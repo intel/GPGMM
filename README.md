@@ -19,7 +19,7 @@ Get the source code as follows:
 
 ```sh
 # Clone the repo as "GPGMM"
-> git clone https://github.com/bbernhar/GPGMM.git GPGMM && cd GPGMM
+> git clone https://github.com/intel/GPGMM.git GPGMM && cd GPGMM
 
 # Bootstrap the gclient configuration
 > cp scripts/standalone.gclient .gclient
