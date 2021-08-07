@@ -40,14 +40,18 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(allocator != nullptr);
 
         switch (GetInfo().mMethod) {
-            case AllocationMethod::kSubAllocated:
+            case AllocationMethod::kSubAllocated: {
                 allocator->FreePlacedResource(*this);
                 break;
-            case AllocationMethod::kDirect:
-                allocator->FreeResourceHeap(*this);
+            }
+            case AllocationMethod::kDirect: {
+                Heap* resourceHeap = static_cast<Heap*>(GetResourceMemory());
+                allocator->FreeResourceHeap(resourceHeap);
                 break;
-            default:
+            }
+            default: {
                 break;
+            }
         }
 
         mResource.Reset();

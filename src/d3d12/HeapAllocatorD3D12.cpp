@@ -14,7 +14,6 @@
 
 #include "src/d3d12/HeapAllocatorD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
-#include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -34,44 +33,21 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceMemoryAllocation HeapAllocator::Allocate(uint64_t size) {
-        D3D12_HEAP_DESC heapDesc;
-        heapDesc.SizeInBytes = size;
-        heapDesc.Properties.Type = mHeapType;
-        heapDesc.Properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapDesc.Properties.CreationNodeMask = 0;
-        heapDesc.Properties.VisibleNodeMask = 0;
-        heapDesc.Alignment = mHeapAlignment;
-        heapDesc.Flags = mHeapFlags;
-
-        // CreateHeap will implicitly make the created heap resident. We must ensure enough free
-        // memory exists before allocating to avoid an out-of-memory error when overcommitted.
-        ResidencyManager* residencyManager = mResourceAllocator->GetResidencyManager();
-        ASSERT(residencyManager != nullptr);
-
-        residencyManager->EnsureCanAllocate(size, mMemorySegment);
-
-        ComPtr<ID3D12Heap> d3d12Heap;
-        HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap));
-        if (FAILED(hr)) {
+        Heap* heap = nullptr;
+        if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
+                                                          mMemorySegment, mHeapAlignment, &heap))) {
             return GPGMM_INVALID_ALLOCATION;
         }
 
-        std::unique_ptr<Heap> heap =
-            std::make_unique<Heap>(std::move(d3d12Heap), mMemorySegment, size);
-
-        // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
-        // avoid calling MakeResident a second time.
-        residencyManager->TrackResidentHeap(heap.get());
-
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        return {mResourceAllocator, info, /*offset*/ 0,
-                static_cast<ResourceMemoryBase*>(heap.release())};
+        return {mResourceAllocator, info,
+                /*offset*/ 0, static_cast<ResourceMemoryBase*>(heap)};
     }
 
     void HeapAllocator::Deallocate(ResourceMemoryAllocation& allocation) {
-        mResourceAllocator->FreeResourceHeap(allocation);
+        Heap* resourceHeap = static_cast<Heap*>(allocation.GetResourceMemory());
+        mResourceAllocator->FreeResourceHeap(resourceHeap);
     }
 
     void HeapAllocator::Release() {

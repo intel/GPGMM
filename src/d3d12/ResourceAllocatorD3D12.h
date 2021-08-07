@@ -99,7 +99,7 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceAllocation;
 
         void FreePlacedResource(ResourceAllocation& allocation);
-        void FreeResourceHeap(ResourceMemoryAllocation& allocation);
+        void FreeResourceHeap(Heap* resourceHeap);
 
         HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
                                      const D3D12_RESOURCE_DESC& requestedResourceDescriptor,
@@ -112,6 +112,13 @@ namespace gpgmm { namespace d3d12 {
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialUsage,
                                         ResourceAllocation** allocation);
+
+        HRESULT CreateResourceHeap(uint64_t size,
+                                   D3D12_HEAP_TYPE heapType,
+                                   D3D12_HEAP_FLAGS heapFlags,
+                                   DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                   uint64_t heapAlignment,
+                                   Heap** resourceHeap);
 
         ComPtr<ID3D12Device> mDevice;
 

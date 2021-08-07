@@ -230,11 +230,9 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    void ResourceAllocator::FreeResourceHeap(ResourceMemoryAllocation& allocation){
-        ASSERT(allocation.GetInfo().mMethod == AllocationMethod::kDirect);
-
-        ASSERT(allocation.GetResourceMemory() != nullptr);
-        delete allocation.GetResourceMemory();
+    void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
+        ASSERT(resourceHeap != nullptr);
+        delete resourceHeap;
     }
 
     void ResourceAllocator::FreePlacedResource(ResourceAllocation& allocation) {
@@ -329,6 +327,41 @@ namespace gpgmm { namespace d3d12 {
         *allocation =
             new ResourceAllocation{this, subAllocation.GetInfo(), subAllocation.GetOffset(),
                                    std::move(placedResource), heap};
+        return hr;
+    }
+
+    HRESULT ResourceAllocator::CreateResourceHeap(uint64_t size,
+                                                  D3D12_HEAP_TYPE heapType,
+                                                  D3D12_HEAP_FLAGS heapFlags,
+                                                  DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                                  uint64_t heapAlignment,
+                                                  Heap** resourceHeap) {
+        D3D12_HEAP_DESC heapDesc;
+        heapDesc.SizeInBytes = size;
+        heapDesc.Properties.Type = heapType;
+        heapDesc.Properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+        heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        heapDesc.Properties.CreationNodeMask = 0;
+        heapDesc.Properties.VisibleNodeMask = 0;
+        heapDesc.Alignment = heapAlignment;
+        heapDesc.Flags = heapFlags;
+
+        // CreateHeap will implicitly make the created heap resident. We must ensure enough free
+        // memory exists before allocating to avoid an out-of-memory error when overcommitted.
+        mResidencyManager->EnsureCanAllocate(size, memorySegment);
+
+        ComPtr<ID3D12Heap> d3d12Heap;
+        HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap));
+        if (FAILED(hr)) {
+            return hr;
+        }
+
+        *resourceHeap = new Heap(std::move(d3d12Heap), memorySegment, size);
+
+        // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
+        // avoid calling MakeResident a second time.
+        mResidencyManager->TrackResidentHeap(*resourceHeap);
+
         return hr;
     }
 
