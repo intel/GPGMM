@@ -1,4 +1,4 @@
-# Copyright 2021 The GPMM Authors
+# Copyright 2021 The GPGMM Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/config/gclient_args.gni")
+# Whether we are building from WebNN's repository.
+webnn_standalone = false
 
-# Enable the compilation for UWP
-gpgmm_is_winuwp = is_win && target_os == "winuwp"
-
-declare_args() {
-  # Enable GPGMM's ASSERTs even in release builds
-  gpgmm_always_assert = false
-
-  # Enables the compilation of GPGMM's D3D12 backend
-  gpgmm_enable_d3d12 = is_win
-
-  # Enable the compilation of GPGMM's Dawn integration for testing.
-  enable_dawn = checkout_dawn
-
-  # Enable the compilation of GPGMM's WebNN integration for testing.
-  enable_webnn = checkout_webnn
-}
+# The paths to WebNN's dependencies
+webnn_root = "//third_party/webnn_native"
+webnn_gpgmm_dir = "//"

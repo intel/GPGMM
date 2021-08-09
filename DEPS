@@ -33,10 +33,6 @@ deps = {
     'url': '{github_git}/webmachinelearning/webnn-native.git@b3b0548517d29b61af85b456bb62e71ba5e7922d',
     'condition': 'checkout_webnn',
   },
-  'third_party/DirectML': {
-    'url': '{github_git}/microsoft/DirectML.git@e1b29b20a21bd2fb669a0c774f9870f8e9731da6',
-    'condition': 'checkout_win and checkout_webnn',
-  },
 
   # Dependencies required to use GN/Clang in standalone
   'build': {
@@ -169,16 +165,6 @@ hooks = [
     'action': ['python', 'build/util/lastchange.py',
                '-o', 'build/util/LASTCHANGE'],
   },
-  
-# TODO: Fix download_dml |dependency_dir|.
-#  {
-#    # Download the DirectML NuGet package.
-#    'name': 'download_dml_unpkg',
-#    'pattern': '.',
-#    'condition': 'checkout_win and checkout_webnn',
-#    'action': ['python3', './third_party/webnn_native/src/webnn_native/dml/deps/script/download_dml.py'],
-#  },
-
   # Use Dawn integration
   {
     'name': 'fetch_dawn_integration_patch',
@@ -208,4 +194,7 @@ recursedeps = [
 
   # Dawn and Tint's revision are linked
   'third_party/dawn',
+
+  # WebNN and DirectML revision are linked
+  'third_party/webnn_native',
 ]

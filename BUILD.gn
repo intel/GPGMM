@@ -31,6 +31,12 @@ group("all") {
       "//third_party/dawn/src/tests:dawn_end2end_tests",
     ]
   }
+
+  if (enable_webnn) {
+    deps += [
+      "//third_party/webnn_native/src/tests:webnn_end2end_tests",
+    ]
+  }
 }
 
 # This target is built when no specific target is specified on the command line.
