@@ -33,8 +33,12 @@ namespace gpgmm {
     }
 
     void BuddyMemoryAllocator::Release() {
-        mMemoryAllocator->Release();
+        for (const TrackedSubAllocations& subAllocation : mTrackedSubAllocations) {
+            ASSERT(subAllocation.refcount == 0);
+        }
+
         mTrackedSubAllocations.clear();
+        mMemoryAllocator->Release();
     }
 
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
