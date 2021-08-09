@@ -14,7 +14,7 @@ vars = {
   'gpgmm_standalone': True,
 
   # Checkout and download Dawn by default. This can be disabled with custom_vars.
-  'checkout_dawn': True,
+  'checkout_dawn': False,
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,

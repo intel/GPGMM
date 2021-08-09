@@ -34,7 +34,7 @@ Get the source code as follows:
 
 ### Run examples
 
-### How do I use it?
+## How do I use it?
 
 To allocate, you create an allocator then create allocations from it:
 ```cpp
@@ -88,14 +88,28 @@ What about residency for other heaps (SV descriptor or query heaps)?
 * Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
 * `d3d12::ResourceAllocation` is a ref-counted object.
 
-# Integrations
+# API Integration Testing
 
-| Project     | Backend                   |
-|-------------|---------------------------|
-| Dawn        | D3D12: yes, Vulkan: TBD   |
-| Skia        | D3D12: TODO, Vulkan: TBD  |
-| WebNN       | DML: yes                  |
-| Aquarium    | D3D12: TODO, Vulkan: TBD  |
+You can test local GPGMM changes through existing end2end tests.
+
+Modify `.gclient`
+```json
+"custom_vars": {
+    "checkout_<Project>": True,
+},
+```
+
+```sh
+> gclient sync
+> ninja -C out/Debug
+> out/Debug/<Test>
+```
+
+| Project     | Backend                   | Test               |
+|-------------|---------------------------|--------------------|
+| Dawn        | D3D12: yes, Vulkan: TBD   | dawn_end2end_tests |
+| Skia        | D3D12: TODO, Vulkan: TBD  |                    |
+| WebNN       | DML: TODO                 | webnn_end2end_tests|
 
 ## License
 
