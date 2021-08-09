@@ -15,7 +15,7 @@
 #ifndef GPGMM_BUDDYALLOCATOR_H_
 #define GPGMM_BUDDYALLOCATOR_H_
 
-#include "common/IntegerTypes.h"
+#include "src/common/IntegerTypes.h"
 
 #include <cstddef>
 #include <cstdint>
