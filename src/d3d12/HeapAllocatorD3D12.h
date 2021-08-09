@@ -26,8 +26,7 @@ namespace gpgmm { namespace d3d12 {
     // Wrapper to allocate a D3D12 heap.
     class HeapAllocator : public ResourceMemoryAllocator {
       public:
-        HeapAllocator(ComPtr<ID3D12Device> device,
-                      ResourceAllocator* resourceAllocator,
+        HeapAllocator(ResourceAllocator* resourceAllocator,
                       D3D12_HEAP_TYPE heapType,
                       D3D12_HEAP_FLAGS heapFlags,
                       DXGI_MEMORY_SEGMENT_GROUP memorySegment,
@@ -39,7 +38,6 @@ namespace gpgmm { namespace d3d12 {
         void Release() override;
 
       private:
-        ComPtr<ID3D12Device> mDevice;
         ResourceAllocator* mResourceAllocator;
         D3D12_HEAP_TYPE mHeapType;
         D3D12_HEAP_FLAGS mHeapFlags;

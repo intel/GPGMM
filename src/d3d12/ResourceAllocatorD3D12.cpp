@@ -166,8 +166,7 @@ namespace gpgmm { namespace d3d12 {
             constexpr uint64_t heapAlignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
 
             mHeapAllocators[i] = std::make_unique<HeapAllocator>(
-                mDevice, this, GetD3D12HeapType(resourceHeapKind),
-                GetD3D12HeapFlags(resourceHeapKind),
+                this, GetD3D12HeapType(resourceHeapKind), GetD3D12HeapFlags(resourceHeapKind),
                 GetMemorySegment(mDevice.Get(), mIsUMA, GetD3D12HeapType(resourceHeapKind)),
                 heapAlignment);
             mPooledHeapAllocators[i] =

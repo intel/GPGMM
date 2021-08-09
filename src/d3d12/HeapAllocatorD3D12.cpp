@@ -18,14 +18,12 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    HeapAllocator::HeapAllocator(ComPtr<ID3D12Device> device,
-                                 ResourceAllocator* resourceAllocator,
+    HeapAllocator::HeapAllocator(ResourceAllocator* resourceAllocator,
                                  D3D12_HEAP_TYPE heapType,
                                  D3D12_HEAP_FLAGS heapFlags,
                                  DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                  uint64_t heapAlignment)
-        : mDevice(device),
-          mResourceAllocator(resourceAllocator),
+        : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
           mMemorySegment(memorySegment),
