@@ -15,11 +15,15 @@
 #include "src/ResourceMemoryAllocation.h"
 #include "src/ResourceMemory.h"
 #include "src/common/Assert.h"
+#include "src/common/IntegerTypes.h"
 
 namespace gpgmm {
 
     ResourceMemoryAllocation::ResourceMemoryAllocation()
-        : mAllocator(nullptr), mOffset(0), mResourceMemory(nullptr), mMappedPointer(nullptr) {
+        : mAllocator(nullptr),
+          mOffset(kInvalidOffset),
+          mResourceMemory(nullptr),
+          mMappedPointer(nullptr) {
     }
 
     ResourceMemoryAllocation::ResourceMemoryAllocation(ResourceAllocatorBase* allocator,
@@ -39,7 +43,7 @@ namespace gpgmm {
     }
 
     uint64_t ResourceMemoryAllocation::GetOffset() const {
-        ASSERT(mInfo.mMethod != AllocationMethod::kInvalid);
+        ASSERT(mOffset != kInvalidOffset);
         return mOffset;
     }
 
@@ -54,6 +58,7 @@ namespace gpgmm {
     void ResourceMemoryAllocation::Invalidate() {
         mResourceMemory = nullptr;
         mInfo = {};
+        mOffset = kInvalidOffset;
     }
 
     ResourceAllocatorBase* ResourceMemoryAllocation::GetAllocator() {

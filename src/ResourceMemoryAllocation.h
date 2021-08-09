@@ -19,7 +19,6 @@
 
 #define GPGMM_INVALID_ALLOCATION \
     ResourceMemoryAllocation {   \
-        nullptr, {}, 0, nullptr  \
     }
 
 namespace gpgmm {
