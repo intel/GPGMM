@@ -34,8 +34,6 @@ namespace gpgmm { namespace d3d12 {
             return;
         }
 
-        ASSERT(GetInfo().mMethod != AllocationMethod::kInvalid);
-
         ResourceAllocator* allocator = static_cast<ResourceAllocator*>(GetAllocator());
         ASSERT(allocator != nullptr);
 

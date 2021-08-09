@@ -36,9 +36,6 @@ namespace gpgmm {
         // Memory sub-divided using one or more blocks of various sizes.
         kSubAllocated,
 
-        // Memory was allocated outside of Dawn.
-        kExternal,
-
         // Memory not allocated or freed.
         kInvalid
     };
