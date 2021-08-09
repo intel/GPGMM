@@ -64,6 +64,7 @@ namespace gpgmm {
 
         ResourceMemoryAllocation(const ResourceMemoryAllocation&) = default;
         ResourceMemoryAllocation& operator=(const ResourceMemoryAllocation&) = default;
+        bool operator==(const ResourceMemoryAllocation&);
 
         ResourceMemoryBase* GetResourceMemory() const;
         uint64_t GetOffset() const;

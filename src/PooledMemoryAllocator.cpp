@@ -39,7 +39,7 @@ namespace gpgmm {
             mPool.pop_front();
         }
 
-        if (memory.GetResourceMemory() == nullptr) {
+        if (memory == GPGMM_INVALID_ALLOCATION) {
             memory = mHeapAllocator->Allocate(size);
         }
 

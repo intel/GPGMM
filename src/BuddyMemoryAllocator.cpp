@@ -70,7 +70,7 @@ namespace gpgmm {
         if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
             // Transfer ownership to this allocator
             ResourceMemoryAllocation memory = mMemoryAllocator->Allocate(mMemoryBlockSize);
-            if (memory.GetResourceMemory() == nullptr) {
+            if (memory == GPGMM_INVALID_ALLOCATION) {
                 return GPGMM_INVALID_ALLOCATION;
             }
             mTrackedSubAllocations[memoryIndex] = {/*refcount*/ 0, std::move(memory)};

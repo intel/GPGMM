@@ -38,6 +38,11 @@ namespace gpgmm {
           mMappedPointer(mappedPointer) {
     }
 
+    bool ResourceMemoryAllocation::operator==(const ResourceMemoryAllocation& other) {
+        return (other.mAllocator == mAllocator && other.mOffset == mOffset &&
+                other.mResourceMemory == mResourceMemory);
+    }
+
     ResourceMemoryBase* ResourceMemoryAllocation::GetResourceMemory() const {
         return mResourceMemory;
     }
