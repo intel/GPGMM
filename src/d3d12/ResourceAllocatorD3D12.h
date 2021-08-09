@@ -33,6 +33,7 @@ namespace gpgmm { namespace d3d12 {
 
     typedef enum ALLOCATOR_FLAGS {
         ALLOCATOR_ALWAYS_COMMITED = 0x1,
+        ALLOCATOR_ALWAYS_IN_BUDGET = 0x2,
     } ALLOCATOR_FLAGS;
 
     struct ALLOCATOR_DESC {
@@ -125,6 +126,7 @@ namespace gpgmm { namespace d3d12 {
         bool mIsUMA;
         uint32_t mResourceHeapTier;
         bool mIsAlwaysCommitted;
+        bool mIsAlwaysInBudget;
 
         static constexpr uint64_t kMaxHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
         static constexpr uint64_t kMinHeapSize = 4ll * 1024ll * 1024ll;            // 4MB

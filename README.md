@@ -73,16 +73,16 @@ allocation.Release();
 ```
 
 To use residency:
-1. Create a `ResourceAllocator`.
-2. Use `ResourceAllocator::CreateResource` for every resource you want residency managed.
-3. Create a `ResidencySet` to track which allocations will be resident for a given command-list (1:1 relationship).
-4. `ResourceAllocation::UpdateResidency` tracks the underlying heap for the resident set.
-5. Use `ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
+1. Create a `d3d12::ResourceAllocator` with `ALLOCATOR_ALWAYS_IN_BUDGET` flag.
+2. Use `d3d12::ResourceAllocator::CreateResource` for every resource you want residency managed.
+3. Create a `d3d12::ResidencySet` to track a collection of allocations that should be resident for a given command-list (1:1 relationship).
+4. `d3d12::ResourceAllocation::UpdateResidency` tracks the underlying heap for the resident set.
+5. Use `d3d12::ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
 
 What about residency for other heaps (SV descriptor or query heaps)?
-1. Sub-class `gpgmm::d3d12::Heap`.
-2. Call `ResidencyManager::TrackResidentHeap` on it after creation.
-3. Use `ResidencyManager::Lock/UnlockHeap` to keep heap resident or not (ex. SV heaps).
+1. Sub-class `d3d12::Heap`.
+2. Call `d3d12::ResidencyManager::TrackResidentHeap` on it after creation.
+3. Use `d3d12::ResidencyManager::[Lock|UnlockHeap]` to keep heap resident or not (ex. SV heaps).
 
 # Prerequisites
 * Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).

@@ -17,13 +17,15 @@
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 namespace gpgmm { namespace d3d12 {
 
-    ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device, ComPtr<IDXGIAdapter3> adapter, bool isUMA)
-        : mDevice(device), mAdapter(adapter), mIsUMA(isUMA){
+    ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
+                                       ComPtr<IDXGIAdapter3> adapter,
+                                       bool isUMA)
+        : mDevice(device), mAdapter(adapter), mIsUMA(isUMA) {
         UpdateVideoMemoryInfo();
 
         // TODO: check error
@@ -31,8 +33,8 @@ namespace gpgmm { namespace d3d12 {
         mCompletionEvent = CreateEvent(nullptr, false, false, nullptr);
     }
 
-    ResidencyManager::~ResidencyManager(){
-        if (mCompletionEvent != INVALID_HANDLE_VALUE){
+    ResidencyManager::~ResidencyManager() {
+        if (mCompletionEvent != INVALID_HANDLE_VALUE) {
             CloseHandle(mCompletionEvent);
             mCompletionEvent = INVALID_HANDLE_VALUE;
         }
@@ -40,10 +42,6 @@ namespace gpgmm { namespace d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(Heap* heap) {
-        if (!mResidencyManagementEnabled) {
-            return S_OK;
-        }
-
         // If the heap isn't already resident, make it resident.
         if (!heap->IsInResidencyLRUCache() && !heap->IsResidencyLocked()) {
             ID3D12Pageable* d3d12Pageable = heap->GetD3D12Pageable();
@@ -51,7 +49,7 @@ namespace gpgmm { namespace d3d12 {
 
             HRESULT hr = MakeAllocationsResident(GetMemorySegmentInfo(heap->GetMemorySegment()),
                                                  size, 1, &d3d12Pageable);
-            if (FAILED(hr)){
+            if (FAILED(hr)) {
                 return hr;
             }
         }
@@ -69,10 +67,6 @@ namespace gpgmm { namespace d3d12 {
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
     void ResidencyManager::UnlockHeap(Heap* heap) {
-        if (!mResidencyManagementEnabled) {
-            return;
-        }
-
         ASSERT(heap->IsResidencyLocked());
         ASSERT(!heap->IsInResidencyLRUCache());
         heap->DecrementResidencyLock();
@@ -189,11 +183,8 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResidencyManager::EnsureCanAllocate(uint64_t allocationSize,
                                                 const DXGI_MEMORY_SEGMENT_GROUP& memorySegment) {
-        if (!mResidencyManagementEnabled) {
-            return S_OK;
-        }
-
-        return EnsureCanMakeResident(allocationSize, GetMemorySegmentInfo(memorySegment), /*sizeEvictedOut*/nullptr);
+        return EnsureCanMakeResident(allocationSize, GetMemorySegmentInfo(memorySegment),
+                                     /*sizeEvictedOut*/ nullptr);
     }
 
     // Any time we need to make something resident, we must check that we have enough free memory to
@@ -202,8 +193,6 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::EnsureCanMakeResident(uint64_t sizeToMakeResident,
                                                     MemorySegmentInfo* memorySegment,
                                                     uint64_t* sizeEvictedOut) {
-        ASSERT(mResidencyManagementEnabled);
-
         UpdateMemorySegmentInfo(memorySegment);
 
         const uint64_t memoryUsageAfterMakeResident = sizeToMakeResident + memorySegment->usage;
@@ -229,13 +218,13 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (resourcesToEvict.size() > 0) {
-           HRESULT hr = mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data());
-            if (FAILED(hr)){
+            HRESULT hr = mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data());
+            if (FAILED(hr)) {
                 return hr;
             }
         }
 
-        if (sizeEvictedOut != nullptr){
+        if (sizeEvictedOut != nullptr) {
             *sizeEvictedOut = sizeEvicted;
         }
         return S_OK;
@@ -247,10 +236,6 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::ExecuteCommandLists(ResidencySet* residencySet,
                                                   ID3D12CommandQueue* d3d12Queue,
                                                   ID3D12CommandList* d3d12CommandList) {
-        if (!mResidencyManagementEnabled) {
-            return S_OK;
-        }
-
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
         std::vector<ID3D12Pageable*> nonLocalHeapsToMakeResident;
         uint64_t localSizeToMakeResident = 0;
@@ -320,8 +305,7 @@ namespace gpgmm { namespace d3d12 {
         // overhead by using MakeResident on a secondary thread, or by instead making use of
         // the EnqueueMakeResident function (which is not available on all Windows 10
         // platforms).
-        HRESULT hr =
-            mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
+        HRESULT hr = mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
 
         // A MakeResident call can fail if there's not enough available memory. This
         // could occur when there's significant fragmentation or if the allocation size
@@ -339,8 +323,7 @@ namespace gpgmm { namespace d3d12 {
                 return E_OUTOFMEMORY;
             }
 
-            hr =
-                mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
+            hr = mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
         }
 
         return S_OK;
@@ -352,10 +335,6 @@ namespace gpgmm { namespace d3d12 {
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
     void ResidencyManager::TrackResidentHeap(Heap* heap) {
-        if (!mResidencyManagementEnabled) {
-            return;
-        }
-
         ASSERT(heap->IsInList() == false);
         GetMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
     }
