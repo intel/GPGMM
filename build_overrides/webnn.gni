@@ -12,9 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Whether we are building from WebNN's repository.
-webnn_standalone = false
-
 # The paths to WebNN's dependencies
-webnn_root = "//third_party/webnn_native"
 webnn_gpgmm_dir = "//"
