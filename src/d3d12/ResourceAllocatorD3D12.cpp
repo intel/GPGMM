@@ -219,9 +219,8 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // Do not track imported resources for purposes of residency.
-        Heap* heap =
-            new Heap(resource, GetMemorySegment(mDevice.Get(), mIsUMA, heapProp.Type),
-                     resourceInfo.SizeInBytes);
+        Heap* heap = new Heap(resource, GetMemorySegment(mDevice.Get(), mIsUMA, heapProp.Type),
+                              resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kDirect;
