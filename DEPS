@@ -4,12 +4,14 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
   'checkout_dawn',
   'checkout_webnn',
+  'checkout_skia',
 ]
 
 vars = {
   'chromium_git': 'https://chromium.googlesource.com',
   'dawn_git': 'https://dawn.googlesource.com',
   'github_git': 'https://github.com',
+  'skia_git': 'https://skia.googlesource.com',
 
   'gpgmm_standalone': True,
 
@@ -18,6 +20,9 @@ vars = {
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,
+
+  # Checkout and download SKIA by default. This can be disabled with custom_vars.
+  'checkout_skia': False,
 }
 
 deps = {
@@ -32,6 +37,11 @@ deps = {
   'third_party/webnn_native': {
     'url': '{github_git}/webmachinelearning/webnn-native.git@310b1cf7e13838e4b134b96317cdf8e1cb1a8204',
     'condition': 'checkout_webnn',
+  },
+
+  'third_party/skia': {
+    'url': '{skia_git}/skia.git@076be6662a23375d1b7ef332a50b8700ed8fade1',
+    'condition': 'checkout_skia',
   },
 
   # Dependencies required to use GN/Clang in standalone
