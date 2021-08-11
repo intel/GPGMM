@@ -30,9 +30,32 @@ Get the source code as follows:
 
 ### Setting up the build
 
+Generate build files using `gn args out/Debug` or `gn args out/Release`.
+
+A text editor will appear asking build options, the most common option is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
+
+To build with a backend, please set the corresponding option from following table.
+
+| Backend | Option |
+|---------|--------------|
+| D3D12 | `gpgmm_enable_d3d12=true` |
+| Vulkan | `gpgmm_enable_vulkan=true` |
+
 ### Build
 
-### Run examples
+Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
+
+### Run tests
+
+Run unit tests:
+```sh
+> ./out/Release/gpgmm_unittests
+```
+
+Run end2end tests:
+```sh
+> ./out/Release/gpgmm_end2end_tests
+```
 
 ## How do I use it?
 
