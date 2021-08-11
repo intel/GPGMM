@@ -1,0 +1,9 @@
+Name: GPGMM
+Short Name: gpgmm
+URL: https://github.com/intel/gpgmm
+License: Apache 2.0
+License File: LICENSE
+Security Critical: yes
+
+Description:
+GPGMM is a General-Purpose GPU Memory Management library. It provides a common set of GPU memory routines optimized for GPUs. The library helps developers manage video memory by implementing the necessary functionality across components based on Vulkan or D3D12.
