@@ -18,18 +18,10 @@ import("build_overrides/gpgmm_overrides_with_defaults.gni")
 group("all") {
   testonly = true
 
-  # TODO: Build gpgmm through tests & samples
-  deps = [ "src:gpgmm_static" ]
+  deps = [ "src/tests:gpgmm_tests" ]
 
-  # deps = [ "src/tests:gpgmm_tests" ]
-  # if (gpgmm_standalone) {
-  #   deps += [ "examples:gpgmm_samples" ]
-  # }
   if (enable_dawn) {
-    deps += [
-      # "//third_party/dawn/src/fuzzers:dawn_fuzzers",
-      "//third_party/dawn/src/tests:dawn_end2end_tests",
-    ]
+    deps += [ "//third_party/dawn/src/tests:dawn_end2end_tests" ]
   }
 
   if (enable_webnn) {

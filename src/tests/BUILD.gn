@@ -1,0 +1,164 @@
+# Copyright 2012 The Dawn Authors
+# Copyright 2021 The GPGMM Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("../../build_overrides/gpgmm_overrides_with_defaults.gni")
+
+import("//testing/test.gni")
+import("${gpgmm_root_dir}/build_overrides/gpgmm_features.gni")
+
+group("gpgmm_tests") {
+  testonly = true
+  deps = [
+    ":gpgmm_end2end_tests",
+    ":gpgmm_unittests",
+
+    # TODO: ":gpgmm_perf_tests",
+  ]
+}
+
+###############################################################################
+# Gtest Gmock - Handle building inside and outside of Chromium.
+###############################################################################
+
+# When building outside of Chromium we need to define our own targets for GTest
+# and GMock. However when compiling inside of Chromium we need to reuse the
+# existing targets, both because Chromium has a special harness for swarming
+# and because otherwise the "gn check" fails.
+
+if (!build_with_chromium) {
+  # When we aren't in Chromium we define out own targets based on the location
+  # of the googletest repo.
+  googletest_dir = gpgmm_googletest_dir
+
+  config("gtest_config") {
+    include_dirs = [
+      "${googletest_dir}/googletest",
+      "${googletest_dir}/googletest/include",
+    ]
+  }
+
+  static_library("gtest") {
+    testonly = true
+    sources = [ "${googletest_dir}/googletest/src/gtest-all.cc" ]
+    public_configs = [ ":gtest_config" ]
+  }
+
+  config("gmock_config") {
+    include_dirs = [
+      "${googletest_dir}/googlemock",
+      "${googletest_dir}/googlemock/include",
+      "${googletest_dir}/googletest/include",
+    ]
+  }
+
+  static_library("gmock") {
+    testonly = true
+    sources = [ "${googletest_dir}/googlemock/src/gmock-all.cc" ]
+    public_configs = [ ":gmock_config" ]
+  }
+
+  group("gmock_and_gtest") {
+    testonly = true
+    public_deps = [
+      ":gmock",
+      ":gtest",
+    ]
+  }
+} else {
+  # When we are in Chromium we reuse its targets, and also add some deps that
+  # are needed to launch the test in swarming mode.
+  group("gmock_and_gtest") {
+    testonly = true
+    public_deps = [
+      "//base",
+      "//base/test:test_support",
+      "//testing/gmock",
+      "//testing/gtest",
+    ]
+  }
+}
+
+###############################################################################
+# Unit tests
+###############################################################################
+
+test("gpgmm_unittests") {
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+
+  deps = [
+    ":gmock_and_gtest",
+    "${gpgmm_root_dir}/src:gpgmm_sources",
+    "${gpgmm_root_dir}/src/common",
+  ]
+
+  sources = []
+
+  # When building inside Chromium, use their gtest main function because it is
+  # needed to run in swarming correctly.
+  if (build_with_chromium) {
+    deps += [ ":gpgmm_unittests_main" ]
+  } else {
+    sources += [ "UnittestsMain.cpp" ]
+  }
+}
+
+###############################################################################
+# End2End tests
+###############################################################################
+
+source_set("gpgmm_end2end_tests_sources") {
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  testonly = true
+
+  deps = [
+    ":gmock_and_gtest",
+    "${gpgmm_root_dir}/src:gpgmm_sources",
+    "${gpgmm_root_dir}/src/common",
+  ]
+
+  sources = [ "GPGMMTest.h" ]
+
+  libs = []
+}
+
+test("gpgmm_end2end_tests") {
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+
+  deps = [
+    ":gmock_and_gtest",
+    ":gpgmm_end2end_tests_sources",
+    "${gpgmm_root_dir}/src:gpgmm_static",
+    "${gpgmm_root_dir}/src/common",
+  ]
+
+  sources = [
+    "GPGMMTest.cpp",
+    "GPGMMTest.h",
+  ]
+
+  libs = []
+
+  # When building inside Chromium, use their gtest main function because it is
+  # needed to run in swarming correctly.
+  if (build_with_chromium) {
+    deps += [ ":gpgmm_end2end_tests_main" ]
+  } else {
+    sources += [ "End2EndTestsMain.cpp" ]
+  }
+
+  if (is_chromeos) {
+    libs += [ "gbm" ]
+  }
+}

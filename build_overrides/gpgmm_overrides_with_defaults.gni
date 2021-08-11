@@ -20,3 +20,7 @@ if (!defined(gpgmm_standalone)) {
 if (!defined(gpgmm_root_dir)) {
   gpgmm_root_dir = get_path_info("..", "abspath")
 }
+
+if (!defined(gpgmm_googletest_dir)) {
+  gpgmm_googletest_dir = "//third_party/googletest"
+}
