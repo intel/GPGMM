@@ -103,7 +103,10 @@ test("gpgmm_unittests") {
     "${gpgmm_root_dir}/src/common",
   ]
 
-  sources = []
+  sources = [
+    "unittests/BuddyAllocatorTests.cpp",
+    "unittests/BuddyMemoryAllocatorTests.cpp",
+  ]
 
   # When building inside Chromium, use their gtest main function because it is
   # needed to run in swarming correctly.
