@@ -88,28 +88,22 @@ What about residency for other heaps (SV descriptor or query heaps)?
 * Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
 * `d3d12::ResourceAllocation` is a ref-counted object.
 
-# API Integration Testing
+# Chromium project API testing
 
-You can test local GPGMM changes through existing end2end tests.
+You can also build & test changes through existing end2end tests.
 
 Modify `.gclient`
 ```json
 "custom_vars": {
-    "checkout_<Project>": True,
+    "checkout_<project>": True,
 },
 ```
 
 ```sh
 > gclient sync
 > ninja -C out/Debug
-> out/Debug/<Test>
+> out/Debug/<project>_end2end_tests
 ```
-
-| Project     | Backend                   | Test               |
-|-------------|---------------------------|--------------------|
-| Dawn        | D3D12: yes, Vulkan: TBD   | dawn_end2end_tests |
-| Skia        | D3D12: TODO, Vulkan: TBD  |                    |
-| WebNN       | DML: TODO                 | webnn_end2end_tests|
 
 ## License
 
