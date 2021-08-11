@@ -66,7 +66,6 @@ namespace gpgmm { namespace d3d12 {
 
       private:
         ComPtr<ID3D12Pageable> mD3d12Pageable;
-        ComPtr<ID3D12Heap> mD3d12Heap;
 
         // mLastSubmission denotes the last time this pageable was submitted to the GPU.
         uint64_t mLastSubmission = 0;
