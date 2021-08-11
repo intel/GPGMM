@@ -85,7 +85,7 @@ namespace gpgmm { namespace d3d12 {
         VideoMemoryInfo mVideoMemoryInfo = {};
 
         HANDLE mCompletionEvent = INVALID_HANDLE_VALUE;
-        uint64_t mCurrentSubmission = 0;
+        uint64_t mCurrentExecuteCommandLists = 0;
         ComPtr<ID3D12Fence> mFence;
     };
 

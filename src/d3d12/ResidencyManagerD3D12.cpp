@@ -160,20 +160,20 @@ namespace gpgmm { namespace d3d12 {
 
         Heap* heap = memorySegment->lruCache.head()->value();
 
-        uint64_t lastSubmission = heap->GetLastSubmission();
+        const uint64_t lastExecuteCommandLists = heap->GetLastExecuteCommandLists();
 
         // If the next candidate for eviction was inserted into the LRU during the pending
         // submission, it is because more memory is being used in a single command list than is
         // available. In this scenario, we cannot make any more resources resident and thrashing
         // must occur.
-        if (lastSubmission == mCurrentSubmission + 1) {
+        if (lastExecuteCommandLists == mCurrentExecuteCommandLists + 1) {
             return nullptr;
         }
 
         // We must ensure that any previous use of a resource has completed before the resource can
         // be evicted.
-        if (lastSubmission > mFence->GetCompletedValue()) {
-            mFence->SetEventOnCompletion(lastSubmission, mCompletionEvent);
+        if (lastExecuteCommandLists > mFence->GetCompletedValue()) {
+            mFence->SetEventOnCompletion(lastExecuteCommandLists, mCompletionEvent);
             WaitForSingleObject(mCompletionEvent, INFINITE);
         }
 
@@ -267,7 +267,7 @@ namespace gpgmm { namespace d3d12 {
             // command list stay resident at least until that command list has finished execution.
             // Setting this serial unnecessarily can leave the LRU in a state where nothing is
             // eligible for eviction, even though some evictions may be possible.
-            heap->SetLastSubmission(mCurrentSubmission + 1);
+            heap->SetLastExecuteCommandLists(mCurrentExecuteCommandLists + 1);
 
             // Insert the heap into the appropriate LRU.
             TrackResidentHeap(heap);
@@ -288,7 +288,7 @@ namespace gpgmm { namespace d3d12 {
         d3d12Queue->ExecuteCommandLists(1, &d3d12CommandList);
 
         if (SUCCEEDED(hr)) {
-            d3d12Queue->Signal(mFence.Get(), ++mCurrentSubmission);
+            d3d12Queue->Signal(mFence.Get(), ++mCurrentExecuteCommandLists);
         }
 
         return hr;

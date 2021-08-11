@@ -43,11 +43,11 @@ namespace gpgmm { namespace d3d12 {
 
         void UpdateResidency(ResidencySet* residencySet);
 
-        // The residency manager must know the last serial that any portion of the pageable was
+        // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at
-        // least until that serial has completed.
-        uint64_t GetLastSubmission() const;
-        void SetLastSubmission(uint64_t serial);
+        // least until that fence has completed.
+        uint64_t GetLastExecuteCommandLists() const;
+        void SetLastExecuteCommandLists(uint64_t fenceValue);
 
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
 
@@ -67,8 +67,8 @@ namespace gpgmm { namespace d3d12 {
       private:
         ComPtr<ID3D12Pageable> mD3d12Pageable;
 
-        // mLastSubmission denotes the last time this pageable was submitted to the GPU.
-        uint64_t mLastSubmission = 0;
+        // mLastExecuteCommandLists denotes the last time this pageable was submitted to the GPU.
+        uint64_t mLastExecuteCommandLists = 0;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegment;
         uint32_t mResidencyLockRefCount = 0;
         uint64_t mSize = 0;
