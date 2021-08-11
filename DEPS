@@ -30,7 +30,7 @@ deps = {
   },
 
   'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@b3b0548517d29b61af85b456bb62e71ba5e7922d',
+    'url': '{github_git}/webmachinelearning/webnn-native.git@310b1cf7e13838e4b134b96317cdf8e1cb1a8204',
     'condition': 'checkout_webnn',
   },
 
@@ -165,7 +165,8 @@ hooks = [
     'action': ['python', 'build/util/lastchange.py',
                '-o', 'build/util/LASTCHANGE'],
   },
-  # Use Dawn integration
+  # Apply Dawn-GPGMM integration patch.
+  # This can be removed once GPGMM is integrated with the upstream project.
   {
     'name': 'fetch_dawn_integration_patch',
     'pattern': '.',
@@ -179,6 +180,25 @@ hooks = [
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': ['git', '-C', './third_party/dawn/',
+               '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
+               'cherry-pick', 'FETCH_HEAD',
+    ],
+  },
+  # Apply WebNN-GPGMM integration patch.
+  # This can be removed once GPGMM is integrated with the upstream project.
+  {
+    'name': 'fetch_webnn_integration_patch',
+    'pattern': '.',
+    'condition': 'checkout_webnn',
+    'action': [ 'git', '-C', './third_party/webnn_native/',
+                'fetch', 'https://github.com/bbernhar/webnn-native', 'gpgmm',
+    ],
+  },
+  {
+    'name': 'apply_webnn_integration_patch',
+    'pattern': '.',
+    'condition': 'checkout_webnn',
+    'action': ['git', '-C', './third_party/webnn_native/',
                '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
                'cherry-pick', 'FETCH_HEAD',
     ],
