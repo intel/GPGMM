@@ -20,12 +20,14 @@
 #include "src/d3d12/d3d12_platform.h"
 
 #include <cstdint>
+#include <memory>
 
 struct ID3D12CommandList;
 struct ID3D12CommandQueue;
 
 namespace gpgmm { namespace d3d12 {
 
+    class Fence;
     class Heap;
     class ResidencySet;
 
@@ -70,7 +72,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT EnsureCanMakeResident(uint64_t allocationSize,
                                       MemorySegmentInfo* memorySegment,
                                       uint64_t* sizeEvictedOut);
-        Heap* RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment);
+        HRESULT RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment, Heap** heapOut);
         HRESULT MakeAllocationsResident(MemorySegmentInfo* segment,
                                         uint64_t sizeToMakeResident,
                                         uint64_t numberOfObjectsToMakeResident,
@@ -84,9 +86,7 @@ namespace gpgmm { namespace d3d12 {
         bool mIsUMA;
         VideoMemoryInfo mVideoMemoryInfo = {};
 
-        HANDLE mCompletionEvent = INVALID_HANDLE_VALUE;
-        uint64_t mCurrentExecuteCommandLists = 0;
-        ComPtr<ID3D12Fence> mFence;
+        std::unique_ptr<Fence> mFence;
     };
 
 }}  // namespace gpgmm::d3d12

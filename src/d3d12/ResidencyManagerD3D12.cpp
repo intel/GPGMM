@@ -14,6 +14,7 @@
 
 #include "src/d3d12/ResidencyManagerD3D12.h"
 
+#include "src/d3d12/FenceD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 
@@ -28,16 +29,10 @@ namespace gpgmm { namespace d3d12 {
         : mDevice(device), mAdapter(adapter), mIsUMA(isUMA) {
         UpdateVideoMemoryInfo();
 
-        // TODO: check error
-        mDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
-        mCompletionEvent = CreateEvent(nullptr, false, false, nullptr);
+        mFence = std::make_unique<Fence>(device, 0);
     }
 
     ResidencyManager::~ResidencyManager() {
-        if (mCompletionEvent != INVALID_HANDLE_VALUE) {
-            CloseHandle(mCompletionEvent);
-            mCompletionEvent = INVALID_HANDLE_VALUE;
-        }
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
@@ -149,13 +144,16 @@ namespace gpgmm { namespace d3d12 {
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
     // nullptr when nothing further can be evicted.
-    Heap* ResidencyManager::RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment) {
+    HRESULT ResidencyManager::RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment,
+                                                       Heap** heapOut) {
         // If the LRU is empty, return nullptr to allow execution to continue. Note that fully
         // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
         // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
         // the process budget and starving Dawn, which will cause thrash.
+        HRESULT hr = S_OK;
         if (memorySegment->lruCache.empty()) {
-            return nullptr;
+            *heapOut = nullptr;
+            return hr;
         }
 
         Heap* heap = memorySegment->lruCache.head()->value();
@@ -166,19 +164,23 @@ namespace gpgmm { namespace d3d12 {
         // submission, it is because more memory is being used in a single command list than is
         // available. In this scenario, we cannot make any more resources resident and thrashing
         // must occur.
-        if (lastExecuteCommandLists == mCurrentExecuteCommandLists + 1) {
-            return nullptr;
+        if (lastExecuteCommandLists == mFence->GetCurrentFence()) {
+            *heapOut = nullptr;
+            return hr;
         }
 
         // We must ensure that any previous use of a resource has completed before the resource can
         // be evicted.
-        if (lastExecuteCommandLists > mFence->GetCompletedValue()) {
-            mFence->SetEventOnCompletion(lastExecuteCommandLists, mCompletionEvent);
-            WaitForSingleObject(mCompletionEvent, INFINITE);
+        hr = mFence->WaitFor(lastExecuteCommandLists);
+        if (FAILED(hr)) {
+            *heapOut = nullptr;
+            return hr;
         }
 
         heap->RemoveFromList();
-        return heap;
+
+        *heapOut = heap;
+        return hr;
     }
 
     HRESULT ResidencyManager::EnsureCanAllocate(uint64_t allocationSize,
@@ -205,8 +207,13 @@ namespace gpgmm { namespace d3d12 {
         std::vector<ID3D12Pageable*> resourcesToEvict;
         uint64_t sizeNeededToBeUnderBudget = memoryUsageAfterMakeResident - memorySegment->budget;
         uint64_t sizeEvicted = 0;
+        HRESULT hr = S_OK;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
-            Heap* heap = RemoveSingleEntryFromLRU(memorySegment);
+            Heap* heap = nullptr;
+            hr = RemoveSingleEntryFromLRU(memorySegment, &heap);
+            if (FAILED(hr)) {
+                return hr;
+            }
 
             // If no heap was returned, then nothing more can be evicted.
             if (heap == nullptr) {
@@ -218,7 +225,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (resourcesToEvict.size() > 0) {
-            HRESULT hr = mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data());
+            hr = mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data());
             if (FAILED(hr)) {
                 return hr;
             }
@@ -227,7 +234,7 @@ namespace gpgmm { namespace d3d12 {
         if (sizeEvictedOut != nullptr) {
             *sizeEvictedOut = sizeEvicted;
         }
-        return S_OK;
+        return hr;
     }
 
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
@@ -267,7 +274,7 @@ namespace gpgmm { namespace d3d12 {
             // command list stay resident at least until that command list has finished execution.
             // Setting this serial unnecessarily can leave the LRU in a state where nothing is
             // eligible for eviction, even though some evictions may be possible.
-            heap->SetLastExecuteCommandLists(mCurrentExecuteCommandLists + 1);
+            heap->SetLastExecuteCommandLists(mFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
             TrackResidentHeap(heap);
@@ -288,7 +295,7 @@ namespace gpgmm { namespace d3d12 {
         d3d12Queue->ExecuteCommandLists(1, &d3d12CommandList);
 
         if (SUCCEEDED(hr)) {
-            d3d12Queue->Signal(mFence.Get(), ++mCurrentExecuteCommandLists);
+            hr = mFence->Signal(d3d12Queue);
         }
 
         return hr;
