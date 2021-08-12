@@ -22,7 +22,6 @@
 #include <cstring>
 
 #include <limits>
-#include <type_traits>
 
 // The following are not valid for 0
 uint32_t ScanForward(uint32_t bits);
@@ -75,27 +74,6 @@ DAWN_FORCE_INLINE const T* AlignPtr(const T* ptr, size_t alignment) {
     ASSERT(alignment != 0);
     return reinterpret_cast<const T*>((reinterpret_cast<size_t>(ptr) + (alignment - 1)) &
                                       ~(alignment - 1));
-}
-
-template <typename destType, typename sourceType>
-destType BitCast(const sourceType& source) {
-    static_assert(sizeof(destType) == sizeof(sourceType), "BitCast: cannot lose precision.");
-    destType output;
-    std::memcpy(&output, &source, sizeof(destType));
-    return output;
-}
-
-uint16_t Float32ToFloat16(float fp32);
-bool IsFloat16NaN(uint16_t fp16);
-
-float SRGBToLinear(float srgb);
-
-template <typename T1,
-          typename T2,
-          typename Enable = typename std::enable_if<sizeof(T1) == sizeof(T2)>::type>
-constexpr bool IsSubset(T1 subset, T2 set) {
-    T2 bitsAlsoInSet = subset & set;
-    return bitsAlsoInSet == subset;
 }
 
 #endif  // COMMON_MATH_H_
