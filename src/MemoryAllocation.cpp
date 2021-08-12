@@ -58,9 +58,11 @@ namespace gpgmm {
     }
 
     void MemoryAllocation::Reset() {
-        mMemory = nullptr;
+        mAllocator = nullptr;
         mInfo = {};
         mOffset = kInvalidOffset;
+        mMemory = nullptr;
+        mMappedPointer = nullptr;
     }
 
     AllocatorBase* MemoryAllocation::GetAllocator() {
