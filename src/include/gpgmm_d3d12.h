@@ -1,4 +1,4 @@
-// Copyright 2018 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_H_
-#define GPGMM_D3D12_H_
+#ifndef INCLUDE_GPGMM_D3D12_H_
+#define INCLUDE_GPGMM_D3D12_H_
 
 #include <gpgmm_export.h>
 
-#include <DXGI1_4.h>
-#include <d3d12.h>
-#include <windows.h>
-#include <wrl/client.h>
-
 #include "src/MemoryAllocation.h"
+
+// clang-format off
 
 #if GPGMM_ENABLE_D3D12
 #include "src/d3d12/HeapD3D12.h"
@@ -31,4 +28,6 @@
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 #endif // GPGMM_ENABLE_D3D12
 
-#endif  // GPGMM_D3D12_H_
+// clang-format on
+
+#endif  // INCLUDE_GPGMM_D3D12_H_
