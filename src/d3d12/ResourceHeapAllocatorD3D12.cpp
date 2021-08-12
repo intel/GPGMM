@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/d3d12/HeapAllocatorD3D12.h"
+#include "src/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    HeapAllocator::HeapAllocator(ResourceAllocator* resourceAllocator,
-                                 D3D12_HEAP_TYPE heapType,
-                                 D3D12_HEAP_FLAGS heapFlags,
-                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                                 uint64_t heapAlignment)
+    ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
+                                                 D3D12_HEAP_TYPE heapType,
+                                                 D3D12_HEAP_FLAGS heapFlags,
+                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                                 uint64_t heapAlignment)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
@@ -30,7 +30,7 @@ namespace gpgmm { namespace d3d12 {
           mHeapAlignment(heapAlignment) {
     }
 
-    MemoryAllocation HeapAllocator::Allocate(uint64_t size) {
+    MemoryAllocation ResourceHeapAllocator::Allocate(uint64_t size) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
                                                           mMemorySegment, mHeapAlignment, &heap))) {
@@ -43,12 +43,12 @@ namespace gpgmm { namespace d3d12 {
                 /*offset*/ 0, static_cast<MemoryBase*>(heap)};
     }
 
-    void HeapAllocator::Deallocate(MemoryAllocation& allocation) {
+    void ResourceHeapAllocator::Deallocate(MemoryAllocation& allocation) {
         Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
         mResourceAllocator->FreeResourceHeap(resourceHeap);
     }
 
-    void HeapAllocator::Release() {
+    void ResourceHeapAllocator::Release() {
         ASSERT(false);
     }
 

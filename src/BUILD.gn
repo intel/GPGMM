@@ -152,8 +152,6 @@ source_set("gpgmm_sources") {
     sources += [
       "d3d12/FenceD3D12.cpp",
       "d3d12/FenceD3D12.h",
-      "d3d12/HeapAllocatorD3D12.cpp",
-      "d3d12/HeapAllocatorD3D12.h",
       "d3d12/HeapD3D12.cpp",
       "d3d12/HeapD3D12.h",
       "d3d12/ResidencyManagerD3D12.cpp",
@@ -164,6 +162,8 @@ source_set("gpgmm_sources") {
       "d3d12/ResourceAllocationD3D12.h",
       "d3d12/ResourceAllocatorD3D12.cpp",
       "d3d12/ResourceAllocatorD3D12.h",
+      "d3d12/ResourceHeapAllocatorD3D12.cpp",
+      "d3d12/ResourceHeapAllocatorD3D12.h",
       "d3d12/UnknownD3D12.cpp",
       "d3d12/UnknownD3D12.h",
       "d3d12/d3d12_platform.h",

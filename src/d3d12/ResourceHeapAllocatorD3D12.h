@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_HEAPALLOCATORD3D12_H_
-#define GPGMM_D3D12_HEAPALLOCATORD3D12_H_
+#ifndef GPGMM_D3D12_RESOURCEHEAPALLOCATORD3D12_H_
+#define GPGMM_D3D12_RESOURCEHEAPALLOCATORD3D12_H_
 
 #include "src/MemoryAllocator.h"
 
@@ -24,14 +24,14 @@ namespace gpgmm { namespace d3d12 {
     class ResourceAllocator;
 
     // Wrapper to allocate a D3D12 heap.
-    class HeapAllocator : public MemoryAllocator {
+    class ResourceHeapAllocator : public MemoryAllocator {
       public:
-        HeapAllocator(ResourceAllocator* resourceAllocator,
-                      D3D12_HEAP_TYPE heapType,
-                      D3D12_HEAP_FLAGS heapFlags,
-                      DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                      uint64_t heapAlignment);
-        ~HeapAllocator() override = default;
+        ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
+                              D3D12_HEAP_TYPE heapType,
+                              D3D12_HEAP_FLAGS heapFlags,
+                              DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                              uint64_t heapAlignment);
+        ~ResourceHeapAllocator() override = default;
 
         MemoryAllocation Allocate(uint64_t size) override;
         void Deallocate(MemoryAllocation& allocation) override;
@@ -47,4 +47,4 @@ namespace gpgmm { namespace d3d12 {
 
 }}  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_HEAPALLOCATORD3D12_H_
+#endif  // GPGMM_D3D12_RESOURCEHEAPALLOCATORD3D12_H_

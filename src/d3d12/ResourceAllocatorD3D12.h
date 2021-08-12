@@ -18,8 +18,8 @@
 #include "src/Allocator.h"
 #include "src/BuddyMemoryAllocator.h"
 #include "src/PooledMemoryAllocator.h"
-#include "src/d3d12/HeapAllocatorD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
+#include "src/d3d12/ResourceHeapAllocatorD3D12.h"
 
 #include <array>
 #include <cstdint>
@@ -96,7 +96,7 @@ namespace gpgmm { namespace d3d12 {
         ResidencyManager* GetResidencyManager();
 
       private:
-        friend HeapAllocator;
+        friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
         void FreePlacedResource(const ResourceAllocation& allocation);
@@ -133,10 +133,11 @@ namespace gpgmm { namespace d3d12 {
 
         std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
             mSubAllocatedResourceAllocators;
-        std::array<std::unique_ptr<HeapAllocator>, ResourceHeapKind::EnumCount> mHeapAllocators;
+        std::array<std::unique_ptr<ResourceHeapAllocator>, ResourceHeapKind::EnumCount>
+            mResourceHeapAllocators;
 
         std::array<std::unique_ptr<PooledMemoryAllocator>, ResourceHeapKind::EnumCount>
-            mPooledHeapAllocators;
+            mPooledResourceHeapAllocators;
 
         std::unique_ptr<ResidencyManager> mResidencyManager;
     };

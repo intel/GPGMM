@@ -14,9 +14,9 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
-#include "src/d3d12/HeapAllocatorD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
+#include "src/d3d12/ResourceHeapAllocatorD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {
@@ -166,15 +166,15 @@ namespace gpgmm { namespace d3d12 {
             // TODO(crbug.com/dawn/849): Consider having MSAA vs non-MSAA heaps.
             constexpr uint64_t heapAlignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
 
-            mHeapAllocators[i] = std::make_unique<HeapAllocator>(
+            mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
                 this, GetD3D12HeapType(resourceHeapKind), GetD3D12HeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetD3D12HeapType(resourceHeapKind)),
                 heapAlignment);
-            mPooledHeapAllocators[i] =
-                std::make_unique<PooledMemoryAllocator>(mHeapAllocators[i].get());
+            mPooledResourceHeapAllocators[i] =
+                std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mSubAllocatedResourceAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
-                kMaxHeapSize, kMinHeapSize, mPooledHeapAllocators[i].get());
+                kMaxHeapSize, kMinHeapSize, mPooledResourceHeapAllocators[i].get());
         }
     }
 
