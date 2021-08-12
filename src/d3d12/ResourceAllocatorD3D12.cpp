@@ -196,12 +196,12 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         if (!mIsAlwaysCommitted) {
-            hr = CreatePlacedResource(allocationDescriptor.HeapType, resourceDescriptor, clearValue,
-                                      initialUsage, allocation);
+            hr = CreatePlacedResource(allocationDescriptor.HeapType, &resourceDescriptor,
+                                      clearValue, initialUsage, allocation);
         }
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
         if (FAILED(hr)) {
-            hr = CreateCommittedResource(allocationDescriptor.HeapType, resourceDescriptor,
+            hr = CreateCommittedResource(allocationDescriptor.HeapType, &resourceDescriptor,
                                          clearValue, initialUsage, allocation);
         }
         return hr;
@@ -236,7 +236,7 @@ namespace gpgmm { namespace d3d12 {
         delete resourceHeap;
     }
 
-    void ResourceAllocator::FreePlacedResource(ResourceAllocation& allocation) {
+    void ResourceAllocator::FreePlacedResource(const ResourceAllocation& allocation) {
         ASSERT(allocation.GetInfo().mMethod == AllocationMethod::kSubAllocated);
 
         D3D12_HEAP_PROPERTIES heapProp;
@@ -253,18 +253,18 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreatePlacedResource(
         D3D12_HEAP_TYPE heapType,
-        const D3D12_RESOURCE_DESC& requestedResourceDescriptor,
+        const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** allocation) {
         const ResourceHeapKind resourceHeapKind =
-            GetResourceHeapKind(requestedResourceDescriptor.Dimension, heapType,
-                                requestedResourceDescriptor.Flags, mResourceHeapTier);
+            GetResourceHeapKind(requestedResourceDescriptor->Dimension, heapType,
+                                requestedResourceDescriptor->Flags, mResourceHeapTier);
 
-        D3D12_RESOURCE_DESC resourceDescriptor = requestedResourceDescriptor;
+        D3D12_RESOURCE_DESC resourceDescriptor = *requestedResourceDescriptor;
         resourceDescriptor.Alignment = GetResourcePlacementAlignment(
-            resourceHeapKind, requestedResourceDescriptor.SampleDesc.Count,
-            requestedResourceDescriptor.Alignment);
+            resourceHeapKind, requestedResourceDescriptor->SampleDesc.Count,
+            requestedResourceDescriptor->Alignment);
 
         // TODO(bryan.bernhart): Figure out how to compute the alignment without calling this
         // twice.
@@ -376,7 +376,7 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
-        const D3D12_RESOURCE_DESC& resourceDescriptor,
+        const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** allocation) {
@@ -392,7 +392,7 @@ namespace gpgmm { namespace d3d12 {
         // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
         // incorrectly allocate a mismatched size.
         D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+            mDevice->GetResourceAllocationInfo(0, 1, resourceDescriptor);
         if (resourceInfo.SizeInBytes == 0 ||
             resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
             return E_OUTOFMEMORY;
@@ -419,7 +419,7 @@ namespace gpgmm { namespace d3d12 {
         // provided to CreateCommittedResource.
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                              &resourceDescriptor, initialUsage, clearValue,
+                                              resourceDescriptor, initialUsage, clearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;
