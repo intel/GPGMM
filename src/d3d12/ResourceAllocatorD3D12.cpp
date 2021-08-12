@@ -14,6 +14,7 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
+#include "src/common/Limits.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
@@ -157,6 +158,10 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET) {
         mResidencyManager = std::make_unique<ResidencyManager>(mDevice, descriptor.Adapter, mIsUMA);
 
+        const uint64_t minHeapSize = (descriptor.PreferredResourceHeapSize > 0)
+                                         ? descriptor.PreferredResourceHeapSize
+                                         : kDefaultHeapSize;
+
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
@@ -174,7 +179,7 @@ namespace gpgmm { namespace d3d12 {
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mSubAllocatedResourceAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
-                kMaxHeapSize, kMinHeapSize, mPooledResourceHeapAllocators[i].get());
+                kMaxHeapSize, minHeapSize, mPooledResourceHeapAllocators[i].get());
         }
     }
 

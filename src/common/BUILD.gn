@@ -161,6 +161,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "Assert.h",
       "Compiler.h",
       "IntegerTypes.h",
+      "Limits.h",
       "LinkedList.h",
       "Log.cpp",
       "Log.h",

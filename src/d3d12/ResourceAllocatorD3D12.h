@@ -41,7 +41,7 @@ namespace gpgmm { namespace d3d12 {
         bool IsUMA;
         uint32_t ResourceHeapTier;
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
-        UINT64 PreferredBlockSize;
+        UINT64 PreferredResourceHeapSize;
         Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
     };
 
@@ -127,9 +127,6 @@ namespace gpgmm { namespace d3d12 {
         uint32_t mResourceHeapTier;
         bool mIsAlwaysCommitted;
         bool mIsAlwaysInBudget;
-
-        static constexpr uint64_t kMaxHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-        static constexpr uint64_t kMinHeapSize = 4ll * 1024ll * 1024ll;            // 4MB
 
         std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
             mSubAllocatedResourceAllocators;
