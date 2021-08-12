@@ -103,33 +103,4 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(heap != nullptr);
         return heap->IsResident();
     }
-
-    HRESULT ResourceAllocation::QueryInterface(REFIID riid, void** ppvObject) {
-        // Always set out parameter to nullptr, validating it first.
-        if (ppvObject == nullptr) {
-            return E_INVALIDARG;
-        }
-
-        *ppvObject = nullptr;
-
-        if (riid == IID_IUnknown) {
-            // Increment reference and return pointer.
-            *ppvObject = this;
-            ++mRefCount;
-            return S_OK;
-        }
-        return E_NOINTERFACE;
-    }
-
-    ULONG ResourceAllocation::AddRef() {
-        return ++mRefCount;
-    }
-
-    ULONG ResourceAllocation::Release() {
-        const uint32_t refcount = --mRefCount;
-        if (mRefCount == 0) {
-            ReleaseThis();
-        }
-        return refcount;
-    }
 }}  // namespace gpgmm::d3d12

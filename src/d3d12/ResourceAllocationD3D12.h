@@ -16,6 +16,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
 #include "src/ResourceMemoryAllocation.h"
+#include "src/d3d12/UnknownD3D12.h"
 #include "src/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -24,7 +25,7 @@ namespace gpgmm { namespace d3d12 {
     class ResourceAllocator;
     class ResidencySet;
 
-    class ResourceAllocation : public ResourceMemoryAllocation, public IUnknown {
+    class ResourceAllocation : public ResourceMemoryAllocation, public Unknown {
       public:
         ResourceAllocation() = default;
         ResourceAllocation(ResourceAllocator* allocator,
@@ -36,11 +37,6 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocation(const ResourceAllocation&) = default;
         ResourceAllocation& operator=(const ResourceAllocation&) = default;
 
-        // IUnknown interfaces
-        HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
-        ULONG AddRef() override;
-        ULONG Release() override;
-
         HRESULT Map(uint32_t subresource, const D3D12_RANGE* pRange, void** ppMappedData);
         void Unmap(uint32_t subresource, const D3D12_RANGE* pRange);
 
@@ -51,11 +47,10 @@ namespace gpgmm { namespace d3d12 {
         bool IsResidentForTesting() const;
 
       protected:
-        void ReleaseThis();
+        void ReleaseThis() override;
 
       private:
         ComPtr<ID3D12Resource> mResource;
-        uint32_t mRefCount = 1;
     };
 
 }}  // namespace gpgmm::d3d12
