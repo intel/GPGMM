@@ -14,14 +14,14 @@
 
 #include "src/BuddyMemoryAllocator.h"
 
-#include "src/ResourceMemoryAllocator.h"
+#include "src/MemoryAllocator.h"
 #include "src/common/Math.h"
 
 namespace gpgmm {
 
     BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t maxSystemSize,
                                                uint64_t memoryBlockSize,
-                                               ResourceMemoryAllocator* memoryAllocator)
+                                               MemoryAllocator* memoryAllocator)
         : mMemoryBlockSize(memoryBlockSize),
           mBuddyBlockAllocator(maxSystemSize),
           mMemoryAllocator(memoryAllocator) {
@@ -46,7 +46,7 @@ namespace gpgmm {
         return offset / mMemoryBlockSize;
     }
 
-    ResourceMemoryAllocation BuddyMemoryAllocator::Allocate(uint64_t size, uint64_t alignment) {
+    MemoryAllocation BuddyMemoryAllocator::Allocate(uint64_t size, uint64_t alignment) {
         if (size == 0) {
             return GPGMM_INVALID_ALLOCATION;
         }
@@ -73,7 +73,7 @@ namespace gpgmm {
         const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
         if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
             // Transfer ownership to this allocator
-            ResourceMemoryAllocation memory = mMemoryAllocator->Allocate(mMemoryBlockSize);
+            MemoryAllocation memory = mMemoryAllocator->Allocate(mMemoryBlockSize);
             if (memory == GPGMM_INVALID_ALLOCATION) {
                 return GPGMM_INVALID_ALLOCATION;
             }
@@ -89,13 +89,12 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = blockOffset % mMemoryBlockSize;
 
-        return ResourceMemoryAllocation{
+        return MemoryAllocation{
             mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetAllocator(), info,
-            memoryOffset,
-            mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetResourceMemory()};
+            memoryOffset, mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetMemory()};
     }
 
-    void BuddyMemoryAllocator::Deallocate(const ResourceMemoryAllocation& allocation) {
+    void BuddyMemoryAllocator::Deallocate(const MemoryAllocation& allocation) {
         const AllocationInfo info = allocation.GetInfo();
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);

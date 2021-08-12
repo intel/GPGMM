@@ -16,23 +16,23 @@
 #include <gtest/gtest.h>
 
 #include "BuddyMemoryAllocator.h"
+#include "Memory.h"
 #include "PooledMemoryAllocator.h"
-#include "ResourceMemory.h"
 
 #include <set>
 #include <vector>
 
 using namespace gpgmm;
 
-class DummyResourceMemoryAllocator : public ResourceMemoryAllocator {
+class DummyMemoryAllocator : public MemoryAllocator {
   public:
-    ResourceMemoryAllocation Allocate(uint64_t size) override {
+    MemoryAllocation Allocate(uint64_t size) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        return {nullptr, info, /*offset*/ 0, new ResourceMemoryBase()};
+        return {nullptr, info, /*offset*/ 0, new MemoryBase()};
     }
 
-    void Deallocate(ResourceMemoryAllocation& allocation) override {
+    void Deallocate(MemoryAllocation& allocation) override {
     }
 
     void Release() override {
@@ -42,20 +42,20 @@ class DummyResourceMemoryAllocator : public ResourceMemoryAllocator {
 class DummyBuddyResourceAllocator {
   public:
     DummyBuddyResourceAllocator(uint64_t maxBlockSize, uint64_t memorySize)
-        : mAllocator(maxBlockSize, memorySize, &mHeapAllocator) {
+        : mAllocator(maxBlockSize, memorySize, &mMemoryAllocator) {
     }
 
     DummyBuddyResourceAllocator(uint64_t maxBlockSize,
                                 uint64_t memorySize,
-                                ResourceMemoryAllocator* heapAllocator)
-        : mAllocator(maxBlockSize, memorySize, heapAllocator) {
+                                MemoryAllocator* memoryAllocator)
+        : mAllocator(maxBlockSize, memorySize, memoryAllocator) {
     }
 
-    ResourceMemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
+    MemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
         return mAllocator.Allocate(allocationSize, alignment);
     }
 
-    void Deallocate(ResourceMemoryAllocation& allocation) {
+    void Deallocate(MemoryAllocation& allocation) {
         mAllocator.Deallocate(allocation);
     }
 
@@ -64,7 +64,7 @@ class DummyBuddyResourceAllocator {
     }
 
   private:
-    DummyResourceMemoryAllocator mHeapAllocator;
+    DummyMemoryAllocator mMemoryAllocator;
     BuddyMemoryAllocator mAllocator;
 };
 
@@ -81,11 +81,11 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
     // Cannot allocate greater than heap size.
-    ResourceMemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
+    MemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
     ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
 
     // Allocate one 128 byte allocation (same size as heap).
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(128);
+    MemoryAllocation allocation1 = allocator.Allocate(128);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
@@ -114,7 +114,7 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
     // Cannot allocate greater than heap size.
-    ResourceMemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
+    MemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
     ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
 
     // Cannot allocate greater than max block size.
@@ -122,20 +122,20 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
 
     // Allocate two 128 byte allocations.
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(heapSize);
+    MemoryAllocation allocation1 = allocator.Allocate(heapSize);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // First allocation creates first heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
 
-    ResourceMemoryAllocation allocation2 = allocator.Allocate(heapSize);
+    MemoryAllocation allocation2 = allocator.Allocate(heapSize);
     ASSERT_EQ(allocation2.GetInfo().mBlockOffset, heapSize);
     ASSERT_EQ(allocation2.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // Second allocation creates second heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
-    ASSERT_NE(allocation1.GetResourceMemory(), allocation2.GetResourceMemory());
+    ASSERT_NE(allocation1.GetMemory(), allocation2.GetMemory());
 
     // Deallocate both allocations
     allocator.Deallocate(allocation1);
@@ -162,28 +162,28 @@ TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
     // Allocate two 64 byte sub-allocations.
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(heapSize / 2);
+    MemoryAllocation allocation1 = allocator.Allocate(heapSize / 2);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // First sub-allocation creates first heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
 
-    ResourceMemoryAllocation allocation2 = allocator.Allocate(heapSize / 2);
+    MemoryAllocation allocation2 = allocator.Allocate(heapSize / 2);
     ASSERT_EQ(allocation2.GetInfo().mBlockOffset, heapSize / 2);
     ASSERT_EQ(allocation2.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // Second allocation re-uses first heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
-    ASSERT_EQ(allocation1.GetResourceMemory(), allocation2.GetResourceMemory());
+    ASSERT_EQ(allocation1.GetMemory(), allocation2.GetMemory());
 
-    ResourceMemoryAllocation allocation3 = allocator.Allocate(heapSize / 2);
+    MemoryAllocation allocation3 = allocator.Allocate(heapSize / 2);
     ASSERT_EQ(allocation3.GetInfo().mBlockOffset, heapSize);
     ASSERT_EQ(allocation3.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // Third allocation creates second heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
-    ASSERT_NE(allocation1.GetResourceMemory(), allocation3.GetResourceMemory());
+    ASSERT_NE(allocation1.GetMemory(), allocation3.GetMemory());
 
     // Deallocate all allocations in reverse order.
     allocator.Deallocate(allocation1);
@@ -216,45 +216,45 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
     // Allocate two 64-byte allocations.
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(64);
+    MemoryAllocation allocation1 = allocator.Allocate(64);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetOffset(), 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
-    ResourceMemoryAllocation allocation2 = allocator.Allocate(64);
+    MemoryAllocation allocation2 = allocator.Allocate(64);
     ASSERT_EQ(allocation2.GetInfo().mBlockOffset, 64u);
     ASSERT_EQ(allocation2.GetOffset(), 64u);
     ASSERT_EQ(allocation2.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // A1 and A2 share H0
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
-    ASSERT_EQ(allocation1.GetResourceMemory(), allocation2.GetResourceMemory());
+    ASSERT_EQ(allocation1.GetMemory(), allocation2.GetMemory());
 
-    ResourceMemoryAllocation allocation3 = allocator.Allocate(128);
+    MemoryAllocation allocation3 = allocator.Allocate(128);
     ASSERT_EQ(allocation3.GetInfo().mBlockOffset, 128u);
     ASSERT_EQ(allocation3.GetOffset(), 0u);
     ASSERT_EQ(allocation3.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     // A3 creates and fully occupies a new heap.
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
-    ASSERT_NE(allocation2.GetResourceMemory(), allocation3.GetResourceMemory());
+    ASSERT_NE(allocation2.GetMemory(), allocation3.GetMemory());
 
-    ResourceMemoryAllocation allocation4 = allocator.Allocate(64);
+    MemoryAllocation allocation4 = allocator.Allocate(64);
     ASSERT_EQ(allocation4.GetInfo().mBlockOffset, 256u);
     ASSERT_EQ(allocation4.GetOffset(), 0u);
     ASSERT_EQ(allocation4.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
-    ASSERT_NE(allocation3.GetResourceMemory(), allocation4.GetResourceMemory());
+    ASSERT_NE(allocation3.GetMemory(), allocation4.GetMemory());
 
     // R5 size forms 64 byte hole after R4.
-    ResourceMemoryAllocation allocation5 = allocator.Allocate(128);
+    MemoryAllocation allocation5 = allocator.Allocate(128);
     ASSERT_EQ(allocation5.GetInfo().mBlockOffset, 384u);
     ASSERT_EQ(allocation5.GetOffset(), 0u);
     ASSERT_EQ(allocation5.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 4u);
-    ASSERT_NE(allocation4.GetResourceMemory(), allocation5.GetResourceMemory());
+    ASSERT_NE(allocation4.GetMemory(), allocation5.GetMemory());
 
     // Deallocate allocations in staggered order.
     allocator.Deallocate(allocation1);
@@ -291,36 +291,36 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     constexpr uint64_t maxBlockSize = 512;
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(64, 128);
+    MemoryAllocation allocation1 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetOffset(), 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
 
-    ResourceMemoryAllocation allocation2 = allocator.Allocate(64, 128);
+    MemoryAllocation allocation2 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation2.GetInfo().mBlockOffset, 128u);
     ASSERT_EQ(allocation2.GetOffset(), 0u);
     ASSERT_EQ(allocation2.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
-    ASSERT_NE(allocation1.GetResourceMemory(), allocation2.GetResourceMemory());
+    ASSERT_NE(allocation1.GetMemory(), allocation2.GetMemory());
 
-    ResourceMemoryAllocation allocation3 = allocator.Allocate(64, 128);
+    MemoryAllocation allocation3 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation3.GetInfo().mBlockOffset, 256u);
     ASSERT_EQ(allocation3.GetOffset(), 0u);
     ASSERT_EQ(allocation3.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
-    ASSERT_NE(allocation2.GetResourceMemory(), allocation3.GetResourceMemory());
+    ASSERT_NE(allocation2.GetMemory(), allocation3.GetMemory());
 
-    ResourceMemoryAllocation allocation4 = allocator.Allocate(64, 64);
+    MemoryAllocation allocation4 = allocator.Allocate(64, 64);
     ASSERT_EQ(allocation4.GetInfo().mBlockOffset, 320u);
     ASSERT_EQ(allocation4.GetOffset(), 64u);
     ASSERT_EQ(allocation4.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
-    ASSERT_EQ(allocation3.GetResourceMemory(), allocation4.GetResourceMemory());
+    ASSERT_EQ(allocation3.GetMemory(), allocation4.GetMemory());
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
@@ -343,35 +343,35 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 
     constexpr uint64_t alignment = 64;
 
-    ResourceMemoryAllocation allocation1 = allocator.Allocate(64, alignment);
+    MemoryAllocation allocation1 = allocator.Allocate(64, alignment);
     ASSERT_EQ(allocation1.GetInfo().mBlockOffset, 0u);
     ASSERT_EQ(allocation1.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
 
-    ResourceMemoryAllocation allocation2 = allocator.Allocate(64, alignment);
+    MemoryAllocation allocation2 = allocator.Allocate(64, alignment);
     ASSERT_EQ(allocation2.GetInfo().mBlockOffset, 64u);
     ASSERT_EQ(allocation2.GetOffset(), 64u);
     ASSERT_EQ(allocation2.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);  // Reuses H0
-    ASSERT_EQ(allocation1.GetResourceMemory(), allocation2.GetResourceMemory());
+    ASSERT_EQ(allocation1.GetMemory(), allocation2.GetMemory());
 
-    ResourceMemoryAllocation allocation3 = allocator.Allocate(128, alignment);
+    MemoryAllocation allocation3 = allocator.Allocate(128, alignment);
     ASSERT_EQ(allocation3.GetInfo().mBlockOffset, 128u);
     ASSERT_EQ(allocation3.GetOffset(), 0u);
     ASSERT_EQ(allocation3.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
-    ASSERT_NE(allocation2.GetResourceMemory(), allocation3.GetResourceMemory());
+    ASSERT_NE(allocation2.GetMemory(), allocation3.GetMemory());
 
-    ResourceMemoryAllocation allocation4 = allocator.Allocate(128, alignment);
+    MemoryAllocation allocation4 = allocator.Allocate(128, alignment);
     ASSERT_EQ(allocation4.GetInfo().mBlockOffset, 256u);
     ASSERT_EQ(allocation4.GetOffset(), 0u);
     ASSERT_EQ(allocation4.GetInfo().mMethod, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
-    ASSERT_NE(allocation3.GetResourceMemory(), allocation4.GetResourceMemory());
+    ASSERT_NE(allocation3.GetMemory(), allocation4.GetMemory());
 }
 
 // Verify allocating a very large resource does not overflow.
@@ -381,7 +381,7 @@ TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
     DummyBuddyResourceAllocator allocator(maxBlockSize, heapSize);
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
-    ResourceMemoryAllocation invalidAllocation = allocator.Allocate(largeBlock);
+    MemoryAllocation invalidAllocation = allocator.Allocate(largeBlock);
     ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
 }
 
@@ -390,27 +390,27 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kHeapSize = 128;
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    DummyResourceMemoryAllocator heapAllocator;
-    PooledMemoryAllocator poolAllocator(&heapAllocator);
+    DummyMemoryAllocator memoryAllocator;
+    PooledMemoryAllocator poolAllocator(&memoryAllocator);
     DummyBuddyResourceAllocator allocator(kMaxBlockSize, kHeapSize, &poolAllocator);
 
-    std::set<ResourceMemoryBase*> heaps = {};
-    std::vector<ResourceMemoryAllocation> allocations = {};
+    std::set<MemoryBase*> heaps = {};
+    std::vector<MemoryAllocation> allocations = {};
 
     constexpr uint32_t kNumOfAllocations = 100;
 
     // Allocate |kNumOfAllocations|.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
-        ResourceMemoryAllocation allocation = allocator.Allocate(4);
+        MemoryAllocation allocation = allocator.Allocate(4);
         ASSERT_EQ(allocation.GetInfo().mMethod, AllocationMethod::kSubAllocated);
-        heaps.insert(allocation.GetResourceMemory());
+        heaps.insert(allocation.GetMemory());
         allocations.push_back(std::move(allocation));
     }
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
 
     // Return the allocations to the pool.
-    for (ResourceMemoryAllocation& allocation : allocations) {
+    for (MemoryAllocation& allocation : allocations) {
         allocator.Deallocate(allocation);
     }
 
@@ -418,9 +418,9 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 
     // Allocate again reusing the same heaps.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
-        ResourceMemoryAllocation allocation = allocator.Allocate(4);
+        MemoryAllocation allocation = allocator.Allocate(4);
         ASSERT_EQ(allocation.GetInfo().mMethod, AllocationMethod::kSubAllocated);
-        ASSERT_FALSE(heaps.insert(allocation.GetResourceMemory()).second);
+        ASSERT_FALSE(heaps.insert(allocation.GetMemory()).second);
     }
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
@@ -431,12 +431,12 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kHeapSize = 128;
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    DummyResourceMemoryAllocator heapAllocator;
-    PooledMemoryAllocator poolAllocator(&heapAllocator);
+    DummyMemoryAllocator memoryAllocator;
+    PooledMemoryAllocator poolAllocator(&memoryAllocator);
     DummyBuddyResourceAllocator allocator(kMaxBlockSize, kHeapSize, &poolAllocator);
 
-    std::set<ResourceMemoryBase*> heaps = {};
-    std::vector<ResourceMemoryAllocation> allocations = {};
+    std::set<MemoryBase*> heaps = {};
+    std::vector<MemoryAllocation> allocations = {};
 
     // Count by heap (vs number of allocations) to ensure there are exactly |kNumOfHeaps| worth of
     // buffers. Otherwise, the heap may be reused if not full.
@@ -444,16 +444,16 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
 
     // Allocate |kNumOfHeaps| worth.
     while (heaps.size() < kNumOfHeaps) {
-        ResourceMemoryAllocation allocation = allocator.Allocate(4);
+        MemoryAllocation allocation = allocator.Allocate(4);
         ASSERT_EQ(allocation.GetInfo().mMethod, AllocationMethod::kSubAllocated);
-        heaps.insert(allocation.GetResourceMemory());
+        heaps.insert(allocation.GetMemory());
         allocations.push_back(std::move(allocation));
     }
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
 
     // Return the allocations to the pool.
-    for (ResourceMemoryAllocation& allocation : allocations) {
+    for (MemoryAllocation& allocation : allocations) {
         allocator.Deallocate(allocation);
     }
 

@@ -17,36 +17,36 @@
 
 namespace gpgmm {
 
-    PooledMemoryAllocator::PooledMemoryAllocator(ResourceMemoryAllocator* heapAllocator)
-        : mHeapAllocator(heapAllocator) {
+    PooledMemoryAllocator::PooledMemoryAllocator(MemoryAllocator* memoryAllocator)
+        : mMemoryAllocator(memoryAllocator) {
     }
 
     void PooledMemoryAllocator::Release() {
-        for (auto& resourceMemory : mPool) {
-            mHeapAllocator->Deallocate(resourceMemory);
+        for (auto& memory : mPool) {
+            mMemoryAllocator->Deallocate(memory);
         }
 
         mPool.clear();
     }
 
-    ResourceMemoryAllocation PooledMemoryAllocator::Allocate(uint64_t size) {
+    MemoryAllocation PooledMemoryAllocator::Allocate(uint64_t size) {
         // Pooled memory is LIFO because memory can be evicted by LRU. However, this means
         // pooling is disabled in-frame when the memory is still pending. For high in-frame
         // memory users, FIFO might be preferable when memory consumption is a higher priority.
-        ResourceMemoryAllocation memory;
+        MemoryAllocation memory;
         if (!mPool.empty()) {
             memory = std::move(mPool.front());
             mPool.pop_front();
         }
 
         if (memory == GPGMM_INVALID_ALLOCATION) {
-            memory = mHeapAllocator->Allocate(size);
+            memory = mMemoryAllocator->Allocate(size);
         }
 
         return memory;
     }
 
-    void PooledMemoryAllocator::Deallocate(ResourceMemoryAllocation& allocation) {
+    void PooledMemoryAllocator::Deallocate(MemoryAllocation& allocation) {
         mPool.push_front(std::move(allocation));
     }
 

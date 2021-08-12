@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_RESOURCEMEMORY_H_
-#define GPGMM_RESOURCEMEMORY_H_
+#ifndef GPGMM_MEMORY_H_
+#define GPGMM_MEMORY_H_
 
 namespace gpgmm {
 
-    // Wrapper for resource memory.
-    class ResourceMemoryBase {
+    class MemoryBase {
       public:
-        ResourceMemoryBase() = default;
-        virtual ~ResourceMemoryBase() = default;
+        MemoryBase() = default;
+        virtual ~MemoryBase() = default;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_RESOURCEMEMORY_H_
+#endif  // GPGMM_MEMORY_H_

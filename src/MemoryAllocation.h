@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_RESOURCEMEMORYALLOCATION_H_
-#define GPGMM_RESOURCEMEMORYALLOCATION_H_
+#ifndef GPGMM_MEMORYALLOCATION_H_
+#define GPGMM_MEMORYALLOCATION_H_
 
 #include <cstdint>
 
 #define GPGMM_INVALID_ALLOCATION \
-    ResourceMemoryAllocation {   \
+    MemoryAllocation {           \
     }
 
 namespace gpgmm {
 
-    class ResourceMemoryBase;
-    class ResourceAllocatorBase;
+    class MemoryBase;
+    class AllocatorBase;
 
     // Allocation method determines how memory was sub-divided.
     // Used by the device to get the allocator that was responsible for the allocation.
@@ -52,35 +52,35 @@ namespace gpgmm {
     };
 
     // Handle into a resource heap pool.
-    class ResourceMemoryAllocation {
+    class MemoryAllocation {
       public:
-        ResourceMemoryAllocation();
-        ResourceMemoryAllocation(ResourceAllocatorBase* allocator,
-                                 const AllocationInfo& info,
-                                 uint64_t offset,
-                                 ResourceMemoryBase* resourceMemory,
-                                 uint8_t* mappedPointer = nullptr);
-        virtual ~ResourceMemoryAllocation() = default;
+        MemoryAllocation();
+        MemoryAllocation(AllocatorBase* allocator,
+                         const AllocationInfo& info,
+                         uint64_t offset,
+                         MemoryBase* memory,
+                         uint8_t* mappedPointer = nullptr);
+        virtual ~MemoryAllocation() = default;
 
-        ResourceMemoryAllocation(const ResourceMemoryAllocation&) = default;
-        ResourceMemoryAllocation& operator=(const ResourceMemoryAllocation&) = default;
-        bool operator==(const ResourceMemoryAllocation&);
+        MemoryAllocation(const MemoryAllocation&) = default;
+        MemoryAllocation& operator=(const MemoryAllocation&) = default;
+        bool operator==(const MemoryAllocation&);
 
-        ResourceMemoryBase* GetResourceMemory() const;
+        MemoryBase* GetMemory() const;
         uint64_t GetOffset() const;
         uint8_t* GetMappedPointer() const;
         AllocationInfo GetInfo() const;
-        ResourceAllocatorBase* GetAllocator();
+        AllocatorBase* GetAllocator();
 
         virtual void Invalidate();
 
       private:
-        ResourceAllocatorBase* mAllocator;
+        AllocatorBase* mAllocator;
         AllocationInfo mInfo;
         uint64_t mOffset;
-        ResourceMemoryBase* mResourceMemory;
+        MemoryBase* mMemory;
         uint8_t* mMappedPointer;
     };
 }  // namespace gpgmm
 
-#endif  // GPGMM_RESOURCEMEMORYALLOCATION_H_
+#endif  // GPGMM_MEMORYALLOCATION_H_

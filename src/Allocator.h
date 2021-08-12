@@ -1,4 +1,4 @@
-// Copyright 2019 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_RESOURCEMEMORYALLOCATOR_H_
-#define GPGMM_RESOURCEMEMORYALLOCATOR_H_
-
-#include "src/ResourceMemoryAllocation.h"
+#ifndef GPGMM_ALLOCATOR_H_
+#define GPGMM_ALLOCATOR_H_
 
 namespace gpgmm {
 
-    // Interface for backend allocators that create memory heaps resoruces can be suballocated in.
-    class ResourceMemoryAllocator {
+    class AllocatorBase {
       public:
-        virtual ~ResourceMemoryAllocator() = default;
-
-        virtual ResourceMemoryAllocation Allocate(uint64_t size) = 0;
-        virtual void Deallocate(ResourceMemoryAllocation& allocation) = 0;
-        virtual void Release() = 0;
+        AllocatorBase() = default;
+        virtual ~AllocatorBase() = default;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_RESOURCEMEMORYALLOCATOR_H_
+#endif  // GPGMM_ALLOCATOR_H_

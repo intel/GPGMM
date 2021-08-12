@@ -16,14 +16,14 @@
 #define GPGMM_BUDDYMEMORYALLOCATOR_H_
 
 #include "src/BuddyAllocator.h"
-#include "src/ResourceMemoryAllocation.h"
+#include "src/MemoryAllocation.h"
 
 #include <memory>
 #include <vector>
 
 namespace gpgmm {
 
-    class ResourceMemoryAllocator;
+    class MemoryAllocator;
 
     // BuddyMemoryAllocator uses the buddy allocator to sub-allocate blocks of device
     // memory created by MemoryAllocator clients. It creates a very large buddy system
@@ -40,11 +40,11 @@ namespace gpgmm {
       public:
         BuddyMemoryAllocator(uint64_t maxSystemSize,
                              uint64_t memoryBlockSize,
-                             ResourceMemoryAllocator* memoryAllocator);
+                             MemoryAllocator* memoryAllocator);
         ~BuddyMemoryAllocator() = default;
 
-        ResourceMemoryAllocation Allocate(uint64_t size, uint64_t alignment);
-        void Deallocate(const ResourceMemoryAllocation& allocation);
+        MemoryAllocation Allocate(uint64_t size, uint64_t alignment);
+        void Deallocate(const MemoryAllocation& allocation);
 
         void Release();
 
@@ -59,11 +59,11 @@ namespace gpgmm {
         uint64_t mMemoryBlockSize = 0;
 
         BuddyAllocator mBuddyBlockAllocator;
-        ResourceMemoryAllocator* mMemoryAllocator;
+        MemoryAllocator* mMemoryAllocator;
 
         struct TrackedSubAllocations {
             size_t refcount = 0;
-            ResourceMemoryAllocation mMemoryAllocation;
+            MemoryAllocation mMemoryAllocation;
         };
 
         std::vector<TrackedSubAllocations> mTrackedSubAllocations;

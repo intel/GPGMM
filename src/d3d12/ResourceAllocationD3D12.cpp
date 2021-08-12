@@ -26,7 +26,7 @@ namespace gpgmm { namespace d3d12 {
                                            uint64_t offset,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* heap)
-        : ResourceMemoryAllocation(allocator, info, offset, heap), mResource(std::move(resource)) {
+        : MemoryAllocation(allocator, info, offset, heap), mResource(std::move(resource)) {
     }
 
     void ResourceAllocation::ReleaseThis() {
@@ -43,7 +43,7 @@ namespace gpgmm { namespace d3d12 {
                 break;
             }
             case AllocationMethod::kDirect: {
-                Heap* resourceHeap = static_cast<Heap*>(GetResourceMemory());
+                Heap* resourceHeap = static_cast<Heap*>(GetMemory());
                 allocator->FreeResourceHeap(resourceHeap);
                 break;
             }
@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         mResource.Reset();
-        ResourceMemoryAllocation::Invalidate();
+        MemoryAllocation::Invalidate();
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
@@ -67,7 +67,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocation::Map(uint32_t subresource,
                                     const D3D12_RANGE* pRange,
                                     void** ppMappedData) {
-        Heap* heap = static_cast<Heap*>(GetResourceMemory());
+        Heap* heap = static_cast<Heap*>(GetMemory());
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -82,7 +82,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pRange) {
-        Heap* heap = static_cast<Heap*>(GetResourceMemory());
+        Heap* heap = static_cast<Heap*>(GetMemory());
         if (heap == nullptr) {
             return;
         }
@@ -93,13 +93,13 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
-        Heap* heap = static_cast<Heap*>(GetResourceMemory());
+        Heap* heap = static_cast<Heap*>(GetMemory());
         ASSERT(heap != nullptr);
         heap->UpdateResidency(residencySet);
     }
 
     bool ResourceAllocation::IsResidentForTesting() const {
-        Heap* heap = static_cast<Heap*>(GetResourceMemory());
+        Heap* heap = static_cast<Heap*>(GetMemory());
         ASSERT(heap != nullptr);
         return heap->IsResident();
     }

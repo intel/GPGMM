@@ -15,9 +15,9 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
+#include "src/Allocator.h"
 #include "src/BuddyMemoryAllocator.h"
 #include "src/PooledMemoryAllocator.h"
-#include "src/ResourceAllocator.h"
 #include "src/d3d12/HeapAllocatorD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 
@@ -80,7 +80,7 @@ namespace gpgmm { namespace d3d12 {
 
     // Manages a list of resource allocators used by the device to create resources using
     // multiple allocation methods.
-    class ResourceAllocator : public ResourceAllocatorBase {
+    class ResourceAllocator : public AllocatorBase {
       public:
         ResourceAllocator(const ALLOCATOR_DESC& descriptor);
         ~ResourceAllocator();

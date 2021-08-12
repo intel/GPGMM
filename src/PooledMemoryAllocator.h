@@ -15,7 +15,7 @@
 #ifndef GPGMM_POOLEDMEMORYALLOCATOR_H_
 #define GPGMM_POOLEDMEMORYALLOCATOR_H_
 
-#include "src/ResourceMemoryAllocator.h"
+#include "src/MemoryAllocator.h"
 
 #include <deque>
 
@@ -25,22 +25,22 @@ namespace gpgmm {
     // pool. Internally, it manages a list of heaps using LIFO (newest heaps are recycled first).
     // The heap is in one of two states: AVAILABLE or not. Upon de-allocate, the heap is returned
     // the pool and made AVAILABLE.
-    class PooledMemoryAllocator : public ResourceMemoryAllocator {
+    class PooledMemoryAllocator : public MemoryAllocator {
       public:
-        PooledMemoryAllocator(ResourceMemoryAllocator* heapAllocator);
+        PooledMemoryAllocator(MemoryAllocator* memoryAllocator);
         ~PooledMemoryAllocator() override = default;
 
-        ResourceMemoryAllocation Allocate(uint64_t size) override;
-        void Deallocate(ResourceMemoryAllocation& allocation) override;
+        MemoryAllocation Allocate(uint64_t size) override;
+        void Deallocate(MemoryAllocation& allocation) override;
         void Release() override;
 
         // For testing purposes.
         uint64_t GetPoolSizeForTesting() const;
 
       private:
-        ResourceMemoryAllocator* mHeapAllocator = nullptr;
+        MemoryAllocator* mMemoryAllocator = nullptr;
 
-        std::deque<ResourceMemoryAllocation> mPool;
+        std::deque<MemoryAllocation> mPool;
     };
 
 }  // namespace gpgmm

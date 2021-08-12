@@ -22,7 +22,7 @@
 #include <windows.h>
 #include <wrl/client.h>
 
-#include "src/ResourceMemoryAllocation.h"
+#include "src/MemoryAllocation.h"
 
 #if GPGMM_ENABLE_D3D12
 #include "src/d3d12/HeapD3D12.h"

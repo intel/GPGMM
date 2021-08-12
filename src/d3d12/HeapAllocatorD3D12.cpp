@@ -30,7 +30,7 @@ namespace gpgmm { namespace d3d12 {
           mHeapAlignment(heapAlignment) {
     }
 
-    ResourceMemoryAllocation HeapAllocator::Allocate(uint64_t size) {
+    MemoryAllocation HeapAllocator::Allocate(uint64_t size) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
                                                           mMemorySegment, mHeapAlignment, &heap))) {
@@ -40,11 +40,11 @@ namespace gpgmm { namespace d3d12 {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
         return {mResourceAllocator, info,
-                /*offset*/ 0, static_cast<ResourceMemoryBase*>(heap)};
+                /*offset*/ 0, static_cast<MemoryBase*>(heap)};
     }
 
-    void HeapAllocator::Deallocate(ResourceMemoryAllocation& allocation) {
-        Heap* resourceHeap = static_cast<Heap*>(allocation.GetResourceMemory());
+    void HeapAllocator::Deallocate(MemoryAllocation& allocation) {
+        Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
         mResourceAllocator->FreeResourceHeap(resourceHeap);
     }
 

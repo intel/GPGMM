@@ -289,7 +289,7 @@ namespace gpgmm { namespace d3d12 {
         BuddyMemoryAllocator* allocator =
             mSubAllocatedResourceAllocators[static_cast<size_t>(resourceHeapKind)].get();
 
-        ResourceMemoryAllocation subAllocation =
+        MemoryAllocation subAllocation =
             allocator->Allocate(resourceInfo.SizeInBytes, resourceInfo.Alignment);
         if (subAllocation == GPGMM_INVALID_ALLOCATION) {
             return E_INVALIDARG;
@@ -298,7 +298,7 @@ namespace gpgmm { namespace d3d12 {
         // Before calling CreatePlacedResource, we must ensure the target heap is resident.
         // CreatePlacedResource will fail if it is not.
         HRESULT hr = S_OK;
-        Heap* heap = static_cast<Heap*>(subAllocation.GetResourceMemory());
+        Heap* heap = static_cast<Heap*>(subAllocation.GetMemory());
         if (mIsAlwaysInBudget) {
             hr = mResidencyManager->LockHeap(heap);
             if (FAILED(hr)) {
