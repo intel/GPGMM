@@ -20,9 +20,9 @@
 
 namespace gpgmm { namespace d3d12 {
     namespace {
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment(ID3D12Device* device,
-                                                   bool isUMA,
-                                                   D3D12_HEAP_TYPE heapType) {
+        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
+                                                                 bool isUMA,
+                                                                 D3D12_HEAP_TYPE heapType) {
             if (isUMA) {
                 return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
             }
@@ -168,7 +168,8 @@ namespace gpgmm { namespace d3d12 {
 
             mHeapAllocators[i] = std::make_unique<HeapAllocator>(
                 this, GetD3D12HeapType(resourceHeapKind), GetD3D12HeapFlags(resourceHeapKind),
-                GetMemorySegment(mDevice.Get(), mIsUMA, GetD3D12HeapType(resourceHeapKind)),
+                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
+                                               GetD3D12HeapType(resourceHeapKind)),
                 heapAlignment);
             mPooledHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mHeapAllocators[i].get());
@@ -219,8 +220,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // Do not track imported resources for purposes of residency.
-        Heap* heap = new Heap(resource, GetMemorySegment(mDevice.Get(), mIsUMA, heapProp.Type),
-                              resourceInfo.SizeInBytes);
+        Heap* heap =
+            new Heap(resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProp.Type),
+                     resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kDirect;
@@ -406,7 +408,8 @@ namespace gpgmm { namespace d3d12 {
         HRESULT hr = S_OK;
         if (mIsAlwaysInBudget) {
             hr = mResidencyManager->EnsureCanAllocate(
-                resourceInfo.SizeInBytes, GetMemorySegment(mDevice.Get(), mIsUMA, heapType));
+                resourceInfo.SizeInBytes,
+                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType));
             if (FAILED(hr)) {
                 return hr;
             }
@@ -427,7 +430,8 @@ namespace gpgmm { namespace d3d12 {
         // heap granularity, every directly allocated ResourceAllocation also stores a Heap
         // object. This object is created manually, and must be deleted manually upon deallocation
         // of the committed resource.
-        Heap* heap = new Heap(committedResource, GetMemorySegment(mDevice.Get(), mIsUMA, heapType),
+        Heap* heap = new Heap(committedResource,
+                              GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType),
                               resourceInfo.SizeInBytes);
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
