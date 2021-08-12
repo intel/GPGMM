@@ -57,7 +57,7 @@ namespace gpgmm {
         return mMappedPointer;
     }
 
-    void MemoryAllocation::Invalidate() {
+    void MemoryAllocation::Reset() {
         mMemory = nullptr;
         mInfo = {};
         mOffset = kInvalidOffset;

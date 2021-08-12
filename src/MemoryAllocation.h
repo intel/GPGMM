@@ -37,7 +37,7 @@ namespace gpgmm {
         kSubAllocated,
 
         // Memory not allocated or freed.
-        kInvalid
+        kUndefined
     };
 
     // Metadata that describes how the allocation was allocated.
@@ -48,7 +48,7 @@ namespace gpgmm {
         // allocation offset is always local to the memory.
         uint64_t mBlockOffset = 0;
 
-        AllocationMethod mMethod = AllocationMethod::kInvalid;
+        AllocationMethod mMethod = AllocationMethod::kUndefined;
     };
 
     // Handle into a resource heap pool.
@@ -72,7 +72,8 @@ namespace gpgmm {
         AllocationInfo GetInfo() const;
         AllocatorBase* GetAllocator();
 
-        virtual void Invalidate();
+      protected:
+        virtual void Reset();
 
       private:
         AllocatorBase* mAllocator;

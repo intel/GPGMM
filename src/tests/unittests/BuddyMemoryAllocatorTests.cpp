@@ -82,7 +82,7 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
 
     // Cannot allocate greater than heap size.
     MemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
-    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
+    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kUndefined);
 
     // Allocate one 128 byte allocation (same size as heap).
     MemoryAllocation allocation1 = allocator.Allocate(128);
@@ -93,7 +93,7 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
 
     // Cannot allocate when allocator is full.
     invalidAllocation = allocator.Allocate(128);
-    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
+    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kUndefined);
 
     allocator.Deallocate(allocation1);
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 0u);
@@ -115,11 +115,11 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
 
     // Cannot allocate greater than heap size.
     MemoryAllocation invalidAllocation = allocator.Allocate(heapSize * 2);
-    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
+    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kUndefined);
 
     // Cannot allocate greater than max block size.
     invalidAllocation = allocator.Allocate(maxBlockSize * 2);
-    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
+    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kUndefined);
 
     // Allocate two 128 byte allocations.
     MemoryAllocation allocation1 = allocator.Allocate(heapSize);
@@ -382,7 +382,7 @@ TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     MemoryAllocation invalidAllocation = allocator.Allocate(largeBlock);
-    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kInvalid);
+    ASSERT_EQ(invalidAllocation.GetInfo().mMethod, AllocationMethod::kUndefined);
 }
 
 // Verify resource heaps will be reused from a pool.

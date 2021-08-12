@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         mResource.Reset();
-        MemoryAllocation::Invalidate();
+        MemoryAllocation::Reset();
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
