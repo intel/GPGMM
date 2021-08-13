@@ -37,7 +37,7 @@ namespace gpgmm { namespace d3d12 {
             return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
         }
 
-        D3D12_HEAP_TYPE GetD3D12HeapType(ResourceHeapKind resourceHeapKind) {
+        D3D12_HEAP_TYPE GetHeapType(ResourceHeapKind resourceHeapKind) {
             switch (resourceHeapKind) {
                 case Readback_OnlyBuffers:
                 case Readback_AllBuffersAndTextures:
@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
-        D3D12_HEAP_FLAGS GetD3D12HeapFlags(ResourceHeapKind resourceHeapKind) {
+        D3D12_HEAP_FLAGS GetHeapFlags(ResourceHeapKind resourceHeapKind) {
             switch (resourceHeapKind) {
                 case Default_AllBuffersAndTextures:
                 case Readback_AllBuffersAndTextures:
@@ -172,9 +172,9 @@ namespace gpgmm { namespace d3d12 {
             constexpr uint64_t heapAlignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
 
             mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
-                this, GetD3D12HeapType(resourceHeapKind), GetD3D12HeapFlags(resourceHeapKind),
+                this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
-                                               GetD3D12HeapType(resourceHeapKind)),
+                                               GetHeapType(resourceHeapKind)),
                 heapAlignment);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
