@@ -17,13 +17,12 @@
 
 #include "src/BuddyAllocator.h"
 #include "src/MemoryAllocation.h"
+#include "src/MemoryAllocator.h"
 
 #include <memory>
 #include <vector>
 
 namespace gpgmm {
-
-    class MemoryAllocator;
 
     // BuddyMemoryAllocator uses the buddy allocator to sub-allocate blocks of device
     // memory created by MemoryAllocator clients. It creates a very large buddy system
@@ -36,17 +35,18 @@ namespace gpgmm {
     //
     // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class BuddyMemoryAllocator {
+    class BuddyMemoryAllocator : public MemoryAllocator {
       public:
         BuddyMemoryAllocator(uint64_t maxSystemSize,
                              uint64_t memoryBlockSize,
+                             uint64_t memoryBlockAlignment,
                              MemoryAllocator* memoryAllocator);
-        ~BuddyMemoryAllocator() = default;
+        ~BuddyMemoryAllocator() override = default;
 
-        MemoryAllocation Allocate(uint64_t size, uint64_t alignment);
-        void Deallocate(const MemoryAllocation& allocation);
-
-        void Release();
+        // MemoryAllocator interface
+        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) override;
+        void Deallocate(MemoryAllocation& allocation) override;
+        void Release() override;
 
         uint64_t GetMemoryBlockSize() const;
 
@@ -57,6 +57,7 @@ namespace gpgmm {
         uint64_t GetMemoryIndex(uint64_t offset) const;
 
         uint64_t mMemoryBlockSize = 0;
+        uint64_t mMemoryBlockAlignment = 0;
 
         BuddyAllocator mBuddyBlockAllocator;
         MemoryAllocator* mMemoryAllocator;

@@ -30,7 +30,8 @@ namespace gpgmm {
         PooledMemoryAllocator(MemoryAllocator* memoryAllocator);
         ~PooledMemoryAllocator() override = default;
 
-        MemoryAllocation Allocate(uint64_t size) override;
+        // MemoryAllocator interface
+        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) override;
         void Deallocate(MemoryAllocation& allocation) override;
         void Release() override;
 

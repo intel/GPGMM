@@ -12,23 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_RESOURCEMEMORYALLOCATOR_H_
-#define GPGMM_RESOURCEMEMORYALLOCATOR_H_
+#ifndef GPGMM_MEMORYALLOCATOR_H_
+#define GPGMM_MEMORYALLOCATOR_H_
 
+#include "src/Allocator.h"
 #include "src/MemoryAllocation.h"
 
 namespace gpgmm {
-
-    // Interface for backend allocators that create memory heaps resoruces can be suballocated in.
-    class MemoryAllocator {
+    class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
 
-        virtual MemoryAllocation Allocate(uint64_t size) = 0;
+        virtual void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) = 0;
         virtual void Deallocate(MemoryAllocation& allocation) = 0;
         virtual void Release() = 0;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_RESOURCEMEMORYALLOCATOR_H_
+#endif  // GPGMM_MEMORYALLOCATOR_H_

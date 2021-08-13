@@ -26,10 +26,10 @@ using namespace gpgmm;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
-    MemoryAllocation Allocate(uint64_t size) override {
+    void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        return {nullptr, info, /*offset*/ 0, new MemoryBase()};
+        allocation = {nullptr, info, /*offset*/ 0, new MemoryBase()};
     }
 
     void Deallocate(MemoryAllocation& allocation) override {
@@ -42,17 +42,19 @@ class DummyMemoryAllocator : public MemoryAllocator {
 class DummyBuddyResourceAllocator {
   public:
     DummyBuddyResourceAllocator(uint64_t maxBlockSize, uint64_t memorySize)
-        : mAllocator(maxBlockSize, memorySize, &mMemoryAllocator) {
+        : mAllocator(maxBlockSize, memorySize, /*memoryAlignment*/ 0, &mMemoryAllocator) {
     }
 
     DummyBuddyResourceAllocator(uint64_t maxBlockSize,
                                 uint64_t memorySize,
                                 MemoryAllocator* memoryAllocator)
-        : mAllocator(maxBlockSize, memorySize, memoryAllocator) {
+        : mAllocator(maxBlockSize, memorySize, /*memoryAlignment*/ 0, memoryAllocator) {
     }
 
     MemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
-        return mAllocator.Allocate(allocationSize, alignment);
+        MemoryAllocation allocation;
+        mAllocator.Allocate(allocationSize, alignment, allocation);
+        return allocation;
     }
 
     void Deallocate(MemoryAllocation& allocation) {

@@ -174,12 +174,11 @@ namespace gpgmm { namespace d3d12 {
             mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
                 this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
-                                               GetHeapType(resourceHeapKind)),
-                heapAlignment);
+                                               GetHeapType(resourceHeapKind)));
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mSubAllocatedResourceAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
-                kMaxHeapSize, minHeapSize, mPooledResourceHeapAllocators[i].get());
+                kMaxHeapSize, minHeapSize, heapAlignment, mPooledResourceHeapAllocators[i].get());
         }
     }
 
@@ -241,7 +240,7 @@ namespace gpgmm { namespace d3d12 {
         delete resourceHeap;
     }
 
-    void ResourceAllocator::FreePlacedResource(const ResourceAllocation& allocation) {
+    void ResourceAllocator::FreePlacedResource(ResourceAllocation& allocation) {
         ASSERT(allocation.GetInfo().mMethod == AllocationMethod::kSubAllocated);
 
         D3D12_HEAP_PROPERTIES heapProp;
@@ -296,8 +295,8 @@ namespace gpgmm { namespace d3d12 {
         BuddyMemoryAllocator* allocator =
             mSubAllocatedResourceAllocators[static_cast<size_t>(resourceHeapKind)].get();
 
-        MemoryAllocation subAllocation =
-            allocator->Allocate(resourceInfo.SizeInBytes, resourceInfo.Alignment);
+        MemoryAllocation subAllocation;
+        allocator->Allocate(resourceInfo.SizeInBytes, resourceInfo.Alignment, subAllocation);
         if (subAllocation == GPGMM_INVALID_ALLOCATION) {
             return E_INVALIDARG;
         }

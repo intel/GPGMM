@@ -99,7 +99,7 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
-        void FreePlacedResource(const ResourceAllocation& allocation);
+        void FreePlacedResource(ResourceAllocation& allocation);
         void FreeResourceHeap(Heap* resourceHeap);
 
         HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,

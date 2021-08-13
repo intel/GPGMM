@@ -21,26 +21,26 @@ namespace gpgmm { namespace d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                                                 uint64_t heapAlignment)
+                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
-          mMemorySegment(memorySegment),
-          mHeapAlignment(heapAlignment) {
+          mMemorySegment(memorySegment) {
     }
 
-    MemoryAllocation ResourceHeapAllocator::Allocate(uint64_t size) {
+    void ResourceHeapAllocator::Allocate(uint64_t size,
+                                         uint64_t alignment,
+                                         MemoryAllocation& allocation) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
-                                                          mMemorySegment, mHeapAlignment, &heap))) {
-            return GPGMM_INVALID_ALLOCATION;
+                                                          mMemorySegment, alignment, &heap))) {
+            return;
         }
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        return {mResourceAllocator, info,
-                /*offset*/ 0, static_cast<MemoryBase*>(heap)};
+        allocation = {mResourceAllocator, info,
+                      /*offset*/ 0, static_cast<MemoryBase*>(heap)};
     }
 
     void ResourceHeapAllocator::Deallocate(MemoryAllocation& allocation) {

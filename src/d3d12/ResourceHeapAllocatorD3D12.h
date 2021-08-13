@@ -29,11 +29,11 @@ namespace gpgmm { namespace d3d12 {
         ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                               D3D12_HEAP_TYPE heapType,
                               D3D12_HEAP_FLAGS heapFlags,
-                              DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                              uint64_t heapAlignment);
+                              DXGI_MEMORY_SEGMENT_GROUP memorySegment);
         ~ResourceHeapAllocator() override = default;
 
-        MemoryAllocation Allocate(uint64_t size) override;
+        // MemoryAllocator interface
+        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) override;
         void Deallocate(MemoryAllocation& allocation) override;
         void Release() override;
 
@@ -42,7 +42,6 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_TYPE mHeapType;
         D3D12_HEAP_FLAGS mHeapFlags;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegment;
-        uint64_t mHeapAlignment;
     };
 
 }}  // namespace gpgmm::d3d12
