@@ -41,12 +41,12 @@ namespace gpgmm { namespace d3d12 {
         return heap.Get();
     }
 
-    uint64_t Heap::GetLastExecuteCommandLists() const {
-        return mLastExecuteCommandLists;
+    uint64_t Heap::GetLastUsedFenceValue() const {
+        return mLastUsedFenceValue;
     }
 
-    void Heap::SetLastExecuteCommandLists(uint64_t fenceValue) {
-        mLastExecuteCommandLists = fenceValue;
+    void Heap::SetLastUsedFenceValue(uint64_t fenceValue) {
+        mLastUsedFenceValue = fenceValue;
     }
 
     DXGI_MEMORY_SEGMENT_GROUP Heap::GetMemorySegment() const {

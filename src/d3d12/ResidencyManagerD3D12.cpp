@@ -158,20 +158,20 @@ namespace gpgmm { namespace d3d12 {
 
         Heap* heap = memorySegment->lruCache.head()->value();
 
-        const uint64_t lastExecuteCommandLists = heap->GetLastExecuteCommandLists();
+        const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
 
         // If the next candidate for eviction was inserted into the LRU during the pending
         // submission, it is because more memory is being used in a single command list than is
         // available. In this scenario, we cannot make any more resources resident and thrashing
         // must occur.
-        if (lastExecuteCommandLists == mFence->GetCurrentFence()) {
+        if (lastUsedFenceValue == mFence->GetCurrentFence()) {
             *heapOut = nullptr;
             return hr;
         }
 
         // We must ensure that any previous use of a resource has completed before the resource can
         // be evicted.
-        hr = mFence->WaitFor(lastExecuteCommandLists);
+        hr = mFence->WaitFor(lastUsedFenceValue);
         if (FAILED(hr)) {
             *heapOut = nullptr;
             return hr;
@@ -274,7 +274,7 @@ namespace gpgmm { namespace d3d12 {
             // command list stay resident at least until that command list has finished execution.
             // Setting this serial unnecessarily can leave the LRU in a state where nothing is
             // eligible for eviction, even though some evictions may be possible.
-            heap->SetLastExecuteCommandLists(mFence->GetCurrentFence());
+            heap->SetLastUsedFenceValue(mFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
             TrackResidentHeap(heap);
