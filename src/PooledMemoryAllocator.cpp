@@ -23,15 +23,13 @@ namespace gpgmm {
 
     void PooledMemoryAllocator::Release() {
         for (auto& memory : mPool) {
-            mMemoryAllocator->Deallocate(memory);
+            mMemoryAllocator->DeallocateMemory(memory);
         }
 
         mPool.clear();
     }
 
-    void PooledMemoryAllocator::Allocate(uint64_t size,
-                                         uint64_t alignment,
-                                         MemoryAllocation& allocation) {
+    void PooledMemoryAllocator::AllocateMemory(MemoryAllocation& allocation) {
         // Pooled memory is LIFO because memory can be evicted by LRU. However, this means
         // pooling is disabled in-frame when the memory is still pending. For high in-frame
         // memory users, FIFO might be preferable when memory consumption is a higher priority.
@@ -41,12 +39,20 @@ namespace gpgmm {
         }
 
         if (allocation == GPGMM_INVALID_ALLOCATION) {
-            mMemoryAllocator->Allocate(size, alignment, /*out*/ allocation);
+            mMemoryAllocator->AllocateMemory(/*inout*/ allocation);
         }
     }
 
-    void PooledMemoryAllocator::Deallocate(MemoryAllocation& allocation) {
+    void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation& allocation) {
         mPool.push_front(std::move(allocation));
+    }
+
+    uint64_t PooledMemoryAllocator::GetMemorySize() const {
+        return mMemoryAllocator->GetMemorySize();
+    }
+
+    uint64_t PooledMemoryAllocator::GetMemoryAlignment() const {
+        return mMemoryAllocator->GetMemoryAlignment();
     }
 
     uint64_t PooledMemoryAllocator::GetPoolSizeForTesting() const {

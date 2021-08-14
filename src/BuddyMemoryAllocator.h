@@ -35,20 +35,17 @@ namespace gpgmm {
     //
     // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class BuddyMemoryAllocator : public MemoryAllocator {
+    class BuddyMemoryAllocator {
       public:
         BuddyMemoryAllocator(uint64_t maxSystemSize,
-                             uint64_t memoryBlockSize,
-                             uint64_t memoryBlockAlignment,
                              MemoryAllocator* memoryAllocator);
-        ~BuddyMemoryAllocator() override = default;
+        ~BuddyMemoryAllocator() = default;
 
-        // MemoryAllocator interface
-        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) override;
-        void Deallocate(MemoryAllocation& allocation) override;
-        void Release() override;
+        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation);
+        void Deallocate(MemoryAllocation& allocation);
+        void Release();
 
-        uint64_t GetMemoryBlockSize() const;
+        uint64_t GetMemorySize() const;
 
         // For testing purposes.
         uint64_t ComputeTotalNumOfHeapsForTesting() const;
@@ -56,12 +53,12 @@ namespace gpgmm {
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;
 
-        uint64_t mMemoryBlockSize = 0;
-        uint64_t mMemoryBlockAlignment = 0;
-
-        BuddyAllocator mBuddyBlockAllocator;
         MemoryAllocator* mMemoryAllocator;
 
+        uint64_t mMemorySize = 0;
+        uint64_t mMemoryAlignment = 0;
+
+        BuddyAllocator mBuddyBlockAllocator;
         struct TrackedSubAllocations {
             size_t refcount = 0;
             MemoryAllocation mMemoryAllocation;

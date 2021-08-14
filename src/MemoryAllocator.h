@@ -23,9 +23,12 @@ namespace gpgmm {
       public:
         virtual ~MemoryAllocator() = default;
 
-        virtual void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation) = 0;
-        virtual void Deallocate(MemoryAllocation& allocation) = 0;
+        virtual void AllocateMemory(MemoryAllocation& allocation) = 0;
+        virtual void DeallocateMemory(MemoryAllocation& allocation) = 0;
         virtual void Release() = 0;
+
+        virtual uint64_t GetMemorySize() const = 0;
+        virtual uint64_t GetMemoryAlignment() const = 0;
     };
 
 }  // namespace gpgmm

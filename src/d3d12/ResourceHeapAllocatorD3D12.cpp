@@ -21,19 +21,21 @@ namespace gpgmm { namespace d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment)
+                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                                 uint64_t heapSize,
+                                                 uint64_t heapAlignment)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
-          mMemorySegment(memorySegment) {
+          mMemorySegment(memorySegment),
+          mHeapSize(heapSize),
+          mHeapAlignment(heapAlignment) {
     }
 
-    void ResourceHeapAllocator::Allocate(uint64_t size,
-                                         uint64_t alignment,
-                                         MemoryAllocation& allocation) {
+    void ResourceHeapAllocator::AllocateMemory(MemoryAllocation& allocation) {
         Heap* heap = nullptr;
-        if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
-                                                          mMemorySegment, alignment, &heap))) {
+        if (FAILED(mResourceAllocator->CreateResourceHeap(mHeapSize, mHeapType, mHeapFlags,
+                                                          mMemorySegment, mHeapAlignment, &heap))) {
             return;
         }
 
@@ -42,7 +44,15 @@ namespace gpgmm { namespace d3d12 {
         allocation = {mResourceAllocator, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
     }
 
-    void ResourceHeapAllocator::Deallocate(MemoryAllocation& allocation) {
+    uint64_t ResourceHeapAllocator::GetMemorySize() const {
+        return mHeapSize;
+    }
+
+    uint64_t ResourceHeapAllocator::GetMemoryAlignment() const {
+        return mHeapAlignment;
+    }
+
+    void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation& allocation) {
         Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
         mResourceAllocator->FreeResourceHeap(resourceHeap);
     }

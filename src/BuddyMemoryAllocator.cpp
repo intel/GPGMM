@@ -20,18 +20,16 @@
 namespace gpgmm {
 
     BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t maxSystemSize,
-                                               uint64_t memoryBlockSize,
-                                               uint64_t memoryBlockAlignment,
                                                MemoryAllocator* memoryAllocator)
-        : mMemoryBlockSize(memoryBlockSize),
-          mMemoryBlockAlignment(memoryBlockAlignment),
-          mBuddyBlockAllocator(maxSystemSize),
-          mMemoryAllocator(memoryAllocator) {
-        ASSERT(memoryBlockSize <= maxSystemSize);
-        ASSERT(IsPowerOfTwo(mMemoryBlockSize));
-        ASSERT(maxSystemSize % mMemoryBlockSize == 0);
+        : mMemoryAllocator(memoryAllocator),
+          mMemorySize(mMemoryAllocator->GetMemorySize()),
+          mMemoryAlignment(mMemoryAllocator->GetMemoryAlignment()),
+          mBuddyBlockAllocator(maxSystemSize) {
+        ASSERT(mMemorySize <= maxSystemSize);
+        ASSERT(IsPowerOfTwo(mMemorySize));
+        ASSERT(maxSystemSize % mMemorySize == 0);
 
-        mTrackedSubAllocations.resize(maxSystemSize / mMemoryBlockSize);
+        mTrackedSubAllocations.resize(maxSystemSize / mMemorySize);
     }
 
     void BuddyMemoryAllocator::Release() {
@@ -45,7 +43,7 @@ namespace gpgmm {
 
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
-        return offset / mMemoryBlockSize;
+        return offset / mMemorySize;
     }
 
     void BuddyMemoryAllocator::Allocate(uint64_t size,
@@ -56,7 +54,7 @@ namespace gpgmm {
         }
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (size > mMemoryBlockSize) {
+        if (size > mMemorySize) {
             return;
         }
 
@@ -64,7 +62,7 @@ namespace gpgmm {
         size = NextPowerOfTwo(size);
 
         // Allocation cannot exceed the memory size.
-        if (size > mMemoryBlockSize) {
+        if (size > mMemorySize) {
             return;
         }
 
@@ -77,12 +75,12 @@ namespace gpgmm {
         const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
         if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
             // Transfer ownership to this allocator
-            MemoryAllocation memory;
-            mMemoryAllocator->Allocate(mMemoryBlockSize, mMemoryBlockAlignment, memory);
-            if (memory == GPGMM_INVALID_ALLOCATION) {
+            MemoryAllocation memoryAllocation;
+            mMemoryAllocator->AllocateMemory(/*inout*/ memoryAllocation);
+            if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
                 return;
             }
-            mTrackedSubAllocations[memoryIndex] = {/*refcount*/ 0, std::move(memory)};
+            mTrackedSubAllocations[memoryIndex] = {/*refcount*/ 0, std::move(memoryAllocation)};
         }
 
         mTrackedSubAllocations[memoryIndex].refcount++;
@@ -92,7 +90,7 @@ namespace gpgmm {
         info.mMethod = AllocationMethod::kSubAllocated;
 
         // Allocation offset is always local to the memory.
-        const uint64_t memoryOffset = blockOffset % mMemoryBlockSize;
+        const uint64_t memoryOffset = blockOffset % mMemorySize;
 
         allocation = MemoryAllocation{
             mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetAllocator(), info,
@@ -110,14 +108,14 @@ namespace gpgmm {
         mTrackedSubAllocations[memoryIndex].refcount--;
 
         if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
-            mMemoryAllocator->Deallocate(mTrackedSubAllocations[memoryIndex].mMemoryAllocation);
+            mMemoryAllocator->DeallocateMemory(mTrackedSubAllocations[memoryIndex].mMemoryAllocation);
         }
 
         mBuddyBlockAllocator.Deallocate(info.mBlockOffset);
     }
 
-    uint64_t BuddyMemoryAllocator::GetMemoryBlockSize() const {
-        return mMemoryBlockSize;
+    uint64_t BuddyMemoryAllocator::GetMemorySize() const {
+        return mMemorySize;
     }
 
     uint64_t BuddyMemoryAllocator::ComputeTotalNumOfHeapsForTesting() const {
