@@ -31,7 +31,7 @@ class DummyMemoryAllocator : public MemoryAllocator {
     void AllocateMemory(MemoryAllocation& allocation) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        allocation = {nullptr, info, /*offset*/ 0, new MemoryBase()};
+        allocation = {this, info, /*offset*/ 0, new MemoryBase()};
     }
 
     void DeallocateMemory(MemoryAllocation& allocation) override {
@@ -66,7 +66,7 @@ class DummyBuddyResourceAllocator {
     }
 
     void Deallocate(MemoryAllocation& allocation) {
-        mAllocator.Deallocate(allocation);
+        mAllocator.DeallocateMemory(allocation);
     }
 
     uint64_t ComputeTotalNumOfHeapsForTesting() const {

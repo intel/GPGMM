@@ -21,12 +21,16 @@
 #include <utility>
 
 namespace gpgmm { namespace d3d12 {
-    ResourceAllocation::ResourceAllocation(ResourceAllocator* allocator,
+    ResourceAllocation::ResourceAllocation(ResourceAllocator* resourceAllocator,
+                                           MemoryAllocator* memoryAllocator,
                                            const AllocationInfo& info,
                                            uint64_t offset,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* heap)
-        : MemoryAllocation(allocator, info, offset, heap), mResource(std::move(resource)) {
+        : MemoryAllocation(memoryAllocator, info, offset, heap),
+          mResourceAllocator(resourceAllocator),
+          mResource(std::move(resource)) {
+        ASSERT(resourceAllocator != nullptr);
     }
 
     void ResourceAllocation::ReleaseThis() {
@@ -34,17 +38,14 @@ namespace gpgmm { namespace d3d12 {
             return;
         }
 
-        ResourceAllocator* allocator = static_cast<ResourceAllocator*>(GetAllocator());
-        ASSERT(allocator != nullptr);
-
         switch (GetInfo().mMethod) {
             case AllocationMethod::kSubAllocated: {
-                allocator->FreePlacedResource(*this);
+                ASSERT(GetAllocator() != nullptr);
+                GetAllocator()->DeallocateMemory(*this);
                 break;
             }
             case AllocationMethod::kDirect: {
-                Heap* resourceHeap = static_cast<Heap*>(GetMemory());
-                allocator->FreeResourceHeap(resourceHeap);
+                mResourceAllocator->FreeResourceHeap(*this);
                 break;
             }
             default: {
@@ -72,8 +73,7 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        ResourceAllocator* allocator = static_cast<ResourceAllocator*>(GetAllocator());
-        HRESULT hr = allocator->GetResidencyManager()->LockHeap(heap);
+        HRESULT hr = mResourceAllocator->GetResidencyManager()->LockHeap(heap);
         if (FAILED(hr)) {
             return hr;
         }
@@ -86,9 +86,7 @@ namespace gpgmm { namespace d3d12 {
         if (heap == nullptr) {
             return;
         }
-        ResourceAllocator* allocator = static_cast<ResourceAllocator*>(GetAllocator());
-        allocator->GetResidencyManager()->UnlockHeap(heap);
-
+        mResourceAllocator->GetResidencyManager()->UnlockHeap(heap);
         mResource->Unmap(subresource, pRange);
     }
 

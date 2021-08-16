@@ -24,7 +24,7 @@
 namespace gpgmm {
 
     class MemoryBase;
-    class AllocatorBase;
+    class MemoryAllocator;
 
     // Allocation method determines how memory was sub-divided.
     // Used by the device to get the allocator that was responsible for the allocation.
@@ -55,7 +55,7 @@ namespace gpgmm {
     class MemoryAllocation {
       public:
         MemoryAllocation();
-        MemoryAllocation(AllocatorBase* allocator,
+        MemoryAllocation(MemoryAllocator* allocator,
                          const AllocationInfo& info,
                          uint64_t offset,
                          MemoryBase* memory,
@@ -70,13 +70,13 @@ namespace gpgmm {
         uint64_t GetOffset() const;
         uint8_t* GetMappedPointer() const;
         AllocationInfo GetInfo() const;
-        AllocatorBase* GetAllocator();
+        MemoryAllocator* GetAllocator();
 
       protected:
         virtual void Reset();
 
       private:
-        AllocatorBase* mAllocator;
+        MemoryAllocator* mAllocator;
         AllocationInfo mInfo;
         uint64_t mOffset;
         MemoryBase* mMemory;

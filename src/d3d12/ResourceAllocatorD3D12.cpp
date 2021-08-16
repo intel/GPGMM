@@ -232,29 +232,14 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kDirect;
 
-        *ppResourceAllocation =
-            new ResourceAllocation{this, info, /*offset*/ 0, std::move(resource), heap};
+        *ppResourceAllocation = new ResourceAllocation{
+            this, /*memoryAllocator*/ nullptr, info, /*offset*/ 0, std::move(resource), heap};
         return hr;
     }
 
-    void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
-        ASSERT(resourceHeap != nullptr);
-        delete resourceHeap;
-    }
-
-    void ResourceAllocator::FreePlacedResource(ResourceAllocation& allocation) {
-        ASSERT(allocation.GetInfo().mMethod == AllocationMethod::kSubAllocated);
-
-        D3D12_HEAP_PROPERTIES heapProp;
-        allocation.GetResource()->GetHeapProperties(&heapProp, nullptr);
-
-        const D3D12_RESOURCE_DESC resourceDescriptor = allocation.GetResource()->GetDesc();
-
-        const size_t resourceHeapKindIndex =
-            GetResourceHeapKind(resourceDescriptor.Dimension, heapProp.Type,
-                                resourceDescriptor.Flags, mResourceHeapTier);
-
-        mSubAllocatedResourceAllocators[resourceHeapKindIndex]->Deallocate(allocation);
+    void ResourceAllocator::FreeResourceHeap(MemoryAllocation& resourceHeap) {
+        ASSERT(resourceHeap.GetMemory() != nullptr);
+        delete resourceHeap.GetMemory();
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
@@ -339,9 +324,12 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(heap);
         }
 
-        *ppResourceAllocation =
-            new ResourceAllocation{this, subAllocation.GetInfo(), subAllocation.GetOffset(),
-                                   std::move(placedResource), heap};
+        *ppResourceAllocation = new ResourceAllocation{this,
+                                                       allocator,
+                                                       subAllocation.GetInfo(),
+                                                       subAllocation.GetOffset(),
+                                                       std::move(placedResource),
+                                                       heap};
         return hr;
     }
 
@@ -458,7 +446,7 @@ namespace gpgmm { namespace d3d12 {
         info.mMethod = AllocationMethod::kDirect;
 
         *ppResourceAllocation =
-            new ResourceAllocation{this, info,
+            new ResourceAllocation{this,         /*memoryAllocator*/ nullptr,  info,
                                    /*offset*/ 0, std::move(committedResource), heap};
         return hr;
     }

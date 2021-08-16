@@ -41,7 +41,7 @@ namespace gpgmm { namespace d3d12 {
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kDirect;
-        allocation = {mResourceAllocator, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
+        allocation = {this, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
     }
 
     uint64_t ResourceHeapAllocator::GetMemorySize() const {
@@ -53,8 +53,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation& allocation) {
-        Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
-        mResourceAllocator->FreeResourceHeap(resourceHeap);
+        mResourceAllocator->FreeResourceHeap(allocation);
     }
 
     void ResourceHeapAllocator::Release() {

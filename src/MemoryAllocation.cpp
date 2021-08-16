@@ -23,7 +23,7 @@ namespace gpgmm {
         : mAllocator(nullptr), mOffset(kInvalidOffset), mMemory(nullptr), mMappedPointer(nullptr) {
     }
 
-    MemoryAllocation::MemoryAllocation(AllocatorBase* allocator,
+    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
                                        const AllocationInfo& info,
                                        uint64_t offset,
                                        MemoryBase* memory,
@@ -65,7 +65,7 @@ namespace gpgmm {
         mMappedPointer = nullptr;
     }
 
-    AllocatorBase* MemoryAllocation::GetAllocator() {
+    MemoryAllocator* MemoryAllocation::GetAllocator() {
         return mAllocator;
     }
 }  // namespace gpgmm

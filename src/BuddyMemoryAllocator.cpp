@@ -97,7 +97,12 @@ namespace gpgmm {
             memoryOffset, mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetMemory()};
     }
 
-    void BuddyMemoryAllocator::Deallocate(MemoryAllocation& allocation) {
+    void BuddyMemoryAllocator::AllocateMemory(MemoryAllocation& allocation) {
+        // Must sub-allocate, cannot allocate memory directly.
+        UNREACHABLE();
+    }
+
+    void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation& allocation) {
         const AllocationInfo info = allocation.GetInfo();
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
@@ -116,6 +121,10 @@ namespace gpgmm {
 
     uint64_t BuddyMemoryAllocator::GetMemorySize() const {
         return mMemorySize;
+    }
+
+    uint64_t BuddyMemoryAllocator::GetMemoryAlignment() const {
+        return mMemoryAllocator->GetMemoryAlignment();
     }
 
     uint64_t BuddyMemoryAllocator::ComputeTotalNumOfHeapsForTesting() const {

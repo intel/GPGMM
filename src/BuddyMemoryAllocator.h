@@ -35,17 +35,21 @@ namespace gpgmm {
     //
     // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class BuddyMemoryAllocator {
+    class BuddyMemoryAllocator : public MemoryAllocator {
       public:
         BuddyMemoryAllocator(uint64_t maxSystemSize,
                              MemoryAllocator* memoryAllocator);
-        ~BuddyMemoryAllocator() = default;
+        ~BuddyMemoryAllocator() override = default;
 
         void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation);
-        void Deallocate(MemoryAllocation& allocation);
-        void Release();
 
-        uint64_t GetMemorySize() const;
+        // MemoryAllocator interface
+        void AllocateMemory(MemoryAllocation& allocation) override;
+        void DeallocateMemory(MemoryAllocation& allocation) override;
+        void Release() override;
+
+        uint64_t GetMemorySize() const override;
+        uint64_t GetMemoryAlignment() const override;
 
         // For testing purposes.
         uint64_t ComputeTotalNumOfHeapsForTesting() const;

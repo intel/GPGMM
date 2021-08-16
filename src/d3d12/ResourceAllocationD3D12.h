@@ -28,7 +28,8 @@ namespace gpgmm { namespace d3d12 {
     class ResourceAllocation : public MemoryAllocation, public Unknown {
       public:
         ResourceAllocation() = default;
-        ResourceAllocation(ResourceAllocator* allocator,
+        ResourceAllocation(ResourceAllocator* resourceAllocator,
+                           MemoryAllocator* memoryAllocator,
                            const AllocationInfo& info,
                            uint64_t offset,
                            ComPtr<ID3D12Resource> resource,
@@ -50,6 +51,7 @@ namespace gpgmm { namespace d3d12 {
         void ReleaseThis() override;
 
       private:
+        ResourceAllocator* mResourceAllocator;
         ComPtr<ID3D12Resource> mResource;
     };
 
