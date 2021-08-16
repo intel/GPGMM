@@ -156,12 +156,11 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
-          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
-        mResidencyManager = std::make_unique<ResidencyManager>(mDevice, descriptor.Adapter, mIsUMA);
-
-        const uint64_t minHeapSize = (descriptor.PreferredResourceHeapSize > 0)
-                                         ? descriptor.PreferredResourceHeapSize
-                                         : kDefaultHeapSize;
+          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling),
+          mResidencyManager(new ResidencyManager(mDevice, descriptor.Adapter, mIsUMA)) {
+        const uint64_t heapSize = (descriptor.PreferredResourceHeapSize > 0)
+                                      ? descriptor.PreferredResourceHeapSize
+                                      : kDefaultHeapSize;
 
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
@@ -176,7 +175,7 @@ namespace gpgmm { namespace d3d12 {
                 this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetHeapType(resourceHeapKind)),
-                minHeapSize, heapAlignment);
+                heapSize, heapAlignment);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mPooledPlacedAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
@@ -253,7 +252,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreatePlacedResource(
         D3D12_HEAP_TYPE heapType,
         const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
-        const D3D12_CLEAR_VALUE* clearValue,
+        const D3D12_CLEAR_VALUE* pClearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
@@ -327,7 +326,7 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
         hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                           &resourceDescriptor, initialUsage, clearValue,
+                                           &resourceDescriptor, initialUsage, pClearValue,
                                            IID_PPV_ARGS(&placedResource));
         if (FAILED(hr)) {
             return hr;
@@ -390,7 +389,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
-        const D3D12_CLEAR_VALUE* clearValue,
+        const D3D12_CLEAR_VALUE* pClearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
@@ -436,7 +435,7 @@ namespace gpgmm { namespace d3d12 {
         // provided to CreateCommittedResource.
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                              resourceDescriptor, initialUsage, clearValue,
+                                              resourceDescriptor, initialUsage, pClearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;

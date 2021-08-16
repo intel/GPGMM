@@ -37,22 +37,29 @@ namespace gpgmm { namespace d3d12 {
     } ALLOCATOR_FLAGS;
 
     struct ALLOCATOR_DESC {
+        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+
         ALLOCATOR_FLAGS Flags;
         bool IsUMA;
+
+        // Determines if the resource heap can mix resource categories (both texture and buffers).
+        // Use CheckFeatureSupport to get supported tier.
         uint32_t ResourceHeapTier;
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
 
         // The minimum size of the created resource heap.
         // If the allocation exceeds |PreferredResourceHeapSize|, it cannot sub-allocate. If the
         // resource heap size is too small, there will be no beneifit to sub-allocate the resource.
+        // By default, a preferred heap size of zero means the default heap size of 4MB will be
+        // used.
         UINT64 PreferredResourceHeapSize;
 
         // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
         // This avoids keeping large resource heaps in memory for infrequently created large
         // resources.
+        // By default, a max resource heap size of zero means created resources will always be
+        // pool-allocated.
         UINT64 MaxResourceSizeForPooling;
-
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
     };
 
     typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
@@ -98,7 +105,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialUsage,
-                               const D3D12_CLEAR_VALUE* clearValue,
+                               const D3D12_CLEAR_VALUE* pClearValue,
                                ResourceAllocation** ppResourceAllocation);
 
         HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
@@ -114,13 +121,13 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
                                      const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
-                                     const D3D12_CLEAR_VALUE* clearValue,
+                                     const D3D12_CLEAR_VALUE* pClearValue,
                                      D3D12_RESOURCE_STATES initialUsage,
                                      ResourceAllocation** ppResourceAllocation);
 
         HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                        const D3D12_CLEAR_VALUE* clearValue,
+                                        const D3D12_CLEAR_VALUE* pClearValue,
                                         D3D12_RESOURCE_STATES initialUsage,
                                         ResourceAllocation** ppResourceAllocation);
 
