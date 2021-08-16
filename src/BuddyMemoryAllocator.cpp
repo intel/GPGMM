@@ -23,7 +23,6 @@ namespace gpgmm {
                                                MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator),
           mMemorySize(mMemoryAllocator->GetMemorySize()),
-          mMemoryAlignment(mMemoryAllocator->GetMemoryAlignment()),
           mBuddyBlockAllocator(maxSystemSize) {
         ASSERT(mMemorySize <= maxSystemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));

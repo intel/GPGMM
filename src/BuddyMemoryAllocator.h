@@ -60,7 +60,6 @@ namespace gpgmm {
         MemoryAllocator* mMemoryAllocator;
 
         uint64_t mMemorySize = 0;
-        uint64_t mMemoryAlignment = 0;
 
         BuddyAllocator mBuddyBlockAllocator;
         struct TrackedSubAllocations {
