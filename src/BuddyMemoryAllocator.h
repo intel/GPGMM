@@ -41,7 +41,7 @@ namespace gpgmm {
                              MemoryAllocator* memoryAllocator);
         ~BuddyMemoryAllocator() override = default;
 
-        void Allocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation);
+        void SubAllocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation);
 
         // MemoryAllocator interface
         void AllocateMemory(MemoryAllocation& allocation) override;

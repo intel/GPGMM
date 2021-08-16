@@ -61,7 +61,7 @@ class DummyBuddyResourceAllocator {
 
     MemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
         MemoryAllocation allocation;
-        mAllocator.Allocate(allocationSize, alignment, allocation);
+        mAllocator.SubAllocate(allocationSize, alignment, allocation);
         return allocation;
     }
 

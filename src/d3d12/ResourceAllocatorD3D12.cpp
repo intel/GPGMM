@@ -287,7 +287,7 @@ namespace gpgmm { namespace d3d12 {
             mSubAllocatedResourceAllocators[static_cast<size_t>(resourceHeapKind)].get();
 
         MemoryAllocation subAllocation;
-        allocator->Allocate(resourceInfo.SizeInBytes, resourceInfo.Alignment, subAllocation);
+        allocator->SubAllocate(resourceInfo.SizeInBytes, resourceInfo.Alignment, subAllocation);
         if (subAllocation == GPGMM_INVALID_ALLOCATION) {
             return E_INVALIDARG;
         }
