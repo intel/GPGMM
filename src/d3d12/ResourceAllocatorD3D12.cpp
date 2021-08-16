@@ -193,7 +193,7 @@ namespace gpgmm { namespace d3d12 {
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialUsage,
                                               const D3D12_CLEAR_VALUE* clearValue,
-                                              ResourceAllocation** allocation) {
+                                              ResourceAllocation** ppResourceAllocation) {
         // TODO(crbug.com/dawn/849): Conditionally disable sub-allocation.
         // For very large resources, there is no benefit to suballocate.
         // For very small resources, it is inefficent to suballocate given the min. heap
@@ -202,18 +202,18 @@ namespace gpgmm { namespace d3d12 {
         HRESULT hr = E_UNEXPECTED;
         if (!mIsAlwaysCommitted) {
             hr = CreatePlacedResource(allocationDescriptor.HeapType, &resourceDescriptor,
-                                      clearValue, initialUsage, allocation);
+                                      clearValue, initialUsage, ppResourceAllocation);
         }
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
         if (FAILED(hr)) {
             hr = CreateCommittedResource(allocationDescriptor.HeapType, &resourceDescriptor,
-                                         clearValue, initialUsage, allocation);
+                                         clearValue, initialUsage, ppResourceAllocation);
         }
         return hr;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
-                                              ResourceAllocation** allocation) {
+                                              ResourceAllocation** ppResourceAllocation) {
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
         D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             mDevice->GetResourceAllocationInfo(0, 1, &desc);
@@ -232,7 +232,8 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kDirect;
 
-        *allocation = new ResourceAllocation{this, info, /*offset*/ 0, std::move(resource), heap};
+        *ppResourceAllocation =
+            new ResourceAllocation{this, info, /*offset*/ 0, std::move(resource), heap};
         return hr;
     }
 
@@ -261,7 +262,11 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** allocation) {
+        ResourceAllocation** ppResourceAllocation) {
+        if (!ppResourceAllocation) {
+            return E_POINTER;
+        }
+
         const ResourceHeapKind resourceHeapKind =
             GetResourceHeapKind(requestedResourceDescriptor->Dimension, heapType,
                                 requestedResourceDescriptor->Flags, mResourceHeapTier);
@@ -334,7 +339,7 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(heap);
         }
 
-        *allocation =
+        *ppResourceAllocation =
             new ResourceAllocation{this, subAllocation.GetInfo(), subAllocation.GetOffset(),
                                    std::move(placedResource), heap};
         return hr;
@@ -384,7 +389,11 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** allocation) {
+        ResourceAllocation** ppResourceAllocation) {
+        if (!ppResourceAllocation) {
+            return E_POINTER;
+        }
+
         D3D12_HEAP_PROPERTIES heapProperties;
         heapProperties.Type = heapType;
         heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -448,8 +457,9 @@ namespace gpgmm { namespace d3d12 {
         AllocationInfo info;
         info.mMethod = AllocationMethod::kDirect;
 
-        *allocation = new ResourceAllocation{this, info,
-                                             /*offset*/ 0, std::move(committedResource), heap};
+        *ppResourceAllocation =
+            new ResourceAllocation{this, info,
+                                   /*offset*/ 0, std::move(committedResource), heap};
         return hr;
     }
 

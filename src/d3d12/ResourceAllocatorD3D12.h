@@ -89,9 +89,10 @@ namespace gpgmm { namespace d3d12 {
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialUsage,
                                const D3D12_CLEAR_VALUE* clearValue,
-                               ResourceAllocation** allocation);
+                               ResourceAllocation** ppResourceAllocation);
 
-        HRESULT CreateResource(ComPtr<ID3D12Resource> resource, ResourceAllocation** allocation);
+        HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
+                               ResourceAllocation** ppResourceAllocation);
 
         ResidencyManager* GetResidencyManager();
 
@@ -106,13 +107,13 @@ namespace gpgmm { namespace d3d12 {
                                      const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
                                      D3D12_RESOURCE_STATES initialUsage,
-                                     ResourceAllocation** allocation);
+                                     ResourceAllocation** ppResourceAllocation);
 
         HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialUsage,
-                                        ResourceAllocation** allocation);
+                                        ResourceAllocation** ppResourceAllocation);
 
         HRESULT CreateResourceHeap(uint64_t size,
                                    D3D12_HEAP_TYPE heapType,
