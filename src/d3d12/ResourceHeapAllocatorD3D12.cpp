@@ -57,7 +57,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceHeapAllocator::Release() {
-        ASSERT(false);
+        // Nothing to release since this allocator always returns new resource heaps.
     }
 
 }}  // namespace gpgmm::d3d12

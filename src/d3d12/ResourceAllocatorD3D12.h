@@ -41,7 +41,17 @@ namespace gpgmm { namespace d3d12 {
         bool IsUMA;
         uint32_t ResourceHeapTier;
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
+
+        // The minimum size of the created resource heap.
+        // If the allocation exceeds |PreferredResourceHeapSize|, it cannot sub-allocate. If the
+        // resource heap size is too small, there will be no beneifit to sub-allocate the resource.
         UINT64 PreferredResourceHeapSize;
+
+        // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
+        // This avoids keeping large resource heaps in memory for infrequently created large
+        // resources.
+        UINT64 MaxResourceSizeForPooling;
+
         Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
     };
 
@@ -127,9 +137,14 @@ namespace gpgmm { namespace d3d12 {
         uint32_t mResourceHeapTier;
         bool mIsAlwaysCommitted;
         bool mIsAlwaysInBudget;
+        uint64_t mMaxResourceSizeForPooling;
 
         std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
-            mSubAllocatedResourceAllocators;
+            mPlacedAllocators;
+
+        std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
+            mPooledPlacedAllocators;
+
         std::array<std::unique_ptr<ResourceHeapAllocator>, ResourceHeapKind::EnumCount>
             mResourceHeapAllocators;
 

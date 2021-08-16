@@ -155,7 +155,8 @@ namespace gpgmm { namespace d3d12 {
           mIsUMA(descriptor.IsUMA),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
-          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET) {
+          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
+          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
         mResidencyManager = std::make_unique<ResidencyManager>(mDevice, descriptor.Adapter, mIsUMA);
 
         const uint64_t minHeapSize = (descriptor.PreferredResourceHeapSize > 0)
@@ -178,13 +179,20 @@ namespace gpgmm { namespace d3d12 {
                 minHeapSize, heapAlignment);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
-            mSubAllocatedResourceAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
+            mPooledPlacedAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
                 kMaxHeapSize, mPooledResourceHeapAllocators[i].get());
+
+            // Non-pooled buddy allocator variant
+            mPlacedAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
+                kMaxHeapSize, mResourceHeapAllocators[i].get());
         }
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        for (auto& allocator : mSubAllocatedResourceAllocators) {
+        for (auto& allocator : mPooledPlacedAllocators) {
+            allocator->Release();
+        }
+        for (auto& allocator : mPlacedAllocators) {
             allocator->Release();
         }
     }
@@ -283,8 +291,15 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        BuddyMemoryAllocator* allocator =
-            mSubAllocatedResourceAllocators[static_cast<size_t>(resourceHeapKind)].get();
+        BuddyMemoryAllocator* allocator = nullptr;
+        if (mMaxResourceSizeForPooling != 0 &&
+            resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
+            allocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+        } else {
+            allocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+        }
+
+        ASSERT(allocator != nullptr);
 
         MemoryAllocation subAllocation;
         allocator->SubAllocate(resourceInfo.SizeInBytes, resourceInfo.Alignment, subAllocation);
