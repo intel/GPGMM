@@ -27,8 +27,6 @@ namespace gpgmm {
         ASSERT(mMemorySize <= maxSystemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
         ASSERT(maxSystemSize % mMemorySize == 0);
-
-        mTrackedSubAllocations.resize(maxSystemSize / mMemorySize);
     }
 
     void BuddyMemoryAllocator::Release() {
@@ -69,7 +67,12 @@ namespace gpgmm {
             return;
         }
 
+        // Avoid tracking all heaps in the buddy system that are not yet allocated.
         const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
+        if (memoryIndex >= mTrackedSubAllocations.size()) {
+            mTrackedSubAllocations.resize(memoryIndex + 1);
+        }
+
         if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
             // Transfer ownership to this allocator
             MemoryAllocation memoryAllocation;
