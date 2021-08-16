@@ -32,9 +32,7 @@ namespace gpgmm {
     }
 
     void BuddyMemoryAllocator::Release() {
-        for (const TrackedSubAllocations& subAllocation : mTrackedSubAllocations) {
-            ASSERT(subAllocation.refcount == 0);
-        }
+        ASSERT(ComputeTotalNumOfHeapsForTesting() == 0);
 
         mTrackedSubAllocations.clear();
         mMemoryAllocator->Release();
