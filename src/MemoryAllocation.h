@@ -26,12 +26,11 @@ namespace gpgmm {
     class MemoryBase;
     class MemoryAllocator;
 
-    // Allocation method determines how memory was sub-divided.
-    // Used by the device to get the allocator that was responsible for the allocation.
+    // Allocation method determines how memory was allocated.
     enum class AllocationMethod {
 
         // Memory not sub-divided.
-        kDirect,
+        kStandalone,
 
         // Memory sub-divided using one or more blocks of various sizes.
         kSubAllocated,

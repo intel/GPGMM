@@ -44,7 +44,7 @@ namespace gpgmm { namespace d3d12 {
                 GetAllocator()->DeallocateMemory(*this);
                 break;
             }
-            case AllocationMethod::kDirect: {
+            case AllocationMethod::kStandalone: {
                 mResourceAllocator->FreeResourceHeap(*this);
                 break;
             }

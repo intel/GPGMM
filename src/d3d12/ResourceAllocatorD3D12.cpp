@@ -237,7 +237,7 @@ namespace gpgmm { namespace d3d12 {
                      resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
-        info.mMethod = gpgmm::AllocationMethod::kDirect;
+        info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
         *ppResourceAllocation = new ResourceAllocation{
             this, /*memoryAllocator*/ nullptr, info, /*offset*/ 0, std::move(resource), heap};
@@ -456,8 +456,8 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->TrackResidentHeap(heap);
         }
 
-        AllocationInfo info;
-        info.mMethod = AllocationMethod::kDirect;
+        AllocationInfo info = {};
+        info.mMethod = AllocationMethod::kStandalone;
 
         *ppResourceAllocation =
             new ResourceAllocation{this,         /*memoryAllocator*/ nullptr,  info,

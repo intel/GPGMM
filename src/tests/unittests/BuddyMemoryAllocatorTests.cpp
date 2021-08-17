@@ -30,7 +30,7 @@ class DummyMemoryAllocator : public MemoryAllocator {
   public:
     void AllocateMemory(MemoryAllocation& allocation) override {
         AllocationInfo info = {};
-        info.mMethod = AllocationMethod::kDirect;
+        info.mMethod = AllocationMethod::kStandalone;
         allocation = {this, info, /*offset*/ 0, new MemoryBase()};
     }
 

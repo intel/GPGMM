@@ -40,7 +40,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         AllocationInfo info = {};
-        info.mMethod = AllocationMethod::kDirect;
+        info.mMethod = AllocationMethod::kStandalone;
         allocation = {this, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
     }
 
