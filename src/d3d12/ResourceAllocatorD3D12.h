@@ -97,10 +97,10 @@ namespace gpgmm { namespace d3d12 {
 
     // Manages a list of resource allocators used by the device to create resources using
     // multiple allocation methods.
-    class ResourceAllocator : public AllocatorBase {
+    class ResourceAllocator : public MemoryAllocator {
       public:
         ResourceAllocator(const ALLOCATOR_DESC& descriptor);
-        ~ResourceAllocator();
+        ~ResourceAllocator() override;
 
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
@@ -117,7 +117,13 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
-        void FreeResourceHeap(MemoryAllocation& resourceHeap);
+        // MemoryAllocator interface
+        void AllocateMemory(MemoryAllocation& allocation) override;
+        void DeallocateMemory(MemoryAllocation& resourceHeap) override;
+        void Release() override;
+
+        uint64_t GetMemorySize() const override;
+        uint64_t GetMemoryAlignment() const override;
 
         HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
                                      const D3D12_RESOURCE_DESC* requestedResourceDescriptor,

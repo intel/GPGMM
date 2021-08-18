@@ -188,12 +188,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        for (auto& allocator : mPooledPlacedAllocators) {
-            allocator->Release();
-        }
-        for (auto& allocator : mPlacedAllocators) {
-            allocator->Release();
-        }
+        Release();
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -239,14 +234,13 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
-        *ppResourceAllocation = new ResourceAllocation{
-            this, /*memoryAllocator*/ nullptr, info, /*offset*/ 0, std::move(resource), heap};
+        *ppResourceAllocation = new ResourceAllocation{/*residencyManager*/ nullptr,
+                                                       /*memoryAllocator*/ this,
+                                                       info,
+                                                       /*offset*/ 0,
+                                                       std::move(resource),
+                                                       heap};
         return hr;
-    }
-
-    void ResourceAllocator::FreeResourceHeap(MemoryAllocation& resourceHeap) {
-        ASSERT(resourceHeap.GetMemory() != nullptr);
-        delete resourceHeap.GetMemory();
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
@@ -338,12 +332,10 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(heap);
         }
 
-        *ppResourceAllocation = new ResourceAllocation{this,
-                                                       allocator,
-                                                       subAllocation.GetInfo(),
-                                                       subAllocation.GetOffset(),
-                                                       std::move(placedResource),
-                                                       heap};
+        *ppResourceAllocation =
+            new ResourceAllocation{mResidencyManager.get(),   allocator,
+                                   subAllocation.GetInfo(),   subAllocation.GetOffset(),
+                                   std::move(placedResource), heap};
         return hr;
     }
 
@@ -459,10 +451,42 @@ namespace gpgmm { namespace d3d12 {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
 
-        *ppResourceAllocation =
-            new ResourceAllocation{this,         /*memoryAllocator*/ nullptr,  info,
-                                   /*offset*/ 0, std::move(committedResource), heap};
+        *ppResourceAllocation = new ResourceAllocation{mResidencyManager.get(),
+                                                       /*memoryAllocator*/ this,
+                                                       info,
+                                                       /*offset*/ 0,
+                                                       std::move(committedResource),
+                                                       heap};
         return hr;
+    }
+
+    void ResourceAllocator::AllocateMemory(MemoryAllocation& allocation) {
+        ASSERT(false);
+    }
+
+    void ResourceAllocator::DeallocateMemory(MemoryAllocation& resourceHeap) {
+        ASSERT(resourceHeap.GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
+        ASSERT(resourceHeap.GetMemory() != nullptr);
+        delete resourceHeap.GetMemory();
+    }
+
+    void ResourceAllocator::Release() {
+        for (auto& allocator : mPooledPlacedAllocators) {
+            allocator->Release();
+        }
+        for (auto& allocator : mPlacedAllocators) {
+            allocator->Release();
+        }
+    }
+
+    uint64_t ResourceAllocator::GetMemorySize() const {
+        ASSERT(false);
+        return kInvalidSize;
+    }
+
+    uint64_t ResourceAllocator::GetMemoryAlignment() const {
+        ASSERT(false);
+        return kInvalidOffset;
     }
 
     ResidencyManager* ResourceAllocator::GetResidencyManager() {

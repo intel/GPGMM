@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation& allocation) {
-        mResourceAllocator->FreeResourceHeap(allocation);
+        mResourceAllocator->DeallocateMemory(allocation);
     }
 
     void ResourceHeapAllocator::Release() {

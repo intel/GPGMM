@@ -21,16 +21,15 @@
 #include <utility>
 
 namespace gpgmm { namespace d3d12 {
-    ResourceAllocation::ResourceAllocation(ResourceAllocator* resourceAllocator,
+    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* memoryAllocator,
                                            const AllocationInfo& info,
                                            uint64_t offset,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* heap)
         : MemoryAllocation(memoryAllocator, info, offset, heap),
-          mResourceAllocator(resourceAllocator),
+          mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
-        ASSERT(resourceAllocator != nullptr);
     }
 
     void ResourceAllocation::ReleaseThis() {
@@ -38,19 +37,8 @@ namespace gpgmm { namespace d3d12 {
             return;
         }
 
-        switch (GetInfo().mMethod) {
-            case AllocationMethod::kSubAllocated: {
-                ASSERT(GetAllocator() != nullptr);
-                GetAllocator()->DeallocateMemory(*this);
-                break;
-            }
-            case AllocationMethod::kStandalone: {
-                mResourceAllocator->FreeResourceHeap(*this);
-                break;
-            }
-            default: {
-                break;
-            }
+        if (GetAllocator() != nullptr) {
+            GetAllocator()->DeallocateMemory(*this);
         }
 
         mResource.Reset();
@@ -73,9 +61,11 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        HRESULT hr = mResourceAllocator->GetResidencyManager()->LockHeap(heap);
-        if (FAILED(hr)) {
-            return hr;
+        if (mResidencyManager != nullptr) {
+            HRESULT hr = mResidencyManager->LockHeap(heap);
+            if (FAILED(hr)) {
+                return hr;
+            }
         }
 
         return mResource->Map(subresource, pRange, ppMappedData);
@@ -86,7 +76,10 @@ namespace gpgmm { namespace d3d12 {
         if (heap == nullptr) {
             return;
         }
-        mResourceAllocator->GetResidencyManager()->UnlockHeap(heap);
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->UnlockHeap(heap);
+        }
+
         mResource->Unmap(subresource, pRange);
     }
 
