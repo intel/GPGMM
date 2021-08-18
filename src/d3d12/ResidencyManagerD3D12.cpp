@@ -14,6 +14,7 @@
 
 #include "src/d3d12/ResidencyManagerD3D12.h"
 
+#include "src/common/Limits.h"
 #include "src/d3d12/FenceD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
@@ -313,8 +314,6 @@ namespace gpgmm { namespace d3d12 {
         // estimates are incorrect. We may be able to continue execution by evicting some
         // more memory and calling MakeResident again.
         while (FAILED(hr)) {
-            constexpr uint32_t kAdditonalSizeToEvict = 50000000;  // 50MB
-
             uint64_t sizeEvicted = 0;
             Evict(kAdditonalSizeToEvict, memorySegmentGroup, &sizeEvicted);
 
