@@ -45,7 +45,6 @@ namespace gpgmm { namespace d3d12 {
         HRESULT SetDebugName(const char* name);
 
         void UpdateResidency(ResidencySet* residencySet);
-        bool IsResidentForTesting() const;
 
       protected:
         void ReleaseThis() override;

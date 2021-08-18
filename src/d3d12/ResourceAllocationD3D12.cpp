@@ -95,10 +95,4 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(heap != nullptr);
         heap->UpdateResidency(residencySet);
     }
-
-    bool ResourceAllocation::IsResidentForTesting() const {
-        Heap* heap = static_cast<Heap*>(GetMemory());
-        ASSERT(heap != nullptr);
-        return heap->IsResident();
-    }
 }}  // namespace gpgmm::d3d12
