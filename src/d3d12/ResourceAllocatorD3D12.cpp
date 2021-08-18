@@ -350,7 +350,7 @@ namespace gpgmm { namespace d3d12 {
                                                   D3D12_HEAP_FLAGS heapFlags,
                                                   DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                                   uint64_t heapAlignment,
-                                                  Heap** resourceHeap) {
+                                                  Heap** ppResourceHeap) {
         D3D12_HEAP_DESC heapDesc;
         heapDesc.SizeInBytes = size;
         heapDesc.Properties.Type = heapType;
@@ -373,12 +373,12 @@ namespace gpgmm { namespace d3d12 {
             return hr;
         }
 
-        *resourceHeap = new Heap(std::move(d3d12Heap), memorySegment, size);
+        *ppResourceHeap = new Heap(std::move(d3d12Heap), memorySegment, size);
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
         if (mIsAlwaysInBudget) {
-            mResidencyManager->TrackResidentHeap(*resourceHeap);
+            mResidencyManager->TrackResidentHeap(*ppResourceHeap);
         }
 
         return hr;

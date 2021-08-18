@@ -136,7 +136,7 @@ namespace gpgmm { namespace d3d12 {
                                    D3D12_HEAP_FLAGS heapFlags,
                                    DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                    uint64_t heapAlignment,
-                                   Heap** resourceHeap);
+                                   Heap** ppResourceHeap);
 
         ComPtr<ID3D12Device> mDevice;
 
