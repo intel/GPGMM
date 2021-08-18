@@ -39,8 +39,9 @@ namespace gpgmm { namespace d3d12 {
         HRESULT LockHeap(Heap* heap);
         void UnlockHeap(Heap* heap);
 
-        HRESULT EnsureCanAllocate(uint64_t allocationSize,
-                                  const DXGI_MEMORY_SEGMENT_GROUP& memorySegment);
+        HRESULT Evict(uint64_t allocationSize,
+                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                      uint64_t* sizeEvictedOut = nullptr);
 
         HRESULT ExecuteCommandLists(ResidencySet* residencySet,
                                     ID3D12CommandQueue* d3d12Queue,
@@ -68,15 +69,13 @@ namespace gpgmm { namespace d3d12 {
             MemorySegmentInfo nonLocal = {DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
         };
 
+        HRESULT EvictHeap(MemorySegmentInfo* memorySegment, Heap** heapOut);
+        HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
+                             uint64_t sizeToMakeResident,
+                             uint64_t numberOfObjectsToMakeResident,
+                             ID3D12Pageable** allocations);
+
         MemorySegmentInfo* GetMemorySegmentInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegment);
-        HRESULT EnsureCanMakeResident(uint64_t allocationSize,
-                                      MemorySegmentInfo* memorySegment,
-                                      uint64_t* sizeEvictedOut);
-        HRESULT RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment, Heap** heapOut);
-        HRESULT MakeAllocationsResident(MemorySegmentInfo* segment,
-                                        uint64_t sizeToMakeResident,
-                                        uint64_t numberOfObjectsToMakeResident,
-                                        ID3D12Pageable** allocations);
         void UpdateVideoMemoryInfo();
         void UpdateMemorySegmentInfo(MemorySegmentInfo* segmentInfo);
 

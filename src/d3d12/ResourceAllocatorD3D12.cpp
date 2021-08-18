@@ -364,7 +364,7 @@ namespace gpgmm { namespace d3d12 {
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget) {
-            mResidencyManager->EnsureCanAllocate(size, memorySegment);
+            mResidencyManager->Evict(size, memorySegment);
         }
 
         ComPtr<ID3D12Heap> d3d12Heap;
@@ -421,8 +421,8 @@ namespace gpgmm { namespace d3d12 {
         // overcommitted.
         HRESULT hr = S_OK;
         if (mIsAlwaysInBudget) {
-            hr = mResidencyManager->EnsureCanAllocate(
-                resourceInfo.SizeInBytes, GetPreferredMemorySegmentGroup(heapProperties, mIsUMA));
+            hr = mResidencyManager->Evict(resourceInfo.SizeInBytes,
+                                          GetPreferredMemorySegmentGroup(heapProperties, mIsUMA));
             if (FAILED(hr)) {
                 return hr;
             }

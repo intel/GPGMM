@@ -42,8 +42,7 @@ namespace gpgmm { namespace d3d12 {
             ID3D12Pageable* d3d12Pageable = heap->GetD3D12Pageable();
             uint64_t size = heap->GetSize();
 
-            HRESULT hr = MakeAllocationsResident(GetMemorySegmentInfo(heap->GetMemorySegment()),
-                                                 size, 1, &d3d12Pageable);
+            HRESULT hr = MakeResident(heap->GetMemorySegment(), size, 1, &d3d12Pageable);
             if (FAILED(hr)) {
                 return hr;
             }
@@ -144,15 +143,14 @@ namespace gpgmm { namespace d3d12 {
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
     // nullptr when nothing further can be evicted.
-    HRESULT ResidencyManager::RemoveSingleEntryFromLRU(MemorySegmentInfo* memorySegment,
-                                                       Heap** heapOut) {
+    HRESULT ResidencyManager::EvictHeap(MemorySegmentInfo* memorySegment, Heap** ppEvictedHeapOut) {
         // If the LRU is empty, return nullptr to allow execution to continue. Note that fully
         // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
         // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
         // the process budget and starving Dawn, which will cause thrash.
         HRESULT hr = S_OK;
         if (memorySegment->lruCache.empty()) {
-            *heapOut = nullptr;
+            *ppEvictedHeapOut = nullptr;
             return hr;
         }
 
@@ -165,7 +163,7 @@ namespace gpgmm { namespace d3d12 {
         // available. In this scenario, we cannot make any more resources resident and thrashing
         // must occur.
         if (lastUsedFenceValue == mFence->GetCurrentFence()) {
-            *heapOut = nullptr;
+            *ppEvictedHeapOut = nullptr;
             return hr;
         }
 
@@ -173,44 +171,41 @@ namespace gpgmm { namespace d3d12 {
         // be evicted.
         hr = mFence->WaitFor(lastUsedFenceValue);
         if (FAILED(hr)) {
-            *heapOut = nullptr;
+            *ppEvictedHeapOut = nullptr;
             return hr;
         }
 
         heap->RemoveFromList();
 
-        *heapOut = heap;
+        *ppEvictedHeapOut = heap;
         return hr;
-    }
-
-    HRESULT ResidencyManager::EnsureCanAllocate(uint64_t allocationSize,
-                                                const DXGI_MEMORY_SEGMENT_GROUP& memorySegment) {
-        return EnsureCanMakeResident(allocationSize, GetMemorySegmentInfo(memorySegment),
-                                     /*sizeEvictedOut*/ nullptr);
     }
 
     // Any time we need to make something resident, we must check that we have enough free memory to
     // make the new object resident while also staying within budget. If there isn't enough
     // memory, we should evict until there is. Returns the number of bytes evicted.
-    HRESULT ResidencyManager::EnsureCanMakeResident(uint64_t sizeToMakeResident,
-                                                    MemorySegmentInfo* memorySegment,
-                                                    uint64_t* sizeEvictedOut) {
-        UpdateMemorySegmentInfo(memorySegment);
+    HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
+                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                                    uint64_t* sizeEvictedOut) {
+        MemorySegmentInfo* memorySegmentInfo = GetMemorySegmentInfo(memorySegmentGroup);
 
-        const uint64_t memoryUsageAfterMakeResident = sizeToMakeResident + memorySegment->usage;
+        UpdateMemorySegmentInfo(memorySegmentInfo);
+
+        const uint64_t memoryUsageAfterMakeResident = sizeToMakeResident + memorySegmentInfo->usage;
 
         // Return when we can call MakeResident and remain under budget.
-        if (memoryUsageAfterMakeResident < memorySegment->budget) {
+        if (memoryUsageAfterMakeResident < memorySegmentInfo->budget) {
             return 0;
         }
 
         std::vector<ID3D12Pageable*> resourcesToEvict;
-        uint64_t sizeNeededToBeUnderBudget = memoryUsageAfterMakeResident - memorySegment->budget;
+        uint64_t sizeNeededToBeUnderBudget =
+            memoryUsageAfterMakeResident - memorySegmentInfo->budget;
         uint64_t sizeEvicted = 0;
         HRESULT hr = S_OK;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
             Heap* heap = nullptr;
-            hr = RemoveSingleEntryFromLRU(memorySegment, &heap);
+            hr = EvictHeap(memorySegmentInfo, &heap);
             if (FAILED(hr)) {
                 return hr;
             }
@@ -282,14 +277,13 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
-            hr = MakeAllocationsResident(&mVideoMemoryInfo.local, localSizeToMakeResident,
-                                         localHeapsToMakeResident.size(),
-                                         localHeapsToMakeResident.data());
+            hr = MakeResident(mVideoMemoryInfo.local.dxgiSegment, localSizeToMakeResident,
+                              localHeapsToMakeResident.size(), localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
-            hr = MakeAllocationsResident(&mVideoMemoryInfo.nonLocal, nonLocalSizeToMakeResident,
-                                         nonLocalHeapsToMakeResident.size(),
-                                         nonLocalHeapsToMakeResident.data());
+            hr = MakeResident(mVideoMemoryInfo.nonLocal.dxgiSegment, nonLocalSizeToMakeResident,
+                              nonLocalHeapsToMakeResident.size(),
+                              nonLocalHeapsToMakeResident.data());
         }
 
         d3d12Queue->ExecuteCommandLists(1, &d3d12CommandList);
@@ -301,11 +295,11 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    HRESULT ResidencyManager::MakeAllocationsResident(MemorySegmentInfo* segment,
-                                                      uint64_t sizeToMakeResident,
-                                                      uint64_t numberOfObjectsToMakeResident,
-                                                      ID3D12Pageable** allocations) {
-        EnsureCanMakeResident(sizeToMakeResident, segment, nullptr);
+    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
+                                           uint64_t sizeToMakeResident,
+                                           uint64_t numberOfObjectsToMakeResident,
+                                           ID3D12Pageable** allocations) {
+        Evict(sizeToMakeResident, memorySegmentGroup, nullptr);
 
         // Note that MakeResident is a synchronous function and can add a significant
         // overhead to command recording. In the future, it may be possible to decrease this
@@ -322,7 +316,7 @@ namespace gpgmm { namespace d3d12 {
             constexpr uint32_t kAdditonalSizeToEvict = 50000000;  // 50MB
 
             uint64_t sizeEvicted = 0;
-            EnsureCanMakeResident(kAdditonalSizeToEvict, segment, &sizeEvicted);
+            Evict(kAdditonalSizeToEvict, memorySegmentGroup, &sizeEvicted);
 
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
