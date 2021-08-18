@@ -378,7 +378,7 @@ namespace gpgmm { namespace d3d12 {
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
         if (mIsAlwaysInBudget) {
-            mResidencyManager->TrackResidentHeap(*ppResourceHeap);
+            mResidencyManager->InsertHeap(*ppResourceHeap);
         }
 
         return hr;
@@ -450,7 +450,7 @@ namespace gpgmm { namespace d3d12 {
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
         if (mIsAlwaysInBudget) {
-            mResidencyManager->TrackResidentHeap(heap);
+            mResidencyManager->InsertHeap(heap);
         }
 
         AllocationInfo info = {};

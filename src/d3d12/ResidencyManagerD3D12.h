@@ -50,7 +50,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t SetExternalMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegment,
                                               uint64_t requestedReservationSize);
 
-        void TrackResidentHeap(Heap* heap);
+        void InsertHeap(Heap* heap);
 
         void RestrictBudgetForTesting(uint64_t artificialBudgetCap);
 

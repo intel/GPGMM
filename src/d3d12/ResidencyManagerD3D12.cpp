@@ -72,7 +72,7 @@ namespace gpgmm { namespace d3d12 {
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        TrackResidentHeap(heap);
+        InsertHeap(heap);
     }
 
     // Returns the appropriate MemorySegmentInfo for a given MemorySegment.
@@ -272,7 +272,7 @@ namespace gpgmm { namespace d3d12 {
             heap->SetLastUsedFenceValue(mFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
-            TrackResidentHeap(heap);
+            InsertHeap(heap);
         }
 
         HRESULT hr = S_OK;
@@ -335,7 +335,7 @@ namespace gpgmm { namespace d3d12 {
     // is implicitly made resident will cause the residency manager to view the allocation as
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
-    void ResidencyManager::TrackResidentHeap(Heap* heap) {
+    void ResidencyManager::InsertHeap(Heap* heap) {
         ASSERT(heap->IsInList() == false);
         GetMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
     }

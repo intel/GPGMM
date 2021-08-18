@@ -104,7 +104,7 @@ To use residency:
 
 What about residency for other heaps (SV descriptor or query heaps)?
 1. Sub-class `d3d12::Heap`.
-2. Call `d3d12::ResidencyManager::TrackResidentHeap` on it after creation.
+2. Call `d3d12::ResidencyManager::InsertHeap` on it after creation.
 3. Use `d3d12::ResidencyManager::[Lock|UnlockHeap]` to keep heap resident or not (ex. SV heaps).
 
 # Prerequisites
