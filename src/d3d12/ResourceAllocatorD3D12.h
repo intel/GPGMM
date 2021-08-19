@@ -60,7 +60,11 @@ namespace gpgmm { namespace d3d12 {
         // By default, a max resource heap size of zero means created resources will always be
         // pool-allocated.
         uint64_t MaxResourceSizeForPooling;
-        
+
+        // The total video memory available to the allocator, expressed as a percentage.
+        // For example, 0.95 means 95% of video memory can be budgeted, always leaving 5%
+        // for the the OS and other applications.
+        float TotalMemorySegmentBudgetLimit;
     };
 
     typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;

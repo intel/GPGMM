@@ -33,7 +33,10 @@ namespace gpgmm { namespace d3d12 {
 
     class ResidencyManager {
       public:
-        ResidencyManager(ComPtr<ID3D12Device> device, ComPtr<IDXGIAdapter3> adapter, bool isUMA);
+        ResidencyManager(ComPtr<ID3D12Device> device,
+                         ComPtr<IDXGIAdapter3> adapter,
+                         bool isUMA,
+                         float memorySegmentBudgetLimit);
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
@@ -84,6 +87,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<IDXGIAdapter3> mAdapter;
         bool mRestrictBudgetForTesting = false;
         bool mIsUMA;
+        float mMemorySegmentBudgetLimit;
         VideoMemoryInfo mVideoMemoryInfo = {};
 
         std::unique_ptr<Fence> mFence;

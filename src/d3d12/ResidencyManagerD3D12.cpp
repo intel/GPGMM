@@ -26,8 +26,14 @@ namespace gpgmm { namespace d3d12 {
 
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter,
-                                       bool isUMA)
-        : mDevice(device), mAdapter(adapter), mIsUMA(isUMA), mFence(new Fence(device, 0)) {
+                                       bool isUMA,
+                                       float memorySegmentBudgetLimit)
+        : mDevice(device),
+          mAdapter(adapter),
+          mIsUMA(isUMA),
+          mMemorySegmentBudgetLimit(memorySegmentBudgetLimit == 0 ? kDefaultMemorySegmentBudgetLimit
+                                                                  : memorySegmentBudgetLimit),
+          mFence(new Fence(device, 0)) {
         UpdateVideoMemoryInfo();
     }
 
@@ -131,13 +137,8 @@ namespace gpgmm { namespace d3d12 {
             return;
         }
 
-        // We cap Dawn's budget to 95% of the provided budget. Leaving some budget unused
-        // decreases fluctuations in the operating-system-defined budget, which improves stability
-        // for both Dawn and other applications on the system. Note the value of 95% is arbitrarily
-        // chosen and subject to future experimentation.
-        static constexpr float kBudgetCap = 0.95;
-        segmentInfo->budget =
-            (queryVideoMemoryInfo.Budget - segmentInfo->externalReservation) * kBudgetCap;
+        segmentInfo->budget = (queryVideoMemoryInfo.Budget - segmentInfo->externalReservation) *
+                              mMemorySegmentBudgetLimit;
     }
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns

@@ -157,7 +157,10 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
           mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling),
-          mResidencyManager(new ResidencyManager(mDevice, descriptor.Adapter, mIsUMA)) {
+          mResidencyManager(new ResidencyManager(mDevice,
+                                                 descriptor.Adapter,
+                                                 mIsUMA,
+                                                 descriptor.TotalMemorySegmentBudgetLimit)) {
         const uint64_t heapSize = (descriptor.PreferredResourceHeapSize > 0)
                                       ? descriptor.PreferredResourceHeapSize
                                       : kDefaultHeapSize;
