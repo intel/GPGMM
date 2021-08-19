@@ -14,6 +14,8 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
+#include "src/PooledMemoryAllocator.h"
+#include "src/VirtualBuddyAllocator.h"
 #include "src/common/Limits.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
@@ -181,11 +183,11 @@ namespace gpgmm { namespace d3d12 {
                 heapSize, heapAlignment);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
-            mPooledPlacedAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
+            mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
                 kMaxHeapSize, mPooledResourceHeapAllocators[i].get());
 
             // Non-pooled buddy allocator variant
-            mPlacedAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
+            mPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
                 kMaxHeapSize, mResourceHeapAllocators[i].get());
         }
     }
@@ -287,7 +289,7 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        BuddyMemoryAllocator* allocator = nullptr;
+        VirtualBuddyAllocator* allocator = nullptr;
         if (mMaxResourceSizeForPooling != 0 &&
             resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
             allocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
+#include "src/common/IntegerTypes.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 

@@ -103,16 +103,17 @@ source_set("gpgmm_sources") {
   #   public_deps = [ "${gpgmm_root_dir}/src/gpgmm_platform" ]
 
   sources = [
+    "BlockAllocator.h",
     "BuddyAllocator.cpp",
     "BuddyAllocator.h",
-    "BuddyMemoryAllocator.cpp",
-    "BuddyMemoryAllocator.h",
     "Memory.h",
     "MemoryAllocation.cpp",
     "MemoryAllocation.h",
     "MemoryAllocator.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
+    "VirtualBuddyAllocator.cpp",
+    "VirtualBuddyAllocator.h",
 
     # "gpgmm_platform.h",
   ]

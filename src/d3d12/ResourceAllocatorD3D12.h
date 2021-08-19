@@ -15,11 +15,8 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
-#include "src/Allocator.h"
-#include "src/BuddyMemoryAllocator.h"
-#include "src/PooledMemoryAllocator.h"
+#include "src/MemoryAllocator.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
-#include "src/d3d12/ResourceHeapAllocatorD3D12.h"
 
 #include <array>
 #include <cstdint>
@@ -27,151 +24,158 @@
 struct ID3D12Device;
 struct IDXGIAdapter3;
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm {
 
-    class ResidencyManager;
+    class PooledMemoryAllocator;
+    class VirtualBuddyAllocator;
 
-    typedef enum ALLOCATOR_FLAGS {
-        ALLOCATOR_ALWAYS_COMMITED = 0x1,
-        ALLOCATOR_ALWAYS_IN_BUDGET = 0x2,
-    } ALLOCATOR_FLAGS;
+    namespace d3d12 {
 
-    struct ALLOCATOR_DESC {
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+        class ResidencyManager;
+        class ResourceHeapAllocator;
 
-        ALLOCATOR_FLAGS Flags;
-        bool IsUMA;
+        typedef enum ALLOCATOR_FLAGS {
+            ALLOCATOR_ALWAYS_COMMITED = 0x1,
+            ALLOCATOR_ALWAYS_IN_BUDGET = 0x2,
+        } ALLOCATOR_FLAGS;
 
-        // Determines if the resource heap can mix resource categories (both texture and buffers).
-        // Use CheckFeatureSupport to get supported tier.
-        uint32_t ResourceHeapTier;
+        struct ALLOCATOR_DESC {
+            Microsoft::WRL::ComPtr<ID3D12Device> Device;
+            Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
 
-        // The minimum size of the created resource heap.
-        // If the allocation exceeds |PreferredResourceHeapSize|, it cannot sub-allocate. If the
-        // resource heap size is too small, there will be no beneifit to sub-allocate the resource.
-        // By default, a preferred heap size of zero means the default heap size of 4MB will be
-        // used.
-        uint64_t PreferredResourceHeapSize;
+            ALLOCATOR_FLAGS Flags;
+            bool IsUMA;
 
-        // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
-        // This avoids keeping large resource heaps in memory for infrequently created large
-        // resources.
-        // By default, a max resource heap size of zero means created resources will always be
-        // pool-allocated.
-        uint64_t MaxResourceSizeForPooling;
+            // Determines if the resource heap can mix resource categories (both texture and
+            // buffers). Use CheckFeatureSupport to get supported tier.
+            uint32_t ResourceHeapTier;
 
-        // The total video memory available to the allocator, expressed as a percentage.
-        // For example, 0.95 means 95% of video memory can be budgeted, always leaving 5%
-        // for the the OS and other applications.
-        float TotalMemorySegmentBudgetLimit;
-    };
+            // The minimum size of the created resource heap.
+            // If the allocation exceeds |PreferredResourceHeapSize|, it cannot sub-allocate. If the
+            // resource heap size is too small, there will be no beneifit to sub-allocate the
+            // resource. By default, a preferred heap size of zero means the default heap size of
+            // 4MB will be used.
+            uint64_t PreferredResourceHeapSize;
 
-    typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
+            // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
+            // This avoids keeping large resource heaps in memory for infrequently created large
+            // resources.
+            // By default, a max resource heap size of zero means created resources will always be
+            // pool-allocated.
+            uint64_t MaxResourceSizeForPooling;
 
-    struct ALLOCATION_DESC {
-        ALLOCATION_FLAGS Flags;
-        D3D12_HEAP_TYPE HeapType;
-    };
+            // The total video memory available to the allocator, expressed as a percentage.
+            // For example, 0.95 means 95% of video memory can be budgeted, always leaving 5%
+            // for the the OS and other applications.
+            float TotalMemorySegmentBudgetLimit;
+        };
 
-    // Resource heap types + flags combinations are named after the D3D constants.
-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_type
-    enum ResourceHeapKind {
+        typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
 
-        // Resource heap tier 2
-        // Allows resource heaps to contain all buffer and textures types.
-        // This enables better heap re-use by avoiding the need for separate heaps and
-        // also reduces fragmentation.
-        Readback_AllBuffersAndTextures,
-        Upload_AllBuffersAndTextures,
-        Default_AllBuffersAndTextures,
+        struct ALLOCATION_DESC {
+            ALLOCATION_FLAGS Flags;
+            D3D12_HEAP_TYPE HeapType;
+        };
 
-        // Resource heap tier 1
-        // Resource heaps only support types from a single resource category.
-        Readback_OnlyBuffers,
-        Upload_OnlyBuffers,
-        Default_OnlyBuffers,
+        // Resource heap types + flags combinations are named after the D3D constants.
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_type
+        enum ResourceHeapKind {
 
-        Default_OnlyNonRenderableOrDepthTextures,
-        Default_OnlyRenderableOrDepthTextures,
+            // Resource heap tier 2
+            // Allows resource heaps to contain all buffer and textures types.
+            // This enables better heap re-use by avoiding the need for separate heaps and
+            // also reduces fragmentation.
+            Readback_AllBuffersAndTextures,
+            Upload_AllBuffersAndTextures,
+            Default_AllBuffersAndTextures,
 
-        EnumCount,
-        InvalidEnum = EnumCount,
-    };
+            // Resource heap tier 1
+            // Resource heaps only support types from a single resource category.
+            Readback_OnlyBuffers,
+            Upload_OnlyBuffers,
+            Default_OnlyBuffers,
 
-    // Manages a list of resource allocators used by the device to create resources using
-    // multiple allocation methods.
-    class ResourceAllocator : public MemoryAllocator {
-      public:
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor);
-        ~ResourceAllocator() override;
+            Default_OnlyNonRenderableOrDepthTextures,
+            Default_OnlyRenderableOrDepthTextures,
 
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
-                               const D3D12_RESOURCE_DESC& resourceDescriptor,
-                               D3D12_RESOURCE_STATES initialUsage,
-                               const D3D12_CLEAR_VALUE* pClearValue,
-                               ResourceAllocation** ppResourceAllocation);
+            EnumCount,
+            InvalidEnum = EnumCount,
+        };
 
-        HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
-                               ResourceAllocation** ppResourceAllocation);
+        // Manages a list of resource allocators used by the device to create resources using
+        // multiple allocation methods.
+        class ResourceAllocator : public MemoryAllocator {
+          public:
+            ResourceAllocator(const ALLOCATOR_DESC& descriptor);
+            ~ResourceAllocator() override;
 
-        ResidencyManager* GetResidencyManager();
+            HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+                                   const D3D12_RESOURCE_DESC& resourceDescriptor,
+                                   D3D12_RESOURCE_STATES initialUsage,
+                                   const D3D12_CLEAR_VALUE* pClearValue,
+                                   ResourceAllocation** ppResourceAllocation);
 
-      private:
-        friend ResourceHeapAllocator;
-        friend ResourceAllocation;
+            HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
+                                   ResourceAllocation** ppResourceAllocation);
 
-        // MemoryAllocator interface
-        void AllocateMemory(MemoryAllocation& allocation) override;
-        void DeallocateMemory(MemoryAllocation& resourceHeap) override;
-        void Release() override;
+            ResidencyManager* GetResidencyManager();
 
-        uint64_t GetMemorySize() const override;
-        uint64_t GetMemoryAlignment() const override;
+          private:
+            friend ResourceHeapAllocator;
+            friend ResourceAllocation;
 
-        HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
-                                     const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
-                                     const D3D12_CLEAR_VALUE* pClearValue,
-                                     D3D12_RESOURCE_STATES initialUsage,
-                                     ResourceAllocation** ppResourceAllocation);
+            // MemoryAllocator interface
+            void AllocateMemory(MemoryAllocation& allocation) override;
+            void DeallocateMemory(MemoryAllocation& resourceHeap) override;
+            void Release() override;
 
-        HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
-                                        const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                        const D3D12_CLEAR_VALUE* pClearValue,
-                                        D3D12_RESOURCE_STATES initialUsage,
-                                        ResourceAllocation** ppResourceAllocation);
+            uint64_t GetMemorySize() const override;
+            uint64_t GetMemoryAlignment() const override;
 
-        HRESULT CreateResourceHeap(uint64_t size,
-                                   D3D12_HEAP_TYPE heapType,
-                                   D3D12_HEAP_FLAGS heapFlags,
-                                   DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                                   uint64_t heapAlignment,
-                                   Heap** ppResourceHeap);
+            HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
+                                         const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
+                                         const D3D12_CLEAR_VALUE* pClearValue,
+                                         D3D12_RESOURCE_STATES initialUsage,
+                                         ResourceAllocation** ppResourceAllocation);
 
-        ComPtr<ID3D12Device> mDevice;
+            HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
+                                            const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                            const D3D12_CLEAR_VALUE* pClearValue,
+                                            D3D12_RESOURCE_STATES initialUsage,
+                                            ResourceAllocation** ppResourceAllocation);
 
-        bool mIsUMA;
-        uint32_t mResourceHeapTier;
-        bool mIsAlwaysCommitted;
-        bool mIsAlwaysInBudget;
-        uint64_t mMaxResourceSizeForPooling;
+            HRESULT CreateResourceHeap(uint64_t size,
+                                       D3D12_HEAP_TYPE heapType,
+                                       D3D12_HEAP_FLAGS heapFlags,
+                                       DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                       uint64_t heapAlignment,
+                                       Heap** ppResourceHeap);
 
-        std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
-            mPlacedAllocators;
+            ComPtr<ID3D12Device> mDevice;
 
-        std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
-            mPooledPlacedAllocators;
+            bool mIsUMA;
+            uint32_t mResourceHeapTier;
+            bool mIsAlwaysCommitted;
+            bool mIsAlwaysInBudget;
+            uint64_t mMaxResourceSizeForPooling;
 
-        std::array<std::unique_ptr<ResourceHeapAllocator>, ResourceHeapKind::EnumCount>
-            mResourceHeapAllocators;
+            std::array<std::unique_ptr<VirtualBuddyAllocator>, ResourceHeapKind::EnumCount>
+                mPlacedAllocators;
 
-        std::array<std::unique_ptr<PooledMemoryAllocator>, ResourceHeapKind::EnumCount>
-            mPooledResourceHeapAllocators;
+            std::array<std::unique_ptr<VirtualBuddyAllocator>, ResourceHeapKind::EnumCount>
+                mPooledPlacedAllocators;
 
-        std::unique_ptr<ResidencyManager> mResidencyManager;
-    };
+            std::array<std::unique_ptr<ResourceHeapAllocator>, ResourceHeapKind::EnumCount>
+                mResourceHeapAllocators;
 
-}}  // namespace gpgmm::d3d12
+            std::array<std::unique_ptr<PooledMemoryAllocator>, ResourceHeapKind::EnumCount>
+                mPooledResourceHeapAllocators;
+
+            std::unique_ptr<ResidencyManager> mResidencyManager;
+        };
+
+    }  // namespace d3d12
+}  // namespace gpgmm
 
 #endif  // GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_

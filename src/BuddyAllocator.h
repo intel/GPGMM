@@ -15,6 +15,7 @@
 #ifndef GPGMM_BUDDYALLOCATOR_H_
 #define GPGMM_BUDDYALLOCATOR_H_
 
+#include "src/BlockAllocator.h"
 #include "src/common/IntegerTypes.h"
 
 #include <cstddef>
@@ -34,14 +35,14 @@ namespace gpgmm {
     // the size of the block to be used to satisfy the request. The first level (index=0) represents
     // the root whose size is also called the max block size.
     //
-    class BuddyAllocator {
+    class BuddyAllocator : public BlockAllocator {
       public:
         BuddyAllocator(uint64_t maxSize);
-        ~BuddyAllocator();
+        ~BuddyAllocator() override;
 
-        // Required methods.
-        uint64_t Allocate(uint64_t allocationSize, uint64_t alignment = 1);
-        void Deallocate(uint64_t offset);
+        // BlockAllocator interface
+        uint64_t Allocate(uint64_t allocationSize, uint64_t alignment = 1) override;
+        void Deallocate(uint64_t offset) override;
 
         // For testing purposes only.
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;
