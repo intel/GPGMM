@@ -186,9 +186,9 @@ namespace gpgmm { namespace d3d12 {
     // make the new object resident while also staying within budget. If there isn't enough
     // memory, we should evict until there is. Returns the number of bytes evicted.
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
-                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                                    const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
-        MemorySegmentInfo* memorySegmentInfo = GetMemorySegmentInfo(memorySegmentGroup);
+        MemorySegmentInfo* memorySegmentInfo = GetMemorySegmentInfo(dxgiMemorySegmentGroup);
 
         UpdateMemorySegmentInfo(memorySegmentInfo);
 
@@ -296,11 +296,11 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
+    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP dxgiMemorySegmentGroup,
                                            uint64_t sizeToMakeResident,
                                            uint64_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
-        Evict(sizeToMakeResident, memorySegmentGroup, nullptr);
+        Evict(sizeToMakeResident, dxgiMemorySegmentGroup, nullptr);
 
         // Note that MakeResident is a synchronous function and can add a significant
         // overhead to command recording. In the future, it may be possible to decrease this
@@ -315,7 +315,7 @@ namespace gpgmm { namespace d3d12 {
         // more memory and calling MakeResident again.
         while (FAILED(hr)) {
             uint64_t sizeEvicted = 0;
-            Evict(kAdditonalSizeToEvict, memorySegmentGroup, &sizeEvicted);
+            Evict(kAdditonalSizeToEvict, dxgiMemorySegmentGroup, &sizeEvicted);
 
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
