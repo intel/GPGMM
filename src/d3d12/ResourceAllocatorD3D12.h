@@ -52,14 +52,15 @@ namespace gpgmm { namespace d3d12 {
         // resource heap size is too small, there will be no beneifit to sub-allocate the resource.
         // By default, a preferred heap size of zero means the default heap size of 4MB will be
         // used.
-        UINT64 PreferredResourceHeapSize;
+        uint64_t PreferredResourceHeapSize;
 
         // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
         // This avoids keeping large resource heaps in memory for infrequently created large
         // resources.
         // By default, a max resource heap size of zero means created resources will always be
         // pool-allocated.
-        UINT64 MaxResourceSizeForPooling;
+        uint64_t MaxResourceSizeForPooling;
+        
     };
 
     typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
