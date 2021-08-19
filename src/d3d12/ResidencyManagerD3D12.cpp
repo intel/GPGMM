@@ -27,10 +27,8 @@ namespace gpgmm { namespace d3d12 {
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter,
                                        bool isUMA)
-        : mDevice(device), mAdapter(adapter), mIsUMA(isUMA) {
+        : mDevice(device), mAdapter(adapter), mIsUMA(isUMA), mFence(new Fence(device, 0)) {
         UpdateVideoMemoryInfo();
-
-        mFence = std::make_unique<Fence>(device, 0);
     }
 
     ResidencyManager::~ResidencyManager() {
