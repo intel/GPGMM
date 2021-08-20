@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_BUDDYMEMORYALLOCATOR_H_
-#define GPGMM_BUDDYMEMORYALLOCATOR_H_
+#ifndef GPGMM_VIRTUALBUDDYALLOCATOR_H_
+#define GPGMM_VIRTUALBUDDYALLOCATOR_H_
 
 #include "src/BuddyAllocator.h"
-#include "src/MemoryAllocation.h"
 #include "src/MemoryAllocator.h"
 
 #include <memory>
@@ -61,14 +60,10 @@ namespace gpgmm {
         uint64_t mMemorySize = 0;
 
         BuddyAllocator mBuddyBlockAllocator;
-        struct TrackedSubAllocations {
-            size_t refcount = 0;
-            MemoryAllocation mMemoryAllocation;
-        };
 
-        std::vector<TrackedSubAllocations> mTrackedSubAllocations;
+        std::vector<MemoryAllocation> mMemoryAllocations;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_BUDDYMEMORYALLOCATOR_H_
+#endif  // GPGMM_VIRTUALBUDDYALLOCATOR_H_

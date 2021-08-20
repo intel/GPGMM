@@ -14,7 +14,6 @@
 
 #include "src/VirtualBuddyAllocator.h"
 
-#include "src/MemoryAllocator.h"
 #include "src/common/Math.h"
 
 namespace gpgmm {
@@ -32,7 +31,7 @@ namespace gpgmm {
     void VirtualBuddyAllocator::Release() {
         ASSERT(ComputeTotalNumOfHeapsForTesting() == 0);
 
-        mTrackedSubAllocations.clear();
+        mMemoryAllocations.clear();
         mMemoryAllocator->Release();
     }
 
@@ -69,21 +68,21 @@ namespace gpgmm {
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
         const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
-        if (memoryIndex >= mTrackedSubAllocations.size()) {
-            mTrackedSubAllocations.resize(memoryIndex + 1);
+        if (memoryIndex >= mMemoryAllocations.size()) {
+            mMemoryAllocations.resize(memoryIndex + 1);
         }
 
-        if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
+        if (!mMemoryAllocations[memoryIndex].IsSubAllocated()) {
             // Transfer ownership to this allocator
             MemoryAllocation memoryAllocation;
             mMemoryAllocator->AllocateMemory(/*inout*/ memoryAllocation);
             if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
                 return;
             }
-            mTrackedSubAllocations[memoryIndex] = {/*refcount*/ 0, std::move(memoryAllocation)};
+            mMemoryAllocations[memoryIndex] = std::move(memoryAllocation);
         }
 
-        mTrackedSubAllocations[memoryIndex].refcount++;
+        mMemoryAllocations[memoryIndex].IncrementSubAllocatedRef();
 
         AllocationInfo info;
         info.mBlockOffset = blockOffset;
@@ -92,9 +91,8 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = blockOffset % mMemorySize;
 
-        allocation = MemoryAllocation{
-            mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetAllocator(), info,
-            memoryOffset, mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetMemory()};
+        allocation = MemoryAllocation{mMemoryAllocations[memoryIndex].GetAllocator(), info,
+                                      memoryOffset, mMemoryAllocations[memoryIndex].GetMemory()};
     }
 
     void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation& allocation) {
@@ -108,13 +106,10 @@ namespace gpgmm {
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlockOffset);
+        mMemoryAllocations[memoryIndex].DecrementSubAllocatedRef();
 
-        ASSERT(mTrackedSubAllocations[memoryIndex].refcount > 0);
-        mTrackedSubAllocations[memoryIndex].refcount--;
-
-        if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
-            mMemoryAllocator->DeallocateMemory(
-                mTrackedSubAllocations[memoryIndex].mMemoryAllocation);
+        if (!mMemoryAllocations[memoryIndex].IsSubAllocated()) {
+            mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex]);
         }
 
         mBuddyBlockAllocator.Deallocate(info.mBlockOffset);
@@ -130,8 +125,8 @@ namespace gpgmm {
 
     uint64_t VirtualBuddyAllocator::ComputeTotalNumOfHeapsForTesting() const {
         uint64_t count = 0;
-        for (const TrackedSubAllocations& allocation : mTrackedSubAllocations) {
-            if (allocation.refcount > 0) {
+        for (const MemoryAllocation& allocation : mMemoryAllocations) {
+            if (allocation.IsSubAllocated()) {
                 count++;
             }
         }

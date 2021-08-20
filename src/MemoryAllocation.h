@@ -71,6 +71,10 @@ namespace gpgmm {
         AllocationInfo GetInfo() const;
         MemoryAllocator* GetAllocator();
 
+        bool IsSubAllocated() const;
+        void IncrementSubAllocatedRef();
+        void DecrementSubAllocatedRef();
+
       protected:
         virtual void Reset();
 
@@ -80,6 +84,7 @@ namespace gpgmm {
         uint64_t mOffset;
         MemoryBase* mMemory;
         uint8_t* mMappedPointer;
+        uint32_t mSubAllocatedRefCount;
     };
 }  // namespace gpgmm
 

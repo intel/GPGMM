@@ -20,7 +20,11 @@
 namespace gpgmm {
 
     MemoryAllocation::MemoryAllocation()
-        : mAllocator(nullptr), mOffset(kInvalidOffset), mMemory(nullptr), mMappedPointer(nullptr) {
+        : mAllocator(nullptr),
+          mOffset(kInvalidOffset),
+          mMemory(nullptr),
+          mMappedPointer(nullptr),
+          mSubAllocatedRefCount(0) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
@@ -32,7 +36,8 @@ namespace gpgmm {
           mInfo(info),
           mOffset(offset),
           mMemory(memory),
-          mMappedPointer(mappedPointer) {
+          mMappedPointer(mappedPointer),
+          mSubAllocatedRefCount(0) {
     }
 
     bool MemoryAllocation::operator==(const MemoryAllocation& other) {
@@ -67,5 +72,18 @@ namespace gpgmm {
 
     MemoryAllocator* MemoryAllocation::GetAllocator() {
         return mAllocator;
+    }
+
+    void MemoryAllocation::IncrementSubAllocatedRef() {
+        mSubAllocatedRefCount++;
+    }
+
+    void MemoryAllocation::DecrementSubAllocatedRef() {
+        ASSERT(mSubAllocatedRefCount > 0);
+        mSubAllocatedRefCount--;
+    }
+
+    bool MemoryAllocation::IsSubAllocated() const {
+        return mSubAllocatedRefCount != 0;
     }
 }  // namespace gpgmm
