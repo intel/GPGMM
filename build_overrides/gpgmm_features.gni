@@ -17,6 +17,17 @@ import("//build/config/gclient_args.gni")
 # Enable the compilation for UWP
 gpgmm_is_winuwp = is_win && target_os == "winuwp"
 
+# Non-standalone builds cannot checkout test integrations.
+# Rather then require GN clients to modify DEPS to disable,
+# always disable them here if undefined.
+if (!defined(checkout_dawn)) {
+  checkout_dawn = false
+}
+
+if (!defined(checkout_webnn)) {
+  checkout_webnn = false
+}
+
 declare_args() {
   # Enable GPGMM's ASSERTs even in release builds
   gpgmm_always_assert = false
