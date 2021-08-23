@@ -479,9 +479,6 @@ namespace gpgmm { namespace d3d12 {
         for (auto& allocator : mPooledPlacedAllocators) {
             allocator->Release();
         }
-        for (auto& allocator : mPlacedAllocators) {
-            allocator->Release();
-        }
     }
 
     uint64_t ResourceAllocator::GetMemorySize() const {
