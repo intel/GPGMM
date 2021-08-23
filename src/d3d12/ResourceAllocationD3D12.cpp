@@ -33,10 +33,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::ReleaseThis() {
-        if (this == nullptr) {
-            return;
-        }
-
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(*this);
         }
