@@ -40,7 +40,7 @@ deps = {
   },
 
   'third_party/skia': {
-    'url': '{skia_git}/skia.git@076be6662a23375d1b7ef332a50b8700ed8fade1',
+    'url': '{skia_git}/skia.git@c01225114a00f3c3c20ef81e9c2903b720140467',
     'condition': 'checkout_skia',
   },
 
@@ -209,6 +209,25 @@ hooks = [
     'pattern': '.',
     'condition': 'checkout_webnn',
     'action': ['git', '-C', './third_party/webnn_native/',
+               '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
+               'cherry-pick', 'FETCH_HEAD',
+    ],
+  },
+  # Apply SKIA-GPGMM integration patch.
+  # This can be removed once GPGMM is integrated with the upstream project.
+  {
+    'name': 'fetch_skia_integration_patch',
+    'pattern': '.',
+    'condition': 'checkout_skia',
+    'action': [ 'git', '-C', './third_party/skia/',
+                'fetch', 'https://github.com/bbernhar/skia', 'gpgmm',
+    ],
+  },
+  {
+    'name': 'apply_skia_integration_patch',
+    'pattern': '.',
+    'condition': 'checkout_skia',
+    'action': ['git', '-C', './third_party/skia/',
                '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
                'cherry-pick', 'FETCH_HEAD',
     ],

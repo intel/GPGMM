@@ -28,6 +28,10 @@ if (!defined(checkout_webnn)) {
   checkout_webnn = false
 }
 
+if (!defined(checkout_skia)) {
+  checkout_skia = false
+}
+
 declare_args() {
   # Enable GPGMM's ASSERTs even in release builds
   gpgmm_always_assert = false
@@ -40,4 +44,7 @@ declare_args() {
 
   # Enable the compilation of GPGMM's WebNN integration for testing.
   enable_webnn = checkout_webnn
+
+  # Enable the compilation of GPGMM's SKIA integration for testing.
+  enable_skia = checkout_skia
 }
