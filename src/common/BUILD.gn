@@ -51,7 +51,7 @@ config("gpgmm_public_include_dirs") {
 }
 
 config("gpgmm_internal") {
-  include_dirs = [ "${gpgmm_root_dir}/src" ]
+  include_dirs = [ "${gpgmm_root_dir}/" ]
 
   defines = []
   if (gpgmm_always_assert || dcheck_always_on || is_debug ||

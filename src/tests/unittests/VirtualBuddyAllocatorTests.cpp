@@ -15,9 +15,9 @@
 
 #include <gtest/gtest.h>
 
-#include "Memory.h"
-#include "PooledMemoryAllocator.h"
-#include "VirtualBuddyAllocator.h"
+#include "src/Memory.h"
+#include "src/PooledMemoryAllocator.h"
+#include "src/VirtualBuddyAllocator.h"
 
 #include <set>
 #include <vector>

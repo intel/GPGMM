@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common/Log.h"
+#include "src/common/Log.h"
 
-#include "common/Assert.h"
-#include "common/Platform.h"
+#include "src/common/Assert.h"
+#include "src/common/Platform.h"
 
 #include <cstdio>
 

@@ -14,7 +14,8 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include "BuddyAllocator.h"
+
+#include "src/BuddyAllocator.h"
 
 using namespace gpgmm;
 

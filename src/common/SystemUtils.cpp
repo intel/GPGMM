@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common/SystemUtils.h"
+#include "src/common/SystemUtils.h"
 
-#include "common/Assert.h"
+#include "src/common/Assert.h"
 
 #if defined(DAWN_PLATFORM_WINDOWS)
 #    include <Windows.h>

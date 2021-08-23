@@ -7,7 +7,7 @@
 #ifndef COMMON_LINKED_LIST_H
 #define COMMON_LINKED_LIST_H
 
-#include "common/Assert.h"
+#include "src/common/Assert.h"
 
 // Simple LinkedList type. (See the Q&A section to understand how this
 // differs from std::list).

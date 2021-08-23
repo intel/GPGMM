@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common/Math.h"
+#include "src/common/Math.h"
 
-#include "common/Assert.h"
-#include "common/Platform.h"
+#include "src/common/Assert.h"
+#include "src/common/Platform.h"
 
 #include <algorithm>
 #include <cmath>

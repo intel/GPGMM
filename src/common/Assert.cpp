@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common/Assert.h"
-#include "common/Log.h"
+#include "src/common/Assert.h"
+#include "src/common/Log.h"
 
 #include <cstdlib>
 
