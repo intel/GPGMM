@@ -326,6 +326,18 @@ TEST(VirtualBuddyAllocatorTests, SameSizeVariousAlignment) {
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
     ASSERT_EQ(allocation3.GetMemory(), allocation4.GetMemory());
+
+    allocator.Deallocate(allocation1);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
+
+    allocator.Deallocate(allocation2);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
+
+    allocator.Deallocate(allocation3);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
+
+    allocator.Deallocate(allocation4);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 0u);
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
@@ -376,6 +388,18 @@ TEST(VirtualBuddyAllocatorTests, VariousSizeSameAlignment) {
 
     ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
     ASSERT_NE(allocation3.GetMemory(), allocation4.GetMemory());
+
+    allocator.Deallocate(allocation1);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 3u);
+
+    allocator.Deallocate(allocation2);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 2u);
+
+    allocator.Deallocate(allocation3);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 1u);
+
+    allocator.Deallocate(allocation4);
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 0u);
 }
 
 // Verify allocating a very large resource does not overflow.
@@ -418,14 +442,23 @@ TEST(VirtualBuddyAllocatorTests, ReuseFreedHeaps) {
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), heaps.size());
 
+    allocations.clear();
+
     // Allocate again reusing the same heaps.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
         MemoryAllocation allocation = allocator.Allocate(4);
         ASSERT_EQ(allocation.GetInfo().mMethod, AllocationMethod::kSubAllocated);
         ASSERT_FALSE(heaps.insert(allocation.GetMemory()).second);
+        allocations.push_back(std::move(allocation));
     }
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
+
+    for (MemoryAllocation& allocation : allocations) {
+        allocator.Deallocate(allocation);
+    }
+
+    ASSERT_EQ(allocator.ComputeTotalNumOfHeapsForTesting(), 0u);
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.

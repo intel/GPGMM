@@ -37,7 +37,7 @@ namespace gpgmm {
     class VirtualBuddyAllocator : public MemoryAllocator {
       public:
         VirtualBuddyAllocator(uint64_t maxSystemSize, MemoryAllocator* memoryAllocator);
-        ~VirtualBuddyAllocator() override = default;
+        ~VirtualBuddyAllocator() override;
 
         void SubAllocate(uint64_t size, uint64_t alignment, MemoryAllocation& allocation);
 

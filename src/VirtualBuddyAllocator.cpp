@@ -28,10 +28,11 @@ namespace gpgmm {
         ASSERT(maxSystemSize % mMemorySize == 0);
     }
 
-    void VirtualBuddyAllocator::Release() {
+    VirtualBuddyAllocator::~VirtualBuddyAllocator() {
         ASSERT(ComputeTotalNumOfHeapsForTesting() == 0);
+    }
 
-        mMemoryAllocations.clear();
+    void VirtualBuddyAllocator::Release() {
         mMemoryAllocator->Release();
     }
 
