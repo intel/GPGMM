@@ -19,6 +19,7 @@
 #include "src/d3d12/ResourceAllocationD3D12.h"
 
 #include <array>
+#include <memory>
 #include <cstdint>
 
 struct ID3D12Device;
