@@ -37,11 +37,11 @@ namespace gpgmm {
     //
     class BuddyAllocator : public BlockAllocator {
       public:
-        BuddyAllocator(uint64_t maxSize);
+        BuddyAllocator(uint64_t maxBlockSize);
         ~BuddyAllocator() override;
 
         // BlockAllocator interface
-        uint64_t Allocate(uint64_t allocationSize, uint64_t alignment = 1) override;
+        uint64_t Allocate(uint64_t size, uint64_t alignment = 1) override;
         void Deallocate(uint64_t offset) override;
 
         // For testing purposes only.

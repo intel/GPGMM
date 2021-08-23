@@ -19,13 +19,13 @@
 
 namespace gpgmm {
 
-    BuddyAllocator::BuddyAllocator(uint64_t maxSize) : mMaxBlockSize(maxSize) {
-        ASSERT(IsPowerOfTwo(maxSize));
+    BuddyAllocator::BuddyAllocator(uint64_t maxBlockSize) : mMaxBlockSize(maxBlockSize) {
+        ASSERT(IsPowerOfTwo(maxBlockSize));
 
         mFreeLists.resize(Log2(mMaxBlockSize) + 1);
 
         // Insert the level0 free block.
-        mRoot = new BuddyBlock(maxSize, /*offset*/ 0);
+        mRoot = new BuddyBlock(maxBlockSize, /*offset*/ 0);
         mFreeLists[0] = {mRoot};
     }
 
@@ -136,13 +136,13 @@ namespace gpgmm {
         }
     }
 
-    uint64_t BuddyAllocator::Allocate(uint64_t allocationSize, uint64_t alignment) {
-        if (allocationSize == 0 || allocationSize > mMaxBlockSize) {
+    uint64_t BuddyAllocator::Allocate(uint64_t size, uint64_t alignment) {
+        if (size == 0 || size > mMaxBlockSize) {
             return kInvalidOffset;
         }
 
         // Compute the level
-        const uint32_t allocationSizeToLevel = ComputeLevelFromBlockSize(allocationSize);
+        const uint32_t allocationSizeToLevel = ComputeLevelFromBlockSize(size);
 
         ASSERT(allocationSizeToLevel < mFreeLists.size());
 
