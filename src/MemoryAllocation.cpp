@@ -63,6 +63,7 @@ namespace gpgmm {
     }
 
     void MemoryAllocation::Reset() {
+        ASSERT(!IsSubAllocated());
         mAllocator = nullptr;
         mInfo = {};
         mOffset = kInvalidOffset;
