@@ -109,6 +109,7 @@ source_set("gpgmm_sources") {
     "Memory.h",
     "MemoryAllocation.cpp",
     "MemoryAllocation.h",
+    "MemoryAllocator.cpp",
     "MemoryAllocator.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",

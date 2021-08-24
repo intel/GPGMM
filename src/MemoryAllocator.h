@@ -29,6 +29,11 @@ namespace gpgmm {
 
         virtual uint64_t GetMemorySize() const = 0;
         virtual uint64_t GetMemoryAlignment() const = 0;
+
+      protected:
+        bool IsSubAllocated(const MemoryAllocation& allocation) const;
+        void IncrementSubAllocatedRef(MemoryAllocation& allocation);
+        void DecrementSubAllocatedRef(MemoryAllocation& allocation);
     };
 
 }  // namespace gpgmm

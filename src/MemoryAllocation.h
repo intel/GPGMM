@@ -71,11 +71,13 @@ namespace gpgmm {
         AllocationInfo GetInfo() const;
         MemoryAllocator* GetAllocator();
 
+      protected:
+        friend class MemoryAllocator;
+
         bool IsSubAllocated() const;
         void IncrementSubAllocatedRef();
         void DecrementSubAllocatedRef();
 
-      protected:
         virtual void Reset();
 
       private:

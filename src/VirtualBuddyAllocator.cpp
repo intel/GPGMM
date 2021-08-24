@@ -73,7 +73,7 @@ namespace gpgmm {
             mMemoryAllocations.resize(memoryIndex + 1);
         }
 
-        if (!mMemoryAllocations[memoryIndex].IsSubAllocated()) {
+        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
             // Transfer ownership to this allocator
             MemoryAllocation memoryAllocation;
             mMemoryAllocator->AllocateMemory(/*inout*/ memoryAllocation);
@@ -83,7 +83,7 @@ namespace gpgmm {
             mMemoryAllocations[memoryIndex] = std::move(memoryAllocation);
         }
 
-        mMemoryAllocations[memoryIndex].IncrementSubAllocatedRef();
+        IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
 
         AllocationInfo info;
         info.mBlockOffset = blockOffset;
@@ -107,9 +107,9 @@ namespace gpgmm {
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlockOffset);
-        mMemoryAllocations[memoryIndex].DecrementSubAllocatedRef();
+        DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
 
-        if (!mMemoryAllocations[memoryIndex].IsSubAllocated()) {
+        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
             mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex]);
         }
 
@@ -127,7 +127,7 @@ namespace gpgmm {
     uint64_t VirtualBuddyAllocator::ComputeTotalNumOfHeapsForTesting() const {
         uint64_t count = 0;
         for (const MemoryAllocation& allocation : mMemoryAllocations) {
-            if (allocation.IsSubAllocated()) {
+            if (IsSubAllocated(allocation)) {
                 count++;
             }
         }
