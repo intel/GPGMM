@@ -29,6 +29,7 @@ namespace gpgmm {
 
         virtual uint64_t GetMemorySize() const = 0;
         virtual uint64_t GetMemoryAlignment() const = 0;
+        virtual uint64_t GetPoolSizeForTesting() const;
 
       protected:
         bool IsSubAllocated(const MemoryAllocation& allocation) const;

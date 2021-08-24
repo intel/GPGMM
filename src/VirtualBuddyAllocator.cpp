@@ -29,7 +29,7 @@ namespace gpgmm {
     }
 
     VirtualBuddyAllocator::~VirtualBuddyAllocator() {
-        ASSERT(ComputeTotalNumOfHeapsForTesting() == 0);
+        ASSERT(GetPoolSizeForTesting() == 0);
     }
 
     void VirtualBuddyAllocator::Release() {
@@ -124,7 +124,7 @@ namespace gpgmm {
         return mMemoryAllocator->GetMemoryAlignment();
     }
 
-    uint64_t VirtualBuddyAllocator::ComputeTotalNumOfHeapsForTesting() const {
+    uint64_t VirtualBuddyAllocator::GetPoolSizeForTesting() const {
         uint64_t count = 0;
         for (const MemoryAllocation& allocation : mMemoryAllocations) {
             if (IsSubAllocated(allocation)) {

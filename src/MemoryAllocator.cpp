@@ -16,6 +16,10 @@
 
 namespace gpgmm {
 
+    uint64_t MemoryAllocator::GetPoolSizeForTesting() const {
+        return 0;
+    }
+
     bool MemoryAllocator::IsSubAllocated(const MemoryAllocation& allocation) const {
         return allocation.IsSubAllocated();
     }
