@@ -300,7 +300,8 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(allocator != nullptr);
 
         MemoryAllocation subAllocation;
-        allocator->SubAllocate(resourceInfo.SizeInBytes, resourceInfo.Alignment, subAllocation);
+        allocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                                     subAllocation);
         if (subAllocation == GPGMM_INVALID_ALLOCATION) {
             return E_INVALIDARG;
         }
@@ -463,6 +464,12 @@ namespace gpgmm { namespace d3d12 {
                                                        std::move(committedResource),
                                                        heap};
         return hr;
+    }
+
+    void ResourceAllocator::SubAllocateMemory(uint64_t size,
+                                              uint64_t alignment,
+                                              MemoryAllocation& allocation) {
+        ASSERT(false);
     }
 
     void ResourceAllocator::AllocateMemory(MemoryAllocation& allocation) {

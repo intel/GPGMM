@@ -42,9 +42,9 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    void VirtualBuddyAllocator::SubAllocate(uint64_t size,
-                                            uint64_t alignment,
-                                            MemoryAllocation& allocation) {
+    void VirtualBuddyAllocator::SubAllocateMemory(uint64_t size,
+                                                  uint64_t alignment,
+                                                  MemoryAllocation& allocation) {
         if (size == 0) {
             return;
         }

@@ -28,6 +28,11 @@ static constexpr uint64_t kHeapSize = 128u;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
+    void SubAllocateMemory(uint64_t size,
+                           uint64_t alignment,
+                           MemoryAllocation& allocation) override {
+    }
+
     void AllocateMemory(MemoryAllocation& allocation) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
@@ -61,7 +66,7 @@ class DummyBuddyResourceAllocator {
 
     MemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
         MemoryAllocation allocation;
-        mAllocator.SubAllocate(allocationSize, alignment, allocation);
+        mAllocator.SubAllocateMemory(allocationSize, alignment, allocation);
         return allocation;
     }
 

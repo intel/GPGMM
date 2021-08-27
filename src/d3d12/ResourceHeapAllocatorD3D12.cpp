@@ -33,6 +33,12 @@ namespace gpgmm { namespace d3d12 {
           mHeapAlignment(heapAlignment) {
     }
 
+    void ResourceHeapAllocator::SubAllocateMemory(uint64_t size,
+                                                  uint64_t alignment,
+                                                  MemoryAllocation& allocation) {
+        ASSERT(false);
+    }
+
     void ResourceHeapAllocator::AllocateMemory(MemoryAllocation& allocation) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(mHeapSize, mHeapType, mHeapFlags,
