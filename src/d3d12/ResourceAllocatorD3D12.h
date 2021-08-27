@@ -130,7 +130,7 @@ namespace gpgmm {
             // MemoryAllocator interface
             void AllocateMemory(MemoryAllocation& allocation) override;
             void DeallocateMemory(MemoryAllocation& resourceHeap) override;
-            void Release() override;
+            void ReleaseMemory() override;
 
             uint64_t GetMemorySize() const override;
             uint64_t GetMemoryAlignment() const override;

@@ -37,7 +37,7 @@ class DummyMemoryAllocator : public MemoryAllocator {
     void DeallocateMemory(MemoryAllocation& allocation) override {
     }
 
-    void Release() override {
+    void ReleaseMemory() override {
     }
 
     uint64_t GetMemorySize() const override {

@@ -193,7 +193,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        Release();
+        ReleaseMemory();
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -475,9 +475,9 @@ namespace gpgmm { namespace d3d12 {
         delete resourceHeap.GetMemory();
     }
 
-    void ResourceAllocator::Release() {
+    void ResourceAllocator::ReleaseMemory() {
         for (auto& allocator : mPooledPlacedAllocators) {
-            allocator->Release();
+            allocator->ReleaseMemory();
         }
     }
 

@@ -1,5 +1,4 @@
 // Copyright 2019 The Dawn Authors
-// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/VirtualBuddyAllocator.h"
+#include "src/BuddyMemoryAllocator.h"
 
+#include "src/MemoryAllocator.h"
 #include "src/common/Math.h"
 
 namespace gpgmm {
 
-    VirtualBuddyAllocator::VirtualBuddyAllocator(uint64_t maxSystemSize,
-                                                 MemoryAllocator* memoryAllocator)
+    BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t maxSystemSize,
+                                               MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator),
           mMemorySize(mMemoryAllocator->GetMemorySize()),
           mBuddyBlockAllocator(maxSystemSize) {
@@ -29,22 +29,21 @@ namespace gpgmm {
         ASSERT(maxSystemSize % mMemorySize == 0);
     }
 
-    VirtualBuddyAllocator::~VirtualBuddyAllocator() {
+    void BuddyMemoryAllocator::ReleaseMemory() {
         ASSERT(GetPoolSizeForTesting() == 0);
+
+        mTrackedSubAllocations.clear();
+        mMemoryAllocator->Release();
     }
 
-    void VirtualBuddyAllocator::ReleaseMemory() {
-        mMemoryAllocator->ReleaseMemory();
-    }
-
-    uint64_t VirtualBuddyAllocator::GetMemoryIndex(uint64_t offset) const {
+    uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
         return offset / mMemorySize;
     }
 
-    void VirtualBuddyAllocator::SubAllocate(uint64_t size,
-                                            uint64_t alignment,
-                                            MemoryAllocation& allocation) {
+    void BuddyMemoryAllocator::SubAllocate(uint64_t size,
+                                           uint64_t alignment,
+                                           MemoryAllocation& allocation) {
         if (size == 0) {
             return;
         }
@@ -70,21 +69,21 @@ namespace gpgmm {
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
         const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
-        if (memoryIndex >= mMemoryAllocations.size()) {
-            mMemoryAllocations.resize(memoryIndex + 1);
+        if (memoryIndex >= mTrackedSubAllocations.size()) {
+            mTrackedSubAllocations.resize(memoryIndex + 1);
         }
 
-        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
+        if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
             // Transfer ownership to this allocator
             MemoryAllocation memoryAllocation;
             mMemoryAllocator->AllocateMemory(/*inout*/ memoryAllocation);
             if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
                 return;
             }
-            mMemoryAllocations[memoryIndex] = std::move(memoryAllocation);
+            mTrackedSubAllocations[memoryIndex] = {/*refcount*/ 0, std::move(memoryAllocation)};
         }
 
-        IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
+        mTrackedSubAllocations[memoryIndex].refcount++;
 
         AllocationInfo info;
         info.mBlockOffset = blockOffset;
@@ -93,42 +92,46 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = blockOffset % mMemorySize;
 
-        allocation = MemoryAllocation{mMemoryAllocations[memoryIndex].GetAllocator(), info,
-                                      memoryOffset, mMemoryAllocations[memoryIndex].GetMemory()};
+        allocation = MemoryAllocation{
+            mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetAllocator(), info,
+            memoryOffset, mTrackedSubAllocations[memoryIndex].mMemoryAllocation.GetMemory()};
     }
 
-    void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation& allocation) {
+    void BuddyMemoryAllocator::AllocateMemory(MemoryAllocation& allocation) {
         // Must sub-allocate, cannot allocate memory directly.
         UNREACHABLE();
     }
 
-    void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation& allocation) {
+    void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation& allocation) {
         const AllocationInfo info = allocation.GetInfo();
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlockOffset);
-        DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
 
-        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
-            mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex]);
+        ASSERT(mTrackedSubAllocations[memoryIndex].refcount > 0);
+        mTrackedSubAllocations[memoryIndex].refcount--;
+
+        if (mTrackedSubAllocations[memoryIndex].refcount == 0) {
+            mMemoryAllocator->DeallocateMemory(
+                mTrackedSubAllocations[memoryIndex].mMemoryAllocation);
         }
 
         mBuddyBlockAllocator.Deallocate(info.mBlockOffset);
     }
 
-    uint64_t VirtualBuddyAllocator::GetMemorySize() const {
+    uint64_t BuddyMemoryAllocator::GetMemorySize() const {
         return mMemorySize;
     }
 
-    uint64_t VirtualBuddyAllocator::GetMemoryAlignment() const {
+    uint64_t BuddyMemoryAllocator::GetMemoryAlignment() const {
         return mMemoryAllocator->GetMemoryAlignment();
     }
 
-    uint64_t VirtualBuddyAllocator::GetPoolSizeForTesting() const {
+    uint64_t BuddyMemoryAllocator::GetPoolSizeForTesting() const {
         uint64_t count = 0;
-        for (const MemoryAllocation& allocation : mMemoryAllocations) {
-            if (IsSubAllocated(allocation)) {
+        for (const TrackedSubAllocations& allocation : mTrackedSubAllocations) {
+            if (allocation.refcount > 0) {
                 count++;
             }
         }

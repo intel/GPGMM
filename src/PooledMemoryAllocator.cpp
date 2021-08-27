@@ -21,7 +21,7 @@ namespace gpgmm {
         : mMemoryAllocator(memoryAllocator) {
     }
 
-    void PooledMemoryAllocator::Release() {
+    void PooledMemoryAllocator::ReleaseMemory() {
         for (auto& memory : mPool) {
             mMemoryAllocator->DeallocateMemory(memory);
         }

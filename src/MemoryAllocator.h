@@ -26,7 +26,7 @@ namespace gpgmm {
 
         virtual void AllocateMemory(MemoryAllocation& allocation) = 0;
         virtual void DeallocateMemory(MemoryAllocation& allocation) = 0;
-        virtual void Release() = 0;
+        virtual void ReleaseMemory() = 0;
 
         virtual uint64_t GetMemorySize() const = 0;
         virtual uint64_t GetMemoryAlignment() const = 0;
