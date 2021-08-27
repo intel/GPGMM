@@ -472,14 +472,16 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(false);
     }
 
-    void ResourceAllocator::AllocateMemory(MemoryAllocation& allocation) {
+    void ResourceAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
         ASSERT(false);
     }
 
-    void ResourceAllocator::DeallocateMemory(MemoryAllocation& resourceHeap) {
-        ASSERT(resourceHeap.GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
-        ASSERT(resourceHeap.GetMemory() != nullptr);
-        delete resourceHeap.GetMemory();
+    void ResourceAllocator::DeallocateMemory(MemoryAllocation* pResourceHeap) {
+        ASSERT(pResourceHeap != nullptr);
+        ASSERT(pResourceHeap->GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
+        ASSERT(pResourceHeap->GetMemory() != nullptr);
+
+        delete pResourceHeap->GetMemory();
     }
 
     void ResourceAllocator::ReleaseMemory() {

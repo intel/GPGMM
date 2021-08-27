@@ -39,7 +39,7 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(false);
     }
 
-    void ResourceHeapAllocator::AllocateMemory(MemoryAllocation& allocation) {
+    void ResourceHeapAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(mHeapSize, mHeapType, mHeapFlags,
                                                           mMemorySegment, mHeapAlignment, &heap))) {
@@ -48,7 +48,8 @@ namespace gpgmm { namespace d3d12 {
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
-        allocation = {this, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
+        *ppAllocation =
+            new MemoryAllocation{this, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
     }
 
     uint64_t ResourceHeapAllocator::GetMemorySize() const {
@@ -59,7 +60,7 @@ namespace gpgmm { namespace d3d12 {
         return mHeapAlignment;
     }
 
-    void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation& allocation) {
+    void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         mResourceAllocator->DeallocateMemory(allocation);
     }
 

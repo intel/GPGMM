@@ -24,11 +24,11 @@ namespace gpgmm {
         return allocation.IsSubAllocated();
     }
 
-    void MemoryAllocator::IncrementSubAllocatedRef(MemoryAllocation& allocation) {
-        allocation.IncrementSubAllocatedRef();
+    void MemoryAllocator::IncrementSubAllocatedRef(MemoryAllocation* pAllocation) {
+        pAllocation->IncrementSubAllocatedRef();
     }
 
-    void MemoryAllocator::DecrementSubAllocatedRef(MemoryAllocation& allocation) {
-        allocation.DecrementSubAllocatedRef();
+    void MemoryAllocator::DecrementSubAllocatedRef(MemoryAllocation* pAllocation) {
+        pAllocation->DecrementSubAllocatedRef();
     }
 }  // namespace gpgmm

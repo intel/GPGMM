@@ -131,8 +131,8 @@ namespace gpgmm {
             void SubAllocateMemory(uint64_t size,
                                    uint64_t alignment,
                                    MemoryAllocation& allocation) override;
-            void AllocateMemory(MemoryAllocation& allocation) override;
-            void DeallocateMemory(MemoryAllocation& resourceHeap) override;
+            void AllocateMemory(MemoryAllocation** ppAllocation) override;
+            void DeallocateMemory(MemoryAllocation* pResourceHeap) override;
             void ReleaseMemory() override;
 
             uint64_t GetMemorySize() const override;

@@ -33,13 +33,13 @@ class DummyMemoryAllocator : public MemoryAllocator {
                            MemoryAllocation& allocation) override {
     }
 
-    void AllocateMemory(MemoryAllocation& allocation) override {
+    void AllocateMemory(MemoryAllocation** ppAllocation) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
-        allocation = {this, info, /*offset*/ 0, new MemoryBase()};
+        *ppAllocation = new MemoryAllocation{this, info, /*offset*/ 0, new MemoryBase()};
     }
 
-    void DeallocateMemory(MemoryAllocation& allocation) override {
+    void DeallocateMemory(MemoryAllocation* allocation) override {
     }
 
     void ReleaseMemory() override {
@@ -71,7 +71,7 @@ class DummyBuddyResourceAllocator {
     }
 
     void Deallocate(MemoryAllocation& allocation) {
-        mAllocator.DeallocateMemory(allocation);
+        mAllocator.DeallocateMemory(&allocation);
     }
 
     uint64_t GetPoolSizeForTesting() const {

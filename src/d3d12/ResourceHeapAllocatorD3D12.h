@@ -39,8 +39,8 @@ namespace gpgmm { namespace d3d12 {
         void SubAllocateMemory(uint64_t size,
                                uint64_t alignment,
                                MemoryAllocation& allocation) override;
-        void AllocateMemory(MemoryAllocation& allocation) override;
-        void DeallocateMemory(MemoryAllocation& allocation) override;
+        void AllocateMemory(MemoryAllocation** ppAllocation) override;
+        void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
 
         uint64_t GetMemorySize() const override;

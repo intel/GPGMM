@@ -44,8 +44,8 @@ namespace gpgmm {
         void SubAllocateMemory(uint64_t size,
                                uint64_t alignment,
                                MemoryAllocation& allocation) override;
-        void AllocateMemory(MemoryAllocation& allocation) override;
-        void DeallocateMemory(MemoryAllocation& allocation) override;
+        void AllocateMemory(MemoryAllocation** ppAllocation) override;
+        void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
 
         uint64_t GetMemorySize() const override;
@@ -61,7 +61,7 @@ namespace gpgmm {
 
         BuddyAllocator mBuddyBlockAllocator;
 
-        std::vector<MemoryAllocation> mMemoryAllocations;
+        std::vector<std::unique_ptr<MemoryAllocation>> mMemoryAllocations;
     };
 
 }  // namespace gpgmm

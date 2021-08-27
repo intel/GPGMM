@@ -19,6 +19,7 @@
 #include "src/MemoryAllocator.h"
 
 #include <deque>
+#include <memory>
 
 namespace gpgmm {
 
@@ -35,8 +36,8 @@ namespace gpgmm {
         void SubAllocateMemory(uint64_t size,
                                uint64_t alignment,
                                MemoryAllocation& allocation) override;
-        void AllocateMemory(MemoryAllocation& allocation) override;
-        void DeallocateMemory(MemoryAllocation& allocation) override;
+        void AllocateMemory(MemoryAllocation** ppAllocation) override;
+        void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
 
         uint64_t GetMemorySize() const override;
@@ -46,7 +47,7 @@ namespace gpgmm {
       private:
         MemoryAllocator* mMemoryAllocator = nullptr;
 
-        std::deque<MemoryAllocation> mPool;
+        std::deque<std::unique_ptr<MemoryAllocation>> mPool;
     };
 
 }  // namespace gpgmm

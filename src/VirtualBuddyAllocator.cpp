@@ -74,17 +74,17 @@ namespace gpgmm {
             mMemoryAllocations.resize(memoryIndex + 1);
         }
 
-        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
+        if (mMemoryAllocations[memoryIndex] == nullptr) {
             // Transfer ownership to this allocator
-            MemoryAllocation memoryAllocation;
-            mMemoryAllocator->AllocateMemory(/*inout*/ memoryAllocation);
-            if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
+            MemoryAllocation* pAllocation = nullptr;
+            mMemoryAllocator->AllocateMemory(&pAllocation);
+            if (pAllocation == nullptr) {
                 return;
             }
-            mMemoryAllocations[memoryIndex] = std::move(memoryAllocation);
+            mMemoryAllocations[memoryIndex] = std::unique_ptr<MemoryAllocation>(pAllocation);
         }
 
-        IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
+        IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
         AllocationInfo info;
         info.mBlockOffset = blockOffset;
@@ -93,25 +93,29 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = blockOffset % mMemorySize;
 
-        allocation = MemoryAllocation{mMemoryAllocations[memoryIndex].GetAllocator(), info,
-                                      memoryOffset, mMemoryAllocations[memoryIndex].GetMemory()};
+        allocation = MemoryAllocation{mMemoryAllocations[memoryIndex]->GetAllocator(), info,
+                                      memoryOffset, mMemoryAllocations[memoryIndex]->GetMemory()};
     }
 
-    void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation& allocation) {
+    void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation** allocation) {
         // Must sub-allocate, cannot allocate memory directly.
         UNREACHABLE();
     }
 
-    void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation& allocation) {
-        const AllocationInfo info = allocation.GetInfo();
+    void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        ASSERT(allocation != nullptr);
+
+        const AllocationInfo info = allocation->GetInfo();
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlockOffset);
-        DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex]);
 
-        if (!IsSubAllocated(mMemoryAllocations[memoryIndex])) {
-            mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex]);
+        ASSERT(mMemoryAllocations[memoryIndex] != nullptr);
+        DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
+
+        if (!IsSubAllocated(*mMemoryAllocations[memoryIndex])) {
+            mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex].release());
         }
 
         mBuddyBlockAllocator.Deallocate(info.mBlockOffset);
@@ -127,8 +131,8 @@ namespace gpgmm {
 
     uint64_t VirtualBuddyAllocator::GetPoolSizeForTesting() const {
         uint64_t count = 0;
-        for (const MemoryAllocation& allocation : mMemoryAllocations) {
-            if (IsSubAllocated(allocation)) {
+        for (auto& allocation : mMemoryAllocations) {
+            if (allocation != nullptr) {
                 count++;
             }
         }
