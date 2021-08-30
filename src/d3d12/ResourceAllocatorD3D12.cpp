@@ -17,6 +17,7 @@
 #include "src/PooledMemoryAllocator.h"
 #include "src/VirtualBuddyAllocator.h"
 #include "src/common/Limits.h"
+#include "src/common/Math.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
@@ -37,6 +38,34 @@ namespace gpgmm { namespace d3d12 {
             }
 
             return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
+        }
+
+        D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
+            ID3D12Device* device,
+            D3D12_RESOURCE_DESC& resourceDescriptor) {
+            // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo
+            if (resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
+                return {Align(resourceDescriptor.Width, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
+                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
+            }
+
+            D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+                device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+
+            // If the requested resource alignment was rejected, let D3D tell us what the
+            // required alignment is for this resource.
+            if (resourceDescriptor.Alignment != 0 &&
+                resourceDescriptor.Alignment != resourceInfo.Alignment) {
+                resourceDescriptor.Alignment = 0;
+                resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+            }
+
+            if (resourceInfo.SizeInBytes == 0) {
+                resourceInfo.SizeInBytes = std::numeric_limits<uint64_t>::max();
+            }
+
+            return resourceInfo;
         }
 
         D3D12_HEAP_TYPE GetHeapType(ResourceHeapKind resourceHeapKind) {
@@ -222,8 +251,8 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
                                               ResourceAllocation** ppResourceAllocation) {
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
-        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            mDevice->GetResourceAllocationInfo(0, 1, &desc);
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+            GetResourceAllocationInfo(mDevice.Get(), desc);
 
         D3D12_HEAP_PROPERTIES heapProp;
         HRESULT hr = resource->GetHeapProperties(&heapProp, nullptr);
@@ -248,44 +277,30 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResource(
-        D3D12_HEAP_TYPE heapType,
-        const D3D12_RESOURCE_DESC* requestedResourceDescriptor,
-        const D3D12_CLEAR_VALUE* pClearValue,
-        D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** ppResourceAllocation) {
+    HRESULT ResourceAllocator::CreatePlacedResource(D3D12_HEAP_TYPE heapType,
+                                                    const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                                    const D3D12_CLEAR_VALUE* pClearValue,
+                                                    D3D12_RESOURCE_STATES initialUsage,
+                                                    ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
             return E_POINTER;
         }
 
-        const ResourceHeapKind resourceHeapKind =
-            GetResourceHeapKind(requestedResourceDescriptor->Dimension, heapType,
-                                requestedResourceDescriptor->Flags, mResourceHeapTier);
+        const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
+            resourceDescriptor->Dimension, heapType, resourceDescriptor->Flags, mResourceHeapTier);
 
-        D3D12_RESOURCE_DESC resourceDescriptor = *requestedResourceDescriptor;
-        resourceDescriptor.Alignment = GetResourcePlacementAlignment(
-            resourceHeapKind, requestedResourceDescriptor->SampleDesc.Count,
-            requestedResourceDescriptor->Alignment);
-
-        // TODO(bryan.bernhart): Figure out how to compute the alignment without calling this
-        // twice.
-        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
-
-        // If the requested resource alignment was rejected, let D3D tell us what the
-        // required alignment is for this resource.
-        if (resourceDescriptor.Alignment != 0 &&
-            resourceDescriptor.Alignment != resourceInfo.Alignment) {
-            resourceDescriptor.Alignment = 0;
-            resourceInfo = mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
-        }
+        D3D12_RESOURCE_DESC newResourceDescriptor = *resourceDescriptor;
+        newResourceDescriptor.Alignment =
+            GetResourcePlacementAlignment(resourceHeapKind, newResourceDescriptor.SampleDesc.Count,
+                                          newResourceDescriptor.Alignment);
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating the resource could cause a device loss (too large).
         // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
         // incorrectly allocate a mismatched size.
-        if (resourceInfo.SizeInBytes == 0 ||
-            resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+            GetResourceAllocationInfo(mDevice.Get(), newResourceDescriptor);
+        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
             return E_OUTOFMEMORY;
         }
 
@@ -326,7 +341,7 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
         hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                           &resourceDescriptor, initialUsage, pClearValue,
+                                           &newResourceDescriptor, initialUsage, pClearValue,
                                            IID_PPV_ARGS(&placedResource));
         if (FAILED(hr)) {
             return hr;
@@ -405,10 +420,10 @@ namespace gpgmm { namespace d3d12 {
         // Otherwise, creating the resource could cause a device loss (too large).
         // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
         // incorrectly allocate a mismatched size.
-        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            mDevice->GetResourceAllocationInfo(0, 1, resourceDescriptor);
-        if (resourceInfo.SizeInBytes == 0 ||
-            resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+        D3D12_RESOURCE_DESC newResourceDesc = *resourceDescriptor;
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+            GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
+        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
             return E_OUTOFMEMORY;
         }
 
@@ -433,7 +448,7 @@ namespace gpgmm { namespace d3d12 {
         // provided to CreateCommittedResource.
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                              resourceDescriptor, initialUsage, pClearValue,
+                                              &newResourceDesc, initialUsage, pClearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;
