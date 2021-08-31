@@ -20,8 +20,8 @@
 #include "src/d3d12/ResourceAllocationD3D12.h"
 
 #include <array>
-#include <memory>
 #include <cstdint>
+#include <memory>
 
 struct ID3D12Device;
 struct IDXGIAdapter3;
@@ -139,12 +139,14 @@ namespace gpgmm {
             uint64_t GetMemoryAlignment() const override;
 
             HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
+                                         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
                                          const D3D12_CLEAR_VALUE* pClearValue,
                                          D3D12_RESOURCE_STATES initialUsage,
                                          ResourceAllocation** ppResourceAllocation);
 
             HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
+                                            const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
                                             const D3D12_CLEAR_VALUE* pClearValue,
                                             D3D12_RESOURCE_STATES initialUsage,

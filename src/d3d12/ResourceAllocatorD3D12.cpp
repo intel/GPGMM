@@ -224,6 +224,17 @@ namespace gpgmm { namespace d3d12 {
                                               D3D12_RESOURCE_STATES initialUsage,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** ppResourceAllocation) {
+        // If d3d tells us the resource size is invalid, treat the error as OOM.
+        // Otherwise, creating the resource could cause a device loss (too large).
+        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
+        // incorrectly allocate a mismatched size.
+        D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+            GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
+        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+            return E_OUTOFMEMORY;
+        }
+
         // TODO(crbug.com/dawn/849): Conditionally disable sub-allocation.
         // For very large resources, there is no benefit to suballocate.
         // For very small resources, it is inefficent to suballocate given the min. heap
@@ -231,13 +242,14 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         if (!mIsAlwaysCommitted) {
-            hr = CreatePlacedResource(allocationDescriptor.HeapType, &resourceDescriptor,
+            hr = CreatePlacedResource(allocationDescriptor.HeapType, resourceInfo, &newResourceDesc,
                                       clearValue, initialUsage, ppResourceAllocation);
         }
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
         if (FAILED(hr)) {
-            hr = CreateCommittedResource(allocationDescriptor.HeapType, &resourceDescriptor,
-                                         clearValue, initialUsage, ppResourceAllocation);
+            hr = CreateCommittedResource(allocationDescriptor.HeapType, resourceInfo,
+                                         &newResourceDesc, clearValue, initialUsage,
+                                         ppResourceAllocation);
         }
         return hr;
     }
@@ -271,25 +283,15 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResource(D3D12_HEAP_TYPE heapType,
-                                                    const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                                    const D3D12_CLEAR_VALUE* pClearValue,
-                                                    D3D12_RESOURCE_STATES initialUsage,
-                                                    ResourceAllocation** ppResourceAllocation) {
+    HRESULT ResourceAllocator::CreatePlacedResource(
+        D3D12_HEAP_TYPE heapType,
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
+        const D3D12_RESOURCE_DESC* resourceDescriptor,
+        const D3D12_CLEAR_VALUE* pClearValue,
+        D3D12_RESOURCE_STATES initialUsage,
+        ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
             return E_POINTER;
-        }
-
-        D3D12_RESOURCE_DESC newResourceDescriptor = *resourceDescriptor;
-
-        // If d3d tells us the resource size is invalid, treat the error as OOM.
-        // Otherwise, creating the resource could cause a device loss (too large).
-        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
-        // incorrectly allocate a mismatched size.
-        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice.Get(), newResourceDescriptor);
-        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
-            return E_OUTOFMEMORY;
         }
 
         const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
@@ -332,7 +334,7 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
         hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                           &newResourceDescriptor, initialUsage, pClearValue,
+                                           resourceDescriptor, initialUsage, pClearValue,
                                            IID_PPV_ARGS(&placedResource));
         if (FAILED(hr)) {
             return hr;
@@ -392,6 +394,7 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
+        const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* pClearValue,
         D3D12_RESOURCE_STATES initialUsage,
@@ -406,17 +409,6 @@ namespace gpgmm { namespace d3d12 {
         heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
         heapProperties.CreationNodeMask = 0;
         heapProperties.VisibleNodeMask = 0;
-
-        // If d3d tells us the resource size is invalid, treat the error as OOM.
-        // Otherwise, creating the resource could cause a device loss (too large).
-        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
-        // incorrectly allocate a mismatched size.
-        D3D12_RESOURCE_DESC newResourceDesc = *resourceDescriptor;
-        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
-        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
-            return E_OUTOFMEMORY;
-        }
 
         if (resourceInfo.SizeInBytes > kMaxHeapSize) {
             return E_OUTOFMEMORY;
@@ -439,7 +431,7 @@ namespace gpgmm { namespace d3d12 {
         // provided to CreateCommittedResource.
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                              &newResourceDesc, initialUsage, pClearValue,
+                                              resourceDescriptor, initialUsage, pClearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;
