@@ -45,9 +45,25 @@ namespace gpgmm { namespace d3d12 {
             D3D12_RESOURCE_DESC& resourceDescriptor) {
             // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo
-            if (resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
+            if (resourceDescriptor.Alignment == 0 &&
+                resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
                 return {Align(resourceDescriptor.Width, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
                         D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
+            }
+
+            // Small textures can take advantage of smaller alignments. For example,
+            // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
+            // Must be non-depth or without render-target to use small resource alignment.
+            // This also applies to MSAA textures (4MB => 64KB).
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
+            if ((resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
+                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
+                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) &&
+                (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
+                                             D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
+                resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
+                                                   ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
+                                                   : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
             }
 
             D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
@@ -157,28 +173,6 @@ namespace gpgmm { namespace d3d12 {
                     UNREACHABLE();
             }
         }
-
-        uint64_t GetResourcePlacementAlignment(ResourceHeapKind resourceHeapKind,
-                                               uint32_t sampleCount,
-                                               uint64_t requestedAlignment) {
-            switch (resourceHeapKind) {
-                // Small resources can take advantage of smaller alignments. For example,
-                // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
-                // Must be non-depth or without render-target to use small resource alignment.
-                // This also applies to MSAA textures (4MB => 64KB).
-                //
-                // Note: Only known to be used for small textures; however, MSDN suggests
-                // it could be extended for more cases. If so, this could default to always
-                // attempt small resource placement.
-                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
-                case Default_OnlyNonRenderableOrDepthTextures:
-                    return (sampleCount > 1) ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
-                                             : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-                default:
-                    return requestedAlignment;
-            }
-        }
-
     }  // namespace
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor)
@@ -286,13 +280,7 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
-            resourceDescriptor->Dimension, heapType, resourceDescriptor->Flags, mResourceHeapTier);
-
         D3D12_RESOURCE_DESC newResourceDescriptor = *resourceDescriptor;
-        newResourceDescriptor.Alignment =
-            GetResourcePlacementAlignment(resourceHeapKind, newResourceDescriptor.SampleDesc.Count,
-                                          newResourceDescriptor.Alignment);
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating the resource could cause a device loss (too large).
@@ -303,6 +291,9 @@ namespace gpgmm { namespace d3d12 {
         if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
             return E_OUTOFMEMORY;
         }
+
+        const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
+            resourceDescriptor->Dimension, heapType, resourceDescriptor->Flags, mResourceHeapTier);
 
         VirtualBuddyAllocator* allocator = nullptr;
         if (mMaxResourceSizeForPooling != 0 &&
