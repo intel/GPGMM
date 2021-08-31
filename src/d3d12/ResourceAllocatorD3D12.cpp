@@ -242,7 +242,19 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         if (!mIsAlwaysCommitted) {
-            hr = CreatePlacedResource(allocationDescriptor.HeapType, resourceInfo, &newResourceDesc,
+
+            const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
+                newResourceDesc.Dimension, allocationDescriptor.HeapType, newResourceDesc.Flags, mResourceHeapTier);
+
+            VirtualBuddyAllocator* allocator = nullptr;
+            if (mMaxResourceSizeForPooling != 0 &&
+                resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
+                allocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+            } else {
+                allocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+            }
+
+            hr = CreatePlacedResource(allocator, resourceInfo, &newResourceDesc,
                                       clearValue, initialUsage, ppResourceAllocation);
         }
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
@@ -284,7 +296,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
-        D3D12_HEAP_TYPE heapType,
+        MemoryAllocator* allocator,
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* pClearValue,
@@ -292,17 +304,6 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
             return E_POINTER;
-        }
-
-        const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
-            resourceDescriptor->Dimension, heapType, resourceDescriptor->Flags, mResourceHeapTier);
-
-        VirtualBuddyAllocator* allocator = nullptr;
-        if (mMaxResourceSizeForPooling != 0 &&
-            resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
-            allocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
-        } else {
-            allocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
         }
 
         ASSERT(allocator != nullptr);

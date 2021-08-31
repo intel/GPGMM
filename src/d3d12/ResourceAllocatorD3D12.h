@@ -138,7 +138,7 @@ namespace gpgmm {
             uint64_t GetMemorySize() const override;
             uint64_t GetMemoryAlignment() const override;
 
-            HRESULT CreatePlacedResource(D3D12_HEAP_TYPE heapType,
+            HRESULT CreatePlacedResource(MemoryAllocator* allocator,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
                                          const D3D12_CLEAR_VALUE* pClearValue,
