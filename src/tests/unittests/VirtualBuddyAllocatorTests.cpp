@@ -30,7 +30,7 @@ class DummyMemoryAllocator : public MemoryAllocator {
   public:
     void SubAllocateMemory(uint64_t size,
                            uint64_t alignment,
-                           MemoryAllocation& allocation) override {
+                           MemoryAllocation& subAllocation) override {
     }
 
     void AllocateMemory(MemoryAllocation** ppAllocation) override {

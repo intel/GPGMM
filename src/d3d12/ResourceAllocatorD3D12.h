@@ -130,7 +130,7 @@ namespace gpgmm {
             // MemoryAllocator interface
             void SubAllocateMemory(uint64_t size,
                                    uint64_t alignment,
-                                   MemoryAllocation& allocation) override;
+                                   MemoryAllocation& subAllocation) override;
             void AllocateMemory(MemoryAllocation** ppAllocation) override;
             void DeallocateMemory(MemoryAllocation* pResourceHeap) override;
             void ReleaseMemory() override;
@@ -138,7 +138,7 @@ namespace gpgmm {
             uint64_t GetMemorySize() const override;
             uint64_t GetMemoryAlignment() const override;
 
-            HRESULT CreatePlacedResource(MemoryAllocator* allocator,
+            HRESULT CreatePlacedResource(MemoryAllocator* subAllocator,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
                                          const D3D12_CLEAR_VALUE* pClearValue,

@@ -43,7 +43,7 @@ namespace gpgmm {
         // MemoryAllocator interface
         void SubAllocateMemory(uint64_t size,
                                uint64_t alignment,
-                               MemoryAllocation& allocation) override;
+                               MemoryAllocation& subAllocation) override;
         void AllocateMemory(MemoryAllocation** ppAllocation) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;

@@ -44,7 +44,7 @@ namespace gpgmm {
 
     void VirtualBuddyAllocator::SubAllocateMemory(uint64_t size,
                                                   uint64_t alignment,
-                                                  MemoryAllocation& allocation) {
+                                                  MemoryAllocation& subAllocation) {
         if (size == 0) {
             return;
         }
@@ -93,8 +93,9 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = blockOffset % mMemorySize;
 
-        allocation = MemoryAllocation{mMemoryAllocations[memoryIndex]->GetAllocator(), info,
-                                      memoryOffset, mMemoryAllocations[memoryIndex]->GetMemory()};
+        subAllocation =
+            MemoryAllocation{mMemoryAllocations[memoryIndex]->GetAllocator(), info, memoryOffset,
+                             mMemoryAllocations[memoryIndex]->GetMemory()};
     }
 
     void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation** allocation) {

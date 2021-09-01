@@ -32,7 +32,7 @@ namespace gpgmm {
 
     void PooledMemoryAllocator::SubAllocateMemory(uint64_t size,
                                                   uint64_t alignment,
-                                                  MemoryAllocation& allocation) {
+                                                  MemoryAllocation& subAllocation) {
         ASSERT(false);
     }
 

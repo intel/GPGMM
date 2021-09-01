@@ -242,20 +242,20 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         if (!mIsAlwaysCommitted) {
+            const ResourceHeapKind resourceHeapKind =
+                GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
+                                    newResourceDesc.Flags, mResourceHeapTier);
 
-            const ResourceHeapKind resourceHeapKind = GetResourceHeapKind(
-                newResourceDesc.Dimension, allocationDescriptor.HeapType, newResourceDesc.Flags, mResourceHeapTier);
-
-            VirtualBuddyAllocator* allocator = nullptr;
+            VirtualBuddyAllocator* subAllocator = nullptr;
             if (mMaxResourceSizeForPooling != 0 &&
                 resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
-                allocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+                subAllocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             } else {
-                allocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+                subAllocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             }
 
-            hr = CreatePlacedResource(allocator, resourceInfo, &newResourceDesc,
-                                      clearValue, initialUsage, ppResourceAllocation);
+            hr = CreatePlacedResource(subAllocator, resourceInfo, &newResourceDesc, clearValue,
+                                      initialUsage, ppResourceAllocation);
         }
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
         if (FAILED(hr)) {
@@ -296,21 +296,21 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
-        MemoryAllocator* allocator,
+        MemoryAllocator* subAllocator,
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* pClearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** ppResourceAllocation) {
+        ASSERT(subAllocator != nullptr);
+
         if (!ppResourceAllocation) {
             return E_POINTER;
         }
 
-        ASSERT(allocator != nullptr);
-
         MemoryAllocation subAllocation;
-        allocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                                     subAllocation);
+        subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                                        subAllocation);
         if (subAllocation == GPGMM_INVALID_ALLOCATION) {
             return E_INVALIDARG;
         }
@@ -348,7 +348,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         *ppResourceAllocation =
-            new ResourceAllocation{mResidencyManager.get(),   allocator,
+            new ResourceAllocation{mResidencyManager.get(),   subAllocator,
                                    subAllocation.GetInfo(),   subAllocation.GetOffset(),
                                    std::move(placedResource), heap};
         return hr;
@@ -386,9 +386,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
-        if (mIsAlwaysInBudget) {
-            mResidencyManager->InsertHeap(*ppResourceHeap);
-        }
+        mResidencyManager->InsertHeap(*ppResourceHeap);
 
         return hr;
     }
@@ -449,9 +447,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
-        if (mIsAlwaysInBudget) {
-            mResidencyManager->InsertHeap(heap);
-        }
+        mResidencyManager->InsertHeap(heap);
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
@@ -467,7 +463,7 @@ namespace gpgmm { namespace d3d12 {
 
     void ResourceAllocator::SubAllocateMemory(uint64_t size,
                                               uint64_t alignment,
-                                              MemoryAllocation& allocation) {
+                                              MemoryAllocation& subAllocation) {
         ASSERT(false);
     }
 
