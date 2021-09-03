@@ -19,18 +19,33 @@
 
 namespace gpgmm { namespace d3d12 {
 
+    namespace {
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+        uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags) {
+            const bool noTexturesAllowedFlags =
+                D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
+            if ((heapFlags & noTexturesAllowedFlags) == noTexturesAllowedFlags) {
+                return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+            }
+            // It is preferred to use a size that is a multiple of the alignment.
+            // However, MSAA heaps are always aligned to 4MB instead of 64KB. This means
+            // if the heap size is too small, the VMM would fragment.
+            // TODO: Consider having MSAA vs non-MSAA heaps.
+            return D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
+        }
+    }  // namespace
+
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
                                                  DXGI_MEMORY_SEGMENT_GROUP memorySegment,
-                                                 uint64_t heapSize,
-                                                 uint64_t heapAlignment)
+                                                 uint64_t heapSize)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
           mMemorySegment(memorySegment),
           mHeapSize(heapSize),
-          mHeapAlignment(heapAlignment) {
+          mHeapAlignment(GetHeapAlignment(heapFlags)) {
     }
 
     void ResourceHeapAllocator::SubAllocateMemory(uint64_t size,

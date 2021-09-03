@@ -193,17 +193,11 @@ namespace gpgmm { namespace d3d12 {
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
-            // It is preferred to use a size that is a multiple of the alignment.
-            // However, MSAA heaps are always aligned to 4MB instead of 64KB. This means
-            // if the heap size is too small, the VMM would fragment.
-            // TODO(crbug.com/dawn/849): Consider having MSAA vs non-MSAA heaps.
-            constexpr uint64_t heapAlignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
-
             mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
                 this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetHeapType(resourceHeapKind)),
-                heapSize, heapAlignment);
+                heapSize);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
