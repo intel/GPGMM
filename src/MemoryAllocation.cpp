@@ -71,7 +71,7 @@ namespace gpgmm {
         mMappedPointer = nullptr;
     }
 
-    MemoryAllocator* MemoryAllocation::GetAllocator() {
+    MemoryAllocator* MemoryAllocation::GetAllocator() const {
         return mAllocator;
     }
 
