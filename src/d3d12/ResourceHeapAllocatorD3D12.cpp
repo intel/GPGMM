@@ -63,8 +63,7 @@ namespace gpgmm { namespace d3d12 {
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
-        *ppAllocation =
-            new MemoryAllocation{this, info, kInvalidOffset, static_cast<MemoryBase*>(heap)};
+        *ppAllocation = new MemoryAllocation{this, info, kInvalidOffset, heap};
     }
 
     uint64_t ResourceHeapAllocator::GetMemorySize() const {
