@@ -317,13 +317,10 @@ namespace gpgmm { namespace d3d12 {
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident.
         // CreatePlacedResource will fail if it is not.
-        HRESULT hr = S_OK;
         Heap* heap = static_cast<Heap*>(subAllocation.GetMemory());
-        if (mIsAlwaysInBudget) {
-            hr = mResidencyManager->LockHeap(heap);
-            if (FAILED(hr)) {
-                return hr;
-            }
+        HRESULT hr = mResidencyManager->LockHeap(heap);
+        if (FAILED(hr)) {
+            return hr;
         }
 
         // With placed resources, a single heap can be reused.
@@ -343,9 +340,7 @@ namespace gpgmm { namespace d3d12 {
 
         // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
         // will insert it into the residency LRU.
-        if (mIsAlwaysInBudget) {
-            mResidencyManager->UnlockHeap(heap);
-        }
+        mResidencyManager->UnlockHeap(heap);
 
         *ppResourceAllocation =
             new ResourceAllocation{mResidencyManager.get(),   subAllocator,
