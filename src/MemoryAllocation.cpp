@@ -20,11 +20,7 @@
 namespace gpgmm {
 
     MemoryAllocation::MemoryAllocation()
-        : mAllocator(nullptr),
-          mOffset(kInvalidOffset),
-          mMemory(nullptr),
-          mMappedPointer(nullptr),
-          mSubAllocatedRefCount(0) {
+        : mAllocator(nullptr), mOffset(kInvalidOffset), mMemory(nullptr), mMappedPointer(nullptr) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
@@ -36,8 +32,7 @@ namespace gpgmm {
           mInfo(info),
           mOffset(offset),
           mMemory(memory),
-          mMappedPointer(mappedPointer),
-          mSubAllocatedRefCount(0) {
+          mMappedPointer(mappedPointer) {
     }
 
     bool MemoryAllocation::operator==(const MemoryAllocation& other) {
@@ -63,7 +58,6 @@ namespace gpgmm {
     }
 
     void MemoryAllocation::Reset() {
-        ASSERT(!IsSubAllocated());
         mAllocator = nullptr;
         mInfo = {};
         mOffset = kInvalidOffset;
@@ -76,15 +70,17 @@ namespace gpgmm {
     }
 
     void MemoryAllocation::IncrementSubAllocatedRef() {
-        mSubAllocatedRefCount++;
+        ASSERT(mMemory != nullptr);
+        mMemory->IncrementSubAllocatedRef();
     }
 
     void MemoryAllocation::DecrementSubAllocatedRef() {
-        ASSERT(mSubAllocatedRefCount > 0);
-        mSubAllocatedRefCount--;
+        ASSERT(mMemory != nullptr);
+        mMemory->DecrementSubAllocatedRef();
     }
 
     bool MemoryAllocation::IsSubAllocated() const {
-        return mSubAllocatedRefCount != 0;
+        ASSERT(mMemory != nullptr);
+        return mMemory->IsSubAllocated();
     }
 }  // namespace gpgmm

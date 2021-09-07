@@ -12,26 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_MEMORY_H_
-#define GPGMM_MEMORY_H_
-
-#include <cstdint>
+#include "src/Memory.h"
+#include "src/common/Assert.h"
 
 namespace gpgmm {
 
-    class MemoryBase {
-      public:
-        MemoryBase() = default;
-        virtual ~MemoryBase();
+    MemoryBase::~MemoryBase() {
+        ASSERT(!IsSubAllocated());
+    }
 
-        bool IsSubAllocated() const;
-        void IncrementSubAllocatedRef();
-        void DecrementSubAllocatedRef();
+    void MemoryBase::IncrementSubAllocatedRef() {
+        mSubAllocatedRefCount++;
+    }
 
-      private:
-        uint32_t mSubAllocatedRefCount = 0;
-    };
+    void MemoryBase::DecrementSubAllocatedRef() {
+        ASSERT(mSubAllocatedRefCount > 0);
+        mSubAllocatedRefCount--;
+    }
 
+    bool MemoryBase::IsSubAllocated() const {
+        return mSubAllocatedRefCount != 0;
+    }
 }  // namespace gpgmm
-
-#endif  // GPGMM_MEMORY_H_
