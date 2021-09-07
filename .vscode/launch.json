@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug GPGMM UT",
+            "request": "launch",
+            "type": "cppvsdbg",
+            "windows":{
+                "program": "gpgmm_unittests.exe",
+            },
+            "args": [
+                "--gtest_filter=*"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/out/Debug",
+            "environment": [],
+            "externalConsole": true
+        },
+        {
+            "name": "Debug GPGMM E2E",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "windows":{
+                "program": "gpgmm_end2end_tests.exe",
+            },
+            "args": [
+                "--gtest_catch_exceptions=0",
+                "--gtest_filter=*"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/out/Debug",
+            "environment": [],
+            "externalConsole": true
+        },
+        {
+            "name": "Debug WebNN E2E",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "windows":{
+                "program": "webnn_end2end_tests.exe",
+            },
+            "args": [
+                "-d gpu",
+                "--gtest_catch_exceptions=0",
+                "--gtest_filter=*"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/out/Debug",
+            "environment": [],
+            "externalConsole": true
+        },
+        {
+            "name": "Debug Dawn E2E",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "windows":{
+                "program": "dawn_end2end_tests.exe",
+            },
+            "args": [
+                "--gtest_catch_exceptions=0",
+                "--enable-backend-validation",
+                "--exclusive-device-type-preference=discrete,integrated,cpu",
+                "--gtest_filter=*"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/out/Debug",
+            "environment": [],
+            "externalConsole": true
+        },
+    ]
+}
