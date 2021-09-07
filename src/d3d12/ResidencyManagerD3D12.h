@@ -88,7 +88,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<IDXGIAdapter3> mAdapter;
         bool mRestrictBudgetForTesting = false;
         bool mIsUMA;
-        float mMemorySegmentBudgetLimit;
+        float mVideoMemoryBudgetLimit;
         VideoMemoryInfo mVideoMemoryInfo = {};
 
         std::unique_ptr<Fence> mFence;

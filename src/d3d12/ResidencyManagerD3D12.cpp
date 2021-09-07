@@ -27,12 +27,12 @@ namespace gpgmm { namespace d3d12 {
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter,
                                        bool isUMA,
-                                       float memorySegmentBudgetLimit)
+                                       float videoMemoryBudgetLimit)
         : mDevice(device),
           mAdapter(adapter),
           mIsUMA(isUMA),
-          mMemorySegmentBudgetLimit(memorySegmentBudgetLimit == 0 ? kDefaultMemorySegmentBudgetLimit
-                                                                  : memorySegmentBudgetLimit),
+          mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultVideoMemoryBudgetLimit
+                                                              : videoMemoryBudgetLimit),
           mFence(new Fence(device, 0)) {
         UpdateVideoMemoryInfo();
     }
@@ -138,7 +138,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         segmentInfo->budget = (queryVideoMemoryInfo.Budget - segmentInfo->externalReservation) *
-                              mMemorySegmentBudgetLimit;
+                              mVideoMemoryBudgetLimit;
     }
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns

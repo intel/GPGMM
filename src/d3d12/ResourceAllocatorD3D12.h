@@ -66,10 +66,10 @@ namespace gpgmm {
             // pool-allocated.
             uint64_t MaxResourceSizeForPooling;
 
-            // The total video memory available to the allocator to budget, expressed as a
+            // The maximum video memory available to the allocator to budget, expressed as a
             // percentage. For example, 0.95 means 95% of video memory can be budgeted, always
             // leaving 5% for the the OS and other applications.
-            float TotalMemorySegmentBudgetLimit;
+            float MaxVideoMemoryBudget;
         };
 
         typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
