@@ -186,7 +186,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(new ResidencyManager(mDevice,
                                                  descriptor.Adapter,
                                                  mIsUMA,
-                                                 descriptor.MaxVideoMemoryBudget)) {
+                                                 descriptor.MaxVideoMemoryBudget,
+                                                 descriptor.TotalResourceBudgetLimit)) {
         const uint64_t heapSize = (descriptor.PreferredResourceHeapSize > 0)
                                       ? descriptor.PreferredResourceHeapSize
                                       : kDefaultHeapSize;

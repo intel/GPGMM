@@ -70,6 +70,10 @@ namespace gpgmm {
             // percentage. For example, 0.95 means 95% of video memory can be budgeted, always
             // leaving 5% for the the OS and other applications.
             float MaxVideoMemoryBudget;
+
+            // The total memory available to budget for resources created by this allocator.
+            // By default, a total resource budget limit of zero means there is no budget set.
+            uint64_t TotalResourceBudgetLimit;
         };
 
         typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;

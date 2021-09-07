@@ -27,14 +27,28 @@ namespace gpgmm { namespace d3d12 {
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter,
                                        bool isUMA,
-                                       float videoMemoryBudgetLimit)
+                                       float videoMemoryBudgetLimit,
+                                       uint64_t mTotalResourceBudgetLimit)
         : mDevice(device),
           mAdapter(adapter),
           mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultVideoMemoryBudgetLimit
                                                               : videoMemoryBudgetLimit),
+          mTotalResourceBudgetLimit(mTotalResourceBudgetLimit),
           mFence(new Fence(device, 0)) {
         UpdateVideoMemoryInfo();
+
+        // There is a non-zero memory usage even before any resources have been created, and this
+        // value can vary by enviroment. By adding this in addition to the artificial budget cap, we
+        // can create a predictable and reproducible budget.
+        if (mTotalResourceBudgetLimit > 0) {
+            mVideoMemoryInfo.local.budget =
+                mVideoMemoryInfo.local.usage + mTotalResourceBudgetLimit;
+            if (!mIsUMA) {
+                mVideoMemoryInfo.nonLocal.budget =
+                    mVideoMemoryInfo.nonLocal.usage + mTotalResourceBudgetLimit;
+            }
+        }
     }
 
     ResidencyManager::~ResidencyManager() {
@@ -132,8 +146,8 @@ namespace gpgmm { namespace d3d12 {
 
         segmentInfo->usage = queryVideoMemoryInfo.CurrentUsage - segmentInfo->externalReservation;
 
-        // If we're restricting the budget for testing, leave the budget as is.
-        if (mRestrictBudgetForTesting) {
+        // If we're restricting the budget, leave the budget as is.
+        if (mTotalResourceBudgetLimit > 0) {
             return;
         }
 
@@ -336,26 +350,5 @@ namespace gpgmm { namespace d3d12 {
     void ResidencyManager::InsertHeap(Heap* heap) {
         ASSERT(heap->IsInList() == false);
         GetMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
-    }
-
-    // Places an artifical cap on Dawn's budget so we can test in a predictable manner. If used,
-    // this function must be called before any resources have been created.
-    void ResidencyManager::RestrictBudgetForTesting(uint64_t artificialBudgetCap) {
-        ASSERT(mVideoMemoryInfo.local.lruCache.empty());
-        ASSERT(mVideoMemoryInfo.nonLocal.lruCache.empty());
-        ASSERT(!mRestrictBudgetForTesting);
-
-        mRestrictBudgetForTesting = true;
-        UpdateVideoMemoryInfo();
-
-        // Dawn has a non-zero memory usage even before any resources have been created, and this
-        // value can vary depending on the environment Dawn is running in. By adding this in
-        // addition to the artificial budget cap, we can create a predictable and reproducible
-        // budget for testing.
-        mVideoMemoryInfo.local.budget = mVideoMemoryInfo.local.usage + artificialBudgetCap;
-        if (!mIsUMA) {
-            mVideoMemoryInfo.nonLocal.budget =
-                mVideoMemoryInfo.nonLocal.usage + artificialBudgetCap;
-        }
     }
 }}  // namespace gpgmm::d3d12

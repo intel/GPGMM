@@ -37,7 +37,8 @@ namespace gpgmm { namespace d3d12 {
         ResidencyManager(ComPtr<ID3D12Device> device,
                          ComPtr<IDXGIAdapter3> adapter,
                          bool isUMA,
-                         float memorySegmentBudgetLimit);
+                         float memorySegmentBudgetLimit,
+                         uint64_t totalResourceBudgetLimit);
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
@@ -57,7 +58,6 @@ namespace gpgmm { namespace d3d12 {
 
         void InsertHeap(Heap* heap);
 
-        void RestrictBudgetForTesting(uint64_t artificialBudgetCap);
 
       private:
         struct MemorySegmentInfo {
@@ -86,9 +86,9 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
-        bool mRestrictBudgetForTesting = false;
         bool mIsUMA;
         float mVideoMemoryBudgetLimit;
+        uint64_t mTotalResourceBudgetLimit;
         VideoMemoryInfo mVideoMemoryInfo = {};
 
         std::unique_ptr<Fence> mFence;
