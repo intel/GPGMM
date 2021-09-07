@@ -15,10 +15,10 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
+#include "../common/Limits.h"
+#include "../common/Math.h"
 #include "src/PooledMemoryAllocator.h"
 #include "src/VirtualBuddyAllocator.h"
-#include "src/common/Limits.h"
-#include "src/common/Math.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"

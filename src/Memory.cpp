@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "src/Memory.h"
-#include "src/common/Assert.h"
+#include "./common/Assert.h"
 
 namespace gpgmm {
 

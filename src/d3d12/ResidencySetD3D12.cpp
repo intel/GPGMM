@@ -14,7 +14,7 @@
 
 #include "src/d3d12/ResidencySetD3D12.h"
 
-#include "src/common/Assert.h"
+#include "../common/Assert.h"
 
 namespace gpgmm { namespace d3d12 {
     void ResidencySet::Insert(Heap* heap) {

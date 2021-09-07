@@ -15,7 +15,7 @@
 #ifndef COMMON_MATH_H_
 #define COMMON_MATH_H_
 
-#include "src/common/Assert.h"
+#include "./Assert.h"
 
 #include <cstddef>
 #include <cstdint>

@@ -14,8 +14,8 @@
 
 #include "src/BuddyAllocator.h"
 
-#include "src/common/Assert.h"
-#include "src/common/Math.h"
+#include "./common/Assert.h"
+#include "./common/Math.h"
 
 namespace gpgmm {
 
