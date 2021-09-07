@@ -349,21 +349,24 @@ namespace gpgmm { namespace d3d12 {
                                                   DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                                   uint64_t heapAlignment,
                                                   Heap** ppResourceHeap) {
-        D3D12_HEAP_DESC heapDesc;
-        heapDesc.SizeInBytes = size;
-        heapDesc.Properties.Type = heapType;
-        heapDesc.Properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapDesc.Properties.CreationNodeMask = 0;
-        heapDesc.Properties.VisibleNodeMask = 0;
-        heapDesc.Alignment = heapAlignment;
-        heapDesc.Flags = heapFlags;
-
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget) {
             mResidencyManager->Evict(size, memorySegment);
         }
+
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = heapType;
+        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        heapProperties.CreationNodeMask = 0;
+        heapProperties.VisibleNodeMask = 0;
+
+        D3D12_HEAP_DESC heapDesc = {};
+        heapDesc.Properties = heapProperties;
+        heapDesc.SizeInBytes = size;
+        heapDesc.Alignment = heapAlignment;
+        heapDesc.Flags = heapFlags;
 
         ComPtr<ID3D12Heap> d3d12Heap;
         HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap));
@@ -391,13 +394,6 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        D3D12_HEAP_PROPERTIES heapProperties;
-        heapProperties.Type = heapType;
-        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapProperties.CreationNodeMask = 0;
-        heapProperties.VisibleNodeMask = 0;
-
         if (resourceInfo.SizeInBytes > kMaxHeapSize) {
             return E_OUTOFMEMORY;
         }
@@ -414,6 +410,13 @@ namespace gpgmm { namespace d3d12 {
                 return hr;
             }
         }
+
+        D3D12_HEAP_PROPERTIES heapProperties;
+        heapProperties.Type = heapType;
+        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        heapProperties.CreationNodeMask = 0;
+        heapProperties.VisibleNodeMask = 0;
 
         // Note: Heap flags are inferred by the resource descriptor and do not need to be explicitly
         // provided to CreateCommittedResource.
