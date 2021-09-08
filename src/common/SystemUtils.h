@@ -15,7 +15,7 @@
 #ifndef COMMON_SYSTEMUTILS_H_
 #define COMMON_SYSTEMUTILS_H_
 
-#include "src/common/Platform.h"
+#include "Platform.h"
 
 #include <string>
 

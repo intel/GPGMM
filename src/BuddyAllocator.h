@@ -16,7 +16,7 @@
 #ifndef GPGMM_BUDDYALLOCATOR_H_
 #define GPGMM_BUDDYALLOCATOR_H_
 
-#include "./common/IntegerTypes.h"
+#include "common/IntegerTypes.h"
 #include "src/BlockAllocator.h"
 
 #include <cstddef>

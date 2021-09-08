@@ -15,7 +15,7 @@
 
 #include "src/VirtualBuddyAllocator.h"
 
-#include "./common/Math.h"
+#include "common/Math.h"
 
 namespace gpgmm {
 

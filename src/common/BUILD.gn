@@ -33,7 +33,7 @@ if (build_with_chromium) {
 }
 
 ###############################################################################
-# Common gpmm configs
+# Common GPGMM configs
 ###############################################################################
 
 config("gpgmm_public_include_dirs") {
@@ -51,8 +51,6 @@ config("gpgmm_public_include_dirs") {
 }
 
 config("gpgmm_internal") {
-  include_dirs = [ "${gpgmm_root_dir}/" ]
-
   defines = []
   if (gpgmm_always_assert || dcheck_always_on || is_debug ||
       use_fuzzing_engine) {
@@ -131,20 +129,6 @@ config("gpgmm_internal") {
       ]
     }
   }
-
-  # TODO: DML support
-  # if (is_clang && webnn_enable_dml) {
-  #   cflags += [
-  #     # Allow the use of DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE); in DirectML.h
-  #     "-Wno-extra-semi",
-
-  #     # Allow the use of DMLX_THROW(_hr); in DirectMLX.h
-  #     "-Wno-extra-semi-stmt",
-
-  #     # Allow the use of DML_OPERATOR_GRAPH_NODE_DESC{ node.op.Get() } in DirectMLX.h
-  #     "-Wno-missing-field-initializers",
-  #   ]
-  # }
 }
 
 ###############################################################################
@@ -155,7 +139,7 @@ config("gpgmm_internal") {
 # all of Chromium's OSes so we explicitly make the target visible only on
 # systems we know Dawn is able to compile on.
 if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
-  static_library("common") {
+  source_set("common") {
     sources = [
       "Assert.cpp",
       "Assert.h",
@@ -172,11 +156,6 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "SystemUtils.h",
     ]
 
-    public_configs = [ ":gpgmm_internal" ]
-
-    # deps = [ "${gpgmm_root_dir}/src/gpgmm:gpgmm_headers" ]
-    if (is_android) {
-      libs = [ "log" ]
-    }
+    configs += [ ":gpgmm_internal" ]
   }
 }

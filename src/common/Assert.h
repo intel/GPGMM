@@ -15,7 +15,7 @@
 #ifndef COMMON_ASSERT_H_
 #define COMMON_ASSERT_H_
 
-#include "./Compiler.h"
+#include "Compiler.h"
 
 // Dawn asserts to be used instead of the regular C stdlib assert function (if you don't use assert
 // yet, you should start now!). In debug ASSERT(condition) will trigger an error, otherwise in

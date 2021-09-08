@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "src/PooledMemoryAllocator.h"
-#include "./common/Assert.h"
+#include "common/Assert.h"
 
 namespace gpgmm {
 

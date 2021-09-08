@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #include "src/MemoryAllocation.h"
-#include "./common/Assert.h"
-#include "./common/IntegerTypes.h"
+#include "common/Assert.h"
+#include "common/IntegerTypes.h"
 #include "src/Memory.h"
 
 namespace gpgmm {
