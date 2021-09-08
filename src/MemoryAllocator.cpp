@@ -13,8 +13,17 @@
 // limitations under the License.
 
 #include "src/MemoryAllocator.h"
+#include "common/Assert.h"
 
 namespace gpgmm {
+
+    void MemoryAllocator::SubAllocateMemory(uint64_t size,
+                                            uint64_t alignment,
+                                            MemoryAllocation& allocation) {
+    }
+
+    void MemoryAllocator::ReleaseMemory() {
+    }
 
     uint64_t MemoryAllocator::GetPoolSizeForTesting() const {
         return 0;

@@ -132,9 +132,6 @@ namespace gpgmm {
             friend ResourceAllocation;
 
             // MemoryAllocator interface
-            void SubAllocateMemory(uint64_t size,
-                                   uint64_t alignment,
-                                   MemoryAllocation& subAllocation) override;
             void AllocateMemory(MemoryAllocation** ppAllocation) override;
             void DeallocateMemory(MemoryAllocation* pResourceHeap) override;
             void ReleaseMemory() override;

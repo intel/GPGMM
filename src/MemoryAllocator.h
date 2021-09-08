@@ -26,10 +26,10 @@ namespace gpgmm {
 
         virtual void SubAllocateMemory(uint64_t size,
                                        uint64_t alignment,
-                                       MemoryAllocation& subAllocation) = 0;
+                                       MemoryAllocation& subAllocation);
         virtual void AllocateMemory(MemoryAllocation** ppAllocation) = 0;
         virtual void DeallocateMemory(MemoryAllocation* pAllocation) = 0;
-        virtual void ReleaseMemory() = 0;
+        virtual void ReleaseMemory();
 
         virtual uint64_t GetMemorySize() const = 0;
         virtual uint64_t GetMemoryAlignment() const = 0;

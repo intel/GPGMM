@@ -455,12 +455,6 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    void ResourceAllocator::SubAllocateMemory(uint64_t size,
-                                              uint64_t alignment,
-                                              MemoryAllocation& subAllocation) {
-        ASSERT(false);
-    }
-
     void ResourceAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
         ASSERT(false);
     }
