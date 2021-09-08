@@ -237,12 +237,12 @@ namespace gpgmm { namespace d3d12 {
         // size could be much larger then the resource allocation.
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
+        MemoryAllocator* subAllocator = nullptr;
         if (!mIsAlwaysCommitted) {
             const ResourceHeapKind resourceHeapKind =
                 GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                     newResourceDesc.Flags, mResourceHeapTier);
 
-            VirtualBuddyAllocator* subAllocator = nullptr;
             if (mMaxResourceSizeForPooling != 0 &&
                 resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
                 subAllocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
@@ -250,13 +250,25 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             }
 
-            hr = CreatePlacedResource(subAllocator, resourceInfo, &newResourceDesc, clearValue,
+            MemoryAllocation subAllocation;
+            subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                                            subAllocation);
+            if (subAllocation == GPGMM_INVALID_ALLOCATION) {
+                return E_INVALIDARG;
+            }
+
+            hr = CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc, clearValue,
                                       initialUsage, ppResourceAllocation);
         }
+
         // If sub-allocation fails, fall-back to direct allocation (committed resource).
         if (FAILED(hr)) {
-            hr = CreateCommittedResource(allocationDescriptor.HeapType, resourceInfo,
-                                         &newResourceDesc, clearValue, initialUsage,
+            AllocationInfo info = {};
+            info.mMethod = AllocationMethod::kStandalone;
+            MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
+
+            hr = CreateCommittedResource(directAllocation, allocationDescriptor.HeapType,
+                                         resourceInfo, &newResourceDesc, clearValue, initialUsage,
                                          ppResourceAllocation);
         }
         return hr;
@@ -292,23 +304,14 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
-        MemoryAllocator* subAllocator,
+        const MemoryAllocation& subAllocation,
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* pClearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** ppResourceAllocation) {
-        ASSERT(subAllocator != nullptr);
-
         if (!ppResourceAllocation) {
             return E_POINTER;
-        }
-
-        MemoryAllocation subAllocation;
-        subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                                        subAllocation);
-        if (subAllocation == GPGMM_INVALID_ALLOCATION) {
-            return E_INVALIDARG;
         }
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident.
@@ -338,10 +341,9 @@ namespace gpgmm { namespace d3d12 {
         // will insert it into the residency LRU.
         mResidencyManager->UnlockHeap(heap);
 
-        *ppResourceAllocation =
-            new ResourceAllocation{mResidencyManager.get(),   subAllocator,
-                                   subAllocation.GetInfo(),   subAllocation.GetOffset(),
-                                   std::move(placedResource), heap};
+        *ppResourceAllocation = new ResourceAllocation{
+            mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
+            subAllocation.GetOffset(), std::move(placedResource),    heap};
         return hr;
     }
 
@@ -386,6 +388,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::CreateCommittedResource(
+        const MemoryAllocation& subAllocation,
         D3D12_HEAP_TYPE heapType,
         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -443,15 +446,9 @@ namespace gpgmm { namespace d3d12 {
         // track this to avoid calling MakeResident a second time.
         mResidencyManager->InsertHeap(heap);
 
-        AllocationInfo info = {};
-        info.mMethod = AllocationMethod::kStandalone;
-
-        *ppResourceAllocation = new ResourceAllocation{mResidencyManager.get(),
-                                                       /*memoryAllocator*/ this,
-                                                       info,
-                                                       /*offset*/ 0,
-                                                       std::move(committedResource),
-                                                       heap};
+        *ppResourceAllocation = new ResourceAllocation{
+            mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
+            subAllocation.GetOffset(), std::move(committedResource), heap};
         return hr;
     }
 

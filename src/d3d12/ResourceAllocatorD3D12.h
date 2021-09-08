@@ -139,14 +139,15 @@ namespace gpgmm {
             uint64_t GetMemorySize() const override;
             uint64_t GetMemoryAlignment() const override;
 
-            HRESULT CreatePlacedResource(MemoryAllocator* subAllocator,
+            HRESULT CreatePlacedResource(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
                                          const D3D12_CLEAR_VALUE* pClearValue,
                                          D3D12_RESOURCE_STATES initialUsage,
                                          ResourceAllocation** ppResourceAllocation);
 
-            HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
+            HRESULT CreateCommittedResource(const MemoryAllocation& subAllocation,
+                                            D3D12_HEAP_TYPE heapType,
                                             const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
                                             const D3D12_CLEAR_VALUE* pClearValue,
