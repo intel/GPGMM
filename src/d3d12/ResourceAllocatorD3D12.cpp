@@ -231,6 +231,10 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
+        const ResourceHeapKind resourceHeapKind =
+            GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
+                                newResourceDesc.Flags, mResourceHeapTier);
+
         // TODO(crbug.com/dawn/849): Conditionally disable sub-allocation.
         // For very large resources, there is no benefit to suballocate.
         // For very small resources, it is inefficent to suballocate given the min. heap
@@ -239,10 +243,6 @@ namespace gpgmm { namespace d3d12 {
         HRESULT hr = E_UNEXPECTED;
         MemoryAllocator* subAllocator = nullptr;
         if (!mIsAlwaysCommitted) {
-            const ResourceHeapKind resourceHeapKind =
-                GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
-                                    newResourceDesc.Flags, mResourceHeapTier);
-
             if (mMaxResourceSizeForPooling != 0 &&
                 resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
                 subAllocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
@@ -267,9 +267,9 @@ namespace gpgmm { namespace d3d12 {
             info.mMethod = AllocationMethod::kStandalone;
             MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
 
-            hr = CreateCommittedResource(directAllocation, allocationDescriptor.HeapType,
-                                         resourceInfo, &newResourceDesc, clearValue, initialUsage,
-                                         ppResourceAllocation);
+            hr = CreateCommittedResource(
+                directAllocation, allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind),
+                resourceInfo, &newResourceDesc, clearValue, initialUsage, ppResourceAllocation);
         }
         return hr;
     }
@@ -390,6 +390,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateCommittedResource(
         const MemoryAllocation& subAllocation,
         D3D12_HEAP_TYPE heapType,
+        D3D12_HEAP_FLAGS heapFlags,
         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* pClearValue,
@@ -426,8 +427,8 @@ namespace gpgmm { namespace d3d12 {
         // Note: Heap flags are inferred by the resource descriptor and do not need to be explicitly
         // provided to CreateCommittedResource.
         ComPtr<ID3D12Resource> committedResource;
-        hr = mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                              resourceDescriptor, initialUsage, pClearValue,
+        hr = mDevice->CreateCommittedResource(&heapProperties, heapFlags, resourceDescriptor,
+                                              initialUsage, pClearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;

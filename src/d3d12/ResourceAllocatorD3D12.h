@@ -148,6 +148,7 @@ namespace gpgmm {
 
             HRESULT CreateCommittedResource(const MemoryAllocation& subAllocation,
                                             D3D12_HEAP_TYPE heapType,
+                                            D3D12_HEAP_FLAGS heapFlags,
                                             const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
                                             const D3D12_CLEAR_VALUE* pClearValue,
