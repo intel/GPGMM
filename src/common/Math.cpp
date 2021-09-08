@@ -1,4 +1,5 @@
 // Copyright 2017 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +26,10 @@
 #    include <intrin.h>
 #endif
 
-uint32_t ScanForward(uint32_t bits) {
-    ASSERT(bits != 0);
+namespace gpgmm {
+
+    uint32_t ScanForward(uint32_t bits) {
+        ASSERT(bits != 0);
 #if defined(DAWN_COMPILER_MSVC)
     unsigned long firstBitIndex = 0ul;
     unsigned char ret = _BitScanForward(&firstBitIndex, bits);
@@ -35,7 +38,7 @@ uint32_t ScanForward(uint32_t bits) {
 #else
     return static_cast<uint32_t>(__builtin_ctz(bits));
 #endif
-}
+    }
 
 uint32_t Log2(uint32_t value) {
     ASSERT(value != 0);
@@ -104,3 +107,5 @@ uint64_t RoundUp(uint64_t n, uint64_t m) {
     ASSERT(m <= std::numeric_limits<uint64_t>::max() - n);
     return ((n + m - 1) / m) * m;
 }
+
+}  // namespace gpgmm

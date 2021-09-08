@@ -1,4 +1,5 @@
 // Copyright 2019 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_LOG_H_
-#define COMMON_LOG_H_
+#ifndef GPGMM_COMMON_LOG_H_
+#define GPGMM_COMMON_LOG_H_
 
 // Dawn targets shouldn't use iostream or printf directly for several reasons:
 //  - iostream adds static initializers which we want to avoid.
@@ -45,7 +46,7 @@
 
 #include <sstream>
 
-namespace dawn {
+namespace gpgmm {
 
     // Log levels mostly used to signal intent where the log message is produced and used to route
     // the message to the correct output.
@@ -90,6 +91,6 @@ namespace dawn {
     LogMessage DebugLog(const char* file, const char* function, int line);
 #define DAWN_DEBUG() ::dawn::DebugLog(__FILE__, __func__, __LINE__)
 
-}  // namespace dawn
+}  // namespace gpgmm
 
-#endif  // COMMON_LOG_H_
+#endif  // GPGMM_COMMON_LOG_H_

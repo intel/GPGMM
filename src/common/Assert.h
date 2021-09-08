@@ -1,4 +1,5 @@
 // Copyright 2017 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_ASSERT_H_
-#define COMMON_ASSERT_H_
+#ifndef GPGMM_COMMON_ASSERT_H_
+#define GPGMM_COMMON_ASSERT_H_
 
 #include "Compiler.h"
 
@@ -77,4 +78,4 @@ void HandleAssertionFailure(const char* file,
                             int line,
                             const char* condition);
 
-#endif  // COMMON_ASSERT_H_
+#endif  // GPGMM_COMMON_ASSERT_H_

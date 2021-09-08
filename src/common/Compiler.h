@@ -1,4 +1,5 @@
 // Copyright 2017 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_COMPILER_H_
-#define COMMON_COMPILER_H_
+#ifndef GPGMM_COMMON_COMPILER_H_
+#define GPGMM_COMMON_COMPILER_H_
 
 // Defines macros for compiler-specific functionality
 //  - DAWN_COMPILER_[CLANG|GCC|MSVC]: Compiler detection
@@ -113,4 +114,4 @@ extern void __cdecl __debugbreak(void);
 #    define DAWN_FALLTHROUGH
 #endif
 
-#endif  // COMMON_COMPILER_H_
+#endif  // GPGMM_COMMON_COMPILER_H_

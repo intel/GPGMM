@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_INTEGERTYPES_H_
-#define COMMON_INTEGERTYPES_H_
+#ifndef GPGMM_COMMON_INTEGERTYPES_H_
+#define GPGMM_COMMON_INTEGERTYPES_H_
 
 #include <cstdint>
 #include <limits>
@@ -25,4 +25,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // COMMON_INTEGERTYPES_H_
+#endif  // GPGMM_COMMON_INTEGERTYPES_H_

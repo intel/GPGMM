@@ -1,4 +1,5 @@
 // Copyright 2019 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,31 +31,33 @@
 
 #include <array>
 
+namespace gpgmm {
+
 #if defined(DAWN_PLATFORM_WINDOWS)
-const char* GetPathSeparator() {
-    return "\\";
+    const char* GetPathSeparator() {
+        return "\\";
 }
 
-std::string GetEnvironmentVar(const char* variableName) {
-    // First pass a size of 0 to get the size of variable value.
-    char* tempBuf = nullptr;
-    DWORD result = GetEnvironmentVariableA(variableName, tempBuf, 0);
-    if (result == 0) {
-        return "";
+    std::string GetEnvironmentVar(const char* variableName) {
+        // First pass a size of 0 to get the size of variable value.
+        char* tempBuf = nullptr;
+        DWORD result = GetEnvironmentVariableA(variableName, tempBuf, 0);
+        if (result == 0) {
+            return "";
+        }
+
+        // Then get variable value with its actual size.
+        std::vector<char> buffer(result + 1);
+        if (GetEnvironmentVariableA(variableName, buffer.data(),
+                                    static_cast<DWORD>(buffer.size())) == 0) {
+            return "";
+        }
+        return std::string(buffer.data());
     }
 
-    // Then get variable value with its actual size.
-    std::vector<char> buffer(result + 1);
-    if (GetEnvironmentVariableA(variableName, buffer.data(), static_cast<DWORD>(buffer.size())) ==
-        0) {
-        return "";
+    bool SetEnvironmentVar(const char* variableName, const char* value) {
+        return SetEnvironmentVariableA(variableName, value) == TRUE;
     }
-    return std::string(buffer.data());
-}
-
-bool SetEnvironmentVar(const char* variableName, const char* value) {
-    return SetEnvironmentVariableA(variableName, value) == TRUE;
-}
 #elif defined(DAWN_PLATFORM_POSIX)
 const char* GetPathSeparator() {
     return "/";
@@ -146,3 +149,5 @@ bool ScopedEnvironmentVar::Set(const char* variableName, const char* value) {
     mIsSet = SetEnvironmentVar(variableName, value);
     return mIsSet;
 }
+
+}  // namespace gpgmm

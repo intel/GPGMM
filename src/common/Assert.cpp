@@ -1,4 +1,5 @@
 // Copyright 2017 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,8 +22,8 @@ void HandleAssertionFailure(const char* file,
                             const char* function,
                             int line,
                             const char* condition) {
-    dawn::ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
-                     << "): " << condition;
+    gpgmm::ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
+                      << "): " << condition;
 #if defined(DAWN_ABORT_ON_ASSERT)
     abort();
 #else

@@ -1,4 +1,5 @@
 // Copyright 2019 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,33 +13,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_SYSTEMUTILS_H_
-#define COMMON_SYSTEMUTILS_H_
+#ifndef GPGMM_COMMON_SYSTEMUTILS_H_
+#define GPGMM_COMMON_SYSTEMUTILS_H_
 
 #include "Platform.h"
 
 #include <string>
 
-const char* GetPathSeparator();
-std::string GetEnvironmentVar(const char* variableName);
-bool SetEnvironmentVar(const char* variableName, const char* value);
-std::string GetExecutableDirectory();
+namespace gpgmm {
 
-class ScopedEnvironmentVar {
-  public:
-    ScopedEnvironmentVar() = default;
-    ScopedEnvironmentVar(const char* variableName, const char* value);
-    ~ScopedEnvironmentVar();
+    const char* GetPathSeparator();
+    std::string GetEnvironmentVar(const char* variableName);
+    bool SetEnvironmentVar(const char* variableName, const char* value);
+    std::string GetExecutableDirectory();
 
-    ScopedEnvironmentVar(const ScopedEnvironmentVar& rhs) = delete;
-    ScopedEnvironmentVar& operator=(const ScopedEnvironmentVar& rhs) = delete;
+    class ScopedEnvironmentVar {
+      public:
+        ScopedEnvironmentVar() = default;
+        ScopedEnvironmentVar(const char* variableName, const char* value);
+        ~ScopedEnvironmentVar();
 
-    bool Set(const char* variableName, const char* value);
+        ScopedEnvironmentVar(const ScopedEnvironmentVar& rhs) = delete;
+        ScopedEnvironmentVar& operator=(const ScopedEnvironmentVar& rhs) = delete;
 
-  private:
-    std::string mName;
-    std::string mOriginalValue;
-    bool mIsSet = false;
-};
+        bool Set(const char* variableName, const char* value);
 
-#endif  // COMMON_SYSTEMUTILS_H_
+      private:
+        std::string mName;
+        std::string mOriginalValue;
+        bool mIsSet = false;
+    };
+
+}  // namespace gpgmm
+
+#endif  // GPGMM_COMMON_SYSTEMUTILS_H_
