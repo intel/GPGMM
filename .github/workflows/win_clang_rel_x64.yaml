@@ -1,0 +1,107 @@
+name: Windows Clang 64-bit Release
+
+on: [push, pull_request]
+
+jobs:
+
+  job:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Git config
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - name: Install depot_tools
+      shell: cmd
+      run: |
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ..\depot_tools
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        gclient
+
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - uses: actions/checkout@v2
+      with:
+        ref: main
+        path: base
+        fetch-depth: 0
+
+    - name: Sync code for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        copy scripts\standalone.gclient .gclient
+        gclient sync
+
+    - name: Generate project for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        gn gen out\Release --args="is_debug=false"
+
+    - name: Build for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        ninja -C out\Release
+
+    - name: Run gpgmm_end2end_tests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2endtests.json
+        cd ..
+        rmdir /s /q base
+
+    - uses: actions/checkout@v2
+      with:
+        path: test
+        fetch-depth: 0
+
+    - name: Sync code for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        copy scripts\standalone.gclient .gclient
+        gclient sync
+
+    - name: Generate project for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        gn gen out\Release --args="is_debug=false"
+
+    - name: Build for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        ninja -C out\Release
+
+    - name: Run gpgmm_end2end_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2endtests.json || true
+
+    - name: Regression check
+      run: |
+        echo "Regression checking..."
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\test_end2endtests.json
