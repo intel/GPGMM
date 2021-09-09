@@ -63,7 +63,7 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        const uint64_t blockOffset = mBuddyBlockAllocator.Allocate(size, alignment);
+        const uint64_t blockOffset = mBuddyBlockAllocator.AllocateBlock(size, alignment);
         if (blockOffset == kInvalidOffset) {
             return;
         }
@@ -118,7 +118,7 @@ namespace gpgmm {
             mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex].release());
         }
 
-        mBuddyBlockAllocator.Deallocate(info.mBlockOffset);
+        mBuddyBlockAllocator.DeallocateBlock(info.mBlockOffset);
     }
 
     uint64_t VirtualBuddyAllocator::GetMemorySize() const {

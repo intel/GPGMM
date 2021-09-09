@@ -20,12 +20,13 @@
 #include <cstdint>
 
 namespace gpgmm {
+    // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
     class BlockAllocator : public AllocatorBase {
       public:
         virtual ~BlockAllocator() = default;
 
-        virtual uint64_t Allocate(uint64_t allocationSize, uint64_t alignment = 1) = 0;
-        virtual void Deallocate(uint64_t offset) = 0;
+        virtual uint64_t AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
+        virtual void DeallocateBlock(uint64_t offset) = 0;
     };
 
 }  // namespace gpgmm

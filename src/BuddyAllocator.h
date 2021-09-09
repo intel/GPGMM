@@ -42,8 +42,8 @@ namespace gpgmm {
         ~BuddyAllocator() override;
 
         // BlockAllocator interface
-        uint64_t Allocate(uint64_t size, uint64_t alignment = 1) override;
-        void Deallocate(uint64_t offset) override;
+        uint64_t AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
+        void DeallocateBlock(uint64_t offset) override;
 
         // For testing purposes only.
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;

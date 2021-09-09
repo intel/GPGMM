@@ -136,7 +136,7 @@ namespace gpgmm {
         }
     }
 
-    uint64_t BuddyAllocator::Allocate(uint64_t size, uint64_t alignment) {
+    uint64_t BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mMaxBlockSize) {
             return kInvalidOffset;
         }
@@ -199,7 +199,7 @@ namespace gpgmm {
         return currBlock->mOffset;
     }
 
-    void BuddyAllocator::Deallocate(uint64_t offset) {
+    void BuddyAllocator::DeallocateBlock(uint64_t offset) {
         BuddyBlock* curr = mRoot;
 
         // TODO(crbug.com/dawn/827): Optimize de-allocation.
