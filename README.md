@@ -1,3 +1,5 @@
+[![Windows Clang 64-bit Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
+
 # GPGMM
 
 GPGMM is a General-Purpose GPU Memory Management library.
