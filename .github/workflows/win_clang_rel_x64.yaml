@@ -61,7 +61,15 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2endtests.json
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+        cd ..
+        rmdir /s /q base
+
+    - name: Run gpgmm_unittests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_unittests.json
         cd ..
         rmdir /s /q base
 
@@ -99,9 +107,18 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2endtests.json || true
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
 
-    - name: Regression check
+    - name: Run gpgmm_unittests (with patch)
+      shell: cmd
       run: |
-        echo "Regression checking..."
-        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\test_end2endtests.json
+        cd test
+        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json || true
+
+    - name: Regression check end2end tests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2end_tests.json ${{ github.workspace }}\..\test_end2end_tests.json
+
+    - name: Regression check unittests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_unittests.json ${{ github.workspace }}\..\test_unittests.json
