@@ -188,9 +188,12 @@ namespace gpgmm { namespace d3d12 {
                                                  mIsUMA,
                                                  descriptor.MaxVideoMemoryBudget,
                                                  descriptor.TotalResourceBudgetLimit)) {
-        const uint64_t heapSize = (descriptor.PreferredResourceHeapSize > 0)
-                                      ? descriptor.PreferredResourceHeapSize
-                                      : kDefaultHeapSize;
+        const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
+                                                 ? descriptor.PreferredResourceHeapSize
+                                                 : kDefaultMinHeapSize;
+
+        mMaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
+                                                                    : kDefaultMaxHeapSize;
 
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
@@ -199,15 +202,15 @@ namespace gpgmm { namespace d3d12 {
                 this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetHeapType(resourceHeapKind)),
-                heapSize);
+                minResourceHeapSize);
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
             mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                kMaxHeapSize, mPooledResourceHeapAllocators[i].get());
+                mMaxResourceHeapSize, mPooledResourceHeapAllocators[i].get());
 
             // Non-pooled buddy allocator variant
             mPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                kMaxHeapSize, mResourceHeapAllocators[i].get());
+                mMaxResourceHeapSize, mResourceHeapAllocators[i].get());
         }
     }
 
@@ -229,7 +232,7 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        if (resourceInfo.SizeInBytes > kMaxHeapSize) {
+        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             return E_OUTOFMEMORY;
         }
 

@@ -19,10 +19,10 @@
 
 namespace gpgmm {
 
-    static constexpr uint64_t kMaxHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-    static constexpr uint64_t kDefaultHeapSize = 4ll * 1024ll * 1024ll;        // 4MB
-    static constexpr uint32_t kAdditonalSizeToEvict = 50ll * 1024ll * 1024ll;  // 50MB
-    static constexpr float kDefaultVideoMemoryBudgetLimit = 0.95;              // 95%
+    static constexpr uint64_t kDefaultMaxHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+    static constexpr uint64_t kDefaultMinHeapSize = 4ll * 1024ll * 1024ll;            // 4MB
+    static constexpr uint32_t kAdditonalSizeToEvict = 50ll * 1024ll * 1024ll;         // 50MB
+    static constexpr float kDefaultVideoMemoryBudgetLimit = 0.95;                     // 95%
 
 }  // namespace gpgmm
 

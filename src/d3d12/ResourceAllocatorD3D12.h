@@ -53,17 +53,21 @@ namespace gpgmm {
             uint32_t ResourceHeapTier;
 
             // The minimum size of the created resource heap.
-            // If the allocation exceeds |PreferredResourceHeapSize|, it cannot sub-allocate. If the
-            // resource heap size is too small, there will be no beneifit to sub-allocate the
-            // resource. By default, a preferred heap size of zero means the default heap size of
-            // 4MB will be used.
+            // If the resource size exceeds |PreferredResourceHeapSize|, it cannot sub-allocate a
+            // heap. By default, a preferred heap size of zero means the default heap size of 4MB
+            // will always be used.
             uint64_t PreferredResourceHeapSize;
 
-            // Any resource greater than |MaxResourceSizeForPooling| will not be pool-allocated.
-            // This avoids keeping large resource heaps in memory for infrequently created large
-            // resources.
-            // By default, a max resource heap size of zero means created resources will always be
-            // pool-allocated.
+            // The maximum size of the created resource heap.
+            // If the resource size exceeds |MaxResourceHeapSize|, CreateResource will always return
+            // E_OUTOFMEMORY. By default, a max resource heap size of zero means the default heap
+            // size of 32GB will always be used.
+            uint64_t MaxResourceHeapSize;
+
+            // The maximum resource size allowed to be created from a pool.
+            // If the resource size is greater than |MaxResourceSizeForPooling|, it will not be
+            // pool-allocated. By default, a max resource heap size of zero means created resources
+            // will always be pool-allocated.
             uint64_t MaxResourceSizeForPooling;
 
             // The maximum video memory available to the allocator to budget, expressed as a
@@ -169,6 +173,7 @@ namespace gpgmm {
             bool mIsAlwaysCommitted;
             bool mIsAlwaysInBudget;
             uint64_t mMaxResourceSizeForPooling;
+            uint64_t mMaxResourceHeapSize;
 
             std::array<std::unique_ptr<VirtualBuddyAllocator>, ResourceHeapKind::EnumCount>
                 mPlacedAllocators;
