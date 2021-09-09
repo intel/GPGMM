@@ -65,6 +65,7 @@ namespace gpgmm {
         MemoryAllocation(const MemoryAllocation&) = default;
         MemoryAllocation& operator=(const MemoryAllocation&) = default;
         bool operator==(const MemoryAllocation&);
+        bool operator!=(const MemoryAllocation& other);
 
         MemoryBase* GetMemory() const;
         uint64_t GetOffset() const;

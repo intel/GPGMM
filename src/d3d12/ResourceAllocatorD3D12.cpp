@@ -221,13 +221,15 @@ namespace gpgmm { namespace d3d12 {
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** ppResourceAllocation) {
         // If d3d tells us the resource size is invalid, treat the error as OOM.
-        // Otherwise, creating the resource could cause a device loss (too large).
-        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
-        // incorrectly allocate a mismatched size.
+        // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
         if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+            return E_OUTOFMEMORY;
+        }
+
+        if (resourceInfo.SizeInBytes > kMaxHeapSize) {
             return E_OUTOFMEMORY;
         }
 
@@ -242,6 +244,7 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         MemoryAllocator* subAllocator = nullptr;
+        MemoryAllocation subAllocation;
         if (!mIsAlwaysCommitted) {
             if (mMaxResourceSizeForPooling != 0 &&
                 resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
@@ -250,19 +253,19 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             }
 
-            MemoryAllocation subAllocation;
             subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
                                             subAllocation);
-            if (subAllocation == GPGMM_INVALID_ALLOCATION) {
-                return E_INVALIDARG;
+            if (subAllocation != GPGMM_INVALID_ALLOCATION) {
+                hr = CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc, clearValue,
+                                          initialUsage, ppResourceAllocation);
+                if (FAILED(hr)) {
+                    subAllocator->DeallocateMemory(&subAllocation);
+                }
             }
-
-            hr = CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc, clearValue,
-                                      initialUsage, ppResourceAllocation);
         }
 
-        // If sub-allocation fails, fall-back to direct allocation (committed resource).
-        if (FAILED(hr)) {
+        // Fall-back to direct allocation if sub-allocation fails.
+        if (subAllocation == GPGMM_INVALID_ALLOCATION || FAILED(hr)) {
             AllocationInfo info = {};
             info.mMethod = AllocationMethod::kStandalone;
             MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
@@ -271,6 +274,7 @@ namespace gpgmm { namespace d3d12 {
                 directAllocation, allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind),
                 resourceInfo, &newResourceDesc, clearValue, initialUsage, ppResourceAllocation);
         }
+
         return hr;
     }
 
@@ -400,9 +404,8 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        if (resourceInfo.SizeInBytes > kMaxHeapSize) {
-            return E_OUTOFMEMORY;
-        }
+        // Suballocation of a committed resource cannot be done in an explicit heap.
+        ASSERT(subAllocation.GetMemory() == nullptr);
 
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
@@ -424,8 +427,11 @@ namespace gpgmm { namespace d3d12 {
         heapProperties.CreationNodeMask = 0;
         heapProperties.VisibleNodeMask = 0;
 
-        // Note: Heap flags are inferred by the resource descriptor and do not need to be explicitly
+        // Resource heap flags must be inferred by the resource descriptor and cannot be explicitly
         // provided to CreateCommittedResource.
+        heapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
+                       D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
+
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, heapFlags, resourceDescriptor,
                                               initialUsage, pClearValue,

@@ -40,6 +40,10 @@ namespace gpgmm {
                 other.mMemory == mMemory);
     }
 
+    bool MemoryAllocation::operator!=(const MemoryAllocation& other) {
+        return !operator==(other);
+    }
+
     MemoryBase* MemoryAllocation::GetMemory() const {
         return mMemory;
     }
