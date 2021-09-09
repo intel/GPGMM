@@ -62,16 +62,12 @@ jobs:
       run: |
         cd base
         out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
-        cd ..
-        rmdir /s /q base
 
     - name: Run gpgmm_unittests
       shell: cmd
       run: |
         cd base
         out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_unittests.json
-        cd ..
-        rmdir /s /q base
 
     - uses: actions/checkout@v2
       with:
