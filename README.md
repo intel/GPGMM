@@ -1,4 +1,4 @@
-[![Windows Standalone Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
+[![Windows Standalone Release](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml)
 [![Windows Dawn Release](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml)
 
 # GPGMM

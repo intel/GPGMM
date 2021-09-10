@@ -1,4 +1,4 @@
-name: Windows Clang 64-bit Release
+name: Windows Standalone Release
 
 on:
   push:
