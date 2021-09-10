@@ -136,9 +136,9 @@ namespace gpgmm {
         }
     }
 
-    uint64_t BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
+    Block BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mMaxBlockSize) {
-            return kInvalidOffset;
+            return {};
         }
 
         // Compute the level
@@ -150,7 +150,7 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
-            return kInvalidOffset;
+            return {};
         }
 
         // Split free blocks level-by-level.
@@ -196,10 +196,10 @@ namespace gpgmm {
         RemoveFreeBlock(currBlock, currBlockLevel);
         currBlock->mState = BlockState::Allocated;
 
-        return currBlock->mOffset;
+        return {currBlock->mOffset, currBlock->mSize};
     }
 
-    void BuddyAllocator::DeallocateBlock(uint64_t offset) {
+    void BuddyAllocator::DeallocateBlock(const Block& block) {
         BuddyBlock* curr = mRoot;
 
         // TODO(crbug.com/dawn/827): Optimize de-allocation.
@@ -209,7 +209,7 @@ namespace gpgmm {
         // Search for the free block node that corresponds to the block offset.
         size_t currBlockLevel = 0;
         while (curr->mState == BlockState::Split) {
-            if (offset < curr->split.pLeft->pBuddy->mOffset) {
+            if (block.offset < curr->split.pLeft->pBuddy->mOffset) {
                 curr = curr->split.pLeft;
             } else {
                 curr = curr->split.pLeft->pBuddy;

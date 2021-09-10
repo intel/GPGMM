@@ -15,18 +15,25 @@
 #ifndef GPGMM_BLOCKALLOCATOR_H_
 #define GPGMM_BLOCKALLOCATOR_H_
 
+#include "common/IntegerTypes.h"
 #include "src/Allocator.h"
 
 #include <cstdint>
 
 namespace gpgmm {
+
+    struct Block {
+        uint64_t offset = kInvalidOffset;
+        uint64_t size = kInvalidSize;
+    };
+
     // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
     class BlockAllocator : public AllocatorBase {
       public:
         virtual ~BlockAllocator() = default;
 
-        virtual uint64_t AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
-        virtual void DeallocateBlock(uint64_t offset) = 0;
+        virtual Block AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
+        virtual void DeallocateBlock(const Block& offset) = 0;
     };
 
 }  // namespace gpgmm

@@ -63,13 +63,13 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        const uint64_t blockOffset = mBuddyBlockAllocator.AllocateBlock(size, alignment);
-        if (blockOffset == kInvalidOffset) {
+        const Block& block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
+        if (block.offset == kInvalidOffset) {
             return;
         }
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
-        const uint64_t memoryIndex = GetMemoryIndex(blockOffset);
+        const uint64_t memoryIndex = GetMemoryIndex(block.offset);
         if (memoryIndex >= mMemoryAllocations.size()) {
             mMemoryAllocations.resize(memoryIndex + 1);
         }
@@ -87,11 +87,11 @@ namespace gpgmm {
         IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
         AllocationInfo info;
-        info.mBlockOffset = blockOffset;
+        info.mBlock = block;
         info.mMethod = AllocationMethod::kSubAllocated;
 
         // Allocation offset is always local to the memory.
-        const uint64_t memoryOffset = blockOffset % mMemorySize;
+        const uint64_t memoryOffset = block.offset % mMemorySize;
 
         subAllocation = MemoryAllocation{/*allocator*/ this, info, memoryOffset,
                                          mMemoryAllocations[memoryIndex]->GetMemory()};
@@ -109,7 +109,7 @@ namespace gpgmm {
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
-        const uint64_t memoryIndex = GetMemoryIndex(info.mBlockOffset);
+        const uint64_t memoryIndex = GetMemoryIndex(info.mBlock.offset);
 
         ASSERT(mMemoryAllocations[memoryIndex] != nullptr);
         DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
@@ -118,7 +118,7 @@ namespace gpgmm {
             mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex].release());
         }
 
-        mBuddyBlockAllocator.DeallocateBlock(info.mBlockOffset);
+        mBuddyBlockAllocator.DeallocateBlock(info.mBlock);
     }
 
     uint64_t VirtualBuddyAllocator::GetMemorySize() const {
