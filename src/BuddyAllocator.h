@@ -42,8 +42,8 @@ namespace gpgmm {
         ~BuddyAllocator() override;
 
         // BlockAllocator interface
-        Block AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
-        void DeallocateBlock(const Block& block) override;
+        Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
+        void DeallocateBlock(Block* block) override;
 
         // For testing purposes only.
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;
@@ -54,15 +54,13 @@ namespace gpgmm {
 
         enum class BlockState { Free, Split, Allocated };
 
-        struct BuddyBlock {
-            BuddyBlock(uint64_t size, uint64_t offset)
-                : mOffset(offset), mSize(size), mState(BlockState::Free) {
+        struct BuddyBlock : public Block {
+            BuddyBlock(uint64_t size, uint64_t offset) : mState(BlockState::Free) {
+                mOffset = offset;
+                mSize = size;
                 free.pPrev = nullptr;
                 free.pNext = nullptr;
             }
-
-            uint64_t mOffset;
-            uint64_t mSize;
 
             // Pointer to this block's buddy, iff parent is split.
             // Used to quickly merge buddy blocks upon de-allocate.

@@ -31,17 +31,17 @@ TEST(BuddyAllocatorTests, SingleBlock) {
     BuddyAllocator allocator(maxBlockSize);
 
     // Check that we cannot allocate a oversized block.
-    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2), nullptr);
 
     // Check that we cannot allocate a zero sized block.
-    ASSERT_EQ(allocator.AllocateBlock(0u).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(0u), nullptr);
 
     // Allocate the block.
-    Block block = allocator.AllocateBlock(maxBlockSize);
-    ASSERT_EQ(block.offset, 0u);
+    Block* block = allocator.AllocateBlock(maxBlockSize);
+    ASSERT_EQ(block->mOffset, 0u);
 
     // Check that we are full.
-    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize), nullptr);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 0u);
 
     // Deallocate the block.
@@ -58,7 +58,7 @@ TEST(BuddyAllocatorTests, MultipleBlocks) {
 
         uint64_t blockSize = (1ull << order);
         for (uint32_t blocki = 0; blocki < (maxBlockSize / blockSize); blocki++) {
-            ASSERT_EQ(allocator.AllocateBlock(blockSize).offset, blockSize * blocki);
+            ASSERT_EQ(allocator.AllocateBlock(blockSize)->mOffset, blockSize * blocki);
         }
     }
 }
@@ -79,8 +79,8 @@ TEST(BuddyAllocatorTests, SingleSplitBlock) {
     BuddyAllocator allocator(maxBlockSize);
 
     // Allocate block (splits two blocks).
-    Block block = allocator.AllocateBlock(8);
-    ASSERT_EQ(block.offset, 0u);
+    Block* block = allocator.AllocateBlock(8);
+    ASSERT_EQ(block->mOffset, 0u);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 2u);
 
     // Deallocate block (merges two blocks).
@@ -88,11 +88,11 @@ TEST(BuddyAllocatorTests, SingleSplitBlock) {
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 
     // Check that we cannot allocate a block that is oversized.
-    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2), nullptr);
 
     // Re-allocate the largest block allowed after merging.
     block = allocator.AllocateBlock(maxBlockSize);
-    ASSERT_EQ(block.offset, 0u);
+    ASSERT_EQ(block->mOffset, 0u);
 
     allocator.DeallocateBlock(block);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
@@ -117,23 +117,23 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocks) {
 
     // Allocate "a" block (two splits).
     constexpr uint64_t blockSizeInBytes = 8;
-    Block blockA = allocator.AllocateBlock(blockSizeInBytes);
-    ASSERT_EQ(blockA.offset, 0u);
+    Block* blockA = allocator.AllocateBlock(blockSizeInBytes);
+    ASSERT_EQ(blockA->mOffset, 0u);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 2u);
 
     // Allocate "b" block.
-    Block blockB = allocator.AllocateBlock(blockSizeInBytes);
-    ASSERT_EQ(blockB.offset, blockSizeInBytes);
+    Block* blockB = allocator.AllocateBlock(blockSizeInBytes);
+    ASSERT_EQ(blockB->mOffset, blockSizeInBytes);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 
     // Allocate "c" block (three splits).
-    Block blockC = allocator.AllocateBlock(blockSizeInBytes);
-    ASSERT_EQ(blockC.offset, blockB.offset + blockSizeInBytes);
+    Block* blockC = allocator.AllocateBlock(blockSizeInBytes);
+    ASSERT_EQ(blockC->mOffset, blockB->mOffset + blockSizeInBytes);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 
     // Allocate "d" block.
-    Block blockD = allocator.AllocateBlock(blockSizeInBytes);
-    ASSERT_EQ(blockD.offset, blockC.offset + blockSizeInBytes);
+    Block* blockD = allocator.AllocateBlock(blockSizeInBytes);
+    ASSERT_EQ(blockD->mOffset, blockC->mOffset + blockSizeInBytes);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 0u);
 
     // Deallocate "d" block.
@@ -177,20 +177,20 @@ TEST(BuddyAllocatorTests, MultipleSplitBlockIncreasingSize) {
     constexpr uint64_t maxBlockSize = 512;
     BuddyAllocator allocator(maxBlockSize);
 
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 0ull);
-    ASSERT_EQ(allocator.AllocateBlock(64).offset, 64ull);
-    ASSERT_EQ(allocator.AllocateBlock(128).offset, 128ull);
-    ASSERT_EQ(allocator.AllocateBlock(256).offset, 256ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 0ull);
+    ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 64ull);
+    ASSERT_EQ(allocator.AllocateBlock(128)->mOffset, 128ull);
+    ASSERT_EQ(allocator.AllocateBlock(256)->mOffset, 256ull);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 
     // Fill in the last free block.
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 32ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 32ull);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 0u);
 
     // Check if we're full.
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(32), nullptr);
 }
 
 // Verify very small allocations using a larger allocator works correctly.
@@ -212,17 +212,17 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksVariableSizes) {
     constexpr uint64_t maxBlockSize = 512;
     BuddyAllocator allocator(maxBlockSize);
 
-    ASSERT_EQ(allocator.AllocateBlock(64).offset, 0ull);
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 64ull);
+    ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 0ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 64ull);
 
-    ASSERT_EQ(allocator.AllocateBlock(64).offset, 128ull);
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 96ull);
+    ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 128ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 96ull);
 
-    ASSERT_EQ(allocator.AllocateBlock(64).offset, 192ull);
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 256ull);
+    ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 192ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 256ull);
 
-    ASSERT_EQ(allocator.AllocateBlock(64).offset, 320ull);
-    ASSERT_EQ(allocator.AllocateBlock(32).offset, 288ull);
+    ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 320ull);
+    ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 288ull);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 }
@@ -248,7 +248,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksInterleaved) {
 
     // Allocate leaf blocks
     constexpr uint64_t minBlockSizeInBytes = 32;
-    std::vector<Block> blocks;
+    std::vector<Block*> blocks;
     for (uint64_t i = 0; i < maxBlockSize / minBlockSizeInBytes; i++) {
         blocks.push_back(allocator.AllocateBlock(minBlockSizeInBytes));
     }
@@ -277,19 +277,19 @@ TEST(BuddyAllocatorTests, SameSizeVariousAlignment) {
     BuddyAllocator allocator(32);
 
     // Allocate Aa (two splits).
-    ASSERT_EQ(allocator.AllocateBlock(8, 16).offset, 0u);
+    ASSERT_EQ(allocator.AllocateBlock(8, 16)->mOffset, 0u);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 2u);
 
     // Allocate Ab (skip Aa buddy due to alignment and perform another split).
-    ASSERT_EQ(allocator.AllocateBlock(8, 16).offset, 16u);
+    ASSERT_EQ(allocator.AllocateBlock(8, 16)->mOffset, 16u);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 2u);
 
     // Check that we cannot fit another.
-    ASSERT_EQ(allocator.AllocateBlock(8, 16).offset, kInvalidOffset);
+    ASSERT_EQ(allocator.AllocateBlock(8, 16), nullptr);
 
     // Allocate Ac (zero splits and Ab's buddy is now the first free block).
-    ASSERT_EQ(allocator.AllocateBlock(8, 8).offset, 24u);
+    ASSERT_EQ(allocator.AllocateBlock(8, 8)->mOffset, 24u);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 }
@@ -312,16 +312,16 @@ TEST(BuddyAllocatorTests, VariousSizeSameAlignment) {
     BuddyAllocator allocator(maxBlockSize);
 
     // Allocate block Aa (two splits)
-    ASSERT_EQ(allocator.AllocateBlock(8, alignment).offset, 0u);
+    ASSERT_EQ(allocator.AllocateBlock(8, alignment)->mOffset, 0u);
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 2u);
 
     // Allocate block Ab (Aa's buddy)
-    ASSERT_EQ(allocator.AllocateBlock(8, alignment).offset, 8u);
+    ASSERT_EQ(allocator.AllocateBlock(8, alignment)->mOffset, 8u);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 1u);
 
     // Check that we can still allocate Ac.
-    ASSERT_EQ(allocator.AllocateBlock(16, alignment).offset, 16ull);
+    ASSERT_EQ(allocator.AllocateBlock(16, alignment)->mOffset, 16ull);
 
     ASSERT_EQ(allocator.ComputeTotalNumOfFreeBlocksForTesting(), 0u);
 }

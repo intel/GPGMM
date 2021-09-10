@@ -136,7 +136,7 @@ namespace gpgmm {
         }
     }
 
-    Block BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
+    Block* BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mMaxBlockSize) {
             return {};
         }
@@ -196,32 +196,15 @@ namespace gpgmm {
         RemoveFreeBlock(currBlock, currBlockLevel);
         currBlock->mState = BlockState::Allocated;
 
-        return {currBlock->mOffset, currBlock->mSize};
+        return currBlock;
     }
 
-    void BuddyAllocator::DeallocateBlock(const Block& block) {
-        BuddyBlock* curr = mRoot;
-
-        // TODO(crbug.com/dawn/827): Optimize de-allocation.
-        // Passing allocationSize directly will avoid the following level-by-level search;
-        // however, it requires the size information to be stored outside the allocator.
-
-        // Search for the free block node that corresponds to the block offset.
-        size_t currBlockLevel = 0;
-        while (curr->mState == BlockState::Split) {
-            if (block.offset < curr->split.pLeft->pBuddy->mOffset) {
-                curr = curr->split.pLeft;
-            } else {
-                curr = curr->split.pLeft->pBuddy;
-            }
-
-            currBlockLevel++;
-        }
+    void BuddyAllocator::DeallocateBlock(Block* block) {
+        BuddyBlock* curr = static_cast<BuddyBlock*>(block);
 
         ASSERT(curr->mState == BlockState::Allocated);
 
-        // Ensure the block is at the correct level
-        ASSERT(currBlockLevel == ComputeLevelFromBlockSize(curr->mSize));
+        size_t currBlockLevel = ComputeLevelFromBlockSize(curr->mSize);
 
         // Mark curr free so we can merge.
         curr->mState = BlockState::Free;

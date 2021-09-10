@@ -16,8 +16,6 @@
 #ifndef GPGMM_MEMORYALLOCATION_H_
 #define GPGMM_MEMORYALLOCATION_H_
 
-#include "BlockAllocator.h"
-
 #include <cstdint>
 
 #define GPGMM_INVALID_ALLOCATION \
@@ -26,6 +24,7 @@
 
 namespace gpgmm {
 
+    struct Block;
     class MemoryBase;
     class MemoryAllocator;
 
@@ -48,7 +47,7 @@ namespace gpgmm {
         // The block offset is within the entire allocator memory range and only required by the
         // buddy sub-allocator to get the corresponding memory. Unlike the block offset, the
         // allocation offset is always local to the memory.
-        Block mBlock;
+        Block* mBlock = nullptr;
 
         AllocationMethod mMethod = AllocationMethod::kUndefined;
     };

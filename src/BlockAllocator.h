@@ -23,8 +23,8 @@
 namespace gpgmm {
 
     struct Block {
-        uint64_t offset = kInvalidOffset;
-        uint64_t size = kInvalidSize;
+        uint64_t mOffset = kInvalidOffset;
+        uint64_t mSize = kInvalidSize;
     };
 
     // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
@@ -32,8 +32,8 @@ namespace gpgmm {
       public:
         virtual ~BlockAllocator() = default;
 
-        virtual Block AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
-        virtual void DeallocateBlock(const Block& offset) = 0;
+        virtual Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
+        virtual void DeallocateBlock(Block* offset) = 0;
     };
 
 }  // namespace gpgmm

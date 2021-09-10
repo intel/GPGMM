@@ -63,13 +63,13 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        const Block& block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
-        if (block.offset == kInvalidOffset) {
+        Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
+        if (block == nullptr) {
             return;
         }
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
-        const uint64_t memoryIndex = GetMemoryIndex(block.offset);
+        const uint64_t memoryIndex = GetMemoryIndex(block->mOffset);
         if (memoryIndex >= mMemoryAllocations.size()) {
             mMemoryAllocations.resize(memoryIndex + 1);
         }
@@ -91,7 +91,7 @@ namespace gpgmm {
         info.mMethod = AllocationMethod::kSubAllocated;
 
         // Allocation offset is always local to the memory.
-        const uint64_t memoryOffset = block.offset % mMemorySize;
+        const uint64_t memoryOffset = block->mOffset % mMemorySize;
 
         subAllocation = MemoryAllocation{/*allocator*/ this, info, memoryOffset,
                                          mMemoryAllocations[memoryIndex]->GetMemory()};
@@ -109,7 +109,7 @@ namespace gpgmm {
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
-        const uint64_t memoryIndex = GetMemoryIndex(info.mBlock.offset);
+        const uint64_t memoryIndex = GetMemoryIndex(info.mBlock->mOffset);
 
         ASSERT(mMemoryAllocations[memoryIndex] != nullptr);
         DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
