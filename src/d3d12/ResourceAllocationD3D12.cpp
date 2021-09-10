@@ -45,10 +45,6 @@ namespace gpgmm { namespace d3d12 {
         return mResource.Get();
     }
 
-    HRESULT ResourceAllocation::SetDebugName(const char* name) {
-        return mResource->SetPrivateData(WKPDID_D3DDebugObjectName, std::strlen(name), name);
-    }
-
     HRESULT ResourceAllocation::Map(uint32_t subresource,
                                     const D3D12_RANGE* pRange,
                                     void** ppMappedData) {

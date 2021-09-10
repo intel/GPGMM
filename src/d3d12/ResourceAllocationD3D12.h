@@ -44,7 +44,6 @@ namespace gpgmm { namespace d3d12 {
         void Unmap(uint32_t subresource, const D3D12_RANGE* pRange);
 
         ID3D12Resource* GetResource() const;
-        HRESULT SetDebugName(const char* name);
 
         void UpdateResidency(ResidencySet* residencySet);
 
