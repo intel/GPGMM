@@ -256,8 +256,8 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             }
 
-            subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                                            subAllocation);
+            subAllocation =
+                subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != GPGMM_INVALID_ALLOCATION) {
                 hr = CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc, clearValue,
                                           initialUsage, ppResourceAllocation);

@@ -41,9 +41,7 @@ namespace gpgmm {
         ~VirtualBuddyAllocator() override;
 
         // MemoryAllocator interface
-        void SubAllocateMemory(uint64_t size,
-                               uint64_t alignment,
-                               MemoryAllocation& subAllocation) override;
+        MemoryAllocation SubAllocateMemory(uint64_t size, uint64_t alignment) override;
         void AllocateMemory(MemoryAllocation** ppAllocation) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;

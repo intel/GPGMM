@@ -42,16 +42,14 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    void VirtualBuddyAllocator::SubAllocateMemory(uint64_t size,
-                                                  uint64_t alignment,
-                                                  MemoryAllocation& subAllocation) {
+    MemoryAllocation VirtualBuddyAllocator::SubAllocateMemory(uint64_t size, uint64_t alignment) {
         if (size == 0) {
-            return;
+            return GPGMM_INVALID_ALLOCATION;
         }
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size > mMemorySize) {
-            return;
+            return GPGMM_INVALID_ALLOCATION;
         }
 
         // Round allocation size to nearest power-of-two.
@@ -59,13 +57,13 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (size > mMemorySize) {
-            return;
+            return GPGMM_INVALID_ALLOCATION;
         }
 
         // Attempt to sub-allocate a block of the requested size.
         Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
         if (block == nullptr) {
-            return;
+            return GPGMM_INVALID_ALLOCATION;
         }
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
@@ -79,7 +77,7 @@ namespace gpgmm {
             MemoryAllocation* pAllocation = nullptr;
             mMemoryAllocator->AllocateMemory(&pAllocation);
             if (pAllocation == nullptr) {
-                return;
+                return GPGMM_INVALID_ALLOCATION;
             }
             mMemoryAllocations[memoryIndex] = std::unique_ptr<MemoryAllocation>(pAllocation);
         }
@@ -93,8 +91,8 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = block->mOffset % mMemorySize;
 
-        subAllocation = MemoryAllocation{/*allocator*/ this, info, memoryOffset,
-                                         mMemoryAllocations[memoryIndex]->GetMemory()};
+        return MemoryAllocation{/*allocator*/ this, info, memoryOffset,
+                                mMemoryAllocations[memoryIndex]->GetMemory()};
     }
 
     void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation** allocation) {

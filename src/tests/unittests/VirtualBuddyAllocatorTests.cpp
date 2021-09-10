@@ -28,11 +28,6 @@ static constexpr uint64_t kHeapSize = 128u;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
-    void SubAllocateMemory(uint64_t size,
-                           uint64_t alignment,
-                           MemoryAllocation& subAllocation) override {
-    }
-
     void AllocateMemory(MemoryAllocation** ppAllocation) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
@@ -40,9 +35,6 @@ class DummyMemoryAllocator : public MemoryAllocator {
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
-    }
-
-    void ReleaseMemory() override {
     }
 
     uint64_t GetMemorySize() const override {
@@ -64,10 +56,8 @@ class DummyBuddyResourceAllocator {
         : mAllocator(maxBlockSize, memoryAllocator) {
     }
 
-    MemoryAllocation Allocate(uint64_t allocationSize, uint64_t alignment = 1) {
-        MemoryAllocation allocation;
-        mAllocator.SubAllocateMemory(allocationSize, alignment, allocation);
-        return allocation;
+    MemoryAllocation Allocate(uint64_t size, uint64_t alignment = 1) {
+        return mAllocator.SubAllocateMemory(size, alignment);
     }
 
     void Deallocate(MemoryAllocation& allocation) {

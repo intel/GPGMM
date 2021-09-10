@@ -24,9 +24,7 @@ namespace gpgmm {
       public:
         virtual ~MemoryAllocator() = default;
 
-        virtual void SubAllocateMemory(uint64_t size,
-                                       uint64_t alignment,
-                                       MemoryAllocation& subAllocation);
+        virtual MemoryAllocation SubAllocateMemory(uint64_t size, uint64_t alignment);
         virtual void AllocateMemory(MemoryAllocation** ppAllocation) = 0;
         virtual void DeallocateMemory(MemoryAllocation* pAllocation) = 0;
         virtual void ReleaseMemory();
