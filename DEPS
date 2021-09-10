@@ -30,7 +30,7 @@ deps = {
   # Note: rolling Dawn also may require vulkan-deps to be rolled below.
   # TODO(gpgmm): Consider linking vulkan-deps to Dawn like Tint.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@6c6707021ab747005401961e90cb5659fd74c256',
+    'url': '{dawn_git}/dawn.git@d9331035a6c4dd3ea9a74da2d06505fc49d82979',
     'condition': 'checkout_dawn',
   },
 
