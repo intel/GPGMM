@@ -1,4 +1,4 @@
-[![Windows Clang 64-bit Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
+[![Windows Standalone Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
 [![Windows Dawn Release](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml)
 
 # GPGMM
@@ -51,12 +51,12 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 
 Run unit tests:
 ```sh
-> ./out/Debug/gpgmm_unittests
+> out/Debug/gpgmm_unittests
 ```
 
 Run end2end tests:
 ```sh
-> ./out/Release/gpgmm_end2end_tests
+> out/Release/gpgmm_end2end_tests
 ```
 
 Or through existing project's end2end tests:
