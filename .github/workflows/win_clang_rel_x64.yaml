@@ -1,6 +1,13 @@
 name: Windows Clang 64-bit Release
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'src/**'
+
+  pull_request:
+    paths:
+      - 'src/**'
 
 jobs:
 
