@@ -46,6 +46,9 @@ namespace gpgmm {
             Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
 
             ALLOCATOR_FLAGS Flags;
+
+            // Determines if this allocator should use shared memory. Use CheckFeatureSupport
+            // to check for support.
             bool IsUMA;
 
             // Determines if the resource heap can mix resource categories (both texture and
