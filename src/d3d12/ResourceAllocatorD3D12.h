@@ -43,7 +43,7 @@ namespace gpgmm {
 
         struct ALLOCATOR_DESC {
             Microsoft::WRL::ComPtr<ID3D12Device> Device;
-            Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+            Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
             ALLOCATOR_FLAGS Flags;
 

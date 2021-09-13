@@ -182,12 +182,16 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
-          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling),
-          mResidencyManager(new ResidencyManager(mDevice,
-                                                 descriptor.Adapter,
-                                                 mIsUMA,
-                                                 descriptor.MaxVideoMemoryBudget,
-                                                 descriptor.TotalResourceBudgetLimit)) {
+          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
+        // Adapter3 support is needed for residency support.
+        // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
+        if (SUCCEEDED(descriptor.Adapter.As(&adapter3))) {
+            mResidencyManager = std::make_unique<ResidencyManager>(
+                mDevice, std::move(adapter3), mIsUMA, descriptor.MaxVideoMemoryBudget,
+                descriptor.TotalResourceBudgetLimit);
+        }
+
         const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                  ? descriptor.PreferredResourceHeapSize
                                                  : kDefaultMinHeapSize;
@@ -324,9 +328,13 @@ namespace gpgmm { namespace d3d12 {
         // Before calling CreatePlacedResource, we must ensure the target heap is resident.
         // CreatePlacedResource will fail if it is not.
         Heap* heap = static_cast<Heap*>(subAllocation.GetMemory());
-        HRESULT hr = mResidencyManager->LockHeap(heap);
-        if (FAILED(hr)) {
-            return hr;
+        ASSERT(heap != nullptr);
+
+        if (mResidencyManager != nullptr) {
+            HRESULT hr = mResidencyManager->LockHeap(heap);
+            if (FAILED(hr)) {
+                return hr;
+            }
         }
 
         // With placed resources, a single heap can be reused.
@@ -337,16 +345,18 @@ namespace gpgmm { namespace d3d12 {
         // barrier).
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
-        hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                           resourceDescriptor, initialUsage, pClearValue,
-                                           IID_PPV_ARGS(&placedResource));
+        HRESULT hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
+                                                   resourceDescriptor, initialUsage, pClearValue,
+                                                   IID_PPV_ARGS(&placedResource));
         if (FAILED(hr)) {
             return hr;
         }
 
         // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
         // will insert it into the residency LRU.
-        mResidencyManager->UnlockHeap(heap);
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->UnlockHeap(heap);
+        }
 
         *ppResourceAllocation = new ResourceAllocation{
             mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
@@ -362,7 +372,7 @@ namespace gpgmm { namespace d3d12 {
                                                   Heap** ppResourceHeap) {
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
-        if (mIsAlwaysInBudget) {
+        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
             mResidencyManager->Evict(size, memorySegment);
         }
 
@@ -389,7 +399,9 @@ namespace gpgmm { namespace d3d12 {
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
-        mResidencyManager->InsertHeap(*ppResourceHeap);
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->InsertHeap(*ppResourceHeap);
+        }
 
         return hr;
     }
@@ -414,7 +426,7 @@ namespace gpgmm { namespace d3d12 {
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
         HRESULT hr = S_OK;
-        if (mIsAlwaysInBudget) {
+        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
             hr = mResidencyManager->Evict(
                 resourceInfo.SizeInBytes,
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType));
@@ -454,7 +466,9 @@ namespace gpgmm { namespace d3d12 {
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
-        mResidencyManager->InsertHeap(heap);
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->InsertHeap(heap);
+        }
 
         *ppResourceAllocation = new ResourceAllocation{
             mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),

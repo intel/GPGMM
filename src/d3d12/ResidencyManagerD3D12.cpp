@@ -25,12 +25,12 @@
 namespace gpgmm { namespace d3d12 {
 
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
-                                       ComPtr<IDXGIAdapter3> adapter,
+                                       ComPtr<IDXGIAdapter3> adapter3,
                                        bool isUMA,
                                        float videoMemoryBudgetLimit,
                                        uint64_t mTotalResourceBudgetLimit)
         : mDevice(device),
-          mAdapter(adapter),
+          mAdapter(adapter3),
           mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultVideoMemoryBudgetLimit
                                                               : videoMemoryBudgetLimit),

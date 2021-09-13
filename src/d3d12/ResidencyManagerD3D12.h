@@ -35,7 +35,7 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager {
       public:
         ResidencyManager(ComPtr<ID3D12Device> device,
-                         ComPtr<IDXGIAdapter3> adapter,
+                         ComPtr<IDXGIAdapter3> adapter3,
                          bool isUMA,
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit);
@@ -57,7 +57,6 @@ namespace gpgmm { namespace d3d12 {
             uint64_t requestedReservationSize);
 
         void InsertHeap(Heap* heap);
-
 
       private:
         struct MemorySegmentInfo {
