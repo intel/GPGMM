@@ -33,7 +33,7 @@ namespace gpgmm {
         virtual ~BlockAllocator() = default;
 
         virtual Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) = 0;
-        virtual void DeallocateBlock(Block* offset) = 0;
+        virtual void DeallocateBlock(Block* block) = 0;
     };
 
 }  // namespace gpgmm
