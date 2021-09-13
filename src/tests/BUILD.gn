@@ -105,6 +105,7 @@ test("gpgmm_unittests") {
 
   sources = [
     "unittests/BuddyAllocatorTests.cpp",
+    "unittests/ConditionalMemoryAllocatorTests.cpp",
     "unittests/VirtualBuddyAllocatorTests.cpp",
   ]
 

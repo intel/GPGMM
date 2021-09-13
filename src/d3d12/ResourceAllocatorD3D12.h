@@ -28,6 +28,7 @@ struct IDXGIAdapter3;
 
 namespace gpgmm {
 
+    class ConditionalMemoryAllocator;
     class PooledMemoryAllocator;
     class VirtualBuddyAllocator;
 
@@ -186,6 +187,9 @@ namespace gpgmm {
 
             std::array<std::unique_ptr<PooledMemoryAllocator>, ResourceHeapKind::EnumCount>
                 mPooledResourceHeapAllocators;
+
+            std::array<std::unique_ptr<ConditionalMemoryAllocator>, ResourceHeapKind::EnumCount>
+                mConditionalPlacedAllocators;
 
             std::unique_ptr<ResidencyManager> mResidencyManager;
         };

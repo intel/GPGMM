@@ -107,6 +107,8 @@ source_set("gpgmm_sources") {
     "BlockAllocator.h",
     "BuddyAllocator.cpp",
     "BuddyAllocator.h",
+    "ConditionalMemoryAllocator.cpp",
+    "ConditionalMemoryAllocator.h",
     "Memory.cpp",
     "Memory.h",
     "MemoryAllocation.cpp",

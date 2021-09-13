@@ -17,6 +17,7 @@
 
 #include "../common/Limits.h"
 #include "../common/Math.h"
+#include "src/ConditionalMemoryAllocator.h"
 #include "src/PooledMemoryAllocator.h"
 #include "src/VirtualBuddyAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
@@ -202,19 +203,29 @@ namespace gpgmm { namespace d3d12 {
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
+            // Standalone d3d heap allocator
             mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
                 this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetHeapType(resourceHeapKind)),
                 minResourceHeapSize);
+
+            // Pooled d3d heap allocator varient.
             mPooledResourceHeapAllocators[i] =
                 std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
+
+            // Pooled placed resource heap sub-allocator based on buddy system.
             mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
                 mMaxResourceHeapSize, mPooledResourceHeapAllocators[i].get());
 
-            // Non-pooled buddy allocator variant
+            // Non-pooled placed resource heap sub-allocator based on the buddy system.
             mPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
                 mMaxResourceHeapSize, mResourceHeapAllocators[i].get());
+
+            // Conditional sub-allocator that uses the pooled or non-pooled buddy sub-allocator.
+            mConditionalPlacedAllocators[i] = std::make_unique<ConditionalMemoryAllocator>(
+                mPooledPlacedAllocators[i].get(), mPlacedAllocators[i].get(),
+                mMaxResourceSizeForPooling);
         }
     }
 
@@ -253,13 +264,8 @@ namespace gpgmm { namespace d3d12 {
         MemoryAllocator* subAllocator = nullptr;
         MemoryAllocation subAllocation;
         if (!mIsAlwaysCommitted) {
-            if (mMaxResourceSizeForPooling != 0 &&
-                resourceInfo.SizeInBytes > mMaxResourceSizeForPooling) {
-                subAllocator = mPooledPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            } else {
-                subAllocator = mPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            }
-
+            subAllocator =
+                mConditionalPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
             subAllocation =
                 subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != GPGMM_INVALID_ALLOCATION) {
@@ -489,7 +495,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::ReleaseMemory() {
-        for (auto& allocator : mPooledPlacedAllocators) {
+        for (auto& allocator : mConditionalPlacedAllocators) {
             allocator->ReleaseMemory();
         }
     }
