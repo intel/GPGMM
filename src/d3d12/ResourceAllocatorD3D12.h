@@ -143,9 +143,6 @@ namespace gpgmm {
             void DeallocateMemory(MemoryAllocation* pResourceHeap) override;
             void ReleaseMemory() override;
 
-            uint64_t GetMemorySize() const override;
-            uint64_t GetMemoryAlignment() const override;
-
             HRESULT CreatePlacedResource(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,

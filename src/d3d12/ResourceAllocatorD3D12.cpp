@@ -494,16 +494,6 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
-    uint64_t ResourceAllocator::GetMemorySize() const {
-        ASSERT(false);
-        return kInvalidSize;
-    }
-
-    uint64_t ResourceAllocator::GetMemoryAlignment() const {
-        ASSERT(false);
-        return kInvalidOffset;
-    }
-
     ResidencyManager* ResourceAllocator::GetResidencyManager() {
         return mResidencyManager.get();
     }

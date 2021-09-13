@@ -16,6 +16,7 @@
 #ifndef GPGMM_MEMORYALLOCATOR_H_
 #define GPGMM_MEMORYALLOCATOR_H_
 
+#include "common/IntegerTypes.h"
 #include "src/Allocator.h"
 #include "src/MemoryAllocation.h"
 
@@ -29,8 +30,8 @@ namespace gpgmm {
         virtual void DeallocateMemory(MemoryAllocation* pAllocation) = 0;
         virtual void ReleaseMemory();
 
-        virtual uint64_t GetMemorySize() const = 0;
-        virtual uint64_t GetMemoryAlignment() const = 0;
+        virtual uint64_t GetMemorySize() const;
+        virtual uint64_t GetMemoryAlignment() const;
         virtual uint64_t GetPoolSizeForTesting() const;
 
       protected:
