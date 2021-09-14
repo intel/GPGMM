@@ -42,7 +42,7 @@ namespace gpgmm {
         ~BuddyAllocator() override;
 
         // BlockAllocator interface
-        Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
+        void AllocateBlock(uint64_t size, uint64_t alignment, Block** ppBlock) override;
         void DeallocateBlock(Block* block) override;
 
         // For testing purposes only.

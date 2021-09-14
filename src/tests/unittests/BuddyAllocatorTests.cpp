@@ -19,6 +19,28 @@
 
 using namespace gpgmm;
 
+class DummyBuddyAllocator {
+  public:
+    DummyBuddyAllocator(uint64_t maxBlockSize) : mAllocator(maxBlockSize) {
+    }
+
+    Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) {
+        Block* pBlock = nullptr;
+        mAllocator.AllocateBlock(size, alignment, &pBlock);
+        return pBlock;
+    }
+
+    void DeallocateBlock(Block* block) {
+        mAllocator.DeallocateBlock(block);
+    }
+
+    uint64_t ComputeTotalNumOfFreeBlocksForTesting() const {
+        return mAllocator.ComputeTotalNumOfFreeBlocksForTesting();
+    }
+
+    BuddyAllocator mAllocator;
+};
+
 // Verify the buddy allocator with a basic test.
 TEST(BuddyAllocatorTests, SingleBlock) {
     // After one 32 byte allocation:
@@ -28,7 +50,7 @@ TEST(BuddyAllocatorTests, SingleBlock) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     // Check that we cannot allocate a oversized block.
     ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2), nullptr);
@@ -54,7 +76,7 @@ TEST(BuddyAllocatorTests, MultipleBlocks) {
     // Fill every level in the allocator (order-n = 2^n)
     const uint64_t maxBlockSize = (1ull << 16);
     for (uint64_t order = 1; (1ull << order) <= maxBlockSize; order++) {
-        BuddyAllocator allocator(maxBlockSize);
+        DummyBuddyAllocator allocator(maxBlockSize);
 
         uint64_t blockSize = (1ull << order);
         for (uint32_t blocki = 0; blocki < (maxBlockSize / blockSize); blocki++) {
@@ -76,7 +98,7 @@ TEST(BuddyAllocatorTests, SingleSplitBlock) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     // Allocate block (splits two blocks).
     Block* block = allocator.AllocateBlock(8);
@@ -111,7 +133,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocks) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     // Populates the free-list with four blocks at Level2.
 
@@ -175,7 +197,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlockIncreasingSize) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 0ull);
     ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 64ull);
@@ -210,7 +232,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksVariableSizes) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 0ull);
     ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 64ull);
@@ -244,7 +266,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksInterleaved) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     // Allocate leaf blocks
     constexpr uint64_t minBlockSizeInBytes = 32;
@@ -274,7 +296,7 @@ TEST(BuddyAllocatorTests, SameSizeVariousAlignment) {
     //      2       8  |   Aa  |   F   |  Ab   |  Ac  |       A - allocated
     //                 --------------------------------
     //
-    BuddyAllocator allocator(32);
+    DummyBuddyAllocator allocator(32);
 
     // Allocate Aa (two splits).
     ASSERT_EQ(allocator.AllocateBlock(8, 16)->mOffset, 0u);
@@ -309,7 +331,7 @@ TEST(BuddyAllocatorTests, VariousSizeSameAlignment) {
     //
     constexpr uint64_t maxBlockSize = 32;
     constexpr uint64_t alignment = 4;
-    BuddyAllocator allocator(maxBlockSize);
+    DummyBuddyAllocator allocator(maxBlockSize);
 
     // Allocate block Aa (two splits)
     ASSERT_EQ(allocator.AllocateBlock(8, alignment)->mOffset, 0u);

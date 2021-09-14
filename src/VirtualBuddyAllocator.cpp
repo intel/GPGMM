@@ -66,7 +66,8 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
+        Block* block = nullptr;
+        mBuddyBlockAllocator.AllocateBlock(size, alignment, &block);
         if (block == nullptr) {
             return;
         }
