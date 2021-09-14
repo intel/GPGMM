@@ -18,10 +18,6 @@
 
 #include <cstdint>
 
-#define GPGMM_INVALID_ALLOCATION \
-    MemoryAllocation {           \
-    }
-
 namespace gpgmm {
 
     struct Block;

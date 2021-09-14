@@ -29,8 +29,9 @@ namespace gpgmm {
         ~ConditionalMemoryAllocator() override = default;
 
         // MemoryAllocator interface
-        MemoryAllocation SubAllocateMemory(uint64_t size, uint64_t alignment) override;
-        void AllocateMemory(MemoryAllocation** ppAllocation) override;
+        void AllocateMemory(uint64_t size,
+                            uint64_t alignment,
+                            MemoryAllocation** ppAllocation) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
 

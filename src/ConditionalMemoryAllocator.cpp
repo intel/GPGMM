@@ -30,17 +30,14 @@ namespace gpgmm {
         mSecondAllocator->ReleaseMemory();
     }
 
-    MemoryAllocation ConditionalMemoryAllocator::SubAllocateMemory(uint64_t size,
-                                                                   uint64_t alignment) {
+    void ConditionalMemoryAllocator::AllocateMemory(uint64_t size,
+                                                    uint64_t alignment,
+                                                    MemoryAllocation** ppAllocation) {
         if (size < mConditionalSize) {
-            return mFirstAllocator->SubAllocateMemory(size, alignment);
+            return mFirstAllocator->AllocateMemory(size, alignment, ppAllocation);
         } else {
-            return mSecondAllocator->SubAllocateMemory(size, alignment);
+            return mSecondAllocator->AllocateMemory(size, alignment, ppAllocation);
         }
-    }
-
-    void ConditionalMemoryAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
-        ASSERT(false);
     }
 
     void ConditionalMemoryAllocator::DeallocateMemory(MemoryAllocation* pAllocation) {

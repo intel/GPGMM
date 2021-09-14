@@ -20,9 +20,12 @@
 namespace gpgmm {
 
     VirtualBuddyAllocator::VirtualBuddyAllocator(uint64_t maxSystemSize,
+                                                 uint64_t memorySize,
+                                                 uint64_t memoryAlignment,
                                                  MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator),
-          mMemorySize(mMemoryAllocator->GetMemorySize()),
+          mMemorySize(memorySize),
+          mMemoryAlignment(memoryAlignment),
           mBuddyBlockAllocator(maxSystemSize) {
         ASSERT(mMemorySize <= maxSystemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
@@ -42,14 +45,16 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    MemoryAllocation VirtualBuddyAllocator::SubAllocateMemory(uint64_t size, uint64_t alignment) {
+    void VirtualBuddyAllocator::AllocateMemory(uint64_t size,
+                                               uint64_t alignment,
+                                               MemoryAllocation** ppAllocation) {
         if (size == 0) {
-            return GPGMM_INVALID_ALLOCATION;
+            return;
         }
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size > mMemorySize) {
-            return GPGMM_INVALID_ALLOCATION;
+            return;
         }
 
         // Round allocation size to nearest power-of-two.
@@ -57,13 +62,13 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (size > mMemorySize) {
-            return GPGMM_INVALID_ALLOCATION;
+            return;
         }
 
         // Attempt to sub-allocate a block of the requested size.
         Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
         if (block == nullptr) {
-            return GPGMM_INVALID_ALLOCATION;
+            return;
         }
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
@@ -75,9 +80,9 @@ namespace gpgmm {
         if (mMemoryAllocations[memoryIndex] == nullptr) {
             // Transfer ownership to this allocator
             MemoryAllocation* pAllocation = nullptr;
-            mMemoryAllocator->AllocateMemory(&pAllocation);
+            mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment, &pAllocation);
             if (pAllocation == nullptr) {
-                return GPGMM_INVALID_ALLOCATION;
+                return;
             }
             mMemoryAllocations[memoryIndex] = std::unique_ptr<MemoryAllocation>(pAllocation);
         }
@@ -91,13 +96,8 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = block->mOffset % mMemorySize;
 
-        return MemoryAllocation{/*allocator*/ this, info, memoryOffset,
-                                mMemoryAllocations[memoryIndex]->GetMemory()};
-    }
-
-    void VirtualBuddyAllocator::AllocateMemory(MemoryAllocation** allocation) {
-        // Must sub-allocate, cannot allocate memory directly.
-        UNREACHABLE();
+        *ppAllocation = new MemoryAllocation{/*allocator*/ this, info, memoryOffset,
+                                             mMemoryAllocations[memoryIndex]->GetMemory()};
     }
 
     void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation* allocation) {

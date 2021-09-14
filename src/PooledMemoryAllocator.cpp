@@ -30,7 +30,9 @@ namespace gpgmm {
         mPool.clear();
     }
 
-    void PooledMemoryAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
+    void PooledMemoryAllocator::AllocateMemory(uint64_t size,
+                                               uint64_t alignment,
+                                               MemoryAllocation** ppAllocation) {
         // Pooled memory is LIFO because memory can be evicted by LRU. However, this means
         // pooling is disabled in-frame when the memory is still pending. For high in-frame
         // memory users, FIFO might be preferable when memory consumption is a higher priority.
@@ -40,7 +42,7 @@ namespace gpgmm {
         }
 
         if (*ppAllocation == nullptr) {
-            mMemoryAllocator->AllocateMemory(ppAllocation);
+            mMemoryAllocator->AllocateMemory(size, alignment, ppAllocation);
         }
     }
 

@@ -19,22 +19,6 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    namespace {
-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
-        uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags) {
-            const bool noTexturesAllowedFlags =
-                D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
-            if ((heapFlags & noTexturesAllowedFlags) == noTexturesAllowedFlags) {
-                return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-            }
-            // It is preferred to use a size that is a multiple of the alignment.
-            // However, MSAA heaps are always aligned to 4MB instead of 64KB. This means
-            // if the heap size is too small, the VMM would fragment.
-            // TODO: Consider having MSAA vs non-MSAA heaps.
-            return D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
-        }
-    }  // namespace
-
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
@@ -43,29 +27,21 @@ namespace gpgmm { namespace d3d12 {
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
-          mMemorySegment(memorySegment),
-          mHeapSize(heapSize),
-          mHeapAlignment(GetHeapAlignment(heapFlags)) {
+          mMemorySegment(memorySegment) {
     }
 
-    void ResourceHeapAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
+    void ResourceHeapAllocator::AllocateMemory(uint64_t size,
+                                               uint64_t alignment,
+                                               MemoryAllocation** ppAllocation) {
         Heap* heap = nullptr;
-        if (FAILED(mResourceAllocator->CreateResourceHeap(mHeapSize, mHeapType, mHeapFlags,
-                                                          mMemorySegment, mHeapAlignment, &heap))) {
+        if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
+                                                          mMemorySegment, alignment, &heap))) {
             return;
         }
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
         *ppAllocation = new MemoryAllocation{this, info, kInvalidOffset, heap};
-    }
-
-    uint64_t ResourceHeapAllocator::GetMemorySize() const {
-        return mHeapSize;
-    }
-
-    uint64_t ResourceHeapAllocator::GetMemoryAlignment() const {
-        return mHeapAlignment;
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {

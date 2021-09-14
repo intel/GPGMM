@@ -17,10 +17,6 @@
 
 namespace gpgmm {
 
-    MemoryAllocation MemoryAllocator::SubAllocateMemory(uint64_t size, uint64_t alignment) {
-        return GPGMM_INVALID_ALLOCATION;
-    }
-
     void MemoryAllocator::ReleaseMemory() {
     }
 

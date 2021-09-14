@@ -123,6 +123,20 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+        uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags) {
+            const bool noTexturesAllowedFlags =
+                D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
+            if ((heapFlags & noTexturesAllowedFlags) == noTexturesAllowedFlags) {
+                return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+            }
+            // It is preferred to use a size that is a multiple of the alignment.
+            // However, MSAA heaps are always aligned to 4MB instead of 64KB. This means
+            // if the heap size is too small, the VMM would fragment.
+            // TODO: Consider having MSAA vs non-MSAA heaps.
+            return D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
+        }
+
         ResourceHeapKind GetResourceHeapKind(D3D12_RESOURCE_DIMENSION dimension,
                                              D3D12_HEAP_TYPE heapType,
                                              D3D12_RESOURCE_FLAGS flags,
@@ -203,9 +217,11 @@ namespace gpgmm { namespace d3d12 {
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
+            const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
+
             // Standalone d3d heap allocator
             mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
-                this, GetHeapType(resourceHeapKind), GetHeapFlags(resourceHeapKind),
+                this, GetHeapType(resourceHeapKind), heapFlags,
                 GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
                                                GetHeapType(resourceHeapKind)),
                 minResourceHeapSize);
@@ -216,11 +232,13 @@ namespace gpgmm { namespace d3d12 {
 
             // Pooled placed resource heap sub-allocator based on buddy system.
             mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                mMaxResourceHeapSize, mPooledResourceHeapAllocators[i].get());
+                mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
+                mPooledResourceHeapAllocators[i].get());
 
             // Non-pooled placed resource heap sub-allocator based on the buddy system.
             mPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                mMaxResourceHeapSize, mResourceHeapAllocators[i].get());
+                mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
+                mResourceHeapAllocators[i].get());
 
             // Conditional sub-allocator that uses the pooled or non-pooled buddy sub-allocator.
             mConditionalPlacedAllocators[i] = std::make_unique<ConditionalMemoryAllocator>(
@@ -262,23 +280,23 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         MemoryAllocator* subAllocator = nullptr;
-        MemoryAllocation subAllocation;
+        MemoryAllocation* subAllocation = nullptr;
         if (!mIsAlwaysCommitted) {
             subAllocator =
                 mConditionalPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            subAllocation =
-                subAllocator->SubAllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
-            if (subAllocation != GPGMM_INVALID_ALLOCATION) {
-                hr = CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc, clearValue,
-                                          initialUsage, ppResourceAllocation);
+            subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                                         &subAllocation);
+            if (subAllocation != nullptr) {
+                hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
+                                          clearValue, initialUsage, ppResourceAllocation);
                 if (FAILED(hr)) {
-                    subAllocator->DeallocateMemory(&subAllocation);
+                    subAllocator->DeallocateMemory(subAllocation);
                 }
             }
         }
 
         // Fall-back to direct allocation if sub-allocation fails.
-        if (subAllocation == GPGMM_INVALID_ALLOCATION || FAILED(hr)) {
+        if (subAllocation == nullptr || FAILED(hr)) {
             AllocationInfo info = {};
             info.mMethod = AllocationMethod::kStandalone;
             MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
@@ -482,7 +500,9 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    void ResourceAllocator::AllocateMemory(MemoryAllocation** ppAllocation) {
+    void ResourceAllocator::AllocateMemory(uint64_t size,
+                                           uint64_t alignment,
+                                           MemoryAllocation** ppAllocation) {
         ASSERT(false);
     }
 

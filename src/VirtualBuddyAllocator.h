@@ -37,12 +37,16 @@ namespace gpgmm {
     // It should also outlive all the resources that are in the buddy allocator.
     class VirtualBuddyAllocator : public MemoryAllocator {
       public:
-        VirtualBuddyAllocator(uint64_t maxSystemSize, MemoryAllocator* memoryAllocator);
+        VirtualBuddyAllocator(uint64_t maxSystemSize,
+                              uint64_t memorySize,
+                              uint64_t memoryAlignment,
+                              MemoryAllocator* memoryAllocator);
         ~VirtualBuddyAllocator() override;
 
         // MemoryAllocator interface
-        MemoryAllocation SubAllocateMemory(uint64_t size, uint64_t alignment) override;
-        void AllocateMemory(MemoryAllocation** ppAllocation) override;
+        void AllocateMemory(uint64_t size,
+                            uint64_t alignment,
+                            MemoryAllocation** ppAllocation) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
 
@@ -56,6 +60,7 @@ namespace gpgmm {
         MemoryAllocator* mMemoryAllocator;
 
         uint64_t mMemorySize = 0;
+        uint64_t mMemoryAlignment = 0;
 
         BuddyAllocator mBuddyBlockAllocator;
 
