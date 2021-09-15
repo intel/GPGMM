@@ -14,4 +14,10 @@
 
 # The paths to WebNN's dependencies
 webnn_jinja2_dir = "//third_party/webnn_native/third_party/jinja2"
+
+# TODO(webnn): WebNN hard codes //third_party/dawn paths within BUILD.gn
+# files so we must use GPGMM-Dawn version instead of WebNN-Dawn version to
+# workaround.
+webnn_dawn_root = "//third_party/dawn"
+
 webnn_gpgmm_dir = "//"
