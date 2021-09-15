@@ -14,5 +14,4 @@
 
 # The paths to WebNN's dependencies
 webnn_jinja2_dir = "//third_party/webnn_native/third_party/jinja2"
-webnn_dawn_root = "//third_party/webnn_native/third_party/dawn"
 webnn_gpgmm_dir = "//"
