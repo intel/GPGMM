@@ -31,8 +31,9 @@ namespace gpgmm {
     }
 
     BuddyAllocator::~BuddyAllocator() {
-        if (mRoot) {
+        if (mRoot != nullptr) {
             DeleteBlock(mRoot);
+            mRoot = nullptr;
         }
     }
 
