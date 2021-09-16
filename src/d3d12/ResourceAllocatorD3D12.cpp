@@ -99,8 +99,9 @@ namespace gpgmm { namespace d3d12 {
                 case Upload_OnlyBuffers:
                 case Upload_AllBuffersAndTextures:
                     return D3D12_HEAP_TYPE_UPLOAD;
-                case EnumCount:
+                default:
                     UNREACHABLE();
+                    return D3D12_HEAP_TYPE_DEFAULT;
             }
         }
 
@@ -118,8 +119,9 @@ namespace gpgmm { namespace d3d12 {
                     return D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
                 case Default_OnlyRenderableOrDepthTextures:
                     return D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
-                case EnumCount:
+                default:
                     UNREACHABLE();
+                    return D3D12_HEAP_FLAG_NONE;
             }
         }
 
@@ -187,6 +189,7 @@ namespace gpgmm { namespace d3d12 {
                 }
                 default:
                     UNREACHABLE();
+                    return ResourceHeapKind::InvalidEnum;
             }
         }
     }  // namespace

@@ -105,6 +105,7 @@ namespace gpgmm { namespace d3d12 {
                 return &mVideoMemoryInfo.nonLocal;
             default:
                 UNREACHABLE();
+                return nullptr;
         }
     }
 
