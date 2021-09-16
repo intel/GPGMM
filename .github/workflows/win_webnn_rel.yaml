@@ -66,6 +66,7 @@ jobs:
 
     - name: Run webnn_end2end_tests
       shell: cmd
+      continue-on-error: true
       run: |
         cd base
         out\Release\webnn_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
@@ -102,6 +103,7 @@ jobs:
 
     - name: Run webnn_end2end_tests (with patch)
       shell: cmd
+      continue-on-error: true
       run: |
         cd test
         out\Release\webnn_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
