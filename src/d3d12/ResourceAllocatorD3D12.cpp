@@ -294,15 +294,16 @@ namespace gpgmm { namespace d3d12 {
                                           clearValue, initialUsage, ppResourceAllocation);
                 if (FAILED(hr)) {
                     subAllocator->DeallocateMemory(subAllocation);
+                    subAllocation = nullptr;
                 }
             }
         }
 
         // Fall-back to direct allocation if sub-allocation fails.
-        if (subAllocation == nullptr || FAILED(hr)) {
+        if (subAllocation == nullptr) {
             AllocationInfo info = {};
             info.mMethod = AllocationMethod::kStandalone;
-            MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
+            const MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
 
             hr = CreateCommittedResource(
                 directAllocation, allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind),
