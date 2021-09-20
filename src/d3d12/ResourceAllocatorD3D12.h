@@ -38,15 +38,27 @@ namespace gpgmm {
         class ResourceHeapAllocator;
 
         typedef enum ALLOCATOR_FLAGS {
+
+            // Disables all flags. Enabled by default.
+            ALLOCATOR_FLAG_NONE = 0x0,
+
+            // Forces standalone committed resource creation. Mostly used to debug problems with
+            // placed
+            // resource based suballocation.
             ALLOCATOR_ALWAYS_COMMITED = 0x1,
+
+            // Ensures resources are always within the resource budget at creation time. Mostly used
+            // to debug
+            // with residency being over committed.
             ALLOCATOR_ALWAYS_IN_BUDGET = 0x2,
+
         } ALLOCATOR_FLAGS;
 
         struct ALLOCATOR_DESC {
             Microsoft::WRL::ComPtr<ID3D12Device> Device;
             Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
-            ALLOCATOR_FLAGS Flags;
+            ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
 
             // Determines if this allocator should use shared memory. Use CheckFeatureSupport
             // to check for support.
@@ -84,10 +96,15 @@ namespace gpgmm {
             uint64_t TotalResourceBudgetLimit;
         };
 
-        typedef enum ALLOCATION_FLAGS {} ALLOCATION_FLAGS;
+        typedef enum ALLOCATION_FLAGS {
+
+            // Disables all flags. Enabled by default.
+            ALLOCATION_FLAG_NONE = 0x0,
+
+        } ALLOCATION_FLAGS;
 
         struct ALLOCATION_DESC {
-            ALLOCATION_FLAGS Flags;
+            ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
             D3D12_HEAP_TYPE HeapType;
         };
 
