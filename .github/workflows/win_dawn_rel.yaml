@@ -68,7 +68,7 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Release\dawn_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+        out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
 
     - name: Clean baseline directory
       shell: cmd
@@ -109,7 +109,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
 
     - name: Regression check end2end tests
       run: |
