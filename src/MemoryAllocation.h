@@ -24,13 +24,13 @@ namespace gpgmm {
     class MemoryBase;
     class MemoryAllocator;
 
-    // Allocation method determines how memory was allocated.
+    // Represents how memory was allocated.
     enum class AllocationMethod {
 
         // Memory not sub-divided.
         kStandalone,
 
-        // Memory sub-divided using one or more blocks of various sizes.
+        // Memory sub-divided using one or more blocks.
         kSubAllocated,
 
         // Memory not allocated or freed.
@@ -48,7 +48,7 @@ namespace gpgmm {
         AllocationMethod mMethod = AllocationMethod::kUndefined;
     };
 
-    // Handle into a resource heap pool.
+    // Represents a location in memory.
     class MemoryAllocation {
       public:
         MemoryAllocation();
