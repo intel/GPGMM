@@ -21,6 +21,7 @@
 #include "src/MemoryAllocation.h"
 
 namespace gpgmm {
+    // Allocates a device memory block.
     class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
@@ -28,7 +29,7 @@ namespace gpgmm {
         virtual void AllocateMemory(uint64_t size,
                                     uint64_t alignment,
                                     MemoryAllocation** ppAllocation) = 0;
-        virtual void DeallocateMemory(MemoryAllocation* pAllocation) = 0;
+        virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
         virtual void ReleaseMemory();
 
         virtual uint64_t GetMemorySize() const;
@@ -37,8 +38,8 @@ namespace gpgmm {
 
       protected:
         bool IsSubAllocated(const MemoryAllocation& allocation) const;
-        void IncrementSubAllocatedRef(MemoryAllocation* pAllocation);
-        void DecrementSubAllocatedRef(MemoryAllocation* pAllocation);
+        void IncrementSubAllocatedRef(MemoryAllocation* allocation);
+        void DecrementSubAllocatedRef(MemoryAllocation* allocation);
     };
 
 }  // namespace gpgmm
