@@ -1,6 +1,8 @@
 name: Windows WebNN Release
 
 on:
+  workflow_dispatch:
+
   push:
     paths:
       - 'src/**'
