@@ -4,14 +4,12 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
   'checkout_dawn',
   'checkout_webnn',
-  'checkout_skia',
 ]
 
 vars = {
   'chromium_git': 'https://chromium.googlesource.com',
   'dawn_git': 'https://dawn.googlesource.com',
   'github_git': 'https://github.com',
-  'skia_git': 'https://skia.googlesource.com',
 
   'gpgmm_standalone': True,
 
@@ -20,9 +18,6 @@ vars = {
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,
-
-  # Checkout and download SKIA by default. This can be disabled with custom_vars.
-  'checkout_skia': False,
 }
 
 deps = {
@@ -39,11 +34,6 @@ deps = {
   'third_party/webnn_native': {
     'url': '{github_git}/webmachinelearning/webnn-native.git@b0b943691e814e4bbb96cfc69a60550e8be7ea8f',
     'condition': 'checkout_webnn',
-  },
-
-  'third_party/skia': {
-    'url': '{skia_git}/skia.git@c01225114a00f3c3c20ef81e9c2903b720140467',
-    'condition': 'checkout_skia',
   },
 
   # Dependencies required to use GN/Clang in standalone
@@ -211,25 +201,6 @@ hooks = [
     'pattern': '.',
     'condition': 'checkout_webnn',
     'action': ['git', '-C', './third_party/webnn_native/',
-               '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
-               'cherry-pick', 'FETCH_HEAD',
-    ],
-  },
-  # Apply SKIA-GPGMM integration patch.
-  # This can be removed once GPGMM is integrated with the upstream project.
-  {
-    'name': 'fetch_skia_integration_patch',
-    'pattern': '.',
-    'condition': 'checkout_skia',
-    'action': [ 'git', '-C', './third_party/skia/',
-                'fetch', 'https://github.com/bbernhar/skia', 'gpgmm',
-    ],
-  },
-  {
-    'name': 'apply_skia_integration_patch',
-    'pattern': '.',
-    'condition': 'checkout_skia',
-    'action': ['git', '-C', './third_party/skia/',
                '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
                'cherry-pick', 'FETCH_HEAD',
     ],
