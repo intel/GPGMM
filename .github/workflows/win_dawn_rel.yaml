@@ -1,8 +1,6 @@
-name: Windows Dawn Release
+name: Windows Dawn-GPMM Release
 
 on:
-  workflow_dispatch:
-
   push:
     branches: main
     paths:

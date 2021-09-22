@@ -1,8 +1,6 @@
-name: Windows WebNN Release
+name: Windows WebNN-GPGMM Release
 
 on:
-  workflow_dispatch:
-
   push:
     branches: main
     paths:
