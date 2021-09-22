@@ -87,25 +87,12 @@ bool IsPowerOfTwo(uint64_t n) {
     return (n & (n - 1)) == 0;
 }
 
-bool IsPtrAligned(const void* ptr, size_t alignment) {
-    ASSERT(IsPowerOfTwo(alignment));
-    ASSERT(alignment != 0);
-    return (reinterpret_cast<size_t>(ptr) & (alignment - 1)) == 0;
-}
-
 bool IsAligned(uint32_t value, size_t alignment) {
     ASSERT(alignment <= UINT32_MAX);
     ASSERT(IsPowerOfTwo(alignment));
     ASSERT(alignment != 0);
     uint32_t alignment32 = static_cast<uint32_t>(alignment);
     return (value & (alignment32 - 1)) == 0;
-}
-
-uint64_t RoundUp(uint64_t n, uint64_t m) {
-    ASSERT(m > 0);
-    ASSERT(n > 0);
-    ASSERT(m <= std::numeric_limits<uint64_t>::max() - n);
-    return ((n + m - 1) / m) * m;
 }
 
 }  // namespace gpgmm
