@@ -138,9 +138,9 @@ namespace gpgmm {
         }
     }
 
-    void BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment, Block** ppBlock) {
+    Block* BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mMaxBlockSize) {
-            return;
+            return nullptr;
         }
 
         // Compute the level
@@ -152,7 +152,7 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
-            return;
+            return nullptr;
         }
 
         // Split free blocks level-by-level.
@@ -198,9 +198,7 @@ namespace gpgmm {
         RemoveFreeBlock(currBlock, currBlockLevel);
         currBlock->mState = BlockState::Allocated;
 
-        *ppBlock = currBlock;
-
-        return;
+        return currBlock;
     }
 
     void BuddyAllocator::DeallocateBlock(Block* block) {

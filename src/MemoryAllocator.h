@@ -20,15 +20,16 @@
 #include "src/Allocator.h"
 #include "src/MemoryAllocation.h"
 
+#include <memory>
+
 namespace gpgmm {
     // Allocates a device memory block.
     class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
 
-        virtual void AllocateMemory(uint64_t size,
-                                    uint64_t alignment,
-                                    MemoryAllocation** ppAllocation) = 0;
+        virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                                 uint64_t alignment) = 0;
         virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
         virtual void ReleaseMemory();
 

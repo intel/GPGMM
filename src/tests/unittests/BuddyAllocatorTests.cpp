@@ -25,9 +25,7 @@ class DummyBuddyAllocator {
     }
 
     Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) {
-        Block* pBlock = nullptr;
-        mAllocator.AllocateBlock(size, alignment, &pBlock);
-        return pBlock;
+        return mAllocator.AllocateBlock(size, alignment);
     }
 
     void DeallocateBlock(Block* block) {

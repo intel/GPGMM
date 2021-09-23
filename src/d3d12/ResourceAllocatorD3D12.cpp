@@ -283,17 +283,17 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
         MemoryAllocator* subAllocator = nullptr;
-        MemoryAllocation* subAllocation = nullptr;
+        std::unique_ptr<MemoryAllocation> subAllocation;
         if (!mIsAlwaysCommitted) {
             subAllocator =
                 mConditionalPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                                         &subAllocation);
+            subAllocation =
+                subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != nullptr) {
                 hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
                                           clearValue, initialUsage, ppResourceAllocation);
                 if (FAILED(hr)) {
-                    subAllocator->DeallocateMemory(subAllocation);
+                    subAllocator->DeallocateMemory(subAllocation.get());
                     subAllocation = nullptr;
                 }
             }
@@ -504,18 +504,18 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
-    void ResourceAllocator::AllocateMemory(uint64_t size,
-                                           uint64_t alignment,
-                                           MemoryAllocation** ppAllocation) {
-        ASSERT(false);
+    std::unique_ptr<MemoryAllocation> ResourceAllocator::AllocateMemory(uint64_t size,
+                                                                        uint64_t alignment) {
+        UNREACHABLE();
+        return {};
     }
 
-    void ResourceAllocator::DeallocateMemory(MemoryAllocation* pResourceHeap) {
-        ASSERT(pResourceHeap != nullptr);
-        ASSERT(pResourceHeap->GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
-        ASSERT(pResourceHeap->GetMemory() != nullptr);
+    void ResourceAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        ASSERT(allocation != nullptr);
+        ASSERT(allocation->GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
+        ASSERT(allocation->GetMemory() != nullptr);
 
-        delete pResourceHeap->GetMemory();
+        delete allocation->GetMemory();
     }
 
     void ResourceAllocator::ReleaseMemory() {

@@ -28,12 +28,10 @@ static constexpr uint64_t kHeapSize = 128u;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
-    void AllocateMemory(uint64_t size,
-                        uint64_t alignment,
-                        MemoryAllocation** ppAllocation) override {
+    std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size, uint64_t alignment) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
-        *ppAllocation = new MemoryAllocation{this, info, /*offset*/ 0, new MemoryBase()};
+        return std::make_unique<MemoryAllocation>(this, info, /*offset*/ 0, new MemoryBase());
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
@@ -59,13 +57,11 @@ class DummyBuddyResourceAllocator {
     }
 
     MemoryAllocation Allocate(uint64_t size, uint64_t alignment = 1) {
-        MemoryAllocation* allocationPtr = nullptr;
-        mAllocator.AllocateMemory(size, alignment, &allocationPtr);
-        std::unique_ptr<MemoryAllocation> allocation(allocationPtr);
-        if (!allocation) {
+        std::unique_ptr<MemoryAllocation> allocation = mAllocator.AllocateMemory(size, alignment);
+        if (allocation == nullptr) {
             return {};
         }
-        return *allocation;
+        return *allocation.release();
     }
 
     void Deallocate(MemoryAllocation& allocation) {

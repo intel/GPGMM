@@ -31,18 +31,17 @@ namespace gpgmm { namespace d3d12 {
           mMemorySegment(memorySegment) {
     }
 
-    void ResourceHeapAllocator::AllocateMemory(uint64_t size,
-                                               uint64_t alignment,
-                                               MemoryAllocation** ppAllocation) {
+    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::AllocateMemory(uint64_t size,
+                                                                            uint64_t alignment) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
                                                           mMemorySegment, alignment, &heap))) {
-            return;
+            return nullptr;
         }
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
-        *ppAllocation = new MemoryAllocation{this, info, kInvalidOffset, heap};
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, kInvalidOffset, heap);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {

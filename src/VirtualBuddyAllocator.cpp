@@ -45,16 +45,15 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    void VirtualBuddyAllocator::AllocateMemory(uint64_t size,
-                                               uint64_t alignment,
-                                               MemoryAllocation** ppAllocation) {
+    std::unique_ptr<MemoryAllocation> VirtualBuddyAllocator::AllocateMemory(uint64_t size,
+                                                                            uint64_t alignment) {
         if (size == 0) {
-            return;
+            return nullptr;
         }
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size > mMemorySize) {
-            return;
+            return nullptr;
         }
 
         // Round allocation size to nearest power-of-two.
@@ -62,14 +61,13 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (size > mMemorySize) {
-            return;
+            return nullptr;
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        Block* block = nullptr;
-        mBuddyBlockAllocator.AllocateBlock(size, alignment, &block);
+        Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
         if (block == nullptr) {
-            return;
+            return nullptr;
         }
 
         // Avoid tracking all heaps in the buddy system that are not yet allocated.
@@ -80,12 +78,12 @@ namespace gpgmm {
 
         if (mMemoryAllocations[memoryIndex] == nullptr) {
             // Transfer ownership to this allocator
-            MemoryAllocation* pAllocation = nullptr;
-            mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment, &pAllocation);
-            if (pAllocation == nullptr) {
-                return;
+            std::unique_ptr<MemoryAllocation> allocation =
+                mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment);
+            if (allocation == nullptr) {
+                return nullptr;
             }
-            mMemoryAllocations[memoryIndex] = std::unique_ptr<MemoryAllocation>(pAllocation);
+            mMemoryAllocations[memoryIndex] = std::move(allocation);
         }
 
         IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
@@ -97,8 +95,8 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = block->mOffset % mMemorySize;
 
-        *ppAllocation = new MemoryAllocation{/*allocator*/ this, info, memoryOffset,
-                                             mMemoryAllocations[memoryIndex]->GetMemory()};
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memoryOffset,
+                                                  mMemoryAllocations[memoryIndex]->GetMemory());
     }
 
     void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation* allocation) {
