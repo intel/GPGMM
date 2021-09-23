@@ -1,4 +1,5 @@
 // Copyright 2019 The Dawn Authors
+// Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +15,7 @@
 
 #include "src/d3d12/ResourceAllocationD3D12.h"
 
+#include "src/MemoryAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
@@ -32,9 +34,26 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)) {
     }
 
+    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
+                                           ResourceAllocator* resourceAllocator,
+                                           const AllocationInfo& info,
+                                           uint64_t offset,
+                                           ComPtr<ID3D12Resource> resource,
+                                           Heap* heap)
+        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, offset, heap),
+          mResourceAllocator(resourceAllocator),
+          mResidencyManager(residencyManager),
+          mResource(std::move(resource)) {
+    }
+
     void ResourceAllocation::ReleaseThis() {
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(this);
+        } else {
+            ASSERT(mResourceAllocator != nullptr);
+            Heap* heap = static_cast<Heap*>(GetMemory());
+            mResourceAllocator->FreeResourceHeap(heap);
+            mResourceAllocator = nullptr;
         }
 
         mResource.Reset();

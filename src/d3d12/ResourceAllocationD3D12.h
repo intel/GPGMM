@@ -36,6 +36,14 @@ namespace gpgmm { namespace d3d12 {
                            uint64_t offset,
                            ComPtr<ID3D12Resource> resource,
                            Heap* heap);
+
+        ResourceAllocation(ResidencyManager* residencyManager,
+                           ResourceAllocator* resourceAllocator,
+                           const AllocationInfo& info,
+                           uint64_t offset,
+                           ComPtr<ID3D12Resource> resource,
+                           Heap* heap);
+
         ~ResourceAllocation() override = default;
         ResourceAllocation(const ResourceAllocation&) = default;
         ResourceAllocation& operator=(const ResourceAllocation&) = default;
@@ -51,6 +59,7 @@ namespace gpgmm { namespace d3d12 {
         void ReleaseThis() override;
 
       private:
+        ResourceAllocator* mResourceAllocator;
         ResidencyManager* mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
     };
