@@ -24,15 +24,15 @@ class ConditionalMemoryAllocatorTests : public testing::Test {
   public:
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
-        void DeallocateMemory(MemoryAllocation* pAllocation) override {
+        void DeallocateMemory(MemoryAllocation* allocation) override {
             return;
         }
 
-        void AllocateMemory(uint64_t size,
-                            uint64_t alignment,
-                            MemoryAllocation** ppAllocation) override {
+        std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                         uint64_t alignment) override {
             mAllocatedBytes += size;
-            *ppAllocation = new MemoryAllocation{this, {}, 0, nullptr};
+            AllocationInfo info = {};
+            return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, 0, nullptr);
         }
 
         uint64_t mAllocatedBytes = 0;
@@ -48,37 +48,25 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
 
     // Smaller allocation uses allocA.
     {
-        MemoryAllocation* subAllocationPtr = nullptr;
-        alloc.AllocateMemory(4, 1, &subAllocationPtr);
-
-        std::unique_ptr<MemoryAllocation> subAllocation(subAllocationPtr);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
         ASSERT_EQ(allocA.mAllocatedBytes, 4u);
     }
 
     // Larger allocation uses allocB.
     {
-        MemoryAllocation* subAllocationPtr = nullptr;
-        alloc.AllocateMemory(24, 1, &subAllocationPtr);
-
-        std::unique_ptr<MemoryAllocation> subAllocation(subAllocationPtr);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
         ASSERT_EQ(allocB.mAllocatedBytes, 24u);
     }
 
     // Smaller allocation again uses allocA.
     {
-        MemoryAllocation* subAllocationPtr = nullptr;
-        alloc.AllocateMemory(4, 1, &subAllocationPtr);
-
-        std::unique_ptr<MemoryAllocation> subAllocation(subAllocationPtr);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
         ASSERT_EQ(allocA.mAllocatedBytes, 8u);
     }
 
     // Larger allocation again uses allocB.
     {
-        MemoryAllocation* subAllocationPtr = nullptr;
-        alloc.AllocateMemory(24, 1, &subAllocationPtr);
-
-        std::unique_ptr<MemoryAllocation> subAllocation(subAllocationPtr);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
         ASSERT_EQ(allocB.mAllocatedBytes, 48u);
     }
 }

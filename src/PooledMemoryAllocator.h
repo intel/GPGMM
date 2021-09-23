@@ -33,10 +33,9 @@ namespace gpgmm {
         ~PooledMemoryAllocator() override = default;
 
         // MemoryAllocator interface
-        void AllocateMemory(uint64_t size,
-                            uint64_t alignment,
-                            MemoryAllocation** ppAllocation) override;
-        void DeallocateMemory(MemoryAllocation* pAllocation) override;
+        std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                         uint64_t alignment) override;
+        void DeallocateMemory(MemoryAllocation* allocation) override;
         void ReleaseMemory() override;
 
         uint64_t GetMemorySize() const override;
