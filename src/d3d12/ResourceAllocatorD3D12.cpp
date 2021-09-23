@@ -351,6 +351,17 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
+        // Must place a resource using a sub-allocated memory allocation.
+        if (subAllocation.GetInfo().mMethod != AllocationMethod::kSubAllocated) {
+            return E_FAIL;
+        }
+
+        // Sub-allocation cannot be smaller than the resource being placed.
+        if (subAllocation.GetInfo().mBlock == nullptr ||
+            subAllocation.GetInfo().mBlock->mSize < resourceInfo.SizeInBytes) {
+            return E_FAIL;
+        }
+
         // Before calling CreatePlacedResource, we must ensure the target heap is resident.
         // CreatePlacedResource will fail if it is not.
         Heap* heap = static_cast<Heap*>(subAllocation.GetMemory());
