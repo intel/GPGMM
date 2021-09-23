@@ -16,7 +16,7 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
-#include "src/MemoryAllocator.h"
+#include "src/Allocator.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 
 #include <array>
@@ -136,7 +136,7 @@ namespace gpgmm {
 
         // Manages a list of resource allocators used by the device to create resources using
         // multiple allocation methods.
-        class ResourceAllocator : public MemoryAllocator {
+        class ResourceAllocator : public AllocatorBase {
           public:
             ResourceAllocator(const ALLOCATOR_DESC& descriptor);
             ~ResourceAllocator() override;
@@ -156,12 +156,6 @@ namespace gpgmm {
             friend ResourceHeapAllocator;
             friend ResourceAllocation;
 
-            // MemoryAllocator interface
-            std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
-                                                             uint64_t alignment) override;
-            void DeallocateMemory(MemoryAllocation* allocation) override;
-            void ReleaseMemory() override;
-
             HRESULT CreatePlacedResource(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -169,8 +163,7 @@ namespace gpgmm {
                                          D3D12_RESOURCE_STATES initialUsage,
                                          ResourceAllocation** ppResourceAllocation);
 
-            HRESULT CreateCommittedResource(const MemoryAllocation& subAllocation,
-                                            D3D12_HEAP_TYPE heapType,
+            HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                             D3D12_HEAP_FLAGS heapFlags,
                                             const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -184,6 +177,8 @@ namespace gpgmm {
                                        DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                        uint64_t heapAlignment,
                                        Heap** ppResourceHeap);
+
+            void FreeResourceHeap(Heap* resourceHeap);
 
             ComPtr<ID3D12Device> mDevice;
 

@@ -251,7 +251,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        ReleaseMemory();
+        for (auto& allocator : mConditionalPlacedAllocators) {
+            allocator->ReleaseMemory();
+        }
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -301,13 +303,9 @@ namespace gpgmm { namespace d3d12 {
 
         // Fall-back to direct allocation if sub-allocation fails.
         if (subAllocation == nullptr) {
-            AllocationInfo info = {};
-            info.mMethod = AllocationMethod::kStandalone;
-            const MemoryAllocation directAllocation(this, info, /*offset*/ 0, nullptr);
-
             hr = CreateCommittedResource(
-                directAllocation, allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind),
-                resourceInfo, &newResourceDesc, clearValue, initialUsage, ppResourceAllocation);
+                allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
+                &newResourceDesc, clearValue, initialUsage, ppResourceAllocation);
         }
 
         return hr;
@@ -334,7 +332,7 @@ namespace gpgmm { namespace d3d12 {
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
         *ppResourceAllocation = new ResourceAllocation{/*residencyManager*/ nullptr,
-                                                       /*memoryAllocator*/ this,
+                                                       /*allocator*/ this,
                                                        info,
                                                        /*offset*/ 0,
                                                        std::move(resource),
@@ -435,7 +433,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::CreateCommittedResource(
-        const MemoryAllocation& subAllocation,
         D3D12_HEAP_TYPE heapType,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
@@ -446,9 +443,6 @@ namespace gpgmm { namespace d3d12 {
         if (!ppResourceAllocation) {
             return E_POINTER;
         }
-
-        // Suballocation of a committed resource cannot be done in an explicit heap.
-        ASSERT(subAllocation.GetMemory() == nullptr);
 
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
@@ -498,30 +492,21 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->InsertHeap(heap);
         }
 
-        *ppResourceAllocation = new ResourceAllocation{
-            mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
-            subAllocation.GetOffset(), std::move(committedResource), heap};
+        AllocationInfo info = {};
+        info.mMethod = AllocationMethod::kStandalone;
+
+        *ppResourceAllocation = new ResourceAllocation{mResidencyManager.get(),
+                                                       /*allocator*/ this,
+                                                       info,
+                                                       /*offset*/ 0,
+                                                       std::move(committedResource),
+                                                       heap};
         return hr;
     }
 
-    std::unique_ptr<MemoryAllocation> ResourceAllocator::AllocateMemory(uint64_t size,
-                                                                        uint64_t alignment) {
-        UNREACHABLE();
-        return {};
-    }
-
-    void ResourceAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        ASSERT(allocation != nullptr);
-        ASSERT(allocation->GetInfo().mMethod == gpgmm::AllocationMethod::kStandalone);
-        ASSERT(allocation->GetMemory() != nullptr);
-
-        delete allocation->GetMemory();
-    }
-
-    void ResourceAllocator::ReleaseMemory() {
-        for (auto& allocator : mConditionalPlacedAllocators) {
-            allocator->ReleaseMemory();
-        }
+    void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
+        ASSERT(resourceHeap != nullptr);
+        delete resourceHeap;
     }
 
     ResidencyManager* ResourceAllocator::GetResidencyManager() {

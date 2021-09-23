@@ -45,7 +45,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        mResourceAllocator->DeallocateMemory(allocation);
+        ASSERT(allocation != nullptr);
+        Heap* heap = static_cast<Heap*>(allocation->GetMemory());
+        mResourceAllocator->FreeResourceHeap(heap);
     }
 
 }}  // namespace gpgmm::d3d12
