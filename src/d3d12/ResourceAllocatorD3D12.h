@@ -53,43 +53,45 @@ namespace gpgmm {
         } ALLOCATOR_FLAGS;
 
         struct ALLOCATOR_DESC {
+            // Device and adapter used by this allocator. The adapter must support DXGI 1.4
+            // to use residency. Required parameters.
             Microsoft::WRL::ComPtr<ID3D12Device> Device;
             Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
             ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
 
             // Determines if this allocator should use shared memory. Use CheckFeatureSupport
-            // to check for support.
+            // to check for support. Required parameter.
             bool IsUMA;
 
             // Determines if the resource heap can mix resource categories (both texture and
-            // buffers). Use CheckFeatureSupport to get supported tier.
+            // buffers). Use CheckFeatureSupport to get supported tier. Required parameter.
             uint32_t ResourceHeapTier;
 
-            // The minimum size of the created resource heap.
-            // If the resource size exceeds |PreferredResourceHeapSize|, it cannot sub-allocate a
-            // heap. By default, a preferred heap size of zero means the default heap size of 4MB
-            // will always be used.
+            // Minimum size of the resource heap.
+            // If the resource size exceeds |PreferredResourceHeapSize|, it will not sub-allocate a
+            // resource within a heap. By default, a preferred heap size of zero means the default
+            // heap size of 4MB will always be used.
             uint64_t PreferredResourceHeapSize;
 
-            // The maximum size of the created resource heap.
+            // Maximum size of the resource heap.
             // If the resource size exceeds |MaxResourceHeapSize|, CreateResource will always return
-            // E_OUTOFMEMORY. By default, a max resource heap size of zero means the default heap
-            // size of 32GB will always be used.
+            // E_OUTOFMEMORY. By default, a max resource heap size of zero means the max heap
+            // size of 32GB is allowed.
             uint64_t MaxResourceHeapSize;
 
-            // The maximum resource size allowed to be created from a pool.
+            // Maximum resource size allowed to be pool-allocated.
             // If the resource size is greater than |MaxResourceSizeForPooling|, it will not be
             // pool-allocated. By default, a max resource heap size of zero means created resources
-            // will always be pool-allocated.
+            // will always be pool-allocated reguardless of size.
             uint64_t MaxResourceSizeForPooling;
 
-            // The maximum video memory available to the allocator to budget, expressed as a
-            // percentage. For example, 0.95 means 95% of video memory can be budgeted, always
-            // leaving 5% for the the OS and other applications.
+            // Maximum video memory available to budget by the allocator, expressed as a
+            // percentage. By default, the max video memory available is 0.95 or 95% of video memory
+            // can be budgeted, always leaving 5% for the OS and other applications.
             float MaxVideoMemoryBudget;
 
-            // The total memory available to budget for resources created by this allocator.
+            // Total memory available to budget for resources created by this allocator.
             // By default, a total resource budget limit of zero means there is no budget set.
             uint64_t TotalResourceBudgetLimit;
         };
@@ -103,7 +105,7 @@ namespace gpgmm {
 
         struct ALLOCATION_DESC {
             ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
-            D3D12_HEAP_TYPE HeapType;
+            D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
         };
 
         // Resource heap types + flags combinations are named after the D3D constants.
