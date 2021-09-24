@@ -23,6 +23,7 @@
 #include "src/VirtualBuddyAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
+#include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
 
 namespace gpgmm { namespace d3d12 {

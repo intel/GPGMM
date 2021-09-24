@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "src/Allocator.h"
-#include "src/d3d12/ResourceAllocationD3D12.h"
+#include "src/d3d12/d3d12_platform.h"
 
 #include <array>
 #include <cstdint>
@@ -28,11 +28,14 @@ struct IDXGIAdapter3;
 
 namespace gpgmm {
 
+    class MemoryAllocation;
     class ScopedAllocatorStack;
 
     namespace d3d12 {
 
+        class Heap;
         class ResidencyManager;
+        class ResourceAllocation;
         class ResourceHeapAllocator;
 
         typedef enum ALLOCATOR_FLAGS {
