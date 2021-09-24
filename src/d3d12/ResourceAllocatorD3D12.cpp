@@ -377,12 +377,9 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
-        // With placed resources, a single heap can be reused.
-        // The resource placed at an offset is only reclaimed
-        // upon Tick or after the last command list using the resource has completed
-        // on the GPU. This means the same physical memory is not reused
-        // within the same command-list and does not require additional synchronization (aliasing
-        // barrier).
+        // The resource is placed at an offset corresponding to the sub-allocation.
+        // Each sub-allocation maps to a disjoint (physical) address range so no heap memory is
+        // be aliased or cannot be reused within a command-list.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
         HRESULT hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
@@ -491,11 +488,8 @@ namespace gpgmm { namespace d3d12 {
             return hr;
         }
 
-        // When using CreateCommittedResource, D3D12 creates an implicit heap that contains the
-        // resource allocation. Because Dawn's memory residency management occurs at the resource
-        // heap granularity, every directly allocated ResourceAllocation also stores a Heap
-        // object. This object is created manually, and must be deleted manually upon deallocation
-        // of the committed resource.
+        // Since residency management occurs at the heap granularity, every committed resource is
+        // wrapped in a heap object.
         Heap* heap = new Heap(committedResource,
                               GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType),
                               resourceInfo.SizeInBytes);
