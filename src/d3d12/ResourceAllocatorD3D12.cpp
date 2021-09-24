@@ -19,6 +19,7 @@
 #include "../common/Math.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/PooledMemoryAllocator.h"
+#include "src/ScopedAllocatorStack.h"
 #include "src/VirtualBuddyAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
@@ -222,38 +223,41 @@ namespace gpgmm { namespace d3d12 {
 
             const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
 
-            // Standalone d3d heap allocator
-            mResourceHeapAllocators[i] = std::make_unique<ResourceHeapAllocator>(
-                this, GetHeapType(resourceHeapKind), heapFlags,
-                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
-                                               GetHeapType(resourceHeapKind)),
-                minResourceHeapSize);
+            std::unique_ptr<ScopedAllocatorStack> stack = std::make_unique<ScopedAllocatorStack>();
 
-            // Pooled d3d heap allocator varient.
-            mPooledResourceHeapAllocators[i] =
-                std::make_unique<PooledMemoryAllocator>(mResourceHeapAllocators[i].get());
+            // Standalone heap allocator.
+            MemoryAllocator* heapAllocator =
+                stack->PushAllocator(std::make_unique<ResourceHeapAllocator>(
+                    this, GetHeapType(resourceHeapKind), heapFlags,
+                    GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
+                                                   GetHeapType(resourceHeapKind)),
+                    minResourceHeapSize));
 
-            // Pooled placed resource heap sub-allocator based on buddy system.
-            mPooledPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
-                mPooledResourceHeapAllocators[i].get());
+            // Placed resource sub-allocator.
+            MemoryAllocator* subAllocator =
+                stack->PushAllocator(std::make_unique<VirtualBuddyAllocator>(
+                    mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
+                    heapAllocator));
 
-            // Non-pooled placed resource heap sub-allocator based on the buddy system.
-            mPlacedAllocators[i] = std::make_unique<VirtualBuddyAllocator>(
-                mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
-                mResourceHeapAllocators[i].get());
+            // Pooled standalone heap allocator.
+            MemoryAllocator* pooledHeapAllocator =
+                stack->PushAllocator(std::make_unique<PooledMemoryAllocator>(heapAllocator));
 
-            // Conditional sub-allocator that uses the pooled or non-pooled buddy sub-allocator.
-            mConditionalPlacedAllocators[i] = std::make_unique<ConditionalMemoryAllocator>(
-                mPooledPlacedAllocators[i].get(), mPlacedAllocators[i].get(),
-                mMaxResourceSizeForPooling);
+            // Pooled placed resource sub-allocator.
+            MemoryAllocator* pooledSubAllocator =
+                stack->PushAllocator(std::make_unique<VirtualBuddyAllocator>(
+                    mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
+                    pooledHeapAllocator));
+
+            // Conditional sub-allocator that uses the pooled or non-pooled sub-allocator.
+            stack->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
+                pooledSubAllocator, subAllocator, mMaxResourceSizeForPooling));
+
+            mAllocators[i] = std::move(stack);
         }
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        for (auto& allocator : mConditionalPlacedAllocators) {
-            allocator->ReleaseMemory();
-        }
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -284,11 +288,10 @@ namespace gpgmm { namespace d3d12 {
         // size could be much larger then the resource allocation.
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         HRESULT hr = E_UNEXPECTED;
-        MemoryAllocator* subAllocator = nullptr;
         std::unique_ptr<MemoryAllocation> subAllocation;
         if (!mIsAlwaysCommitted) {
-            subAllocator =
-                mConditionalPlacedAllocators[static_cast<size_t>(resourceHeapKind)].get();
+            MemoryAllocator* subAllocator =
+                mAllocators[static_cast<size_t>(resourceHeapKind)]->GetAllocator();
             subAllocation =
                 subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != nullptr) {

@@ -28,9 +28,7 @@ struct IDXGIAdapter3;
 
 namespace gpgmm {
 
-    class ConditionalMemoryAllocator;
-    class PooledMemoryAllocator;
-    class VirtualBuddyAllocator;
+    class ScopedAllocatorStack;
 
     namespace d3d12 {
 
@@ -189,20 +187,8 @@ namespace gpgmm {
             uint64_t mMaxResourceSizeForPooling;
             uint64_t mMaxResourceHeapSize;
 
-            std::array<std::unique_ptr<VirtualBuddyAllocator>, ResourceHeapKind::EnumCount>
-                mPlacedAllocators;
-
-            std::array<std::unique_ptr<VirtualBuddyAllocator>, ResourceHeapKind::EnumCount>
-                mPooledPlacedAllocators;
-
-            std::array<std::unique_ptr<ResourceHeapAllocator>, ResourceHeapKind::EnumCount>
-                mResourceHeapAllocators;
-
-            std::array<std::unique_ptr<PooledMemoryAllocator>, ResourceHeapKind::EnumCount>
-                mPooledResourceHeapAllocators;
-
-            std::array<std::unique_ptr<ConditionalMemoryAllocator>, ResourceHeapKind::EnumCount>
-                mConditionalPlacedAllocators;
+            std::array<std::unique_ptr<ScopedAllocatorStack>, ResourceHeapKind::EnumCount>
+                mAllocators;
 
             std::unique_ptr<ResidencyManager> mResidencyManager;
         };
