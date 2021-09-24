@@ -20,7 +20,8 @@ namespace gpgmm {
         return mAllocators.back().get();
     }
 
-    MemoryAllocator* ScopedAllocatorStack::PushAllocator(std::unique_ptr<MemoryAllocator> allocator) {
+    MemoryAllocator* ScopedAllocatorStack::PushAllocator(
+        std::unique_ptr<MemoryAllocator> allocator) {
         mAllocators.push_back(std::move(allocator));
         return mAllocators.back().get();
     }
