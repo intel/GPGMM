@@ -258,6 +258,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
+        for (auto& allocatorStack : mAllocators) {
+            MemoryAllocator* allocator = allocatorStack->GetAllocator();
+            ASSERT(allocator != nullptr);
+            allocator->ReleaseMemory();
+        }
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
