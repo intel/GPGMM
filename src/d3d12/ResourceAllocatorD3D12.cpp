@@ -155,6 +155,7 @@ namespace gpgmm { namespace d3d12 {
                         return Readback_AllBuffersAndTextures;
                     default:
                         UNREACHABLE();
+                        return ResourceHeapKind::InvalidEnum;
                 }
             }
 
@@ -193,6 +194,8 @@ namespace gpgmm { namespace d3d12 {
                     UNREACHABLE();
                     return ResourceHeapKind::InvalidEnum;
             }
+        
+            return ResourceHeapKind::InvalidEnum;
         }
     }  // namespace
 
