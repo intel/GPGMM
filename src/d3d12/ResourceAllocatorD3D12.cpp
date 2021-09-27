@@ -194,7 +194,7 @@ namespace gpgmm { namespace d3d12 {
                     UNREACHABLE();
                     return ResourceHeapKind::InvalidEnum;
             }
-        
+
             return ResourceHeapKind::InvalidEnum;
         }
     }  // namespace
@@ -325,6 +325,10 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
                                               ResourceAllocation** ppResourceAllocation) {
+        if (resource == nullptr) {
+            return E_POINTER;
+        }
+
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
