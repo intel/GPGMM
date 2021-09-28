@@ -458,6 +458,8 @@ TEST(VirtualBuddyAllocatorTests, ReuseFreedHeaps) {
     }
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 0u);
+
+    poolAllocator.ReleaseMemory();
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
@@ -491,4 +493,6 @@ TEST(VirtualBuddyAllocatorTests, DestroyHeaps) {
     }
 
     ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), kNumOfHeaps);
+
+    poolAllocator.ReleaseMemory();
 }

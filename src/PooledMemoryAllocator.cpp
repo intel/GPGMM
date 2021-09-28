@@ -21,6 +21,10 @@ namespace gpgmm {
         : mMemoryAllocator(memoryAllocator) {
     }
 
+    PooledMemoryAllocator::~PooledMemoryAllocator() {
+        ASSERT(GetPoolSizeForTesting() == 0);
+    }
+
     void PooledMemoryAllocator::ReleaseMemory() {
         for (auto& allocation : mPool) {
             ASSERT(allocation != nullptr);

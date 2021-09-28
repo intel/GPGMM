@@ -30,7 +30,7 @@ namespace gpgmm {
     class PooledMemoryAllocator : public MemoryAllocator {
       public:
         PooledMemoryAllocator(MemoryAllocator* memoryAllocator);
-        ~PooledMemoryAllocator() override = default;
+        ~PooledMemoryAllocator() override;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
