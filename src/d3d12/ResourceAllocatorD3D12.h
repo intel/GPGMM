@@ -147,11 +147,11 @@ namespace gpgmm {
             HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                    const D3D12_RESOURCE_DESC& resourceDescriptor,
                                    D3D12_RESOURCE_STATES initialUsage,
-                                   const D3D12_CLEAR_VALUE* pClearValue,
-                                   ResourceAllocation** ppResourceAllocation);
+                                   const D3D12_CLEAR_VALUE* clearValue,
+                                   ResourceAllocation** resourceAllocation);
 
             HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
-                                   ResourceAllocation** ppResourceAllocation);
+                                   ResourceAllocation** resourceAllocation);
 
             ResidencyManager* GetResidencyManager();
 
@@ -162,17 +162,17 @@ namespace gpgmm {
             HRESULT CreatePlacedResource(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                          const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                         const D3D12_CLEAR_VALUE* pClearValue,
+                                         const D3D12_CLEAR_VALUE* clearValue,
                                          D3D12_RESOURCE_STATES initialUsage,
-                                         ResourceAllocation** ppResourceAllocation);
+                                         ResourceAllocation** resourceAllocation);
 
             HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                             D3D12_HEAP_FLAGS heapFlags,
                                             const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                            const D3D12_CLEAR_VALUE* pClearValue,
+                                            const D3D12_CLEAR_VALUE* clearValue,
                                             D3D12_RESOURCE_STATES initialUsage,
-                                            ResourceAllocation** ppResourceAllocation);
+                                            ResourceAllocation** resourceAllocation);
 
             HRESULT CreateResourceHeap(uint64_t size,
                                        D3D12_HEAP_TYPE heapType,

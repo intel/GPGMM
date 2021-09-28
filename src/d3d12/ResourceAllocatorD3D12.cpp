@@ -273,7 +273,7 @@ namespace gpgmm { namespace d3d12 {
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialUsage,
                                               const D3D12_CLEAR_VALUE* clearValue,
-                                              ResourceAllocation** ppResourceAllocation) {
+                                              ResourceAllocation** resourceAllocation) {
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -305,7 +305,7 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != nullptr) {
                 hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
-                                          clearValue, initialUsage, ppResourceAllocation);
+                                          clearValue, initialUsage, resourceAllocation);
                 if (FAILED(hr)) {
                     subAllocator->DeallocateMemory(subAllocation.get());
                     subAllocation = nullptr;
@@ -317,14 +317,14 @@ namespace gpgmm { namespace d3d12 {
         if (subAllocation == nullptr) {
             hr = CreateCommittedResource(
                 allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
-                &newResourceDesc, clearValue, initialUsage, ppResourceAllocation);
+                &newResourceDesc, clearValue, initialUsage, resourceAllocation);
         }
 
         return hr;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
-                                              ResourceAllocation** ppResourceAllocation) {
+                                              ResourceAllocation** resourceAllocation) {
         if (resource == nullptr) {
             return E_POINTER;
         }
@@ -347,12 +347,12 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
-        *ppResourceAllocation = new ResourceAllocation{/*residencyManager*/ nullptr,
-                                                       /*allocator*/ this,
-                                                       info,
-                                                       /*offset*/ 0,
-                                                       std::move(resource),
-                                                       heap};
+        *resourceAllocation = new ResourceAllocation{/*residencyManager*/ nullptr,
+                                                     /*allocator*/ this,
+                                                     info,
+                                                     /*offset*/ 0,
+                                                     std::move(resource),
+                                                     heap};
         return hr;
     }
 
@@ -360,10 +360,10 @@ namespace gpgmm { namespace d3d12 {
         const MemoryAllocation& subAllocation,
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
-        const D3D12_CLEAR_VALUE* pClearValue,
+        const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** ppResourceAllocation) {
-        if (!ppResourceAllocation) {
+        ResourceAllocation** resourceAllocation) {
+        if (!resourceAllocation) {
             return E_POINTER;
         }
 
@@ -396,7 +396,7 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
         HRESULT hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                                   resourceDescriptor, initialUsage, pClearValue,
+                                                   resourceDescriptor, initialUsage, clearValue,
                                                    IID_PPV_ARGS(&placedResource));
         if (FAILED(hr)) {
             return hr;
@@ -408,7 +408,7 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(heap);
         }
 
-        *ppResourceAllocation = new ResourceAllocation{
+        *resourceAllocation = new ResourceAllocation{
             mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
             subAllocation.GetOffset(), std::move(placedResource),    heap};
         return hr;
@@ -461,7 +461,7 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
-        const D3D12_CLEAR_VALUE* pClearValue,
+        const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** ppResourceAllocation) {
         if (!ppResourceAllocation) {
@@ -495,7 +495,7 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Resource> committedResource;
         hr = mDevice->CreateCommittedResource(&heapProperties, heapFlags, resourceDescriptor,
-                                              initialUsage, pClearValue,
+                                              initialUsage, clearValue,
                                               IID_PPV_ARGS(&committedResource));
         if (FAILED(hr)) {
             return hr;
