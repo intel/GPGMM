@@ -19,7 +19,7 @@
 
 namespace gpgmm {
 
-    // Conditionally sub-allocates memory depending on the requested allocation size.
+    // Conditionally allocates depending on the size.
     // If the allocation size is less then the |conditionalSize|, the |firstAllocator| will be used.
     class ConditionalMemoryAllocator : public MemoryAllocator {
       public:
@@ -33,9 +33,6 @@ namespace gpgmm {
                                                          uint64_t alignment) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
         void ReleaseMemory() override;
-
-        uint64_t GetMemorySize() const override;
-        uint64_t GetMemoryAlignment() const override;
 
       private:
         MemoryAllocator* mFirstAllocator = nullptr;

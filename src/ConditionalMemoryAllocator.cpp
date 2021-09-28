@@ -44,12 +44,4 @@ namespace gpgmm {
         allocation->GetAllocator()->DeallocateMemory(allocation);
     }
 
-    uint64_t ConditionalMemoryAllocator::GetMemorySize() const {
-        return kInvalidSize;
-    }
-
-    uint64_t ConditionalMemoryAllocator::GetMemoryAlignment() const {
-        return kInvalidOffset;
-    }
-
 }  // namespace gpgmm
