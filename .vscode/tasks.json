@@ -1,0 +1,205 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  // Available variables which can be used inside of strings.
+  // ${workspaceRoot}: the root folder of the team
+  // ${file}: the current opened file
+  // ${fileBasename}: the current opened file's basename
+  // ${fileDirname}: the current opened file's dirname
+  // ${fileExtname}: the current opened file's extension
+  // ${cwd}: the current working directory of the spawned process
+  "version": "2.0.0",
+  "tasks": [
+    // Build tasks
+    {
+      "label": "Build debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "ninja -C out\\Debug",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true,
+      },
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "label": "Build release",
+      "type": "shell",
+      "command": "ninja -C out\\Release",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "label": "Clean debug build",
+      "group": "build",
+      "type": "shell",
+      "command": "gn clean out\\Debug",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean release build",
+      "group": "build",
+      "type": "shell",
+      "command": "gn clean out\\Release",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate debug",
+      "group": "build",
+      "type": "shell",
+      "command": "gn args out\\Debug --args=is_debug=true",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate release",
+      "group": "build",
+      "type": "shell",
+      "command": "gn args out\\Release --args=is_debug=false",
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Sync deps",
+      "type": "shell",
+      "linux": {
+        "command": "sh",
+        "args": [
+          "-c",
+          "git fetch origin && git rebase origin/main && gclient sync"
+        ]
+      },
+      "osx": {
+        "command": "sh",
+        "args": [
+          "-c",
+          "git fetch origin && git rebase origin/main && gclient sync"
+        ]
+      },
+      "windows": {
+        "command": "/C",
+        "args": [
+          "git fetch origin && git rebase origin/main && gclient sync"
+        ],
+        "options": {
+          "shell": {
+            "executable": "cmd"
+          }
+        }
+      },
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rebuild debug",
+      "group": "build",
+      "dependsOn": [
+        "Clean debug build",
+        "Build debug",
+      ]
+    },
+    {
+      "label": "Rebuild release",
+      "group": "build",
+      "dependsOn": [
+        "Clean release build",
+        "Build release",
+      ]
+    },
+    // Testing tasks
+    {
+      "label": "Run debug end2end tests",
+      "group": "test",
+      "type": "shell",
+      "command": "gpgmm_end2end_tests.exe",
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Debug"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run debug unittests",
+      "group": "test",
+      "type": "shell",
+      "command": "gpgmm_unittests.exe",
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Debug"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run release end2end tests",
+      "group": "test",
+      "type": "shell",
+      "command": "gpgmm_end2end_tests.exe",
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Release"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run release unittests",
+      "group": "test",
+      "type": "shell",
+      "command": "gpgmm_unittests.exe",
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Release"
+      },
+      "problemMatcher": []
+    },
+  ],
+}

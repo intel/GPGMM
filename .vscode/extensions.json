@@ -1,7 +1,11 @@
 {
-    "recommendations": [
-        "ms-vscode.cpptools",
-        "ms-python.python",
-        "github.vscode-pull-request-github"
-    ]
+  "recommendations": [
+    // Adds IntelliSense, Linting, Debugging, formatting, unit tests, and more.
+    "ms-vscode.cpptools",
+    "ms-python.python",
+    // Review and manage your GitHub pull requests and issues directly in VS Code
+    "github.vscode-pull-request-github",
+    // GN Syntax Highlighting for Visual Studio Code
+    "npclaudiu.vscode-gn",
+  ]
 }
