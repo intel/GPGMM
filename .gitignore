@@ -78,7 +78,3 @@ ehthumbs.db
 ehthumbs_vista.db
 Desktop.ini
 $RECYCLE.BIN/
-
-### Node ###
-node/generator/specifications
-node/PATH_TO_DAWN
