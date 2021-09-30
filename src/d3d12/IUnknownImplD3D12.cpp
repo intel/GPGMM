@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/d3d12/UnknownD3D12.h"
+#include "src/d3d12/IUnknownImplD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
-    HRESULT Unknown::QueryInterface(REFIID riid, void** ppvObject) {
+    HRESULT IUnknownImpl::QueryInterface(REFIID riid, void** ppvObject) {
         // Always set out parameter to nullptr, validating it first.
         if (ppvObject == nullptr) {
             return E_INVALIDARG;
@@ -32,11 +32,11 @@ namespace gpgmm { namespace d3d12 {
         return E_NOINTERFACE;
     }
 
-    ULONG Unknown::AddRef() {
+    ULONG IUnknownImpl::AddRef() {
         return ++mRefCount;
     }
 
-    ULONG Unknown::Release() {
+    ULONG IUnknownImpl::Release() {
         const uint32_t refcount = --mRefCount;
         if (mRefCount == 0) {
             ReleaseThis();
@@ -44,7 +44,7 @@ namespace gpgmm { namespace d3d12 {
         return refcount;
     }
 
-    void Unknown::ReleaseThis() {
+    void IUnknownImpl::ReleaseThis() {
         delete this;
     }
 }}  // namespace gpgmm::d3d12

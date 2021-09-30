@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
 #include "src/MemoryAllocation.h"
-#include "src/d3d12/UnknownD3D12.h"
+#include "src/d3d12/IUnknownImplD3D12.h"
 #include "src/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -27,7 +27,7 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
-    class ResourceAllocation : public MemoryAllocation, public Unknown {
+    class ResourceAllocation : public MemoryAllocation, public IUnknownImpl {
       public:
         ResourceAllocation() = default;
         ResourceAllocation(ResidencyManager* residencyManager,

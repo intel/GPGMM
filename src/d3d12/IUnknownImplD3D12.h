@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_UNKNOWND3D12_H_
-#define GPGMM_D3D12_UNKNOWND3D12_H_
+#ifndef GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
+#define GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
 
 #include "src/d3d12/d3d12_platform.h"
 
@@ -21,10 +21,10 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    class Unknown : public IUnknown {
+    class IUnknownImpl : public IUnknown {
       public:
-        Unknown() = default;
-        virtual ~Unknown() = default;
+        IUnknownImpl() = default;
+        virtual ~IUnknownImpl() = default;
 
         // IUnknown interfaces
         HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
@@ -39,4 +39,4 @@ namespace gpgmm { namespace d3d12 {
 
 }}  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_UNKNOWND3D12_H_
+#endif  // GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
