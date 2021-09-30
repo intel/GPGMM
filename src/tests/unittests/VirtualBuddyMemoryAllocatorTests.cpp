@@ -17,7 +17,7 @@
 
 #include "src/Memory.h"
 #include "src/PooledMemoryAllocator.h"
-#include "src/VirtualBuddyAllocator.h"
+#include "src/VirtualBuddyMemoryAllocator.h"
 
 #include <set>
 #include <vector>
@@ -46,13 +46,13 @@ class DummyMemoryAllocator : public MemoryAllocator {
     }
 };
 
-class DummyBuddyResourceAllocator {
+class DummyBuddyMemoryAllocator {
   public:
-    DummyBuddyResourceAllocator(uint64_t maxBlockSize)
+    DummyBuddyMemoryAllocator(uint64_t maxBlockSize)
         : mAllocator(maxBlockSize, kHeapSize, kInvalidOffset, &mMemoryAllocator) {
     }
 
-    DummyBuddyResourceAllocator(uint64_t maxBlockSize, MemoryAllocator* memoryAllocator)
+    DummyBuddyMemoryAllocator(uint64_t maxBlockSize, MemoryAllocator* memoryAllocator)
         : mAllocator(maxBlockSize, kHeapSize, kInvalidOffset, memoryAllocator) {
     }
 
@@ -74,11 +74,11 @@ class DummyBuddyResourceAllocator {
 
   private:
     DummyMemoryAllocator mMemoryAllocator;
-    VirtualBuddyAllocator mAllocator;
+    VirtualBuddyMemoryAllocator mAllocator;
 };
 
 // Verify a single resource allocation in a single heap.
-TEST(VirtualBuddyAllocatorTests, SingleHeap) {
+TEST(VirtualBuddyMemoryAllocatorTests, SingleHeap) {
     // After one 128 byte resource allocation:
     //
     // max block size -> ---------------------------
@@ -86,7 +86,7 @@ TEST(VirtualBuddyAllocatorTests, SingleHeap) {
     // max heap size  -> ---------------------------       An - Resource allocation n
     //
     constexpr uint64_t maxBlockSize = kHeapSize;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     // Cannot allocate greater than heap size.
     MemoryAllocation invalidAllocation = allocator.Allocate(kHeapSize * 2);
@@ -108,7 +108,7 @@ TEST(VirtualBuddyAllocatorTests, SingleHeap) {
 }
 
 // Verify that multiple allocation are created in separate heaps.
-TEST(VirtualBuddyAllocatorTests, MultipleHeaps) {
+TEST(VirtualBuddyMemoryAllocatorTests, MultipleHeaps) {
     // After two 128 byte resource allocations:
     //
     // max block size -> ---------------------------
@@ -118,7 +118,7 @@ TEST(VirtualBuddyAllocatorTests, MultipleHeaps) {
     //                   ---------------------------
     //
     constexpr uint64_t maxBlockSize = 256;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     // Cannot allocate greater than heap size.
     MemoryAllocation invalidAllocation = allocator.Allocate(kHeapSize * 2);
@@ -153,7 +153,7 @@ TEST(VirtualBuddyAllocatorTests, MultipleHeaps) {
 }
 
 // Verify multiple sub-allocations can re-use heaps.
-TEST(VirtualBuddyAllocatorTests, MultipleSplitHeaps) {
+TEST(VirtualBuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     // After two 64 byte allocations with 128 byte heaps.
     //
     // max block size -> ---------------------------
@@ -165,7 +165,7 @@ TEST(VirtualBuddyAllocatorTests, MultipleSplitHeaps) {
     //                   ---------------------------
     //
     constexpr uint64_t maxBlockSize = 256;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     // Allocate two 64 byte sub-allocations.
     MemoryAllocation allocation1 = allocator.Allocate(kHeapSize / 2);
@@ -204,7 +204,7 @@ TEST(VirtualBuddyAllocatorTests, MultipleSplitHeaps) {
 }
 
 // Verify resource sub-allocation of various sizes over multiple heaps.
-TEST(VirtualBuddyAllocatorTests, MultiplSplitHeapsVariableSizes) {
+TEST(VirtualBuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     // After three 64 byte allocations and two 128 byte allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -218,7 +218,7 @@ TEST(VirtualBuddyAllocatorTests, MultiplSplitHeapsVariableSizes) {
     //                   -------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     // Allocate two 64-byte allocations.
     MemoryAllocation allocation1 = allocator.Allocate(64);
@@ -279,7 +279,7 @@ TEST(VirtualBuddyAllocatorTests, MultiplSplitHeapsVariableSizes) {
 }
 
 // Verify resource sub-allocation of same sizes with various alignments.
-TEST(VirtualBuddyAllocatorTests, SameSizeVariousAlignment) {
+TEST(VirtualBuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     // After three 64 byte and one 128 byte resource allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -293,7 +293,7 @@ TEST(VirtualBuddyAllocatorTests, SameSizeVariousAlignment) {
     //                   -------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     MemoryAllocation allocation1 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation1.GetInfo().mBlock->mOffset, 0u);
@@ -340,7 +340,7 @@ TEST(VirtualBuddyAllocatorTests, SameSizeVariousAlignment) {
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
-TEST(VirtualBuddyAllocatorTests, VariousSizeSameAlignment) {
+TEST(VirtualBuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     // After two 64 byte and two 128 byte resource allocations:
     //
     // max block size -> -------------------------------------------------------
@@ -354,7 +354,7 @@ TEST(VirtualBuddyAllocatorTests, VariousSizeSameAlignment) {
     //                   -------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     constexpr uint64_t alignment = 64;
 
@@ -402,9 +402,9 @@ TEST(VirtualBuddyAllocatorTests, VariousSizeSameAlignment) {
 }
 
 // Verify allocating a very large resource does not overflow.
-TEST(VirtualBuddyAllocatorTests, AllocationOverflow) {
+TEST(VirtualBuddyMemoryAllocatorTests, AllocationOverflow) {
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyResourceAllocator allocator(maxBlockSize);
+    DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     MemoryAllocation invalidAllocation = allocator.Allocate(largeBlock);
@@ -412,12 +412,12 @@ TEST(VirtualBuddyAllocatorTests, AllocationOverflow) {
 }
 
 // Verify resource heaps will be reused from a pool.
-TEST(VirtualBuddyAllocatorTests, ReuseFreedHeaps) {
+TEST(VirtualBuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
     PooledMemoryAllocator poolAllocator(&memoryAllocator);
-    DummyBuddyResourceAllocator allocator(kMaxBlockSize, &poolAllocator);
+    DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};
     std::vector<MemoryAllocation> allocations = {};
@@ -463,12 +463,12 @@ TEST(VirtualBuddyAllocatorTests, ReuseFreedHeaps) {
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
-TEST(VirtualBuddyAllocatorTests, DestroyHeaps) {
+TEST(VirtualBuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
     PooledMemoryAllocator poolAllocator(&memoryAllocator);
-    DummyBuddyResourceAllocator allocator(kMaxBlockSize, &poolAllocator);
+    DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};
     std::vector<MemoryAllocation> allocations = {};

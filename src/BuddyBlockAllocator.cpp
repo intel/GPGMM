@@ -13,14 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/BuddyAllocator.h"
+#include "src/BuddyBlockAllocator.h"
 
 #include "common/Assert.h"
 #include "common/Math.h"
 
 namespace gpgmm {
 
-    BuddyAllocator::BuddyAllocator(uint64_t maxBlockSize) : mMaxBlockSize(maxBlockSize) {
+    BuddyBlockAllocator::BuddyBlockAllocator(uint64_t maxBlockSize) : mMaxBlockSize(maxBlockSize) {
         ASSERT(IsPowerOfTwo(maxBlockSize));
 
         mFreeLists.resize(Log2(mMaxBlockSize) + 1);
@@ -30,18 +30,18 @@ namespace gpgmm {
         mFreeLists[0] = {mRoot};
     }
 
-    BuddyAllocator::~BuddyAllocator() {
+    BuddyBlockAllocator::~BuddyBlockAllocator() {
         if (mRoot != nullptr) {
             DeleteBlock(mRoot);
             mRoot = nullptr;
         }
     }
 
-    uint64_t BuddyAllocator::ComputeTotalNumOfFreeBlocksForTesting() const {
+    uint64_t BuddyBlockAllocator::ComputeTotalNumOfFreeBlocksForTesting() const {
         return ComputeNumOfFreeBlocks(mRoot);
     }
 
-    uint64_t BuddyAllocator::ComputeNumOfFreeBlocks(BuddyBlock* block) const {
+    uint64_t BuddyBlockAllocator::ComputeNumOfFreeBlocks(BuddyBlock* block) const {
         if (block->mState == BlockState::Free) {
             return 1;
         } else if (block->mState == BlockState::Split) {
@@ -51,15 +51,15 @@ namespace gpgmm {
         return 0;
     }
 
-    uint32_t BuddyAllocator::ComputeLevelFromBlockSize(uint64_t blockSize) const {
+    uint32_t BuddyBlockAllocator::ComputeLevelFromBlockSize(uint64_t blockSize) const {
         // Every level in the buddy system can be indexed by order-n where n = log2(blockSize).
         // However, mFreeList zero-indexed by level.
         // For example, blockSize=4 is Level1 if MAX_BLOCK is 8.
         return Log2(mMaxBlockSize) - Log2(blockSize);
     }
 
-    uint64_t BuddyAllocator::GetNextFreeAlignedBlock(size_t allocationBlockLevel,
-                                                     uint64_t alignment) const {
+    uint64_t BuddyBlockAllocator::GetNextFreeAlignedBlock(size_t allocationBlockLevel,
+                                                          uint64_t alignment) const {
         ASSERT(IsPowerOfTwo(alignment));
         // The current level is the level that corresponds to the allocation size. The free list may
         // not contain a block at that level until a larger one gets allocated (and splits).
@@ -97,7 +97,7 @@ namespace gpgmm {
     // Called by allocate upon splitting to insert a child block into a free-list.
     // Note: Always insert into the head of the free-list. As when a larger free block at a lower
     // level was split, there were no smaller free blocks at a higher level to allocate.
-    void BuddyAllocator::InsertFreeBlock(BuddyBlock* block, size_t level) {
+    void BuddyBlockAllocator::InsertFreeBlock(BuddyBlock* block, size_t level) {
         ASSERT(block->mState == BlockState::Free);
 
         // Inserted block is now the front (no prev).
@@ -115,7 +115,7 @@ namespace gpgmm {
         mFreeLists[level].head = block;
     }
 
-    void BuddyAllocator::RemoveFreeBlock(BuddyBlock* block, size_t level) {
+    void BuddyBlockAllocator::RemoveFreeBlock(BuddyBlock* block, size_t level) {
         ASSERT(block->mState == BlockState::Free);
 
         if (mFreeLists[level].head == block) {
@@ -138,7 +138,7 @@ namespace gpgmm {
         }
     }
 
-    Block* BuddyAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
+    Block* BuddyBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mMaxBlockSize) {
             return nullptr;
         }
@@ -201,7 +201,7 @@ namespace gpgmm {
         return currBlock;
     }
 
-    void BuddyAllocator::DeallocateBlock(Block* block) {
+    void BuddyBlockAllocator::DeallocateBlock(Block* block) {
         BuddyBlock* curr = static_cast<BuddyBlock*>(block);
 
         ASSERT(curr->mState == BlockState::Allocated);
@@ -235,7 +235,7 @@ namespace gpgmm {
     }
 
     // Helper which deletes a block in the tree recursively (post-order).
-    void BuddyAllocator::DeleteBlock(BuddyBlock* block) {
+    void BuddyBlockAllocator::DeleteBlock(BuddyBlock* block) {
         ASSERT(block != nullptr);
 
         if (block->mState == BlockState::Split) {

@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/VirtualBuddyAllocator.h"
+#include "src/VirtualBuddyMemoryAllocator.h"
 
 #include "common/Math.h"
 
 namespace gpgmm {
 
-    VirtualBuddyAllocator::VirtualBuddyAllocator(uint64_t maxSystemSize,
-                                                 uint64_t memorySize,
-                                                 uint64_t memoryAlignment,
-                                                 MemoryAllocator* memoryAllocator)
+    VirtualBuddyMemoryAllocator::VirtualBuddyMemoryAllocator(uint64_t maxSystemSize,
+                                                             uint64_t memorySize,
+                                                             uint64_t memoryAlignment,
+                                                             MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator),
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
@@ -32,21 +32,22 @@ namespace gpgmm {
         ASSERT(maxSystemSize % mMemorySize == 0);
     }
 
-    VirtualBuddyAllocator::~VirtualBuddyAllocator() {
+    VirtualBuddyMemoryAllocator::~VirtualBuddyMemoryAllocator() {
         ASSERT(GetPoolSizeForTesting() == 0);
     }
 
-    void VirtualBuddyAllocator::ReleaseMemory() {
+    void VirtualBuddyMemoryAllocator::ReleaseMemory() {
         mMemoryAllocator->ReleaseMemory();
     }
 
-    uint64_t VirtualBuddyAllocator::GetMemoryIndex(uint64_t offset) const {
+    uint64_t VirtualBuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
         return offset / mMemorySize;
     }
 
-    std::unique_ptr<MemoryAllocation> VirtualBuddyAllocator::AllocateMemory(uint64_t size,
-                                                                            uint64_t alignment) {
+    std::unique_ptr<MemoryAllocation> VirtualBuddyMemoryAllocator::AllocateMemory(
+        uint64_t size,
+        uint64_t alignment) {
         if (size == 0) {
             return nullptr;
         }
@@ -99,7 +100,7 @@ namespace gpgmm {
                                                   mMemoryAllocations[memoryIndex]->GetMemory());
     }
 
-    void VirtualBuddyAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void VirtualBuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         ASSERT(allocation != nullptr);
 
         const AllocationInfo info = allocation->GetInfo();
@@ -118,15 +119,15 @@ namespace gpgmm {
         mBuddyBlockAllocator.DeallocateBlock(info.mBlock);
     }
 
-    uint64_t VirtualBuddyAllocator::GetMemorySize() const {
+    uint64_t VirtualBuddyMemoryAllocator::GetMemorySize() const {
         return mMemorySize;
     }
 
-    uint64_t VirtualBuddyAllocator::GetMemoryAlignment() const {
+    uint64_t VirtualBuddyMemoryAllocator::GetMemoryAlignment() const {
         return mMemoryAllocator->GetMemoryAlignment();
     }
 
-    uint64_t VirtualBuddyAllocator::GetPoolSizeForTesting() const {
+    uint64_t VirtualBuddyMemoryAllocator::GetPoolSizeForTesting() const {
         uint64_t count = 0;
         for (auto& allocation : mMemoryAllocations) {
             if (allocation != nullptr) {

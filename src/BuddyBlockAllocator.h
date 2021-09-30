@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_BUDDYALLOCATOR_H_
-#define GPGMM_BUDDYALLOCATOR_H_
+#ifndef GPGMM_BUDDYBLOCKALLOCATOR_H_
+#define GPGMM_BUDDYBLOCKALLOCATOR_H_
 
 #include "common/IntegerTypes.h"
 #include "src/BlockAllocator.h"
@@ -36,10 +36,10 @@ namespace gpgmm {
     // the size of the block to be used to satisfy the request. The first level (index=0) represents
     // the root whose size is also called the max block size.
     //
-    class BuddyAllocator : public BlockAllocator {
+    class BuddyBlockAllocator : public BlockAllocator {
       public:
-        BuddyAllocator(uint64_t maxBlockSize);
-        ~BuddyAllocator() override;
+        BuddyBlockAllocator(uint64_t maxBlockSize);
+        ~BuddyBlockAllocator() override;
 
         // BlockAllocator interface
         Block* AllocateBlock(uint64_t size, uint64_t alignment) override;
@@ -113,4 +113,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_BUDDYALLOCATOR_H_
+#endif  // GPGMM_BUDDYBLOCKALLOCATOR_H_

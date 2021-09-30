@@ -15,13 +15,13 @@
 
 #include <gtest/gtest.h>
 
-#include "src/BuddyAllocator.h"
+#include "src/BuddyBlockAllocator.h"
 
 using namespace gpgmm;
 
-class DummyBuddyAllocator {
+class DummyBuddyBlockAllocator {
   public:
-    DummyBuddyAllocator(uint64_t maxBlockSize) : mAllocator(maxBlockSize) {
+    DummyBuddyBlockAllocator(uint64_t maxBlockSize) : mAllocator(maxBlockSize) {
     }
 
     Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) {
@@ -36,11 +36,11 @@ class DummyBuddyAllocator {
         return mAllocator.ComputeTotalNumOfFreeBlocksForTesting();
     }
 
-    BuddyAllocator mAllocator;
+    BuddyBlockAllocator mAllocator;
 };
 
 // Verify the buddy allocator with a basic test.
-TEST(BuddyAllocatorTests, SingleBlock) {
+TEST(BuddyBlockAllocatorTests, SingleBlock) {
     // After one 32 byte allocation:
     //
     //  Level          --------------------------------
@@ -48,7 +48,7 @@ TEST(BuddyAllocatorTests, SingleBlock) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     // Check that we cannot allocate a oversized block.
     ASSERT_EQ(allocator.AllocateBlock(maxBlockSize * 2), nullptr);
@@ -70,11 +70,11 @@ TEST(BuddyAllocatorTests, SingleBlock) {
 }
 
 // Verify multiple allocations succeeds using a buddy allocator.
-TEST(BuddyAllocatorTests, MultipleBlocks) {
+TEST(BuddyBlockAllocatorTests, MultipleBlocks) {
     // Fill every level in the allocator (order-n = 2^n)
     const uint64_t maxBlockSize = (1ull << 16);
     for (uint64_t order = 1; (1ull << order) <= maxBlockSize; order++) {
-        DummyBuddyAllocator allocator(maxBlockSize);
+        DummyBuddyBlockAllocator allocator(maxBlockSize);
 
         uint64_t blockSize = (1ull << order);
         for (uint32_t blocki = 0; blocki < (maxBlockSize / blockSize); blocki++) {
@@ -84,7 +84,7 @@ TEST(BuddyAllocatorTests, MultipleBlocks) {
 }
 
 // Verify that a single allocation succeeds using a buddy allocator.
-TEST(BuddyAllocatorTests, SingleSplitBlock) {
+TEST(BuddyBlockAllocatorTests, SingleSplitBlock) {
     //  After one 8 byte allocation:
     //
     //  Level          --------------------------------
@@ -96,7 +96,7 @@ TEST(BuddyAllocatorTests, SingleSplitBlock) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     // Allocate block (splits two blocks).
     Block* block = allocator.AllocateBlock(8);
@@ -119,7 +119,7 @@ TEST(BuddyAllocatorTests, SingleSplitBlock) {
 }
 
 // Verify that a multiple allocated blocks can be removed in the free-list.
-TEST(BuddyAllocatorTests, MultipleSplitBlocks) {
+TEST(BuddyBlockAllocatorTests, MultipleSplitBlocks) {
     //  After four 16 byte allocations:
     //
     //  Level          --------------------------------
@@ -131,7 +131,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocks) {
     //                 --------------------------------
     //
     constexpr uint64_t maxBlockSize = 32;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     // Populates the free-list with four blocks at Level2.
 
@@ -179,7 +179,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocks) {
 }
 
 // Verify the buddy allocator can handle allocations of various sizes.
-TEST(BuddyAllocatorTests, MultipleSplitBlockIncreasingSize) {
+TEST(BuddyBlockAllocatorTests, MultipleSplitBlockIncreasingSize) {
     //  After four Level4-to-Level1 byte then one L4 block allocations:
     //
     //  Level          -----------------------------------------------------------------
@@ -195,7 +195,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlockIncreasingSize) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 0ull);
     ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 64ull);
@@ -214,7 +214,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlockIncreasingSize) {
 }
 
 // Verify very small allocations using a larger allocator works correctly.
-TEST(BuddyAllocatorTests, MultipleSplitBlocksVariableSizes) {
+TEST(BuddyBlockAllocatorTests, MultipleSplitBlocksVariableSizes) {
     //  After allocating four pairs of one 64 byte block and one 32 byte block.
     //
     //  Level          -----------------------------------------------------------------
@@ -230,7 +230,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksVariableSizes) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     ASSERT_EQ(allocator.AllocateBlock(64)->mOffset, 0ull);
     ASSERT_EQ(allocator.AllocateBlock(32)->mOffset, 64ull);
@@ -248,7 +248,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksVariableSizes) {
 }
 
 // Verify the buddy allocator can deal with bad fragmentation.
-TEST(BuddyAllocatorTests, MultipleSplitBlocksInterleaved) {
+TEST(BuddyBlockAllocatorTests, MultipleSplitBlocksInterleaved) {
     //  Allocate every leaf then de-allocate every other of those allocations.
     //
     //  Level          -----------------------------------------------------------------
@@ -264,7 +264,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksInterleaved) {
     //                 -----------------------------------------------------------------
     //
     constexpr uint64_t maxBlockSize = 512;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     // Allocate leaf blocks
     constexpr uint64_t minBlockSizeInBytes = 32;
@@ -282,7 +282,7 @@ TEST(BuddyAllocatorTests, MultipleSplitBlocksInterleaved) {
 }
 
 // Verify the buddy allocator can deal with multiple allocations with mixed alignments.
-TEST(BuddyAllocatorTests, SameSizeVariousAlignment) {
+TEST(BuddyBlockAllocatorTests, SameSizeVariousAlignment) {
     //  After two 8 byte allocations with 16 byte alignment then one 8 byte allocation with 8 byte
     //  alignment.
     //
@@ -294,7 +294,7 @@ TEST(BuddyAllocatorTests, SameSizeVariousAlignment) {
     //      2       8  |   Aa  |   F   |  Ab   |  Ac  |       A - allocated
     //                 --------------------------------
     //
-    DummyBuddyAllocator allocator(32);
+    DummyBuddyBlockAllocator allocator(32);
 
     // Allocate Aa (two splits).
     ASSERT_EQ(allocator.AllocateBlock(8, 16)->mOffset, 0u);
@@ -315,7 +315,7 @@ TEST(BuddyAllocatorTests, SameSizeVariousAlignment) {
 }
 
 // Verify the buddy allocator can deal with multiple allocations with equal alignments.
-TEST(BuddyAllocatorTests, VariousSizeSameAlignment) {
+TEST(BuddyBlockAllocatorTests, VariousSizeSameAlignment) {
     //  After two 8 byte allocations with 4 byte alignment then one 16 byte allocation with 4 byte
     //  alignment.
     //
@@ -329,7 +329,7 @@ TEST(BuddyAllocatorTests, VariousSizeSameAlignment) {
     //
     constexpr uint64_t maxBlockSize = 32;
     constexpr uint64_t alignment = 4;
-    DummyBuddyAllocator allocator(maxBlockSize);
+    DummyBuddyBlockAllocator allocator(maxBlockSize);
 
     // Allocate block Aa (two splits)
     ASSERT_EQ(allocator.AllocateBlock(8, alignment)->mOffset, 0u);

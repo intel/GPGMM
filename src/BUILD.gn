@@ -105,8 +105,8 @@ source_set("gpgmm_sources") {
 
   sources = [
     "BlockAllocator.h",
-    "BuddyAllocator.cpp",
-    "BuddyAllocator.h",
+    "BuddyBlockAllocator.cpp",
+    "BuddyBlockAllocator.h",
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
     "Memory.cpp",
@@ -119,8 +119,8 @@ source_set("gpgmm_sources") {
     "PooledMemoryAllocator.h",
     "ScopedAllocatorStack.cpp",
     "ScopedAllocatorStack.h",
-    "VirtualBuddyAllocator.cpp",
-    "VirtualBuddyAllocator.h",
+    "VirtualBuddyMemoryAllocator.cpp",
+    "VirtualBuddyMemoryAllocator.h",
 
     # "gpgmm_platform.h",
   ]

@@ -20,7 +20,7 @@
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/PooledMemoryAllocator.h"
 #include "src/ScopedAllocatorStack.h"
-#include "src/VirtualBuddyAllocator.h"
+#include "src/VirtualBuddyMemoryAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
@@ -239,7 +239,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Placed resource sub-allocator.
             MemoryAllocator* subAllocator =
-                stack->PushAllocator(std::make_unique<VirtualBuddyAllocator>(
+                stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
                     mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
                     heapAllocator));
 
@@ -249,7 +249,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Pooled placed resource sub-allocator.
             MemoryAllocator* pooledSubAllocator =
-                stack->PushAllocator(std::make_unique<VirtualBuddyAllocator>(
+                stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
                     mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
                     pooledHeapAllocator));
 
