@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef INCLUDE_GPGMM_D3D12_H_
-#define INCLUDE_GPGMM_D3D12_H_
+#ifndef GPGMM_INCLUDE_GPGMM_D3D12_H_
+#define GPGMM_INCLUDE_GPGMM_D3D12_H_
 
 #include <gpgmm_export.h>
 
@@ -29,4 +29,4 @@
 
 // clang-format on
 
-#endif  // INCLUDE_GPGMM_D3D12_H_
+#endif  // GPGMM_INCLUDE_GPGMM_D3D12_H_
