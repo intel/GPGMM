@@ -135,6 +135,15 @@ source_set("gpgmm_end2end_tests_sources") {
   sources = [ "GPGMMTest.h" ]
 
   libs = []
+
+  if (gpgmm_enable_d3d12) {
+    sources += [ "end2end/D3D12IUnknownImplTests.cpp" ]
+  }
+
+  libs += [
+    "d3d12.lib",
+    "dxgi.lib",
+  ]
 }
 
 test("gpgmm_end2end_tests") {
