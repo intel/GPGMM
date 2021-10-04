@@ -47,7 +47,6 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                          uint64_t alignment) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
-        void ReleaseMemory() override;
 
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;

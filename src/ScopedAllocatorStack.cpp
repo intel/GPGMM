@@ -35,8 +35,10 @@ namespace gpgmm {
     }
 
     void ScopedAllocatorStack::ReleaseMemory() {
-        ASSERT(!mAllocators.empty());
-        mAllocators.back()->ReleaseMemory();
+        for (auto& alloc : mAllocators) {
+            ASSERT(alloc != nullptr);
+            alloc->ReleaseMemory();
+        }
     }
 
 }  // namespace gpgmm

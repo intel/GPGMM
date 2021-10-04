@@ -36,10 +36,6 @@ namespace gpgmm {
         ASSERT(GetSuballocatedMemorySizeForTesting() == 0);
     }
 
-    void VirtualBuddyMemoryAllocator::ReleaseMemory() {
-        mMemoryAllocator->ReleaseMemory();
-    }
-
     uint64_t VirtualBuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
         return offset / mMemorySize;

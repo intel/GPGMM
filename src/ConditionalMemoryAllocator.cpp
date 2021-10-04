@@ -25,11 +25,6 @@ namespace gpgmm {
           mConditionalSize(conditionalSize) {
     }
 
-    void ConditionalMemoryAllocator::ReleaseMemory() {
-        mFirstAllocator->ReleaseMemory();
-        mSecondAllocator->ReleaseMemory();
-    }
-
     std::unique_ptr<MemoryAllocation> ConditionalMemoryAllocator::AllocateMemory(
         uint64_t size,
         uint64_t alignment) {
@@ -41,7 +36,8 @@ namespace gpgmm {
     }
 
     void ConditionalMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        allocation->GetAllocator()->DeallocateMemory(allocation);
+        // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
+        UNREACHABLE();
     }
 
 }  // namespace gpgmm
