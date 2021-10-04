@@ -18,7 +18,7 @@
 #include "../common/Limits.h"
 #include "../common/Math.h"
 #include "src/ConditionalMemoryAllocator.h"
-#include "src/PooledMemoryAllocator.h"
+#include "src/LIFOPooledMemoryAllocator.h"
 #include "src/ScopedAllocatorStack.h"
 #include "src/VirtualBuddyMemoryAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
@@ -245,7 +245,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Pooled standalone heap allocator.
             MemoryAllocator* pooledHeapAllocator =
-                stack->PushAllocator(std::make_unique<PooledMemoryAllocator>(heapAllocator));
+                stack->PushAllocator(std::make_unique<LIFOPooledMemoryAllocator>(heapAllocator));
 
             // Pooled placed resource sub-allocator.
             MemoryAllocator* pooledSubAllocator =

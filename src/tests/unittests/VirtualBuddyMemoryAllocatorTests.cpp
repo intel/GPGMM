@@ -15,8 +15,8 @@
 
 #include <gtest/gtest.h>
 
+#include "src/LIFOPooledMemoryAllocator.h"
 #include "src/Memory.h"
-#include "src/PooledMemoryAllocator.h"
 #include "src/VirtualBuddyMemoryAllocator.h"
 
 #include <set>
@@ -416,7 +416,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
-    PooledMemoryAllocator poolAllocator(&memoryAllocator);
+    LIFOPooledMemoryAllocator poolAllocator(&memoryAllocator);
     DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};
@@ -467,7 +467,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
-    PooledMemoryAllocator poolAllocator(&memoryAllocator);
+    LIFOPooledMemoryAllocator poolAllocator(&memoryAllocator);
     DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};

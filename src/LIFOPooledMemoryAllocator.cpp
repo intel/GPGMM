@@ -13,39 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/PooledMemoryAllocator.h"
+#include "src/LIFOPooledMemoryAllocator.h"
 #include "common/Assert.h"
 
 namespace gpgmm {
 
-    PooledMemoryAllocator::PooledMemoryAllocator(MemoryAllocator* memoryAllocator)
+    LIFOPooledMemoryAllocator::LIFOPooledMemoryAllocator(MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator) {
     }
 
-    PooledMemoryAllocator::~PooledMemoryAllocator() {
+    LIFOPooledMemoryAllocator::~LIFOPooledMemoryAllocator() {
         ASSERT(GetPoolSizeForTesting() == 0);
     }
 
-    void PooledMemoryAllocator::ReleaseMemory() {
-        for (auto& allocation : mPool) {
-            ASSERT(allocation != nullptr);
-            mMemoryAllocator->DeallocateMemory(allocation.release());
-        }
-
-        mPool.clear();
+    void LIFOPooledMemoryAllocator::ReleaseMemory() {
+        mMemoryPool.ReleasePool();
     }
 
-    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                            uint64_t alignment) {
+    std::unique_ptr<MemoryAllocation> LIFOPooledMemoryAllocator::AllocateMemory(
+        uint64_t size,
+        uint64_t alignment) {
         // Pooled memory is LIFO because memory can be evicted by LRU. However, this means
         // pooling is disabled in-frame when the memory is still pending. For high in-frame
         // memory users, FIFO might be preferable when memory consumption is a higher priority.
-        std::unique_ptr<MemoryAllocation> allocation;
-        if (!mPool.empty()) {
-            allocation = std::move(mPool.front());
-            mPool.pop_front();
-        }
-
+        std::unique_ptr<MemoryAllocation> allocation = mMemoryPool.AcquireFromPool();
         if (allocation == nullptr) {
             allocation = mMemoryAllocator->AllocateMemory(size, alignment);
         }
@@ -53,19 +44,19 @@ namespace gpgmm {
         return allocation;
     }
 
-    void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        mPool.push_front(std::unique_ptr<MemoryAllocation>(allocation));
+    void LIFOPooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        mMemoryPool.ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
     }
 
-    uint64_t PooledMemoryAllocator::GetMemorySize() const {
+    uint64_t LIFOPooledMemoryAllocator::GetMemorySize() const {
         return mMemoryAllocator->GetMemorySize();
     }
 
-    uint64_t PooledMemoryAllocator::GetMemoryAlignment() const {
+    uint64_t LIFOPooledMemoryAllocator::GetMemoryAlignment() const {
         return mMemoryAllocator->GetMemoryAlignment();
     }
 
-    uint64_t PooledMemoryAllocator::GetPoolSizeForTesting() const {
-        return mPool.size();
+    uint64_t LIFOPooledMemoryAllocator::GetPoolSizeForTesting() const {
+        return mMemoryPool.GetPoolSize();
     }
 }  // namespace gpgmm

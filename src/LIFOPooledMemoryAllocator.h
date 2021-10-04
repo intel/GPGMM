@@ -13,24 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_POOLEDMEMORYALLOCATOR_H_
-#define GPGMM_POOLEDMEMORYALLOCATOR_H_
+#ifndef GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
+#define GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
 
+#include "src/LIFOMemoryPool.h"
 #include "src/MemoryAllocator.h"
-
-#include <deque>
-#include <memory>
 
 namespace gpgmm {
 
-    // |PooledMemoryAllocator| allocates a fixed-size resource memory from a resource memory
-    // pool. Internally, it manages a list of heaps using LIFO (newest heaps are recycled first).
-    // The heap is in one of two states: AVAILABLE or not. Upon de-allocate, the heap is returned
-    // the pool and made AVAILABLE.
-    class PooledMemoryAllocator : public MemoryAllocator {
+    // |LIFOPooledMemoryAllocator| allocates from a memory pool using the LIFO strategy.
+    class LIFOPooledMemoryAllocator : public MemoryAllocator {
       public:
-        PooledMemoryAllocator(MemoryAllocator* memoryAllocator);
-        ~PooledMemoryAllocator() override;
+        LIFOPooledMemoryAllocator(MemoryAllocator* memoryAllocator);
+        ~LIFOPooledMemoryAllocator() override;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
@@ -45,9 +40,9 @@ namespace gpgmm {
       private:
         MemoryAllocator* mMemoryAllocator = nullptr;
 
-        std::deque<std::unique_ptr<MemoryAllocation>> mPool;
+        LIFOMemoryPool mMemoryPool;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_POOLEDMEMORYALLOCATOR_H_
+#endif  // GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
