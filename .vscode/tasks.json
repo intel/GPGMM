@@ -165,41 +165,163 @@
       "label": "Run debug end2end tests",
       "group": "test",
       "type": "shell",
-      "command": "gpgmm_end2end_tests.exe",
+      "windows": {
+        "command": "gpgmm_end2end_tests.exe"
+      },
       "options": {
         "cwd": "${workspaceRoot}\\out\\Debug"
       },
+      "dependsOn": [
+        "Build debug"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Run debug unittests",
       "group": "test",
       "type": "shell",
-      "command": "gpgmm_unittests.exe",
+      "windows": {
+        "command": "gpgmm_unittests.exe"
+      },
       "options": {
         "cwd": "${workspaceRoot}\\out\\Debug"
       },
+      "dependsOn": [
+        "Build debug"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Run release end2end tests",
       "group": "test",
       "type": "shell",
-      "command": "gpgmm_end2end_tests.exe",
+      "windows": {
+        "command": "gpgmm_end2end_tests.exe"
+      },
       "options": {
         "cwd": "${workspaceRoot}\\out\\Release"
       },
+      "dependsOn": [
+        "Build release"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Run release unittests",
       "group": "test",
       "type": "shell",
-      "command": "gpgmm_unittests.exe",
+      "windows": {
+        "command": "gpgmm_unittests.exe"
+      },
       "options": {
         "cwd": "${workspaceRoot}\\out\\Release"
       },
+      "dependsOn": [
+        "Build release"
+      ],
       "problemMatcher": []
+    },
+    {
+      "label": "Run debug Dawn-GPGMM end2end tests",
+      "group": "test",
+      "type": "shell",
+      "windows": {
+        "command": "dawn_end2end_tests.exe",
+        "args": [
+          "--backend=d3d12",
+          "--enable-backend-validation",
+          "--exclusive-device-type-preference=discrete,integrated,cpu",
+          "--gtest_filter=*"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Debug"
+      },
+      "dependsOn": [
+        "Build debug"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run release Dawn-GPGMM end2end tests",
+      "group": "test",
+      "type": "shell",
+      "windows": {
+        "command": "dawn_end2end_tests.exe",
+        "args": [
+          "--backend=d3d12",
+          "--enable-backend-validation",
+          "--exclusive-device-type-preference=discrete,integrated,cpu",
+          "--gtest_filter=*"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Release"
+      },
+      "dependsOn": [
+        "Build release"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run debug WebNN-GPGMM end2end tests",
+      "group": "test",
+      "type": "shell",
+      "windows": {
+        "command": "webnn_end2end_tests.exe",
+        "args": [
+          "-d gpu",
+          "--gtest_filter=*"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Debug"
+      },
+      "dependsOn": [
+        "Build debug"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run release WebNN-GPGMM end2end tests",
+      "group": "test",
+      "type": "shell",
+      "windows": {
+        "command": "webnn_end2end_tests.exe",
+        "args": [
+          "-d gpu",
+          "--gtest_filter=*"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceRoot}\\out\\Release"
+      },
+      "dependsOn": [
+        "Build release"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run all debug tests",
+      "group": "test",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Run debug unittests",
+        "Run debug end2end tests",
+        "Run debug Dawn-GPGMM end2end tests",
+        "Run debug WebNN-GPGMM end2end tests"
+      ]
+    },
+    {
+      "label": "Run all release tests",
+      "group": "test",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Run release unittests",
+        "Run release end2end tests",
+        "Run release Dawn-GPGMM end2end tests",
+        "Run release WebNN-GPGMM end2end tests"
+      ]
     },
   ],
 }

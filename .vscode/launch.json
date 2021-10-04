@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug GPGMM UT",
+      "name": "Debug unittests",
       "request": "launch",
       "type": "cppvsdbg",
       "windows": {
@@ -20,7 +20,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug GPGMM E2E",
+      "name": "Debug end2end",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
@@ -36,7 +36,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug WebNN E2E",
+      "name": "Debug WebNN-GPGMM end2end",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
@@ -53,7 +53,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug Dawn E2E",
+      "name": "Debug Dawn-GPGMM end2end",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
@@ -61,6 +61,7 @@
       },
       "args": [
         "--gtest_catch_exceptions=0",
+        "--backend=d3d12",
         "--enable-backend-validation",
         "--exclusive-device-type-preference=discrete,integrated,cpu",
         "--gtest_filter=*"
