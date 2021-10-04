@@ -23,7 +23,7 @@
 #include <memory>
 
 namespace gpgmm {
-    // Allocates a device memory block.
+
     class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
