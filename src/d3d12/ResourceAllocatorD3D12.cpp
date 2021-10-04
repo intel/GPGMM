@@ -257,13 +257,12 @@ namespace gpgmm { namespace d3d12 {
             stack->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
                 pooledSubAllocator, subAllocator, mMaxResourceSizeForPooling));
 
-            mAllocators[i] = std::move(stack);
+            mSubAllocators[i] = std::move(stack);
         }
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        for (auto& allocatorStack : mAllocators) {
-            MemoryAllocator* allocator = allocatorStack->GetAllocator();
+        for (auto& allocator : mSubAllocators) {
             ASSERT(allocator != nullptr);
             allocator->ReleaseMemory();
         }
@@ -300,7 +299,7 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<MemoryAllocation> subAllocation;
         if (!mIsAlwaysCommitted) {
             MemoryAllocator* subAllocator =
-                mAllocators[static_cast<size_t>(resourceHeapKind)]->GetAllocator();
+                mSubAllocators[static_cast<size_t>(resourceHeapKind)].get();
             subAllocation =
                 subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != nullptr) {

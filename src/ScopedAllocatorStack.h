@@ -21,15 +21,20 @@
 
 namespace gpgmm {
 
-    // Scopes memory allocators together in the order they are
-    // dependent on each other where only the last allocator is used.
-    class ScopedAllocatorStack {
+    // Combines multiple (dependant) memory allocators together at run-time and
+    // exposes them as a single memory allocator.
+    class ScopedAllocatorStack : public MemoryAllocator {
       public:
         ScopedAllocatorStack() = default;
-        ~ScopedAllocatorStack() = default;
+        ~ScopedAllocatorStack() override = default;
 
-        MemoryAllocator* GetAllocator() const;
         MemoryAllocator* PushAllocator(std::unique_ptr<MemoryAllocator> allocator);
+
+        std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                         uint64_t alignment) override;
+        void DeallocateMemory(MemoryAllocation* allocation) override;
+
+        void ReleaseMemory() override;
 
       private:
         std::vector<std::unique_ptr<MemoryAllocator>> mAllocators;

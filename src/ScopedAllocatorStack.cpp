@@ -13,17 +13,30 @@
 // limitations under the License.
 
 #include "src/ScopedAllocatorStack.h"
+#include "common/Assert.h"
 
 namespace gpgmm {
-
-    MemoryAllocator* ScopedAllocatorStack::GetAllocator() const {
-        return mAllocators.back().get();
-    }
 
     MemoryAllocator* ScopedAllocatorStack::PushAllocator(
         std::unique_ptr<MemoryAllocator> allocator) {
         mAllocators.push_back(std::move(allocator));
         return mAllocators.back().get();
+    }
+
+    std::unique_ptr<MemoryAllocation> ScopedAllocatorStack::AllocateMemory(uint64_t size,
+                                                                           uint64_t alignment) {
+        ASSERT(!mAllocators.empty());
+        return mAllocators.back()->AllocateMemory(size, alignment);
+    }
+
+    void ScopedAllocatorStack::DeallocateMemory(MemoryAllocation* allocation) {
+        ASSERT(!mAllocators.empty());
+        mAllocators.back()->DeallocateMemory(allocation);
+    }
+
+    void ScopedAllocatorStack::ReleaseMemory() {
+        ASSERT(!mAllocators.empty());
+        mAllocators.back()->ReleaseMemory();
     }
 
 }  // namespace gpgmm
