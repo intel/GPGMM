@@ -119,8 +119,8 @@ source_set("gpgmm_sources") {
     "MemoryAllocation.h",
     "MemoryAllocator.cpp",
     "MemoryAllocator.h",
-    "ScopedAllocatorStack.cpp",
-    "ScopedAllocatorStack.h",
+    "MemoryAllocatorStack.cpp",
+    "MemoryAllocatorStack.h",
     "VirtualBuddyMemoryAllocator.cpp",
     "VirtualBuddyMemoryAllocator.h",
 

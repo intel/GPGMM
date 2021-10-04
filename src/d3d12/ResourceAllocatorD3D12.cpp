@@ -19,7 +19,7 @@
 #include "../common/Math.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/LIFOPooledMemoryAllocator.h"
-#include "src/ScopedAllocatorStack.h"
+#include "src/MemoryAllocatorStack.h"
 #include "src/VirtualBuddyMemoryAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
@@ -227,7 +227,7 @@ namespace gpgmm { namespace d3d12 {
 
             const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
 
-            std::unique_ptr<ScopedAllocatorStack> stack = std::make_unique<ScopedAllocatorStack>();
+            std::unique_ptr<MemoryAllocatorStack> stack = std::make_unique<MemoryAllocatorStack>();
 
             // Standalone heap allocator.
             MemoryAllocator* heapAllocator =

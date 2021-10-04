@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_SCOPED_ALLOCATOR_STACK_H_
-#define GPGMM_SCOPED_ALLOCATOR_STACK_H_
+#ifndef GPGMM_MEMORY_ALLOCATOR_STACK_H_
+#define GPGMM_MEMORY_ALLOCATOR_STACK_H_
 
 #include "src/MemoryAllocator.h"
 
@@ -23,10 +23,10 @@ namespace gpgmm {
 
     // Combines multiple (dependant) memory allocators together at run-time and
     // exposes them as a single memory allocator.
-    class ScopedAllocatorStack : public MemoryAllocator {
+    class MemoryAllocatorStack : public MemoryAllocator {
       public:
-        ScopedAllocatorStack() = default;
-        ~ScopedAllocatorStack() override = default;
+        MemoryAllocatorStack() = default;
+        ~MemoryAllocatorStack() override = default;
 
         MemoryAllocator* PushAllocator(std::unique_ptr<MemoryAllocator> allocator);
 
@@ -42,4 +42,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_SCOPED_ALLOCATOR_STACK_H_
+#endif  // GPGMM_MEMORY_ALLOCATOR_STACK_H_
