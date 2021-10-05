@@ -315,26 +315,27 @@ namespace gpgmm { namespace d3d12 {
             &newResourceDesc, clearValue, initialUsage, resourceAllocation);
     }
 
-    HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
+    HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
                                               ResourceAllocation** resourceAllocation) {
-        if (resource == nullptr) {
+        if (committedResource == nullptr) {
             return E_POINTER;
         }
 
-        D3D12_RESOURCE_DESC desc = resource->GetDesc();
+        D3D12_RESOURCE_DESC desc = committedResource->GetDesc();
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
 
         D3D12_HEAP_PROPERTIES heapProp;
-        HRESULT hr = resource->GetHeapProperties(&heapProp, nullptr);
+        HRESULT hr = committedResource->GetHeapProperties(&heapProp, nullptr);
         if (FAILED(hr)) {
             return hr;
         }
 
         // Do not track imported resources for purposes of residency.
-        Heap* heap = new Heap(
-            resource, GetPreferredMemorySegmentGroup(mDevice.Get(), /*IsUMA*/ false, heapProp.Type),
-            resourceInfo.SizeInBytes);
+        Heap* heap =
+            new Heap(committedResource,
+                     GetPreferredMemorySegmentGroup(mDevice.Get(), /*IsUMA*/ false, heapProp.Type),
+                     resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
@@ -343,7 +344,7 @@ namespace gpgmm { namespace d3d12 {
                                                      /*allocator*/ this,
                                                      info,
                                                      /*offset*/ 0,
-                                                     std::move(resource),
+                                                     std::move(committedResource),
                                                      heap};
         return hr;
     }

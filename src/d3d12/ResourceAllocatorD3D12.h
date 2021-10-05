@@ -145,7 +145,7 @@ namespace gpgmm { namespace d3d12 {
                                const D3D12_CLEAR_VALUE* clearValue,
                                ResourceAllocation** resourceAllocation);
 
-        HRESULT CreateResource(ComPtr<ID3D12Resource> resource,
+        HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** resourceAllocation);
 
         ResidencyManager* GetResidencyManager();
