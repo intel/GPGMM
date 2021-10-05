@@ -6,6 +6,7 @@
 dawn_has_build = false
 
 # The paths to Dawn's dependencies
+dawn_abseil_dir = "//third_party/dawn/third_party/abseil-cpp"
 dawn_jinja2_dir = "//third_party/dawn/third_party/jinja2"
 dawn_glfw_dir = "//third_party/dawn/third_party/glfw"
 dawn_glm_dir = "//third_party/dawn/third_party/glm"
