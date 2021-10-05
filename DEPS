@@ -168,41 +168,25 @@ hooks = [
                '-o', 'build/util/LASTCHANGE'],
   },
   # Apply Dawn-GPGMM integration patch.
-  # This can be removed once GPGMM is integrated with the upstream project.
-  {
-    'name': 'fetch_dawn_integration_patch',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'fetch', 'https://github.com/bbernhar/dawn', 'gpgmm',
-    ],
-  },
+  # Patch can be removed should GPGMM be merged into upstream.
   {
     'name': 'apply_dawn_integration_patch',
     'pattern': '.',
     'condition': 'checkout_dawn',
-    'action': ['git', '-C', './third_party/dawn/',
-               '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
-               'cherry-pick', 'FETCH_HEAD',
+    'action': [ 'git', '-C', './third_party/dawn/',
+                'apply', '--ignore-space-change', '--ignore-whitespace',
+                '../../patches/gpgmm_dawn.diff',
     ],
   },
   # Apply WebNN-GPGMM integration patch.
-  # This can be removed once GPGMM is integrated with the upstream project.
-  {
-    'name': 'fetch_webnn_integration_patch',
-    'pattern': '.',
-    'condition': 'checkout_webnn',
-    'action': [ 'git', '-C', './third_party/webnn_native/',
-                'fetch', 'https://github.com/bbernhar/webnn-native', 'gpgmm',
-    ],
-  },
+  # Patch can be removed should GPGMM be merged into upstream.
   {
     'name': 'apply_webnn_integration_patch',
     'pattern': '.',
     'condition': 'checkout_webnn',
-    'action': ['git', '-C', './third_party/webnn_native/',
-               '-c', 'user.name=Custom Patch', '-c', 'user.email=custompatch@example.com',
-               'cherry-pick', 'FETCH_HEAD',
+    'action': [ 'git', '-C', './third_party/webnn_native/',
+                'apply', '--ignore-space-change', '--ignore-whitespace',
+                '../../patches/gpgmm_webnn.diff',
     ],
   },
 ]
@@ -211,7 +195,7 @@ recursedeps = [
   # buildtools provides clang_format, libc++, and libc++abi
   'buildtools',
 
-  # vulkan-deps provides vulkan-headers, spirv-tools, and gslang 
+  # vulkan-deps provides vulkan-headers, spirv-tools, and gslang
   'third_party/vulkan-deps',
 
   # Dawn and Tint's revision are linked

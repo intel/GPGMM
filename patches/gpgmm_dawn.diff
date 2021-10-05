@@ -1,0 +1,1527 @@
+From 333a85e6e1ac417b0559ff1a554acb75260100c2 Mon Sep 17 00:00:00 2001
+From: Bryan Bernhart <bryan.bernhart@intel.com>
+Date: Thu, 29 Jul 2021 13:53:46 -0700
+Subject: [PATCH] Use GPGMM for D3D12 backend.
+
+Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
+---
+ .gitignore                                    |   1 +
+ DEPS                                          |   5 +
+ build_overrides/dawn.gni                      |   1 +
+ build_overrides/gpgmm.gni                     |  18 +
+ scripts/dawn_features.gni                     |   4 +-
+ src/dawn_native/BUILD.gn                      |   7 +-
+ src/dawn_native/Toggles.cpp                   |   4 +
+ src/dawn_native/Toggles.h                     |   1 +
+ src/dawn_native/d3d12/BufferD3D12.cpp         |  37 +-
+ src/dawn_native/d3d12/BufferD3D12.h           |   7 +-
+ .../d3d12/CommandRecordingContext.cpp         |  22 +-
+ .../d3d12/CommandRecordingContext.h           |   4 +-
+ src/dawn_native/d3d12/D3D12Backend.cpp        |  10 +-
+ src/dawn_native/d3d12/DeviceD3D12.cpp         |  76 +++-
+ src/dawn_native/d3d12/DeviceD3D12.h           |  16 +-
+ .../d3d12/ResourceAllocatorManagerD3D12.cpp   | 410 ------------------
+ .../d3d12/ResourceAllocatorManagerD3D12.h     | 107 -----
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  25 +-
+ .../ShaderVisibleDescriptorAllocatorD3D12.h   |   6 +-
+ src/dawn_native/d3d12/StagingBufferD3D12.cpp  |  25 +-
+ src/dawn_native/d3d12/StagingBufferD3D12.h    |   5 +-
+ src/dawn_native/d3d12/TextureD3D12.cpp        |  44 +-
+ src/dawn_native/d3d12/TextureD3D12.h          |   5 +-
+ src/dawn_native/d3d12/UtilsD3D12.cpp          |  11 +
+ src/dawn_native/d3d12/UtilsD3D12.h            |   2 +
+ src/tests/white_box/D3D12ResidencyTests.cpp   |  18 +-
+ 26 files changed, 211 insertions(+), 660 deletions(-)
+ create mode 100644 build_overrides/gpgmm.gni
+ delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
+ delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
+
+diff --git a/.gitignore b/.gitignore
+index d1da2c1c..d7b89dfc 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -24,6 +24,7 @@
+ /third_party/vulkan-deps
+ /third_party/vulkan_memory_allocator
+ /third_party/zlib
++/third_party/gpgmm/
+ /tools
+ /out
+ 
+diff --git a/DEPS b/DEPS
+index 94a2d512..8d752c2d 100644
+--- a/DEPS
++++ b/DEPS
+@@ -137,6 +137,11 @@ deps = {
+     'condition': 'dawn_standalone',
+   },
+ 
++  'third_party/gpgmm': {
++    'url': '{github_git}/intel/gpgmm.git@ac25a1858332f52fa74c2dd4689ebef1ce8d7859',
++    'condition': 'dawn_standalone',
++  },
++
+   'third_party/abseil-cpp': {
+     'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@789af048b388657987c59d4da406859034fe310f',
+     'condition': 'dawn_standalone',
+diff --git a/build_overrides/dawn.gni b/build_overrides/dawn.gni
+index 4e9d4907..406d8f07 100644
+--- a/build_overrides/dawn.gni
++++ b/build_overrides/dawn.gni
+@@ -40,3 +40,4 @@ dawn_tint_dir = "//third_party/tint"
+ dawn_vulkan_loader_dir = "//third_party/vulkan-deps/vulkan-loader/src"
+ dawn_vulkan_validation_layers_dir =
+     "//third_party/vulkan-deps/vulkan-validation-layers/src"
++dawn_gpgmm_dir = "//third_party/gpgmm"
+diff --git a/build_overrides/gpgmm.gni b/build_overrides/gpgmm.gni
+new file mode 100644
+index 00000000..3f630e04
+--- /dev/null
++++ b/build_overrides/gpgmm.gni
+@@ -0,0 +1,18 @@
++# Copyright 2021 The Dawn Authors
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# We are building inside Dawn.
++gpgmm_standalone = false
++
++gpgmm_root_dir = "//third_party/gpgmm"
+diff --git a/scripts/dawn_features.gni b/scripts/dawn_features.gni
+index 5a80f4d3..facf0023 100644
+--- a/scripts/dawn_features.gni
++++ b/scripts/dawn_features.gni
+@@ -67,8 +67,8 @@ declare_args() {
+   # Enables the compilation of Dawn's OpenGLES backend
+   # (WebGPU/Compat subset)
+   # Disables OpenGLES when compiling for UWP, since UWP only supports d3d
+-  dawn_enable_opengles = !build_with_chromium && ((is_linux && !is_chromeos) ||
+-                                                  (is_win && !dawn_is_winuwp))
++  # Disables OpenGLES when compiling for GPGMM, since GPGMM does not support OGL.
++  dawn_enable_opengles = false
+ 
+   # Enables the compilation of Dawn's Vulkan backend
+   # Disables vulkan when compiling for UWP, since UWP only supports d3d
+diff --git a/src/dawn_native/BUILD.gn b/src/dawn_native/BUILD.gn
+index 37254d73..0fa69ba4 100644
+--- a/src/dawn_native/BUILD.gn
++++ b/src/dawn_native/BUILD.gn
+@@ -159,6 +159,7 @@ source_set("dawn_native_sources") {
+   deps = [
+     ":dawn_native_headers",
+     ":dawn_native_utils_gen",
++    "${dawn_gpgmm_dir}/src:gpgmm_static",
+     "${dawn_root}/src/common",
+     "${dawn_spirv_tools_dir}:spvtools_opt",
+     "${dawn_spirv_tools_dir}:spvtools_val",
+@@ -398,10 +399,6 @@ source_set("dawn_native_sources") {
+       "d3d12/Forward.h",
+       "d3d12/GPUDescriptorHeapAllocationD3D12.cpp",
+       "d3d12/GPUDescriptorHeapAllocationD3D12.h",
+-      "d3d12/HeapAllocatorD3D12.cpp",
+-      "d3d12/HeapAllocatorD3D12.h",
+-      "d3d12/HeapD3D12.cpp",
+-      "d3d12/HeapD3D12.h",
+       "d3d12/IntegerTypes.h",
+       "d3d12/NativeSwapChainImplD3D12.cpp",
+       "d3d12/NativeSwapChainImplD3D12.h",
+@@ -421,8 +418,6 @@ source_set("dawn_native_sources") {
+       "d3d12/RenderPipelineD3D12.h",
+       "d3d12/ResidencyManagerD3D12.cpp",
+       "d3d12/ResidencyManagerD3D12.h",
+-      "d3d12/ResourceAllocatorManagerD3D12.cpp",
+-      "d3d12/ResourceAllocatorManagerD3D12.h",
+       "d3d12/ResourceHeapAllocationD3D12.cpp",
+       "d3d12/ResourceHeapAllocationD3D12.h",
+       "d3d12/SamplerD3D12.cpp",
+diff --git a/src/dawn_native/Toggles.cpp b/src/dawn_native/Toggles.cpp
+index e7f844d5..ef6c016e 100644
+--- a/src/dawn_native/Toggles.cpp
++++ b/src/dawn_native/Toggles.cpp
+@@ -90,6 +90,10 @@ namespace dawn_native {
+               "recently used resources local to the GPU. Turning this component off can cause "
+               "allocation failures when application memory exceeds physical device memory.",
+               "https://crbug.com/dawn/193"}},
++            {Toggle::UseD3D12SmallResidencyBudgetForTesting,
++             {"use_d3d12_small_residency_budget",
++              "Enable residency management with a small budget for testing purposes.",
++              "https://crbug.com/dawn/193"}},
+             {Toggle::SkipValidation,
+              {"skip_validation", "Skip expensive validation of Dawn commands.",
+               "https://crbug.com/dawn/271"}},
+diff --git a/src/dawn_native/Toggles.h b/src/dawn_native/Toggles.h
+index 09885987..4c9201b3 100644
+--- a/src/dawn_native/Toggles.h
++++ b/src/dawn_native/Toggles.h
+@@ -33,6 +33,7 @@ namespace dawn_native {
+         UseD3D12ResourceHeapTier2,
+         UseD3D12RenderPass,
+         UseD3D12ResidencyManagement,
++        UseD3D12SmallResidencyBudgetForTesting,
+         SkipValidation,
+         VulkanUseD32S8,
+         MetalDisableSamplerCompare,
+diff --git a/src/dawn_native/d3d12/BufferD3D12.cpp b/src/dawn_native/d3d12/BufferD3D12.cpp
+index 39fcb839..cdb121d3 100644
+--- a/src/dawn_native/d3d12/BufferD3D12.cpp
++++ b/src/dawn_native/d3d12/BufferD3D12.cpp
+@@ -190,7 +190,11 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     ID3D12Resource* Buffer::GetD3D12Resource() const {
+-        return mResourceAllocation.GetD3D12Resource();
++        if (mResourceAllocation == nullptr) {
++            return nullptr;
++        }
++
++        return mResourceAllocation->GetResource();
+     }
+ 
+     // When true is returned, a D3D12_RESOURCE_BARRIER has been created and must be used in a
+@@ -200,8 +204,7 @@ namespace dawn_native { namespace d3d12 {
+                                                  D3D12_RESOURCE_BARRIER* barrier,
+                                                  wgpu::BufferUsage newUsage) {
+         // Track the underlying heap to ensure residency.
+-        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-        commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
++        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
+ 
+         // Return the resource barrier.
+         return TransitionUsageAndGetResourceBarrier(commandContext, barrier, newUsage);
+@@ -300,7 +303,7 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     D3D12_GPU_VIRTUAL_ADDRESS Buffer::GetVA() const {
+-        return mResourceAllocation.GetGPUPointer();
++        return mResourceAllocation->GetResource()->GetGPUVirtualAddress();
+     }
+ 
+     bool Buffer::IsCPUWritableAtCreation() const {
+@@ -320,11 +323,6 @@ namespace dawn_native { namespace d3d12 {
+                                    size_t offset,
+                                    size_t size,
+                                    const char* contextInfo) {
+-        // The mapped buffer can be accessed at any time, so it must be locked to ensure it is never
+-        // evicted. This buffer should already have been made resident when it was created.
+-        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-        DAWN_TRY(ToBackend(GetDevice())->GetResidencyManager()->LockAllocation(heap));
+-
+         D3D12_RANGE range = {offset, offset + size};
+         // mMappedData is the pointer to the start of the resource, irrespective of offset.
+         // MSDN says (note the weird use of "never"):
+@@ -333,7 +331,7 @@ namespace dawn_native { namespace d3d12 {
+         //   pReadRange.
+         //
+         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12resource-map
+-        DAWN_TRY(CheckHRESULT(GetD3D12Resource()->Map(0, &range, &mMappedData), contextInfo));
++        DAWN_TRY(CheckHRESULT(mResourceAllocation->Map(0, &range, &mMappedData), contextInfo));
+ 
+         if (isWrite) {
+             mWrittenMappedRange = range;
+@@ -364,14 +362,9 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     void Buffer::UnmapImpl() {
+-        GetD3D12Resource()->Unmap(0, &mWrittenMappedRange);
++        mResourceAllocation->Unmap(0, &mWrittenMappedRange);
+         mMappedData = nullptr;
+         mWrittenMappedRange = {0, 0};
+-
+-        // When buffers are mapped, they are locked to keep them in resident memory. We must unlock
+-        // them when they are unmapped.
+-        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-        ToBackend(GetDevice())->GetResidencyManager()->UnlockAllocation(heap);
+     }
+ 
+     void* Buffer::GetMappedPointerImpl() {
+@@ -389,16 +382,15 @@ namespace dawn_native { namespace d3d12 {
+             UnmapImpl();
+         }
+ 
+-        ToBackend(GetDevice())->DeallocateMemory(mResourceAllocation);
++        ToBackend(GetDevice())->DeallocateMemory(std::move(mResourceAllocation));
+     }
+ 
+     bool Buffer::CheckIsResidentForTesting() const {
+-        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-        return heap->IsInList() || heap->IsResidencyLocked();
++        return static_cast<gpgmm::d3d12::Heap*>(mResourceAllocation->GetMemory())->IsResident();
+     }
+ 
+-    bool Buffer::CheckAllocationMethodForTesting(AllocationMethod allocationMethod) const {
+-        return mResourceAllocation.GetInfo().mMethod == allocationMethod;
++    bool Buffer::CheckAllocationMethodForTesting(gpgmm::AllocationMethod allocationMethod) const {
++        return mResourceAllocation->GetInfo().mMethod == allocationMethod;
+     }
+ 
+     MaybeError Buffer::EnsureDataInitialized(CommandRecordingContext* commandContext) {
+@@ -446,8 +438,7 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     void Buffer::SetLabelImpl() {
+-        SetDebugName(ToBackend(GetDevice()), mResourceAllocation.GetD3D12Resource(), "Dawn_Buffer",
+-                     GetLabel());
++        SetDebugName(ToBackend(GetDevice()), GetD3D12Resource(), "Dawn_Buffer", GetLabel());
+     }
+ 
+     MaybeError Buffer::InitializeToZero(CommandRecordingContext* commandContext) {
+diff --git a/src/dawn_native/d3d12/BufferD3D12.h b/src/dawn_native/d3d12/BufferD3D12.h
+index d6fcbbdc..14ef9df2 100644
+--- a/src/dawn_native/d3d12/BufferD3D12.h
++++ b/src/dawn_native/d3d12/BufferD3D12.h
+@@ -17,9 +17,10 @@
+ 
+ #include "dawn_native/Buffer.h"
+ 
+-#include "dawn_native/d3d12/ResourceHeapAllocationD3D12.h"
+ #include "dawn_native/d3d12/d3d12_platform.h"
+ 
++#include <gpgmm_d3d12.h>
++
+ namespace dawn_native { namespace d3d12 {
+ 
+     class CommandRecordingContext;
+@@ -39,7 +40,7 @@ namespace dawn_native { namespace d3d12 {
+         void TrackUsageAndTransitionNow(CommandRecordingContext* commandContext,
+                                         wgpu::BufferUsage newUsage);
+ 
+-        bool CheckAllocationMethodForTesting(AllocationMethod allocationMethod) const;
++        bool CheckAllocationMethodForTesting(gpgmm::AllocationMethod allocationMethod) const;
+         bool CheckIsResidentForTesting() const;
+ 
+         MaybeError EnsureDataInitialized(CommandRecordingContext* commandContext);
+@@ -75,7 +76,7 @@ namespace dawn_native { namespace d3d12 {
+                                uint64_t offset = 0,
+                                uint64_t size = 0);
+ 
+-        ResourceHeapAllocation mResourceAllocation;
++        ComPtr<gpgmm::d3d12::ResourceAllocation> mResourceAllocation;
+         bool mFixedResourceState = false;
+         wgpu::BufferUsage mLastUsage = wgpu::BufferUsage::None;
+         ExecutionSerial mLastUsedSerial = std::numeric_limits<ExecutionSerial>::max();
+diff --git a/src/dawn_native/d3d12/CommandRecordingContext.cpp b/src/dawn_native/d3d12/CommandRecordingContext.cpp
+index 8faa46e0..d1747346 100644
+--- a/src/dawn_native/d3d12/CommandRecordingContext.cpp
++++ b/src/dawn_native/d3d12/CommandRecordingContext.cpp
+@@ -35,6 +35,7 @@ namespace dawn_native { namespace d3d12 {
+                                             "D3D12 resetting command list");
+             if (error.IsError()) {
+                 mD3d12CommandList.Reset();
++                mResidencySet.Reset();
+                 DAWN_TRY(std::move(error));
+             }
+         } else {
+@@ -70,26 +71,21 @@ namespace dawn_native { namespace d3d12 {
+                 Release();
+                 DAWN_TRY(std::move(error));
+             }
+-            DAWN_TRY(device->GetResidencyManager()->EnsureHeapsAreResident(
+-                mHeapsPendingUsage.data(), mHeapsPendingUsage.size()));
+-
+-            ID3D12CommandList* d3d12CommandList = GetCommandList();
+-            device->GetCommandQueue()->ExecuteCommandLists(1, &d3d12CommandList);
+-
++            DAWN_TRY(
++                CheckHRESULT(device->GetResidencyManager()->ExecuteCommandLists(
++                                 &mResidencySet, device->GetCommandQueue().Get(), GetCommandList()),
++                             "D3D12 execute command list"));
+             mIsOpen = false;
+             mSharedTextures.clear();
+             mHeapsPendingUsage.clear();
++
++            mResidencySet.Reset();
+         }
+         return {};
+     }
+ 
+-    void CommandRecordingContext::TrackHeapUsage(Heap* heap, ExecutionSerial serial) {
+-        // Before tracking the heap, check the last serial it was recorded on to ensure we aren't
+-        // tracking it more than once.
+-        if (heap->GetLastUsage() < serial) {
+-            heap->SetLastUsage(serial);
+-            mHeapsPendingUsage.push_back(heap);
+-        }
++    gpgmm::d3d12::ResidencySet* CommandRecordingContext::GetResidencySet() {
++        return &mResidencySet;
+     }
+ 
+     ID3D12GraphicsCommandList* CommandRecordingContext::GetCommandList() const {
+diff --git a/src/dawn_native/d3d12/CommandRecordingContext.h b/src/dawn_native/d3d12/CommandRecordingContext.h
+index 6c6dc37d..7f8aa756 100644
+--- a/src/dawn_native/d3d12/CommandRecordingContext.h
++++ b/src/dawn_native/d3d12/CommandRecordingContext.h
+@@ -19,6 +19,7 @@
+ #include "dawn_native/d3d12/BufferD3D12.h"
+ #include "dawn_native/d3d12/d3d12_platform.h"
+ 
++#include <gpgmm_d3d12.h>
+ #include <set>
+ 
+ namespace dawn_native { namespace d3d12 {
+@@ -40,7 +41,7 @@ namespace dawn_native { namespace d3d12 {
+ 
+         MaybeError ExecuteCommandList(Device* device);
+ 
+-        void TrackHeapUsage(Heap* heap, ExecutionSerial serial);
++        gpgmm::d3d12::ResidencySet* GetResidencySet();
+ 
+         void AddToTempBuffers(Ref<Buffer> tempBuffer);
+ 
+@@ -50,6 +51,7 @@ namespace dawn_native { namespace d3d12 {
+         bool mIsOpen = false;
+         std::set<Texture*> mSharedTextures;
+         std::vector<Heap*> mHeapsPendingUsage;
++        gpgmm::d3d12::ResidencySet mResidencySet;
+ 
+         std::vector<Ref<Buffer>> mTempBuffers;
+     };
+diff --git a/src/dawn_native/d3d12/D3D12Backend.cpp b/src/dawn_native/d3d12/D3D12Backend.cpp
+index bc9df608..5d2ebff4 100644
+--- a/src/dawn_native/d3d12/D3D12Backend.cpp
++++ b/src/dawn_native/d3d12/D3D12Backend.cpp
+@@ -168,8 +168,16 @@ namespace dawn_native { namespace d3d12 {
+                                           MemorySegment memorySegment) {
+         Device* backendDevice = reinterpret_cast<Device*>(device);
+ 
++        // TODO: remove unnecessary type conversion
++        DXGI_MEMORY_SEGMENT_GROUP dxgiSegment = {};
++        if (memorySegment == MemorySegment::Local) {
++            dxgiSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
++        } else if (memorySegment == MemorySegment::NonLocal) {
++            dxgiSegment = DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
++        }
++
+         return backendDevice->GetResidencyManager()->SetExternalMemoryReservation(
+-            memorySegment, requestedReservationSize);
++            dxgiSegment, requestedReservationSize);
+     }
+ 
+     AdapterDiscoveryOptions::AdapterDiscoveryOptions(ComPtr<IDXGIAdapter> adapter)
+diff --git a/src/dawn_native/d3d12/DeviceD3D12.cpp b/src/dawn_native/d3d12/DeviceD3D12.cpp
+index 3b96092e..63d5d332 100644
+--- a/src/dawn_native/d3d12/DeviceD3D12.cpp
++++ b/src/dawn_native/d3d12/DeviceD3D12.cpp
+@@ -30,8 +30,6 @@
+ #include "dawn_native/d3d12/QuerySetD3D12.h"
+ #include "dawn_native/d3d12/QueueD3D12.h"
+ #include "dawn_native/d3d12/RenderPipelineD3D12.h"
+-#include "dawn_native/d3d12/ResidencyManagerD3D12.h"
+-#include "dawn_native/d3d12/ResourceAllocatorManagerD3D12.h"
+ #include "dawn_native/d3d12/SamplerD3D12.h"
+ #include "dawn_native/d3d12/SamplerHeapCacheD3D12.h"
+ #include "dawn_native/d3d12/ShaderModuleD3D12.h"
+@@ -121,8 +119,23 @@ namespace dawn_native { namespace d3d12 {
+ 
+         mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
+ 
+-        mResidencyManager = std::make_unique<ResidencyManager>(this);
+-        mResourceAllocatorManager = std::make_unique<ResourceAllocatorManager>(this);
++        Adapter* adapter = ToBackend(GetAdapter());
++
++        gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
++        allocatorDesc.Adapter = adapter->GetHardwareAdapter();
++        allocatorDesc.Device = mD3d12Device;
++        allocatorDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
++        allocatorDesc.ResourceHeapTier = adapter->GetDeviceInfo().resourceHeapTier;
++
++        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
++            allocatorDesc.Flags = gpgmm::d3d12::ALLOCATOR_ALWAYS_IN_BUDGET;
++        }
++
++        if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
++            allocatorDesc.TotalResourceBudgetLimit = 100000000;  // 100MB
++        }
++
++        mResourceAllocator = std::make_unique<gpgmm::d3d12::ResourceAllocator>(allocatorDesc);
+ 
+         // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
+         DAWN_TRY_ASSIGN(
+@@ -237,8 +250,8 @@ namespace dawn_native { namespace d3d12 {
+         return mCommandAllocatorManager.get();
+     }
+ 
+-    ResidencyManager* Device::GetResidencyManager() const {
+-        return mResidencyManager.get();
++    gpgmm::d3d12::ResidencyManager* Device::GetResidencyManager() const {
++        return mResourceAllocator->GetResidencyManager();
+     }
+ 
+     ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
+@@ -254,7 +267,6 @@ namespace dawn_native { namespace d3d12 {
+         // Perform cleanup operations to free unused objects
+         ExecutionSerial completedSerial = GetCompletedCommandSerial();
+ 
+-        mResourceAllocatorManager->Tick(completedSerial);
+         DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
+         mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
+         mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
+@@ -456,16 +468,51 @@ namespace dawn_native { namespace d3d12 {
+         return {};
+     }
+ 
+-    void Device::DeallocateMemory(ResourceHeapAllocation& allocation) {
+-        mResourceAllocatorManager->DeallocateMemory(allocation);
++    void Device::DeallocateMemory(ComPtr<gpgmm::d3d12::ResourceAllocation> allocation) {
++        if (allocation == nullptr) {
++            return;
++        }
++
++        ReferenceUntilUnused(allocation);
++
++        // Invalidate the allocation immediately in case one accidentally
++        // calls DeallocateMemory again using the same allocation.
++        allocation = nullptr;
++    }
++
++    ResultOrError<ComPtr<gpgmm::d3d12::ResourceAllocation>> Device::CreateExternalAllocation(
++        ComPtr<ID3D12Resource> texture) {
++        ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
++        DAWN_TRY(CheckHRESULT(mResourceAllocator->CreateResource(texture, &allocation),
++                              "CreateResource failed"));
++        return allocation;
+     }
+ 
+-    ResultOrError<ResourceHeapAllocation> Device::AllocateMemory(
++    ResultOrError<ComPtr<gpgmm::d3d12::ResourceAllocation>> Device::AllocateMemory(
+         D3D12_HEAP_TYPE heapType,
+         const D3D12_RESOURCE_DESC& resourceDescriptor,
+         D3D12_RESOURCE_STATES initialUsage) {
+-        return mResourceAllocatorManager->AllocateMemory(heapType, resourceDescriptor,
+-                                                         initialUsage);
++        // In order to suppress a warning in the D3D12 debug layer, we need to specify an
++        // optimized clear value. As there are no negative consequences when picking a mismatched
++        // clear value, we use zero as the optimized clear value. This also enables fast clears on
++        // some architectures.
++        D3D12_CLEAR_VALUE zero{};
++        D3D12_CLEAR_VALUE* optimizedClearValue = nullptr;
++        if (IsClearValueOptimizable(resourceDescriptor)) {
++            zero.Format = resourceDescriptor.Format;
++            optimizedClearValue = &zero;
++        }
++
++        gpgmm::d3d12::ALLOCATION_DESC desc = {};
++        desc.HeapType = heapType;
++
++        ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
++        DAWN_TRY(CheckOutOfMemoryHRESULT(
++            mResourceAllocator->CreateResource(desc, resourceDescriptor, initialUsage,
++                                               optimizedClearValue, &allocation),
++            "CreateResource"));
++
++        return allocation;
+     }
+ 
+     Ref<TextureBase> Device::CreateExternalTexture(
+@@ -516,6 +563,7 @@ namespace dawn_native { namespace d3d12 {
+         SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
+         SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
+         SetToggle(Toggle::UseD3D12ResidencyManagement, true);
++        SetToggle(Toggle::UseD3D12SmallResidencyBudgetForTesting, false);
+         SetToggle(Toggle::UseDXC, false);
+ 
+ #if defined(_DEBUG)
+@@ -612,10 +660,6 @@ namespace dawn_native { namespace d3d12 {
+             ::CloseHandle(mFenceEvent);
+         }
+ 
+-        // Release recycled resource heaps.
+-        if (mResourceAllocatorManager != nullptr) {
+-            mResourceAllocatorManager->DestroyPool();
+-        }
+ 
+         // We need to handle clearing up com object refs that were enqeued after TickImpl
+         mUsedComObjectRefs.ClearUpTo(std::numeric_limits<ExecutionSerial>::max());
+diff --git a/src/dawn_native/d3d12/DeviceD3D12.h b/src/dawn_native/d3d12/DeviceD3D12.h
+index 186e29ee..da019a1e 100644
+--- a/src/dawn_native/d3d12/DeviceD3D12.h
++++ b/src/dawn_native/d3d12/DeviceD3D12.h
+@@ -22,12 +22,12 @@
+ #include "dawn_native/d3d12/Forward.h"
+ #include "dawn_native/d3d12/TextureD3D12.h"
+ 
++#include <gpgmm_d3d12.h>
++
+ namespace dawn_native { namespace d3d12 {
+ 
+     class CommandAllocatorManager;
+     class PlatformFunctions;
+-    class ResidencyManager;
+-    class ResourceAllocatorManager;
+     class SamplerHeapCache;
+     class ShaderVisibleDescriptorAllocator;
+     class StagingDescriptorAllocator;
+@@ -61,7 +61,7 @@ namespace dawn_native { namespace d3d12 {
+         ComPtr<ID3D12CommandSignature> GetDrawIndexedIndirectSignature() const;
+ 
+         CommandAllocatorManager* GetCommandAllocatorManager() const;
+-        ResidencyManager* GetResidencyManager() const;
++        gpgmm::d3d12::ResidencyManager* GetResidencyManager() const;
+ 
+         const PlatformFunctions* GetFunctions() const;
+         ComPtr<IDXGIFactory4> GetFactory() const;
+@@ -99,12 +99,15 @@ namespace dawn_native { namespace d3d12 {
+                                             TextureCopy* dst,
+                                             const Extent3D& copySizePixels) override;
+ 
+-        ResultOrError<ResourceHeapAllocation> AllocateMemory(
++        ResultOrError<ComPtr<gpgmm::d3d12::ResourceAllocation>> AllocateMemory(
+             D3D12_HEAP_TYPE heapType,
+             const D3D12_RESOURCE_DESC& resourceDescriptor,
+             D3D12_RESOURCE_STATES initialUsage);
+ 
+-        void DeallocateMemory(ResourceHeapAllocation& allocation);
++        void DeallocateMemory(ComPtr<gpgmm::d3d12::ResourceAllocation> allocation);
++
++        ResultOrError<ComPtr<gpgmm::d3d12::ResourceAllocation>> CreateExternalAllocation(
++            ComPtr<ID3D12Resource> texture);
+ 
+         ShaderVisibleDescriptorAllocator* GetViewShaderVisibleDescriptorAllocator() const;
+         ShaderVisibleDescriptorAllocator* GetSamplerShaderVisibleDescriptorAllocator() const;
+@@ -208,8 +211,7 @@ namespace dawn_native { namespace d3d12 {
+         SerialQueue<ExecutionSerial, ComPtr<IUnknown>> mUsedComObjectRefs;
+ 
+         std::unique_ptr<CommandAllocatorManager> mCommandAllocatorManager;
+-        std::unique_ptr<ResourceAllocatorManager> mResourceAllocatorManager;
+-        std::unique_ptr<ResidencyManager> mResidencyManager;
++        std::unique_ptr<gpgmm::d3d12::ResourceAllocator> mResourceAllocator;
+ 
+         static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup =
+             3 * kMaxSamplersPerShaderStage;
+diff --git a/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp b/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
+deleted file mode 100644
+index 166d59f8..00000000
+--- a/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
++++ /dev/null
+@@ -1,410 +0,0 @@
+-// Copyright 2019 The Dawn Authors
+-//
+-// Licensed under the Apache License, Version 2.0 (the "License");
+-// you may not use this file except in compliance with the License.
+-// You may obtain a copy of the License at
+-//
+-//     http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-
+-#include "dawn_native/d3d12/ResourceAllocatorManagerD3D12.h"
+-
+-#include "dawn_native/d3d12/D3D12Error.h"
+-#include "dawn_native/d3d12/DeviceD3D12.h"
+-#include "dawn_native/d3d12/HeapAllocatorD3D12.h"
+-#include "dawn_native/d3d12/HeapD3D12.h"
+-#include "dawn_native/d3d12/ResidencyManagerD3D12.h"
+-#include "dawn_native/d3d12/UtilsD3D12.h"
+-
+-namespace dawn_native { namespace d3d12 {
+-    namespace {
+-        MemorySegment GetMemorySegment(Device* device, D3D12_HEAP_TYPE heapType) {
+-            if (device->GetDeviceInfo().isUMA) {
+-                return MemorySegment::Local;
+-            }
+-
+-            D3D12_HEAP_PROPERTIES heapProperties =
+-                device->GetD3D12Device()->GetCustomHeapProperties(0, heapType);
+-
+-            if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
+-                return MemorySegment::Local;
+-            }
+-
+-            return MemorySegment::NonLocal;
+-        }
+-
+-        D3D12_HEAP_TYPE GetD3D12HeapType(ResourceHeapKind resourceHeapKind) {
+-            switch (resourceHeapKind) {
+-                case Readback_OnlyBuffers:
+-                case Readback_AllBuffersAndTextures:
+-                    return D3D12_HEAP_TYPE_READBACK;
+-                case Default_AllBuffersAndTextures:
+-                case Default_OnlyBuffers:
+-                case Default_OnlyNonRenderableOrDepthTextures:
+-                case Default_OnlyRenderableOrDepthTextures:
+-                    return D3D12_HEAP_TYPE_DEFAULT;
+-                case Upload_OnlyBuffers:
+-                case Upload_AllBuffersAndTextures:
+-                    return D3D12_HEAP_TYPE_UPLOAD;
+-                case EnumCount:
+-                    UNREACHABLE();
+-            }
+-        }
+-
+-        D3D12_HEAP_FLAGS GetD3D12HeapFlags(ResourceHeapKind resourceHeapKind) {
+-            switch (resourceHeapKind) {
+-                case Default_AllBuffersAndTextures:
+-                case Readback_AllBuffersAndTextures:
+-                case Upload_AllBuffersAndTextures:
+-                    return D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES;
+-                case Default_OnlyBuffers:
+-                case Readback_OnlyBuffers:
+-                case Upload_OnlyBuffers:
+-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
+-                case Default_OnlyNonRenderableOrDepthTextures:
+-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
+-                case Default_OnlyRenderableOrDepthTextures:
+-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
+-                case EnumCount:
+-                    UNREACHABLE();
+-            }
+-        }
+-
+-        ResourceHeapKind GetResourceHeapKind(D3D12_RESOURCE_DIMENSION dimension,
+-                                             D3D12_HEAP_TYPE heapType,
+-                                             D3D12_RESOURCE_FLAGS flags,
+-                                             uint32_t resourceHeapTier) {
+-            if (resourceHeapTier >= 2) {
+-                switch (heapType) {
+-                    case D3D12_HEAP_TYPE_UPLOAD:
+-                        return Upload_AllBuffersAndTextures;
+-                    case D3D12_HEAP_TYPE_DEFAULT:
+-                        return Default_AllBuffersAndTextures;
+-                    case D3D12_HEAP_TYPE_READBACK:
+-                        return Readback_AllBuffersAndTextures;
+-                    default:
+-                        UNREACHABLE();
+-                }
+-            }
+-
+-            switch (dimension) {
+-                case D3D12_RESOURCE_DIMENSION_BUFFER: {
+-                    switch (heapType) {
+-                        case D3D12_HEAP_TYPE_UPLOAD:
+-                            return Upload_OnlyBuffers;
+-                        case D3D12_HEAP_TYPE_DEFAULT:
+-                            return Default_OnlyBuffers;
+-                        case D3D12_HEAP_TYPE_READBACK:
+-                            return Readback_OnlyBuffers;
+-                        default:
+-                            UNREACHABLE();
+-                    }
+-                    break;
+-                }
+-                case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
+-                case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
+-                case D3D12_RESOURCE_DIMENSION_TEXTURE3D: {
+-                    switch (heapType) {
+-                        case D3D12_HEAP_TYPE_DEFAULT: {
+-                            if ((flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ||
+-                                (flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)) {
+-                                return Default_OnlyRenderableOrDepthTextures;
+-                            }
+-                            return Default_OnlyNonRenderableOrDepthTextures;
+-                        }
+-
+-                        default:
+-                            UNREACHABLE();
+-                    }
+-                    break;
+-                }
+-                default:
+-                    UNREACHABLE();
+-            }
+-        }
+-
+-        uint64_t GetResourcePlacementAlignment(ResourceHeapKind resourceHeapKind,
+-                                               uint32_t sampleCount,
+-                                               uint64_t requestedAlignment) {
+-            switch (resourceHeapKind) {
+-                // Small resources can take advantage of smaller alignments. For example,
+-                // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
+-                // Must be non-depth or without render-target to use small resource alignment.
+-                // This also applies to MSAA textures (4MB => 64KB).
+-                //
+-                // Note: Only known to be used for small textures; however, MSDN suggests
+-                // it could be extended for more cases. If so, this could default to always
+-                // attempt small resource placement.
+-                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
+-                case Default_OnlyNonRenderableOrDepthTextures:
+-                    return (sampleCount > 1) ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
+-                                             : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+-                default:
+-                    return requestedAlignment;
+-            }
+-        }
+-
+-        bool IsClearValueOptimizable(const D3D12_RESOURCE_DESC& resourceDescriptor) {
+-            // Optimized clear color cannot be set on buffers, non-render-target/depth-stencil
+-            // textures, or typeless resources
+-            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource
+-            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
+-            return !IsTypeless(resourceDescriptor.Format) &&
+-                   resourceDescriptor.Dimension != D3D12_RESOURCE_DIMENSION_BUFFER &&
+-                   (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
+-                                                D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) != 0;
+-        }
+-
+-    }  // namespace
+-
+-    ResourceAllocatorManager::ResourceAllocatorManager(Device* device) : mDevice(device) {
+-        mResourceHeapTier = (mDevice->IsToggleEnabled(Toggle::UseD3D12ResourceHeapTier2))
+-                                ? mDevice->GetDeviceInfo().resourceHeapTier
+-                                : 1;
+-
+-        for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
+-            const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
+-            mHeapAllocators[i] = std::make_unique<HeapAllocator>(
+-                mDevice, GetD3D12HeapType(resourceHeapKind), GetD3D12HeapFlags(resourceHeapKind),
+-                GetMemorySegment(device, GetD3D12HeapType(resourceHeapKind)));
+-            mPooledHeapAllocators[i] =
+-                std::make_unique<PooledResourceMemoryAllocator>(mHeapAllocators[i].get());
+-            mSubAllocatedResourceAllocators[i] = std::make_unique<BuddyMemoryAllocator>(
+-                kMaxHeapSize, kMinHeapSize, mPooledHeapAllocators[i].get());
+-        }
+-    }
+-
+-    ResultOrError<ResourceHeapAllocation> ResourceAllocatorManager::AllocateMemory(
+-        D3D12_HEAP_TYPE heapType,
+-        const D3D12_RESOURCE_DESC& resourceDescriptor,
+-        D3D12_RESOURCE_STATES initialUsage) {
+-        // In order to suppress a warning in the D3D12 debug layer, we need to specify an
+-        // optimized clear value. As there are no negative consequences when picking a mismatched
+-        // clear value, we use zero as the optimized clear value. This also enables fast clears on
+-        // some architectures.
+-        D3D12_CLEAR_VALUE zero{};
+-        D3D12_CLEAR_VALUE* optimizedClearValue = nullptr;
+-        if (IsClearValueOptimizable(resourceDescriptor)) {
+-            zero.Format = resourceDescriptor.Format;
+-            optimizedClearValue = &zero;
+-        }
+-
+-        // TODO(crbug.com/dawn/849): Conditionally disable sub-allocation.
+-        // For very large resources, there is no benefit to suballocate.
+-        // For very small resources, it is inefficent to suballocate given the min. heap
+-        // size could be much larger then the resource allocation.
+-        // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
+-        ResourceHeapAllocation subAllocation;
+-        DAWN_TRY_ASSIGN(subAllocation, CreatePlacedResource(heapType, resourceDescriptor,
+-                                                            optimizedClearValue, initialUsage));
+-        if (subAllocation.GetInfo().mMethod != AllocationMethod::kInvalid) {
+-            return std::move(subAllocation);
+-        }
+-
+-        // If sub-allocation fails, fall-back to direct allocation (committed resource).
+-        ResourceHeapAllocation directAllocation;
+-        DAWN_TRY_ASSIGN(directAllocation,
+-                        CreateCommittedResource(heapType, resourceDescriptor, optimizedClearValue,
+-                                                initialUsage));
+-        if (directAllocation.GetInfo().mMethod != AllocationMethod::kInvalid) {
+-            return std::move(directAllocation);
+-        }
+-
+-        // If direct allocation fails, the system is probably out of memory.
+-        return DAWN_OUT_OF_MEMORY_ERROR("Allocation failed");
+-    }
+-
+-    void ResourceAllocatorManager::Tick(ExecutionSerial completedSerial) {
+-        for (ResourceHeapAllocation& allocation :
+-             mAllocationsToDelete.IterateUpTo(completedSerial)) {
+-            if (allocation.GetInfo().mMethod == AllocationMethod::kSubAllocated) {
+-                FreeMemory(allocation);
+-            }
+-        }
+-        mAllocationsToDelete.ClearUpTo(completedSerial);
+-    }
+-
+-    void ResourceAllocatorManager::DeallocateMemory(ResourceHeapAllocation& allocation) {
+-        if (allocation.GetInfo().mMethod == AllocationMethod::kInvalid) {
+-            return;
+-        }
+-
+-        mAllocationsToDelete.Enqueue(allocation, mDevice->GetPendingCommandSerial());
+-
+-        // Directly allocated ResourceHeapAllocations are created with a heap object that must be
+-        // manually deleted upon deallocation. See ResourceAllocatorManager::CreateCommittedResource
+-        // for more information.
+-        if (allocation.GetInfo().mMethod == AllocationMethod::kDirect) {
+-            delete allocation.GetResourceHeap();
+-        }
+-
+-        // Invalidate the allocation immediately in case one accidentally
+-        // calls DeallocateMemory again using the same allocation.
+-        allocation.Invalidate();
+-
+-        ASSERT(allocation.GetD3D12Resource() == nullptr);
+-    }
+-
+-    void ResourceAllocatorManager::FreeMemory(ResourceHeapAllocation& allocation) {
+-        ASSERT(allocation.GetInfo().mMethod == AllocationMethod::kSubAllocated);
+-
+-        D3D12_HEAP_PROPERTIES heapProp;
+-        allocation.GetD3D12Resource()->GetHeapProperties(&heapProp, nullptr);
+-
+-        const D3D12_RESOURCE_DESC resourceDescriptor = allocation.GetD3D12Resource()->GetDesc();
+-
+-        const size_t resourceHeapKindIndex =
+-            GetResourceHeapKind(resourceDescriptor.Dimension, heapProp.Type,
+-                                resourceDescriptor.Flags, mResourceHeapTier);
+-
+-        mSubAllocatedResourceAllocators[resourceHeapKindIndex]->Deallocate(allocation);
+-    }
+-
+-    ResultOrError<ResourceHeapAllocation> ResourceAllocatorManager::CreatePlacedResource(
+-        D3D12_HEAP_TYPE heapType,
+-        const D3D12_RESOURCE_DESC& requestedResourceDescriptor,
+-        const D3D12_CLEAR_VALUE* optimizedClearValue,
+-        D3D12_RESOURCE_STATES initialUsage) {
+-        const ResourceHeapKind resourceHeapKind =
+-            GetResourceHeapKind(requestedResourceDescriptor.Dimension, heapType,
+-                                requestedResourceDescriptor.Flags, mResourceHeapTier);
+-
+-        D3D12_RESOURCE_DESC resourceDescriptor = requestedResourceDescriptor;
+-        resourceDescriptor.Alignment = GetResourcePlacementAlignment(
+-            resourceHeapKind, requestedResourceDescriptor.SampleDesc.Count,
+-            requestedResourceDescriptor.Alignment);
+-
+-        // TODO(bryan.bernhart): Figure out how to compute the alignment without calling this
+-        // twice.
+-        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+-            mDevice->GetD3D12Device()->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+-
+-        // If the requested resource alignment was rejected, let D3D tell us what the
+-        // required alignment is for this resource.
+-        if (resourceDescriptor.Alignment != 0 &&
+-            resourceDescriptor.Alignment != resourceInfo.Alignment) {
+-            resourceDescriptor.Alignment = 0;
+-            resourceInfo =
+-                mDevice->GetD3D12Device()->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+-        }
+-
+-        // If d3d tells us the resource size is invalid, treat the error as OOM.
+-        // Otherwise, creating the resource could cause a device loss (too large).
+-        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
+-        // incorrectly allocate a mismatched size.
+-        if (resourceInfo.SizeInBytes == 0 ||
+-            resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+-            return DAWN_OUT_OF_MEMORY_ERROR("Resource allocation size was invalid.");
+-        }
+-
+-        BuddyMemoryAllocator* allocator =
+-            mSubAllocatedResourceAllocators[static_cast<size_t>(resourceHeapKind)].get();
+-
+-        ResourceMemoryAllocation allocation;
+-        DAWN_TRY_ASSIGN(allocation,
+-                        allocator->Allocate(resourceInfo.SizeInBytes, resourceInfo.Alignment));
+-        if (allocation.GetInfo().mMethod == AllocationMethod::kInvalid) {
+-            return ResourceHeapAllocation{};  // invalid
+-        }
+-
+-        Heap* heap = ToBackend(allocation.GetResourceHeap());
+-
+-        // Before calling CreatePlacedResource, we must ensure the target heap is resident.
+-        // CreatePlacedResource will fail if it is not.
+-        DAWN_TRY(mDevice->GetResidencyManager()->LockAllocation(heap));
+-
+-        // With placed resources, a single heap can be reused.
+-        // The resource placed at an offset is only reclaimed
+-        // upon Tick or after the last command list using the resource has completed
+-        // on the GPU. This means the same physical memory is not reused
+-        // within the same command-list and does not require additional synchronization (aliasing
+-        // barrier).
+-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
+-        ComPtr<ID3D12Resource> placedResource;
+-        DAWN_TRY(CheckOutOfMemoryHRESULT(
+-            mDevice->GetD3D12Device()->CreatePlacedResource(
+-                heap->GetD3D12Heap(), allocation.GetOffset(), &resourceDescriptor, initialUsage,
+-                optimizedClearValue, IID_PPV_ARGS(&placedResource)),
+-            "ID3D12Device::CreatePlacedResource"));
+-
+-        // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
+-        // will insert it into the residency LRU.
+-        mDevice->GetResidencyManager()->UnlockAllocation(heap);
+-
+-        return ResourceHeapAllocation{allocation.GetInfo(), allocation.GetOffset(),
+-                                      std::move(placedResource), heap};
+-    }
+-
+-    ResultOrError<ResourceHeapAllocation> ResourceAllocatorManager::CreateCommittedResource(
+-        D3D12_HEAP_TYPE heapType,
+-        const D3D12_RESOURCE_DESC& resourceDescriptor,
+-        const D3D12_CLEAR_VALUE* optimizedClearValue,
+-        D3D12_RESOURCE_STATES initialUsage) {
+-        D3D12_HEAP_PROPERTIES heapProperties;
+-        heapProperties.Type = heapType;
+-        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+-        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+-        heapProperties.CreationNodeMask = 0;
+-        heapProperties.VisibleNodeMask = 0;
+-
+-        // If d3d tells us the resource size is invalid, treat the error as OOM.
+-        // Otherwise, creating the resource could cause a device loss (too large).
+-        // This is because NextPowerOfTwo(UINT64_MAX) overflows and proceeds to
+-        // incorrectly allocate a mismatched size.
+-        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+-            mDevice->GetD3D12Device()->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+-        if (resourceInfo.SizeInBytes == 0 ||
+-            resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+-            return DAWN_OUT_OF_MEMORY_ERROR("Resource allocation size was invalid.");
+-        }
+-
+-        if (resourceInfo.SizeInBytes > kMaxHeapSize) {
+-            return ResourceHeapAllocation{};  // Invalid
+-        }
+-
+-        // CreateCommittedResource will implicitly make the created resource resident. We must
+-        // ensure enough free memory exists before allocating to avoid an out-of-memory error when
+-        // overcommitted.
+-        DAWN_TRY(mDevice->GetResidencyManager()->EnsureCanAllocate(
+-            resourceInfo.SizeInBytes, GetMemorySegment(mDevice, heapType)));
+-
+-        // Note: Heap flags are inferred by the resource descriptor and do not need to be explicitly
+-        // provided to CreateCommittedResource.
+-        ComPtr<ID3D12Resource> committedResource;
+-        DAWN_TRY(CheckOutOfMemoryHRESULT(
+-            mDevice->GetD3D12Device()->CreateCommittedResource(
+-                &heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDescriptor, initialUsage,
+-                optimizedClearValue, IID_PPV_ARGS(&committedResource)),
+-            "ID3D12Device::CreateCommittedResource"));
+-
+-        // When using CreateCommittedResource, D3D12 creates an implicit heap that contains the
+-        // resource allocation. Because Dawn's memory residency management occurs at the resource
+-        // heap granularity, every directly allocated ResourceHeapAllocation also stores a Heap
+-        // object. This object is created manually, and must be deleted manually upon deallocation
+-        // of the committed resource.
+-        Heap* heap = new Heap(committedResource, GetMemorySegment(mDevice, heapType),
+-                              resourceInfo.SizeInBytes);
+-
+-        // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
+-        // track this to avoid calling MakeResident a second time.
+-        mDevice->GetResidencyManager()->TrackResidentAllocation(heap);
+-
+-        AllocationInfo info;
+-        info.mMethod = AllocationMethod::kDirect;
+-
+-        return ResourceHeapAllocation{info,
+-                                      /*offset*/ 0, std::move(committedResource), heap};
+-    }
+-
+-    void ResourceAllocatorManager::DestroyPool() {
+-        for (auto& alloc : mPooledHeapAllocators) {
+-            alloc->DestroyPool();
+-        }
+-    }
+-
+-}}  // namespace dawn_native::d3d12
+diff --git a/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h b/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
+deleted file mode 100644
+index 7bbf53ae..00000000
+--- a/src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
++++ /dev/null
+@@ -1,107 +0,0 @@
+-// Copyright 2019 The Dawn Authors
+-//
+-// Licensed under the Apache License, Version 2.0 (the "License");
+-// you may not use this file except in compliance with the License.
+-// You may obtain a copy of the License at
+-//
+-//     http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-
+-#ifndef DAWNNATIVE_D3D12_RESOURCEALLOCATORMANAGERD3D12_H_
+-#define DAWNNATIVE_D3D12_RESOURCEALLOCATORMANAGERD3D12_H_
+-
+-#include "common/SerialQueue.h"
+-#include "dawn_native/BuddyMemoryAllocator.h"
+-#include "dawn_native/IntegerTypes.h"
+-#include "dawn_native/PooledResourceMemoryAllocator.h"
+-#include "dawn_native/d3d12/HeapAllocatorD3D12.h"
+-#include "dawn_native/d3d12/ResourceHeapAllocationD3D12.h"
+-
+-#include <array>
+-
+-namespace dawn_native { namespace d3d12 {
+-
+-    class Device;
+-
+-    // Resource heap types + flags combinations are named after the D3D constants.
+-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_type
+-    enum ResourceHeapKind {
+-
+-        // Resource heap tier 2
+-        // Allows resource heaps to contain all buffer and textures types.
+-        // This enables better heap re-use by avoiding the need for separate heaps and
+-        // also reduces fragmentation.
+-        Readback_AllBuffersAndTextures,
+-        Upload_AllBuffersAndTextures,
+-        Default_AllBuffersAndTextures,
+-
+-        // Resource heap tier 1
+-        // Resource heaps only support types from a single resource category.
+-        Readback_OnlyBuffers,
+-        Upload_OnlyBuffers,
+-        Default_OnlyBuffers,
+-
+-        Default_OnlyNonRenderableOrDepthTextures,
+-        Default_OnlyRenderableOrDepthTextures,
+-
+-        EnumCount,
+-        InvalidEnum = EnumCount,
+-    };
+-
+-    // Manages a list of resource allocators used by the device to create resources using
+-    // multiple allocation methods.
+-    class ResourceAllocatorManager {
+-      public:
+-        ResourceAllocatorManager(Device* device);
+-
+-        ResultOrError<ResourceHeapAllocation> AllocateMemory(
+-            D3D12_HEAP_TYPE heapType,
+-            const D3D12_RESOURCE_DESC& resourceDescriptor,
+-            D3D12_RESOURCE_STATES initialUsage);
+-
+-        void DeallocateMemory(ResourceHeapAllocation& allocation);
+-
+-        void Tick(ExecutionSerial lastCompletedSerial);
+-
+-        void DestroyPool();
+-
+-      private:
+-        void FreeMemory(ResourceHeapAllocation& allocation);
+-
+-        ResultOrError<ResourceHeapAllocation> CreatePlacedResource(
+-            D3D12_HEAP_TYPE heapType,
+-            const D3D12_RESOURCE_DESC& requestedResourceDescriptor,
+-            const D3D12_CLEAR_VALUE* optimizedClearValue,
+-            D3D12_RESOURCE_STATES initialUsage);
+-
+-        ResultOrError<ResourceHeapAllocation> CreateCommittedResource(
+-            D3D12_HEAP_TYPE heapType,
+-            const D3D12_RESOURCE_DESC& resourceDescriptor,
+-            const D3D12_CLEAR_VALUE* optimizedClearValue,
+-            D3D12_RESOURCE_STATES initialUsage);
+-
+-        Device* mDevice;
+-        uint32_t mResourceHeapTier;
+-
+-        static constexpr uint64_t kMaxHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+-        static constexpr uint64_t kMinHeapSize = 4ll * 1024ll * 1024ll;            // 4MB
+-
+-        std::array<std::unique_ptr<BuddyMemoryAllocator>, ResourceHeapKind::EnumCount>
+-            mSubAllocatedResourceAllocators;
+-        std::array<std::unique_ptr<HeapAllocator>, ResourceHeapKind::EnumCount> mHeapAllocators;
+-
+-        std::array<std::unique_ptr<PooledResourceMemoryAllocator>, ResourceHeapKind::EnumCount>
+-            mPooledHeapAllocators;
+-
+-        SerialQueue<ExecutionSerial, ResourceHeapAllocation> mAllocationsToDelete;
+-    };
+-
+-}}  // namespace dawn_native::d3d12
+-
+-#endif  // DAWNNATIVE_D3D12_RESOURCEALLOCATORMANAGERD3D12_H_
+diff --git a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
+index 916a371c..40706643 100644
+--- a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
++++ b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
+@@ -90,7 +90,9 @@ namespace dawn_native { namespace d3d12 {
+           mSizeIncrement(device->GetD3D12Device()->GetDescriptorHandleIncrementSize(heapType)),
+           mDescriptorCount(GetD3D12ShaderVisibleHeapMinSize(
+               heapType,
+-              mDevice->IsToggleEnabled(Toggle::UseD3D12SmallShaderVisibleHeapForTesting))) {
++              mDevice->IsToggleEnabled(Toggle::UseD3D12SmallShaderVisibleHeapForTesting))),
++          mResidencyManagementEnabled(
++              device->IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
+         ASSERT(heapType == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV ||
+                heapType == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+     }
+@@ -142,7 +144,11 @@ namespace dawn_native { namespace d3d12 {
+         // the actual size may vary depending on the driver.
+         const uint64_t kSize = mSizeIncrement * descriptorCount;
+ 
+-        DAWN_TRY(mDevice->GetResidencyManager()->EnsureCanAllocate(kSize, MemorySegment::Local));
++        if (mResidencyManagementEnabled) {
++            DAWN_TRY(CheckHRESULT(
++                mDevice->GetResidencyManager()->Evict(kSize, DXGI_MEMORY_SEGMENT_GROUP_LOCAL),
++                "Unable to allocate heap"));
++        }
+ 
+         ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap;
+         D3D12_DESCRIPTOR_HEAP_DESC heapDescriptor;
+@@ -159,7 +165,9 @@ namespace dawn_native { namespace d3d12 {
+ 
+         // We must track the allocation in the LRU when it is created, otherwise the residency
+         // manager will see the allocation as non-resident in the later call to LockAllocation.
+-        mDevice->GetResidencyManager()->TrackResidentAllocation(descriptorHeap.get());
++        if (mResidencyManagementEnabled) {
++            mDevice->GetResidencyManager()->InsertHeap(descriptorHeap.get());
++        }
+ 
+         return std::move(descriptorHeap);
+     }
+@@ -171,7 +179,9 @@ namespace dawn_native { namespace d3d12 {
+         // The first phase increasingly grows a small heap in binary sizes for light users while the
+         // second phase pool-allocates largest sized heaps for heavy users.
+         if (mHeap != nullptr) {
+-            mDevice->GetResidencyManager()->UnlockAllocation(mHeap.get());
++            if (mResidencyManagementEnabled) {
++                mDevice->GetResidencyManager()->UnlockHeap(mHeap.get());
++            }
+ 
+             const uint32_t maxDescriptorCount = GetD3D12ShaderVisibleHeapMaxSize(
+                 mHeapType,
+@@ -198,7 +208,10 @@ namespace dawn_native { namespace d3d12 {
+             DAWN_TRY_ASSIGN(descriptorHeap, AllocateHeap(mDescriptorCount));
+         }
+ 
+-        DAWN_TRY(mDevice->GetResidencyManager()->LockAllocation(descriptorHeap.get()));
++        if (mResidencyManagementEnabled) {
++            DAWN_TRY(CheckHRESULT(mDevice->GetResidencyManager()->LockHeap(descriptorHeap.get()),
++                                  "Unable to lock descriptor heap"));
++        }
+ 
+         // Create a FIFO buffer from the recently created heap.
+         mHeap = std::move(descriptorHeap);
+@@ -244,7 +257,7 @@ namespace dawn_native { namespace d3d12 {
+     ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(
+         ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap,
+         uint64_t size)
+-        : Pageable(d3d12DescriptorHeap, MemorySegment::Local, size),
++        : gpgmm::d3d12::Heap(d3d12DescriptorHeap, DXGI_MEMORY_SEGMENT_GROUP_LOCAL, size),
+           mD3d12DescriptorHeap(std::move(d3d12DescriptorHeap)) {
+     }
+ 
+diff --git a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
+index a315b560..66ef201e 100644
+--- a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
++++ b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
+@@ -23,6 +23,8 @@
+ 
+ #include <list>
+ 
++#include <gpgmm_d3d12.h>
++
+ // |ShaderVisibleDescriptorAllocator| allocates a variable-sized block of descriptors from a GPU
+ // descriptor heap pool.
+ // Internally, it manages a list of heaps using a ringbuffer block allocator. The heap is in one
+@@ -34,7 +36,7 @@ namespace dawn_native { namespace d3d12 {
+     class Device;
+     class GPUDescriptorHeapAllocation;
+ 
+-    class ShaderVisibleDescriptorHeap : public Pageable {
++    class ShaderVisibleDescriptorHeap : public gpgmm::d3d12::Heap {
+       public:
+         ShaderVisibleDescriptorHeap(ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap,
+                                     uint64_t size);
+@@ -99,6 +101,8 @@ namespace dawn_native { namespace d3d12 {
+         // The descriptor count is the current size of the heap in number of descriptors.
+         // This is stored on the allocator to avoid extra conversions.
+         uint32_t mDescriptorCount = 0;
++
++        bool mResidencyManagementEnabled = false;
+     };
+ }}  // namespace dawn_native::d3d12
+ 
+diff --git a/src/dawn_native/d3d12/StagingBufferD3D12.cpp b/src/dawn_native/d3d12/StagingBufferD3D12.cpp
+index d35622e9..f8071f0b 100644
+--- a/src/dawn_native/d3d12/StagingBufferD3D12.cpp
++++ b/src/dawn_native/d3d12/StagingBufferD3D12.cpp
+@@ -43,35 +43,20 @@ namespace dawn_native { namespace d3d12 {
+                         mDevice->AllocateMemory(D3D12_HEAP_TYPE_UPLOAD, resourceDescriptor,
+                                                 D3D12_RESOURCE_STATE_GENERIC_READ));
+ 
+-        // The mapped buffer can be accessed at any time, so it must be locked to ensure it is never
+-        // evicted. This buffer should already have been made resident when it was created.
+-        DAWN_TRY(mDevice->GetResidencyManager()->LockAllocation(
+-            ToBackend(mUploadHeap.GetResourceHeap())));
+-
+         SetDebugName(mDevice, GetResource(), "Dawn_StagingBuffer");
+ 
+-        return CheckHRESULT(GetResource()->Map(0, nullptr, &mMappedPointer), "ID3D12Resource::Map");
++        return CheckHRESULT(mUploadHeap->Map(0, nullptr, &mMappedPointer),
++                            "Unable to map staging buffer");
+     }
+ 
+     StagingBuffer::~StagingBuffer() {
+-        // Always check if the allocation is valid before Unmap.
+-        // The resource would not exist had it failed to allocate.
+-        if (mUploadHeap.GetInfo().mMethod == AllocationMethod::kInvalid) {
+-            return;
+-        }
+-
+-        // The underlying heap was locked in residency upon creation. We must unlock it when this
+-        // buffer becomes unmapped.
+-        mDevice->GetResidencyManager()->UnlockAllocation(ToBackend(mUploadHeap.GetResourceHeap()));
+-
+-        // Invalidate the CPU virtual address & flush cache (if needed).
+-        GetResource()->Unmap(0, nullptr);
++        mUploadHeap->Unmap(0, nullptr);
+         mMappedPointer = nullptr;
+ 
+-        mDevice->DeallocateMemory(mUploadHeap);
++        mDevice->DeallocateMemory(std::move(mUploadHeap));
+     }
+ 
+     ID3D12Resource* StagingBuffer::GetResource() const {
+-        return mUploadHeap.GetD3D12Resource();
++        return mUploadHeap->GetResource();
+     }
+ }}  // namespace dawn_native::d3d12
+diff --git a/src/dawn_native/d3d12/StagingBufferD3D12.h b/src/dawn_native/d3d12/StagingBufferD3D12.h
+index aafe60d3..5b9ab342 100644
+--- a/src/dawn_native/d3d12/StagingBufferD3D12.h
++++ b/src/dawn_native/d3d12/StagingBufferD3D12.h
+@@ -16,9 +16,10 @@
+ #define DAWNNATIVE_STAGINGBUFFERD3D12_H_
+ 
+ #include "dawn_native/StagingBuffer.h"
+-#include "dawn_native/d3d12/ResourceHeapAllocationD3D12.h"
+ #include "dawn_native/d3d12/d3d12_platform.h"
+ 
++#include <gpgmm_d3d12.h>
++
+ namespace dawn_native { namespace d3d12 {
+ 
+     class Device;
+@@ -34,7 +35,7 @@ namespace dawn_native { namespace d3d12 {
+ 
+       private:
+         Device* mDevice;
+-        ResourceHeapAllocation mUploadHeap;
++        ComPtr<gpgmm::d3d12::ResourceAllocation> mUploadHeap;
+     };
+ }}  // namespace dawn_native::d3d12
+ 
+diff --git a/src/dawn_native/d3d12/TextureD3D12.cpp b/src/dawn_native/d3d12/TextureD3D12.cpp
+index 81c4ba05..85386835 100644
+--- a/src/dawn_native/d3d12/TextureD3D12.cpp
++++ b/src/dawn_native/d3d12/TextureD3D12.cpp
+@@ -25,7 +25,6 @@
+ #include "dawn_native/d3d12/D3D12Error.h"
+ #include "dawn_native/d3d12/DeviceD3D12.h"
+ #include "dawn_native/d3d12/HeapD3D12.h"
+-#include "dawn_native/d3d12/ResourceAllocatorManagerD3D12.h"
+ #include "dawn_native/d3d12/StagingBufferD3D12.h"
+ #include "dawn_native/d3d12/StagingDescriptorAllocatorD3D12.h"
+ #include "dawn_native/d3d12/TextureCopySplitter.h"
+@@ -561,12 +560,8 @@ namespace dawn_native { namespace d3d12 {
+         D3D12_RESOURCE_DESC desc = d3d12Texture->GetDesc();
+         mD3D12ResourceFlags = desc.Flags;
+ 
+-        AllocationInfo info;
+-        info.mMethod = AllocationMethod::kExternal;
+-        // When creating the ResourceHeapAllocation, the resource heap is set to nullptr because the
+-        // texture is owned externally. The texture's owning entity must remain responsible for
+-        // memory management.
+-        mResourceAllocation = {info, 0, std::move(d3d12Texture), nullptr};
++        DAWN_TRY_ASSIGN(mResourceAllocation,
++                        ToBackend(GetDevice())->CreateExternalAllocation(d3d12Texture));
+ 
+         SetLabelHelper("Dawn_ExternalTexture");
+ 
+@@ -623,15 +618,10 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     MaybeError Texture::InitializeAsSwapChainTexture(ComPtr<ID3D12Resource> d3d12Texture) {
+-        AllocationInfo info;
+-        info.mMethod = AllocationMethod::kExternal;
+-        // When creating the ResourceHeapAllocation, the resource heap is set to nullptr because the
+-        // texture is owned externally. The texture's owning entity must remain responsible for
+-        // memory management.
+-        mResourceAllocation = {info, 0, std::move(d3d12Texture), nullptr};
++        DAWN_TRY_ASSIGN(mResourceAllocation,
++                        ToBackend(GetDevice())->CreateExternalAllocation(d3d12Texture));
+ 
+         SetLabelHelper("Dawn_SwapChainTexture");
+-
+         return {};
+     }
+ 
+@@ -660,11 +650,11 @@ namespace dawn_native { namespace d3d12 {
+         if (mSwapChainTexture) {
+             ID3D12SharingContract* d3dSharingContract = device->GetSharingContract();
+             if (d3dSharingContract != nullptr) {
+-                d3dSharingContract->Present(mResourceAllocation.GetD3D12Resource(), 0, 0);
++                d3dSharingContract->Present(mResourceAllocation->GetResource(), 0, 0);
+             }
+         }
+ 
+-        device->DeallocateMemory(mResourceAllocation);
++        device->DeallocateMemory(std::move(mResourceAllocation));
+ 
+         // Now that we've deallocated the memory, the texture is no longer a swap chain texture.
+         // We can set mSwapChainTexture to false to avoid passing a nullptr to
+@@ -681,7 +671,10 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     ID3D12Resource* Texture::GetD3D12Resource() const {
+-        return mResourceAllocation.GetD3D12Resource();
++        if (mResourceAllocation == nullptr) {
++            return nullptr;
++        }
++        return mResourceAllocation->GetResource();
+     }
+ 
+     DXGI_FORMAT Texture::GetD3D12CopyableSubresourceFormat(Aspect aspect) const {
+@@ -723,11 +716,8 @@ namespace dawn_native { namespace d3d12 {
+     void Texture::TrackUsageAndTransitionNow(CommandRecordingContext* commandContext,
+                                              D3D12_RESOURCE_STATES newState,
+                                              const SubresourceRange& range) {
+-        if (mResourceAllocation.GetInfo().mMethod != AllocationMethod::kExternal) {
+-            // Track the underlying heap to ensure residency.
+-            Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
+-        }
++        // Track the underlying heap to ensure residency.
++        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
+ 
+         std::vector<D3D12_RESOURCE_BARRIER> barriers;
+ 
+@@ -877,11 +867,8 @@ namespace dawn_native { namespace d3d12 {
+         CommandRecordingContext* commandContext,
+         std::vector<D3D12_RESOURCE_BARRIER>* barriers,
+         const TextureSubresourceUsage& textureUsages) {
+-        if (mResourceAllocation.GetInfo().mMethod != AllocationMethod::kExternal) {
+-            // Track the underlying heap to ensure residency.
+-            Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
+-            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
+-        }
++        // Track the underlying heap to ensure residency.
++        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
+ 
+         HandleTransitionSpecialCases(commandContext);
+ 
+@@ -1114,8 +1101,7 @@ namespace dawn_native { namespace d3d12 {
+     }
+ 
+     void Texture::SetLabelHelper(const char* prefix) {
+-        SetDebugName(ToBackend(GetDevice()), mResourceAllocation.GetD3D12Resource(), prefix,
+-                     GetLabel());
++        SetDebugName(ToBackend(GetDevice()), GetD3D12Resource(), prefix, GetLabel());
+     }
+ 
+     void Texture::SetLabelImpl() {
+diff --git a/src/dawn_native/d3d12/TextureD3D12.h b/src/dawn_native/d3d12/TextureD3D12.h
+index c414a8ae..c1399b51 100644
+--- a/src/dawn_native/d3d12/TextureD3D12.h
++++ b/src/dawn_native/d3d12/TextureD3D12.h
+@@ -21,9 +21,10 @@
+ #include "dawn_native/IntegerTypes.h"
+ #include "dawn_native/PassResourceUsage.h"
+ #include "dawn_native/d3d12/IntegerTypes.h"
+-#include "dawn_native/d3d12/ResourceHeapAllocationD3D12.h"
+ #include "dawn_native/d3d12/d3d12_platform.h"
+ 
++#include <gpgmm_d3d12.h>
++
+ namespace dawn_native { namespace d3d12 {
+ 
+     class CommandRecordingContext;
+@@ -129,7 +130,7 @@ namespace dawn_native { namespace d3d12 {
+ 
+         SubresourceStorage<StateAndDecay> mSubresourceStateAndDecay;
+ 
+-        ResourceHeapAllocation mResourceAllocation;
++        ComPtr<gpgmm::d3d12::ResourceAllocation> mResourceAllocation;
+         bool mSwapChainTexture = false;
+         D3D12_RESOURCE_FLAGS mD3D12ResourceFlags;
+ 
+diff --git a/src/dawn_native/d3d12/UtilsD3D12.cpp b/src/dawn_native/d3d12/UtilsD3D12.cpp
+index 38479eba..a134c0e7 100644
+--- a/src/dawn_native/d3d12/UtilsD3D12.cpp
++++ b/src/dawn_native/d3d12/UtilsD3D12.cpp
+@@ -372,6 +372,17 @@ namespace dawn_native { namespace d3d12 {
+         }
+     }
+ 
++    bool IsClearValueOptimizable(const D3D12_RESOURCE_DESC& resourceDescriptor) {
++        // Optimized clear color cannot be set on buffers, non-render-target/depth-stencil
++        // textures, or typeless resources
++        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource
++        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
++        return !IsTypeless(resourceDescriptor.Format) &&
++               resourceDescriptor.Dimension != D3D12_RESOURCE_DIMENSION_BUFFER &&
++               (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
++                                            D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) != 0;
++    }
++
+     void SetDebugName(Device* device, ID3D12Object* object, const char* prefix, std::string label) {
+         if (!object) {
+             return;
+diff --git a/src/dawn_native/d3d12/UtilsD3D12.h b/src/dawn_native/d3d12/UtilsD3D12.h
+index 2a3f3d5b..7fa9506d 100644
+--- a/src/dawn_native/d3d12/UtilsD3D12.h
++++ b/src/dawn_native/d3d12/UtilsD3D12.h
+@@ -81,6 +81,8 @@ namespace dawn_native { namespace d3d12 {
+                                    Buffer* buffer,
+                                    const Extent3D& copySize);
+ 
++    bool IsClearValueOptimizable(const D3D12_RESOURCE_DESC& resourceDescriptor);
++
+     void SetDebugName(Device* device,
+                       ID3D12Object* object,
+                       const char* prefix,
+diff --git a/src/tests/white_box/D3D12ResidencyTests.cpp b/src/tests/white_box/D3D12ResidencyTests.cpp
+index 124cd442..8ff216d4 100644
+--- a/src/tests/white_box/D3D12ResidencyTests.cpp
++++ b/src/tests/white_box/D3D12ResidencyTests.cpp
+@@ -40,11 +40,6 @@ class D3D12ResidencyTestBase : public DawnTest {
+         DawnTest::SetUp();
+         DAWN_TEST_UNSUPPORTED_IF(UsesWire());
+ 
+-        // Restrict Dawn's budget to create an artificial budget.
+-        dawn_native::d3d12::Device* d3dDevice =
+-            reinterpret_cast<dawn_native::d3d12::Device*>(device.Get());
+-        d3dDevice->GetResidencyManager()->RestrictBudgetForTesting(kRestrictedBudgetSize);
+-
+         // Initialize a source buffer on the GPU to serve as a source to quickly copy data to other
+         // buffers.
+         constexpr uint32_t one = 1;
+@@ -92,7 +87,7 @@ class D3D12ResidencyTestBase : public DawnTest {
+ class D3D12ResourceResidencyTests : public D3D12ResidencyTestBase {
+   protected:
+     bool CheckAllocationMethod(wgpu::Buffer buffer,
+-                               dawn_native::AllocationMethod allocationMethod) const {
++                               gpgmm::AllocationMethod allocationMethod) const {
+         dawn_native::d3d12::Buffer* d3dBuffer =
+             reinterpret_cast<dawn_native::d3d12::Buffer*>(buffer.Get());
+         return d3dBuffer->CheckAllocationMethodForTesting(allocationMethod);
+@@ -125,8 +120,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitSmallResources) {
+     // internally.
+     for (uint32_t i = 0; i < bufferSet1.size(); i++) {
+         EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
+-        EXPECT_TRUE(
+-            CheckAllocationMethod(bufferSet1[i], dawn_native::AllocationMethod::kSubAllocated));
++        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], gpgmm::AllocationMethod::kSubAllocated));
+     }
+ 
+     // Create enough directly-allocated buffers to use the entire budget.
+@@ -164,7 +158,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitLargeResources) {
+     // allocated internally.
+     for (uint32_t i = 0; i < bufferSet1.size(); i++) {
+         EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
+-        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], dawn_native::AllocationMethod::kDirect));
++        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], gpgmm::AllocationMethod::kStandalone));
+     }
+ 
+     // Create enough directly-allocated buffers to use the entire budget.
+@@ -418,6 +412,8 @@ TEST_P(D3D12DescriptorResidencyTests, SwitchedViewHeapResidency) {
+     EXPECT_FALSE(allocator->IsLastShaderVisibleHeapInLRUForTesting());
+ }
+ 
+-DAWN_INSTANTIATE_TEST(D3D12ResourceResidencyTests, D3D12Backend());
++DAWN_INSTANTIATE_TEST(D3D12ResourceResidencyTests,
++                      D3D12Backend({"use_d3d12_small_residency_budget"}));
+ DAWN_INSTANTIATE_TEST(D3D12DescriptorResidencyTests,
+-                      D3D12Backend({"use_d3d12_small_shader_visible_heap"}));
++                      D3D12Backend({"use_d3d12_small_shader_visible_heap",
++                                    "use_d3d12_small_residency_budget"}));
+-- 
+2.23.0.windows.1
+
