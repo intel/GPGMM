@@ -295,31 +295,24 @@ namespace gpgmm { namespace d3d12 {
         // For very small resources, it is inefficent to suballocate given the min. heap
         // size could be much larger then the resource allocation.
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
-        HRESULT hr = E_UNEXPECTED;
-        std::unique_ptr<MemoryAllocation> subAllocation;
         if (!mIsAlwaysCommitted) {
             MemoryAllocator* subAllocator =
                 mSubAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            subAllocation =
+            std::unique_ptr<MemoryAllocation> subAllocation =
                 subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
             if (subAllocation != nullptr) {
-                hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
-                                          clearValue, initialUsage, resourceAllocation);
+                HRESULT hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
+                                                  clearValue, initialUsage, resourceAllocation);
                 if (FAILED(hr)) {
                     subAllocator->DeallocateMemory(subAllocation.get());
-                    subAllocation = nullptr;
                 }
+                return hr;
             }
         }
 
-        // Fall-back to direct allocation if sub-allocation fails.
-        if (subAllocation == nullptr) {
-            hr = CreateCommittedResource(
-                allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
-                &newResourceDesc, clearValue, initialUsage, resourceAllocation);
-        }
-
-        return hr;
+        return CreateCommittedResource(
+            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
+            &newResourceDesc, clearValue, initialUsage, resourceAllocation);
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
