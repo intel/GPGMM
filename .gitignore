@@ -1,15 +1,19 @@
 *.pyc
 
 # Directories added by gclient sync and the GN build
-.cipd
-.gclient
-.gclient_entries
-build
-buildtools
-testing
-third_party/*
-tools
-out
+/.cipd
+/.gclient
+/.gclient_entries
+/build
+/buildtools
+/testing
+/third_party/dawn
+/third_party/googletest
+/third_party/llvm-build
+/third_party/vulkan-deps
+/third_party/webnn_native
+/tools
+/out
 
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 
