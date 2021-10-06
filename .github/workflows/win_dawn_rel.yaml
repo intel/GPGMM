@@ -70,6 +70,7 @@ jobs:
 
     - name: Run dawn_end2end_tests
       shell: cmd
+      continue-on-error: true
       run: |
         cd base
         out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
@@ -111,6 +112,7 @@ jobs:
 
     - name: Run dawn_end2end_tests (with patch)
       shell: cmd
+      continue-on-error: true
       run: |
         cd test
         out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
