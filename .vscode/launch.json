@@ -36,6 +36,22 @@
       "externalConsole": true
     },
     {
+      "name": "Debug capture replay tests",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "windows": {
+        "program": "gpgmm_capture_replay_tests.exe",
+      },
+      "args": [
+        "--gtest_catch_exceptions=0",
+        "--gtest_filter=*"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/out/Debug",
+      "environment": [],
+      "externalConsole": true
+    },
+    {
       "name": "Debug WebNN-GPGMM end2end",
       "type": "cppvsdbg",
       "request": "launch",

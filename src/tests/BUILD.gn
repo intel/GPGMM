@@ -21,6 +21,7 @@ import("${gpgmm_root_dir}/build_overrides/gpgmm_features.gni")
 group("gpgmm_tests") {
   testonly = true
   deps = [
+    ":gpgmm_capture_replay_tests",
     ":gpgmm_end2end_tests",
     ":gpgmm_unittests",
 
@@ -169,6 +170,104 @@ test("gpgmm_end2end_tests") {
     deps += [ ":gpgmm_end2end_tests_main" ]
   } else {
     sources += [ "End2EndTestsMain.cpp" ]
+  }
+
+  if (is_chromeos) {
+    libs += [ "gbm" ]
+  }
+}
+
+###############################################################################
+# Capture replay tests
+###############################################################################
+
+trace_index_file_name = "traces.json"
+
+action("generate_capture_replay_trace_index") {
+  script = "${gpgmm_root_dir}/scripts/generate_capture_replay_trace_index.py"
+  outputs = [ "$target_gen_dir" + "/" + trace_index_file_name ]
+
+  _traces_dir_absolute_path = rebase_path("./capture_replay_tests/traces/")
+  _trace_index_file_path =
+      rebase_path(target_gen_dir, root_build_dir) + "/" + trace_index_file_name
+
+  args = [
+    "--traces_dir",
+    _traces_dir_absolute_path,
+    "--trace_index",
+    _trace_index_file_path,
+  ]
+}
+
+source_set("gpgmm_capture_replay_tests_sources") {
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  testonly = true
+
+  deps = [
+    ":generate_capture_replay_trace_index",
+    ":gmock_and_gtest",
+    "${gpgmm_root_dir}/src:gpgmm_sources",
+    "${gpgmm_root_dir}/src/common",
+    "${gpgmm_root_dir}/third_party/gn/jsoncpp",
+  ]
+
+  # Constructs the absolute path to the traces folder. Ensure the traces folder
+  # can always be found since gpgmm could be under \\third_party.
+  _root_trace_index_path =
+      get_path_info(target_gen_dir, "abspath") + "/" + trace_index_file_name
+  _root_trace_index_absolute_path = rebase_path(_root_trace_index_path)
+
+  defines = [ "GPGMM_CAPTURE_REPLAY_TESTS_TRACE_INDEX=\"${_root_trace_index_absolute_path}\"" ]
+
+  sources = [ "GPGMMTest.h" ]
+
+  libs = []
+
+  if (gpgmm_enable_d3d12) {
+    sources += [
+      "capture_replay_tests/GPGMMCaptureReplayTests.cpp",
+      "capture_replay_tests/GPGMMCaptureReplayTests.h",
+    ]
+
+    libs += [
+      "d3d12.lib",
+      "dxgi.lib",
+    ]
+  }
+}
+
+test("gpgmm_capture_replay_tests") {
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+
+  deps = [
+    ":gmock_and_gtest",
+    ":gpgmm_capture_replay_tests_sources",
+    "${gpgmm_root_dir}/src:gpgmm",
+    "${gpgmm_root_dir}/src/common",
+    "${gpgmm_root_dir}/third_party/gn/jsoncpp",
+  ]
+
+  sources = [
+    "GPGMMTest.cpp",
+    "GPGMMTest.h",
+  ]
+
+  if (gpgmm_enable_d3d12) {
+    sources += [
+      "D3D12Test.cpp",
+      "D3D12Test.h",
+      "capture_replay_tests/D3D12EventTraceReplay.cpp",
+    ]
+  }
+
+  libs = []
+
+  # When building inside Chromium, use their gtest main function because it is
+  # needed to run in swarming correctly.
+  if (build_with_chromium) {
+    deps += [ ":gpgmm_capture_replay_tests_main" ]
+  } else {
+    sources += [ "CaptureReplayTestsMain.cpp" ]
   }
 
   if (is_chromeos) {

@@ -12,29 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TESTS_GPGMM_TEST_H_
-#define TESTS_GPGMM_TEST_H_
+#include "src/d3d12/UtilsD3D12.h"
 
-#include "gtest/gtest.h"
+namespace gpgmm { namespace d3d12 {
 
-class GPGMMTestBase {
-  protected:
-    virtual ~GPGMMTestBase();
-
-    void SetUp();
-    void TearDown();
-};
-
-void InitGPGMMEnd2EndTestEnvironment();
-
-class GPGMMTestEnvironment : public testing::Environment {
-  public:
-    explicit GPGMMTestEnvironment() {
+    bool IsDepthFormat(DXGI_FORMAT format) {
+        // Depth formats in order of appearance.
+        // https://docs.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format
+        switch (format) {
+            case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+            case DXGI_FORMAT_D32_FLOAT:
+            case DXGI_FORMAT_D24_UNORM_S8_UINT:
+            case DXGI_FORMAT_D16_UNORM:
+                return true;
+            default:
+                return false;
+        }
     }
 
-    static void SetEnvironment(GPGMMTestEnvironment* env);
-
-    void SetUp() override;
-};
-
-#endif  // TESTS_GPGMM_TEST_H_
+}}  // namespace gpgmm::d3d12

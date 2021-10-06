@@ -24,3 +24,7 @@ if (!defined(gpgmm_root_dir)) {
 if (!defined(gpgmm_googletest_dir)) {
   gpgmm_googletest_dir = "//third_party/googletest"
 }
+
+if (!defined(gpgmm_jsoncpp_dir)) {
+  gpgmm_jsoncpp_dir = "//third_party/jsoncpp"
+}

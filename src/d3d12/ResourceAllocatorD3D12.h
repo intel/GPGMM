@@ -50,6 +50,23 @@ namespace gpgmm { namespace d3d12 {
 
     } ALLOCATOR_FLAGS;
 
+    typedef enum ALLOCATOR_RECORD_FLAGS {
+
+        // Disables all recording flags. Enabled by default.
+        ALLOCATOR_RECORD_FLAGS_NONE = 0x0,
+
+        // Configures event-based tracing using the Trace Event API.
+        ALLOCATOR_RECORD_TRACE_EVENTS = 0x1,
+
+    } ALLOCATOR_RECORD_FLAGS;
+
+    struct ALLOCATOR_RECORD_OPTIONS {
+        ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAGS_NONE;
+
+        // Path to trace file. Default is trace.json.
+        const char* TraceFile = nullptr;
+    };
+
     struct ALLOCATOR_DESC {
         // Device and adapter used by this allocator. The adapter must support DXGI 1.4
         // to use residency. Required parameters.
@@ -57,6 +74,9 @@ namespace gpgmm { namespace d3d12 {
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
         ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
+
+        // Configures memory tracing.
+        ALLOCATOR_RECORD_OPTIONS RecordOptions;
 
         // Determines if this allocator should use shared memory. Use CheckFeatureSupport
         // to check for support. Required parameter.

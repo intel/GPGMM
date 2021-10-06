@@ -73,6 +73,10 @@ deps = {
     'url': '{chromium_git}/vulkan-deps@df0528b581a1709ccad790c205d3c11d0b657ed6',
     'condition': 'gpgmm_standalone',
   },
+  'third_party/jsoncpp/source': {
+    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@9059f5cad030ba11d37818847443a53918c327b1',
+    'condition': 'gpgmm_standalone',
+  },
 }
 
 hooks = [

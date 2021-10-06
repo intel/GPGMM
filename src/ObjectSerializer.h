@@ -12,28 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/GPGMMTest.h"
+#ifndef GPGMM_OBJECTSERIALIZER_H_
+#define GPGMM_OBJECTSERIALIZER_H_
 
-static GPGMMTestEnvironment* gTestEnv = nullptr;
+#include <string>
 
-void InitGPGMMEnd2EndTestEnvironment() {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
-}
+namespace gpgmm {
 
-void GPGMMTestBase::SetUp() {
-}
+    template <typename D>
+    class ObjectSerializer {
+      public:
+        template <typename T>
+        static std::string SerializeToJSON(const T& value) {
+            ObjectSerializer<D> serializer;
+            return static_cast<D*>(&serializer)->AppendTo(value);
+        }
+    };
 
-GPGMMTestBase::~GPGMMTestBase() {
-}
+}  // namespace gpgmm
 
-void GPGMMTestBase::TearDown() {
-}
-
-// static
-void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
-    gTestEnv = env;
-}
-
-void GPGMMTestEnvironment::SetUp() {
-}
+#endif  // GPGMM_OBJECTSERIALIZER_H_

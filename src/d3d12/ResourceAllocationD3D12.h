@@ -44,7 +44,7 @@ namespace gpgmm { namespace d3d12 {
                            ComPtr<ID3D12Resource> resource,
                            Heap* heap);
 
-        ~ResourceAllocation() override = default;
+        ~ResourceAllocation() override;
         ResourceAllocation(const ResourceAllocation&) = default;
         ResourceAllocation& operator=(const ResourceAllocation&) = default;
 

@@ -152,9 +152,15 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "Math.cpp",
       "Math.h",
       "Platform.h",
+      "PlatformTime.cpp",
+      "PlatformTime.h",
       "SystemUtils.cpp",
       "SystemUtils.h",
     ]
+
+    if (is_win) {
+      sources += [ "WindowsTime.cpp" ]
+    }
 
     configs += [ ":gpgmm_internal" ]
   }
