@@ -1,4 +1,4 @@
-From 442eff6ed01fab915422423442cc7a2b5a4c49b2 Mon Sep 17 00:00:00 2001
+From 4cf3ad3d28d0ba6082deb435ea57a5c8129a415b Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Thu, 29 Jul 2021 13:53:46 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -17,12 +17,12 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/d3d12/BufferD3D12.h           |   7 +-
  .../d3d12/CommandRecordingContext.cpp         |  21 +-
  .../d3d12/CommandRecordingContext.h           |   4 +-
- src/dawn_native/d3d12/D3D12Backend.cpp        |  10 +-
+ src/dawn_native/d3d12/D3D12Backend.cpp        |  17 +-
  src/dawn_native/d3d12/DeviceD3D12.cpp         |  76 +++-
  src/dawn_native/d3d12/DeviceD3D12.h           |  16 +-
  .../d3d12/ResourceAllocatorManagerD3D12.cpp   | 410 ------------------
  .../d3d12/ResourceAllocatorManagerD3D12.h     | 107 -----
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  25 +-
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  26 +-
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |   6 +-
  src/dawn_native/d3d12/StagingBufferD3D12.cpp  |  25 +-
  src/dawn_native/d3d12/StagingBufferD3D12.h    |   5 +-
@@ -31,7 +31,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/d3d12/UtilsD3D12.cpp          |  11 +
  src/dawn_native/d3d12/UtilsD3D12.h            |   2 +
  src/tests/white_box/D3D12ResidencyTests.cpp   |  18 +-
- 26 files changed, 212 insertions(+), 658 deletions(-)
+ 26 files changed, 219 insertions(+), 659 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
@@ -387,13 +387,15 @@ index 6c6dc37d..7f8aa756 100644
          std::vector<Ref<Buffer>> mTempBuffers;
      };
 diff --git a/src/dawn_native/d3d12/D3D12Backend.cpp b/src/dawn_native/d3d12/D3D12Backend.cpp
-index bc9df608..5d2ebff4 100644
+index bc9df608..b33c2d12 100644
 --- a/src/dawn_native/d3d12/D3D12Backend.cpp
 +++ b/src/dawn_native/d3d12/D3D12Backend.cpp
-@@ -168,8 +168,16 @@ namespace dawn_native { namespace d3d12 {
+@@ -168,8 +168,21 @@ namespace dawn_native { namespace d3d12 {
                                            MemorySegment memorySegment) {
          Device* backendDevice = reinterpret_cast<Device*>(device);
  
+-        return backendDevice->GetResidencyManager()->SetExternalMemoryReservation(
+-            memorySegment, requestedReservationSize);
 +        // TODO: remove unnecessary type conversion
 +        DXGI_MEMORY_SEGMENT_GROUP dxgiSegment = {};
 +        if (memorySegment == MemorySegment::Local) {
@@ -402,9 +404,13 @@ index bc9df608..5d2ebff4 100644
 +            dxgiSegment = DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
 +        }
 +
-         return backendDevice->GetResidencyManager()->SetExternalMemoryReservation(
--            memorySegment, requestedReservationSize);
-+            dxgiSegment, requestedReservationSize);
++        uint64_t actualReservationSize = 0;
++        if (FAILED(backendDevice->GetResidencyManager()->SetVideoMemoryReservation(
++                dxgiSegment, requestedReservationSize, &actualReservationSize))) {
++            dawn::ErrorLog() << "Unable to set the video memory reservation";
++            return 0;
++        }
++        return actualReservationSize;
      }
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions(ComPtr<IDXGIAdapter> adapter)
@@ -1128,7 +1134,7 @@ index 7bbf53ae..00000000
 -
 -#endif  // DAWNNATIVE_D3D12_RESOURCEALLOCATORMANAGERD3D12_H_
 diff --git a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
-index 916a371c..40706643 100644
+index 916a371c..aab893c6 100644
 --- a/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 +++ b/src/dawn_native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 @@ -90,7 +90,9 @@ namespace dawn_native { namespace d3d12 {
@@ -1155,18 +1161,19 @@ index 916a371c..40706643 100644
  
          ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap;
          D3D12_DESCRIPTOR_HEAP_DESC heapDescriptor;
-@@ -159,7 +165,9 @@ namespace dawn_native { namespace d3d12 {
+@@ -159,7 +165,10 @@ namespace dawn_native { namespace d3d12 {
  
          // We must track the allocation in the LRU when it is created, otherwise the residency
          // manager will see the allocation as non-resident in the later call to LockAllocation.
 -        mDevice->GetResidencyManager()->TrackResidentAllocation(descriptorHeap.get());
 +        if (mResidencyManagementEnabled) {
-+            mDevice->GetResidencyManager()->InsertHeap(descriptorHeap.get());
++            DAWN_TRY(CheckHRESULT(mDevice->GetResidencyManager()->InsertHeap(descriptorHeap.get()),
++                                  "Unable to insert descriptor heap into residency manager"));
 +        }
  
          return std::move(descriptorHeap);
      }
-@@ -171,7 +179,9 @@ namespace dawn_native { namespace d3d12 {
+@@ -171,7 +180,9 @@ namespace dawn_native { namespace d3d12 {
          // The first phase increasingly grows a small heap in binary sizes for light users while the
          // second phase pool-allocates largest sized heaps for heavy users.
          if (mHeap != nullptr) {
@@ -1177,7 +1184,7 @@ index 916a371c..40706643 100644
  
              const uint32_t maxDescriptorCount = GetD3D12ShaderVisibleHeapMaxSize(
                  mHeapType,
-@@ -198,7 +208,10 @@ namespace dawn_native { namespace d3d12 {
+@@ -198,7 +209,10 @@ namespace dawn_native { namespace d3d12 {
              DAWN_TRY_ASSIGN(descriptorHeap, AllocateHeap(mDescriptorCount));
          }
  
@@ -1189,7 +1196,7 @@ index 916a371c..40706643 100644
  
          // Create a FIFO buffer from the recently created heap.
          mHeap = std::move(descriptorHeap);
-@@ -244,7 +257,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -244,7 +258,7 @@ namespace dawn_native { namespace d3d12 {
      ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(
          ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap,
          uint64_t size)

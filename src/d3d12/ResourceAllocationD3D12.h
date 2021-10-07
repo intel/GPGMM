@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
 
         ID3D12Resource* GetResource() const;
 
-        void UpdateResidency(ResidencySet* residencySet);
+        HRESULT UpdateResidency(ResidencySet* residencySet);
 
       protected:
         void ReleaseThis() override;
