@@ -152,7 +152,7 @@ test("gpgmm_end2end_tests") {
   deps = [
     ":gmock_and_gtest",
     ":gpgmm_end2end_tests_sources",
-    "${gpgmm_root_dir}/src:gpgmm_static",
+    "${gpgmm_root_dir}/src:gpgmm",
     "${gpgmm_root_dir}/src/common",
   ]
 
