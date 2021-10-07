@@ -15,6 +15,8 @@
 #ifndef GPGMM_D3D12_RESIDENCYSETD3D12_H_
 #define GPGMM_D3D12_RESIDENCYSETD3D12_H_
 
+#include "src/d3d12/d3d12_platform.h"
+
 #include <set>
 #include <vector>
 
@@ -30,8 +32,8 @@ namespace gpgmm { namespace d3d12 {
         ResidencySet() = default;
         ~ResidencySet() = default;
 
-        void Insert(Heap* heap);
-        void Reset();
+        HRESULT Insert(Heap* heap);
+        HRESULT Reset();
 
       private:
         friend ResidencyManager;

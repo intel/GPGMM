@@ -96,9 +96,11 @@ namespace gpgmm { namespace d3d12 {
         mResource->Unmap(subresource, pRange);
     }
 
-    void ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
+    HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
         Heap* heap = static_cast<Heap*>(GetMemory());
-        ASSERT(heap != nullptr);
-        heap->UpdateResidency(residencySet);
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+        return heap->UpdateResidency(residencySet);
     }
 }}  // namespace gpgmm::d3d12

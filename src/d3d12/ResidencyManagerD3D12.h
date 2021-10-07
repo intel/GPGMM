@@ -53,15 +53,15 @@ namespace gpgmm { namespace d3d12 {
                                     ResidencySet** residencySets,
                                     uint32_t count);
 
-        uint64_t SetExternalMemoryReservation(
-            const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
-            uint64_t requestedReservationSize);
+        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
+                                          uint64_t reservation,
+                                          uint64_t* reservationOut = nullptr);
 
-        void InsertHeap(Heap* heap);
+        HRESULT InsertHeap(Heap* heap);
 
       private:
-        struct MemorySegmentInfo {
-            const DXGI_MEMORY_SEGMENT_GROUP dxgiSegment;
+        struct VideoMemorySegmentInfo {
+            const DXGI_MEMORY_SEGMENT_GROUP dxgiMemorySegmentGroup;
             LinkedList<Heap> lruCache = {};
             uint64_t budget = 0;
             uint64_t usage = 0;
@@ -70,19 +70,20 @@ namespace gpgmm { namespace d3d12 {
         };
 
         struct VideoMemoryInfo {
-            MemorySegmentInfo local = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
-            MemorySegmentInfo nonLocal = {DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
+            VideoMemorySegmentInfo localVideoMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
+            VideoMemorySegmentInfo nonLocalVideoMemorySegment = {
+                DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
         };
 
-        HRESULT EvictHeap(MemorySegmentInfo* memorySegment, Heap** heapOut);
+        HRESULT EvictHeap(VideoMemorySegmentInfo* videoMemorySegment, Heap** heapOut);
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP dxgiMemorySegmentGroup,
                              uint64_t sizeToMakeResident,
                              uint64_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        MemorySegmentInfo* GetMemorySegmentInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegment);
-        void UpdateVideoMemoryInfo();
-        void UpdateMemorySegmentInfo(MemorySegmentInfo* segmentInfo);
+        VideoMemorySegmentInfo* GetVideoMemorySegmentInfo(
+            const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup);
+        void UpdateVideoMemorySegmentInfo(VideoMemorySegmentInfo* videoMemorySegment);
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;

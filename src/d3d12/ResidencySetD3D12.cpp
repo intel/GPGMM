@@ -14,19 +14,22 @@
 
 #include "src/d3d12/ResidencySetD3D12.h"
 
-#include "../common/Assert.h"
-
 namespace gpgmm { namespace d3d12 {
-    void ResidencySet::Insert(Heap* heap) {
-        ASSERT(heap != nullptr);
-        bool inserted = mSet.insert(heap).second;
+    HRESULT ResidencySet::Insert(Heap* heap) {
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+        const bool inserted = mSet.insert(heap).second;
         if (inserted) {
             mToMakeResident.push_back(heap);
+            return S_OK;
         }
+        return E_FAIL;
     }
 
-    void ResidencySet::Reset() {
+    HRESULT ResidencySet::Reset() {
         mSet.clear();
         mToMakeResident.clear();
+        return S_OK;
     }
 }}  // namespace gpgmm::d3d12

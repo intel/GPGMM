@@ -37,17 +37,21 @@ namespace gpgmm { namespace d3d12 {
                                                               : videoMemoryBudgetLimit),
           mTotalResourceBudgetLimit(mTotalResourceBudgetLimit),
           mFence(new Fence(device, 0)) {
-        UpdateVideoMemoryInfo();
+        // Query and set the video memory limits for each segment.
+        UpdateVideoMemorySegmentInfo(&mVideoMemoryInfo.localVideoMemorySegment);
+        if (!mIsUMA) {
+            UpdateVideoMemorySegmentInfo(&mVideoMemoryInfo.nonLocalVideoMemorySegment);
+        }
 
         // There is a non-zero memory usage even before any resources have been created, and this
         // value can vary by enviroment. By adding this in addition to the artificial budget cap, we
         // can create a predictable and reproducible budget.
         if (mTotalResourceBudgetLimit > 0) {
-            mVideoMemoryInfo.local.budget =
-                mVideoMemoryInfo.local.usage + mTotalResourceBudgetLimit;
+            mVideoMemoryInfo.localVideoMemorySegment.budget =
+                mVideoMemoryInfo.localVideoMemorySegment.usage + mTotalResourceBudgetLimit;
             if (!mIsUMA) {
-                mVideoMemoryInfo.nonLocal.budget =
-                    mVideoMemoryInfo.nonLocal.usage + mTotalResourceBudgetLimit;
+                mVideoMemoryInfo.nonLocalVideoMemorySegment.budget =
+                    mVideoMemoryInfo.nonLocalVideoMemorySegment.usage + mTotalResourceBudgetLimit;
             }
         }
     }
@@ -95,47 +99,46 @@ namespace gpgmm { namespace d3d12 {
         InsertHeap(heap);
     }
 
-    // Returns the appropriate MemorySegmentInfo for a given MemorySegment.
-    ResidencyManager::MemorySegmentInfo* ResidencyManager::GetMemorySegmentInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegment) {
-        switch (memorySegment) {
+    // Returns the appropriate VideoMemorySegmentInfo for a given DXGI_MEMORY_SEGMENT_GROUP.
+    ResidencyManager::VideoMemorySegmentInfo* ResidencyManager::GetVideoMemorySegmentInfo(
+        const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup) {
+        switch (dxgiMemorySegmentGroup) {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
-                return &mVideoMemoryInfo.local;
+                return &mVideoMemoryInfo.localVideoMemorySegment;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
                 ASSERT(!mIsUMA);
-                return &mVideoMemoryInfo.nonLocal;
+                return &mVideoMemoryInfo.nonLocalVideoMemorySegment;
             default:
                 UNREACHABLE();
                 return nullptr;
         }
     }
 
-    // Allows an application component external to Dawn to cap Dawn's residency budgets to prevent
-    // competition for device memory. Returns the amount of memory reserved, which may be less
-    // that the requested reservation when under pressure.
-    uint64_t ResidencyManager::SetExternalMemoryReservation(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegment,
-        uint64_t requestedReservationSize) {
-        MemorySegmentInfo* segmentInfo = GetMemorySegmentInfo(memorySegment);
+    // Sends the minimum required physical video memory for an application, to this residency
+    // manager. Returns the amount of memory reserved, which may be less then the |reservation| when
+    // under video memory pressure.
+    HRESULT ResidencyManager::SetVideoMemoryReservation(
+        const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
+        uint64_t reservation,
+        uint64_t* reservationOut) {
+        VideoMemorySegmentInfo* videoMemorySegment =
+            GetVideoMemorySegmentInfo(dxgiMemorySegmentGroup);
 
-        segmentInfo->externalRequest = requestedReservationSize;
+        videoMemorySegment->externalRequest = reservation;
 
-        UpdateMemorySegmentInfo(segmentInfo);
+        UpdateVideoMemorySegmentInfo(videoMemorySegment);
 
-        return segmentInfo->externalReservation;
+        *reservationOut = videoMemorySegment->externalReservation;
+
+        return S_OK;
     }
 
-    void ResidencyManager::UpdateVideoMemoryInfo() {
-        UpdateMemorySegmentInfo(&mVideoMemoryInfo.local);
-        if (!mIsUMA) {
-            UpdateMemorySegmentInfo(&mVideoMemoryInfo.nonLocal);
-        }
-    }
-
-    void ResidencyManager::UpdateMemorySegmentInfo(MemorySegmentInfo* segmentInfo) {
+    void ResidencyManager::UpdateVideoMemorySegmentInfo(
+        VideoMemorySegmentInfo* videoMemorySegment) {
         DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfo;
 
-        mAdapter->QueryVideoMemoryInfo(0, segmentInfo->dxgiSegment, &queryVideoMemoryInfo);
+        mAdapter->QueryVideoMemoryInfo(0, videoMemorySegment->dxgiMemorySegmentGroup,
+                                       &queryVideoMemoryInfo);
 
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -143,34 +146,37 @@ namespace gpgmm { namespace d3d12 {
         // component from consuming a disproportionate share of memory and ensures that Dawn can
         // continue to make forward progress. Note the choice to halve memory is arbitrarily chosen
         // and subject to future experimentation.
-        segmentInfo->externalReservation =
-            std::min(queryVideoMemoryInfo.Budget / 2, segmentInfo->externalRequest);
+        videoMemorySegment->externalReservation =
+            std::min(queryVideoMemoryInfo.Budget / 2, videoMemorySegment->externalRequest);
 
-        segmentInfo->usage = queryVideoMemoryInfo.CurrentUsage - segmentInfo->externalReservation;
+        videoMemorySegment->usage =
+            queryVideoMemoryInfo.CurrentUsage - videoMemorySegment->externalReservation;
 
         // If we're restricting the budget, leave the budget as is.
         if (mTotalResourceBudgetLimit > 0) {
             return;
         }
 
-        segmentInfo->budget = (queryVideoMemoryInfo.Budget - segmentInfo->externalReservation) *
-                              mVideoMemoryBudgetLimit;
+        videoMemorySegment->budget =
+            (queryVideoMemoryInfo.Budget - videoMemorySegment->externalReservation) *
+            mVideoMemoryBudgetLimit;
     }
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
     // nullptr when nothing further can be evicted.
-    HRESULT ResidencyManager::EvictHeap(MemorySegmentInfo* memorySegment, Heap** ppEvictedHeapOut) {
+    HRESULT ResidencyManager::EvictHeap(VideoMemorySegmentInfo* videoMemorySegment,
+                                        Heap** ppEvictedHeapOut) {
         // If the LRU is empty, return nullptr to allow execution to continue. Note that fully
         // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
         // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
         // the process budget and starving Dawn, which will cause thrash.
         HRESULT hr = S_OK;
-        if (memorySegment->lruCache.empty()) {
+        if (videoMemorySegment->lruCache.empty()) {
             *ppEvictedHeapOut = nullptr;
             return hr;
         }
 
-        Heap* heap = memorySegment->lruCache.head()->value();
+        Heap* heap = videoMemorySegment->lruCache.head()->value();
 
         const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
 
@@ -203,25 +209,27 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
                                     const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
-        MemorySegmentInfo* memorySegmentInfo = GetMemorySegmentInfo(dxgiMemorySegmentGroup);
+        VideoMemorySegmentInfo* videoMemorySegmentInfo =
+            GetVideoMemorySegmentInfo(dxgiMemorySegmentGroup);
 
-        UpdateMemorySegmentInfo(memorySegmentInfo);
+        UpdateVideoMemorySegmentInfo(videoMemorySegmentInfo);
 
-        const uint64_t memoryUsageAfterMakeResident = sizeToMakeResident + memorySegmentInfo->usage;
+        const uint64_t memoryUsageAfterMakeResident =
+            sizeToMakeResident + videoMemorySegmentInfo->usage;
 
         // Return when we can call MakeResident and remain under budget.
-        if (memoryUsageAfterMakeResident < memorySegmentInfo->budget) {
+        if (memoryUsageAfterMakeResident < videoMemorySegmentInfo->budget) {
             return 0;
         }
 
         std::vector<ID3D12Pageable*> resourcesToEvict;
         uint64_t sizeNeededToBeUnderBudget =
-            memoryUsageAfterMakeResident - memorySegmentInfo->budget;
+            memoryUsageAfterMakeResident - videoMemorySegmentInfo->budget;
         uint64_t sizeEvicted = 0;
         HRESULT hr = S_OK;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
             Heap* heap = nullptr;
-            hr = EvictHeap(memorySegmentInfo, &heap);
+            hr = EvictHeap(videoMemorySegmentInfo, &heap);
             if (FAILED(hr)) {
                 return hr;
             }
@@ -299,12 +307,13 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
-            hr = MakeResident(mVideoMemoryInfo.local.dxgiSegment, localSizeToMakeResident,
-                              localHeapsToMakeResident.size(), localHeapsToMakeResident.data());
+            hr = MakeResident(mVideoMemoryInfo.localVideoMemorySegment.dxgiMemorySegmentGroup,
+                              localSizeToMakeResident, localHeapsToMakeResident.size(),
+                              localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
-            hr = MakeResident(mVideoMemoryInfo.nonLocal.dxgiSegment, nonLocalSizeToMakeResident,
-                              nonLocalHeapsToMakeResident.size(),
+            hr = MakeResident(mVideoMemoryInfo.nonLocalVideoMemorySegment.dxgiMemorySegmentGroup,
+                              nonLocalSizeToMakeResident, nonLocalHeapsToMakeResident.size(),
                               nonLocalHeapsToMakeResident.data());
         }
 
@@ -355,8 +364,14 @@ namespace gpgmm { namespace d3d12 {
     // is implicitly made resident will cause the residency manager to view the allocation as
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
-    void ResidencyManager::InsertHeap(Heap* heap) {
-        ASSERT(heap->IsInList() == false);
-        GetMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
+    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+        // Heap already exists in the cache.
+        if (heap->IsInList()) {
+            return E_INVALIDARG;
+        }
+
+        GetVideoMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
+
+        return S_OK;
     }
 }}  // namespace gpgmm::d3d12

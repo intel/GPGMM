@@ -78,7 +78,7 @@ namespace gpgmm { namespace d3d12 {
         return IsInList() || IsResidencyLocked();
     }
 
-    void Heap::UpdateResidency(ResidencySet* residencySet) {
-        residencySet->Insert(this);
+    HRESULT Heap::UpdateResidency(ResidencySet* residencySet) {
+        return residencySet->Insert(this);
     }
 }}  // namespace gpgmm::d3d12

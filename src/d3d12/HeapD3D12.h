@@ -42,7 +42,7 @@ namespace gpgmm { namespace d3d12 {
         ID3D12Pageable* GetD3D12Pageable() const;
         ID3D12Heap* GetD3D12Heap() const;
 
-        void UpdateResidency(ResidencySet* residencySet);
+        HRESULT UpdateResidency(ResidencySet* residencySet);
 
         // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at
