@@ -48,9 +48,10 @@ namespace gpgmm { namespace d3d12 {
                       const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
                       uint64_t* sizeEvictedOut = nullptr);
 
-        HRESULT ExecuteCommandLists(ResidencySet* residencySet,
-                                    ID3D12CommandQueue* d3d12Queue,
-                                    ID3D12CommandList* d3d12CommandList);
+        HRESULT ExecuteCommandLists(ID3D12CommandQueue* d3d12Queue,
+                                    ID3D12CommandList** d3d12CommandLists,
+                                    ResidencySet** residencySets,
+                                    uint32_t count);
 
         uint64_t SetExternalMemoryReservation(
             const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,

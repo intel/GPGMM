@@ -1,4 +1,4 @@
-From 333a85e6e1ac417b0559ff1a554acb75260100c2 Mon Sep 17 00:00:00 2001
+From 442eff6ed01fab915422423442cc7a2b5a4c49b2 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Thu, 29 Jul 2021 13:53:46 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -15,7 +15,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/Toggles.h                     |   1 +
  src/dawn_native/d3d12/BufferD3D12.cpp         |  37 +-
  src/dawn_native/d3d12/BufferD3D12.h           |   7 +-
- .../d3d12/CommandRecordingContext.cpp         |  22 +-
+ .../d3d12/CommandRecordingContext.cpp         |  21 +-
  .../d3d12/CommandRecordingContext.h           |   4 +-
  src/dawn_native/d3d12/D3D12Backend.cpp        |  10 +-
  src/dawn_native/d3d12/DeviceD3D12.cpp         |  76 +++-
@@ -31,7 +31,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/d3d12/UtilsD3D12.cpp          |  11 +
  src/dawn_native/d3d12/UtilsD3D12.h            |   2 +
  src/tests/white_box/D3D12ResidencyTests.cpp   |  18 +-
- 26 files changed, 211 insertions(+), 660 deletions(-)
+ 26 files changed, 212 insertions(+), 658 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
@@ -310,7 +310,7 @@ index d6fcbbdc..14ef9df2 100644
          wgpu::BufferUsage mLastUsage = wgpu::BufferUsage::None;
          ExecutionSerial mLastUsedSerial = std::numeric_limits<ExecutionSerial>::max();
 diff --git a/src/dawn_native/d3d12/CommandRecordingContext.cpp b/src/dawn_native/d3d12/CommandRecordingContext.cpp
-index 8faa46e0..d1747346 100644
+index 8faa46e0..ef6f1b05 100644
 --- a/src/dawn_native/d3d12/CommandRecordingContext.cpp
 +++ b/src/dawn_native/d3d12/CommandRecordingContext.cpp
 @@ -35,6 +35,7 @@ namespace dawn_native { namespace d3d12 {
@@ -321,20 +321,21 @@ index 8faa46e0..d1747346 100644
                  DAWN_TRY(std::move(error));
              }
          } else {
-@@ -70,26 +71,21 @@ namespace dawn_native { namespace d3d12 {
+@@ -70,26 +71,24 @@ namespace dawn_native { namespace d3d12 {
                  Release();
                  DAWN_TRY(std::move(error));
              }
 -            DAWN_TRY(device->GetResidencyManager()->EnsureHeapsAreResident(
 -                mHeapsPendingUsage.data(), mHeapsPendingUsage.size()));
--
--            ID3D12CommandList* d3d12CommandList = GetCommandList();
+ 
+             ID3D12CommandList* d3d12CommandList = GetCommandList();
 -            device->GetCommandQueue()->ExecuteCommandLists(1, &d3d12CommandList);
 -
-+            DAWN_TRY(
-+                CheckHRESULT(device->GetResidencyManager()->ExecuteCommandLists(
-+                                 &mResidencySet, device->GetCommandQueue().Get(), GetCommandList()),
-+                             "D3D12 execute command list"));
++            gpgmm::d3d12::ResidencySet* residencySet = GetResidencySet();
++            DAWN_TRY(CheckHRESULT(
++                device->GetResidencyManager()->ExecuteCommandLists(
++                    device->GetCommandQueue().Get(), &d3d12CommandList, &residencySet, 1),
++                "D3D12 execute command list"));
              mIsOpen = false;
              mSharedTextures.clear();
              mHeapsPendingUsage.clear();
