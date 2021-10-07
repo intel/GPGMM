@@ -1,6 +1,6 @@
-From 3497e007104c8494718fde99d4bb8d382c8e2e6d Mon Sep 17 00:00:00 2001
+From a756be08e1d840b854ac4322d808ac5c7e47f0d3 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
-Date: Mon, 20 Sep 2021 17:43:37 -0700
+Date: Wed, 6 Oct 2021 15:53:59 -0700
 Subject: [PATCH] Use GPGMM for DML backend.
 
 Add supports for sub-allocation and
@@ -8,30 +8,29 @@ residency for Tensor resources.
 ---
  .gitignore                               |   1 +
  DEPS                                     |   4 +
- build_overrides/gpgmm.gni                |  22 ++++
+ build_overrides/gpgmm.gni                |  19 +++
  build_overrides/webnn.gni                |   1 +
- build_overrides/webnn_features.gni       |   4 +-
  src/webnn_native/BUILD.gn                |   1 +
- src/webnn_native/dml/deps/src/device.cpp | 141 +++++++++++++++--------
- src/webnn_native/dml/deps/src/device.h   |  32 +++--
- src/webnn_native/dml/deps/src/util.h     |  34 +++---
- 9 files changed, 168 insertions(+), 72 deletions(-)
+ src/webnn_native/dml/deps/src/device.cpp | 161 ++++++++++++++++-------
+ src/webnn_native/dml/deps/src/device.h   |  34 +++--
+ src/webnn_native/dml/deps/src/util.h     |  48 ++++---
+ 8 files changed, 191 insertions(+), 78 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
-index 66eebc2..c64c95b 100644
+index 66eebc2..addc5b0 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -19,6 +19,7 @@ third_party/microsoft.ai.directml*
+@@ -15,6 +15,7 @@ third_party/llvm-build
+ third_party/markupsafe/
+ third_party/dawn
+ third_party/DirectML
++third_party/gpgmm
+ third_party/microsoft.ai.directml*
  third_party/oneDNN
  third_party/XNNPACK
- third_party/stb
-+third_party/gpgmm/
- tools
- out
- 
 diff --git a/DEPS b/DEPS
-index 9435775..26fc4e3 100644
+index 9435775..f25f1ab 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -89,6 +89,10 @@ deps = {
@@ -40,17 +39,17 @@ index 9435775..26fc4e3 100644
  
 +  # GPGMM support
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@8cab51eca20a1616f5acc85065ffc0c5efc2a8d7',
++    'url': '{github_git}/intel/gpgmm.git@651fec7b490ff04943dec8222af25b9e10bf9142',
 +  },
  }
  
  hooks = [
 diff --git a/build_overrides/gpgmm.gni b/build_overrides/gpgmm.gni
 new file mode 100644
-index 0000000..bdfcd92
+index 0000000..e572c04
 --- /dev/null
 +++ b/build_overrides/gpgmm.gni
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,19 @@
 +# Copyright 2021 The GPGMM Authors
 +#
 +# Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,9 +68,6 @@ index 0000000..bdfcd92
 +# The values in this file are the defaults for when we are building from
 +# Dawn's repository.
 +
-+# We are building inside WebNN.
-+gpgmm_standalone = false
-+
 +gpgmm_root_dir = "//third_party/gpgmm"
 diff --git a/build_overrides/webnn.gni b/build_overrides/webnn.gni
 index 0db9e03..7155c1c 100644
@@ -82,21 +78,6 @@ index 0db9e03..7155c1c 100644
  webnn_googletest_dir = "//third_party/googletest"
  webnn_jinja2_dir = "//third_party/jinja2"
 +webnn_gpgmm_dir = "//third_party/gpgmm"
-diff --git a/build_overrides/webnn_features.gni b/build_overrides/webnn_features.gni
-index d4397ae..bfea7d5 100644
---- a/build_overrides/webnn_features.gni
-+++ b/build_overrides/webnn_features.gni
-@@ -17,7 +17,9 @@ declare_args() {
-   webnn_enable_openvino = false
- 
-   # Enables the compilation of DirectML backend
--  webnn_enable_dml = false
-+  # GPGMM only supports the DML backend so make the GPGMM-WebNN
-+  # integration always use it.
-+  webnn_enable_dml = is_win
- 
-   # Enables the compilation of oneDNN backend
-   webnn_enable_onednn = false
 diff --git a/src/webnn_native/BUILD.gn b/src/webnn_native/BUILD.gn
 index bca9dca..9891da3 100644
 --- a/src/webnn_native/BUILD.gn
@@ -110,7 +91,7 @@ index bca9dca..9891da3 100644
    ]
    defines = []
 diff --git a/src/webnn_native/dml/deps/src/device.cpp b/src/webnn_native/dml/deps/src/device.cpp
-index 809b6b3..6e9c608 100644
+index 809b6b3..5bf9285 100644
 --- a/src/webnn_native/dml/deps/src/device.cpp
 +++ b/src/webnn_native/dml/deps/src/device.cpp
 @@ -12,6 +12,13 @@
@@ -127,36 +108,36 @@ index 809b6b3..6e9c608 100644
  Device::Device(bool useGpu, bool useDebugLayer) : m_useGpu(useGpu), m_useDebugLayer(useDebugLayer) {}
  
  HRESULT Device::Init()
-@@ -28,17 +35,26 @@ HRESULT Device::Init()
+@@ -28,15 +35,24 @@ HRESULT Device::Init()
              debugController->EnableDebugLayer();
          }
      }
 -
-+    Microsoft::WRL::ComPtr<IDXGIAdapter3> pAdapter;
++    Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
      if (    !m_useGpu 
          ||  FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3d12Device))))
      {
          Microsoft::WRL::ComPtr<IDXGIFactory4> dxgiFactory;
          ReturnIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)));
 -        Microsoft::WRL::ComPtr<IDXGIAdapter3> pAdapter;
-         ReturnIfFailed(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pAdapter)));
-         ReturnIfFailed(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3d12Device)));
-     }
- 
-+    // Lookup the hardware adapter used by the default device.
-+    if (pAdapter == nullptr){
+-        ReturnIfFailed(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pAdapter)));
+-        ReturnIfFailed(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3d12Device)));
++        ReturnIfFailed(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&dxgiAdapter)));
++        ReturnIfFailed(D3D12CreateDevice(dxgiAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_d3d12Device)));
++    }
++
++    // Get the hardware adapter used by the device.
++    if (dxgiAdapter == nullptr){
 +        LUID adapterLUID = m_d3d12Device->GetAdapterLuid();
 +        Microsoft::WRL::ComPtr<IDXGIFactory1> dxgiFactory;
 +        ReturnIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)));
 +        ComPtr<IDXGIFactory4> dxgiFactory4;
 +        ReturnIfFailed(dxgiFactory.As(&dxgiFactory4));
-+        dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&pAdapter));
-+    }
-+
++        dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&dxgiAdapter));
+     }
+ 
      D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
-     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-@@ -55,6 +71,20 @@ HRESULT Device::Init()
+@@ -55,6 +71,21 @@ HRESULT Device::Init()
          nullptr, // initial pipeline state
          IID_GRAPHICS_PPV_ARGS(m_commandList.GetAddressOf())));
  
@@ -167,17 +148,18 @@ index 809b6b3..6e9c608 100644
 +    ReturnIfFailed(m_d3d12Device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
 +
 +    gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-+    allocatorDesc.Adapter = pAdapter;
++    allocatorDesc.Adapter = dxgiAdapter;
 +    allocatorDesc.Device = m_d3d12Device;
 +    allocatorDesc.IsUMA = arch.UMA;
 +    allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
 +
-+    m_allocator = std::make_unique<gpgmm::d3d12::ResourceAllocator>(allocatorDesc);
++    m_resourceAllocator = std::make_unique<gpgmm::d3d12::ResourceAllocator>(allocatorDesc);
++    m_residencyManager = m_resourceAllocator->GetResidencyManager();
 +
      D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
      descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
      descriptorHeapDesc.NumDescriptors = 4; // One each for the input, output, persistent, and temporary resources
-@@ -156,7 +186,7 @@ HRESULT Device::DispatchOperator(
+@@ -156,7 +187,7 @@ HRESULT Device::DispatchOperator(
      {
          if (binding.sizeInBytes != 0)
          {
@@ -186,7 +168,7 @@ index 809b6b3..6e9c608 100644
          }
      }
  
-@@ -164,19 +194,19 @@ HRESULT Device::DispatchOperator(
+@@ -164,19 +195,19 @@ HRESULT Device::DispatchOperator(
      {
          if (binding.sizeInBytes != 0)
          {
@@ -211,7 +193,7 @@ index 809b6b3..6e9c608 100644
      };
      
      ReturnIfFailed(ClearGpuBuffers(buffersToClear));
-@@ -212,17 +242,17 @@ HRESULT Device::DispatchOperator(
+@@ -212,17 +243,17 @@ HRESULT Device::DispatchOperator(
          m_commandList->ResourceBarrier(
              1,
              &CD3DX12_RESOURCE_BARRIER::Transition(
@@ -232,7 +214,7 @@ index 809b6b3..6e9c608 100644
                  D3D12_RESOURCE_STATE_COPY_DEST,
                  D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
              );
-@@ -233,8 +263,8 @@ HRESULT Device::DispatchOperator(
+@@ -233,8 +264,8 @@ HRESULT Device::DispatchOperator(
  
      DML_BINDING_TABLE_DESC bindingTableDesc = {};
      bindingTableDesc.Dispatchable = op;
@@ -243,7 +225,7 @@ index 809b6b3..6e9c608 100644
      bindingTableDesc.SizeInDescriptors = bindingProps.RequiredDescriptorCount;
  
      ReturnIfFailed(m_bindingTable->Reset(&bindingTableDesc));
-@@ -260,20 +290,20 @@ HRESULT Device::DispatchOperator(
+@@ -260,20 +291,20 @@ HRESULT Device::DispatchOperator(
      // Bind persistent/temporary resources
      if (bindingProps.PersistentResourceSize != 0)
      {
@@ -267,7 +249,7 @@ index 809b6b3..6e9c608 100644
      m_commandRecorder->RecordDispatch(m_commandList.Get(), op, m_bindingTable.Get());
      RecordOutputReadBack(outputsResourceSize);
      ReturnIfFailed(ExecuteCommandListAndWait());
-@@ -291,17 +321,17 @@ void Device::RecordOutputReadBack(uint64_t outputsResourceSize)
+@@ -291,17 +322,17 @@ void Device::RecordOutputReadBack(uint64_t outputsResourceSize)
          m_commandList->ResourceBarrier(
              1,
              &CD3DX12_RESOURCE_BARRIER::Transition(
@@ -288,7 +270,7 @@ index 809b6b3..6e9c608 100644
                  D3D12_RESOURCE_STATE_COPY_SOURCE,
                  D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
              );
-@@ -404,16 +434,16 @@ HRESULT Device::InitializeOperator(
+@@ -404,16 +435,16 @@ HRESULT Device::InitializeOperator(
      {
          if (binding.sizeInBytes != 0)
          {
@@ -309,7 +291,7 @@ index 809b6b3..6e9c608 100644
      };
  
      ReturnIfFailed(ClearGpuBuffers(buffersToClear));
-@@ -449,17 +479,17 @@ HRESULT Device::InitializeOperator(
+@@ -449,17 +480,17 @@ HRESULT Device::InitializeOperator(
          m_commandList->ResourceBarrier(
              1,
              &CD3DX12_RESOURCE_BARRIER::Transition(
@@ -330,7 +312,7 @@ index 809b6b3..6e9c608 100644
                  D3D12_RESOURCE_STATE_COPY_DEST,
                  D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
                  );
-@@ -470,8 +500,8 @@ HRESULT Device::InitializeOperator(
+@@ -470,8 +501,8 @@ HRESULT Device::InitializeOperator(
  
      DML_BINDING_TABLE_DESC bindingTableDesc = {};
      bindingTableDesc.Dispatchable = m_operatorInitializer.Get();
@@ -341,7 +323,7 @@ index 809b6b3..6e9c608 100644
      bindingTableDesc.SizeInDescriptors = descriptorHeapSize;
  
      ReturnIfFailed(m_bindingTable->Reset(&bindingTableDesc));
-@@ -481,20 +511,20 @@ HRESULT Device::InitializeOperator(
+@@ -481,20 +512,20 @@ HRESULT Device::InitializeOperator(
  
      if (persistentResourceSize != 0)
      {
@@ -365,13 +347,20 @@ index 809b6b3..6e9c608 100644
      m_commandRecorder->RecordDispatch(m_commandList.Get(), m_operatorInitializer.Get(), m_bindingTable.Get());
      ReturnIfFailed(ExecuteCommandListAndWait());
      return S_OK;
-@@ -504,19 +534,20 @@ HRESULT Device::ExecuteCommandListAndWait()
+@@ -503,28 +534,35 @@ HRESULT Device::InitializeOperator(
+ HRESULT Device::ExecuteCommandListAndWait()
  {
      ReturnIfFailed(m_commandList->Close());
- 
--    ID3D12CommandList* commandLists[] = { m_commandList.Get() };
+-
++    
+     ID3D12CommandList* commandLists[] = { m_commandList.Get() };
 -    m_commandQueue->ExecuteCommandLists(ARRAYSIZE(commandLists), commandLists);
-+    m_allocator->GetResidencyManager()->ExecuteCommandLists(&m_residencySet, m_commandQueue.Get(), m_commandList.Get());
++    gpgmm::d3d12::ResidencySet* residencySets[] = { &m_residencySet };
++    if (m_residencyManager != nullptr){
++        m_residencyManager->ExecuteCommandLists(m_commandQueue.Get(), commandLists, residencySets, ARRAYSIZE(commandLists));
++    } else {
++        m_commandQueue->ExecuteCommandLists(ARRAYSIZE(commandLists), commandLists);
++    }
  
      WaitForQueueToComplete(m_commandQueue.Get());
  
@@ -389,16 +378,17 @@ index 809b6b3..6e9c608 100644
      uint64_t newSize = RoundUpToPow2(requestedSizeInBytes);     // ensures geometric growth
      newSize = std::max(newSize, static_cast<uint64_t>(65536));  // Minimum size of 64k
  
-@@ -524,7 +555,7 @@ HRESULT Device::EnsureUploadHeapSize(uint64_t requestedSizeInBytes)
+     if (newSize != existingSize)
      {
          m_uploadHeap = nullptr;
-         ReturnIfFailed(CreateCommittedResource(
+-        ReturnIfFailed(CreateCommittedResource(
 -            m_d3d12Device.Get(),
-+            m_allocator.get(),
++        ReturnIfFailed(CreateResource(
++            m_resourceAllocator.get(),
              CD3DX12_RESOURCE_DESC::Buffer(newSize),
              CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
              D3D12_RESOURCE_STATE_GENERIC_READ,
-@@ -534,7 +565,7 @@ HRESULT Device::EnsureUploadHeapSize(uint64_t requestedSizeInBytes)
+@@ -534,7 +572,7 @@ HRESULT Device::EnsureUploadHeapSize(uint64_t requestedSizeInBytes)
      return S_OK;
  }
  
@@ -407,7 +397,7 @@ index 809b6b3..6e9c608 100644
  {
      if (m_useCpuCustomHeapResources)
      {
-@@ -547,63 +578,81 @@ HRESULT Device::EnsureCpuOrDefaultBufferSize(uint64_t requestedSizeInBytes, _Ino
+@@ -547,64 +585,89 @@ HRESULT Device::EnsureCpuOrDefaultBufferSize(uint64_t requestedSizeInBytes, _Ino
      return S_OK;
  }
  
@@ -423,8 +413,11 @@ index 809b6b3..6e9c608 100644
      {
          buffer = nullptr;
 -        ReturnIfFailed(CreateCpuCustomBuffer(m_d3d12Device.Get(), newSize, buffer));
-+        ReturnIfFailed(CreateCpuCustomBuffer(m_allocator.get(), newSize, buffer));
++        ReturnIfFailed(CreateCpuCustomBuffer(m_resourceAllocator.get(), newSize, buffer));
      }
++
++    UpdateResidency(buffer.Get(), &m_residencySet);
++    
      return S_OK;
  }
  
@@ -440,11 +433,11 @@ index 809b6b3..6e9c608 100644
      {
          buffer = nullptr;
 -        ReturnIfFailed(CreateDefaultBuffer(m_d3d12Device.Get(), newSize, buffer));
-+        ReturnIfFailed(CreateDefaultBuffer(m_allocator.get(), newSize, buffer));
-+    }
-+    if (buffer){
-+        buffer->UpdateResidency(&m_residencySet);
++        ReturnIfFailed(CreateDefaultBuffer(m_resourceAllocator.get(), newSize, buffer));
      }
++
++    UpdateResidency(buffer.Get(), &m_residencySet);
++    
      return S_OK;
  }
  
@@ -456,15 +449,16 @@ index 809b6b3..6e9c608 100644
  
      if (newSize != existingSize)
      {
-+        if (m_descriptorHeap != nullptr){
-+            m_allocator->GetResidencyManager()->UnlockHeap(m_descriptorHeap.get());
++        if (m_descriptorHeap != nullptr && m_residencyManager != nullptr){
++            m_residencyManager->UnlockHeap(m_descriptorHeap.get());
 +        }
 +
          m_descriptorHeap = nullptr;
++        
++        if (m_residencyManager != nullptr){
++            ReturnIfFailed(m_residencyManager->Evict(newSize, DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
++        }
  
-+        ReturnIfFailed(m_allocator->GetResidencyManager()->Evict(
-+                                  newSize, DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
-+
          D3D12_DESCRIPTOR_HEAP_DESC desc = {};
          desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
          desc.NumDescriptors = newSize;
@@ -475,8 +469,11 @@ index 809b6b3..6e9c608 100644
 +        ReturnIfFailed(m_d3d12Device->CreateDescriptorHeap(&desc, IID_GRAPHICS_PPV_ARGS(d3d12DescriptorHeap.GetAddressOf())));
 +    
 +        m_descriptorHeap = std::make_unique<SVDescriptorHeap>(std::move(d3d12DescriptorHeap), newSize);
-+        m_allocator->GetResidencyManager()->InsertHeap(m_descriptorHeap.get());
-+        ReturnIfFailed(m_allocator->GetResidencyManager()->LockHeap(m_descriptorHeap.get()));
++
++        if (m_residencyManager){
++            m_residencyManager->InsertHeap(m_descriptorHeap.get());
++            ReturnIfFailed(m_residencyManager->LockHeap(m_descriptorHeap.get()));
++        }
      }
      return S_OK;
  }
@@ -492,15 +489,16 @@ index 809b6b3..6e9c608 100644
      {
          m_readbackHeap = nullptr;
 -        ReturnIfFailed(CreateReadBackBuffer(m_d3d12Device.Get(), newSize, m_readbackHeap));
-+        ReturnIfFailed(CreateReadBackBuffer(m_allocator.get(), newSize, m_readbackHeap));
-+    }
-+    if (m_readbackHeap){
-+        m_readbackHeap->UpdateResidency(&m_residencySet);
++        ReturnIfFailed(CreateReadBackBuffer(m_resourceAllocator.get(), newSize, m_readbackHeap));
      }
++
++    UpdateResidency(m_readbackHeap.Get(), &m_residencySet);
++    
      return S_OK;
  }
+ 
 diff --git a/src/webnn_native/dml/deps/src/device.h b/src/webnn_native/dml/deps/src/device.h
-index cd1dea3..29dc7eb 100644
+index cd1dea3..bdad682 100644
 --- a/src/webnn_native/dml/deps/src/device.h
 +++ b/src/webnn_native/dml/deps/src/device.h
 @@ -6,8 +6,17 @@
@@ -534,15 +532,17 @@ index cd1dea3..29dc7eb 100644
          HRESULT EnsureDescriptorHeapSize(uint32_t requestedSizeInDescriptors);
  
          HRESULT ClearGpuBuffers(dml::Span<ID3D12Resource*> buffers);
-@@ -64,6 +73,7 @@ namespace pydml
+@@ -64,6 +73,9 @@ namespace pydml
          Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
          Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocator;
          Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
-+        std::unique_ptr<gpgmm::d3d12::ResourceAllocator> m_allocator;
++        std::unique_ptr<gpgmm::d3d12::ResourceAllocator> m_resourceAllocator;
++            
++        gpgmm::d3d12::ResidencyManager* m_residencyManager = nullptr;
  
          // GPU- and CPU-visible descriptor heaps used for ClearUnorderedAccessView
          Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_clearUavDescriptorHeapGpu;
-@@ -75,16 +85,18 @@ namespace pydml
+@@ -75,16 +87,18 @@ namespace pydml
          Microsoft::WRL::ComPtr<IDMLBindingTable> m_bindingTable;
  
          // Lazily-initialized resources for operator initialization/execution
@@ -569,7 +569,7 @@ index cd1dea3..29dc7eb 100644
          bool m_useCpuCustomHeapResources = false;
          bool m_useGpu = true;
 diff --git a/src/webnn_native/dml/deps/src/util.h b/src/webnn_native/dml/deps/src/util.h
-index aef161a..4747b70 100644
+index aef161a..9855222 100644
 --- a/src/webnn_native/dml/deps/src/util.h
 +++ b/src/webnn_native/dml/deps/src/util.h
 @@ -10,6 +10,8 @@
@@ -581,11 +581,19 @@ index aef161a..4747b70 100644
  #define FAILED(hr) (((HRESULT)(hr)) < 0)
  
  #define ReturnIfFailed(hr) \
-@@ -115,29 +117,31 @@ struct DmlBufferArrayBinding
+@@ -114,30 +116,38 @@ struct DmlBufferArrayBinding
+     }
  };
  
- inline HRESULT CreateCommittedResource(
+-inline HRESULT CreateCommittedResource(
 -    ID3D12Device* device,
++inline void UpdateResidency(gpgmm::d3d12::ResourceAllocation* resource, gpgmm::d3d12::ResidencySet* residencySet){
++    DAWN_ASSERT(residencySet != nullptr);
++    if (resource == nullptr) return;
++    resource->UpdateResidency(residencySet);
++}
++
++inline HRESULT CreateResource(
 +    gpgmm::d3d12::ResourceAllocator* allocator,
      const D3D12_RESOURCE_DESC& resourceDesc,
      const D3D12_HEAP_PROPERTIES& heapProperties,
@@ -622,16 +630,18 @@ index aef161a..4747b70 100644
      D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
      )
  {
-@@ -150,7 +154,7 @@ inline HRESULT CreateCpuCustomBuffer(
+@@ -149,8 +159,8 @@ inline HRESULT CreateCpuCustomBuffer(
+         0
      };
  
-     return CreateCommittedResource(
+-    return CreateCommittedResource(
 -        device,
++    return CreateResource(
 +        allocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes, flags),
          heapProperties,
          D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-@@ -159,14 +163,14 @@ inline HRESULT CreateCpuCustomBuffer(
+@@ -159,14 +169,14 @@ inline HRESULT CreateCpuCustomBuffer(
  }
  
  inline HRESULT CreateDefaultBuffer(
@@ -643,21 +653,23 @@ index aef161a..4747b70 100644
      D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
      )
  {
-     return CreateCommittedResource(
+-    return CreateCommittedResource(
 -        device,
++    return CreateResource(
 +        allocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes, flags),
          CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
          D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-@@ -174,10 +178,10 @@ inline HRESULT CreateDefaultBuffer(
+@@ -174,10 +184,10 @@ inline HRESULT CreateDefaultBuffer(
          );
  }
  
 -inline HRESULT CreateReadBackBuffer(ID3D12Device* device, UINT64 sizeInBytes, Microsoft::WRL::ComPtr<ID3D12Resource>& resource)
 +inline HRESULT CreateReadBackBuffer(gpgmm::d3d12::ResourceAllocator* allocator, UINT64 sizeInBytes, Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocation>& resource)
  {
-     return CreateCommittedResource(
+-    return CreateCommittedResource(
 -        device,
++    return CreateResource(
 +        allocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes),
          CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),

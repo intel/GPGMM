@@ -251,9 +251,15 @@ namespace gpgmm { namespace d3d12 {
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
-    HRESULT ResidencyManager::ExecuteCommandLists(ResidencySet* residencySet,
-                                                  ID3D12CommandQueue* d3d12Queue,
-                                                  ID3D12CommandList* d3d12CommandList) {
+    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* d3d12Queue,
+                                                  ID3D12CommandList** d3d12CommandLists,
+                                                  ResidencySet** residencySets,
+                                                  uint32_t count) {
+        // TODO: support multiple command lists.
+        ASSERT(count == 1);
+        ID3D12CommandList* commandList = d3d12CommandLists[0];
+        ResidencySet* residencySet = residencySets[0];
+
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
         std::vector<ID3D12Pageable*> nonLocalHeapsToMakeResident;
         uint64_t localSizeToMakeResident = 0;
@@ -302,7 +308,7 @@ namespace gpgmm { namespace d3d12 {
                               nonLocalHeapsToMakeResident.data());
         }
 
-        d3d12Queue->ExecuteCommandLists(1, &d3d12CommandList);
+        d3d12Queue->ExecuteCommandLists(1, &commandList);
 
         if (SUCCEEDED(hr)) {
             hr = mFence->Signal(d3d12Queue);
