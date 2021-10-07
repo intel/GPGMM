@@ -181,31 +181,10 @@ source_set("gpgmm_sources") {
   }
 }
 
-# The static and shared libraries for gpgmm. Most of the files are
-# already compiled in gpgmm_sources, but we still need to compile
-# files defining exported symbols.
-static_library("gpgmm_static") {
-  # DEFINE_PREFIX = "GPGMM"
-  complete_static_lib = true
-
-  # Make headers publically visible
+source_set("gpgmm") {
   public_deps = [ ":gpgmm_headers" ]
-
   deps = [
     ":gpgmm_sources",
     "${gpgmm_root_dir}/src/common",
   ]
-
-  #   sources = [ "GPGMMNative.cpp" ]
-  #   configs = [ ":gpgmm_internal" ]
-
-  #   public_configs = [
-  #     ":gpgmm_weak_framework",
-  #     ":gpgmm_vulkan_rpath",
-  #   ]
-
-  #   if (gpgmm_enable_d3d12) {
-  #     sources += [ "d3d12/D3D12Backend.cpp" ]
-  #   }
 }
-# TODO: support shared

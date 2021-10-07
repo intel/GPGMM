@@ -1,4 +1,4 @@
-From a756be08e1d840b854ac4322d808ac5c7e47f0d3 Mon Sep 17 00:00:00 2001
+From 054318a464e0e94cd31df79f7024949df09f5333 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Wed, 6 Oct 2021 15:53:59 -0700
 Subject: [PATCH] Use GPGMM for DML backend.
@@ -8,13 +8,13 @@ residency for Tensor resources.
 ---
  .gitignore                               |   1 +
  DEPS                                     |   4 +
- build_overrides/gpgmm.gni                |  19 +++
+ build_overrides/gpgmm.gni                |  20 +++
  build_overrides/webnn.gni                |   1 +
- src/webnn_native/BUILD.gn                |   1 +
- src/webnn_native/dml/deps/src/device.cpp | 161 ++++++++++++++++-------
+ src/webnn_native/BUILD.gn                |   2 +
+ src/webnn_native/dml/deps/src/device.cpp | 158 ++++++++++++++++-------
  src/webnn_native/dml/deps/src/device.h   |  34 +++--
  src/webnn_native/dml/deps/src/util.h     |  48 ++++---
- 8 files changed, 191 insertions(+), 78 deletions(-)
+ 8 files changed, 191 insertions(+), 77 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -30,27 +30,27 @@ index 66eebc2..addc5b0 100644
  third_party/oneDNN
  third_party/XNNPACK
 diff --git a/DEPS b/DEPS
-index 9435775..f25f1ab 100644
+index 9435775..c481ef0 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -89,6 +89,10 @@ deps = {
      'condition': 'dawn_standalone',
    },
  
-+  # GPGMM support
++  # GPGMM support for fast DML allocation and residency management.
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@651fec7b490ff04943dec8222af25b9e10bf9142',
++    'url': '{github_git}/intel/gpgmm.git@05efd4cdd1c5f64ce8523bd19e0000b37d22b0ce',
 +  },
  }
  
  hooks = [
 diff --git a/build_overrides/gpgmm.gni b/build_overrides/gpgmm.gni
 new file mode 100644
-index 0000000..e572c04
+index 0000000..d211a6d
 --- /dev/null
 +++ b/build_overrides/gpgmm.gni
-@@ -0,0 +1,19 @@
-+# Copyright 2021 The GPGMM Authors
+@@ -0,0 +1,20 @@
++# Copyright 2021 The WebNN-native Authors
 +#
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
@@ -64,11 +64,12 @@ index 0000000..e572c04
 +# See the License for the specific language governing permissions and
 +# limitations under the License.
 +
-+# These are variables that are overridable by projects that include Dawn.
-+# The values in this file are the defaults for when we are building from
-+# Dawn's repository.
++# These are variables that are overridden by projects that include GPGMM.
++# The values in this file are the defaults for when we are building GPGMM
++# from WebNN-native's repository.
 +
-+gpgmm_root_dir = "//third_party/gpgmm"
++# The paths to GPGMM's dependencies
++# Note: Non-standalone GPGMM has no additional dependencies.
 diff --git a/build_overrides/webnn.gni b/build_overrides/webnn.gni
 index 0db9e03..7155c1c 100644
 --- a/build_overrides/webnn.gni
@@ -79,19 +80,20 @@ index 0db9e03..7155c1c 100644
  webnn_jinja2_dir = "//third_party/jinja2"
 +webnn_gpgmm_dir = "//third_party/gpgmm"
 diff --git a/src/webnn_native/BUILD.gn b/src/webnn_native/BUILD.gn
-index bca9dca..9891da3 100644
+index bca9dca..2eff4af 100644
 --- a/src/webnn_native/BUILD.gn
 +++ b/src/webnn_native/BUILD.gn
-@@ -78,6 +78,7 @@ source_set("webnn_native_sources") {
-   deps = [
-     ":webnn_native_headers",
-     ":webnn_native_utils_gen",
-+    "${webnn_gpgmm_dir}/src:gpgmm_static",
-     "${webnn_root}/src/common",
-   ]
-   defines = []
+@@ -238,6 +238,8 @@ source_set("webnn_native_sources") {
+     ]
+ 
+     data_deps += [ ":copy_dml_dll" ]
++
++    deps += [ "${webnn_gpgmm_dir}/src:gpgmm" ]
+   }
+ 
+   if (webnn_enable_onednn) {
 diff --git a/src/webnn_native/dml/deps/src/device.cpp b/src/webnn_native/dml/deps/src/device.cpp
-index 809b6b3..5bf9285 100644
+index 809b6b3..b14f0da 100644
 --- a/src/webnn_native/dml/deps/src/device.cpp
 +++ b/src/webnn_native/dml/deps/src/device.cpp
 @@ -12,6 +12,13 @@
@@ -347,16 +349,13 @@ index 809b6b3..5bf9285 100644
      m_commandRecorder->RecordDispatch(m_commandList.Get(), m_operatorInitializer.Get(), m_bindingTable.Get());
      ReturnIfFailed(ExecuteCommandListAndWait());
      return S_OK;
-@@ -503,28 +534,35 @@ HRESULT Device::InitializeOperator(
- HRESULT Device::ExecuteCommandListAndWait()
- {
+@@ -505,26 +536,32 @@ HRESULT Device::ExecuteCommandListAndWait()
      ReturnIfFailed(m_commandList->Close());
--
-+    
+ 
      ID3D12CommandList* commandLists[] = { m_commandList.Get() };
 -    m_commandQueue->ExecuteCommandLists(ARRAYSIZE(commandLists), commandLists);
-+    gpgmm::d3d12::ResidencySet* residencySets[] = { &m_residencySet };
 +    if (m_residencyManager != nullptr){
++        gpgmm::d3d12::ResidencySet* residencySets[] = { &m_residencySet };
 +        m_residencyManager->ExecuteCommandLists(m_commandQueue.Get(), commandLists, residencySets, ARRAYSIZE(commandLists));
 +    } else {
 +        m_commandQueue->ExecuteCommandLists(ARRAYSIZE(commandLists), commandLists);
@@ -366,8 +365,7 @@ index 809b6b3..5bf9285 100644
  
      ReturnIfFailed(m_commandAllocator->Reset());
      ReturnIfFailed(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
-+
-+    m_residencySet.Reset();
++    ReturnIfFailed(m_residencySet.Reset());
      return S_OK;
  }
  
@@ -388,7 +386,7 @@ index 809b6b3..5bf9285 100644
              CD3DX12_RESOURCE_DESC::Buffer(newSize),
              CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
              D3D12_RESOURCE_STATE_GENERIC_READ,
-@@ -534,7 +572,7 @@ HRESULT Device::EnsureUploadHeapSize(uint64_t requestedSizeInBytes)
+@@ -534,7 +571,7 @@ HRESULT Device::EnsureUploadHeapSize(uint64_t requestedSizeInBytes)
      return S_OK;
  }
  
@@ -397,7 +395,7 @@ index 809b6b3..5bf9285 100644
  {
      if (m_useCpuCustomHeapResources)
      {
-@@ -547,64 +585,89 @@ HRESULT Device::EnsureCpuOrDefaultBufferSize(uint64_t requestedSizeInBytes, _Ino
+@@ -547,64 +584,89 @@ HRESULT Device::EnsureCpuOrDefaultBufferSize(uint64_t requestedSizeInBytes, _Ino
      return S_OK;
  }
  
@@ -470,8 +468,8 @@ index 809b6b3..5bf9285 100644
 +    
 +        m_descriptorHeap = std::make_unique<SVDescriptorHeap>(std::move(d3d12DescriptorHeap), newSize);
 +
-+        if (m_residencyManager){
-+            m_residencyManager->InsertHeap(m_descriptorHeap.get());
++        if (m_residencyManager != nullptr){
++            ReturnIfFailed(m_residencyManager->InsertHeap(m_descriptorHeap.get()));
 +            ReturnIfFailed(m_residencyManager->LockHeap(m_descriptorHeap.get()));
 +        }
      }
@@ -569,7 +567,7 @@ index cd1dea3..bdad682 100644
          bool m_useCpuCustomHeapResources = false;
          bool m_useGpu = true;
 diff --git a/src/webnn_native/dml/deps/src/util.h b/src/webnn_native/dml/deps/src/util.h
-index aef161a..9855222 100644
+index aef161a..f65f5ee 100644
 --- a/src/webnn_native/dml/deps/src/util.h
 +++ b/src/webnn_native/dml/deps/src/util.h
 @@ -10,6 +10,8 @@
@@ -594,7 +592,7 @@ index aef161a..9855222 100644
 +}
 +
 +inline HRESULT CreateResource(
-+    gpgmm::d3d12::ResourceAllocator* allocator,
++    gpgmm::d3d12::ResourceAllocator* resourceAllocator,
      const D3D12_RESOURCE_DESC& resourceDesc,
      const D3D12_HEAP_PROPERTIES& heapProperties,
      D3D12_RESOURCE_STATES initialState,
@@ -609,7 +607,7 @@ index aef161a..9855222 100644
 +    gpgmm::d3d12::ALLOCATION_DESC desc = {};
 +    desc.HeapType = heapProperties.Type;
 +
-+    ReturnIfFailed(allocator->CreateResource(
++    ReturnIfFailed(resourceAllocator->CreateResource(
 +        desc,
 +        resourceDesc,
          initialState,
@@ -623,7 +621,7 @@ index aef161a..9855222 100644
  
  inline HRESULT CreateCpuCustomBuffer(
 -    ID3D12Device* device,
-+    gpgmm::d3d12::ResourceAllocator* allocator,
++    gpgmm::d3d12::ResourceAllocator* resourceAllocator,
      UINT64 sizeInBytes,
 -    Microsoft::WRL::ComPtr<ID3D12Resource>& resource,
 +    Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocation>& resource,
@@ -637,7 +635,7 @@ index aef161a..9855222 100644
 -    return CreateCommittedResource(
 -        device,
 +    return CreateResource(
-+        allocator,
++        resourceAllocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes, flags),
          heapProperties,
          D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
@@ -646,7 +644,7 @@ index aef161a..9855222 100644
  
  inline HRESULT CreateDefaultBuffer(
 -    ID3D12Device* device,
-+    gpgmm::d3d12::ResourceAllocator* allocator,
++    gpgmm::d3d12::ResourceAllocator* resourceAllocator,
      UINT64 sizeInBytes,
 -    Microsoft::WRL::ComPtr<ID3D12Resource>& resource,
 +    Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocation>& resource,
@@ -656,7 +654,7 @@ index aef161a..9855222 100644
 -    return CreateCommittedResource(
 -        device,
 +    return CreateResource(
-+        allocator,
++        resourceAllocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes, flags),
          CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
          D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
@@ -665,12 +663,12 @@ index aef161a..9855222 100644
  }
  
 -inline HRESULT CreateReadBackBuffer(ID3D12Device* device, UINT64 sizeInBytes, Microsoft::WRL::ComPtr<ID3D12Resource>& resource)
-+inline HRESULT CreateReadBackBuffer(gpgmm::d3d12::ResourceAllocator* allocator, UINT64 sizeInBytes, Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocation>& resource)
++inline HRESULT CreateReadBackBuffer(gpgmm::d3d12::ResourceAllocator* resourceAllocator, UINT64 sizeInBytes, Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocation>& resource)
  {
 -    return CreateCommittedResource(
 -        device,
 +    return CreateResource(
-+        allocator,
++        resourceAllocator,
          CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes),
          CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),
          D3D12_RESOURCE_STATE_COPY_DEST,

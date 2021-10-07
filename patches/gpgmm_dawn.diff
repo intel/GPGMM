@@ -1,4 +1,4 @@
-From 4cf3ad3d28d0ba6082deb435ea57a5c8129a415b Mon Sep 17 00:00:00 2001
+From 62991f51a91c31dc094e8f3df19df950029100a9 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Thu, 29 Jul 2021 13:53:46 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -113,14 +113,14 @@ index 5a80f4d3..facf0023 100644
    # Enables the compilation of Dawn's Vulkan backend
    # Disables vulkan when compiling for UWP, since UWP only supports d3d
 diff --git a/src/dawn_native/BUILD.gn b/src/dawn_native/BUILD.gn
-index 37254d73..0fa69ba4 100644
+index 37254d73..c9cc6696 100644
 --- a/src/dawn_native/BUILD.gn
 +++ b/src/dawn_native/BUILD.gn
 @@ -159,6 +159,7 @@ source_set("dawn_native_sources") {
    deps = [
      ":dawn_native_headers",
      ":dawn_native_utils_gen",
-+    "${dawn_gpgmm_dir}/src:gpgmm_static",
++    "${dawn_gpgmm_dir}/src:gpgmm",
      "${dawn_root}/src/common",
      "${dawn_spirv_tools_dir}:spvtools_opt",
      "${dawn_spirv_tools_dir}:spvtools_val",
