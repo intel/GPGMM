@@ -136,7 +136,9 @@ namespace gpgmm { namespace d3d12 {
     // multiple allocation methods.
     class ResourceAllocator : public AllocatorBase {
       public:
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor);
+        static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
+                                       ResourceAllocator** resourceAllocator);
+
         ~ResourceAllocator() override;
 
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -153,6 +155,15 @@ namespace gpgmm { namespace d3d12 {
       private:
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
+
+        ResourceAllocator(ComPtr<ID3D12Device> device,
+                          std::unique_ptr<ResidencyManager> residencyManager,
+                          bool isUMA,
+                          uint32_t resourceHeapTier,
+                          ALLOCATOR_FLAGS allocatorFlags,
+                          uint64_t maxResourceSizeForPooling,
+                          uint64_t minResourceHeapSize,
+                          uint64_t maxResourceHeapSize);
 
         HRESULT CreatePlacedResource(const MemoryAllocation& subAllocation,
                                      const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
@@ -179,17 +190,15 @@ namespace gpgmm { namespace d3d12 {
         void FreeResourceHeap(Heap* resourceHeap);
 
         ComPtr<ID3D12Device> mDevice;
+        std::unique_ptr<ResidencyManager> mResidencyManager;
 
         bool mIsUMA;
         uint32_t mResourceHeapTier;
         bool mIsAlwaysCommitted;
         bool mIsAlwaysInBudget;
-        uint64_t mMaxResourceSizeForPooling;
         uint64_t mMaxResourceHeapSize;
 
         std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount> mSubAllocators;
-
-        std::unique_ptr<ResidencyManager> mResidencyManager;
     };
 
 }}  // namespace gpgmm::d3d12

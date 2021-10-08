@@ -88,7 +88,9 @@ allocatorDesc.Adapter = adapter;
 allocatorDesc.Device = device;
 allocatorDesc.IsUMA =  arch.UMA;
 allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
-gpgmm::d3d12::ResourceAllocator allocator(desc);
+
+gpgmm::d3d12::ResourceAllocator* resourceAllocator = nullptr; // call delete to destroy
+gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &resourceAllocator);
 ```
 
 ```cpp

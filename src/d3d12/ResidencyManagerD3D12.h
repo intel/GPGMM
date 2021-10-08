@@ -31,14 +31,10 @@ namespace gpgmm { namespace d3d12 {
     class Fence;
     class Heap;
     class ResidencySet;
+    class ResourceAllocator;
 
     class ResidencyManager {
       public:
-        ResidencyManager(ComPtr<ID3D12Device> device,
-                         ComPtr<IDXGIAdapter3> adapter3,
-                         bool isUMA,
-                         float memorySegmentBudgetLimit,
-                         uint64_t totalResourceBudgetLimit);
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
@@ -60,6 +56,14 @@ namespace gpgmm { namespace d3d12 {
         HRESULT InsertHeap(Heap* heap);
 
       private:
+        friend ResourceAllocator;
+
+        ResidencyManager(ComPtr<ID3D12Device> device,
+                         ComPtr<IDXGIAdapter3> adapter3,
+                         bool isUMA,
+                         float memorySegmentBudgetLimit,
+                         uint64_t totalResourceBudgetLimit);
+
         struct VideoMemorySegmentInfo {
             const DXGI_MEMORY_SEGMENT_GROUP dxgiMemorySegmentGroup;
             LinkedList<Heap> lruCache = {};
