@@ -1,4 +1,4 @@
-From 62991f51a91c31dc094e8f3df19df950029100a9 Mon Sep 17 00:00:00 2001
+From 5304ab9066407127ec57c472dae5bfbe424b959c Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Thu, 29 Jul 2021 13:53:46 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -18,7 +18,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  .../d3d12/CommandRecordingContext.cpp         |  21 +-
  .../d3d12/CommandRecordingContext.h           |   4 +-
  src/dawn_native/d3d12/D3D12Backend.cpp        |  17 +-
- src/dawn_native/d3d12/DeviceD3D12.cpp         |  76 +++-
+ src/dawn_native/d3d12/DeviceD3D12.cpp         |  80 +++-
  src/dawn_native/d3d12/DeviceD3D12.h           |  16 +-
  .../d3d12/ResourceAllocatorManagerD3D12.cpp   | 410 ------------------
  .../d3d12/ResourceAllocatorManagerD3D12.h     | 107 -----
@@ -31,7 +31,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/d3d12/UtilsD3D12.cpp          |  11 +
  src/dawn_native/d3d12/UtilsD3D12.h            |   2 +
  src/tests/white_box/D3D12ResidencyTests.cpp   |  18 +-
- 26 files changed, 219 insertions(+), 659 deletions(-)
+ 26 files changed, 223 insertions(+), 659 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.cpp
  delete mode 100644 src/dawn_native/d3d12/ResourceAllocatorManagerD3D12.h
@@ -415,7 +415,7 @@ index bc9df608..b33c2d12 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions(ComPtr<IDXGIAdapter> adapter)
 diff --git a/src/dawn_native/d3d12/DeviceD3D12.cpp b/src/dawn_native/d3d12/DeviceD3D12.cpp
-index 3b96092e..63d5d332 100644
+index 3b96092e..50e7a181 100644
 --- a/src/dawn_native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn_native/d3d12/DeviceD3D12.cpp
 @@ -30,8 +30,6 @@
@@ -427,7 +427,7 @@ index 3b96092e..63d5d332 100644
  #include "dawn_native/d3d12/SamplerD3D12.h"
  #include "dawn_native/d3d12/SamplerHeapCacheD3D12.h"
  #include "dawn_native/d3d12/ShaderModuleD3D12.h"
-@@ -121,8 +119,23 @@ namespace dawn_native { namespace d3d12 {
+@@ -121,8 +119,27 @@ namespace dawn_native { namespace d3d12 {
  
          mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
  
@@ -449,11 +449,15 @@ index 3b96092e..63d5d332 100644
 +            allocatorDesc.TotalResourceBudgetLimit = 100000000;  // 100MB
 +        }
 +
-+        mResourceAllocator = std::make_unique<gpgmm::d3d12::ResourceAllocator>(allocatorDesc);
++        gpgmm::d3d12::ResourceAllocator* resourceAllocator = nullptr;
++        DAWN_TRY(CheckHRESULT(
++            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator),
++            "D3D12 create resource allocator"));
++        mResourceAllocator.reset(resourceAllocator);
  
          // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
          DAWN_TRY_ASSIGN(
-@@ -237,8 +250,8 @@ namespace dawn_native { namespace d3d12 {
+@@ -237,8 +254,8 @@ namespace dawn_native { namespace d3d12 {
          return mCommandAllocatorManager.get();
      }
  
@@ -464,7 +468,7 @@ index 3b96092e..63d5d332 100644
      }
  
      ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -254,7 +267,6 @@ namespace dawn_native { namespace d3d12 {
+@@ -254,7 +271,6 @@ namespace dawn_native { namespace d3d12 {
          // Perform cleanup operations to free unused objects
          ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -472,7 +476,7 @@ index 3b96092e..63d5d332 100644
          DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
          mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
          mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -456,16 +468,51 @@ namespace dawn_native { namespace d3d12 {
+@@ -456,16 +472,51 @@ namespace dawn_native { namespace d3d12 {
          return {};
      }
  
@@ -529,7 +533,7 @@ index 3b96092e..63d5d332 100644
      }
  
      Ref<TextureBase> Device::CreateExternalTexture(
-@@ -516,6 +563,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -516,6 +567,7 @@ namespace dawn_native { namespace d3d12 {
          SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
          SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
          SetToggle(Toggle::UseD3D12ResidencyManagement, true);
@@ -537,7 +541,7 @@ index 3b96092e..63d5d332 100644
          SetToggle(Toggle::UseDXC, false);
  
  #if defined(_DEBUG)
-@@ -612,10 +660,6 @@ namespace dawn_native { namespace d3d12 {
+@@ -612,10 +664,6 @@ namespace dawn_native { namespace d3d12 {
              ::CloseHandle(mFenceEvent);
          }
  

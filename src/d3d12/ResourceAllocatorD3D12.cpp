@@ -199,29 +199,50 @@ namespace gpgmm { namespace d3d12 {
         }
     }  // namespace
 
-    ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor)
-        : mDevice(descriptor.Device),
-          mIsUMA(descriptor.IsUMA),
-          mResourceHeapTier(descriptor.ResourceHeapTier),
-          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
-          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
-          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
+    // static
+    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& descriptor,
+                                               ResourceAllocator** resourceAllocator) {
         // Adapter3 support is needed for residency support.
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
+        std::unique_ptr<ResidencyManager> residencyManager;
         if (SUCCEEDED(descriptor.Adapter.As(&adapter3))) {
-            mResidencyManager = std::make_unique<ResidencyManager>(
-                mDevice, std::move(adapter3), mIsUMA, descriptor.MaxVideoMemoryBudget,
-                descriptor.TotalResourceBudgetLimit);
+            residencyManager = std::unique_ptr<ResidencyManager>(new ResidencyManager(
+                descriptor.Device, std::move(adapter3), descriptor.IsUMA,
+                descriptor.MaxVideoMemoryBudget, descriptor.TotalResourceBudgetLimit));
         }
 
         const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                  ? descriptor.PreferredResourceHeapSize
                                                  : kDefaultMinHeapSize;
 
-        mMaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
-                                                                    : kDefaultMaxHeapSize;
+        const uint64_t maxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
+                                                 ? descriptor.MaxResourceHeapSize
+                                                 : kDefaultMaxHeapSize;
 
+        *resourceAllocator = new ResourceAllocator(
+            descriptor.Device, std::move(residencyManager), descriptor.IsUMA,
+            descriptor.ResourceHeapTier, descriptor.Flags, descriptor.MaxResourceSizeForPooling,
+            minResourceHeapSize, maxResourceHeapSize);
+
+        return S_OK;
+    }
+
+    ResourceAllocator::ResourceAllocator(Microsoft::WRL::ComPtr<ID3D12Device> device,
+                                         std::unique_ptr<ResidencyManager> residencyManager,
+                                         bool isUMA,
+                                         uint32_t resourceHeapTier,
+                                         ALLOCATOR_FLAGS allocatorFlags,
+                                         uint64_t maxResourceSizeForPooling,
+                                         uint64_t minResourceHeapSize,
+                                         uint64_t maxResourceHeapSize)
+        : mDevice(std::move(device)),
+          mResidencyManager(std::move(residencyManager)),
+          mIsUMA(isUMA),
+          mResourceHeapTier(resourceHeapTier),
+          mIsAlwaysCommitted(allocatorFlags & ALLOCATOR_ALWAYS_COMMITED),
+          mIsAlwaysInBudget(allocatorFlags & ALLOCATOR_ALWAYS_IN_BUDGET),
+          mMaxResourceHeapSize(maxResourceHeapSize) {
         for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
@@ -255,7 +276,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Conditional sub-allocator that uses the pooled or non-pooled sub-allocator.
             stack->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
-                pooledSubAllocator, subAllocator, mMaxResourceSizeForPooling));
+                pooledSubAllocator, subAllocator, maxResourceSizeForPooling));
 
             mSubAllocators[i] = std::move(stack);
         }
