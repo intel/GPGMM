@@ -1,7 +1,5 @@
 [![Windows Standalone Release](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml)
 [![Windows Standalone Debug](https://github.com/intel/GPGMM/actions/workflows/win_standalone_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_standalone_dbg.yaml)
-[![Windows Dawn-GPGMM Release](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_dawn_rel.yaml)
-[![Windows WebNN-GPGMM Release](https://github.com/intel/GPGMM/actions/workflows/win_webnn_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_webnn_rel.yaml)
 
 # GPGMM
 
@@ -59,18 +57,6 @@ Run unit tests:
 Run end2end tests:
 ```sh
 > out/Release/gpgmm_end2end_tests
-```
-
-Or through existing project's end2end tests:
-
-```sh
-> cp scripts/<project>.gclient .gclient
-```
-
-Then `gclient sync` and [build again](#build) before running:
-
-```sh
-> out/Debug/<project>_end2end_tests
 ```
 
 ## How do I use it?
