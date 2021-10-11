@@ -58,7 +58,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        gn gen out\Release --args="is_debug=false"
+        gn gen out\Release --args="is_debug=false dawn_enable_opengles=false"
 
     - name: Build for main branch
       shell: cmd
@@ -100,7 +100,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        gn gen out\Release --args="is_debug=false"
+        gn gen out\Release --args="is_debug=false dawn_enable_opengles=false"
 
     - name: Build for main branch (with patch)
       shell: cmd
