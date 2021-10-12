@@ -9,6 +9,7 @@
 /testing
 /third_party/dawn
 /third_party/googletest
+/third_party/jsoncpp
 /third_party/llvm-build
 /third_party/vulkan-deps
 /third_party/webnn_native

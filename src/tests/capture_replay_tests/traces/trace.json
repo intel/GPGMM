@@ -1,0 +1,142 @@
+{
+  "traceEvents": [
+    {},
+    {
+      "name": "CreateAllocator",
+      "cat": "0",
+      "ph": "i",
+      "tid": 3324,
+      "ts": 0,
+      "pid": "GPGMM",
+      "args": {
+        "Flags": 2,
+        "RecordOptions": {
+          "Flags": 0
+        },
+        "IsUMA": 0,
+        "ResourceHeapTier": 1,
+        "PreferredResourceHeapSize": 0,
+        "MaxResourceHeapSize": 0,
+        "MaxResourceSizeForPooling": 0,
+        "MaxVideoMemoryBudget": 0,
+        "TotalResourceBudgetLimit": 0
+      }
+    },
+    {
+      "name": "ResourceAllocator",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x1b5494fd410",
+      "tid": 3324,
+      "ts": 22,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 3324,
+      "ts": 21436,
+      "pid": "GPGMM",
+      "args": {
+        "allocationDescriptor": {
+          "Flags": 0,
+          "HeapType": 1
+        },
+        "resourceDescriptor": {
+          "Dimension": 1,
+          "Alignment": 0,
+          "Width": 256,
+          "Height": 1,
+          "DepthOrArraySize": 1,
+          "MipLevels": 1,
+          "Format": 0,
+          "Layout": 1,
+          "SampleDesc": {
+            "Count": 1,
+            "Quality": 0
+          },
+          "Flags": 0
+        },
+        "initialUsage": 0,
+        "clearValue": {}
+      }
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x1b548f30d90",
+      "tid": 3324,
+      "ts": 22514,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 3324,
+      "ts": 23427,
+      "pid": "GPGMM",
+      "args": {
+        "allocationDescriptor": {
+          "Flags": 0,
+          "HeapType": 2
+        },
+        "resourceDescriptor": {
+          "Dimension": 1,
+          "Alignment": 0,
+          "Width": 4194304,
+          "Height": 1,
+          "DepthOrArraySize": 1,
+          "MipLevels": 1,
+          "Format": 0,
+          "Layout": 1,
+          "SampleDesc": {
+            "Count": 1,
+            "Quality": 0
+          },
+          "Flags": 0
+        },
+        "initialUsage": 2755,
+        "clearValue": {}
+      }
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x1b548f32690",
+      "tid": 3324,
+      "ts": 25343,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x1b548f30d90",
+      "tid": 3324,
+      "ts": 29203,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x1b548f32690",
+      "tid": 3324,
+      "ts": 29487,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x1b5494fd410",
+      "tid": 3324,
+      "ts": 29600,
+      "pid": "GPGMM"
+    }
+  ]
+}

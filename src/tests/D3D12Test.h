@@ -14,26 +14,26 @@
 
 #include "src/tests/GPGMMTest.h"
 
-static GPGMMTestEnvironment* gTestEnv = nullptr;
+#include "src/d3d12/d3d12_platform.h"
 
-void InitGPGMMEnd2EndTestEnvironment() {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
-}
+#include <memory>
 
-void GPGMMTestBase::SetUp() {
-}
+namespace gpgmm { namespace d3d12 {
+    struct ALLOCATOR_DESC;
+    class ResourceAllocator;
+}}  // namespace gpgmm::d3d12
 
-GPGMMTestBase::~GPGMMTestBase() {
-}
+class D3D12GPGMMTest : public GPGMMTestBase {
+  public:
+    void SetUp();
+    void TearDown();
 
-void GPGMMTestBase::TearDown() {
-}
+    gpgmm::d3d12::ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
 
-// static
-void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
-    gTestEnv = env;
-}
+  protected:
+    ComPtr<IDXGIAdapter3> mAdapter;
+    ComPtr<ID3D12Device> mDevice;
 
-void GPGMMTestEnvironment::SetUp() {
-}
+    bool mIsUMA = false;
+    uint32_t mResourceHeapTier = 1;
+};

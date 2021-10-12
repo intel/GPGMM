@@ -12,28 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/GPGMMTest.h"
+#include "src/d3d12/d3d12_platform.h"
 
-static GPGMMTestEnvironment* gTestEnv = nullptr;
+namespace gpgmm { namespace d3d12 {
 
-void InitGPGMMEnd2EndTestEnvironment() {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
-}
+    bool IsDepthFormat(DXGI_FORMAT format);
 
-void GPGMMTestBase::SetUp() {
-}
-
-GPGMMTestBase::~GPGMMTestBase() {
-}
-
-void GPGMMTestBase::TearDown() {
-}
-
-// static
-void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
-    gTestEnv = env;
-}
-
-void GPGMMTestEnvironment::SetUp() {
-}
+}}  // namespace gpgmm::d3d12

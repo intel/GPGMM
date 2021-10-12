@@ -12,28 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/GPGMMTest.h"
+#ifndef GPGMM_COMMON_PLATFORMTIME_H_
+#define GPGMM_COMMON_PLATFORMTIME_H_
 
-static GPGMMTestEnvironment* gTestEnv = nullptr;
+namespace gpgmm {
 
-void InitGPGMMEnd2EndTestEnvironment() {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
-}
+    class PlatformTime {
+      public:
+        virtual ~PlatformTime() {
+        }
 
-void GPGMMTestBase::SetUp() {
-}
+        double GetRelativeTime();
 
-GPGMMTestBase::~GPGMMTestBase() {
-}
+        virtual double GetAbsoluteTime() = 0;
+    };
 
-void GPGMMTestBase::TearDown() {
-}
+    PlatformTime* CreatePlatformTime();
 
-// static
-void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
-    gTestEnv = env;
-}
+}  // namespace gpgmm
 
-void GPGMMTestEnvironment::SetUp() {
-}
+#endif  // GPGMM_COMMON_PLATFORMTIME_H_

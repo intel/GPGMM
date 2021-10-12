@@ -93,6 +93,11 @@ source_set("gpgmm_sources") {
     "${gpgmm_root_dir}/src/common",
   ]
   defines = []
+
+  if (gpgmm_always_record_event_trace) {
+    defines += [ "GPGMM_ALWAYS_RECORD_EVENT_TRACE" ]
+  }
+
   libs = []
   data_deps = []
 
@@ -121,6 +126,9 @@ source_set("gpgmm_sources") {
     "MemoryAllocator.h",
     "MemoryAllocatorStack.cpp",
     "MemoryAllocatorStack.h",
+    "ObjectSerializer.h",
+    "TraceEvent.cpp",
+    "TraceEvent.h",
     "VirtualBuddyMemoryAllocator.cpp",
     "VirtualBuddyMemoryAllocator.h",
 
@@ -166,6 +174,8 @@ source_set("gpgmm_sources") {
       "d3d12/HeapD3D12.h",
       "d3d12/IUnknownImplD3D12.cpp",
       "d3d12/IUnknownImplD3D12.h",
+      "d3d12/JSONSerializerD3D12.cpp",
+      "d3d12/JSONSerializerD3D12.h",
       "d3d12/ResidencyManagerD3D12.cpp",
       "d3d12/ResidencyManagerD3D12.h",
       "d3d12/ResidencySetD3D12.cpp",
@@ -176,6 +186,8 @@ source_set("gpgmm_sources") {
       "d3d12/ResourceAllocatorD3D12.h",
       "d3d12/ResourceHeapAllocatorD3D12.cpp",
       "d3d12/ResourceHeapAllocatorD3D12.h",
+      "d3d12/UtilsD3D12.cpp",
+      "d3d12/UtilsD3D12.h",
       "d3d12/d3d12_platform.h",
     ]
   }

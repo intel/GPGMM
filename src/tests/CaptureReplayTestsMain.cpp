@@ -12,28 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/GPGMMTest.h"
+#include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
-static GPGMMTestEnvironment* gTestEnv = nullptr;
-
-void InitGPGMMEnd2EndTestEnvironment() {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
-}
-
-void GPGMMTestBase::SetUp() {
-}
-
-GPGMMTestBase::~GPGMMTestBase() {
-}
-
-void GPGMMTestBase::TearDown() {
-}
-
-// static
-void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
-    gTestEnv = env;
-}
-
-void GPGMMTestEnvironment::SetUp() {
+int main(int argc, char** argv) {
+    InitGPGMMCaptureReplayTestEnvironment(argc, argv);
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
