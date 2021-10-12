@@ -76,6 +76,12 @@ jobs:
         cd base
         out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_unittests.json
 
+    - name: Run gpgmm_capture_replay_tests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json
+
     - uses: actions/checkout@v2
       with:
         path: test
@@ -118,6 +124,12 @@ jobs:
         cd test
         out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json || true
 
+    - name: Run gpgmm_capture_replay_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json
+
     - name: Regression check end2end tests
       run: |
         python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2end_tests.json ${{ github.workspace }}\..\test_end2end_tests.json
@@ -125,3 +137,7 @@ jobs:
     - name: Regression check unittests
       run: |
         python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_unittests.json ${{ github.workspace }}\..\test_unittests.json
+
+    - name: Regression check capture replay tests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_capture_replay_tests.json ${{ github.workspace }}\..\test_capture_replay_tests.json
