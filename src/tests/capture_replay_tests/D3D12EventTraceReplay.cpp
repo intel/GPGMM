@@ -26,13 +26,14 @@
 #include <gpgmm_d3d12.h>
 #include <json/json.h>
 
+using namespace gpgmm::d3d12;
+
 namespace {
 
-    gpgmm::d3d12::ALLOCATION_DESC ConvertToGPGMMAllocationDesc(
-        const Json::Value& allocationDescriptorJsonValue) {
-        gpgmm::d3d12::ALLOCATION_DESC allocationDescriptor = {};
-        allocationDescriptor.Flags = static_cast<gpgmm::d3d12::ALLOCATION_FLAGS>(
-            allocationDescriptorJsonValue["Flags"].asInt());
+    ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescriptorJsonValue) {
+        ALLOCATION_DESC allocationDescriptor = {};
+        allocationDescriptor.Flags =
+            static_cast<ALLOCATION_FLAGS>(allocationDescriptorJsonValue["Flags"].asInt());
         allocationDescriptor.HeapType =
             static_cast<D3D12_HEAP_TYPE>(allocationDescriptorJsonValue["HeapType"].asInt());
         return allocationDescriptor;
@@ -41,7 +42,7 @@ namespace {
     D3D12_CLEAR_VALUE ConvertToD3D12ClearValue(const Json::Value& clearValueJsonValue) {
         D3D12_CLEAR_VALUE clearValue = {};
         clearValue.Format = static_cast<DXGI_FORMAT>(clearValueJsonValue["Format"].asInt());
-        if (gpgmm::d3d12::IsDepthFormat(clearValue.Format)) {
+        if (IsDepthFormat(clearValue.Format)) {
             const Json::Value& depthStencilValue = clearValueJsonValue["DepthStencil"];
             clearValue.DepthStencil.Depth = depthStencilValue["Depth"].asFloat();
             clearValue.DepthStencil.Stencil = *depthStencilValue["Stencil"].asCString();
@@ -86,10 +87,10 @@ namespace {
 
 }  // namespace
 
-class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWithParams {
+class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithParams {
   protected:
     void SetUp() override {
-        D3D12GPGMMTest::SetUp();
+        D3D12TestBase::SetUp();
     }
 
     void RunTest(const TraceFile& traceFile) {
@@ -99,14 +100,13 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, ComPtr<gpgmm::d3d12::ResourceAllocation>> allocationToIDMap;
-        std::unordered_map<std::string, std::unique_ptr<gpgmm::d3d12::ResourceAllocator>>
-            allocatorToIDMap;
+        std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToIDMap;
+        std::unordered_map<std::string, std::unique_ptr<ResourceAllocator>> allocatorToIDMap;
 
-        ComPtr<gpgmm::d3d12::ResourceAllocation> newAllocationWithoutID;
+        ComPtr<ResourceAllocation> newAllocationWithoutID;
 
         std::string allocatorInstanceID;
-        gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
+        ALLOCATOR_DESC allocatorDesc = {};
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
@@ -121,15 +121,13 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
                 const Json::Value& args = event["args"];
                 ASSERT_FALSE(args.empty());
 
-                allocatorDesc.Flags =
-                    static_cast<gpgmm::d3d12::ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
 
                 const Json::Value& recordOptions = args["RecordOptions"];
                 ASSERT_FALSE(recordOptions.empty());
 
                 allocatorDesc.RecordOptions.Flags =
-                    static_cast<gpgmm::d3d12::ALLOCATOR_RECORD_FLAGS>(
-                        recordOptions["Flags"].asInt());
+                    static_cast<ALLOCATOR_RECORD_FLAGS>(recordOptions["Flags"].asInt());
 
                 allocatorDesc.PreferredResourceHeapSize =
                     args["PreferredResourceHeapSize"].asUInt64();
@@ -145,8 +143,8 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
                 const Json::Value& args = event["args"];
                 ASSERT_FALSE(args.empty());
 
-                const gpgmm::d3d12::ALLOCATION_DESC allocationDescriptor =
-                    ConvertToGPGMMAllocationDesc(args["allocationDescriptor"]);
+                const ALLOCATION_DESC allocationDescriptor =
+                    ConvertToAllocationDesc(args["allocationDescriptor"]);
 
                 const D3D12_RESOURCE_STATES initialUsage =
                     static_cast<D3D12_RESOURCE_STATES>(args["initialUsage"].asInt());
@@ -189,20 +187,19 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
             } else if (event["name"].asString() == "ResourceAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
-                        gpgmm::d3d12::ResourceAllocator* resourceAllocatorPtr = nullptr;
-                        gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc,
-                                                                         &resourceAllocatorPtr);
+                        ResourceAllocator* resourceAllocatorPtr = nullptr;
+                        ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocatorPtr);
                         ASSERT_NE(resourceAllocatorPtr, nullptr);
 
                         // Assume subsequent events are always against this allocator instance.
                         // This is because call trace events have no ID associated with them.
                         allocatorInstanceID = event["id"].asString();
 
-                        ASSERT_TRUE(allocatorToIDMap
-                                        .insert({allocatorInstanceID,
-                                                 std::unique_ptr<gpgmm::d3d12::ResourceAllocator>(
-                                                     resourceAllocatorPtr)})
-                                        .second);
+                        ASSERT_TRUE(
+                            allocatorToIDMap
+                                .insert({allocatorInstanceID,
+                                         std::unique_ptr<ResourceAllocator>(resourceAllocatorPtr)})
+                                .second);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {

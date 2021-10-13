@@ -16,24 +16,25 @@
 
 #include "src/d3d12/d3d12_platform.h"
 
-#include <memory>
-
 namespace gpgmm { namespace d3d12 {
+
     struct ALLOCATOR_DESC;
     class ResourceAllocator;
+    class ResourceAllocation;
+
+    class D3D12TestBase : public GPGMMTestBase {
+      public:
+        void SetUp();
+        void TearDown();
+
+        ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
+
+      protected:
+        ComPtr<IDXGIAdapter3> mAdapter;
+        ComPtr<ID3D12Device> mDevice;
+
+        bool mIsUMA = false;
+        uint32_t mResourceHeapTier = 1;
+    };
+
 }}  // namespace gpgmm::d3d12
-
-class D3D12GPGMMTest : public GPGMMTestBase {
-  public:
-    void SetUp();
-    void TearDown();
-
-    gpgmm::d3d12::ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
-
-  protected:
-    ComPtr<IDXGIAdapter3> mAdapter;
-    ComPtr<ID3D12Device> mDevice;
-
-    bool mIsUMA = false;
-    uint32_t mResourceHeapTier = 1;
-};

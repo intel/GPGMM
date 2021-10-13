@@ -16,43 +16,47 @@
 
 #include <gpgmm_d3d12.h>
 
-void D3D12GPGMMTest::SetUp() {
-    GPGMMTestBase::SetUp();
+namespace gpgmm { namespace d3d12 {
 
-    D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice));
-    ASSERT_NE(mDevice.Get(), nullptr);
+    void D3D12TestBase::SetUp() {
+        GPGMMTestBase::SetUp();
 
-    LUID adapterLUID = mDevice->GetAdapterLuid();
-    ComPtr<IDXGIFactory1> dxgiFactory;
-    CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
-    ASSERT_NE(dxgiFactory.Get(), nullptr);
+        D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice));
+        ASSERT_NE(mDevice.Get(), nullptr);
 
-    ComPtr<IDXGIFactory4> dxgiFactory4;
-    dxgiFactory.As(&dxgiFactory4);
-    ASSERT_NE(dxgiFactory4.Get(), nullptr);
+        LUID adapterLUID = mDevice->GetAdapterLuid();
+        ComPtr<IDXGIFactory1> dxgiFactory;
+        CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+        ASSERT_NE(dxgiFactory.Get(), nullptr);
 
-    dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&mAdapter));
-    ASSERT_NE(mAdapter.Get(), nullptr);
+        ComPtr<IDXGIFactory4> dxgiFactory4;
+        dxgiFactory.As(&dxgiFactory4);
+        ASSERT_NE(dxgiFactory4.Get(), nullptr);
 
-    D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-    mDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch));
-    mIsUMA = arch.UMA;
+        dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&mAdapter));
+        ASSERT_NE(mAdapter.Get(), nullptr);
 
-    D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-    mDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
-    mResourceHeapTier = options.ResourceHeapTier;
-}
+        D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
+        mDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch));
+        mIsUMA = arch.UMA;
 
-void D3D12GPGMMTest::TearDown() {
-    GPGMMTestBase::TearDown();
-    // TODO
-}
+        D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
+        mDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
+        mResourceHeapTier = options.ResourceHeapTier;
+    }
 
-gpgmm::d3d12::ALLOCATOR_DESC D3D12GPGMMTest::CreateBasicAllocatorDesc() const {
-    gpgmm::d3d12::ALLOCATOR_DESC desc = {};
-    desc.Adapter = mAdapter;
-    desc.Device = mDevice;
-    desc.IsUMA = mIsUMA;
-    desc.ResourceHeapTier = mResourceHeapTier;
-    return desc;
-}
+    void D3D12TestBase::TearDown() {
+        GPGMMTestBase::TearDown();
+        // TODO
+    }
+
+    ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
+        ALLOCATOR_DESC desc = {};
+        desc.Adapter = mAdapter;
+        desc.Device = mDevice;
+        desc.IsUMA = mIsUMA;
+        desc.ResourceHeapTier = mResourceHeapTier;
+        return desc;
+    }
+
+}}  // namespace gpgmm::d3d12
