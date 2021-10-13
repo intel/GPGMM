@@ -115,6 +115,7 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
              eventIndex++) {
             const Json::Value& event = traceEvents[eventIndex];
             if (event["name"].asString() == "CreateAllocator") {
+                // TODO: handle capture/re-play device mismatches.
                 allocatorDesc = CreateBasicAllocatorDesc();
 
                 const Json::Value& args = event["args"];
@@ -129,9 +130,6 @@ class D3D12EventTraceReplay : public D3D12GPGMMTest, public CaptureReplyTestWith
                 allocatorDesc.RecordOptions.Flags =
                     static_cast<gpgmm::d3d12::ALLOCATOR_RECORD_FLAGS>(
                         recordOptions["Flags"].asInt());
-
-                ASSERT_EQ(allocatorDesc.IsUMA, args["IsUMA"].asInt());
-                ASSERT_EQ(allocatorDesc.ResourceHeapTier, args["ResourceHeapTier"].asUInt());
 
                 allocatorDesc.PreferredResourceHeapSize =
                     args["PreferredResourceHeapSize"].asUInt64();
