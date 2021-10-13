@@ -37,7 +37,7 @@ namespace gpgmm {
 
     void ConditionalMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
-        UNREACHABLE();
+        allocation->GetAllocator()->DeallocateMemory(allocation);
     }
 
 }  // namespace gpgmm

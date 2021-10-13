@@ -133,18 +133,22 @@ source_set("gpgmm_end2end_tests_sources") {
     "${gpgmm_root_dir}/src/common",
   ]
 
-  sources = [ "GPGMMTest.h" ]
-
+  sources = []
   libs = []
 
   if (gpgmm_enable_d3d12) {
-    sources += [ "end2end/D3D12IUnknownImplTests.cpp" ]
-  }
+    sources += [
+      "D3D12Test.cpp",
+      "D3D12Test.h",
+      "end2end/D3D12IUnknownImplTests.cpp",
+      "end2end/D3D12ResourceAllocatorTests.cpp",
+    ]
 
-  libs += [
-    "d3d12.lib",
-    "dxgi.lib",
-  ]
+    libs += [
+      "d3d12.lib",
+      "dxgi.lib",
+    ]
+  }
 }
 
 test("gpgmm_end2end_tests") {

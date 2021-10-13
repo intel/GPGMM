@@ -204,6 +204,10 @@ namespace gpgmm { namespace d3d12 {
     // static
     HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& descriptor,
                                                ResourceAllocator** resourceAllocator) {
+        if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
+            return E_INVALIDARG;
+        }
+
         // Adapter3 support is needed for residency support.
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
@@ -364,7 +368,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
                                               ResourceAllocation** resourceAllocation) {
         if (committedResource == nullptr) {
-            return E_POINTER;
+            return E_INVALIDARG;
         }
 
         D3D12_RESOURCE_DESC desc = committedResource->GetDesc();
