@@ -131,9 +131,9 @@ namespace gpgmm { namespace d3d12 {
 
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags) {
-            const bool noTexturesAllowedFlags =
+            const D3D12_HEAP_FLAGS denyAllTexturesFlags =
                 D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
-            if ((heapFlags & noTexturesAllowedFlags) == noTexturesAllowedFlags) {
+            if ((heapFlags & denyAllTexturesFlags) == denyAllTexturesFlags) {
                 return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
             }
             // It is preferred to use a size that is a multiple of the alignment.
