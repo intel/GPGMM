@@ -23,9 +23,6 @@
 #include <cstdint>
 #include <memory>
 
-struct ID3D12Device;
-struct IDXGIAdapter3;
-
 namespace gpgmm { namespace d3d12 {
 
     class Heap;
