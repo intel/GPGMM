@@ -23,18 +23,26 @@ class GPGMMTestBase {
 
     void SetUp();
     void TearDown();
+
+    bool IsDeviceLeakChecksEnabled() const;
 };
 
-void InitGPGMMEnd2EndTestEnvironment();
+void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv);
 
 class GPGMMTestEnvironment : public testing::Environment {
   public:
-    explicit GPGMMTestEnvironment() {
-    }
+    GPGMMTestEnvironment(int argc, char** argv);
 
     static void SetEnvironment(GPGMMTestEnvironment* env);
 
     void SetUp() override;
+
+    bool IsDeviceLeakChecksEnabled() const;
+
+  private:
+    void PrintTestEnviromentSettings() const;
+
+    bool mEnableDeviceLeakChecks = false;
 };
 
 #endif  // TESTS_GPGMM_TEST_H_

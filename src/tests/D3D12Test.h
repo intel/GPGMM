@@ -16,6 +16,9 @@
 
 #include "src/d3d12/d3d12_platform.h"
 
+#define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
+#define ASSERT_SUCCEEDED(expr) ASSERT_TRUE(SUCCEEDED(expr))
+
 namespace gpgmm { namespace d3d12 {
 
     struct ALLOCATOR_DESC;
