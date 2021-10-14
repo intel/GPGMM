@@ -1,5 +1,7 @@
-[![Windows Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
-[![Windows Debug](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)
+[![win_clang_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
+[![win_clang_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)
+[![win_msvc_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml)
+[![win_msvc_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml)
 
 # GPGMM
 
