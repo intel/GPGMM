@@ -20,16 +20,18 @@
 
 using namespace gpgmm::d3d12;
 
-#define ASSERT_ERROR(expr) ASSERT_TRUE(FAILED(expr))
-#define ASSERT_SUCCESS(expr) ASSERT_TRUE(SUCCEEDED(expr))
-
 class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test {
   protected:
     void SetUp() override {
         D3D12TestBase::SetUp();
 
-        ASSERT_SUCCESS(CreateAllocator(CreateBasicAllocatorDesc(), mDefaultAllocator));
+        ASSERT_SUCCEEDED(CreateAllocator(CreateBasicAllocatorDesc(), mDefaultAllocator));
         ASSERT_NE(mDefaultAllocator, nullptr);
+    }
+
+    void TearDown() override {
+        mDefaultAllocator = nullptr;
+        D3D12TestBase::TearDown();
     }
 
     static HRESULT CreateAllocator(const ALLOCATOR_DESC& desc,
@@ -65,7 +67,7 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     // Creating an empty allocator should fail.
     std::unique_ptr<ResourceAllocator> allocator;
-    ASSERT_ERROR(CreateAllocator({}, /*out*/ allocator));
+    ASSERT_FAILED(CreateAllocator({}, /*out*/ allocator));
     ASSERT_EQ(allocator, nullptr);
 }
 
@@ -73,7 +75,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
     // Exceeding the max resource heap size should always fail.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_ERROR(mDefaultAllocator->CreateResource(
+        ASSERT_FAILED(mDefaultAllocator->CreateResource(
             {}, CreateBasicBufferDesc(gpgmm::kDefaultMaxHeapSize + 1), D3D12_RESOURCE_STATE_COMMON,
             nullptr, &allocation));
         ASSERT_EQ(allocation, nullptr);
@@ -82,7 +84,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
     // Using the min resource heap size should always succeed.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCESS(
+        ASSERT_SUCCEEDED(
             mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(gpgmm::kDefaultMinHeapSize),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -93,17 +95,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
 TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
     // Importing a non-existent buffer should always fail.
     ComPtr<ResourceAllocation> externalAllocation;
-    ASSERT_ERROR(mDefaultAllocator->CreateResource(nullptr, &externalAllocation));
+    ASSERT_FAILED(mDefaultAllocator->CreateResource(nullptr, &externalAllocation));
     ASSERT_EQ(externalAllocation, nullptr);
 
     // Importing a buffer should always succeed.
-    ASSERT_SUCCESS(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
         {}, CreateBasicBufferDesc(gpgmm::kDefaultMinHeapSize), D3D12_RESOURCE_STATE_COMMON, nullptr,
         &externalAllocation));
     ASSERT_NE(externalAllocation, nullptr);
 
     ComPtr<ResourceAllocation> internalAllocation;
-    ASSERT_SUCCESS(
+    ASSERT_SUCCEEDED(
         mDefaultAllocator->CreateResource(externalAllocation->GetResource(), &internalAllocation));
     ASSERT_NE(internalAllocation, nullptr);
 
@@ -117,8 +119,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalidDesc) {
     badBufferDesc.Flags = static_cast<D3D12_RESOURCE_FLAGS>(0xFF);
 
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_ERROR(mDefaultAllocator->CreateResource({}, badBufferDesc, D3D12_RESOURCE_STATE_COMMON,
-                                                   nullptr, &allocation));
+    ASSERT_FAILED(mDefaultAllocator->CreateResource({}, badBufferDesc, D3D12_RESOURCE_STATE_COMMON,
+                                                    nullptr, &allocation));
     ASSERT_EQ(allocation, nullptr);
 }
 
@@ -127,12 +129,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
     desc.Flags = ALLOCATOR_ALWAYS_COMMITED;
 
     std::unique_ptr<ResourceAllocator> allocator;
-    ASSERT_SUCCESS(CreateAllocator(desc, /*out*/ allocator));
+    ASSERT_SUCCEEDED(CreateAllocator(desc, /*out*/ allocator));
     ASSERT_NE(allocator, nullptr);
 
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_SUCCESS(allocator->CreateResource({}, CreateBasicBufferDesc(gpgmm::kDefaultMinHeapSize),
-                                             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    ASSERT_SUCCEEDED(allocator->CreateResource({},
+                                               CreateBasicBufferDesc(gpgmm::kDefaultMinHeapSize),
+                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     ASSERT_NE(allocation, nullptr);
 
     // Commmitted resources cannot be backed by a D3D12 heap.

@@ -27,6 +27,7 @@
         "program": "gpgmm_end2end_tests.exe",
       },
       "args": [
+        "--check-device-leaks",
         "--gtest_catch_exceptions=0",
         "--gtest_filter=*"
       ],
@@ -43,6 +44,7 @@
         "program": "gpgmm_capture_replay_tests.exe",
       },
       "args": [
+        "--check-device-leaks",
         "--gtest_catch_exceptions=0",
         "--gtest_filter=*"
       ],

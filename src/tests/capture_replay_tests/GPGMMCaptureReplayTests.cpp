@@ -34,8 +34,8 @@ void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
     testing::AddGlobalTestEnvironment(gTestEnv);
 }
 
-GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
-    // TODO
+GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, char** argv)
+    : GPGMMTestEnvironment(argc, argv) {
 }
 
 GPGMMCaptureReplayTestEnvironment::~GPGMMCaptureReplayTestEnvironment() = default;

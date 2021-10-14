@@ -93,6 +93,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         D3D12TestBase::SetUp();
     }
 
+    void TearDown() override {
+        D3D12TestBase::TearDown();
+    }
+
     void RunTest(const TraceFile& traceFile) {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
