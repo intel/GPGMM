@@ -1,0 +1,143 @@
+name: win_clang_rel_x64
+
+on:
+  push:
+    paths:
+      - 'src/**'
+
+  pull_request:
+    paths:
+      - 'src/**'
+
+jobs:
+
+  job:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Git config
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - name: Install depot_tools
+      shell: cmd
+      run: |
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ..\depot_tools
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        gclient
+
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - uses: actions/checkout@v2
+      with:
+        ref: main
+        path: base
+        fetch-depth: 0
+
+    - name: Sync code for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        copy scripts\standalone.gclient .gclient
+        gclient sync
+
+    - name: Generate project for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        gn gen out\Release --args="is_debug=false"
+
+    - name: Build for main branch
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd base
+        ninja -C out\Release
+
+    - name: Run gpgmm_end2end_tests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+
+    - name: Run gpgmm_unittests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_unittests.json
+
+    - name: Run gpgmm_capture_replay_tests
+      shell: cmd
+      run: |
+        cd base
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json
+
+    - uses: actions/checkout@v2
+      with:
+        path: test
+        fetch-depth: 0
+
+    - name: Sync code for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        copy scripts\standalone.gclient .gclient
+        gclient sync
+
+    - name: Generate project for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        gn gen out\Release --args="is_debug=false"
+
+    - name: Build for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        ninja -C out\Release
+
+    - name: Run gpgmm_end2end_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+
+    - name: Run gpgmm_unittests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json || true
+
+    - name: Run gpgmm_capture_replay_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json
+
+    - name: Regression check end2end tests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2end_tests.json ${{ github.workspace }}\..\test_end2end_tests.json
+
+    - name: Regression check unittests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_unittests.json ${{ github.workspace }}\..\test_unittests.json
+
+    - name: Regression check capture replay tests
+      run: |
+        python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_capture_replay_tests.json ${{ github.workspace }}\..\test_capture_replay_tests.json

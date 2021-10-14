@@ -1,5 +1,5 @@
-[![Windows Standalone Release](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_standalone_rel.yaml)
-[![Windows Standalone Debug](https://github.com/intel/GPGMM/actions/workflows/win_standalone_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_standalone_dbg.yaml)
+[![Windows Release](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
+[![Windows Debug](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)
 
 # GPGMM
 
