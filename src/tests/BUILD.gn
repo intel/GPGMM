@@ -96,12 +96,11 @@ if (!build_with_chromium) {
 ###############################################################################
 
 test("gpgmm_unittests") {
-  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",
     "${gpgmm_root_dir}/src:gpgmm_sources",
-    "${gpgmm_root_dir}/src/common",
   ]
 
   sources = [
@@ -124,13 +123,12 @@ test("gpgmm_unittests") {
 ###############################################################################
 
 source_set("gpgmm_end2end_tests_sources") {
-  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
   testonly = true
 
   deps = [
     ":gmock_and_gtest",
     "${gpgmm_root_dir}/src:gpgmm_sources",
-    "${gpgmm_root_dir}/src/common",
   ]
 
   sources = []
@@ -152,13 +150,12 @@ source_set("gpgmm_end2end_tests_sources") {
 }
 
 test("gpgmm_end2end_tests") {
-  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",
     ":gpgmm_end2end_tests_sources",
     "${gpgmm_root_dir}/src:gpgmm",
-    "${gpgmm_root_dir}/src/common",
   ]
 
   sources = [
@@ -187,7 +184,7 @@ test("gpgmm_end2end_tests") {
 
 trace_index_file_name = "traces.json"
 
-action("generate_capture_replay_trace_index") {
+action("generate_capture_replay_trace_index_file") {
   script = "${gpgmm_root_dir}/scripts/generate_capture_replay_trace_index.py"
   outputs = [ "$target_gen_dir" + "/" + trace_index_file_name ]
 
@@ -204,14 +201,13 @@ action("generate_capture_replay_trace_index") {
 }
 
 source_set("gpgmm_capture_replay_tests_sources") {
-  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
   testonly = true
 
   deps = [
-    ":generate_capture_replay_trace_index",
+    ":generate_capture_replay_trace_index_file",
     ":gmock_and_gtest",
     "${gpgmm_root_dir}/src:gpgmm_sources",
-    "${gpgmm_root_dir}/src/common",
     "${gpgmm_root_dir}/third_party/gn/jsoncpp",
   ]
 
@@ -241,13 +237,12 @@ source_set("gpgmm_capture_replay_tests_sources") {
 }
 
 test("gpgmm_capture_replay_tests") {
-  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+  configs += [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",
     ":gpgmm_capture_replay_tests_sources",
     "${gpgmm_root_dir}/src:gpgmm",
-    "${gpgmm_root_dir}/src/common",
     "${gpgmm_root_dir}/third_party/gn/jsoncpp",
   ]
 

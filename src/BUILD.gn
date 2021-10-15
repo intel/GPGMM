@@ -43,8 +43,8 @@ if (is_mac) {
 #       gpgmm_enable_vulkan_loader && gpgmm_vulkan_loader_dir != ""
 # }
 
-config("gpgmm_internal") {
-  configs = [ "${gpgmm_root_dir}/src/common:gpgmm_internal" ]
+config("gpgmm_common_config") {
+  configs = [ "${gpgmm_root_dir}/src/common:gpgmm_common_config" ]
 
   # Suppress warnings that Metal isn't in the deployment target of Chrome:
   # initialization of the Metal backend is behind a IsMetalSupported check so
@@ -76,12 +76,8 @@ config("gpgmm_vulkan_rpath") {
 # dependencies of gpgmm
 source_set("gpgmm_headers") {
   # public_deps = [ "${gpgmm_root_dir}/src/gpgmm:gpgmmcpp_headers" ]
-  all_dependent_configs =
-      [ "${gpgmm_root_dir}/src/common:gpgmm_public_include_dirs" ]
-  sources = [
-    "${gpgmm_root_dir}/src/include/D3D12Backend.h",
-    "${gpgmm_root_dir}/src/include/gpgmm_export.h",
-  ]
+  all_dependent_configs = [ "${gpgmm_root_dir}/src/common:gpgmm_public_config" ]
+  sources = [ "${gpgmm_root_dir}/src/include/gpgmm_export.h" ]
 }
 
 # The meat of the compilation for gpgmm so that we can cheaply have
@@ -90,7 +86,7 @@ source_set("gpgmm_headers") {
 source_set("gpgmm_sources") {
   deps = [
     ":gpgmm_headers",
-    "${gpgmm_root_dir}/src/common",
+    "${gpgmm_root_dir}/src/common:gpgmm_common_sources",
   ]
   defines = []
 
@@ -101,7 +97,7 @@ source_set("gpgmm_sources") {
   libs = []
   data_deps = []
 
-  configs += [ ":gpgmm_internal" ]
+  configs += [ ":gpgmm_common_config" ]
 
   # Dependencies that are needed to compile gpgmm entry points in
   # FooBackend.cpp need to be public deps so they are propagated to the
@@ -196,8 +192,5 @@ source_set("gpgmm_sources") {
 
 source_set("gpgmm") {
   public_deps = [ ":gpgmm_headers" ]
-  deps = [
-    ":gpgmm_sources",
-    "${gpgmm_root_dir}/src/common",
-  ]
+  deps = [ ":gpgmm_sources" ]
 }
