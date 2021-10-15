@@ -164,6 +164,7 @@ source_set("gpgmm_sources") {
   if (gpgmm_enable_d3d12) {
     libs += [ "dxguid.lib" ]
     sources += [
+      "d3d12/DefaultsD3D12.h",
       "d3d12/FenceD3D12.cpp",
       "d3d12/FenceD3D12.h",
       "d3d12/HeapD3D12.cpp",
@@ -172,7 +173,6 @@ source_set("gpgmm_sources") {
       "d3d12/IUnknownImplD3D12.h",
       "d3d12/JSONSerializerD3D12.cpp",
       "d3d12/JSONSerializerD3D12.h",
-      "d3d12/LimitsD3D12.h",
       "d3d12/ResidencyManagerD3D12.cpp",
       "d3d12/ResidencyManagerD3D12.h",
       "d3d12/ResidencySetD3D12.cpp",

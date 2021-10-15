@@ -75,30 +75,27 @@ namespace gpgmm { namespace d3d12 {
         // Configures memory tracing.
         ALLOCATOR_RECORD_OPTIONS RecordOptions;
 
-        // Determines if this allocator should use shared memory. Use CheckFeatureSupport
+        // Determines if resource heaps can exist in shared memory. Use CheckFeatureSupport
         // to check for support. Required parameter.
         bool IsUMA;
 
-        // Determines if the resource heap can mix resource categories (both texture and
+        // Determines if resource heaps can mix resource categories (both texture and
         // buffers). Use CheckFeatureSupport to get supported tier. Required parameter.
         uint32_t ResourceHeapTier;
 
-        // Minimum size of the resource heap.
-        // If the resource size exceeds |PreferredResourceHeapSize|, it will not sub-allocate a
-        // resource within a heap. By default, a preferred heap size of zero means the default
-        // heap size of 4MB will always be used.
+        // Preferred size of the resource heap.
+        // The preferred size of the resource heap is the minimum heap size to sub-allocate
+        // from. A larger resource heap consumes more memory but could be faster for sub-allocation.
         uint64_t PreferredResourceHeapSize;
 
         // Maximum size of the resource heap.
-        // If the resource size exceeds |MaxResourceHeapSize|, CreateResource will always return
-        // E_OUTOFMEMORY. By default, a max resource heap size of zero means the max heap
-        // size of 32GB is allowed.
+        // The maximum resource size restricts the total address range of available memory to
+        // allocate.
         uint64_t MaxResourceHeapSize;
 
         // Maximum resource size allowed to be pool-allocated.
-        // If the resource size is greater than |MaxResourceSizeForPooling|, it will not be
-        // pool-allocated. By default, a max resource heap size of zero means created resources
-        // will always be pool-allocated reguardless of size.
+        // Pool-allocating larger resources consumes more memory but could be faster to allocate
+        // from by using a pool of resource heaps.
         uint64_t MaxResourceSizeForPooling;
 
         // Maximum video memory available to budget by the allocator, expressed as a
@@ -107,8 +104,11 @@ namespace gpgmm { namespace d3d12 {
         float MaxVideoMemoryBudget;
 
         // Total memory available to budget for resources created by this allocator.
-        // By default, a total resource budget limit of zero means there is no budget set.
         uint64_t TotalResourceBudgetLimit;
+
+        // Total memory Size of resident resources that could be evicted, should there not be enough
+        // residency budget available.
+        uint64_t ResidentResourceEvictSize;
     };
 
     typedef enum ALLOCATION_FLAGS {

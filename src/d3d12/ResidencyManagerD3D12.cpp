@@ -15,9 +15,9 @@
 
 #include "src/d3d12/ResidencyManagerD3D12.h"
 
+#include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/FenceD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
-#include "src/d3d12/LimitsD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
 
@@ -34,7 +34,7 @@ namespace gpgmm { namespace d3d12 {
         : mDevice(device),
           mAdapter(adapter3),
           mIsUMA(isUMA),
-          mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultVideoMemoryBudgetLimit
+          mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
                                                               : videoMemoryBudgetLimit),
           mTotalResourceBudgetLimit(mTotalResourceBudgetLimit),
           mFence(new Fence(device, 0)) {
@@ -330,7 +330,7 @@ namespace gpgmm { namespace d3d12 {
         // more memory and calling MakeResident again.
         while (FAILED(hr)) {
             uint64_t sizeEvicted = 0;
-            Evict(kAdditonalSizeToEvict, dxgiMemorySegmentGroup, &sizeEvicted);
+            Evict(kDefaultResidentResourceEvictSize, dxgiMemorySegmentGroup, &sizeEvicted);
 
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
