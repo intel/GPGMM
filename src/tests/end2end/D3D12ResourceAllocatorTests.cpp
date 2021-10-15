@@ -15,6 +15,7 @@
 #include "src/tests/D3D12Test.h"
 
 #include "src/d3d12/LimitsD3D12.h"
+#include "src/d3d12/UtilsD3D12.h"
 
 #include <gpgmm_d3d12.h>
 #include <memory>
@@ -38,12 +39,9 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
     static HRESULT CreateAllocator(const ALLOCATOR_DESC& desc,
                                    std::unique_ptr<ResourceAllocator>& resourceAllocatorOut) {
         ResourceAllocator* resourceAllocator = nullptr;
-        HRESULT hr = ResourceAllocator::CreateAllocator(desc, &resourceAllocator);
-        if (FAILED(hr)) {
-            return hr;
-        }
+        ReturnIfFailed(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
         resourceAllocatorOut = std::unique_ptr<ResourceAllocator>(resourceAllocator);
-        return hr;
+        return S_OK;
     }
 
     static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width) {

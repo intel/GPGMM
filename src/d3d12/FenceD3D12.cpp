@@ -15,6 +15,7 @@
 #include "src/d3d12/FenceD3D12.h"
 
 #include "../common/Assert.h"
+#include "src/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     Fence::Fence(ComPtr<ID3D12Device> device, uint64_t initialValue)
@@ -41,9 +42,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT Fence::WaitFor(uint64_t fenceValue) {
-        HRESULT hr = S_OK;
         if (!IsCompleted(fenceValue)) {
-            hr = mFence->SetEventOnCompletion(fenceValue, mCompletionEvent);
+            ReturnIfFailed(mFence->SetEventOnCompletion(fenceValue, mCompletionEvent));
 
             // Wait for the event to complete (it will automatically reset).
             const uint32_t result = WaitForSingleObject(mCompletionEvent, INFINITE);
@@ -54,7 +54,7 @@ namespace gpgmm { namespace d3d12 {
             // Update the latest completed fence value.
             GetAndCacheLastCompletedFence();
         }
-        return hr;
+        return S_OK;
     }
 
     bool Fence::IsCompleted(uint64_t fenceValue) {
@@ -71,10 +71,10 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT Fence::Signal(ID3D12CommandQueue* pCommandQueue) {
         ASSERT(mLastSignaledFence != mCurrentFence);
-        HRESULT hr = pCommandQueue->Signal(mFence.Get(), mCurrentFence);
+        ReturnIfFailed(pCommandQueue->Signal(mFence.Get(), mCurrentFence));
         mLastSignaledFence = mCurrentFence;
         mCurrentFence++;
-        return hr;
+        return S_OK;
     }
 
     uint64_t Fence::GetLastSignaledFence() const {

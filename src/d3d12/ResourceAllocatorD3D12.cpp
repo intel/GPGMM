@@ -27,6 +27,7 @@
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
+#include "src/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {
@@ -378,10 +379,7 @@ namespace gpgmm { namespace d3d12 {
             GetResourceAllocationInfo(mDevice.Get(), desc);
 
         D3D12_HEAP_PROPERTIES heapProp;
-        HRESULT hr = committedResource->GetHeapProperties(&heapProp, nullptr);
-        if (FAILED(hr)) {
-            return hr;
-        }
+        ReturnIfFailed(committedResource->GetHeapProperties(&heapProp, nullptr));
 
         // Do not track imported resources for purposes of residency.
         Heap* heap =
@@ -398,7 +396,7 @@ namespace gpgmm { namespace d3d12 {
                                                      /*offset*/ 0,
                                                      std::move(committedResource),
                                                      heap};
-        return hr;
+        return S_OK;
     }
 
     HRESULT ResourceAllocator::CreatePlacedResource(
@@ -429,10 +427,7 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(heap != nullptr);
 
         if (mResidencyManager != nullptr) {
-            HRESULT hr = mResidencyManager->LockHeap(heap);
-            if (FAILED(hr)) {
-                return hr;
-            }
+            mResidencyManager->LockHeap(heap);
         }
 
         // The resource is placed at an offset corresponding to the sub-allocation.
@@ -440,12 +435,9 @@ namespace gpgmm { namespace d3d12 {
         // be aliased or cannot be reused within a command-list.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
-        HRESULT hr = mDevice->CreatePlacedResource(heap->GetD3D12Heap(), subAllocation.GetOffset(),
-                                                   resourceDescriptor, initialUsage, clearValue,
-                                                   IID_PPV_ARGS(&placedResource));
-        if (FAILED(hr)) {
-            return hr;
-        }
+        ReturnIfFailed(mDevice->CreatePlacedResource(
+            heap->GetD3D12Heap(), subAllocation.GetOffset(), resourceDescriptor, initialUsage,
+            clearValue, IID_PPV_ARGS(&placedResource)));
 
         // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
         // will insert it into the residency LRU.
@@ -456,7 +448,8 @@ namespace gpgmm { namespace d3d12 {
         *resourceAllocation = new ResourceAllocation{
             mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
             subAllocation.GetOffset(), std::move(placedResource),    heap};
-        return hr;
+
+        return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResourceHeap(uint64_t size,
@@ -485,10 +478,7 @@ namespace gpgmm { namespace d3d12 {
         heapDesc.Flags = heapFlags;
 
         ComPtr<ID3D12Heap> d3d12Heap;
-        HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap));
-        if (FAILED(hr)) {
-            return hr;
-        }
+        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
 
         *ppResourceHeap = new Heap(std::move(d3d12Heap), memorySegment, size);
 
@@ -498,7 +488,7 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->InsertHeap(*ppResourceHeap);
         }
 
-        return hr;
+        return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateCommittedResource(
@@ -516,14 +506,10 @@ namespace gpgmm { namespace d3d12 {
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
-        HRESULT hr = S_OK;
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
-            hr = mResidencyManager->Evict(
+            ReturnIfFailed(mResidencyManager->Evict(
                 resourceInfo.SizeInBytes,
-                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType));
-            if (FAILED(hr)) {
-                return hr;
-            }
+                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType)));
         }
 
         D3D12_HEAP_PROPERTIES heapProperties;
@@ -539,12 +525,9 @@ namespace gpgmm { namespace d3d12 {
                        D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
 
         ComPtr<ID3D12Resource> committedResource;
-        hr = mDevice->CreateCommittedResource(&heapProperties, heapFlags, resourceDescriptor,
-                                              initialUsage, clearValue,
-                                              IID_PPV_ARGS(&committedResource));
-        if (FAILED(hr)) {
-            return hr;
-        }
+        ReturnIfFailed(mDevice->CreateCommittedResource(
+            &heapProperties, heapFlags, resourceDescriptor, initialUsage, clearValue,
+            IID_PPV_ARGS(&committedResource)));
 
         // Since residency management occurs at the heap granularity, every committed resource is
         // wrapped in a heap object.
@@ -567,7 +550,7 @@ namespace gpgmm { namespace d3d12 {
                                                        /*offset*/ 0,
                                                        std::move(committedResource),
                                                        heap};
-        return hr;
+        return S_OK;
     }
 
     void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
