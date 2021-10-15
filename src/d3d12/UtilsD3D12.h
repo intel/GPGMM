@@ -11,11 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#ifndef GPGMM_D3D12_UTILSD3D12_H_
+#define GPGMM_D3D12_UTILSD3D12_H_
 
 #include "src/d3d12/d3d12_platform.h"
+
+#define ReturnIfFailed(expr) \
+    {                        \
+        HRESULT hr = expr;   \
+        if (FAILED(hr)) {    \
+            return hr;       \
+        }                    \
+    }                        \
+    for (;;)                 \
+    break
 
 namespace gpgmm { namespace d3d12 {
 
     bool IsDepthFormat(DXGI_FORMAT format);
 
 }}  // namespace gpgmm::d3d12
+
+#endif  // GPGMM_D3D12_UTILSD3D12_H_

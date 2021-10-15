@@ -19,6 +19,7 @@
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/LimitsD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
+#include "src/d3d12/UtilsD3D12.h"
 
 #include <algorithm>
 #include <vector>
@@ -66,10 +67,7 @@ namespace gpgmm { namespace d3d12 {
             ID3D12Pageable* d3d12Pageable = heap->GetD3D12Pageable();
             uint64_t size = heap->GetSize();
 
-            HRESULT hr = MakeResident(heap->GetMemorySegment(), size, 1, &d3d12Pageable);
-            if (FAILED(hr)) {
-                return hr;
-            }
+            ReturnIfFailed(MakeResident(heap->GetMemorySegment(), size, 1, &d3d12Pageable));
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -170,10 +168,8 @@ namespace gpgmm { namespace d3d12 {
         // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
         // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
         // the process budget and starving Dawn, which will cause thrash.
-        HRESULT hr = S_OK;
         if (videoMemorySegment->lruCache.empty()) {
-            *ppEvictedHeapOut = nullptr;
-            return hr;
+            return S_OK;
         }
 
         Heap* heap = videoMemorySegment->lruCache.head()->value();
@@ -185,22 +181,18 @@ namespace gpgmm { namespace d3d12 {
         // available. In this scenario, we cannot make any more resources resident and thrashing
         // must occur.
         if (lastUsedFenceValue == mFence->GetCurrentFence()) {
-            *ppEvictedHeapOut = nullptr;
-            return hr;
+            return S_OK;
         }
 
         // We must ensure that any previous use of a resource has completed before the resource can
         // be evicted.
-        hr = mFence->WaitFor(lastUsedFenceValue);
-        if (FAILED(hr)) {
-            *ppEvictedHeapOut = nullptr;
-            return hr;
-        }
+        ReturnIfFailed(mFence->WaitFor(lastUsedFenceValue));
 
         heap->RemoveFromList();
 
         *ppEvictedHeapOut = heap;
-        return hr;
+
+        return S_OK;
     }
 
     // Any time we need to make something resident, we must check that we have enough free memory to
@@ -226,13 +218,9 @@ namespace gpgmm { namespace d3d12 {
         uint64_t sizeNeededToBeUnderBudget =
             memoryUsageAfterMakeResident - videoMemorySegmentInfo->budget;
         uint64_t sizeEvicted = 0;
-        HRESULT hr = S_OK;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
             Heap* heap = nullptr;
-            hr = EvictHeap(videoMemorySegmentInfo, &heap);
-            if (FAILED(hr)) {
-                return hr;
-            }
+            ReturnIfFailed(EvictHeap(videoMemorySegmentInfo, &heap));
 
             // If no heap was returned, then nothing more can be evicted.
             if (heap == nullptr) {
@@ -244,16 +232,13 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (resourcesToEvict.size() > 0) {
-            hr = mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data());
-            if (FAILED(hr)) {
-                return hr;
-            }
+            ReturnIfFailed(mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data()));
         }
 
         if (sizeEvictedOut != nullptr) {
             *sizeEvictedOut = sizeEvicted;
         }
-        return hr;
+        return S_OK;
     }
 
     // Given a list of heaps that are pending usage, this function will estimate memory needed,

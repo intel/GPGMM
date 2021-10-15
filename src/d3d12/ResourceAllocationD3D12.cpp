@@ -20,6 +20,7 @@
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
+#include "src/d3d12/UtilsD3D12.h"
 
 #include <utility>
 
@@ -82,10 +83,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (mResidencyManager != nullptr) {
-            HRESULT hr = mResidencyManager->LockHeap(heap);
-            if (FAILED(hr)) {
-                return hr;
-            }
+            ReturnIfFailed(mResidencyManager->LockHeap(heap));
         }
 
         return mResource->Map(subresource, pRange, ppMappedData);
