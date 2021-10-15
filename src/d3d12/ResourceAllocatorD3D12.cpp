@@ -15,7 +15,6 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
-#include "../common/Limits.h"
 #include "../common/Math.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/LIFOPooledMemoryAllocator.h"
@@ -24,6 +23,7 @@
 #include "src/VirtualBuddyMemoryAllocator.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/JSONSerializerD3D12.h"
+#include "src/d3d12/LimitsD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"

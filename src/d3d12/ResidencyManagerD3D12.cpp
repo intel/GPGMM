@@ -15,9 +15,9 @@
 
 #include "src/d3d12/ResidencyManagerD3D12.h"
 
-#include "../common/Limits.h"
 #include "src/d3d12/FenceD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
+#include "src/d3d12/LimitsD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 
 #include <algorithm>
