@@ -1,4 +1,4 @@
-From c7340cedf5f34cf4788dd09b53ea24d5b68849e4 Mon Sep 17 00:00:00 2001
+From 99b3d09005bab6cddee4a178ec80102336d83386 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Mon, 11 Oct 2021 15:05:34 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -28,7 +28,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn_native/d3d12/UtilsD3D12.cpp          | 11 +++
  src/dawn_native/d3d12/UtilsD3D12.h            |  2 +
  src/tests/white_box/D3D12ResidencyTests.cpp   | 18 ++--
- 23 files changed, 226 insertions(+), 137 deletions(-)
+ 23 files changed, 228 insertions(+), 135 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -758,7 +758,7 @@ index aafe60d3..5b9ab342 100644
  }}  // namespace dawn_native::d3d12
  
 diff --git a/src/dawn_native/d3d12/TextureD3D12.cpp b/src/dawn_native/d3d12/TextureD3D12.cpp
-index 81c4ba05..018e0689 100644
+index 81c4ba05..07bcfdaa 100644
 --- a/src/dawn_native/d3d12/TextureD3D12.cpp
 +++ b/src/dawn_native/d3d12/TextureD3D12.cpp
 @@ -561,12 +561,8 @@ namespace dawn_native { namespace d3d12 {
@@ -820,7 +820,7 @@ index 81c4ba05..018e0689 100644
      }
  
      DXGI_FORMAT Texture::GetD3D12CopyableSubresourceFormat(Aspect aspect) const {
-@@ -723,11 +717,8 @@ namespace dawn_native { namespace d3d12 {
+@@ -723,10 +717,9 @@ namespace dawn_native { namespace d3d12 {
      void Texture::TrackUsageAndTransitionNow(CommandRecordingContext* commandContext,
                                               D3D12_RESOURCE_STATES newState,
                                               const SubresourceRange& range) {
@@ -828,13 +828,13 @@ index 81c4ba05..018e0689 100644
 -            // Track the underlying heap to ensure residency.
 -            Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
--        }
 +        // Track the underlying heap to ensure residency.
-+        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
++        if (GetTextureState() != TextureState::OwnedExternal) {
++            mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
+         }
  
          std::vector<D3D12_RESOURCE_BARRIER> barriers;
- 
-@@ -877,11 +868,8 @@ namespace dawn_native { namespace d3d12 {
+@@ -877,10 +870,9 @@ namespace dawn_native { namespace d3d12 {
          CommandRecordingContext* commandContext,
          std::vector<D3D12_RESOURCE_BARRIER>* barriers,
          const TextureSubresourceUsage& textureUsages) {
@@ -842,13 +842,13 @@ index 81c4ba05..018e0689 100644
 -            // Track the underlying heap to ensure residency.
 -            Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
--        }
 +        // Track the underlying heap to ensure residency.
-+        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
++        if (GetTextureState() != TextureState::OwnedExternal) {
++            mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
+         }
  
          HandleTransitionSpecialCases(commandContext);
- 
-@@ -1114,8 +1102,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -1114,8 +1106,7 @@ namespace dawn_native { namespace d3d12 {
      }
  
      void Texture::SetLabelHelper(const char* prefix) {
