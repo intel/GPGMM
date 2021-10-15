@@ -106,6 +106,11 @@ namespace gpgmm { namespace d3d12 {
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
+
+        if (mResidencyManager == nullptr) {
+            return E_FAIL;
+        }
+
         return heap->UpdateResidency(residencySet);
     }
 }}  // namespace gpgmm::d3d12
