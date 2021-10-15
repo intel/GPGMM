@@ -140,5 +140,5 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
     // Commmitted resources cannot be backed by a D3D12 heap.
     Heap* resourceHeap = static_cast<Heap*>(allocation->GetMemory());
     ASSERT_NE(resourceHeap, nullptr);
-    ASSERT_EQ(resourceHeap->GetD3D12Heap(), nullptr);
+    ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
 }

@@ -25,6 +25,7 @@
 namespace gpgmm { namespace d3d12 {
 
     class ResidencySet;
+    class ResidencyManager;
 
     // This class is used to represent ID3D12Heap allocations, as well as an implicit heap
     // representing a directly allocated resource, and also serves as a node within
@@ -39,10 +40,23 @@ namespace gpgmm { namespace d3d12 {
              uint64_t size);
         ~Heap();
 
-        ID3D12Pageable* GetD3D12Pageable() const;
-        ID3D12Heap* GetD3D12Heap() const;
+        ID3D12Heap* GetHeap() const;
 
         HRESULT UpdateResidency(ResidencySet* residencySet);
+
+        uint64_t GetSize() const;
+
+        bool IsResident() const;
+
+        // Testing only.
+        bool IsInResidencyLRUCache() const;
+        bool IsResidencyLocked() const;
+
+      private:
+        friend ResidencyManager;
+
+        ID3D12Pageable* GetD3D12Pageable() const;
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at
@@ -50,22 +64,12 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetLastUsedFenceValue() const;
         void SetLastUsedFenceValue(uint64_t fenceValue);
 
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
-
-        uint64_t GetSize() const;
-
-        bool IsInResidencyLRUCache() const;
-
         // In some scenarios, such as async buffer mapping or descriptor heaps, we must lock
         // residency to ensure the pageable cannot be evicted. Because multiple buffers may be
         // mapped in a single heap, we must track the number of resources currently locked.
         void IncrementResidencyLock();
         void DecrementResidencyLock();
-        bool IsResidencyLocked() const;
 
-        bool IsResident() const;
-
-      private:
         ComPtr<ID3D12Pageable> mD3d12Pageable;
 
         // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.

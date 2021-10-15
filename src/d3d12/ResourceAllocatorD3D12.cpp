@@ -435,9 +435,9 @@ namespace gpgmm { namespace d3d12 {
         // be aliased or cannot be reused within a command-list.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
-        ReturnIfFailed(mDevice->CreatePlacedResource(
-            heap->GetD3D12Heap(), subAllocation.GetOffset(), resourceDescriptor, initialUsage,
-            clearValue, IID_PPV_ARGS(&placedResource)));
+        ReturnIfFailed(mDevice->CreatePlacedResource(heap->GetHeap(), subAllocation.GetOffset(),
+                                                     resourceDescriptor, initialUsage, clearValue,
+                                                     IID_PPV_ARGS(&placedResource)));
 
         // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
         // will insert it into the residency LRU.
