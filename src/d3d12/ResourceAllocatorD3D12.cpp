@@ -21,9 +21,9 @@
 #include "src/MemoryAllocatorStack.h"
 #include "src/TraceEvent.h"
 #include "src/VirtualBuddyMemoryAllocator.h"
+#include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/JSONSerializerD3D12.h"
-#include "src/d3d12/LimitsD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceHeapAllocatorD3D12.h"
@@ -221,11 +221,11 @@ namespace gpgmm { namespace d3d12 {
 
         const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                  ? descriptor.PreferredResourceHeapSize
-                                                 : kDefaultMinHeapSize;
+                                                 : kDefaultPreferredResourceHeapSize;
 
         const uint64_t maxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
                                                  ? descriptor.MaxResourceHeapSize
-                                                 : kDefaultMaxHeapSize;
+                                                 : kDefaultMaxResourceHeapSize;
 
         bool enableEventTracer = descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_TRACE_EVENTS;
 #ifdef GPGMM_ALWAYS_RECORD_EVENT_TRACE
