@@ -166,9 +166,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
 
                 ASSERT_FALSE(allocatorInstanceID.empty());
 
-                ASSERT_TRUE(SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
+                ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
                     allocationDescriptor, resourceDescriptor, initialUsage, clearValuePtr,
-                    &newAllocationWithoutID)));
+                    &newAllocationWithoutID));
 
             } else if (event["name"].asString() == "ResourceAllocation") {
                 switch (*event["ph"].asCString()) {
