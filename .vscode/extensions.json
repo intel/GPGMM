@@ -7,5 +7,7 @@
     "github.vscode-pull-request-github",
     // GN Syntax Highlighting for Visual Studio Code
     "npclaudiu.vscode-gn",
+    // Displays GitHub workflow (bot) status in status bar.
+    "cschleiden.vscode-github-actions",
   ]
 }

@@ -44,4 +44,11 @@
   "C_Cpp.clang_format_sortIncludes": true,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "modifications",
+  // GPGMM: Github Actions: pins workflow status in status bar.
+  "github-actions.workflows.pinned.workflows": [
+    ".github/workflows/win_clang_dbg_x64.yaml",
+    ".github/workflows/win_clang_rel_x64.yaml"
+  ],
+  "github-actions.workflows.pinned.refresh.enabled": true,
+  "github-actions.workflows.pinned.refresh.interval": 65
 }
