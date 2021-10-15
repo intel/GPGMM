@@ -36,7 +36,7 @@ if (build_with_chromium) {
 # Common GPGMM configs
 ###############################################################################
 
-config("gpgmm_public_include_dirs") {
+config("gpgmm_public_config") {
   defines = []
   if (gpgmm_enable_d3d12) {
     defines += [ "GPGMM_ENABLE_D3D12=1" ]
@@ -50,7 +50,7 @@ config("gpgmm_public_include_dirs") {
   ]
 }
 
-config("gpgmm_internal") {
+config("gpgmm_common_config") {
   defines = []
   if (gpgmm_always_assert || dcheck_always_on || is_debug ||
       use_fuzzing_engine) {
@@ -62,7 +62,7 @@ config("gpgmm_internal") {
     defines += [ "DAWN_ABORT_ON_ASSERT" ]
   }
 
-  # Only internal Dawn targets can use this config, this means only targets in
+  # Only internal build targets can use this config, this means only targets in
   # this BUILD.gn file and related subdirs.
   visibility = [ "../*" ]
 
@@ -132,14 +132,14 @@ config("gpgmm_internal") {
 }
 
 ###############################################################################
-# Common GPGMM library
+# Common GPGMM sources
 ###############################################################################
 
 # This GN file is discovered by all Chromium builds, but common doesn't support
 # all of Chromium's OSes so we explicitly make the target visible only on
 # systems we know Dawn is able to compile on.
 if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
-  source_set("common") {
+  source_set("gpgmm_common_sources") {
     sources = [
       "Assert.cpp",
       "Assert.h",
@@ -161,6 +161,6 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       sources += [ "WindowsTime.cpp" ]
     }
 
-    configs += [ ":gpgmm_internal" ]
+    configs += [ ":gpgmm_common_config" ]
   }
 }
