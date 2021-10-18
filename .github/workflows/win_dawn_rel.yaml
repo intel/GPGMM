@@ -1,4 +1,4 @@
-name: Windows Dawn-GPMM Release
+name: win_dawn_rel
 
 on:
   push:

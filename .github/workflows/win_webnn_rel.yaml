@@ -1,4 +1,4 @@
-name: Windows WebNN-GPGMM Release
+name: win_webnn_rel
 
 on:
   push:
