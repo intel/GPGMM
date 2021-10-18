@@ -54,7 +54,9 @@ namespace gpgmm { namespace d3d12 {
         GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocation");
     }
 
-    void ResourceAllocation::ReleaseThis() {
+    void ResourceAllocation::DeleteThis() {
+        GPGMM_API_TRACE_FUNCTION_BEGIN();
+
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(this);
         } else {
@@ -67,7 +69,9 @@ namespace gpgmm { namespace d3d12 {
         mResource.Reset();
         MemoryAllocation::Reset();
 
-        IUnknownImpl::ReleaseThis();
+        IUnknownImpl::DeleteThis();
+
+        GPGMM_API_TRACE_FUNCTION_END();
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {

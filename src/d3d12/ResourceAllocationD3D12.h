@@ -56,7 +56,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT UpdateResidency(ResidencySet* residencySet);
 
       protected:
-        void ReleaseThis() override;
+        void DeleteThis() override;
 
       private:
         ResourceAllocator* mResourceAllocator;
