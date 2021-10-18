@@ -349,16 +349,13 @@ namespace gpgmm { namespace d3d12 {
         if (!mIsAlwaysCommitted) {
             MemoryAllocator* subAllocator =
                 mSubAllocators[static_cast<size_t>(resourceHeapKind)].get();
-            std::unique_ptr<MemoryAllocation> subAllocation =
-                subAllocator->AllocateMemory(resourceInfo.SizeInBytes, resourceInfo.Alignment);
-            if (subAllocation != nullptr) {
-                HRESULT hr = CreatePlacedResource(*subAllocation, resourceInfo, &newResourceDesc,
-                                                  clearValue, initialUsage, resourceAllocation);
-                if (FAILED(hr)) {
-                    subAllocator->DeallocateMemory(subAllocation.get());
-                }
-                return hr;
-            }
+
+            ReturnIfSucceeded(TryAllocateResource(
+                subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                [&](auto allocation) -> HRESULT {
+                    return CreatePlacedResource(allocation, resourceInfo, &newResourceDesc,
+                                                clearValue, initialUsage, resourceAllocation);
+                }));
         }
 
         return CreateCommittedResource(
