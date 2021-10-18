@@ -209,16 +209,6 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        // Adapter3 support is needed for residency support.
-        // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
-        std::unique_ptr<ResidencyManager> residencyManager;
-        if (SUCCEEDED(descriptor.Adapter.As(&adapter3))) {
-            residencyManager = std::unique_ptr<ResidencyManager>(new ResidencyManager(
-                descriptor.Device, std::move(adapter3), descriptor.IsUMA,
-                descriptor.MaxVideoMemoryBudget, descriptor.TotalResourceBudgetLimit));
-        }
-
         const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                  ? descriptor.PreferredResourceHeapSize
                                                  : kDefaultPreferredResourceHeapSize;
@@ -238,6 +228,15 @@ namespace gpgmm { namespace d3d12 {
 
         // Must StartupEventTracer before tracing any class.
         GPGMM_API_TRACE_FUNCTION_CALL(descriptor);
+
+        std::unique_ptr<ResidencyManager> residencyManager;
+        ResidencyManager* residencyManagerPtr = nullptr;
+        if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
+                descriptor.Device, descriptor.Adapter, descriptor.IsUMA,
+                descriptor.MaxVideoMemoryBudget, descriptor.TotalResourceBudgetLimit,
+                &residencyManagerPtr))) {
+            residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
+        }
 
         *resourceAllocator = new ResourceAllocator(
             descriptor.Device, std::move(residencyManager), descriptor.IsUMA,
