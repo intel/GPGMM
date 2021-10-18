@@ -26,33 +26,56 @@
 
 namespace gpgmm { namespace d3d12 {
 
+    // static
+    HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
+                                                     ComPtr<IDXGIAdapter> adapter,
+                                                     bool isUMA,
+                                                     float videoMemoryBudgetLimit,
+                                                     uint64_t totalResourceBudgetLimit,
+                                                     ResidencyManager** residencyManagerOut) {
+        // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
+        ReturnIfFailed(adapter.As(&adapter3));
+
+        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
+            new ResidencyManager(std::move(device), std::move(adapter3), isUMA,
+                                 videoMemoryBudgetLimit, totalResourceBudgetLimit));
+
+        // Query and set the video memory limits per segment.
+        VideoMemoryInfo& videoMemory = residencyManager->mVideoMemory;
+        ReturnIfFailed(
+            residencyManager->UpdateVideoMemorySegment(&videoMemory.localVideoMemorySegment));
+        if (!isUMA) {
+            ReturnIfFailed(residencyManager->UpdateVideoMemorySegment(
+                &videoMemory.nonLocalVideoMemorySegment));
+        }
+
+        *residencyManagerOut = residencyManager.release();
+
+        return S_OK;
+    }
+
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter3,
                                        bool isUMA,
                                        float videoMemoryBudgetLimit,
-                                       uint64_t mTotalResourceBudgetLimit)
+                                       uint64_t totalResourceBudgetLimit)
         : mDevice(device),
           mAdapter(adapter3),
           mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
                                                               : videoMemoryBudgetLimit),
-          mTotalResourceBudgetLimit(mTotalResourceBudgetLimit),
+          mTotalResourceBudgetLimit(totalResourceBudgetLimit),
           mFence(new Fence(device, 0)) {
-        // Query and set the video memory limits for each segment.
-        UpdateVideoMemorySegmentInfo(&mVideoMemoryInfo.localVideoMemorySegment);
-        if (!mIsUMA) {
-            UpdateVideoMemorySegmentInfo(&mVideoMemoryInfo.nonLocalVideoMemorySegment);
-        }
-
         // There is a non-zero memory usage even before any resources have been created, and this
-        // value can vary by enviroment. By adding this in addition to the artificial budget cap, we
-        // can create a predictable and reproducible budget.
+        // value can vary by enviroment. By adding this in addition to the artificial budget limit,
+        // we can create a predictable and reproducible budget.
         if (mTotalResourceBudgetLimit > 0) {
-            mVideoMemoryInfo.localVideoMemorySegment.budget =
-                mVideoMemoryInfo.localVideoMemorySegment.usage + mTotalResourceBudgetLimit;
+            mVideoMemory.localVideoMemorySegment.budget =
+                mVideoMemory.localVideoMemorySegment.usage + mTotalResourceBudgetLimit;
             if (!mIsUMA) {
-                mVideoMemoryInfo.nonLocalVideoMemorySegment.budget =
-                    mVideoMemoryInfo.nonLocalVideoMemorySegment.usage + mTotalResourceBudgetLimit;
+                mVideoMemory.nonLocalVideoMemorySegment.budget =
+                    mVideoMemory.nonLocalVideoMemorySegment.usage + mTotalResourceBudgetLimit;
             }
         }
     }
@@ -98,14 +121,14 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // Returns the appropriate VideoMemorySegmentInfo for a given DXGI_MEMORY_SEGMENT_GROUP.
-    ResidencyManager::VideoMemorySegmentInfo* ResidencyManager::GetVideoMemorySegmentInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup) {
-        switch (dxgiMemorySegmentGroup) {
+    ResidencyManager::VideoMemorySegmentInfo* ResidencyManager::GetVideoMemorySegment(
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+        switch (memorySegmentGroup) {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
-                return &mVideoMemoryInfo.localVideoMemorySegment;
+                return &mVideoMemory.localVideoMemorySegment;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
                 ASSERT(!mIsUMA);
-                return &mVideoMemoryInfo.nonLocalVideoMemorySegment;
+                return &mVideoMemory.nonLocalVideoMemorySegment;
             default:
                 UNREACHABLE();
                 return nullptr;
@@ -116,27 +139,25 @@ namespace gpgmm { namespace d3d12 {
     // manager. Returns the amount of memory reserved, which may be less then the |reservation| when
     // under video memory pressure.
     HRESULT ResidencyManager::SetVideoMemoryReservation(
-        const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         uint64_t reservation,
         uint64_t* reservationOut) {
-        VideoMemorySegmentInfo* videoMemorySegment =
-            GetVideoMemorySegmentInfo(dxgiMemorySegmentGroup);
+        VideoMemorySegmentInfo* videoMemorySegment = GetVideoMemorySegment(memorySegmentGroup);
 
         videoMemorySegment->externalRequest = reservation;
 
-        UpdateVideoMemorySegmentInfo(videoMemorySegment);
+        UpdateVideoMemorySegment(videoMemorySegment);
 
         *reservationOut = videoMemorySegment->externalReservation;
 
         return S_OK;
     }
 
-    void ResidencyManager::UpdateVideoMemorySegmentInfo(
-        VideoMemorySegmentInfo* videoMemorySegment) {
+    HRESULT ResidencyManager::UpdateVideoMemorySegment(VideoMemorySegmentInfo* videoMemorySegment) {
         DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfo;
 
-        mAdapter->QueryVideoMemoryInfo(0, videoMemorySegment->dxgiMemorySegmentGroup,
-                                       &queryVideoMemoryInfo);
+        ReturnIfFailed(mAdapter->QueryVideoMemoryInfo(0, videoMemorySegment->memorySegmentGroup,
+                                                      &queryVideoMemoryInfo));
 
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -152,12 +173,14 @@ namespace gpgmm { namespace d3d12 {
 
         // If we're restricting the budget, leave the budget as is.
         if (mTotalResourceBudgetLimit > 0) {
-            return;
+            return S_OK;
         }
 
         videoMemorySegment->budget =
             (queryVideoMemoryInfo.Budget - videoMemorySegment->externalReservation) *
             mVideoMemoryBudgetLimit;
+
+        return S_OK;
     }
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
@@ -199,12 +222,11 @@ namespace gpgmm { namespace d3d12 {
     // make the new object resident while also staying within budget. If there isn't enough
     // memory, we should evict until there is. Returns the number of bytes evicted.
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
-                                    const DXGI_MEMORY_SEGMENT_GROUP& dxgiMemorySegmentGroup,
+                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
-        VideoMemorySegmentInfo* videoMemorySegmentInfo =
-            GetVideoMemorySegmentInfo(dxgiMemorySegmentGroup);
+        VideoMemorySegmentInfo* videoMemorySegmentInfo = GetVideoMemorySegment(memorySegmentGroup);
 
-        UpdateVideoMemorySegmentInfo(videoMemorySegmentInfo);
+        ReturnIfFailed(UpdateVideoMemorySegment(videoMemorySegmentInfo));
 
         const uint64_t memoryUsageAfterMakeResident =
             sizeToMakeResident + videoMemorySegmentInfo->usage;
@@ -244,13 +266,13 @@ namespace gpgmm { namespace d3d12 {
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
-    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* d3d12Queue,
-                                                  ID3D12CommandList** d3d12CommandLists,
+    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* queue,
+                                                  ID3D12CommandList** commandLists,
                                                   ResidencySet** residencySets,
                                                   uint32_t count) {
         // TODO: support multiple command lists.
         ASSERT(count == 1);
-        ID3D12CommandList* commandList = d3d12CommandLists[0];
+        ID3D12CommandList* commandList = commandLists[0];
         ResidencySet* residencySet = residencySets[0];
 
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
@@ -292,30 +314,30 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
-            hr = MakeResident(mVideoMemoryInfo.localVideoMemorySegment.dxgiMemorySegmentGroup,
+            hr = MakeResident(mVideoMemory.localVideoMemorySegment.memorySegmentGroup,
                               localSizeToMakeResident, localHeapsToMakeResident.size(),
                               localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
-            hr = MakeResident(mVideoMemoryInfo.nonLocalVideoMemorySegment.dxgiMemorySegmentGroup,
+            hr = MakeResident(mVideoMemory.nonLocalVideoMemorySegment.memorySegmentGroup,
                               nonLocalSizeToMakeResident, nonLocalHeapsToMakeResident.size(),
                               nonLocalHeapsToMakeResident.data());
         }
 
-        d3d12Queue->ExecuteCommandLists(1, &commandList);
+        queue->ExecuteCommandLists(1, &commandList);
 
         if (SUCCEEDED(hr)) {
-            hr = mFence->Signal(d3d12Queue);
+            hr = mFence->Signal(queue);
         }
 
         return hr;
     }
 
-    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP dxgiMemorySegmentGroup,
+    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                            uint64_t sizeToMakeResident,
                                            uint64_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
-        Evict(sizeToMakeResident, dxgiMemorySegmentGroup, nullptr);
+        Evict(sizeToMakeResident, memorySegmentGroup, nullptr);
 
         // Note that MakeResident is a synchronous function and can add a significant
         // overhead to command recording. In the future, it may be possible to decrease this
@@ -330,7 +352,7 @@ namespace gpgmm { namespace d3d12 {
         // more memory and calling MakeResident again.
         while (FAILED(hr)) {
             uint64_t sizeEvicted = 0;
-            Evict(kDefaultResidentResourceEvictSize, dxgiMemorySegmentGroup, &sizeEvicted);
+            Evict(kDefaultResidentResourceEvictSize, memorySegmentGroup, &sizeEvicted);
 
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
@@ -355,7 +377,7 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        GetVideoMemorySegmentInfo(heap->GetMemorySegmentGroup())->lruCache.Append(heap);
+        GetVideoMemorySegment(heap->GetMemorySegmentGroup())->lruCache.Append(heap);
 
         return S_OK;
     }
