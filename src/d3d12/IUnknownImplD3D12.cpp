@@ -39,12 +39,12 @@ namespace gpgmm { namespace d3d12 {
     ULONG IUnknownImpl::Release() {
         const uint32_t refcount = --mRefCount;
         if (mRefCount == 0) {
-            ReleaseThis();
+            DeleteThis();
         }
         return refcount;
     }
 
-    void IUnknownImpl::ReleaseThis() {
+    void IUnknownImpl::DeleteThis() {
         delete this;
     }
 }}  // namespace gpgmm::d3d12

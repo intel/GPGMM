@@ -41,6 +41,20 @@
 // is not used.
 const uint64_t kNoId = 0;
 
+#define GPGMM_API_TRACE_FUNCTION_BEGIN()     \
+    do {                                     \
+        if (gpgmm::IsEventTracerEnabled()) { \
+            TRACE_EVENT_BEGIN(__func__);     \
+        }                                    \
+    } while (false)
+
+#define GPGMM_API_TRACE_FUNCTION_END()       \
+    do {                                     \
+        if (gpgmm::IsEventTracerEnabled()) { \
+            TRACE_EVENT_END(__func__);       \
+        }                                    \
+    } while (false)
+
 #define GPGMM_API_TRACE_FUNCTION_CALL(DESC)                                \
     do {                                                                   \
         if (gpgmm::IsEventTracerEnabled()) {                               \
@@ -66,7 +80,7 @@ const uint64_t kNoId = 0;
 #define TRACE_EVENT_INSTANT(name, args) \
     INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(TRACE_EVENT_PHASE_INSTANT, name, TRACE_EVENT_FLAG_NONE, args)
 
-#define TRACE_EVENT_START(name) \
+#define TRACE_EVENT_BEGIN(name) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_BEGIN, name, TRACE_EVENT_FLAG_NONE)
 
 #define TRACE_EVENT_END(name) \

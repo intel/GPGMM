@@ -318,6 +318,8 @@ namespace gpgmm { namespace d3d12 {
                                               D3D12_RESOURCE_STATES initialUsage,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** resourceAllocation) {
+        GPGMM_API_TRACE_FUNCTION_BEGIN();
+
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor, initialUsage,
                                            clearValue};
 
@@ -357,13 +359,18 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
-        return CreateCommittedResource(
+        ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
-            &newResourceDesc, clearValue, initialUsage, resourceAllocation);
+            &newResourceDesc, clearValue, initialUsage, resourceAllocation));
+
+        GPGMM_API_TRACE_FUNCTION_END();
+        return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
                                               ResourceAllocation** resourceAllocation) {
+        GPGMM_API_TRACE_FUNCTION_BEGIN();
+
         if (committedResource == nullptr) {
             return E_INVALIDARG;
         }
@@ -392,6 +399,8 @@ namespace gpgmm { namespace d3d12 {
                                                      /*offset*/ 0,
                                                      std::move(committedResource),
                                                      heap};
+
+        GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
     }
 

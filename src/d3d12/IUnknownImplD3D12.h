@@ -31,7 +31,8 @@ namespace gpgmm { namespace d3d12 {
         ULONG AddRef() override;
         ULONG Release() override;
 
-        virtual void ReleaseThis();
+        // Derived class may override this if they require a customer deleter.
+        virtual void DeleteThis();
 
       private:
         uint32_t mRefCount = 1;
