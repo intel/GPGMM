@@ -35,8 +35,8 @@ namespace gpgmm { namespace d3d12 {
     // pageable allocation is released.
     class Heap : public MemoryBase, public LinkNode<Heap> {
       public:
-        Heap(ComPtr<ID3D12Pageable> d3d12Pageable,
-             const DXGI_MEMORY_SEGMENT_GROUP& memorySegment,
+        Heap(ComPtr<ID3D12Pageable> pageable,
+             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
              uint64_t size);
         ~Heap();
 
@@ -55,8 +55,8 @@ namespace gpgmm { namespace d3d12 {
       private:
         friend ResidencyManager;
 
-        ID3D12Pageable* GetD3D12Pageable() const;
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
+        ID3D12Pageable* GetPageable() const;
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at
@@ -70,11 +70,11 @@ namespace gpgmm { namespace d3d12 {
         void IncrementResidencyLock();
         void DecrementResidencyLock();
 
-        ComPtr<ID3D12Pageable> mD3d12Pageable;
+        ComPtr<ID3D12Pageable> mPageable;
 
         // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
         uint64_t mLastUsedFenceValue = 0;
-        DXGI_MEMORY_SEGMENT_GROUP mMemorySegment;
+        DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
         uint32_t mResidencyLockRefCount = 0;
         uint64_t mSize = 0;
     };

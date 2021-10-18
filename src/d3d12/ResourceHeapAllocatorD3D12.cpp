@@ -23,19 +23,19 @@ namespace gpgmm { namespace d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                                  uint64_t heapSize)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
-          mMemorySegment(memorySegment) {
+          mMemorySegmentGroup(memorySegmentGroup) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::AllocateMemory(uint64_t size,
                                                                             uint64_t alignment) {
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags,
-                                                          mMemorySegment, alignment, &heap))) {
+                                                          mMemorySegmentGroup, alignment, &heap))) {
             return nullptr;
         }
 

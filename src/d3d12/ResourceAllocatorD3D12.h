@@ -200,7 +200,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT CreateResourceHeap(uint64_t size,
                                    D3D12_HEAP_TYPE heapType,
                                    D3D12_HEAP_FLAGS heapFlags,
-                                   DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                   DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                    uint64_t heapAlignment,
                                    Heap** ppResourceHeap);
 

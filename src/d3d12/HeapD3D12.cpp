@@ -17,10 +17,10 @@
 #include "src/d3d12/ResidencySetD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
-    Heap::Heap(ComPtr<ID3D12Pageable> d3d12Pageable,
-               const DXGI_MEMORY_SEGMENT_GROUP& memorySegment,
+    Heap::Heap(ComPtr<ID3D12Pageable> pageable,
+               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                uint64_t size)
-        : mD3d12Pageable(std::move(d3d12Pageable)), mMemorySegment(memorySegment), mSize(size) {
+        : mPageable(std::move(pageable)), mMemorySegmentGroup(memorySegmentGroup), mSize(size) {
     }
 
     // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
@@ -32,13 +32,13 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
-    ID3D12Pageable* Heap::GetD3D12Pageable() const {
-        return mD3d12Pageable.Get();
+    ID3D12Pageable* Heap::GetPageable() const {
+        return mPageable.Get();
     }
 
     ID3D12Heap* Heap::GetHeap() const {
         ComPtr<ID3D12Heap> heap;
-        mD3d12Pageable.As(&heap);
+        mPageable.As(&heap);
         return heap.Get();
     }
 
@@ -50,8 +50,8 @@ namespace gpgmm { namespace d3d12 {
         mLastUsedFenceValue = fenceValue;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP Heap::GetMemorySegment() const {
-        return mMemorySegment;
+    DXGI_MEMORY_SEGMENT_GROUP Heap::GetMemorySegmentGroup() const {
+        return mMemorySegmentGroup;
     }
 
     uint64_t Heap::GetSize() const {

@@ -455,13 +455,13 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateResourceHeap(uint64_t size,
                                                   D3D12_HEAP_TYPE heapType,
                                                   D3D12_HEAP_FLAGS heapFlags,
-                                                  DXGI_MEMORY_SEGMENT_GROUP memorySegment,
+                                                  DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                                   uint64_t heapAlignment,
                                                   Heap** ppResourceHeap) {
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
-            mResidencyManager->Evict(size, memorySegment);
+            mResidencyManager->Evict(size, memorySegmentGroup);
         }
 
         D3D12_HEAP_PROPERTIES heapProperties = {};
@@ -480,7 +480,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Heap> d3d12Heap;
         ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
 
-        *ppResourceHeap = new Heap(std::move(d3d12Heap), memorySegment, size);
+        *ppResourceHeap = new Heap(std::move(d3d12Heap), memorySegmentGroup, size);
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.

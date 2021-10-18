@@ -64,10 +64,10 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::LockHeap(Heap* heap) {
         // If the heap isn't already resident, make it resident.
         if (!heap->IsInResidencyLRUCache() && !heap->IsResidencyLocked()) {
-            ID3D12Pageable* d3d12Pageable = heap->GetD3D12Pageable();
+            ID3D12Pageable* pageable = heap->GetPageable();
             uint64_t size = heap->GetSize();
 
-            ReturnIfFailed(MakeResident(heap->GetMemorySegment(), size, 1, &d3d12Pageable));
+            ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), size, 1, &pageable));
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -228,7 +228,7 @@ namespace gpgmm { namespace d3d12 {
             }
 
             sizeEvicted += heap->GetSize();
-            resourcesToEvict.push_back(heap->GetD3D12Pageable());
+            resourcesToEvict.push_back(heap->GetPageable());
         }
 
         if (resourcesToEvict.size() > 0) {
@@ -271,12 +271,12 @@ namespace gpgmm { namespace d3d12 {
                 // update its position in the LRU.
                 heap->RemoveFromList();
             } else {
-                if (heap->GetMemorySegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
+                if (heap->GetMemorySegmentGroup() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
                     localSizeToMakeResident += heap->GetSize();
-                    localHeapsToMakeResident.push_back(heap->GetD3D12Pageable());
+                    localHeapsToMakeResident.push_back(heap->GetPageable());
                 } else {
                     nonLocalSizeToMakeResident += heap->GetSize();
-                    nonLocalHeapsToMakeResident.push_back(heap->GetD3D12Pageable());
+                    nonLocalHeapsToMakeResident.push_back(heap->GetPageable());
                 }
             }
 
@@ -355,7 +355,7 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        GetVideoMemorySegmentInfo(heap->GetMemorySegment())->lruCache.Append(heap);
+        GetVideoMemorySegmentInfo(heap->GetMemorySegmentGroup())->lruCache.Append(heap);
 
         return S_OK;
     }
