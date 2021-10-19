@@ -176,9 +176,9 @@ namespace gpgmm { namespace d3d12 {
             return S_OK;
         }
 
-        videoMemorySegment->budget =
+        videoMemorySegment->budget = static_cast<uint64_t>(
             (queryVideoMemoryInfo.Budget - videoMemorySegment->externalReservation) *
-            mVideoMemoryBudgetLimit;
+            mVideoMemoryBudgetLimit);
 
         return S_OK;
     }
@@ -254,7 +254,8 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (resourcesToEvict.size() > 0) {
-            ReturnIfFailed(mDevice->Evict(resourcesToEvict.size(), resourcesToEvict.data()));
+            const uint32_t numOfResources = static_cast<uint32_t>(resourcesToEvict.size());
+            ReturnIfFailed(mDevice->Evict(numOfResources, resourcesToEvict.data()));
         }
 
         if (sizeEvictedOut != nullptr) {
@@ -314,13 +315,16 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
+            const uint32_t numOfresources = static_cast<uint32_t>(localHeapsToMakeResident.size());
             hr = MakeResident(mVideoMemory.localVideoMemorySegment.memorySegmentGroup,
-                              localSizeToMakeResident, localHeapsToMakeResident.size(),
+                              localSizeToMakeResident, numOfresources,
                               localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
+            const uint32_t numOfResources =
+                static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             hr = MakeResident(mVideoMemory.nonLocalVideoMemorySegment.memorySegmentGroup,
-                              nonLocalSizeToMakeResident, nonLocalHeapsToMakeResident.size(),
+                              nonLocalSizeToMakeResident, numOfResources,
                               nonLocalHeapsToMakeResident.data());
         }
 
@@ -335,7 +339,7 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                            uint64_t sizeToMakeResident,
-                                           uint64_t numberOfObjectsToMakeResident,
+                                           uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
         Evict(sizeToMakeResident, memorySegmentGroup, nullptr);
 

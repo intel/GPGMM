@@ -89,7 +89,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT EvictHeap(VideoMemorySegmentInfo* videoMemorySegment, Heap** heapOut);
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                              uint64_t sizeToMakeResident,
-                             uint64_t numberOfObjectsToMakeResident,
+                             uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
         VideoMemorySegmentInfo* GetVideoMemorySegment(

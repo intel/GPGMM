@@ -23,7 +23,7 @@ namespace gpgmm { namespace d3d12 {
         32ll * 1024ll * 1024ll * 1024ll;                                                   // 32GB
     static constexpr uint64_t kDefaultPreferredResourceHeapSize = 4ll * 1024ll * 1024ll;   // 4MB
     static constexpr uint32_t kDefaultResidentResourceEvictSize = 50ll * 1024ll * 1024ll;  // 50MB
-    static constexpr float kDefaultMaxVideoMemoryBudget = 0.95;                            // 95%
+    static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;                           // 95%
 
 }}  // namespace gpgmm::d3d12
 
