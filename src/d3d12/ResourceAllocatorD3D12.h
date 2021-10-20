@@ -16,12 +16,16 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
-#include "src/MemoryAllocator.h"
-#include "src/d3d12/d3d12_platform.h"
+#include "src/Allocator.h"
+#include "src/d3d12/IUnknownImplD3D12.h"
 
 #include <array>
-#include <cstdint>
 #include <memory>
+
+namespace gpgmm {
+    class MemoryAllocator;
+    class MemoryAllocation;
+}  // namespace gpgmm
 
 namespace gpgmm { namespace d3d12 {
 
@@ -149,9 +153,7 @@ namespace gpgmm { namespace d3d12 {
         InvalidEnum = EnumCount,
     };
 
-    // Manages a list of resource allocators used by the device to create resources using
-    // multiple allocation methods.
-    class ResourceAllocator : public AllocatorBase {
+    class ResourceAllocator : public AllocatorBase, public IUnknownImpl {
       public:
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
                                        ResourceAllocator** resourceAllocator);
@@ -167,7 +169,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** resourceAllocation);
 
-        ResidencyManager* GetResidencyManager();
+        ResidencyManager* GetResidencyManager() const;
 
       private:
         friend ResourceHeapAllocator;

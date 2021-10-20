@@ -563,7 +563,7 @@ namespace gpgmm { namespace d3d12 {
         delete resourceHeap;
     }
 
-    ResidencyManager* ResourceAllocator::GetResidencyManager() {
+    ResidencyManager* ResourceAllocator::GetResidencyManager() const {
         return mResidencyManager.get();
     }
 
