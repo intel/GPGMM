@@ -85,6 +85,10 @@ namespace gpgmm { namespace d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(Heap* heap) {
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+
         // If the heap isn't already resident, make it resident.
         if (!heap->IsInResidencyLRUCache() && !heap->IsResidencyLocked()) {
             ID3D12Pageable* pageable = heap->GetPageable();
@@ -105,19 +109,29 @@ namespace gpgmm { namespace d3d12 {
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    void ResidencyManager::UnlockHeap(Heap* heap) {
-        ASSERT(heap->IsResidencyLocked());
-        ASSERT(!heap->IsInResidencyLRUCache());
+    HRESULT ResidencyManager::UnlockHeap(Heap* heap) {
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+
+        if (!heap->IsResidencyLocked()) {
+            return E_FAIL;
+        }
+
+        if (heap->IsInResidencyLRUCache()) {
+            return E_FAIL;
+        }
+
         heap->DecrementResidencyLock();
 
         // If another lock still exists on the heap, nothing further should be done.
         if (heap->IsResidencyLocked()) {
-            return;
+            return S_OK;
         }
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        InsertHeap(heap);
+        return InsertHeap(heap);
     }
 
     // Returns the appropriate VideoMemorySegmentInfo for a given DXGI_MEMORY_SEGMENT_GROUP.
@@ -376,6 +390,10 @@ namespace gpgmm { namespace d3d12 {
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
     HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+
         // Heap already exists in the cache.
         if (heap->IsInList()) {
             return E_INVALIDARG;
