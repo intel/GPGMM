@@ -37,13 +37,6 @@ if (build_with_chromium) {
 ###############################################################################
 
 config("gpgmm_public_config") {
-  defines = []
-  if (gpgmm_enable_d3d12) {
-    defines += [ "GPGMM_ENABLE_D3D12=1" ]
-  } else {
-    defines += [ "GPGMM_ENABLE_D3D12=0" ]
-  }
-
   include_dirs = [
     "${gpgmm_root_dir}/",
     "${gpgmm_root_dir}/src/include",
