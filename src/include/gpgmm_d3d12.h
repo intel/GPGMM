@@ -19,13 +19,11 @@
 
 // clang-format off
 
-#if GPGMM_ENABLE_D3D12
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
-#endif // GPGMM_ENABLE_D3D12
 
 // clang-format on
 

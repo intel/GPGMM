@@ -1,0 +1,46 @@
+name: win_msvc_dbg_x64_cmake
+
+on:
+  push:
+    paths:
+      - 'src/**'
+
+  pull_request:
+    paths:
+      - 'src/**'
+
+jobs:
+
+  job:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Git config
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - name: Installing vcpkg
+      shell: cmd
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+
+    - uses: actions/checkout@v2
+      with:
+        path: test
+        fetch-depth: 0
+
+    - name: Generate project for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    - name: Build for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake --build .
