@@ -32,7 +32,7 @@ deps = {
   },
 
   'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@5c4637c9c027925c2202f457692bd2f9e2f8dcf8',
+    'url': '{github_git}/webmachinelearning/webnn-native.git@02ba3d87ffec8fcb49d7086d572bee5d9d1edb0f',
     'condition': 'checkout_webnn',
   },
 
@@ -180,17 +180,6 @@ hooks = [
     'action': [ 'git', '-C', './third_party/dawn/',
                 'apply', '--ignore-space-change', '--ignore-whitespace',
                 '../../patches/gpgmm_dawn.diff',
-    ],
-  },
-  # Apply WebNN-GPGMM integration patch.
-  # Patch can be removed should GPGMM be merged into upstream.
-  {
-    'name': 'apply_webnn_integration_patch',
-    'pattern': '.',
-    'condition': 'checkout_webnn',
-    'action': [ 'git', '-C', './third_party/webnn_native/',
-                'apply', '--ignore-space-change', '--ignore-whitespace',
-                '../../patches/gpgmm_webnn.diff',
     ],
   },
 ]
