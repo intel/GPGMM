@@ -61,9 +61,9 @@ namespace gpgmm { namespace d3d12 {
         static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
                                               ComPtr<IDXGIAdapter> adapter,
                                               bool isUMA,
-                                              float videoMemoryBudgetLimit,
-                                              uint64_t totalResourceBudgetLimit,
-                                              ResidencyManager** residencyManager);
+                                              float videoMemoryBudget,
+                                              uint64_t availableForResourceBudget,
+                                              ResidencyManager** residencyManagerOut);
 
         ResidencyManager(ComPtr<ID3D12Device> device,
                          ComPtr<IDXGIAdapter3> adapter3,
@@ -71,38 +71,36 @@ namespace gpgmm { namespace d3d12 {
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit);
 
-        struct VideoMemorySegmentInfo {
-            const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup;
-            LinkedList<Heap> lruCache = {};
+        using Cache = LinkedList<Heap>;
+
+        struct MemorySegmentInfo {
+            const DXGI_MEMORY_SEGMENT_GROUP group;
+            Cache lruCache = {};
             uint64_t budget = 0;
-            uint64_t usage = 0;
-            uint64_t externalReservation = 0;
-            uint64_t externalRequest = 0;
+            uint64_t currentUsage = 0;
+            uint64_t currentReservation = 0;
+            uint64_t reservation = 0;
         };
 
-        struct VideoMemoryInfo {
-            VideoMemorySegmentInfo localVideoMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
-            VideoMemorySegmentInfo nonLocalVideoMemorySegment = {
-                DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
-        };
+        HRESULT EvictHeap(const Cache& cache, Heap** heapOut);
 
-        HRESULT EvictHeap(const VideoMemorySegmentInfo& videoMemorySegment, Heap** heapOut);
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        VideoMemorySegmentInfo* GetVideoMemorySegment(
+        MemorySegmentInfo* GetMemorySegmentInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        HRESULT UpdateVideoMemorySegment(VideoMemorySegmentInfo* videoMemorySegment);
+        HRESULT UpdateMemorySegmentInfo(MemorySegmentInfo* memorySegmentInfo);
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
         bool mIsUMA;
-        float mVideoMemoryBudgetLimit;
-        uint64_t mTotalResourceBudgetLimit;
-        VideoMemoryInfo mVideoMemory = {};
+        float mMemoryBudgetLimit;
+        uint64_t mAvailableForResourcesBudget;
+        MemorySegmentInfo mLocalMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
+        MemorySegmentInfo mNonLocalMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
 
         std::unique_ptr<Fence> mFence;
     };
