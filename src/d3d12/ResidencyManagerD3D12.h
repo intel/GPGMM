@@ -35,13 +35,6 @@ namespace gpgmm { namespace d3d12 {
 
     class ResidencyManager {
       public:
-        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                              ComPtr<IDXGIAdapter> adapter,
-                                              bool isUMA,
-                                              float videoMemoryBudgetLimit,
-                                              uint64_t totalResourceBudgetLimit,
-                                              ResidencyManager** residencyManager);
-
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
@@ -64,6 +57,13 @@ namespace gpgmm { namespace d3d12 {
 
       private:
         friend ResourceAllocator;
+
+        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
+                                              ComPtr<IDXGIAdapter> adapter,
+                                              bool isUMA,
+                                              float videoMemoryBudgetLimit,
+                                              uint64_t totalResourceBudgetLimit,
+                                              ResidencyManager** residencyManager);
 
         ResidencyManager(ComPtr<ID3D12Device> device,
                          ComPtr<IDXGIAdapter3> adapter3,
