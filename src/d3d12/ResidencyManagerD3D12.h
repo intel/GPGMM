@@ -45,7 +45,7 @@ namespace gpgmm { namespace d3d12 {
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
-        void UnlockHeap(Heap* heap);
+        HRESULT UnlockHeap(Heap* heap);
 
         HRESULT Evict(uint64_t allocationSize,
                       const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
