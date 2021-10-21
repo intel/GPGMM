@@ -29,23 +29,40 @@ namespace gpgmm { namespace d3d12 {
     // static
     HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
                                                      ComPtr<IDXGIAdapter> adapter,
-                                                     bool isUMA,
-                                                     float videoMemoryBudgetLimit,
-                                                     uint64_t totalResourceBudgetLimit,
+                                                     bool videoMemoryIsUMA,
+                                                     float videoMemoryBudget,
+                                                     uint64_t videoMemoryAvailableForResources,
                                                      ResidencyManager** residencyManagerOut) {
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
         ReturnIfFailed(adapter.As(&adapter3));
 
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(std::move(device), std::move(adapter3), isUMA,
-                                 videoMemoryBudgetLimit, totalResourceBudgetLimit));
+            new ResidencyManager(std::move(device), std::move(adapter3)));
 
         // Query and set the video memory limits per segment.
         VideoMemoryInfo& videoMemory = residencyManager->mVideoMemory;
+        videoMemory.isUMA = videoMemoryIsUMA;
+        videoMemory.budget =
+            (videoMemoryBudget == 0) ? kDefaultMaxVideoMemoryBudget : videoMemoryBudget;
+        videoMemory.availableForResources = videoMemoryAvailableForResources;
+
+        // There is a non-zero memory usage even before any resources have been created, and
+        // this value can vary by enviroment. By adding this in addition to the artificial
+        // budget limit, we can create a predictable and reproducible budget.
+        if (videoMemory.availableForResources > 0) {
+            videoMemory.localVideoMemorySegment.budget =
+                videoMemory.localVideoMemorySegment.usage + videoMemory.availableForResources;
+            if (!videoMemoryIsUMA) {
+                videoMemory.nonLocalVideoMemorySegment.budget =
+                    videoMemory.nonLocalVideoMemorySegment.usage +
+                    videoMemory.availableForResources;
+            }
+        }
+
         ReturnIfFailed(
             residencyManager->UpdateVideoMemorySegment(&videoMemory.localVideoMemorySegment));
-        if (!isUMA) {
+        if (!videoMemory.isUMA) {
             ReturnIfFailed(residencyManager->UpdateVideoMemorySegment(
                 &videoMemory.nonLocalVideoMemorySegment));
         }
@@ -55,29 +72,8 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
-                                       ComPtr<IDXGIAdapter3> adapter3,
-                                       bool isUMA,
-                                       float videoMemoryBudgetLimit,
-                                       uint64_t totalResourceBudgetLimit)
-        : mDevice(device),
-          mAdapter(adapter3),
-          mIsUMA(isUMA),
-          mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
-                                                              : videoMemoryBudgetLimit),
-          mTotalResourceBudgetLimit(totalResourceBudgetLimit),
-          mFence(new Fence(device, 0)) {
-        // There is a non-zero memory usage even before any resources have been created, and this
-        // value can vary by enviroment. By adding this in addition to the artificial budget limit,
-        // we can create a predictable and reproducible budget.
-        if (mTotalResourceBudgetLimit > 0) {
-            mVideoMemory.localVideoMemorySegment.budget =
-                mVideoMemory.localVideoMemorySegment.usage + mTotalResourceBudgetLimit;
-            if (!mIsUMA) {
-                mVideoMemory.nonLocalVideoMemorySegment.budget =
-                    mVideoMemory.nonLocalVideoMemorySegment.usage + mTotalResourceBudgetLimit;
-            }
-        }
+    ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device, ComPtr<IDXGIAdapter3> adapter3)
+        : mDevice(device), mAdapter(adapter3), mFence(new Fence(device, 0)) {
     }
 
     ResidencyManager::~ResidencyManager() {
@@ -141,7 +137,7 @@ namespace gpgmm { namespace d3d12 {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
                 return &mVideoMemory.localVideoMemorySegment;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
-                ASSERT(!mIsUMA);
+                ASSERT(!mVideoMemory.isUMA);
                 return &mVideoMemory.nonLocalVideoMemorySegment;
             default:
                 UNREACHABLE();
@@ -186,13 +182,13 @@ namespace gpgmm { namespace d3d12 {
             queryVideoMemoryInfo.CurrentUsage - videoMemorySegment->externalReservation;
 
         // If we're restricting the budget, leave the budget as is.
-        if (mTotalResourceBudgetLimit > 0) {
+        if (mVideoMemory.availableForResources > 0) {
             return S_OK;
         }
 
         videoMemorySegment->budget = static_cast<uint64_t>(
             (queryVideoMemoryInfo.Budget - videoMemorySegment->externalReservation) *
-            mVideoMemoryBudgetLimit);
+            mVideoMemory.budget);
 
         return S_OK;
     }
@@ -334,7 +330,7 @@ namespace gpgmm { namespace d3d12 {
                               localSizeToMakeResident, numOfresources,
                               localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
-            ASSERT(!mIsUMA);
+            ASSERT(!mVideoMemory.isUMA);
             const uint32_t numOfResources =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             hr = MakeResident(mVideoMemory.nonLocalVideoMemorySegment.memorySegmentGroup,

@@ -65,11 +65,7 @@ namespace gpgmm { namespace d3d12 {
       private:
         friend ResourceAllocator;
 
-        ResidencyManager(ComPtr<ID3D12Device> device,
-                         ComPtr<IDXGIAdapter3> adapter3,
-                         bool isUMA,
-                         float memorySegmentBudgetLimit,
-                         uint64_t totalResourceBudgetLimit);
+        ResidencyManager(ComPtr<ID3D12Device> device, ComPtr<IDXGIAdapter3> adapter3);
 
         struct VideoMemorySegmentInfo {
             const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup;
@@ -84,6 +80,9 @@ namespace gpgmm { namespace d3d12 {
             VideoMemorySegmentInfo localVideoMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
             VideoMemorySegmentInfo nonLocalVideoMemorySegment = {
                 DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
+            bool isUMA = false;
+            float budget = 0;
+            uint64_t availableForResources = 0;
         };
 
         HRESULT EvictHeap(const VideoMemorySegmentInfo& videoMemorySegment, Heap** heapOut);
@@ -99,9 +98,6 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
-        bool mIsUMA;
-        float mVideoMemoryBudgetLimit;
-        uint64_t mTotalResourceBudgetLimit;
         VideoMemoryInfo mVideoMemory = {};
 
         std::unique_ptr<Fence> mFence;
