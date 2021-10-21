@@ -47,13 +47,13 @@ namespace gpgmm { namespace d3d12 {
         HRESULT LockHeap(Heap* heap);
         HRESULT UnlockHeap(Heap* heap);
 
-        HRESULT Evict(uint64_t allocationSize,
+        HRESULT Evict(uint64_t sizeToMakeResident,
                       const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                       uint64_t* sizeEvictedOut = nullptr);
 
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* queue,
-                                    ID3D12CommandList** commandLists,
-                                    ResidencySet** residencySets,
+                                    ID3D12CommandList* const* commandLists,
+                                    ResidencySet* const* residencySets,
                                     uint32_t count);
 
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
@@ -86,7 +86,7 @@ namespace gpgmm { namespace d3d12 {
                 DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
         };
 
-        HRESULT EvictHeap(VideoMemorySegmentInfo* videoMemorySegment, Heap** heapOut);
+        HRESULT EvictHeap(const VideoMemorySegmentInfo& videoMemorySegment, Heap** heapOut);
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,

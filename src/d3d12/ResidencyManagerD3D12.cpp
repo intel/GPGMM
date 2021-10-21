@@ -160,7 +160,7 @@ namespace gpgmm { namespace d3d12 {
 
         videoMemorySegment->externalRequest = reservation;
 
-        UpdateVideoMemorySegment(videoMemorySegment);
+        ReturnIfFailed(UpdateVideoMemorySegment(videoMemorySegment));
 
         *reservationOut = videoMemorySegment->externalReservation;
 
@@ -199,17 +199,17 @@ namespace gpgmm { namespace d3d12 {
 
     // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
     // nullptr when nothing further can be evicted.
-    HRESULT ResidencyManager::EvictHeap(VideoMemorySegmentInfo* videoMemorySegment,
-                                        Heap** ppEvictedHeapOut) {
+    HRESULT ResidencyManager::EvictHeap(const VideoMemorySegmentInfo& videoMemorySegment,
+                                        Heap** heapOut) {
         // If the LRU is empty, return nullptr to allow execution to continue. Note that fully
         // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
         // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
         // the process budget and starving Dawn, which will cause thrash.
-        if (videoMemorySegment->lruCache.empty()) {
+        if (videoMemorySegment.lruCache.empty()) {
             return S_OK;
         }
 
-        Heap* heap = videoMemorySegment->lruCache.head()->value();
+        Heap* heap = videoMemorySegment.lruCache.head()->value();
 
         const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
 
@@ -227,7 +227,7 @@ namespace gpgmm { namespace d3d12 {
 
         heap->RemoveFromList();
 
-        *ppEvictedHeapOut = heap;
+        *heapOut = heap;
 
         return S_OK;
     }
@@ -256,7 +256,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t sizeEvicted = 0;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
             Heap* heap = nullptr;
-            ReturnIfFailed(EvictHeap(videoMemorySegmentInfo, &heap));
+            ReturnIfFailed(EvictHeap(*videoMemorySegmentInfo, &heap));
 
             // If no heap was returned, then nothing more can be evicted.
             if (heap == nullptr) {
@@ -282,8 +282,8 @@ namespace gpgmm { namespace d3d12 {
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
     HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* queue,
-                                                  ID3D12CommandList** commandLists,
-                                                  ResidencySet** residencySets,
+                                                  ID3D12CommandList* const* commandLists,
+                                                  ResidencySet* const* residencySets,
                                                   uint32_t count) {
         // TODO: support multiple command lists.
         ASSERT(count == 1);
@@ -342,10 +342,10 @@ namespace gpgmm { namespace d3d12 {
                               nonLocalHeapsToMakeResident.data());
         }
 
-        queue->ExecuteCommandLists(1, &commandList);
+        queue->ExecuteCommandLists(count, &commandList);
 
         if (SUCCEEDED(hr)) {
-            hr = mFence->Signal(queue);
+            ReturnIfFailed(mFence->Signal(queue));
         }
 
         return hr;
@@ -355,7 +355,7 @@ namespace gpgmm { namespace d3d12 {
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
-        Evict(sizeToMakeResident, memorySegmentGroup, nullptr);
+        ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
 
         // Note that MakeResident is a synchronous function and can add a significant
         // overhead to command recording. In the future, it may be possible to decrease this
@@ -370,7 +370,8 @@ namespace gpgmm { namespace d3d12 {
         // more memory and calling MakeResident again.
         while (FAILED(hr)) {
             uint64_t sizeEvicted = 0;
-            Evict(kDefaultResidentResourceEvictSize, memorySegmentGroup, &sizeEvicted);
+            ReturnIfFailed(
+                Evict(kDefaultResidentResourceEvictSize, memorySegmentGroup, &sizeEvicted));
 
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
@@ -399,7 +400,12 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        GetVideoMemorySegment(heap->GetMemorySegmentGroup())->lruCache.Append(heap);
+        VideoMemorySegmentInfo* memorySegment =
+            GetVideoMemorySegment(heap->GetMemorySegmentGroup());
+        ASSERT(memorySegment != nullptr);
+
+        memorySegment->lruCache.Append(heap);
+        ASSERT(heap->IsInList());
 
         return S_OK;
     }
