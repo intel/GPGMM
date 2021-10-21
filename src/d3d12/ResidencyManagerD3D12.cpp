@@ -27,25 +27,18 @@
 namespace gpgmm { namespace d3d12 {
 
     // static
-    HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                                     ComPtr<IDXGIAdapter> adapter,
-                                                     bool videoMemoryIsUMA,
-                                                     float videoMemoryBudget,
-                                                     uint64_t videoMemoryAvailableForResources,
+    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                                      ResidencyManager** residencyManagerOut) {
-        // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
-        ReturnIfFailed(adapter.As(&adapter3));
-
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(std::move(device), std::move(adapter3)));
+            new ResidencyManager(std::move(descriptor.Device), std::move(descriptor.Adapter)));
 
         // Query and set the video memory limits per segment.
         VideoMemoryInfo& videoMemory = residencyManager->mVideoMemory;
-        videoMemory.isUMA = videoMemoryIsUMA;
-        videoMemory.budget =
-            (videoMemoryBudget == 0) ? kDefaultMaxVideoMemoryBudget : videoMemoryBudget;
-        videoMemory.availableForResources = videoMemoryAvailableForResources;
+        videoMemory.isUMA = descriptor.IsUMA;
+        videoMemory.budget = (descriptor.MaxVideoMemoryBudget == 0)
+                                 ? kDefaultMaxVideoMemoryBudget
+                                 : descriptor.MaxVideoMemoryBudget;
+        videoMemory.availableForResources = descriptor.AvailableVideoMemoryForResources;
 
         // There is a non-zero memory usage even before any resources have been created, and
         // this value can vary by enviroment. By adding this in addition to the artificial
@@ -53,7 +46,7 @@ namespace gpgmm { namespace d3d12 {
         if (videoMemory.availableForResources > 0) {
             videoMemory.localVideoMemorySegment.budget =
                 videoMemory.localVideoMemorySegment.usage + videoMemory.availableForResources;
-            if (!videoMemoryIsUMA) {
+            if (!videoMemory.isUMA) {
                 videoMemory.nonLocalVideoMemorySegment.budget =
                     videoMemory.nonLocalVideoMemorySegment.usage +
                     videoMemory.availableForResources;

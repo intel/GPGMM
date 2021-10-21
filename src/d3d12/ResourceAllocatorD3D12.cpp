@@ -229,12 +229,21 @@ namespace gpgmm { namespace d3d12 {
         // Must StartupEventTracer before tracing any class.
         GPGMM_API_TRACE_FUNCTION_CALL(descriptor);
 
+        // Residency management requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         std::unique_ptr<ResidencyManager> residencyManager;
-        ResidencyManager* residencyManagerPtr = nullptr;
-        if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
-                descriptor.Device, descriptor.Adapter, descriptor.IsUMA,
-                descriptor.MaxVideoMemoryBudget, descriptor.TotalResourceBudgetLimit,
-                &residencyManagerPtr))) {
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
+        if (SUCCEEDED(descriptor.Adapter.As(&adapter3))) {
+            RESIDENCY_DESC residencyDescriptor = {};
+            residencyDescriptor.Device = descriptor.Device;
+            residencyDescriptor.Adapter = adapter3;
+            residencyDescriptor.IsUMA = descriptor.IsUMA;
+            residencyDescriptor.MaxVideoMemoryBudget = descriptor.MaxVideoMemoryBudget;
+            residencyDescriptor.AvailableVideoMemoryForResources =
+                descriptor.TotalResourceBudgetLimit;
+
+            ResidencyManager* residencyManagerPtr = nullptr;
+            ReturnIfFailed(ResidencyManager::CreateResidencyManager(residencyDescriptor,
+                                                                    &residencyManagerPtr));
             residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
         }
 

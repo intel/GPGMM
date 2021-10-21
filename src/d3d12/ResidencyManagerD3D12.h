@@ -23,9 +23,6 @@
 #include <cstdint>
 #include <memory>
 
-struct ID3D12CommandList;
-struct ID3D12CommandQueue;
-
 namespace gpgmm { namespace d3d12 {
 
     class Fence;
@@ -33,13 +30,37 @@ namespace gpgmm { namespace d3d12 {
     class ResidencySet;
     class ResourceAllocator;
 
+    typedef enum RESIDENCY_FLAGS {
+
+        // Disables all flags. Enabled by default.
+        RESIDENCY_FLAG_NONE = 0x0,
+
+    } RESIDENCY_FLAGS;
+
+    struct RESIDENCY_DESC {
+        // Device and adapter used by this residency manager. The adapter must support DXGI 1.4
+        // to use residency. Required parameters.
+        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+
+        RESIDENCY_FLAGS Flags = RESIDENCY_FLAG_NONE;
+
+        // Determines if video memory segments are unified or shared. Use CheckFeatureSupport
+        // to check for support. Required parameter.
+        bool IsUMA;
+
+        // Maximum video memory available to budget by the allocator, expressed as a
+        // percentage. By default, the max video memory available is 0.95 or 95% of video memory
+        // can be budgeted, always leaving 5% for the OS and other applications.
+        float MaxVideoMemoryBudget;
+
+        // Video memory available to budget for resources.
+        uint64_t AvailableVideoMemoryForResources;
+    };
+
     class ResidencyManager {
       public:
-        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                              ComPtr<IDXGIAdapter> adapter,
-                                              bool isUMA,
-                                              float videoMemoryBudgetLimit,
-                                              uint64_t totalResourceBudgetLimit,
+        static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               ResidencyManager** residencyManager);
 
         ~ResidencyManager();

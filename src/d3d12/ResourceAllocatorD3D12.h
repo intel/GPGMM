@@ -69,8 +69,7 @@ namespace gpgmm { namespace d3d12 {
     };
 
     struct ALLOCATOR_DESC {
-        // Device and adapter used by this allocator. The adapter must support DXGI 1.4
-        // to use residency. Required parameters.
+        // Device and adapter used by this allocator. Required parameters.
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
@@ -102,17 +101,9 @@ namespace gpgmm { namespace d3d12 {
         // from by using a pool of resource heaps.
         uint64_t MaxResourceSizeForPooling;
 
-        // Maximum video memory available to budget by the allocator, expressed as a
-        // percentage. By default, the max video memory available is 0.95 or 95% of video memory
-        // can be budgeted, always leaving 5% for the OS and other applications.
+        // Control residency management for this allocator. See ResidencyManagerD3D12.h.
         float MaxVideoMemoryBudget;
-
-        // Total memory available to budget for resources created by this allocator.
         uint64_t TotalResourceBudgetLimit;
-
-        // Total memory Size of resident resources that could be evicted, should there not be enough
-        // residency budget available.
-        uint64_t ResidentResourceEvictSize;
     };
 
     typedef enum ALLOCATION_FLAGS {
