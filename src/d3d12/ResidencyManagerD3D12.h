@@ -74,7 +74,6 @@ namespace gpgmm { namespace d3d12 {
         using Cache = LinkedList<Heap>;
 
         struct MemorySegmentInfo {
-            const DXGI_MEMORY_SEGMENT_GROUP group;
             Cache lruCache = {};
             uint64_t budget = 0;
             uint64_t currentUsage = 0;
@@ -92,15 +91,16 @@ namespace gpgmm { namespace d3d12 {
         MemorySegmentInfo* GetMemorySegmentInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        HRESULT UpdateMemorySegmentInfo(MemorySegmentInfo* memorySegmentInfo);
+        HRESULT UpdateMemorySegmentInfo(MemorySegmentInfo* memorySegmentInfo,
+                                        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
         bool mIsUMA;
         float mMemoryBudgetLimit;
         uint64_t mAvailableForResourcesBudget;
-        MemorySegmentInfo mLocalMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_LOCAL};
-        MemorySegmentInfo mNonLocalMemorySegment = {DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL};
+        MemorySegmentInfo mLocalMemorySegment;
+        MemorySegmentInfo mNonLocalMemorySegment;
 
         std::unique_ptr<Fence> mFence;
     };

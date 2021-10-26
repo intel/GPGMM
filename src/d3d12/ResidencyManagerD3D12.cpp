@@ -43,10 +43,10 @@ namespace gpgmm { namespace d3d12 {
 
         // Query and set the video memory limits per segment.
         ReturnIfFailed(residencyManager->UpdateMemorySegmentInfo(
-            residencyManager->GetMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL)));
+            &residencyManager->mLocalMemorySegment, DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
         if (!isUMA) {
             ReturnIfFailed(residencyManager->UpdateMemorySegmentInfo(
-                residencyManager->GetMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)));
+                &residencyManager->mNonLocalMemorySegment, DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
         }
 
         *residencyManagerOut = residencyManager.release();
@@ -157,18 +157,20 @@ namespace gpgmm { namespace d3d12 {
 
         memorySegmentInfo->reservation = reservation;
 
-        ReturnIfFailed(UpdateMemorySegmentInfo(memorySegmentInfo));
+        ReturnIfFailed(UpdateMemorySegmentInfo(memorySegmentInfo, memorySegmentGroup));
 
         *reservationOut = memorySegmentInfo->currentReservation;
 
         return S_OK;
     }
 
-    HRESULT ResidencyManager::UpdateMemorySegmentInfo(MemorySegmentInfo* memorySegmentInfo) {
+    HRESULT ResidencyManager::UpdateMemorySegmentInfo(
+        MemorySegmentInfo* memorySegmentInfo,
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfo;
 
         ReturnIfFailed(
-            mAdapter->QueryVideoMemoryInfo(0, memorySegmentInfo->group, &queryVideoMemoryInfo));
+            mAdapter->QueryVideoMemoryInfo(0, memorySegmentGroup, &queryVideoMemoryInfo));
 
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -236,7 +238,7 @@ namespace gpgmm { namespace d3d12 {
                                     uint64_t* sizeEvictedOut) {
         MemorySegmentInfo* memorySegmentInfo = GetMemorySegmentInfo(memorySegmentGroup);
 
-        ReturnIfFailed(UpdateMemorySegmentInfo(memorySegmentInfo));
+        ReturnIfFailed(UpdateMemorySegmentInfo(memorySegmentInfo, memorySegmentGroup));
 
         const uint64_t currentUsageAfterMakeResident =
             sizeToMakeResident + memorySegmentInfo->currentUsage;
@@ -326,13 +328,13 @@ namespace gpgmm { namespace d3d12 {
         HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
             const uint32_t numOfresources = static_cast<uint32_t>(localHeapsToMakeResident.size());
-            hr = MakeResident(mLocalMemorySegment.group, localSizeToMakeResident, numOfresources,
-                              localHeapsToMakeResident.data());
+            hr = MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
+                              numOfresources, localHeapsToMakeResident.data());
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
             const uint32_t numOfResources =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
-            hr = MakeResident(mNonLocalMemorySegment.group, nonLocalSizeToMakeResident,
+            hr = MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, nonLocalSizeToMakeResident,
                               numOfResources, nonLocalHeapsToMakeResident.data());
         }
 
