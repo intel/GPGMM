@@ -156,7 +156,7 @@ namespace gpgmm { namespace d3d12 {
     class ResourceAllocator : public AllocatorBase, public IUnknownImpl {
       public:
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
-                                       ResourceAllocator** resourceAllocator);
+                                       ResourceAllocator** resourceAllocationOut);
 
         ~ResourceAllocator() override;
 
@@ -164,10 +164,10 @@ namespace gpgmm { namespace d3d12 {
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialUsage,
                                const D3D12_CLEAR_VALUE* clearValue,
-                               ResourceAllocation** resourceAllocation);
+                               ResourceAllocation** resourceAllocationOut);
 
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
-                               ResourceAllocation** resourceAllocation);
+                               ResourceAllocation** resourceAllocationOut);
 
         ResidencyManager* GetResidencyManager() const;
 
@@ -189,7 +189,7 @@ namespace gpgmm { namespace d3d12 {
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
                                      D3D12_RESOURCE_STATES initialUsage,
-                                     ResourceAllocation** resourceAllocation);
+                                     ResourceAllocation** resourceAllocationOut);
 
         HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                         D3D12_HEAP_FLAGS heapFlags,
@@ -197,14 +197,14 @@ namespace gpgmm { namespace d3d12 {
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialUsage,
-                                        ResourceAllocation** resourceAllocation);
+                                        ResourceAllocation** resourceAllocationOut);
 
         HRESULT CreateResourceHeap(uint64_t size,
                                    D3D12_HEAP_TYPE heapType,
                                    D3D12_HEAP_FLAGS heapFlags,
                                    DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                    uint64_t heapAlignment,
-                                   Heap** ppResourceHeap);
+                                   Heap** resourceHeapOut);
 
         void FreeResourceHeap(Heap* resourceHeap);
 

@@ -317,7 +317,7 @@ namespace gpgmm { namespace d3d12 {
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialUsage,
                                               const D3D12_CLEAR_VALUE* clearValue,
-                                              ResourceAllocation** resourceAllocation) {
+                                              ResourceAllocation** resourceAllocationOut) {
         GPGMM_API_TRACE_FUNCTION_BEGIN();
 
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor, initialUsage,
@@ -355,20 +355,20 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
                 [&](auto allocation) -> HRESULT {
                     return CreatePlacedResource(allocation, resourceInfo, &newResourceDesc,
-                                                clearValue, initialUsage, resourceAllocation);
+                                                clearValue, initialUsage, resourceAllocationOut);
                 }));
         }
 
         ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
-            &newResourceDesc, clearValue, initialUsage, resourceAllocation));
+            &newResourceDesc, clearValue, initialUsage, resourceAllocationOut));
 
         GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
-                                              ResourceAllocation** resourceAllocation) {
+                                              ResourceAllocation** resourceAllocationOut) {
         GPGMM_API_TRACE_FUNCTION_BEGIN();
 
         if (committedResource == nullptr) {
@@ -393,12 +393,12 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
-        *resourceAllocation = new ResourceAllocation{/*residencyManager*/ nullptr,
-                                                     /*allocator*/ this,
-                                                     info,
-                                                     /*offset*/ 0,
-                                                     std::move(committedResource),
-                                                     heap};
+        *resourceAllocationOut = new ResourceAllocation{/*residencyManager*/ nullptr,
+                                                        /*allocator*/ this,
+                                                        info,
+                                                        /*offset*/ 0,
+                                                        std::move(committedResource),
+                                                        heap};
 
         GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
@@ -410,8 +410,8 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** resourceAllocation) {
-        if (!resourceAllocation) {
+        ResourceAllocation** resourceAllocationOut) {
+        if (!resourceAllocationOut) {
             return E_POINTER;
         }
 
@@ -450,7 +450,7 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(heap);
         }
 
-        *resourceAllocation = new ResourceAllocation{
+        *resourceAllocationOut = new ResourceAllocation{
             mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
             subAllocation.GetOffset(), std::move(placedResource),    heap};
 
@@ -462,7 +462,7 @@ namespace gpgmm { namespace d3d12 {
                                                   D3D12_HEAP_FLAGS heapFlags,
                                                   DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                                   uint64_t heapAlignment,
-                                                  Heap** ppResourceHeap) {
+                                                  Heap** resourceHeapOut) {
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
@@ -485,12 +485,12 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Heap> d3d12Heap;
         ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
 
-        *ppResourceHeap = new Heap(std::move(d3d12Heap), memorySegmentGroup, size);
+        *resourceHeapOut = new Heap(std::move(d3d12Heap), memorySegmentGroup, size);
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
         if (mResidencyManager != nullptr) {
-            mResidencyManager->InsertHeap(*ppResourceHeap);
+            mResidencyManager->InsertHeap(*resourceHeapOut);
         }
 
         return S_OK;
@@ -503,8 +503,8 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
-        ResourceAllocation** ppResourceAllocation) {
-        if (!ppResourceAllocation) {
+        ResourceAllocation** resourceAllocationOut) {
+        if (!resourceAllocationOut) {
             return E_POINTER;
         }
 
@@ -549,12 +549,12 @@ namespace gpgmm { namespace d3d12 {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
 
-        *ppResourceAllocation = new ResourceAllocation{mResidencyManager.get(),
-                                                       /*allocator*/ this,
-                                                       info,
-                                                       /*offset*/ 0,
-                                                       std::move(committedResource),
-                                                       heap};
+        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(),
+                                                        /*allocator*/ this,
+                                                        info,
+                                                        /*offset*/ 0,
+                                                        std::move(committedResource),
+                                                        heap};
         return S_OK;
     }
 
