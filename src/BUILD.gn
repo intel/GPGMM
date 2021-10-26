@@ -173,6 +173,8 @@ source_set("gpgmm_sources") {
       "d3d12/IUnknownImplD3D12.h",
       "d3d12/JSONSerializerD3D12.cpp",
       "d3d12/JSONSerializerD3D12.h",
+      "d3d12/ResidencyCacheD3D12.cpp",
+      "d3d12/ResidencyCacheD3D12.h",
       "d3d12/ResidencyManagerD3D12.cpp",
       "d3d12/ResidencyManagerD3D12.h",
       "d3d12/ResidencySetD3D12.cpp",

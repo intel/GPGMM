@@ -16,7 +16,7 @@
 #ifndef GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
-#include "../common/LinkedList.h"
+#include "src/d3d12/ResidencyCacheD3D12.h"
 
 #include "src/d3d12/d3d12_platform.h"
 
@@ -71,18 +71,14 @@ namespace gpgmm { namespace d3d12 {
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit);
 
-        using Cache = LinkedList<Heap>;
-
         struct MemorySegmentInfo {
             const DXGI_MEMORY_SEGMENT_GROUP group;
-            Cache lruCache = {};
+            ResidencyCache cache = {};
             uint64_t budget = 0;
             uint64_t currentUsage = 0;
             uint64_t currentReservation = 0;
             uint64_t reservation = 0;
         };
-
-        HRESULT EvictHeap(const Cache& cache, Heap** heapOut);
 
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                              uint64_t sizeToMakeResident,

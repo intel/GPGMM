@@ -76,6 +76,8 @@ if (GPGMM_ENABLE_D3D12)
         "d3d12/JSONSerializerD3D12.h"
         "d3d12/ResidencyManagerD3D12.cpp"
         "d3d12/ResidencyManagerD3D12.h"
+        "d3d12/ResidencyCacheD3D12.cpp"
+        "d3d12/ResidencyCacheD3D12.h"
         "d3d12/ResidencySetD3D12.cpp"
         "d3d12/ResidencySetD3D12.h"
         "d3d12/ResourceAllocationD3D12.cpp"
