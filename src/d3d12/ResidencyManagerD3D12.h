@@ -73,12 +73,9 @@ namespace gpgmm { namespace d3d12 {
 
         using Cache = LinkedList<Heap>;
 
-        struct MemorySegmentInfo {
+        struct VideoMemorySegment {
             Cache lruCache = {};
-            uint64_t budget = 0;
-            uint64_t currentUsage = 0;
-            uint64_t currentReservation = 0;
-            uint64_t reservation = 0;
+            DXGI_QUERY_VIDEO_MEMORY_INFO Info = {};
         };
 
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
@@ -86,19 +83,21 @@ namespace gpgmm { namespace d3d12 {
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        MemorySegmentInfo* GetMemorySegmentInfo(
+        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemorySegmentInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        HRESULT UpdateMemorySegmentInfo(MemorySegmentInfo* memorySegmentInfo,
-                                        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        Cache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+
+        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                                     DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemoryInfo) const;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
         bool mIsUMA;
-        float mMemoryBudgetLimit;
+        float mVideoMemoryBudgetLimit;
         uint64_t mAvailableForResourcesBudget;
-        MemorySegmentInfo mLocalMemorySegment;
-        MemorySegmentInfo mNonLocalMemorySegment;
+        VideoMemorySegment mLocalVideoMemorySegment;
+        VideoMemorySegment mNonLocalVideoMemorySegment;
 
         std::unique_ptr<Fence> mFence;
     };
