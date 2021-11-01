@@ -25,6 +25,7 @@
 using namespace gpgmm;
 
 static constexpr uint64_t kHeapSize = 128u;
+static constexpr uint64_t kHeapAlignment = 1u;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
@@ -42,21 +43,21 @@ class DummyMemoryAllocator : public MemoryAllocator {
     }
 
     uint64_t GetMemoryAlignment() const override {
-        return 0;
+        return kHeapAlignment;
     }
 };
 
 class DummyBuddyMemoryAllocator {
   public:
     DummyBuddyMemoryAllocator(uint64_t maxBlockSize)
-        : mAllocator(maxBlockSize, kHeapSize, kInvalidOffset, &mMemoryAllocator) {
+        : mAllocator(maxBlockSize, kHeapSize, kHeapAlignment, &mMemoryAllocator) {
     }
 
     DummyBuddyMemoryAllocator(uint64_t maxBlockSize, MemoryAllocator* memoryAllocator)
-        : mAllocator(maxBlockSize, kHeapSize, kInvalidOffset, memoryAllocator) {
+        : mAllocator(maxBlockSize, kHeapSize, kHeapAlignment, memoryAllocator) {
     }
 
-    MemoryAllocation Allocate(uint64_t size, uint64_t alignment = 1) {
+    MemoryAllocation Allocate(uint64_t size, uint64_t alignment = kHeapAlignment) {
         std::unique_ptr<MemoryAllocation> allocation = mAllocator.AllocateMemory(size, alignment);
         if (allocation == nullptr) {
             return {};
