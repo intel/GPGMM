@@ -196,40 +196,6 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    // Removes a heap from the LRU and returns the least recently used heap when possible. Returns
-    // nullptr when nothing further can be evicted.
-    HRESULT ResidencyManager::EvictHeap(const Cache& cache, Heap** heapOut) {
-        // If the LRU is empty, return nullptr to allow execution to continue. Note that fully
-        // emptying the LRU is undesirable, because it can mean either 1) the LRU is not accurately
-        // accounting for Dawn's GPU allocations, or 2) a component external to Dawn is using all of
-        // the process budget and starving Dawn, which will cause thrash.
-        if (cache.empty()) {
-            return S_OK;
-        }
-
-        Heap* heap = cache.head()->value();
-
-        const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
-
-        // If the next candidate for eviction was inserted into the LRU during the pending
-        // submission, it is because more memory is being used in a single command list than is
-        // available. In this scenario, we cannot make any more resources resident and thrashing
-        // must occur.
-        if (lastUsedFenceValue == mFence->GetCurrentFence()) {
-            return S_OK;
-        }
-
-        // We must ensure that any previous use of a resource has completed before the resource can
-        // be evicted.
-        ReturnIfFailed(mFence->WaitFor(lastUsedFenceValue));
-
-        heap->RemoveFromList();
-
-        *heapOut = heap;
-
-        return S_OK;
-    }
-
     // Any time we need to make something resident, we must check that we have enough free memory to
     // make the new object resident while also staying within budget. If there isn't enough
     // memory, we should evict until there is. Returns the number of bytes evicted.
@@ -253,13 +219,31 @@ namespace gpgmm { namespace d3d12 {
             currentUsageAfterMakeResident - memorySegmentInfo->budget;
         uint64_t sizeEvicted = 0;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
-            Heap* heap = nullptr;
-            ReturnIfFailed(EvictHeap(memorySegmentInfo->lruCache, &heap));
-
-            // If no heap was returned, then nothing more can be evicted.
-            if (heap == nullptr) {
+            // If the cache is empty, allow execution to continue. Note that fully
+            // emptying the cache is undesirable, because it can mean either 1) the cache is not
+            // accurately accounting for GPU allocations, or 2) an external component is
+            // using all of the budget and is starving us, which will cause thrash.
+            Cache* cache = &memorySegmentInfo->lruCache;
+            if (cache->empty()) {
                 break;
             }
+
+            Heap* heap = cache->head()->value();
+            const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
+
+            // If the next candidate for eviction was inserted into the cache during the current
+            // submission, it is because more memory is being used in a single command list than is
+            // available. In this scenario, we cannot make any more resources resident and thrashing
+            // must occur.
+            if (lastUsedFenceValue == mFence->GetCurrentFence()) {
+                break;
+            }
+
+            // We must ensure that any previous use of a resource has completed before the resource
+            // can be evicted.
+            ReturnIfFailed(mFence->WaitFor(lastUsedFenceValue));
+
+            heap->RemoveFromList();
 
             sizeEvicted += heap->GetSize();
             resourcesToEvict.push_back(heap->GetPageable());

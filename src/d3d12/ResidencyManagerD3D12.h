@@ -81,8 +81,6 @@ namespace gpgmm { namespace d3d12 {
             uint64_t reservation = 0;
         };
 
-        HRESULT EvictHeap(const Cache& cache, Heap** heapOut);
-
         HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
