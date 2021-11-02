@@ -200,6 +200,32 @@ namespace gpgmm { namespace d3d12 {
 
             return ResourceHeapKind::InvalidEnum;
         }
+
+        // RAII wrapper to lock/unlock heap from the residency cache.
+        class ScopedHeapLock {
+          public:
+            ScopedHeapLock(ResidencyManager* residencyManager, Heap* heap)
+                : mResidencyManager(residencyManager), mHeap(heap) {
+                ASSERT(heap != nullptr);
+                if (mResidencyManager != nullptr) {
+                    mResidencyManager->LockHeap(mHeap);
+                }
+            }
+
+            ~ScopedHeapLock() {
+                if (mResidencyManager != nullptr) {
+                    mResidencyManager->UnlockHeap(mHeap);
+                }
+            }
+
+            ScopedHeapLock(const ScopedHeapLock&) = delete;
+            ScopedHeapLock& operator=(const ScopedHeapLock&) = delete;
+
+          private:
+            ResidencyManager* const mResidencyManager;
+            Heap* const mHeap;
+        };
+
     }  // namespace
 
     // static
@@ -428,23 +454,16 @@ namespace gpgmm { namespace d3d12 {
         Heap* heap = static_cast<Heap*>(subAllocation.GetMemory());
         ASSERT(heap != nullptr);
 
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->LockHeap(heap);
-        }
-
-        // The resource is placed at an offset corresponding to the sub-allocation.
-        // Each sub-allocation maps to a disjoint (physical) address range so no heap memory is
-        // be aliased or cannot be reused within a command-list.
-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
         ComPtr<ID3D12Resource> placedResource;
-        ReturnIfFailed(mDevice->CreatePlacedResource(heap->GetHeap(), subAllocation.GetOffset(),
-                                                     resourceDescriptor, initialUsage, clearValue,
-                                                     IID_PPV_ARGS(&placedResource)));
-
-        // After CreatePlacedResource has finished, the heap can be unlocked from residency. This
-        // will insert it into the residency LRU.
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->UnlockHeap(heap);
+        {
+            // Resource is placed at an offset corresponding to the sub-allocation.
+            // Each sub-allocation maps to a disjoint (physical) address range so no heap memory is
+            // aliased or reused within a command-list.
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
+            ScopedHeapLock scopedHeapLock(GetResidencyManager(), heap);
+            ReturnIfFailed(mDevice->CreatePlacedResource(
+                heap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor, initialUsage,
+                clearValue, IID_PPV_ARGS(&placedResource)));
         }
 
         *resourceAllocationOut = new ResourceAllocation{
