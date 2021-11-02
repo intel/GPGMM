@@ -267,22 +267,20 @@ namespace gpgmm { namespace d3d12 {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
 
             const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
+            const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
+            const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapKind);
 
             std::unique_ptr<MemoryAllocatorStack> stack = std::make_unique<MemoryAllocatorStack>();
 
             // Standalone heap allocator.
             MemoryAllocator* heapAllocator =
                 stack->PushAllocator(std::make_unique<ResourceHeapAllocator>(
-                    this, GetHeapType(resourceHeapKind), heapFlags,
-                    GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA,
-                                                   GetHeapType(resourceHeapKind)),
-                    minResourceHeapSize));
+                    this, heapType, heapFlags, minResourceHeapSize));
 
             // Placed resource sub-allocator.
             MemoryAllocator* subAllocator =
                 stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
-                    heapAllocator));
+                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, heapAllocator));
 
             // Pooled standalone heap allocator.
             MemoryAllocator* pooledHeapAllocator =
@@ -291,8 +289,7 @@ namespace gpgmm { namespace d3d12 {
             // Pooled placed resource sub-allocator.
             MemoryAllocator* pooledSubAllocator =
                 stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, minResourceHeapSize, GetHeapAlignment(heapFlags),
-                    pooledHeapAllocator));
+                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, pooledHeapAllocator));
 
             // Conditional sub-allocator that uses the pooled or non-pooled sub-allocator.
             stack->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
@@ -460,9 +457,11 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateResourceHeap(uint64_t size,
                                                   D3D12_HEAP_TYPE heapType,
                                                   D3D12_HEAP_FLAGS heapFlags,
-                                                  DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                                   uint64_t heapAlignment,
                                                   Heap** resourceHeapOut) {
+        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
+            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
+
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
