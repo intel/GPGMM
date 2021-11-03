@@ -17,11 +17,20 @@
 
 namespace gpgmm {
 
-    MemoryBase::MemoryBase() : RefCounted(0) {
-    }
-
     MemoryBase::~MemoryBase() {
-        ASSERT(RefCount() == 0);
+        ASSERT(!IsSubAllocated());
     }
 
+    void MemoryBase::IncrementSubAllocatedRef() {
+        mSubAllocatedRefCount++;
+    }
+
+    void MemoryBase::DecrementSubAllocatedRef() {
+        ASSERT(mSubAllocatedRefCount > 0);
+        mSubAllocatedRefCount--;
+    }
+
+    bool MemoryBase::IsSubAllocated() const {
+        return mSubAllocatedRefCount != 0;
+    }
 }  // namespace gpgmm

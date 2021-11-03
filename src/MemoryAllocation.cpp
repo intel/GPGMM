@@ -74,17 +74,18 @@ namespace gpgmm {
         return mAllocator;
     }
 
-    void MemoryAllocation::AddSubAllocatedRef() {
+    void MemoryAllocation::IncrementSubAllocatedRef() {
         ASSERT(mMemory != nullptr);
-        mMemory->Ref();
+        mMemory->IncrementSubAllocatedRef();
     }
 
-    void MemoryAllocation::ReleaseSubAllocatedRef() {
+    void MemoryAllocation::DecrementSubAllocatedRef() {
         ASSERT(mMemory != nullptr);
-        mMemory->Unref();
+        mMemory->DecrementSubAllocatedRef();
     }
+
     bool MemoryAllocation::IsSubAllocated() const {
         ASSERT(mMemory != nullptr);
-        return mMemory->RefCount() > 0;
+        return mMemory->IsSubAllocated();
     }
 }  // namespace gpgmm

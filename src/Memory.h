@@ -15,16 +15,21 @@
 #ifndef GPGMM_MEMORY_H_
 #define GPGMM_MEMORY_H_
 
-#include "common/RefCount.h"
-
 #include <cstdint>
 
 namespace gpgmm {
 
-    class MemoryBase : public RefCounted {
+    class MemoryBase {
       public:
-        MemoryBase();
+        MemoryBase() = default;
         virtual ~MemoryBase();
+
+        bool IsSubAllocated() const;
+        void IncrementSubAllocatedRef();
+        void DecrementSubAllocatedRef();
+
+      private:
+        uint32_t mSubAllocatedRefCount = 0;
     };
 
 }  // namespace gpgmm
