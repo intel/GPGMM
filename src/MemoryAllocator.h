@@ -39,8 +39,8 @@ namespace gpgmm {
 
       protected:
         bool IsSubAllocated(const MemoryAllocation& allocation) const;
-        void AddSubAllocatedRef(MemoryAllocation* allocation);
-        void ReleaseSubAllocatedRef(MemoryAllocation* allocation);
+        void IncrementSubAllocatedRef(MemoryAllocation* allocation);
+        void DecrementSubAllocatedRef(MemoryAllocation* allocation);
     };
 
 }  // namespace gpgmm

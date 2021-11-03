@@ -74,8 +74,8 @@ namespace gpgmm {
         friend class MemoryAllocator;
 
         bool IsSubAllocated() const;
-        void AddSubAllocatedRef();
-        void ReleaseSubAllocatedRef();
+        void IncrementSubAllocatedRef();
+        void DecrementSubAllocatedRef();
 
         virtual void Reset();
 

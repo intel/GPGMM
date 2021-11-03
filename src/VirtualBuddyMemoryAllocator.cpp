@@ -83,7 +83,7 @@ namespace gpgmm {
             mMemoryAllocations[memoryIndex] = std::move(allocation);
         }
 
-        AddSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
+        IncrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
         AllocationInfo info;
         info.mBlock = block;
@@ -106,7 +106,7 @@ namespace gpgmm {
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlock->mOffset);
 
         ASSERT(mMemoryAllocations[memoryIndex] != nullptr);
-        ReleaseSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
+        DecrementSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
         if (!IsSubAllocated(*mMemoryAllocations[memoryIndex])) {
             mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex].release());

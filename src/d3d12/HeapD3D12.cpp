@@ -62,16 +62,16 @@ namespace gpgmm { namespace d3d12 {
         return IsInList();
     }
 
-    void Heap::AddResidencyLockRef() {
-        mResidencyLock.Ref();
+    void Heap::IncrementResidencyLock() {
+        mResidencyLockRefCount++;
     }
 
-    void Heap::ReleaseResidencyLock() {
-        mResidencyLock.Unref();
+    void Heap::DecrementResidencyLock() {
+        mResidencyLockRefCount--;
     }
 
     bool Heap::IsResidencyLocked() const {
-        return mResidencyLock.RefCount() != 0;
+        return mResidencyLockRefCount != 0;
     }
 
     bool Heap::IsResident() const {

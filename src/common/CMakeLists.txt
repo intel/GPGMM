@@ -27,8 +27,6 @@ target_sources(gpgmm_common PRIVATE
   "Platform.h"
   "PlatformTime.cpp"
   "PlatformTime.h"
-  "RefCount.cpp"
-  "RefCount.h"
   "SystemUtils.cpp"
   "SystemUtils.h"
 )
