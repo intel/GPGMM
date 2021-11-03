@@ -17,6 +17,7 @@
 #define GPGMM_D3D12_HEAPD3D12_H_
 
 #include "../common/LinkedList.h"
+#include "../common/RefCount.h"
 #include "src/Memory.h"
 #include "src/d3d12/d3d12_platform.h"
 
@@ -64,18 +65,17 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetLastUsedFenceValue() const;
         void SetLastUsedFenceValue(uint64_t fenceValue);
 
-        // In some scenarios, such as async buffer mapping or descriptor heaps, we must lock
-        // residency to ensure the pageable cannot be evicted. Because multiple buffers may be
-        // mapped in a single heap, we must track the number of resources currently locked.
-        void IncrementResidencyLock();
-        void DecrementResidencyLock();
+        // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
+        // heaps or mapping resources).
+        void AddResidencyLockRef();
+        void ReleaseResidencyLock();
 
         ComPtr<ID3D12Pageable> mPageable;
 
         // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
         uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
-        uint32_t mResidencyLockRefCount = 0;
+        RefCounted mResidencyLock;
         uint64_t mSize = 0;
     };
 }}  // namespace gpgmm::d3d12

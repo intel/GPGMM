@@ -105,7 +105,7 @@ namespace gpgmm { namespace d3d12 {
             heap->RemoveFromList();
         }
 
-        heap->IncrementResidencyLock();
+        heap->AddResidencyLockRef();
 
         return S_OK;
     }
@@ -125,7 +125,7 @@ namespace gpgmm { namespace d3d12 {
             return E_FAIL;
         }
 
-        heap->DecrementResidencyLock();
+        heap->ReleaseResidencyLock();
 
         // If another lock still exists on the heap, nothing further should be done.
         if (heap->IsResidencyLocked()) {

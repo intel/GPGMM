@@ -26,22 +26,22 @@ namespace gpgmm { namespace d3d12 {
         if (riid == IID_IUnknown) {
             // Increment reference and return pointer.
             *ppvObject = this;
-            ++mRefCount;
+            Ref();
             return S_OK;
         }
         return E_NOINTERFACE;
     }
 
     ULONG IUnknownImpl::AddRef() {
-        return ++mRefCount;
+        Ref();
+        return RefCount();
     }
 
     ULONG IUnknownImpl::Release() {
-        const uint32_t refcount = --mRefCount;
-        if (mRefCount == 0) {
+        if (Unref()) {
             DeleteThis();
         }
-        return refcount;
+        return RefCount();
     }
 
     void IUnknownImpl::DeleteThis() {

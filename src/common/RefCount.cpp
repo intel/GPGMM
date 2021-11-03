@@ -12,16 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/Memory.h"
-#include "common/Assert.h"
+#include "RefCount.h"
+#include "Assert.h"
 
 namespace gpgmm {
 
-    MemoryBase::MemoryBase() : RefCounted(0) {
+    RefCounted::RefCounted(int_fast32_t count) : mRef(count) {
     }
 
-    MemoryBase::~MemoryBase() {
-        ASSERT(RefCount() == 0);
+    void RefCounted::Ref() {
+        mRef.fetch_add(1, std::memory_order_relaxed);
+    }
+
+    bool RefCounted::Unref() {
+        if (mRef.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    int_fast32_t RefCounted::RefCount() const {
+        return mRef.load(std::memory_order_acquire);
     }
 
 }  // namespace gpgmm
