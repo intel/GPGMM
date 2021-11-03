@@ -45,8 +45,8 @@ namespace gpgmm { namespace d3d12 {
                            Heap* heap);
 
         ~ResourceAllocation() override;
-        ResourceAllocation(const ResourceAllocation&) = default;
-        ResourceAllocation& operator=(const ResourceAllocation&) = default;
+        ResourceAllocation(const ResourceAllocation&) = delete;
+        ResourceAllocation& operator=(const ResourceAllocation&) = delete;
 
         HRESULT Map(uint32_t subresource, const D3D12_RANGE* pRange, void** ppMappedData);
         void Unmap(uint32_t subresource, const D3D12_RANGE* pRange);
