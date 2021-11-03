@@ -416,12 +416,9 @@ namespace gpgmm { namespace d3d12 {
         gpgmm::AllocationInfo info;
         info.mMethod = gpgmm::AllocationMethod::kStandalone;
 
-        *resourceAllocationOut = new ResourceAllocation{/*residencyManager*/ nullptr,
-                                                        /*allocator*/ this,
-                                                        info,
-                                                        /*offset*/ 0,
-                                                        std::move(committedResource),
-                                                        heap};
+        *resourceAllocationOut =
+            new ResourceAllocation{/*residencyManager*/ nullptr,
+                                   /*allocator*/ this, info, std::move(committedResource), heap};
 
         GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
@@ -466,9 +463,9 @@ namespace gpgmm { namespace d3d12 {
                 clearValue, IID_PPV_ARGS(&placedResource)));
         }
 
-        *resourceAllocationOut = new ResourceAllocation{
-            mResidencyManager.get(),   subAllocation.GetAllocator(), subAllocation.GetInfo(),
-            subAllocation.GetOffset(), std::move(placedResource),    heap};
+        *resourceAllocationOut =
+            new ResourceAllocation{mResidencyManager.get(), subAllocation.GetAllocator(),
+                                   subAllocation.GetInfo(), std::move(placedResource), heap};
 
         return S_OK;
     }
@@ -567,12 +564,9 @@ namespace gpgmm { namespace d3d12 {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
 
-        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(),
-                                                        /*allocator*/ this,
-                                                        info,
-                                                        /*offset*/ 0,
-                                                        std::move(committedResource),
-                                                        heap};
+        *resourceAllocationOut =
+            new ResourceAllocation{mResidencyManager.get(),
+                                   /*allocator*/ this, info, std::move(committedResource), heap};
         return S_OK;
     }
 

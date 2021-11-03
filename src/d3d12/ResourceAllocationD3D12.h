@@ -33,24 +33,22 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* memoryAllocator,
                            const AllocationInfo& info,
-                           uint64_t offset,
                            ComPtr<ID3D12Resource> resource,
-                           Heap* heap);
+                           Heap* resourceHeap);
 
         // Constructs a resource allocation without a memory allocator.
         ResourceAllocation(ResidencyManager* residencyManager,
                            ResourceAllocator* resourceAllocator,
                            const AllocationInfo& info,
-                           uint64_t offset,
                            ComPtr<ID3D12Resource> resource,
-                           Heap* heap);
+                           Heap* resourceHeap);
 
         ~ResourceAllocation() override;
         ResourceAllocation(const ResourceAllocation&) = delete;
         ResourceAllocation& operator=(const ResourceAllocation&) = delete;
 
-        HRESULT Map(uint32_t subresource, const D3D12_RANGE* pRange, void** ppMappedData);
-        void Unmap(uint32_t subresource, const D3D12_RANGE* pRange);
+        HRESULT Map(uint32_t subresource, const D3D12_RANGE* readRange, void** dataOut);
+        void Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange);
 
         ID3D12Resource* GetResource() const;
 

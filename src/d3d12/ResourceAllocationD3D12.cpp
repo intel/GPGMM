@@ -28,10 +28,9 @@ namespace gpgmm { namespace d3d12 {
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* memoryAllocator,
                                            const AllocationInfo& info,
-                                           uint64_t offset,
                                            ComPtr<ID3D12Resource> resource,
-                                           Heap* heap)
-        : MemoryAllocation(memoryAllocator, info, offset, heap),
+                                           Heap* resourceHeap)
+        : MemoryAllocation(memoryAllocator, info, kInvalidOffset, resourceHeap),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
@@ -41,10 +40,9 @@ namespace gpgmm { namespace d3d12 {
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            ResourceAllocator* resourceAllocator,
                                            const AllocationInfo& info,
-                                           uint64_t offset,
                                            ComPtr<ID3D12Resource> resource,
-                                           Heap* heap)
-        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, offset, heap),
+                                           Heap* resourceHeap)
+        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, kInvalidOffset, resourceHeap),
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
@@ -62,8 +60,8 @@ namespace gpgmm { namespace d3d12 {
             GetAllocator()->DeallocateMemory(this);
         } else {
             ASSERT(mResourceAllocator != nullptr);
-            Heap* heap = static_cast<Heap*>(GetMemory());
-            mResourceAllocator->FreeResourceHeap(heap);
+            Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+            mResourceAllocator->FreeResourceHeap(resourceHeap);
         }
 
         mResource.Reset();
@@ -79,35 +77,35 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocation::Map(uint32_t subresource,
-                                    const D3D12_RANGE* pRange,
-                                    void** ppMappedData) {
-        Heap* heap = static_cast<Heap*>(GetMemory());
-        if (heap == nullptr) {
+                                    const D3D12_RANGE* readRange,
+                                    void** dataOut) {
+        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
 
         if (mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->LockHeap(heap));
+            ReturnIfFailed(mResidencyManager->LockHeap(resourceHeap));
         }
 
-        return mResource->Map(subresource, pRange, ppMappedData);
+        return mResource->Map(subresource, readRange, dataOut);
     }
 
-    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pRange) {
-        Heap* heap = static_cast<Heap*>(GetMemory());
-        if (heap == nullptr) {
+    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
+        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        if (resourceHeap == nullptr) {
             return;
         }
         if (mResidencyManager != nullptr) {
-            mResidencyManager->UnlockHeap(heap);
+            mResidencyManager->UnlockHeap(resourceHeap);
         }
 
-        mResource->Unmap(subresource, pRange);
+        mResource->Unmap(subresource, writtenRange);
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
-        Heap* heap = static_cast<Heap*>(GetMemory());
-        if (heap == nullptr) {
+        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
 
@@ -115,6 +113,6 @@ namespace gpgmm { namespace d3d12 {
             return E_FAIL;
         }
 
-        return heap->UpdateResidency(residencySet);
+        return resourceHeap->UpdateResidency(residencySet);
     }
 }}  // namespace gpgmm::d3d12
