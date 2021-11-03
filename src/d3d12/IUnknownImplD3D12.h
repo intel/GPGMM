@@ -17,13 +17,13 @@
 
 #include "src/d3d12/d3d12_platform.h"
 
-#include <cstdint>
+#include "../common/RefCount.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    class IUnknownImpl : public IUnknown {
+    class IUnknownImpl : public IUnknown, public RefCounted {
       public:
-        IUnknownImpl() = default;
+        IUnknownImpl();
         virtual ~IUnknownImpl() = default;
 
         // IUnknown interfaces
@@ -33,9 +33,6 @@ namespace gpgmm { namespace d3d12 {
 
         // Derived class may override this if they require a customer deleter.
         virtual void DeleteThis();
-
-      private:
-        uint32_t mRefCount = 1;
     };
 
 }}  // namespace gpgmm::d3d12

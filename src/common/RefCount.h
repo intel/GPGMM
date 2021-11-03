@@ -12,16 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/Memory.h"
-#include "common/Assert.h"
+#ifndef GPGMM_COMMON_REFCOUNT_H_
+#define GPGMM_COMMON_REFCOUNT_H_
+
+#include <atomic>
+#include <cstdint>
 
 namespace gpgmm {
 
-    MemoryBase::MemoryBase() : RefCounted(0) {
-    }
+    class RefCounted {
+      public:
+        RefCounted(int_fast32_t initialRefCount);
+        ~RefCounted() = default;
 
-    MemoryBase::~MemoryBase() {
-        ASSERT(RefCount() == 0);
-    }
+        // Increments ref by one.
+        void Ref();
+
+        // Decrements ref by one. If count is positive, returns false.
+        // Otherwise, when it reaches zero, returns true and deletes this.
+        bool Unref();
+
+        // Get the reference count.
+        int_fast32_t RefCount() const;
+
+      private:
+        mutable std::atomic_int_fast32_t mRef;
+    };
 
 }  // namespace gpgmm
+
+#endif  // GPGMM_COMMON_REFCOUNT_H_
