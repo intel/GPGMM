@@ -29,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
 
     class ResourceAllocation : public MemoryAllocation, public IUnknownImpl {
       public:
-        ResourceAllocation() = default;
+        // Constructs a resource allocation using a memory allocator.
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* memoryAllocator,
                            const AllocationInfo& info,
@@ -37,6 +37,7 @@ namespace gpgmm { namespace d3d12 {
                            ComPtr<ID3D12Resource> resource,
                            Heap* heap);
 
+        // Constructs a resource allocation without a memory allocator.
         ResourceAllocation(ResidencyManager* residencyManager,
                            ResourceAllocator* resourceAllocator,
                            const AllocationInfo& info,
@@ -59,8 +60,8 @@ namespace gpgmm { namespace d3d12 {
         void DeleteThis() override;
 
       private:
-        ResourceAllocator* mResourceAllocator;
-        ResidencyManager* mResidencyManager;
+        ResourceAllocator* const mResourceAllocator;
+        ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
     };
 

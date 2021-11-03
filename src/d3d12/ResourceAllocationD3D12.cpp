@@ -32,6 +32,7 @@ namespace gpgmm { namespace d3d12 {
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* heap)
         : MemoryAllocation(memoryAllocator, info, offset, heap),
+          mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation");
@@ -63,7 +64,6 @@ namespace gpgmm { namespace d3d12 {
             ASSERT(mResourceAllocator != nullptr);
             Heap* heap = static_cast<Heap*>(GetMemory());
             mResourceAllocator->FreeResourceHeap(heap);
-            mResourceAllocator = nullptr;
         }
 
         mResource.Reset();
