@@ -40,7 +40,7 @@ namespace gpgmm { namespace d3d12 {
         ss << "{ "
            << "\"allocationDescriptor\": " << AppendTo(desc.allocationDescriptor) << ", "
            << "\"resourceDescriptor\": " << AppendTo(desc.resourceDescriptor) << ", "
-           << "\"initialUsage\": " << desc.initialUsage << ", "
+           << "\"initialResourceState\": " << desc.initialResourceState << ", "
            << "\"clearValue\": " << AppendTo(desc.clearValue) << " }";
         return ss.str();
     }

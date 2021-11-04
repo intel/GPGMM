@@ -150,8 +150,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                 const ALLOCATION_DESC allocationDescriptor =
                     ConvertToAllocationDesc(args["allocationDescriptor"]);
 
-                const D3D12_RESOURCE_STATES initialUsage =
-                    static_cast<D3D12_RESOURCE_STATES>(args["initialUsage"].asInt());
+                const D3D12_RESOURCE_STATES initialResourceState =
+                    static_cast<D3D12_RESOURCE_STATES>(args["initialResourceState"].asInt());
 
                 const D3D12_CLEAR_VALUE* clearValuePtr = nullptr;
                 D3D12_CLEAR_VALUE clearValue = {};
@@ -167,7 +167,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                 ASSERT_FALSE(allocatorInstanceID.empty());
 
                 ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
-                    allocationDescriptor, resourceDescriptor, initialUsage, clearValuePtr,
+                    allocationDescriptor, resourceDescriptor, initialResourceState, clearValuePtr,
                     &newAllocationWithoutID));
 
             } else if (event["name"].asString() == "ResourceAllocation") {

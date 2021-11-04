@@ -338,7 +338,7 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
-                                              D3D12_RESOURCE_STATES initialUsage,
+                                              D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** resourceAllocationOut) {
         GPGMM_API_TRACE_FUNCTION_BEGIN();
@@ -347,8 +347,8 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor, initialUsage,
-                                           clearValue};
+        const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor,
+                                           initialResourceState, clearValue};
 
         GPGMM_API_TRACE_FUNCTION_CALL(desc);
 
@@ -382,13 +382,14 @@ namespace gpgmm { namespace d3d12 {
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
                 [&](auto subAllocation) -> HRESULT {
                     return CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc,
-                                                clearValue, initialUsage, resourceAllocationOut);
+                                                clearValue, initialResourceState,
+                                                resourceAllocationOut);
                 }));
         }
 
         ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
-            &newResourceDesc, clearValue, initialUsage, resourceAllocationOut));
+            &newResourceDesc, clearValue, initialResourceState, resourceAllocationOut));
 
         GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
@@ -437,7 +438,7 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
-        D3D12_RESOURCE_STATES initialUsage,
+        D3D12_RESOURCE_STATES initialResourceState,
         ResourceAllocation** resourceAllocationOut) {
         // Must place a resource using a sub-allocated memory allocation.
         if (subAllocation.GetInfo().mMethod != AllocationMethod::kSubAllocated) {
@@ -463,8 +464,8 @@ namespace gpgmm { namespace d3d12 {
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
             ScopedHeapLock scopedHeapLock(GetResidencyManager(), heap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
-                heap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor, initialUsage,
-                clearValue, IID_PPV_ARGS(&placedResource)));
+                heap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor,
+                initialResourceState, clearValue, IID_PPV_ARGS(&placedResource)));
         }
 
         *resourceAllocationOut =
@@ -521,7 +522,7 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
-        D3D12_RESOURCE_STATES initialUsage,
+        D3D12_RESOURCE_STATES initialResourceState,
         ResourceAllocation** resourceAllocationOut) {
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
@@ -546,7 +547,7 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Resource> committedResource;
         ReturnIfFailed(mDevice->CreateCommittedResource(
-            &heapProperties, heapFlags, resourceDescriptor, initialUsage, clearValue,
+            &heapProperties, heapFlags, resourceDescriptor, initialResourceState, clearValue,
             IID_PPV_ARGS(&committedResource)));
 
         // Since residency management occurs at the heap granularity, every committed resource is

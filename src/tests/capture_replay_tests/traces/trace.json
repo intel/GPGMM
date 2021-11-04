@@ -58,7 +58,7 @@
           },
           "Flags": 0
         },
-        "initialUsage": 0,
+        "initialResourceState": 0,
         "clearValue": {}
       }
     },
@@ -98,7 +98,7 @@
           },
           "Flags": 0
         },
-        "initialUsage": 2755,
+        "initialResourceState": 2755,
         "clearValue": {}
       }
     },

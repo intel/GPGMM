@@ -162,7 +162,7 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
-                               D3D12_RESOURCE_STATES initialUsage,
+                               D3D12_RESOURCE_STATES initialResourceState,
                                const D3D12_CLEAR_VALUE* clearValue,
                                ResourceAllocation** resourceAllocationOut);
 
@@ -188,7 +188,7 @@ namespace gpgmm { namespace d3d12 {
                                      const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
-                                     D3D12_RESOURCE_STATES initialUsage,
+                                     D3D12_RESOURCE_STATES initialResourceState,
                                      ResourceAllocation** resourceAllocationOut);
 
         HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
@@ -196,7 +196,7 @@ namespace gpgmm { namespace d3d12 {
                                         const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
                                         const D3D12_CLEAR_VALUE* clearValue,
-                                        D3D12_RESOURCE_STATES initialUsage,
+                                        D3D12_RESOURCE_STATES initialResourceState,
                                         ResourceAllocation** resourceAllocationOut);
 
         HRESULT CreateResourceHeap(uint64_t size,
