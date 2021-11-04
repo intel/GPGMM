@@ -70,6 +70,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     ASSERT_EQ(allocator, nullptr);
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateResource) {
+    // Creating a resource without allocation should always fail.
+    ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
+        nullptr, nullptr));
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
     // Exceeding the max resource heap size should always fail.
     {
@@ -96,6 +103,11 @@ TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
     ComPtr<ResourceAllocation> externalAllocation;
     ASSERT_FAILED(mDefaultAllocator->CreateResource(nullptr, &externalAllocation));
     ASSERT_EQ(externalAllocation, nullptr);
+
+    // Importing a buffer without returning the allocation should always fail.
+    ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
+        nullptr, nullptr));
 
     // Importing a buffer should always succeed.
     ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(

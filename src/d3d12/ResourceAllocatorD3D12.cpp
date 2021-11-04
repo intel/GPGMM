@@ -343,6 +343,10 @@ namespace gpgmm { namespace d3d12 {
                                               ResourceAllocation** resourceAllocationOut) {
         GPGMM_API_TRACE_FUNCTION_BEGIN();
 
+        if (!resourceAllocationOut) {
+            return E_POINTER;
+        }
+
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor, initialUsage,
                                            clearValue};
 
@@ -394,6 +398,10 @@ namespace gpgmm { namespace d3d12 {
                                               ResourceAllocation** resourceAllocationOut) {
         GPGMM_API_TRACE_FUNCTION_BEGIN();
 
+        if (!resourceAllocationOut) {
+            return E_POINTER;
+        }
+
         if (committedResource == nullptr) {
             return E_INVALIDARG;
         }
@@ -431,10 +439,6 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** resourceAllocationOut) {
-        if (!resourceAllocationOut) {
-            return E_POINTER;
-        }
-
         // Must place a resource using a sub-allocated memory allocation.
         if (subAllocation.GetInfo().mMethod != AllocationMethod::kSubAllocated) {
             return E_FAIL;
@@ -519,10 +523,6 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialUsage,
         ResourceAllocation** resourceAllocationOut) {
-        if (!resourceAllocationOut) {
-            return E_POINTER;
-        }
-
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
