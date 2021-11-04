@@ -59,8 +59,8 @@ namespace gpgmm {
                          uint8_t* mappedPointer = nullptr);
         virtual ~MemoryAllocation() = default;
 
-        MemoryAllocation(const MemoryAllocation&) = default;
-        MemoryAllocation& operator=(const MemoryAllocation&) = default;
+        MemoryAllocation(const MemoryAllocation&) = delete;
+        MemoryAllocation& operator=(const MemoryAllocation&) = delete;
         bool operator==(const MemoryAllocation&);
         bool operator!=(const MemoryAllocation& other);
 
@@ -77,14 +77,12 @@ namespace gpgmm {
         void IncrementSubAllocatedRef();
         void DecrementSubAllocatedRef();
 
-        virtual void Reset();
-
       private:
-        MemoryAllocator* mAllocator;
+        MemoryAllocator* const mAllocator;
         AllocationInfo mInfo;
         uint64_t mOffset;
-        MemoryBase* mMemory;
-        uint8_t* mMappedPointer;
+        MemoryBase* const mMemory;
+        uint8_t* const mMappedPointer;
     };
 }  // namespace gpgmm
 

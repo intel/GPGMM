@@ -65,8 +65,6 @@ namespace gpgmm { namespace d3d12 {
         }
 
         mResource.Reset();
-        MemoryAllocation::Reset();
-
         IUnknownImpl::DeleteThis();
 
         GPGMM_API_TRACE_FUNCTION_END();

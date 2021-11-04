@@ -380,7 +380,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                [&](auto subAllocation) -> HRESULT {
+                [&](const auto& subAllocation) -> HRESULT {
                     return CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc,
                                                 clearValue, initialResourceState,
                                                 resourceAllocationOut);

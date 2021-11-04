@@ -62,14 +62,6 @@ namespace gpgmm {
         return mMappedPointer;
     }
 
-    void MemoryAllocation::Reset() {
-        mAllocator = nullptr;
-        mInfo = {};
-        mOffset = kInvalidOffset;
-        mMemory = nullptr;
-        mMappedPointer = nullptr;
-    }
-
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
         return mAllocator;
     }
