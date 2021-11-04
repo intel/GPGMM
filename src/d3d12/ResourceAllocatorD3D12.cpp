@@ -376,8 +376,8 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
-                [&](auto allocation) -> HRESULT {
-                    return CreatePlacedResource(allocation, resourceInfo, &newResourceDesc,
+                [&](auto subAllocation) -> HRESULT {
+                    return CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc,
                                                 clearValue, initialUsage, resourceAllocationOut);
                 }));
         }
@@ -551,22 +551,22 @@ namespace gpgmm { namespace d3d12 {
 
         // Since residency management occurs at the heap granularity, every committed resource is
         // wrapped in a heap object.
-        Heap* heap = new Heap(committedResource,
-                              GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType),
-                              resourceInfo.SizeInBytes);
+        Heap* resourceHeap = new Heap(
+            committedResource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType),
+            resourceInfo.SizeInBytes);
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
         if (mResidencyManager != nullptr) {
-            mResidencyManager->InsertHeap(heap);
+            mResidencyManager->InsertHeap(resourceHeap);
         }
 
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
 
-        *resourceAllocationOut =
-            new ResourceAllocation{mResidencyManager.get(),
-                                   /*allocator*/ this, info, std::move(committedResource), heap};
+        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(),
+                                                        /*allocator*/ this, info,
+                                                        std::move(committedResource), resourceHeap};
         return S_OK;
     }
 
