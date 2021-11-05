@@ -61,6 +61,11 @@ Run end2end tests:
 > out/Release/gpgmm_end2end_tests
 ```
 
+Run capture replay tests:
+```sh
+> out/Release/gpgmm_capture_replay_tests.exe
+```
+
 ## How do I use it?
 
 To allocate, you create an allocator then create allocations from it:
