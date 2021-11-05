@@ -15,21 +15,31 @@
 #ifndef GPGMM_MEMORYPOOL_H_
 #define GPGMM_MEMORYPOOL_H_
 
+#include "common/IntegerTypes.h"
+
 #include <memory>
 
 namespace gpgmm {
 
     class MemoryAllocation;
 
-    // Stores a set of fixe-sized memory blocks or heaps in memory.
+    // Stores memory blocks or heaps.
     class MemoryPool {
       public:
         virtual ~MemoryPool() = default;
 
-        virtual std::unique_ptr<MemoryAllocation> AcquireFromPool() = 0;
-        virtual void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation) = 0;
+        // Retrieves a memory allocation from the pool using an optional index.
+        virtual std::unique_ptr<MemoryAllocation> AcquireFromPool(
+            uint64_t memoryIndex = kInvalidIndex) = 0;
+
+        // Returns a memory allocation back to the pool using an optional index.
+        virtual void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
+                                  uint64_t memoryIndex = kInvalidIndex) = 0;
+
+        // Deallocates memory allocations owned by the pool.
         virtual void ReleasePool() = 0;
 
+        // Returns number of memory allocations in the pool.
         virtual uint64_t GetPoolSize() const = 0;
     };
 

@@ -27,6 +27,8 @@ target_sources(gpgmm PRIVATE
     "LIFOMemoryPool.h"
     "LIFOPooledMemoryAllocator.cpp"
     "LIFOPooledMemoryAllocator.h"
+    "LinearMemoryPool.cpp"
+    "LinearMemoryPool.h"
     "Memory.cpp"
     "Memory.h"
     "MemoryAllocation.cpp"
