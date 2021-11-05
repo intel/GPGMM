@@ -19,16 +19,23 @@
 
 namespace gpgmm {
 
-    std::unique_ptr<MemoryAllocation> LIFOMemoryPool::AcquireFromPool() {
+    std::unique_ptr<MemoryAllocation> LIFOMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
+        ASSERT(memoryIndex == kInvalidIndex);
+
         std::unique_ptr<MemoryAllocation> allocation;
         if (!mPool.empty()) {
             allocation = std::move(mPool.front());
             mPool.pop_front();
         }
+
         return allocation;
     }
 
-    void LIFOMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation) {
+    void LIFOMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
+                                      uint64_t memoryIndex) {
+        ASSERT(memoryIndex == kInvalidIndex);
+        ASSERT(allocation != nullptr);
+
         mPool.push_front(std::move(allocation));
     }
 
