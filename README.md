@@ -111,6 +111,33 @@ What about residency for other heaps (SV descriptor or query heaps)?
 2. Call `d3d12::ResidencyManager::InsertHeap` on it after creation.
 3. Use `d3d12::ResidencyManager::Lock` or `d3d12::ResidencyManager::UnlockHeap` to keep heap resident or not, respectively.
 
+## Project/build integration
+GPGMM has built-in GN or CMake build targets.
+
+### GN
+
+BUILD.gn
+```gn
+source_set("proj") {
+  deps = [ "${gpgmm_dir}/src:gpgmm" ]
+}
+```
+Create `build_overrides/gpgmm.gni` file in root directory.
+
+### CMake
+
+CMakeLists.txt
+```cmake
+add_subdirectory(gpgmm)
+target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/)
+target_link_libraries(proj PRIVATE gpgmm ...)
+```
+
+Then import:
+```cpp
+#include <gpgmm_d3d12.h> // or gpgmm_vulkan.h
+```
+
 # Prerequisites
 * Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
 
