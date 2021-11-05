@@ -15,9 +15,9 @@
 
 #include <gtest/gtest.h>
 
+#include "src/BuddyMemoryAllocator.h"
 #include "src/LIFOPooledMemoryAllocator.h"
 #include "src/Memory.h"
-#include "src/VirtualBuddyMemoryAllocator.h"
 
 #include <set>
 #include <vector>
@@ -75,11 +75,11 @@ class DummyBuddyMemoryAllocator {
 
   private:
     DummyMemoryAllocator mMemoryAllocator;
-    VirtualBuddyMemoryAllocator mAllocator;
+    BuddyMemoryAllocator mAllocator;
 };
 
 // Verify a single resource allocation in a single heap.
-TEST(VirtualBuddyMemoryAllocatorTests, SingleHeap) {
+TEST(BuddyMemoryAllocatorTests, SingleHeap) {
     // After one 128 byte resource allocation:
     //
     // max block size -> ---------------------------
@@ -109,7 +109,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, SingleHeap) {
 }
 
 // Verify that multiple allocation are created in separate heaps.
-TEST(VirtualBuddyMemoryAllocatorTests, MultipleHeaps) {
+TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     // After two 128 byte resource allocations:
     //
     // max block size -> ---------------------------
@@ -154,7 +154,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, MultipleHeaps) {
 }
 
 // Verify multiple sub-allocations can re-use heaps.
-TEST(VirtualBuddyMemoryAllocatorTests, MultipleSplitHeaps) {
+TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     // After two 64 byte allocations with 128 byte heaps.
     //
     // max block size -> ---------------------------
@@ -205,7 +205,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, MultipleSplitHeaps) {
 }
 
 // Verify resource sub-allocation of various sizes over multiple heaps.
-TEST(VirtualBuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
+TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     // After three 64 byte allocations and two 128 byte allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -280,7 +280,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 }
 
 // Verify resource sub-allocation of same sizes with various alignments.
-TEST(VirtualBuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
+TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     // After three 64 byte and one 128 byte resource allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -341,7 +341,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
-TEST(VirtualBuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
+TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     // After two 64 byte and two 128 byte resource allocations:
     //
     // max block size -> -------------------------------------------------------
@@ -403,7 +403,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 }
 
 // Verify allocating a very large resource does not overflow.
-TEST(VirtualBuddyMemoryAllocatorTests, AllocationOverflow) {
+TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
     constexpr uint64_t maxBlockSize = 512;
     DummyBuddyMemoryAllocator allocator(maxBlockSize);
 
@@ -413,7 +413,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, AllocationOverflow) {
 }
 
 // Verify resource heaps will be reused from a pool.
-TEST(VirtualBuddyMemoryAllocatorTests, ReuseFreedHeaps) {
+TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
@@ -464,7 +464,7 @@ TEST(VirtualBuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
-TEST(VirtualBuddyMemoryAllocatorTests, DestroyHeaps) {
+TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;

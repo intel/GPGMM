@@ -22,4 +22,4 @@ Modified
 - Fix possible use-after-free bug in `gpgmm::BuddyAllocator::~BuddyAllocator` (13db8b0233cf9f0f054ed080dc207a108564357f).
 - Secure switch statements with default values (08aa60bc1d7df638d5e6767313c3b57464f08819).
 - `gpgmm::d3d12::GetResourceAllocationInfo` has been optimized for buffers since they are always 64KB sized-aligned (7fa27066ea035d1216dd0f70aabe44b07a5825b7).
-- Improve memory usage in `gpgmm::VirtualBuddyMemoryAllocator::AllocateMemory` by tracking per allocated heaps (vs system).
+- Improve memory usage in `gpgmm::BuddyMemoryAllocator::AllocateMemory` by tracking per allocated heaps (vs system).

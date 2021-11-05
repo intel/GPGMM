@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_VIRTUALBUDDYMEMORYALLOCATOR_H_
-#define GPGMM_VIRTUALBUDDYMEMORYALLOCATOR_H_
+#ifndef GPGMM_BUDDYMEMORYALLOCATOR_H_
+#define GPGMM_BUDDYMEMORYALLOCATOR_H_
 
 #include "src/BuddyBlockAllocator.h"
 #include "src/MemoryAllocator.h"
@@ -24,7 +24,7 @@
 
 namespace gpgmm {
 
-    // VirtualBuddyMemoryAllocator uses the buddy allocator to sub-allocate blocks of device
+    // BuddyMemoryAllocator uses the buddy allocator to sub-allocate blocks of device
     // memory created by MemoryAllocator clients. It creates a very large buddy system
     // where backing device memory blocks equal a specified level in the system.
     //
@@ -35,13 +35,13 @@ namespace gpgmm {
     //
     // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class VirtualBuddyMemoryAllocator : public MemoryAllocator {
+    class BuddyMemoryAllocator : public MemoryAllocator {
       public:
-        VirtualBuddyMemoryAllocator(uint64_t maxSystemSize,
-                                    uint64_t memorySize,
-                                    uint64_t memoryAlignment,
-                                    MemoryAllocator* memoryAllocator);
-        ~VirtualBuddyMemoryAllocator() override;
+        BuddyMemoryAllocator(uint64_t maxSystemSize,
+                             uint64_t memorySize,
+                             uint64_t memoryAlignment,
+                             MemoryAllocator* memoryAllocator);
+        ~BuddyMemoryAllocator() override;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
@@ -68,4 +68,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_VIRTUALBUDDYMEMORYALLOCATOR_H_
+#endif  // GPGMM_BUDDYMEMORYALLOCATOR_H_

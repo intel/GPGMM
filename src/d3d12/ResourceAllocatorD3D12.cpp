@@ -16,11 +16,11 @@
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
 #include "../common/Math.h"
+#include "src/BuddyMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/LIFOPooledMemoryAllocator.h"
 #include "src/MemoryAllocatorStack.h"
 #include "src/TraceEvent.h"
-#include "src/VirtualBuddyMemoryAllocator.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/JSONSerializerD3D12.h"
@@ -305,7 +305,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Placed resource sub-allocator.
             MemoryAllocator* subAllocator =
-                stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
+                stack->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
                     mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, heapAllocator));
 
             // Pooled standalone heap allocator.
@@ -314,7 +314,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Pooled placed resource sub-allocator.
             MemoryAllocator* pooledSubAllocator =
-                stack->PushAllocator(std::make_unique<VirtualBuddyMemoryAllocator>(
+                stack->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
                     mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, pooledHeapAllocator));
 
             // Conditional sub-allocator that uses the pooled or non-pooled sub-allocator.

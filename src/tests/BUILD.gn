@@ -106,7 +106,7 @@ test("gpgmm_unittests") {
   sources = [
     "unittests/BuddyBlockAllocatorTests.cpp",
     "unittests/ConditionalMemoryAllocatorTests.cpp",
-    "unittests/VirtualBuddyMemoryAllocatorTests.cpp",
+    "unittests/BuddyMemoryAllocatorTests.cpp",
   ]
 
   # When building inside Chromium, use their gtest main function because it is

@@ -19,6 +19,8 @@ target_sources(gpgmm PRIVATE
     "BlockAllocator.h"
     "BuddyBlockAllocator.cpp"
     "BuddyBlockAllocator.h"
+    "BuddyMemoryAllocator.cpp"
+    "BuddyMemoryAllocator.h"
     "ConditionalMemoryAllocator.cpp"
     "ConditionalMemoryAllocator.h"
     "LIFOMemoryPool.cpp"
@@ -36,8 +38,6 @@ target_sources(gpgmm PRIVATE
     "ObjectSerializer.h"
     "TraceEvent.cpp"
     "TraceEvent.h"
-    "VirtualBuddyMemoryAllocator.cpp"
-    "VirtualBuddyMemoryAllocator.h"
 )
 
 target_link_libraries(gpgmm

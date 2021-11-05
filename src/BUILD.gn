@@ -108,6 +108,8 @@ source_set("gpgmm_sources") {
     "BlockAllocator.h",
     "BuddyBlockAllocator.cpp",
     "BuddyBlockAllocator.h",
+    "BuddyMemoryAllocator.cpp",
+    "BuddyMemoryAllocator.h",
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
     "LIFOMemoryPool.cpp",
@@ -125,8 +127,6 @@ source_set("gpgmm_sources") {
     "ObjectSerializer.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
-    "VirtualBuddyMemoryAllocator.cpp",
-    "VirtualBuddyMemoryAllocator.h",
 
     # "gpgmm_platform.h",
   ]
