@@ -28,7 +28,12 @@ namespace gpgmm { namespace d3d12 {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::AllocateMemory(uint64_t size,
-                                                                            uint64_t alignment) {
+                                                                            uint64_t alignment,
+                                                                            bool neverAllocate) {
+        if (neverAllocate) {
+            return {};
+        }
+
         Heap* heap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags, alignment,
                                                           &heap))) {

@@ -29,7 +29,9 @@ static constexpr uint64_t kHeapAlignment = 1u;
 
 class DummyMemoryAllocator : public MemoryAllocator {
   public:
-    std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size, uint64_t alignment) override {
+    std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                     uint64_t alignment,
+                                                     bool neverAllocate) override {
         AllocationInfo info = {};
         info.mMethod = AllocationMethod::kStandalone;
         return std::make_unique<MemoryAllocation>(this, info, /*offset*/ 0, new MemoryBase());
@@ -57,8 +59,11 @@ class DummyBuddyMemoryAllocator {
         : mAllocator(maxBlockSize, kHeapSize, kHeapAlignment, memoryAllocator) {
     }
 
-    MemoryAllocation Allocate(uint64_t size, uint64_t alignment = kHeapAlignment) {
-        std::unique_ptr<MemoryAllocation> allocation = mAllocator.AllocateMemory(size, alignment);
+    MemoryAllocation Allocate(uint64_t size,
+                              uint64_t alignment = kHeapAlignment,
+                              bool neverAllocate = true) {
+        std::unique_ptr<MemoryAllocation> allocation =
+            mAllocator.AllocateMemory(size, alignment, neverAllocate);
         if (allocation == nullptr) {
             return {};
         }

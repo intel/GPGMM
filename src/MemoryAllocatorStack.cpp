@@ -24,9 +24,10 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> MemoryAllocatorStack::AllocateMemory(uint64_t size,
-                                                                           uint64_t alignment) {
+                                                                           uint64_t alignment,
+                                                                           bool neverAllocate) {
         ASSERT(!mAllocators.empty());
-        return mAllocators.back()->AllocateMemory(size, alignment);
+        return mAllocators.back()->AllocateMemory(size, alignment, neverAllocate);
     }
 
     void MemoryAllocatorStack::DeallocateMemory(MemoryAllocation* allocation) {
