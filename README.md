@@ -77,21 +77,20 @@ allocatorDesc.Device = device;
 allocatorDesc.IsUMA =  arch.UMA;
 allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
 
-gpgmm::d3d12::ResourceAllocator* resourceAllocator = nullptr; // call delete to destroy
-gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &resourceAllocator);
+ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
+gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator);
 ```
 
 ```cpp
-/* Fill this stuff out */
-D3D12_RESOURCE_DESC& resourceDescriptor = {...};
+/* Fill this out */
+D3D12_RESOURCE_DESC& resourceDesc = {...};
 D3D12_RESOURCE_STATES initialState = {...}
-D3D12_CLEAR_VALUE zero{};
 
 gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
 allocationDesc.HeapType = heapType;
 
 ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
-allocator->CreateResource(allocationDesc, resourceDescriptor, initialState, &zero, &allocation);
+allocator->CreateResource(allocationDesc, resourceDesc, initialState, /*pOptimizedClear*/nullptr, &allocation);
 ```
 
 Then de-allocate:
@@ -114,7 +113,6 @@ What about residency for other heaps (SV descriptor or query heaps)?
 
 # Prerequisites
 * Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
-* `d3d12::ResourceAllocation` is ref-counted.
 
 ## License
 

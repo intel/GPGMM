@@ -327,13 +327,16 @@ namespace gpgmm { namespace d3d12 {
 
     ResourceAllocator::~ResourceAllocator() {
         GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocator");
+        ShutdownEventTracer();
+    }
 
+    void ResourceAllocator::DeleteThis() {
         for (auto& allocator : mSubAllocators) {
             ASSERT(allocator != nullptr);
             allocator->ReleaseMemory();
         }
 
-        ShutdownEventTracer();
+        IUnknownImpl::DeleteThis();
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,

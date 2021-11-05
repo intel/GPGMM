@@ -171,6 +171,9 @@ namespace gpgmm { namespace d3d12 {
 
         ResidencyManager* GetResidencyManager() const;
 
+      protected:
+        void DeleteThis() override;
+
       private:
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
