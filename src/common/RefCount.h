@@ -29,7 +29,7 @@ namespace gpgmm {
         void Ref();
 
         // Decrements ref by one. If count is positive, returns false.
-        // Otherwise, when it reaches zero, returns true and deletes this.
+        // Otherwise, when it reaches zero, returns true.
         bool Unref();
 
         // Get the reference count.

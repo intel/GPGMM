@@ -41,10 +41,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ULONG IUnknownImpl::Release() {
-        if (Unref()) {
+        const ULONG refCount = Unref() ? 0 : RefCount();
+        if (refCount == 0) {
             DeleteThis();
         }
-        return RefCount();
+        return refCount;
     }
 
     void IUnknownImpl::DeleteThis() {
