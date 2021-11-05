@@ -33,7 +33,7 @@ namespace gpgmm {
     }
 
     BuddyMemoryAllocator::~BuddyMemoryAllocator() {
-        ASSERT(mPool.GetPoolSize() == 0);
+        ASSERT(GetSuballocatedMemorySizeForTesting() == 0);
     }
 
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
@@ -66,20 +66,23 @@ namespace gpgmm {
             return nullptr;
         }
 
+        // Avoid tracking all heaps in the buddy system that are not yet allocated.
         const uint64_t memoryIndex = GetMemoryIndex(block->mOffset);
-        std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
-
-        if (memoryAllocation == nullptr) {
-            memoryAllocation = mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment);
-            if (memoryAllocation == nullptr) {
-                return nullptr;
-            }
+        if (memoryIndex >= mMemoryAllocations.size()) {
+            mMemoryAllocations.resize(memoryIndex + 1);
         }
 
-        AddSubAllocatedRef(memoryAllocation.get());
+        if (mMemoryAllocations[memoryIndex] == nullptr) {
+            // Transfer ownership to this allocator
+            std::unique_ptr<MemoryAllocation> allocation =
+                mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment);
+            if (allocation == nullptr) {
+                return nullptr;
+            }
+            mMemoryAllocations[memoryIndex] = std::move(allocation);
+        }
 
-        MemoryBase* memory = memoryAllocation->GetMemory();
-        mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+        AddSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
         AllocationInfo info;
         info.mBlock = block;
@@ -88,29 +91,27 @@ namespace gpgmm {
         // Allocation offset is always local to the memory.
         const uint64_t memoryOffset = block->mOffset % mMemorySize;
 
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memoryOffset, memory);
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memoryOffset,
+                                                  mMemoryAllocations[memoryIndex]->GetMemory());
     }
 
-    void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {
-        ASSERT(subAllocation != nullptr);
+    void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        ASSERT(allocation != nullptr);
 
-        const AllocationInfo info = subAllocation->GetInfo();
+        const AllocationInfo info = allocation->GetInfo();
 
         ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
 
         const uint64_t memoryIndex = GetMemoryIndex(info.mBlock->mOffset);
 
-        mBuddyBlockAllocator.DeallocateBlock(info.mBlock);
+        ASSERT(mMemoryAllocations[memoryIndex] != nullptr);
+        ReleaseSubAllocatedRef(mMemoryAllocations[memoryIndex].get());
 
-        std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
-
-        ReleaseSubAllocatedRef(memoryAllocation.get());
-
-        if (!IsSubAllocated(*memoryAllocation)) {
-            mMemoryAllocator->DeallocateMemory(memoryAllocation.release());
-        } else {
-            mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+        if (!IsSubAllocated(*mMemoryAllocations[memoryIndex])) {
+            mMemoryAllocator->DeallocateMemory(mMemoryAllocations[memoryIndex].release());
         }
+
+        mBuddyBlockAllocator.DeallocateBlock(info.mBlock);
     }
 
     uint64_t BuddyMemoryAllocator::GetMemorySize() const {
@@ -121,8 +122,14 @@ namespace gpgmm {
         return mMemoryAllocator->GetMemoryAlignment();
     }
 
-    uint64_t BuddyMemoryAllocator::GetPoolSizeForTesting() const {
-        return mPool.GetPoolSize();
+    uint64_t BuddyMemoryAllocator::GetSuballocatedMemorySizeForTesting() const {
+        uint64_t count = 0;
+        for (auto& allocation : mMemoryAllocations) {
+            if (allocation != nullptr) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }  // namespace gpgmm

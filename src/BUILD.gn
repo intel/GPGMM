@@ -116,8 +116,6 @@ source_set("gpgmm_sources") {
     "LIFOMemoryPool.h",
     "LIFOPooledMemoryAllocator.cpp",
     "LIFOPooledMemoryAllocator.h",
-    "LinearMemoryPool.cpp",
-    "LinearMemoryPool.h",
     "Memory.cpp",
     "Memory.h",
     "MemoryAllocation.cpp",

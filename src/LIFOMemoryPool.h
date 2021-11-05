@@ -21,16 +21,13 @@
 
 namespace gpgmm {
 
-    // Pools memory using LIFO queue (newest are recycled first).
+    // Manages memory allocations using LIFO queue (newest are recycled first).
     class LIFOMemoryPool : public MemoryPool {
       public:
         ~LIFOMemoryPool() override = default;
 
-        std::unique_ptr<MemoryAllocation> AcquireFromPool(
-            uint64_t memoryIndex = kInvalidIndex) override;
-
-        void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
-                          uint64_t memoryIndex = kInvalidIndex) override;
+        std::unique_ptr<MemoryAllocation> AcquireFromPool() override;
+        void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation) override;
         void ReleasePool() override;
 
         uint64_t GetPoolSize() const override;

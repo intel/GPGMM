@@ -17,10 +17,10 @@
 #define GPGMM_BUDDYMEMORYALLOCATOR_H_
 
 #include "src/BuddyBlockAllocator.h"
-#include "src/LinearMemoryPool.h"
 #include "src/MemoryAllocator.h"
 
 #include <memory>
+#include <vector>
 
 namespace gpgmm {
 
@@ -46,11 +46,12 @@ namespace gpgmm {
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                          uint64_t alignment) override;
-        void DeallocateMemory(MemoryAllocation* subAllocation) override;
+        void DeallocateMemory(MemoryAllocation* allocation) override;
 
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
-        uint64_t GetPoolSizeForTesting() const override;
+
+        uint64_t GetSuballocatedMemorySizeForTesting() const;
 
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;
@@ -62,7 +63,7 @@ namespace gpgmm {
 
         BuddyBlockAllocator mBuddyBlockAllocator;
 
-        LinearMemoryPool mPool;
+        std::vector<std::unique_ptr<MemoryAllocation>> mMemoryAllocations;
     };
 
 }  // namespace gpgmm
