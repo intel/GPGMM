@@ -32,7 +32,7 @@
 
 // MSVC triggers a warning in /W4 for do {} while(0). SDL worked around this by using (0,0) and
 // points out that it looks like an owl face.
-#if defined(DAWN_COMPILER_MSVC)
+#if defined(GPGMM_COMPILER_MSVC)
 #    define DAWN_ASSERT_LOOP_CONDITION (0, 0)
 #else
 #    define DAWN_ASSERT_LOOP_CONDITION (0)
@@ -49,9 +49,9 @@
             }                                                         \
         } while (DAWN_ASSERT_LOOP_CONDITION)
 #else
-#    if defined(DAWN_COMPILER_MSVC)
+#    if defined(GPGMM_COMPILER_MSVC)
 #        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) __assume(condition)
-#    elif defined(DAWN_COMPILER_CLANG) && defined(__builtin_assume)
+#    elif defined(GPGMM_COMPILER_CLANG) && defined(__builtin_assume)
 #        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) __builtin_assume(condition)
 #    else
 #        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) \

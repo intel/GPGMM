@@ -20,7 +20,7 @@
 
 #include <cstdio>
 
-#if defined(DAWN_PLATFORM_ANDROID)
+#if defined(GPGMM_PLATFORM_ANDROID)
 #    include <android/log.h>
 #endif
 
@@ -44,7 +44,7 @@ namespace gpgmm {
             }
         }
 
-#if defined(DAWN_PLATFORM_ANDROID)
+#if defined(GPGMM_PLATFORM_ANDROID)
         android_LogPriority AndroidLogPriority(LogSeverity severity) {
             switch (severity) {
                 case LogSeverity::Debug:
@@ -60,7 +60,7 @@ namespace gpgmm {
                     return ANDROID_LOG_ERROR;
             }
         }
-#endif  // defined(DAWN_PLATFORM_ANDROID)
+#endif  // defined(GPGMM_PLATFORM_ANDROID)
 
     }  // anonymous namespace
 
@@ -82,14 +82,14 @@ namespace gpgmm {
             outputStream = stderr;
         }
 
-#if defined(DAWN_PLATFORM_ANDROID)
+#if defined(GPGMM_PLATFORM_ANDROID)
         android_LogPriority androidPriority = AndroidLogPriority(mSeverity);
         __android_log_print(androidPriority, "Dawn", "%s: %s\n", severityName, fullMessage.c_str());
-#else   // defined(DAWN_PLATFORM_ANDROID)
+#else   // defined(GPGMM_PLATFORM_ANDROID)
         // Note: we use fprintf because <iostream> includes static initializers.
         fprintf(outputStream, "%s: %s\n", severityName, fullMessage.c_str());
         fflush(outputStream);
-#endif  // defined(DAWN_PLATFORM_ANDROID)
+#endif  // defined(GPGMM_PLATFORM_ANDROID)
     }
 
     LogMessage DebugLog() {
