@@ -12,33 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_LIFOMEMORYPOOL_H_
-#define GPGMM_LIFOMEMORYPOOL_H_
+#ifndef GPGMM_LINEARMEMORYPOOL_H_
+#define GPGMM_LINEARMEMORYPOOL_H_
 
 #include "src/MemoryPool.h"
 
-#include <deque>
+#include <vector>
 
 namespace gpgmm {
 
-    // Pools memory using LIFO queue (newest are recycled first).
-    class LIFOMemoryPool : public MemoryPool {
+    class LinearMemoryPool : public MemoryPool {
       public:
-        ~LIFOMemoryPool() override = default;
+        LinearMemoryPool() = default;
+        ~LinearMemoryPool() override = default;
 
-        std::unique_ptr<MemoryAllocation> AcquireFromPool(
-            uint64_t memoryIndex = kInvalidIndex) override;
-
+        // MemoryPool interface
+        std::unique_ptr<MemoryAllocation> AcquireFromPool(uint64_t memoryIndex) override;
         void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
-                          uint64_t memoryIndex = kInvalidIndex) override;
+                          uint64_t memoryIndex) override;
         void ReleasePool() override;
 
         uint64_t GetPoolSize() const override;
 
       private:
-        std::deque<std::unique_ptr<MemoryAllocation>> mPool;
+        std::vector<std::unique_ptr<MemoryAllocation>> mPool;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_LIFOMEMORYPOOL_H_
+#endif  // GPGMM_LINEARMEMORYPOOL_H_
