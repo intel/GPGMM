@@ -32,7 +32,8 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> LIFOPooledMemoryAllocator::AllocateMemory(
         uint64_t size,
-        uint64_t alignment) {
+        uint64_t alignment,
+        bool neverAllocate) {
         // Pooled memory is of fixed size and of the same alignment.
         if (GetMemorySize() != size || GetMemoryAlignment() != alignment) {
             return {};
@@ -43,7 +44,8 @@ namespace gpgmm {
         // memory users, FIFO might be preferable when memory consumption is a higher priority.
         std::unique_ptr<MemoryAllocation> allocation = mMemoryPool.AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->AllocateMemory(GetMemorySize(), GetMemoryAlignment());
+            allocation = mMemoryAllocator->AllocateMemory(GetMemorySize(), GetMemoryAlignment(),
+                                                          neverAllocate);
         }
 
         return allocation;

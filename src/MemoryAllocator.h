@@ -29,7 +29,8 @@ namespace gpgmm {
         virtual ~MemoryAllocator() = default;
 
         virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
-                                                                 uint64_t alignment) = 0;
+                                                                 uint64_t alignment,
+                                                                 bool neverAllocate) = 0;
         virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
         virtual void ReleaseMemory();
 

@@ -154,3 +154,36 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
     ASSERT_NE(resourceHeap, nullptr);
     ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
 }
+
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
+    // Check we can't reuse memory if CreateResource was never called previously.
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags = ALLOCATION_NEVER_ALLOCATE_MEMORY;
+    ComPtr<ResourceAllocation> allocation;
+    ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize + 1),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    ASSERT_EQ(allocation, nullptr);
+
+    allocationDesc.Flags = ALLOCATION_FLAG_NONE;
+    ComPtr<ResourceAllocation> allocationA;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationA));
+    ASSERT_NE(allocationA, nullptr);
+
+    // Re-check that the same resource heap is used once CreateResource gets called.
+    allocationDesc.Flags = ALLOCATION_NEVER_ALLOCATE_MEMORY;
+    ComPtr<ResourceAllocation> allocationB;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationB));
+    ASSERT_NE(allocationB, nullptr);
+
+    // Must fail since the first resource heap is full and another CreateResource cannot allocate.
+    ComPtr<ResourceAllocation> allocationC;
+    ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationC));
+    ASSERT_EQ(allocationC, nullptr);
+}

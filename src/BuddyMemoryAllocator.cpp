@@ -42,7 +42,8 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                           uint64_t alignment) {
+                                                                           uint64_t alignment,
+                                                                           bool neverAllocate) {
         if (size == 0) {
             return nullptr;
         }
@@ -75,7 +76,7 @@ namespace gpgmm {
         if (mMemoryAllocations[memoryIndex] == nullptr) {
             // Transfer ownership to this allocator
             std::unique_ptr<MemoryAllocation> allocation =
-                mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment);
+                mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment, neverAllocate);
             if (allocation == nullptr) {
                 return nullptr;
             }

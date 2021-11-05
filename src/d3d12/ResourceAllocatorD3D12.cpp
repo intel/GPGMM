@@ -377,17 +377,22 @@ namespace gpgmm { namespace d3d12 {
         // For very small resources, it is inefficent to suballocate given the min. heap
         // size could be much larger then the resource allocation.
         // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
+        const bool neverAllocate = allocationDescriptor.Flags & ALLOCATION_NEVER_ALLOCATE_MEMORY;
         if (!mIsAlwaysCommitted) {
             MemoryAllocator* subAllocator =
                 mSubAllocators[static_cast<size_t>(resourceHeapKind)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
-                subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment,
+                subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
                 [&](auto subAllocation) -> HRESULT {
                     return CreatePlacedResource(subAllocation, resourceInfo, &newResourceDesc,
                                                 clearValue, initialResourceState,
                                                 resourceAllocationOut);
                 }));
+        }
+
+        if (neverAllocate) {
+            return E_OUTOFMEMORY;
         }
 
         ReturnIfFailed(CreateCommittedResource(

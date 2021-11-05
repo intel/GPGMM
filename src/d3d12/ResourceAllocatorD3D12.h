@@ -118,6 +118,11 @@ namespace gpgmm { namespace d3d12 {
         // Disables all flags. Enabled by default.
         ALLOCATION_FLAG_NONE = 0x0,
 
+        // Forbids creating a new resource heap when creating a resource. The created resource
+        // must use an existing resource heap or E_OUTOFMEMORY. Effectively disables creating
+        // standalone allocations whose memory cannot be reused.
+        ALLOCATION_NEVER_ALLOCATE_MEMORY = 0x1,
+
     } ALLOCATION_FLAGS;
 
     struct ALLOCATION_DESC {
