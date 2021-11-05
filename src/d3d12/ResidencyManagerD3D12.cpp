@@ -231,7 +231,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Return when we can call MakeResident and remain under budget.
         if (currentUsageAfterMakeResident < videoMemorySegmentInfo->Budget) {
-            return 0;
+            return S_OK;
         }
 
         std::vector<ID3D12Pageable*> resourcesToEvict;
