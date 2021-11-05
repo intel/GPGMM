@@ -63,7 +63,7 @@ Run end2end tests:
 
 Run capture replay tests:
 ```sh
-> out/Release/gpgmm_capture_replay_tests.exe
+> out/Release/gpgmm_capture_replay_tests
 ```
 
 ## How do I use it?
