@@ -26,7 +26,10 @@ namespace gpgmm {
         mFreeLists.resize(Log2(mMaxBlockSize) + 1);
 
         // Insert the level0 free block.
-        mRoot = new BuddyBlock(maxBlockSize, /*offset*/ 0);
+        mRoot = new BuddyBlock{};
+        mRoot->Size = maxBlockSize;
+        mRoot->Offset = 0;
+
         mFreeLists[0] = {mRoot};
     }
 
@@ -86,7 +89,7 @@ namespace gpgmm {
         for (size_t ii = 0; ii <= allocationBlockLevel; ++ii) {
             size_t currLevel = allocationBlockLevel - ii;
             BuddyBlock* freeBlock = mFreeLists[currLevel].head;
-            if (freeBlock && (freeBlock->mOffset % alignment == 0)) {
+            if (freeBlock && (freeBlock->Offset % alignment == 0)) {
                 return currLevel;
             }
         }
@@ -167,10 +170,14 @@ namespace gpgmm {
             RemoveFreeBlock(currBlock, currBlockLevel);
 
             // Create two free child blocks (the buddies).
-            const uint64_t nextLevelSize = currBlock->mSize / 2;
-            BuddyBlock* leftChildBlock = new BuddyBlock(nextLevelSize, currBlock->mOffset);
-            BuddyBlock* rightChildBlock =
-                new BuddyBlock(nextLevelSize, currBlock->mOffset + nextLevelSize);
+            const uint64_t nextLevelSize = currBlock->Size / 2;
+            BuddyBlock* leftChildBlock = new BuddyBlock{};
+            leftChildBlock->Size = nextLevelSize;
+            leftChildBlock->Offset = currBlock->Offset;
+
+            BuddyBlock* rightChildBlock = new BuddyBlock{};
+            rightChildBlock->Size = nextLevelSize;
+            rightChildBlock->Offset = currBlock->Offset + nextLevelSize;
 
             // Remember the parent to merge these back upon de-allocation.
             rightChildBlock->pParent = currBlock;
@@ -206,7 +213,7 @@ namespace gpgmm {
 
         ASSERT(curr->mState == BlockState::Allocated);
 
-        size_t currBlockLevel = ComputeLevelFromBlockSize(curr->mSize);
+        size_t currBlockLevel = ComputeLevelFromBlockSize(curr->Size);
 
         // Mark curr free so we can merge.
         curr->mState = BlockState::Free;

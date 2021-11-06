@@ -67,7 +67,7 @@ namespace gpgmm {
             return nullptr;
         }
 
-        const uint64_t memoryIndex = GetMemoryIndex(block->mOffset);
+        const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
         std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
 
         if (memoryAllocation == nullptr) {
@@ -84,11 +84,11 @@ namespace gpgmm {
         mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
         AllocationInfo info;
-        info.mBlock = block;
-        info.mMethod = AllocationMethod::kSubAllocated;
+        info.Block = block;
+        info.Method = AllocationMethod::kSubAllocated;
 
         // Allocation offset is always local to the memory.
-        const uint64_t memoryOffset = block->mOffset % mMemorySize;
+        const uint64_t memoryOffset = block->Offset % mMemorySize;
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memoryOffset, memory);
     }
@@ -98,11 +98,11 @@ namespace gpgmm {
 
         const AllocationInfo info = subAllocation->GetInfo();
 
-        ASSERT(info.mMethod == AllocationMethod::kSubAllocated);
+        ASSERT(info.Method == AllocationMethod::kSubAllocated);
 
-        const uint64_t memoryIndex = GetMemoryIndex(info.mBlock->mOffset);
+        const uint64_t memoryIndex = GetMemoryIndex(info.Block->Offset);
 
-        mBuddyBlockAllocator.DeallocateBlock(info.mBlock);
+        mBuddyBlockAllocator.DeallocateBlock(info.Block);
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
 

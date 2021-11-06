@@ -55,11 +55,8 @@ namespace gpgmm {
         enum class BlockState { Free, Split, Allocated };
 
         struct BuddyBlock : public Block {
-            BuddyBlock(uint64_t size, uint64_t offset) : mState(BlockState::Free) {
-                mOffset = offset;
-                mSize = size;
-                free.pPrev = nullptr;
-                free.pNext = nullptr;
+            BuddyBlock() {
+                free = {};
             }
 
             // Pointer to this block's buddy, iff parent is split.
@@ -68,15 +65,15 @@ namespace gpgmm {
             BuddyBlock* pParent = nullptr;
 
             // Track whether this block has been split or not.
-            BlockState mState;
+            BlockState mState = BlockState::Free;
 
             struct FreeLinks {
-                BuddyBlock* pPrev;
-                BuddyBlock* pNext;
+                BuddyBlock* pPrev = nullptr;
+                BuddyBlock* pNext = nullptr;
             };
 
             struct SplitLink {
-                BuddyBlock* pLeft;
+                BuddyBlock* pLeft = nullptr;
             };
 
             union {
