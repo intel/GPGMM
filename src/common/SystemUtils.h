@@ -27,23 +27,6 @@ namespace gpgmm {
     bool SetEnvironmentVar(const char* variableName, const char* value);
     std::string GetExecutableDirectory();
 
-    class ScopedEnvironmentVar {
-      public:
-        ScopedEnvironmentVar() = default;
-        ScopedEnvironmentVar(const char* variableName, const char* value);
-        ~ScopedEnvironmentVar();
-
-        ScopedEnvironmentVar(const ScopedEnvironmentVar& rhs) = delete;
-        ScopedEnvironmentVar& operator=(const ScopedEnvironmentVar& rhs) = delete;
-
-        bool Set(const char* variableName, const char* value);
-
-      private:
-        std::string mName;
-        std::string mOriginalValue;
-        bool mIsSet = false;
-    };
-
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_SYSTEMUTILS_H_

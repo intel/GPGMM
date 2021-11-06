@@ -32,7 +32,7 @@
 // Clang and GCC, check for __clang__ too to catch clang-cl masquarading as MSVC
 #if defined(__GNUC__) || defined(__clang__)
 #    if defined(__clang__)
-#        define DAWN_COMPILER_CLANG
+#        define GPGMM_COMPILER_CLANG
 #    else
 #        define DAWN_COMPILER_GCC
 #    endif
@@ -68,7 +68,7 @@
 
 // MSVC
 #elif defined(_MSC_VER)
-#    define DAWN_COMPILER_MSVC
+#    define GPGMM_COMPILER_MSVC
 
 extern void __cdecl __debugbreak(void);
 #    define DAWN_BREAKPOINT() __debugbreak()
