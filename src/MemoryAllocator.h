@@ -16,8 +16,10 @@
 #ifndef GPGMM_MEMORYALLOCATOR_H_
 #define GPGMM_MEMORYALLOCATOR_H_
 
+#include "common/Assert.h"
 #include "common/IntegerTypes.h"
-#include "src/Allocator.h"
+#include "src/BlockAllocator.h"
+#include "src/Memory.h"
 #include "src/MemoryAllocation.h"
 
 #include <memory>
@@ -27,6 +29,31 @@ namespace gpgmm {
     class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
+
+        // Combines AllocateBlock and AllocateMemory into a single call.
+        // If memory cannot be allocated for the block, the block will also be
+        // deallocated instead of allowing it to leak.
+        template <typename GetOrCreateMemoryFn>
+        MemoryBase* TrySubAllocateMemory(BlockAllocator* blockAllocator,
+                                         uint64_t blockSize,
+                                         uint64_t blockAlignment,
+                                         GetOrCreateMemoryFn&& GetOrCreateMemory) {
+            Block* block = blockAllocator->AllocateBlock(blockSize, blockAlignment);
+            if (block == nullptr) {
+                return nullptr;
+            }
+
+            MemoryBase* memory = GetOrCreateMemory(block);
+            if (memory == nullptr) {
+                blockAllocator->DeallocateBlock(block);
+                return nullptr;
+            }
+
+            ASSERT(memory != nullptr);
+            memory->Ref();
+
+            return memory;
+        }
 
         virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                                  uint64_t alignment,
