@@ -40,6 +40,7 @@
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
 const uint64_t kNoId = 0;
+const std::string kNoArgs = "";
 
 #define GPGMM_API_TRACE_FUNCTION_BEGIN()     \
     do {                                     \
@@ -55,10 +56,10 @@ const uint64_t kNoId = 0;
         }                                    \
     } while (false)
 
-#define GPGMM_API_TRACE_FUNCTION_CALL(DESC)                                \
+#define GPGMM_API_TRACE_FUNCTION_CALL(desc)                                \
     do {                                                                   \
         if (gpgmm::IsEventTracerEnabled()) {                               \
-            auto GPGMM_LOCAL_ARGS = JSONSerializer::SerializeToJSON(DESC); \
+            auto GPGMM_LOCAL_ARGS = JSONSerializer::SerializeToJSON(desc); \
             TRACE_EVENT_INSTANT(__func__, GPGMM_LOCAL_ARGS);               \
         }                                                                  \
     } while (false)
@@ -73,8 +74,16 @@ const uint64_t kNoId = 0;
 #define GPGMM_OBJECT_DELETE_INSTANCE(className)                  \
     do {                                                         \
         if (gpgmm::IsEventTracerEnabled()) {                     \
-            TRACE_EVENT_OBJECT_CREATED_WITH_ID(className, this); \
+            TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, this); \
         }                                                        \
+    } while (false)
+
+#define GPGMM_OBJECT_SNAPSHOT_INSTANCE(className, desc)                           \
+    do {                                                                          \
+        if (gpgmm::IsEventTracerEnabled()) {                                      \
+            auto GPGMM_LOCAL_SNAPSHOT = JSONSerializer::SerializeToJSON(desc);    \
+            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(className, GPGMM_LOCAL_SNAPSHOT); \
+        }                                                                         \
     } while (false)
 
 #define TRACE_EVENT_INSTANT(name, args) \
@@ -88,25 +97,25 @@ const uint64_t kNoId = 0;
 
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID)
+                                     TRACE_EVENT_FLAG_HAS_ID, kNoArgs)
 
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_DELETE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID)
+                                     TRACE_EVENT_FLAG_HAS_ID, kNoArgs)
 
-#define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id)                             \
+#define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID)
+                                     TRACE_EVENT_FLAG_NONE, "snapshot", snapshot)
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                   \
     do {                                                               \
         gpgmm::EventTracing::AddTraceEvent(phase, name, kNoId, flags); \
     } while (false)
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags)                      \
-    do {                                                                              \
-        gpgmm::TraceEventID traceEventID(id);                                         \
-        gpgmm::EventTracing::AddTraceEvent(phase, name, traceEventID.GetID(), flags); \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags, ...)                              \
+    do {                                                                                           \
+        gpgmm::TraceEventID traceEventID(id);                                                      \
+        gpgmm::EventTracing::AddTraceEvent(phase, name, traceEventID.GetID(), flags, __VA_ARGS__); \
     } while (false)
 
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(phase, name, flags, args)         \
@@ -176,6 +185,13 @@ namespace gpgmm {
                                   uint64_t id,
                                   uint32_t flags,
                                   std::string args = "");
+
+        static void AddTraceEvent(char phase,
+                                  const char* name,
+                                  uint64_t id,
+                                  uint32_t flags,
+                                  std::string arg1Name,
+                                  std::string arg1Value);
     };
 
     class EventTracer {

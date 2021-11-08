@@ -68,6 +68,21 @@ namespace gpgmm {
         }
     }
 
+    void EventTracing::AddTraceEvent(char phase,
+                                     const char* name,
+                                     uint64_t id,
+                                     uint32_t flags,
+                                     std::string arg1Name,
+                                     std::string arg1Value) {
+        if (gEventTracer != nullptr) {
+            std::stringstream args;
+            args << "{"
+                 << "\"" << arg1Name << "\": " << arg1Value << "}";
+
+            gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args.str());
+        }
+    }
+
     EventTracer::EventTracer(const char* traceFile)
         : mTraceFile(traceFile), mPlatformTime(CreatePlatformTime()) {
         if (mTraceFile != nullptr) {
