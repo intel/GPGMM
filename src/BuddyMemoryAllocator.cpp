@@ -20,17 +20,17 @@
 
 namespace gpgmm {
 
-    BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t maxSystemSize,
+    BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t systemSize,
                                                uint64_t memorySize,
                                                uint64_t memoryAlignment,
                                                MemoryAllocator* memoryAllocator)
         : mMemoryAllocator(memoryAllocator),
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
-          mBuddyBlockAllocator(maxSystemSize) {
-        ASSERT(mMemorySize <= maxSystemSize);
+          mBuddyBlockAllocator(systemSize) {
+        ASSERT(mMemorySize <= systemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
-        ASSERT(maxSystemSize % mMemorySize == 0);
+        ASSERT(systemSize % mMemorySize == 0);
     }
 
     BuddyMemoryAllocator::~BuddyMemoryAllocator() {

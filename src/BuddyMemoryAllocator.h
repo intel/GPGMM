@@ -37,7 +37,7 @@ namespace gpgmm {
     // It should also outlive all the resources that are in the buddy allocator.
     class BuddyMemoryAllocator : public MemoryAllocator {
       public:
-        BuddyMemoryAllocator(uint64_t maxSystemSize,
+        BuddyMemoryAllocator(uint64_t systemSize,
                              uint64_t memorySize,
                              uint64_t memoryAlignment,
                              MemoryAllocator* memoryAllocator);
