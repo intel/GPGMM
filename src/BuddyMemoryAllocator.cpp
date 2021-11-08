@@ -63,33 +63,36 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        Block* block = mBuddyBlockAllocator.AllocateBlock(size, alignment);
-        if (block == nullptr) {
+        AllocationInfo info = {};
+        MemoryBase* memory = TrySubAllocateMemory(
+            &mBuddyBlockAllocator, size, alignment, [&](auto block) -> MemoryBase* {
+                const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
+                std::unique_ptr<MemoryAllocation> memoryAllocation =
+                    mPool.AcquireFromPool(memoryIndex);
+
+                // No existing, allocate new memory for the block.
+                if (memoryAllocation == nullptr) {
+                    memoryAllocation = mMemoryAllocator->AllocateMemory(
+                        mMemorySize, mMemoryAlignment, neverAllocate);
+                    if (memoryAllocation == nullptr) {
+                        return nullptr;
+                    }
+                }
+
+                info.Block = block;
+                info.Method = AllocationMethod::kSubAllocated;
+                info.Offset = block->Offset %
+                              mMemorySize;  // Allocation offset is always local to the memory.
+
+                MemoryBase* memory = memoryAllocation->GetMemory();
+                mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+
+                return memory;
+            });
+
+        if (memory == nullptr) {
             return nullptr;
         }
-
-        const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-        std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
-
-        if (memoryAllocation == nullptr) {
-            memoryAllocation =
-                mMemoryAllocator->AllocateMemory(mMemorySize, mMemoryAlignment, neverAllocate);
-            if (memoryAllocation == nullptr) {
-                return nullptr;
-            }
-        }
-
-        MemoryBase* memory = memoryAllocation->GetMemory();
-        ASSERT(memory != nullptr);
-        memory->Ref();
-
-        mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
-
-        AllocationInfo info;
-        info.Block = block;
-        info.Method = AllocationMethod::kSubAllocated;
-        info.Offset =
-            block->Offset % mMemorySize;  // Allocation offset is always local to the memory.
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memory);
     }

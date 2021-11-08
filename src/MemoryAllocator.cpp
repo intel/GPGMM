@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "src/MemoryAllocator.h"
-#include "common/Assert.h"
 
 namespace gpgmm {
 
