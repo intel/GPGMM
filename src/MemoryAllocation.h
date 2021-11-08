@@ -43,9 +43,9 @@ namespace gpgmm {
         // The block offset is within the entire allocator memory range and only required by the
         // buddy sub-allocator to get the corresponding memory. Unlike the block offset, the
         // allocation offset is always local to the memory.
-        Block* mBlock = nullptr;
+        Block* Block = nullptr;
 
-        AllocationMethod mMethod = AllocationMethod::kUndefined;
+        AllocationMethod Method = AllocationMethod::kUndefined;
     };
 
     // Represents a location in memory.

@@ -23,8 +23,8 @@
 namespace gpgmm {
 
     struct Block {
-        uint64_t mOffset = kInvalidOffset;
-        uint64_t mSize = kInvalidSize;
+        uint64_t Offset = kInvalidOffset;
+        uint64_t Size = kInvalidSize;
     };
 
     // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.

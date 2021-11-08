@@ -431,7 +431,7 @@ namespace gpgmm { namespace d3d12 {
                      resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
-        info.mMethod = gpgmm::AllocationMethod::kStandalone;
+        info.Method = gpgmm::AllocationMethod::kStandalone;
 
         *resourceAllocationOut =
             new ResourceAllocation{/*residencyManager*/ nullptr,
@@ -449,13 +449,13 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         ResourceAllocation** resourceAllocationOut) {
         // Must place a resource using a sub-allocated memory allocation.
-        if (subAllocation.GetInfo().mMethod != AllocationMethod::kSubAllocated) {
+        if (subAllocation.GetInfo().Method != AllocationMethod::kSubAllocated) {
             return E_FAIL;
         }
 
         // Sub-allocation cannot be smaller than the resource being placed.
-        if (subAllocation.GetInfo().mBlock == nullptr ||
-            subAllocation.GetInfo().mBlock->mSize < resourceInfo.SizeInBytes) {
+        if (subAllocation.GetInfo().Block == nullptr ||
+            subAllocation.GetInfo().Block->Size < resourceInfo.SizeInBytes) {
             return E_FAIL;
         }
 
@@ -571,7 +571,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         AllocationInfo info = {};
-        info.mMethod = AllocationMethod::kStandalone;
+        info.Method = AllocationMethod::kStandalone;
 
         *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(),
                                                         /*allocator*/ this, info,

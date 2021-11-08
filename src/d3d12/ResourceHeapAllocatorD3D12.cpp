@@ -41,7 +41,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         AllocationInfo info = {};
-        info.mMethod = AllocationMethod::kStandalone;
+        info.Method = AllocationMethod::kStandalone;
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, kInvalidOffset, heap);
     }
 
