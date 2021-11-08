@@ -18,8 +18,9 @@
 #include "../common/Math.h"
 #include "src/BuddyMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
-#include "src/LIFOPooledMemoryAllocator.h"
+#include "src/LIFOMemoryPool.h"
 #include "src/MemoryAllocatorStack.h"
+#include "src/PooledMemoryAllocator.h"
 #include "src/TraceEvent.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
@@ -309,8 +310,9 @@ namespace gpgmm { namespace d3d12 {
                     mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, heapAllocator));
 
             // Pooled standalone heap allocator.
-            MemoryAllocator* pooledHeapAllocator =
-                stack->PushAllocator(std::make_unique<LIFOPooledMemoryAllocator>(heapAllocator));
+            std::unique_ptr<MemoryPool> pool = std::make_unique<LIFOMemoryPool>();
+            MemoryAllocator* pooledHeapAllocator = stack->PushAllocator(
+                std::make_unique<PooledMemoryAllocator>(heapAllocator, pool.get()));
 
             // Pooled placed resource sub-allocator.
             MemoryAllocator* pooledSubAllocator =
@@ -322,6 +324,7 @@ namespace gpgmm { namespace d3d12 {
                 pooledSubAllocator, subAllocator, maxResourceSizeForPooling));
 
             mSubAllocators[i] = std::move(stack);
+            mMemoryPools[i] = std::move(pool);
         }
     }
 
@@ -331,9 +334,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeleteThis() {
-        for (auto& allocator : mSubAllocators) {
-            ASSERT(allocator != nullptr);
-            allocator->ReleaseMemory();
+        for (auto& pool : mMemoryPools) {
+            ASSERT(pool != nullptr);
+            pool->ReleasePool();
         }
 
         IUnknownImpl::DeleteThis();

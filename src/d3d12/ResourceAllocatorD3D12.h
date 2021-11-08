@@ -25,6 +25,7 @@
 namespace gpgmm {
     class MemoryAllocator;
     class MemoryAllocation;
+    class MemoryPool;
 }  // namespace gpgmm
 
 namespace gpgmm { namespace d3d12 {
@@ -222,6 +223,7 @@ namespace gpgmm { namespace d3d12 {
         bool mIsAlwaysInBudget;
         uint64_t mMaxResourceHeapSize;
 
+        std::array<std::unique_ptr<MemoryPool>, ResourceHeapKind::EnumCount> mMemoryPools;
         std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount> mSubAllocators;
     };
 

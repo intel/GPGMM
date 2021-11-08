@@ -32,11 +32,9 @@ namespace gpgmm {
                                                                  uint64_t alignment,
                                                                  bool neverAllocate) = 0;
         virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
-        virtual void ReleaseMemory();
 
         virtual uint64_t GetMemorySize() const;
         virtual uint64_t GetMemoryAlignment() const;
-        virtual uint64_t GetPoolSizeForTesting() const;
     };
 
 }  // namespace gpgmm

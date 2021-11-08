@@ -17,9 +17,6 @@
 
 namespace gpgmm {
 
-    void MemoryAllocator::ReleaseMemory() {
-    }
-
     uint64_t MemoryAllocator::GetMemorySize() const {
         ASSERT(false);
         return kInvalidSize;
@@ -29,9 +26,4 @@ namespace gpgmm {
         ASSERT(false);
         return kInvalidOffset;
     }
-
-    uint64_t MemoryAllocator::GetPoolSizeForTesting() const {
-        return 0;
-    }
-
 }  // namespace gpgmm
