@@ -202,6 +202,8 @@ namespace gpgmm {
     }
 
     void BuddyBlockAllocator::DeallocateBlock(Block* block) {
+        ASSERT(block != nullptr);
+
         BuddyBlock* curr = static_cast<BuddyBlock*>(block);
 
         ASSERT(curr->mState == BlockState::Allocated);
@@ -232,6 +234,9 @@ namespace gpgmm {
         }
 
         InsertFreeBlock(curr, currBlockLevel);
+
+        // Invalidate to ensure it cannot be deallocated again.
+        block = {};
     }
 
     // Helper which deletes a block in the tree recursively (post-order).
