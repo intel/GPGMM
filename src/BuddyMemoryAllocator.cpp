@@ -16,6 +16,7 @@
 #include "src/BuddyMemoryAllocator.h"
 
 #include "common/Math.h"
+#include "src/Memory.h"
 
 namespace gpgmm {
 
@@ -78,9 +79,10 @@ namespace gpgmm {
             }
         }
 
-        AddSubAllocatedRef(memoryAllocation.get());
-
         MemoryBase* memory = memoryAllocation->GetMemory();
+        ASSERT(memory != nullptr);
+        memory->Ref();
+
         mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
         AllocationInfo info;
@@ -106,9 +108,10 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
 
-        ReleaseSubAllocatedRef(memoryAllocation.get());
+        MemoryBase* memory = memoryAllocation->GetMemory();
+        ASSERT(memory != nullptr);
 
-        if (!IsSubAllocated(*memoryAllocation)) {
+        if (memory->Unref()) {
             mMemoryAllocator->DeallocateMemory(memoryAllocation.release());
         } else {
             mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);

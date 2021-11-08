@@ -73,10 +73,6 @@ namespace gpgmm {
       protected:
         friend class MemoryAllocator;
 
-        bool IsSubAllocated() const;
-        void AddSubAllocatedRef();
-        void ReleaseSubAllocatedRef();
-
         virtual void Reset();
 
       private:
