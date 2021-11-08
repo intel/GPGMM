@@ -18,7 +18,6 @@
 #include "src/d3d12/UtilsD3D12.h"
 
 #include <gpgmm_d3d12.h>
-#include <memory>
 
 using namespace gpgmm::d3d12;
 
@@ -27,21 +26,14 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
     void SetUp() override {
         D3D12TestBase::SetUp();
 
-        ASSERT_SUCCEEDED(CreateAllocator(CreateBasicAllocatorDesc(), mDefaultAllocator));
+        ASSERT_SUCCEEDED(
+            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &mDefaultAllocator));
         ASSERT_NE(mDefaultAllocator, nullptr);
     }
 
     void TearDown() override {
         mDefaultAllocator = nullptr;
         D3D12TestBase::TearDown();
-    }
-
-    static HRESULT CreateAllocator(const ALLOCATOR_DESC& desc,
-                                   std::unique_ptr<ResourceAllocator>& resourceAllocatorOut) {
-        ResourceAllocator* resourceAllocator = nullptr;
-        ReturnIfFailed(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
-        resourceAllocatorOut = std::unique_ptr<ResourceAllocator>(resourceAllocator);
-        return S_OK;
     }
 
     static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width) {
@@ -60,13 +52,13 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
         return resourceDesc;
     }
 
-    std::unique_ptr<ResourceAllocator> mDefaultAllocator;
+    ComPtr<ResourceAllocator> mDefaultAllocator;
 };
 
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     // Creating an empty allocator should fail.
-    std::unique_ptr<ResourceAllocator> allocator;
-    ASSERT_FAILED(CreateAllocator({}, /*out*/ allocator));
+    ComPtr<ResourceAllocator> allocator;
+    ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &allocator));
     ASSERT_EQ(allocator, nullptr);
 }
 
@@ -139,8 +131,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
     desc.Flags = ALLOCATOR_ALWAYS_COMMITED;
 
-    std::unique_ptr<ResourceAllocator> allocator;
-    ASSERT_SUCCEEDED(CreateAllocator(desc, /*out*/ allocator));
+    ComPtr<ResourceAllocator> allocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
     ASSERT_NE(allocator, nullptr);
 
     ComPtr<ResourceAllocation> allocation;

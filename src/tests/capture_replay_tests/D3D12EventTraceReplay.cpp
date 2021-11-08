@@ -105,7 +105,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
         std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToIDMap;
-        std::unordered_map<std::string, std::unique_ptr<ResourceAllocator>> allocatorToIDMap;
+        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
 
         ComPtr<ResourceAllocation> newAllocationWithoutID;
 
@@ -191,19 +191,17 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
             } else if (event["name"].asString() == "ResourceAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
-                        ResourceAllocator* resourceAllocatorPtr = nullptr;
-                        ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocatorPtr);
-                        ASSERT_NE(resourceAllocatorPtr, nullptr);
+                        ComPtr<ResourceAllocator> resourceAllocator;
+                        ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator);
+                        ASSERT_NE(resourceAllocator, nullptr);
 
                         // Assume subsequent events are always against this allocator instance.
                         // This is because call trace events have no ID associated with them.
                         allocatorInstanceID = event["id"].asString();
 
-                        ASSERT_TRUE(
-                            allocatorToIDMap
-                                .insert({allocatorInstanceID,
-                                         std::unique_ptr<ResourceAllocator>(resourceAllocatorPtr)})
-                                .second);
+                        ASSERT_TRUE(allocatorToIDMap
+                                        .insert({allocatorInstanceID, std::move(resourceAllocator)})
+                                        .second);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
