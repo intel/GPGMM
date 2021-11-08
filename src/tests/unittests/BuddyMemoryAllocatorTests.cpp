@@ -34,7 +34,8 @@ class DummyMemoryAllocator : public MemoryAllocator {
                                                      bool neverAllocate) override {
         AllocationInfo info = {};
         info.Method = AllocationMethod::kStandalone;
-        return std::make_unique<MemoryAllocation>(this, info, /*offset*/ 0, new MemoryBase());
+        info.Offset = 0;
+        return std::make_unique<MemoryAllocation>(this, info, new MemoryBase());
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
@@ -229,12 +230,12 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     // Allocate two 64-byte allocations.
     MemoryAllocation allocation1 = allocator.Allocate(64);
     ASSERT_EQ(allocation1.GetInfo().Block->Offset, 0u);
-    ASSERT_EQ(allocation1.GetOffset(), 0u);
+    ASSERT_EQ(allocation1.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation1.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     MemoryAllocation allocation2 = allocator.Allocate(64);
     ASSERT_EQ(allocation2.GetInfo().Block->Offset, 64u);
-    ASSERT_EQ(allocation2.GetOffset(), 64u);
+    ASSERT_EQ(allocation2.GetInfo().Offset, 64u);
     ASSERT_EQ(allocation2.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     // A1 and A2 share H0
@@ -243,7 +244,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     MemoryAllocation allocation3 = allocator.Allocate(128);
     ASSERT_EQ(allocation3.GetInfo().Block->Offset, 128u);
-    ASSERT_EQ(allocation3.GetOffset(), 0u);
+    ASSERT_EQ(allocation3.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     // A3 creates and fully occupies a new heap.
@@ -252,7 +253,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     MemoryAllocation allocation4 = allocator.Allocate(64);
     ASSERT_EQ(allocation4.GetInfo().Block->Offset, 256u);
-    ASSERT_EQ(allocation4.GetOffset(), 0u);
+    ASSERT_EQ(allocation4.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation4.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 3u);
@@ -261,7 +262,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     // R5 size forms 64 byte hole after R4.
     MemoryAllocation allocation5 = allocator.Allocate(128);
     ASSERT_EQ(allocation5.GetInfo().Block->Offset, 384u);
-    ASSERT_EQ(allocation5.GetOffset(), 0u);
+    ASSERT_EQ(allocation5.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation5.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 4u);
@@ -303,14 +304,14 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
 
     MemoryAllocation allocation1 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation1.GetInfo().Block->Offset, 0u);
-    ASSERT_EQ(allocation1.GetOffset(), 0u);
+    ASSERT_EQ(allocation1.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation1.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 1u);
 
     MemoryAllocation allocation2 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation2.GetInfo().Block->Offset, 128u);
-    ASSERT_EQ(allocation2.GetOffset(), 0u);
+    ASSERT_EQ(allocation2.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation2.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 2u);
@@ -318,7 +319,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
 
     MemoryAllocation allocation3 = allocator.Allocate(64, 128);
     ASSERT_EQ(allocation3.GetInfo().Block->Offset, 256u);
-    ASSERT_EQ(allocation3.GetOffset(), 0u);
+    ASSERT_EQ(allocation3.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 3u);
@@ -326,7 +327,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
 
     MemoryAllocation allocation4 = allocator.Allocate(64, 64);
     ASSERT_EQ(allocation4.GetInfo().Block->Offset, 320u);
-    ASSERT_EQ(allocation4.GetOffset(), 64u);
+    ASSERT_EQ(allocation4.GetInfo().Offset, 64u);
     ASSERT_EQ(allocation4.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 3u);
@@ -372,7 +373,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 
     MemoryAllocation allocation2 = allocator.Allocate(64, alignment);
     ASSERT_EQ(allocation2.GetInfo().Block->Offset, 64u);
-    ASSERT_EQ(allocation2.GetOffset(), 64u);
+    ASSERT_EQ(allocation2.GetInfo().Offset, 64u);
     ASSERT_EQ(allocation2.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 1u);  // Reuses H0
@@ -380,7 +381,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 
     MemoryAllocation allocation3 = allocator.Allocate(128, alignment);
     ASSERT_EQ(allocation3.GetInfo().Block->Offset, 128u);
-    ASSERT_EQ(allocation3.GetOffset(), 0u);
+    ASSERT_EQ(allocation3.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 2u);
@@ -388,7 +389,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 
     MemoryAllocation allocation4 = allocator.Allocate(128, alignment);
     ASSERT_EQ(allocation4.GetInfo().Block->Offset, 256u);
-    ASSERT_EQ(allocation4.GetOffset(), 0u);
+    ASSERT_EQ(allocation4.GetInfo().Offset, 0u);
     ASSERT_EQ(allocation4.GetInfo().Method, AllocationMethod::kSubAllocated);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 3u);

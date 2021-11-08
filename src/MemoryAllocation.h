@@ -16,6 +16,8 @@
 #ifndef GPGMM_MEMORYALLOCATION_H_
 #define GPGMM_MEMORYALLOCATION_H_
 
+#include "common/IntegerTypes.h"
+
 #include <cstdint>
 
 namespace gpgmm {
@@ -27,13 +29,13 @@ namespace gpgmm {
     // Represents how memory was allocated.
     enum class AllocationMethod {
 
-        // Memory not sub-divided.
+        // Not sub-divided.
         kStandalone,
 
-        // Memory sub-divided using one or more blocks.
+        // Sub-divided using one or more blocks.
         kSubAllocated,
 
-        // Memory not allocated or freed.
+        // Not yet allocated or invalid.
         kUndefined
     };
 
@@ -41,11 +43,15 @@ namespace gpgmm {
     struct AllocationInfo {
         // AllocationInfo contains a separate offset to not confuse block vs memory offsets.
         // The block offset is within the entire allocator memory range and only required by the
-        // buddy sub-allocator to get the corresponding memory. Unlike the block offset, the
+        // sub-allocator to get the corresponding memory. Unlike the block offset, the
         // allocation offset is always local to the memory.
+        uint64_t Offset = kInvalidOffset;
+
         Block* Block = nullptr;
 
         AllocationMethod Method = AllocationMethod::kUndefined;
+
+        bool operator==(const AllocationInfo& other) const;
     };
 
     // Represents a location in memory.
@@ -54,18 +60,16 @@ namespace gpgmm {
         MemoryAllocation();
         MemoryAllocation(MemoryAllocator* allocator,
                          const AllocationInfo& info,
-                         uint64_t offset,
                          MemoryBase* memory,
                          uint8_t* mappedPointer = nullptr);
         virtual ~MemoryAllocation() = default;
 
         MemoryAllocation(const MemoryAllocation&) = default;
         MemoryAllocation& operator=(const MemoryAllocation&) = default;
-        bool operator==(const MemoryAllocation&);
-        bool operator!=(const MemoryAllocation& other);
+        bool operator==(const MemoryAllocation&) const;
+        bool operator!=(const MemoryAllocation& other) const;
 
         MemoryBase* GetMemory() const;
-        uint64_t GetOffset() const;
         uint8_t* GetMappedPointer() const;
         AllocationInfo GetInfo() const;
         MemoryAllocator* GetAllocator() const;
@@ -78,7 +82,6 @@ namespace gpgmm {
       private:
         MemoryAllocator* mAllocator;
         AllocationInfo mInfo;
-        uint64_t mOffset;
         MemoryBase* mMemory;
         uint8_t* mMappedPointer;
     };

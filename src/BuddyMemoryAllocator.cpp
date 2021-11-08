@@ -88,11 +88,10 @@ namespace gpgmm {
         AllocationInfo info;
         info.Block = block;
         info.Method = AllocationMethod::kSubAllocated;
+        info.Offset =
+            block->Offset % mMemorySize;  // Allocation offset is always local to the memory.
 
-        // Allocation offset is always local to the memory.
-        const uint64_t memoryOffset = block->Offset % mMemorySize;
-
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memoryOffset, memory);
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memory);
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {

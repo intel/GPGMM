@@ -30,7 +30,7 @@ namespace gpgmm { namespace d3d12 {
                                            const AllocationInfo& info,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator, info, kInvalidOffset, resourceHeap),
+        : MemoryAllocation(memoryAllocator, info, resourceHeap),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
@@ -42,7 +42,7 @@ namespace gpgmm { namespace d3d12 {
                                            const AllocationInfo& info,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, kInvalidOffset, resourceHeap),
+        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, resourceHeap),
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {

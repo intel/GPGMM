@@ -21,37 +21,30 @@
 namespace gpgmm {
 
     MemoryAllocation::MemoryAllocation()
-        : mAllocator(nullptr), mOffset(kInvalidOffset), mMemory(nullptr), mMappedPointer(nullptr) {
+        : mAllocator(nullptr), mMemory(nullptr), mMappedPointer(nullptr) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
                                        const AllocationInfo& info,
-                                       uint64_t offset,
                                        MemoryBase* memory,
                                        uint8_t* mappedPointer)
-        : mAllocator(allocator),
-          mInfo(info),
-          mOffset(offset),
-          mMemory(memory),
-          mMappedPointer(mappedPointer) {
+        : mAllocator(allocator), mInfo(info), mMemory(memory), mMappedPointer(mappedPointer) {
     }
 
-    bool MemoryAllocation::operator==(const MemoryAllocation& other) {
-        return (other.mAllocator == mAllocator && other.mOffset == mOffset &&
-                other.mMemory == mMemory);
+    bool AllocationInfo::operator==(const AllocationInfo& other) const {
+        return other.Block == Block && other.Offset == Offset && other.Method == Method;
     }
 
-    bool MemoryAllocation::operator!=(const MemoryAllocation& other) {
+    bool MemoryAllocation::operator==(const MemoryAllocation& other) const {
+        return (other.mAllocator == mAllocator && other.mMemory == mMemory && other.mInfo == mInfo);
+    }
+
+    bool MemoryAllocation::operator!=(const MemoryAllocation& other) const {
         return !operator==(other);
     }
 
     MemoryBase* MemoryAllocation::GetMemory() const {
         return mMemory;
-    }
-
-    uint64_t MemoryAllocation::GetOffset() const {
-        ASSERT(mOffset != kInvalidOffset);
-        return mOffset;
     }
 
     AllocationInfo MemoryAllocation::GetInfo() const {
@@ -65,7 +58,6 @@ namespace gpgmm {
     void MemoryAllocation::Reset() {
         mAllocator = nullptr;
         mInfo = {};
-        mOffset = kInvalidOffset;
         mMemory = nullptr;
         mMappedPointer = nullptr;
     }

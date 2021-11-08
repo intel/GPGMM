@@ -472,7 +472,7 @@ namespace gpgmm { namespace d3d12 {
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
             ScopedHeapLock scopedHeapLock(GetResidencyManager(), heap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
-                heap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor,
+                heap->GetHeap(), subAllocation.GetInfo().Offset, resourceDescriptor,
                 initialResourceState, clearValue, IID_PPV_ARGS(&placedResource)));
         }
 
