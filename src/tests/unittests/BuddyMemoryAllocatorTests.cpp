@@ -16,8 +16,9 @@
 #include <gtest/gtest.h>
 
 #include "src/BuddyMemoryAllocator.h"
-#include "src/LIFOPooledMemoryAllocator.h"
+#include "src/LIFOMemoryPool.h"
 #include "src/Memory.h"
+#include "src/PooledMemoryAllocator.h"
 
 #include <set>
 #include <vector>
@@ -422,7 +423,8 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
-    LIFOPooledMemoryAllocator poolAllocator(&memoryAllocator);
+    LIFOMemoryPool memoryPool;
+    PooledMemoryAllocator poolAllocator(&memoryAllocator, &memoryPool);
     DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};
@@ -438,14 +440,14 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
+    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
 
     // Return the allocations to the pool.
     for (MemoryAllocation& allocation : allocations) {
         allocator.Deallocate(allocation);
     }
 
-    ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), heaps.size());
+    ASSERT_EQ(memoryPool.GetPoolSize(), heaps.size());
 
     allocations.clear();
 
@@ -457,7 +459,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
+    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
 
     for (MemoryAllocation& allocation : allocations) {
         allocator.Deallocate(allocation);
@@ -465,7 +467,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 0u);
 
-    poolAllocator.ReleaseMemory();
+    memoryPool.ReleasePool();
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
@@ -473,7 +475,8 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     DummyMemoryAllocator memoryAllocator;
-    LIFOPooledMemoryAllocator poolAllocator(&memoryAllocator);
+    LIFOMemoryPool memoryPool;
+    PooledMemoryAllocator poolAllocator(&memoryAllocator, &memoryPool);
     DummyBuddyMemoryAllocator allocator(kMaxBlockSize, &poolAllocator);
 
     std::set<MemoryBase*> heaps = {};
@@ -491,14 +494,14 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), 0u);
+    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
 
     // Return the allocations to the pool.
     for (MemoryAllocation& allocation : allocations) {
         allocator.Deallocate(allocation);
     }
 
-    ASSERT_EQ(poolAllocator.GetPoolSizeForTesting(), kNumOfHeaps);
+    ASSERT_EQ(memoryPool.GetPoolSize(), kNumOfHeaps);
 
-    poolAllocator.ReleaseMemory();
+    memoryPool.ReleasePool();
 }

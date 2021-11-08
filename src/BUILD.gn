@@ -114,8 +114,6 @@ source_set("gpgmm_sources") {
     "ConditionalMemoryAllocator.h",
     "LIFOMemoryPool.cpp",
     "LIFOMemoryPool.h",
-    "LIFOPooledMemoryAllocator.cpp",
-    "LIFOPooledMemoryAllocator.h",
     "LinearMemoryPool.cpp",
     "LinearMemoryPool.h",
     "Memory.cpp",
@@ -127,6 +125,8 @@ source_set("gpgmm_sources") {
     "MemoryAllocatorStack.cpp",
     "MemoryAllocatorStack.h",
     "ObjectSerializer.h",
+    "PooledMemoryAllocator.cpp",
+    "PooledMemoryAllocator.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
 

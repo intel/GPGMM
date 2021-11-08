@@ -25,8 +25,6 @@ target_sources(gpgmm PRIVATE
     "ConditionalMemoryAllocator.h"
     "LIFOMemoryPool.cpp"
     "LIFOMemoryPool.h"
-    "LIFOPooledMemoryAllocator.cpp"
-    "LIFOPooledMemoryAllocator.h"
     "LinearMemoryPool.cpp"
     "LinearMemoryPool.h"
     "Memory.cpp"
@@ -38,6 +36,8 @@ target_sources(gpgmm PRIVATE
     "MemoryAllocatorStack.cpp"
     "MemoryAllocatorStack.h"
     "ObjectSerializer.h"
+    "PooledMemoryAllocator.cpp"
+    "PooledMemoryAllocator.h"
     "TraceEvent.cpp"
     "TraceEvent.h"
 )

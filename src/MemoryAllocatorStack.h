@@ -35,8 +35,6 @@ namespace gpgmm {
                                                          bool neverAllocate) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
 
-        void ReleaseMemory() override;
-
       private:
         std::vector<std::unique_ptr<MemoryAllocator>> mAllocators;
     };

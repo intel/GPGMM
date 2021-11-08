@@ -1,4 +1,3 @@
-// Copyright 2020 The Dawn Authors
 // Copyright 2021 The GPGMM Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,37 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
-#define GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
+#ifndef GPGMM_POOLEDMEMORYALLOCATOR_H_
+#define GPGMM_POOLEDMEMORYALLOCATOR_H_
 
-#include "src/LIFOMemoryPool.h"
 #include "src/MemoryAllocator.h"
+#include "src/MemoryPool.h"
 
 namespace gpgmm {
 
-    // |LIFOPooledMemoryAllocator| allocates from a memory pool using the LIFO strategy.
-    class LIFOPooledMemoryAllocator : public MemoryAllocator {
+    // |PooledMemoryAllocator| allocates memory of fixed size and same alignment using a pool.
+    class PooledMemoryAllocator : public MemoryAllocator {
       public:
-        LIFOPooledMemoryAllocator(MemoryAllocator* memoryAllocator);
-        ~LIFOPooledMemoryAllocator() override;
+        PooledMemoryAllocator(MemoryAllocator* memoryAllocator, MemoryPool* memoryPool);
+        ~PooledMemoryAllocator() override;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                          uint64_t alignment,
                                                          bool neverAllocate) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
-        void ReleaseMemory() override;
-
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
-        uint64_t GetPoolSizeForTesting() const override;
 
       private:
         MemoryAllocator* mMemoryAllocator = nullptr;
-
-        LIFOMemoryPool mMemoryPool;
+        MemoryPool* mMemoryPool = nullptr;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_LIFOPOOLEDMEMORYALLOCATOR_H_
+#endif  // GPGMM_POOLEDMEMORYALLOCATOR_H_
