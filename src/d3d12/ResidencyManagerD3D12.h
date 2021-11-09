@@ -93,9 +93,10 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
-        bool mIsUMA;
-        float mVideoMemoryBudgetLimit;
-        uint64_t mAvailableForResourcesBudget;
+        const bool mIsUMA;
+        const float mVideoMemoryBudgetLimit;
+        const uint64_t mAvailableForResourcesBudget;
+
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
 
