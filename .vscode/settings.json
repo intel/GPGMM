@@ -22,7 +22,8 @@
     // There's an extension for these files, excluding the linter headaches.
     // https://marketplace.visualstudio.com/items?itemName=npclaudiu.vscode-gn
     "*.gni": "javascript",
-    "*.gn": "javascript"
+    "*.gn": "javascript",
+    "*.ipp": "cpp"
   },
   "files.exclude": {
     // Ignore build output folders.
