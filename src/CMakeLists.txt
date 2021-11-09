@@ -67,6 +67,8 @@ endif()
 
 if (GPGMM_ENABLE_D3D12)
     target_sources(gpgmm PRIVATE
+        "d3d12/BufferAllocatorD3D12.cpp"
+        "d3d12/BufferAllocatorD3D12.h"
         "d3d12/DefaultsD3D12.h"
         "d3d12/FenceD3D12.cpp"
         "d3d12/FenceD3D12.h"

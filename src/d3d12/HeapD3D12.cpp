@@ -35,8 +35,8 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
-    ID3D12Pageable* Heap::GetPageable() const {
-        return mPageable.Get();
+    ComPtr<ID3D12Pageable> Heap::GetPageable() const {
+        return mPageable;
     }
 
     ID3D12Heap* Heap::GetHeap() const {
