@@ -297,9 +297,8 @@ namespace gpgmm { namespace d3d12 {
             std::unique_ptr<CombinedMemoryAllocator> combinedAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
 
-            MemoryAllocator* standaloneHeapAllocator =
-                combinedAllocator->PushAllocator(std::make_unique<ResourceHeapAllocator>(
-                    this, heapType, heapFlags, minResourceHeapSize));
+            MemoryAllocator* standaloneHeapAllocator = combinedAllocator->PushAllocator(
+                std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags));
 
             MemoryAllocator* placedResourceSubAllocator = combinedAllocator->PushAllocator(
                 std::make_unique<BuddyMemoryAllocator>(mMaxResourceHeapSize, minResourceHeapSize,

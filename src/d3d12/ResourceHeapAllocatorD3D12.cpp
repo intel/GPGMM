@@ -22,8 +22,7 @@ namespace gpgmm { namespace d3d12 {
 
     ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
                                                  D3D12_HEAP_TYPE heapType,
-                                                 D3D12_HEAP_FLAGS heapFlags,
-                                                 uint64_t heapSize)
+                                                 D3D12_HEAP_FLAGS heapFlags)
         : mResourceAllocator(resourceAllocator), mHeapType(heapType), mHeapFlags(heapFlags) {
     }
 
