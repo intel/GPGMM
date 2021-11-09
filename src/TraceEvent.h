@@ -64,26 +64,26 @@ const std::string kNoArgs = "";
         }                                                                  \
     } while (false)
 
-#define GPGMM_OBJECT_NEW_INSTANCE(className)                     \
+#define GPGMM_OBJECT_NEW_INSTANCE(className, objPtr)             \
     do {                                                         \
         if (gpgmm::IsEventTracerEnabled()) {                     \
             TRACE_EVENT_OBJECT_CREATED_WITH_ID(className, this); \
         }                                                        \
     } while (false)
 
-#define GPGMM_OBJECT_DELETE_INSTANCE(className)                  \
+#define GPGMM_OBJECT_DELETE_INSTANCE(className, objPtr)          \
     do {                                                         \
         if (gpgmm::IsEventTracerEnabled()) {                     \
             TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, this); \
         }                                                        \
     } while (false)
 
-#define GPGMM_OBJECT_SNAPSHOT_INSTANCE(className, desc)                           \
-    do {                                                                          \
-        if (gpgmm::IsEventTracerEnabled()) {                                      \
-            auto GPGMM_LOCAL_SNAPSHOT = JSONSerializer::SerializeToJSON(desc);    \
-            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(className, GPGMM_LOCAL_SNAPSHOT); \
-        }                                                                         \
+#define GPGMM_OBJECT_SNAPSHOT_INSTANCE(className, objPtr, desc)                           \
+    do {                                                                                  \
+        if (gpgmm::IsEventTracerEnabled()) {                                              \
+            auto GPGMM_LOCAL_SNAPSHOT = JSONSerializer::SerializeToJSON(desc);            \
+            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(className, objPtr, GPGMM_LOCAL_SNAPSHOT); \
+        }                                                                                 \
     } while (false)
 
 #define TRACE_EVENT_INSTANT(name, args) \

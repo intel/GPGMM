@@ -288,7 +288,7 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(allocatorFlags & ALLOCATOR_ALWAYS_COMMITED),
           mIsAlwaysInBudget(allocatorFlags & ALLOCATOR_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(maxResourceHeapSize) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator");
+        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator", this);
 
         for (uint32_t kindIndex = 0; kindIndex < ResourceHeapKind::EnumCount; kindIndex++) {
             const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(kindIndex);
@@ -328,7 +328,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocator");
+        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocator", this);
         ShutdownEventTracer();
     }
 

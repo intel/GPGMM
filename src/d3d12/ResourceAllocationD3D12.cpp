@@ -34,7 +34,7 @@ namespace gpgmm { namespace d3d12 {
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation");
+        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -46,11 +46,11 @@ namespace gpgmm { namespace d3d12 {
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation");
+        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
     }
 
     ResourceAllocation::~ResourceAllocation() {
-        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocation");
+        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocation", this);
     }
 
     void ResourceAllocation::DeleteThis() {
