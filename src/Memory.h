@@ -15,13 +15,12 @@
 #ifndef GPGMM_MEMORY_H_
 #define GPGMM_MEMORY_H_
 
+#include "common/NonCopyable.h"
 #include "common/RefCount.h"
-
-#include <cstdint>
 
 namespace gpgmm {
 
-    class MemoryBase : public RefCounted {
+    class MemoryBase : public RefCounted, public NonCopyable {
       public:
         MemoryBase();
         virtual ~MemoryBase();
