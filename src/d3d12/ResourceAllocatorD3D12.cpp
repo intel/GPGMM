@@ -203,7 +203,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // RAII wrapper to lock/unlock heap from the residency cache.
-        class ScopedHeapLock {
+        class ScopedHeapLock : public NonCopyable {
           public:
             ScopedHeapLock(ResidencyManager* residencyManager, Heap* heap)
                 : mResidencyManager(residencyManager), mHeap(heap) {
@@ -218,9 +218,6 @@ namespace gpgmm { namespace d3d12 {
                     mResidencyManager->UnlockHeap(mHeap);
                 }
             }
-
-            ScopedHeapLock(const ScopedHeapLock&) = delete;
-            ScopedHeapLock& operator=(const ScopedHeapLock&) = delete;
 
           private:
             ResidencyManager* const mResidencyManager;

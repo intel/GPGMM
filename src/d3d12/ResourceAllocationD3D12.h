@@ -16,6 +16,7 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
+#include "../common/NonCopyable.h"
 #include "src/MemoryAllocation.h"
 #include "src/d3d12/IUnknownImplD3D12.h"
 #include "src/d3d12/d3d12_platform.h"
@@ -27,7 +28,7 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
-    class ResourceAllocation : public MemoryAllocation, public IUnknownImpl {
+    class ResourceAllocation : public MemoryAllocation, public NonCopyable, public IUnknownImpl {
       public:
         // Constructs a resource allocation using a memory allocator.
         ResourceAllocation(ResidencyManager* residencyManager,
@@ -44,8 +45,6 @@ namespace gpgmm { namespace d3d12 {
                            Heap* resourceHeap);
 
         ~ResourceAllocation() override;
-        ResourceAllocation(const ResourceAllocation&) = delete;
-        ResourceAllocation& operator=(const ResourceAllocation&) = delete;
 
         HRESULT Map(uint32_t subresource, const D3D12_RANGE* readRange, void** dataOut);
         void Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange);
