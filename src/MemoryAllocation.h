@@ -23,8 +23,6 @@
 namespace gpgmm {
 
     struct Block;
-    class MemoryBase;
-    class MemoryAllocator;
 
     // Represents how memory was allocated.
     enum class AllocationMethod {
@@ -53,6 +51,9 @@ namespace gpgmm {
 
         bool operator==(const AllocationInfo& other) const;
     };
+
+    class MemoryBase;
+    class MemoryAllocator;
 
     // Represents a location in memory.
     class MemoryAllocation {
