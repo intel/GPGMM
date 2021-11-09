@@ -12,6 +12,7 @@
         "program": "gpgmm_unittests.exe",
       },
       "args": [
+        "--gtest_catch_exceptions=1",
         "--gtest_filter=*"
       ],
       "stopAtEntry": false,
@@ -28,7 +29,7 @@
       },
       "args": [
         "--check-device-leaks",
-        "--gtest_catch_exceptions=0",
+        "--gtest_catch_exceptions=1",
         "--gtest_filter=*"
       ],
       "stopAtEntry": false,
@@ -45,7 +46,7 @@
       },
       "args": [
         "--check-device-leaks",
-        "--gtest_catch_exceptions=0",
+        "--gtest_catch_exceptions=1",
         "--gtest_filter=*"
       ],
       "stopAtEntry": false,
@@ -62,7 +63,7 @@
       },
       "args": [
         "-d gpu",
-        "--gtest_catch_exceptions=0",
+        "--gtest_catch_exceptions=1",
         "--gtest_filter=*"
       ],
       "stopAtEntry": false,
@@ -78,7 +79,7 @@
         "program": "dawn_end2end_tests.exe",
       },
       "args": [
-        "--gtest_catch_exceptions=0",
+        "--gtest_catch_exceptions=1",
         "--backend=d3d12",
         "--enable-backend-validation",
         "--exclusive-device-type-preference=discrete,integrated,cpu",
