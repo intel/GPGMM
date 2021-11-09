@@ -17,9 +17,9 @@
 
 #include "../common/Math.h"
 #include "src/BuddyMemoryAllocator.h"
+#include "src/CombinedMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/LIFOMemoryPool.h"
-#include "src/MemoryAllocatorStack.h"
 #include "src/PooledMemoryAllocator.h"
 #include "src/TraceEvent.h"
 #include "src/d3d12/DefaultsD3D12.h"
@@ -290,41 +290,40 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceHeapSize(maxResourceHeapSize) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator");
 
-        for (uint32_t i = 0; i < ResourceHeapKind::EnumCount; i++) {
-            const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(i);
+        for (uint32_t kindIndex = 0; kindIndex < ResourceHeapKind::EnumCount; kindIndex++) {
+            const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(kindIndex);
 
             const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
             const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapKind);
 
-            std::unique_ptr<MemoryAllocatorStack> stack = std::make_unique<MemoryAllocatorStack>();
+            std::unique_ptr<CombinedMemoryAllocator> combinedAllocator =
+                std::make_unique<CombinedMemoryAllocator>();
 
-            // Standalone heap allocator.
-            MemoryAllocator* heapAllocator =
-                stack->PushAllocator(std::make_unique<ResourceHeapAllocator>(
+            MemoryAllocator* standaloneHeapAllocator =
+                combinedAllocator->PushAllocator(std::make_unique<ResourceHeapAllocator>(
                     this, heapType, heapFlags, minResourceHeapSize));
 
-            // Placed resource sub-allocator.
-            MemoryAllocator* subAllocator =
-                stack->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, heapAllocator));
+            MemoryAllocator* placedResourceSubAllocator = combinedAllocator->PushAllocator(
+                std::make_unique<BuddyMemoryAllocator>(mMaxResourceHeapSize, minResourceHeapSize,
+                                                       heapAlignment, standaloneHeapAllocator));
 
-            // Pooled standalone heap allocator.
-            std::unique_ptr<MemoryPool> pool = std::make_unique<LIFOMemoryPool>();
-            MemoryAllocator* pooledHeapAllocator = stack->PushAllocator(
-                std::make_unique<PooledMemoryAllocator>(heapAllocator, pool.get()));
+            std::unique_ptr<MemoryPool> resourceHeapPool = std::make_unique<LIFOMemoryPool>();
+            MemoryAllocator* standalonePooledHeapAllocator =
+                combinedAllocator->PushAllocator(std::make_unique<PooledMemoryAllocator>(
+                    standaloneHeapAllocator, resourceHeapPool.get()));
 
-            // Pooled placed resource sub-allocator.
-            MemoryAllocator* pooledSubAllocator =
-                stack->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment, pooledHeapAllocator));
+            MemoryAllocator* placedResourcePooledSubAllocator =
+                combinedAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
+                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment,
+                    standalonePooledHeapAllocator));
 
-            // Conditional sub-allocator that uses the pooled or non-pooled sub-allocator.
-            stack->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
-                pooledSubAllocator, subAllocator, maxResourceSizeForPooling));
+            combinedAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
+                placedResourcePooledSubAllocator, placedResourceSubAllocator,
+                maxResourceSizeForPooling));
 
-            mSubAllocators[i] = std::move(stack);
-            mMemoryPools[i] = std::move(pool);
+            mResourceAllocatorOfKind[kindIndex] = std::move(combinedAllocator);
+            mResourceHeapPoolOfKind[kindIndex] = std::move(resourceHeapPool);
         }
     }
 
@@ -334,7 +333,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeleteThis() {
-        for (auto& pool : mMemoryPools) {
+        for (auto& pool : mResourceHeapPoolOfKind) {
             ASSERT(pool != nullptr);
             pool->ReleasePool();
         }
@@ -383,7 +382,7 @@ namespace gpgmm { namespace d3d12 {
         const bool neverAllocate = allocationDescriptor.Flags & ALLOCATION_NEVER_ALLOCATE_MEMORY;
         if (!mIsAlwaysCommitted) {
             MemoryAllocator* subAllocator =
-                mSubAllocators[static_cast<size_t>(resourceHeapKind)].get();
+                mResourceAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,

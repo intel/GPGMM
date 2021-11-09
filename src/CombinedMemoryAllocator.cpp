@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/MemoryAllocatorStack.h"
 #include "common/Assert.h"
+#include "src/CombinedMemoryAllocator.h"
 
 namespace gpgmm {
 
-    MemoryAllocator* MemoryAllocatorStack::PushAllocator(
+    MemoryAllocator* CombinedMemoryAllocator::PushAllocator(
         std::unique_ptr<MemoryAllocator> allocator) {
         mAllocators.push_back(std::move(allocator));
         return mAllocators.back().get();
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocatorStack::AllocateMemory(uint64_t size,
-                                                                           uint64_t alignment,
-                                                                           bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> CombinedMemoryAllocator::AllocateMemory(uint64_t size,
+                                                                              uint64_t alignment,
+                                                                              bool neverAllocate) {
         ASSERT(!mAllocators.empty());
         return mAllocators.back()->AllocateMemory(size, alignment, neverAllocate);
     }
 
-    void MemoryAllocatorStack::DeallocateMemory(MemoryAllocation* allocation) {
+    void CombinedMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         ASSERT(!mAllocators.empty());
         mAllocators.back()->DeallocateMemory(allocation);
     }
