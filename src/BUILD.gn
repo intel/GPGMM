@@ -110,6 +110,8 @@ source_set("gpgmm_sources") {
     "BuddyBlockAllocator.h",
     "BuddyMemoryAllocator.cpp",
     "BuddyMemoryAllocator.h",
+    "CombinedMemoryAllocator.cpp",
+    "CombinedMemoryAllocator.h",
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
     "LIFOMemoryPool.cpp",
@@ -122,8 +124,6 @@ source_set("gpgmm_sources") {
     "MemoryAllocation.h",
     "MemoryAllocator.cpp",
     "MemoryAllocator.h",
-    "CombinedMemoryAllocator.cpp",
-    "CombinedMemoryAllocator.h",
     "ObjectSerializer.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
@@ -166,6 +166,8 @@ source_set("gpgmm_sources") {
   if (gpgmm_enable_d3d12) {
     libs += [ "dxguid.lib" ]
     sources += [
+      "d3d12/BufferAllocatorD3D12.cpp",
+      "d3d12/BufferAllocatorD3D12.h",
       "d3d12/DefaultsD3D12.h",
       "d3d12/FenceD3D12.cpp",
       "d3d12/FenceD3D12.h",

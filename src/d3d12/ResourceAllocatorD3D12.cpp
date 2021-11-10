@@ -22,6 +22,7 @@
 #include "src/LIFOMemoryPool.h"
 #include "src/PooledMemoryAllocator.h"
 #include "src/TraceEvent.h"
+#include "src/d3d12/BufferAllocatorD3D12.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/JSONSerializerD3D12.h"
@@ -202,6 +203,20 @@ namespace gpgmm { namespace d3d12 {
             return ResourceHeapKind::InvalidEnum;
         }
 
+        D3D12_RESOURCE_STATES GetInitialResourceState(D3D12_HEAP_TYPE heapType) {
+            switch (heapType) {
+                case D3D12_HEAP_TYPE_DEFAULT:
+                case D3D12_HEAP_TYPE_UPLOAD:
+                    return D3D12_RESOURCE_STATE_GENERIC_READ;
+                case D3D12_HEAP_TYPE_READBACK:
+                    return D3D12_RESOURCE_STATE_COPY_DEST;
+                case D3D12_HEAP_TYPE_CUSTOM:
+                    // TODO
+                default:
+                    UNREACHABLE();
+            }
+        }
+
         // RAII wrapper to lock/unlock heap from the residency cache.
         class ScopedHeapLock : public NonCopyable {
           public:
@@ -320,6 +335,21 @@ namespace gpgmm { namespace d3d12 {
 
             mResourceAllocatorOfKind[kindIndex] = std::move(combinedAllocator);
             mResourceHeapPoolOfKind[kindIndex] = std::move(resourceHeapPool);
+
+            std::unique_ptr<CombinedMemoryAllocator> bufferSubAllocator =
+                std::make_unique<CombinedMemoryAllocator>();
+
+            MemoryAllocator* bufferAllocator =
+                bufferSubAllocator->PushAllocator(std::make_unique<BufferAllocator>(
+                    this, heapType, D3D12_RESOURCE_FLAG_NONE, GetInitialResourceState(heapType),
+                    /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*resourceAlignment*/ 0));
+
+            bufferSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
+                mMaxResourceHeapSize, bufferAllocator->GetMemorySize(),
+                bufferAllocator->GetMemoryAlignment(), bufferAllocator));
+
+            mBufferAllocatorOfKind[kindIndex] = std::move(bufferSubAllocator);
         }
     }
 
@@ -370,19 +400,46 @@ namespace gpgmm { namespace d3d12 {
             GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
 
-        // TODO(crbug.com/dawn/849): Conditionally disable sub-allocation.
-        // For very large resources, there is no benefit to suballocate.
-        // For very small resources, it is inefficent to suballocate given the min. heap
-        // size could be much larger then the resource allocation.
-        // Attempt to satisfy the request using sub-allocation (placed resource in a heap).
         const bool neverAllocate = allocationDescriptor.Flags & ALLOCATION_NEVER_ALLOCATE_MEMORY;
+
+        // Attempt to sub-allocate using the most effective allocator.
+        MemoryAllocator* subAllocator = nullptr;
+
+        // Attempt to create a resource allocation within the same resource.
+        if ((allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
+            resourceInfo.Alignment > resourceDescriptor.Width &&
+            resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
+            GetInitialResourceState(GetHeapType(resourceHeapKind)) == initialResourceState &&
+            mIsAlwaysCommitted == false) {
+            subAllocator = mBufferAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
+
+            const uint64_t subAllocatedAlignment =
+                (resourceDescriptor.Alignment == 0) ? 1 : resourceDescriptor.Alignment;
+
+            ReturnIfSucceeded(TryAllocateResource(
+                subAllocator, resourceDescriptor.Width, subAllocatedAlignment, neverAllocate,
+                [&](const auto& subAllocation) -> HRESULT {
+                    // Committed resource implicitly creates a resource heap which can be
+                    // used for sub-allocation.
+                    ComPtr<ID3D12Resource> committedResource;
+                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
+                    ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
+
+                    *resourceAllocationOut = new ResourceAllocation{
+                        mResidencyManager.get(),      subAllocator,
+                        subAllocation.GetInfo(),      subAllocation.GetInfo().Offset,
+                        std::move(committedResource), resourceHeap};
+
+                    return S_OK;
+                }));
+        }
+
         if (!mIsAlwaysCommitted) {
-            MemoryAllocator* subAllocator =
-                mResourceAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
+            subAllocator = mResourceAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
-                [&](auto subAllocation) -> HRESULT {
+                [&](const auto& subAllocation) -> HRESULT {
                     ComPtr<ID3D12Resource> placedResource;
                     Heap* resourceHeap = nullptr;
                     ReturnIfFailed(CreatePlacedResourceHeap(
@@ -390,8 +447,9 @@ namespace gpgmm { namespace d3d12 {
                         initialResourceState, &placedResource, &resourceHeap));
 
                     *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(), subAllocation.GetAllocator(),
-                        subAllocation.GetInfo(), std::move(placedResource), resourceHeap};
+                        mResidencyManager.get(),   subAllocation.GetAllocator(),
+                        subAllocation.GetInfo(),   /*offsetFromResource*/ 0,
+                        std::move(placedResource), resourceHeap};
 
                     return S_OK;
                 }));
@@ -401,10 +459,11 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
+        // TODO: Come up with a better heuristic to conditionally disable sub-allocation.
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResourceHeap(
-            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo,
+            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
         AllocationInfo info = {};
@@ -544,7 +603,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateCommittedResourceHeap(
         D3D12_HEAP_TYPE heapType,
         D3D12_HEAP_FLAGS heapFlags,
-        const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
+        uint64_t resourceSize,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
@@ -555,8 +614,7 @@ namespace gpgmm { namespace d3d12 {
         // overcommitted.
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
             ReturnIfFailed(mResidencyManager->Evict(
-                resourceInfo.SizeInBytes,
-                GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType)));
+                resourceSize, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType)));
         }
 
         D3D12_HEAP_PROPERTIES heapProperties;
@@ -577,9 +635,9 @@ namespace gpgmm { namespace d3d12 {
             IID_PPV_ARGS(&committedResource)));
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
-        Heap* resourceHeap = new Heap(
-            committedResource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType),
-            resourceInfo.SizeInBytes);
+        Heap* resourceHeap =
+            new Heap(committedResource,
+                     GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType), resourceSize);
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
@@ -587,7 +645,10 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->InsertHeap(resourceHeap);
         }
 
-        *commitedResourceOut = committedResource.Detach();
+        if (commitedResourceOut != nullptr) {
+            *commitedResourceOut = committedResource.Detach();
+        }
+
         *resourceHeapOut = resourceHeap;
 
         return S_OK;

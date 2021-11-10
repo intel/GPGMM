@@ -25,15 +25,30 @@
 #include <utility>
 
 namespace gpgmm { namespace d3d12 {
+
+    namespace {
+
+        // Returns a resource range from the start of the allocation.
+        D3D12_RANGE GetResourceRange(const D3D12_RANGE* range, uint64_t offset) {
+            if (range == nullptr) {
+                return {};
+            }
+            return {range->Begin + offset, range->End + offset};
+        }
+
+    }  // namespace
+
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* memoryAllocator,
                                            const AllocationInfo& info,
+                                           uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
         : MemoryAllocation(memoryAllocator, info, resourceHeap),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
-          mResource(std::move(resource)) {
+          mResource(std::move(resource)),
+          mOffsetFromResource(offsetFromResource) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
     }
 
@@ -45,7 +60,8 @@ namespace gpgmm { namespace d3d12 {
         : MemoryAllocation(/*memoryAllocator*/ nullptr, info, resourceHeap),
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
-          mResource(std::move(resource)) {
+          mResource(std::move(resource)),
+          mOffsetFromResource(0) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
     }
 
@@ -88,7 +104,21 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfFailed(mResidencyManager->LockHeap(resourceHeap));
         }
 
-        return mResource->Map(subresource, readRange, dataOut);
+        D3D12_RANGE readRangeFromOffset{};
+        D3D12_RANGE* readRangeFromOffsetPtr = nullptr;
+        if (readRange != nullptr) {
+            readRangeFromOffset = GetResourceRange(readRange, mOffsetFromResource);
+            readRangeFromOffsetPtr = &readRangeFromOffset;
+        }
+
+        void* mappedResourceBase = nullptr;
+        ReturnIfFailed(mResource->Map(subresource, readRangeFromOffsetPtr, &mappedResourceBase));
+
+        if (dataOut != nullptr) {
+            *dataOut = static_cast<uint8_t*>(mappedResourceBase) + mOffsetFromResource;
+        }
+
+        return S_OK;
     }
 
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
@@ -100,7 +130,14 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->UnlockHeap(resourceHeap);
         }
 
-        mResource->Unmap(subresource, writtenRange);
+        D3D12_RANGE writtenRangeFromOffset{};
+        D3D12_RANGE* writtenRangeFromOffsetPtr = nullptr;
+        if (writtenRange != nullptr) {
+            writtenRangeFromOffset = GetResourceRange(writtenRange, mOffsetFromResource);
+            writtenRangeFromOffsetPtr = &writtenRangeFromOffset;
+        }
+
+        mResource->Unmap(subresource, writtenRangeFromOffsetPtr);
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
@@ -114,5 +151,14 @@ namespace gpgmm { namespace d3d12 {
         }
 
         return resourceHeap->UpdateResidency(residencySet);
+    }
+
+    D3D12_GPU_VIRTUAL_ADDRESS ResourceAllocation::GetGPUVirtualAddress() const {
+        ASSERT(mResource != nullptr);
+        return mResource->GetGPUVirtualAddress() + mOffsetFromResource;
+    }
+
+    uint64_t ResourceAllocation::GetOffsetFromResource() const {
+        return mOffsetFromResource;
     }
 }}  // namespace gpgmm::d3d12

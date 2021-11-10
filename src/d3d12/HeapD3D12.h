@@ -27,6 +27,7 @@ namespace gpgmm { namespace d3d12 {
 
     class ResidencySet;
     class ResidencyManager;
+    class ResourceAllocator;
 
     // This class is used to represent ID3D12Heap allocations, as well as an implicit heap
     // representing a directly allocated resource, and also serves as a node within
@@ -55,8 +56,9 @@ namespace gpgmm { namespace d3d12 {
 
       private:
         friend ResidencyManager;
+        friend ResourceAllocator;
 
-        ID3D12Pageable* GetPageable() const;
+        ComPtr<ID3D12Pageable> GetPageable() const;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was

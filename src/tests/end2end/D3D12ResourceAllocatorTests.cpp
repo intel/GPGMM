@@ -179,3 +179,72 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
         D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationC));
     ASSERT_EQ(allocationC, nullptr);
 }
+
+TEST_F(D3D12ResourceAllocatorTests, SuballocateWithinResource) {
+    ALLOCATION_DESC desc = {};
+    desc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
+    desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+    constexpr uint32_t kSubAllocationSize = 4u;
+
+    // Create two tiny buffers that will be byte-aligned.
+    ComPtr<ResourceAllocation> tinyBufferAllocA;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        &tinyBufferAllocA));
+    ASSERT_NE(tinyBufferAllocA, nullptr);
+
+    ComPtr<ResourceAllocation> tinyBufferAllocB;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        &tinyBufferAllocB));
+    ASSERT_NE(tinyBufferAllocB, nullptr);
+
+    // Both buffers should be allocated in sequence, back-to-back.
+    EXPECT_EQ(tinyBufferAllocA->GetInfo().Offset + kSubAllocationSize,
+              tinyBufferAllocB->GetInfo().Offset);
+
+    EXPECT_EQ(tinyBufferAllocA->GetResource(), tinyBufferAllocB->GetResource());
+
+    EXPECT_EQ(tinyBufferAllocA->GetGPUVirtualAddress() + kSubAllocationSize,
+              tinyBufferAllocB->GetGPUVirtualAddress());
+
+    // Create another using a new heap type, it must be given it's own resource.
+    desc.HeapType = D3D12_HEAP_TYPE_READBACK;
+
+    ComPtr<ResourceAllocation> tinyBufferAllocC;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+        &tinyBufferAllocC));
+    ASSERT_NE(tinyBufferAllocC, nullptr);
+
+    EXPECT_EQ(tinyBufferAllocC->GetInfo().Offset, 0u);
+    EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
+
+    // Write kSubAllocationSize worth of bytes with value 0xAA in mapped subAllocation A.
+    std::vector<uint8_t> dataAA(kSubAllocationSize, 0xAA);
+    void* mappedBufferA = nullptr;
+    ASSERT_SUCCEEDED(tinyBufferAllocA->Map(0, nullptr, &mappedBufferA));
+    memcpy(mappedBufferA, dataAA.data(), dataAA.size());
+
+    // Write kSubAllocationSize worth of bytes with value 0xBB in mapped subAllocation B.
+    std::vector<uint8_t> dataBB(kSubAllocationSize, 0xBB);
+    void* mappedBufferB = nullptr;
+    ASSERT_SUCCEEDED(tinyBufferAllocB->Map(0, nullptr, &mappedBufferB));
+    memcpy(mappedBufferB, dataBB.data(), dataBB.size());
+
+    EXPECT_NE(mappedBufferA, mappedBufferB);
+
+    // Map the entire buffer and check both allocated ranges.
+    void* mappedBuffer = nullptr;
+    ASSERT_SUCCEEDED(tinyBufferAllocB->GetResource()->Map(0, nullptr, &mappedBuffer));
+
+    const uint8_t* mappedByte = static_cast<uint8_t*>(mappedBuffer);
+    for (uint32_t i = 0; i < kSubAllocationSize; i++, mappedByte++) {
+        EXPECT_EQ(*mappedByte, 0xAA);
+    }
+
+    for (uint32_t i = 0; i < kSubAllocationSize; i++, mappedByte++) {
+        EXPECT_EQ(*mappedByte, 0xBB);
+    }
+}

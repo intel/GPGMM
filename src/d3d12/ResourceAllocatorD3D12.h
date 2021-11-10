@@ -30,6 +30,7 @@ namespace gpgmm {
 
 namespace gpgmm { namespace d3d12 {
 
+    class BufferAllocator;
     class Heap;
     class ResidencyManager;
     class ResourceAllocation;
@@ -124,6 +125,15 @@ namespace gpgmm { namespace d3d12 {
         // standalone allocations whose memory cannot be reused.
         ALLOCATION_NEVER_ALLOCATE_MEMORY = 0x1,
 
+        // Sub-allocates within the same resource down to a single byte. This is useful
+        // for constant buffers (ie. index and vertex buffers) which will be used as read-only
+        // after creation since the resource can only be in one state at a time. When this
+        // flag is not used, the minimum resource size is always equal to the smallest resource heap
+        // allowed (or 64KB).
+        // It is undefined behavior to use sub-allocations within the same resource betweem multiple
+        // command queues since accesses are not guarenteed to be coherent.
+        ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE,
+
     } ALLOCATION_FLAGS;
 
     struct ALLOCATION_DESC {
@@ -179,6 +189,7 @@ namespace gpgmm { namespace d3d12 {
         void DeleteThis() override;
 
       private:
+        friend BufferAllocator;
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
@@ -201,7 +212,7 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT CreateCommittedResourceHeap(D3D12_HEAP_TYPE heapType,
                                             D3D12_HEAP_FLAGS heapFlags,
-                                            const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
+                                            uint64_t resourceSize,
                                             const D3D12_RESOURCE_DESC* resourceDescriptor,
                                             const D3D12_CLEAR_VALUE* clearValue,
                                             D3D12_RESOURCE_STATES initialResourceState,
@@ -229,6 +240,8 @@ namespace gpgmm { namespace d3d12 {
             mResourceHeapPoolOfKind;
         std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount>
             mResourceAllocatorOfKind;
+        std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount>
+            mBufferAllocatorOfKind;
     };
 
 }}  // namespace gpgmm::d3d12

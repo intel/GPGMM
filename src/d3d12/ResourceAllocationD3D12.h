@@ -34,6 +34,7 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* memoryAllocator,
                            const AllocationInfo& info,
+                           uint64_t offsetFromResource,
                            ComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);
 
@@ -46,12 +47,26 @@ namespace gpgmm { namespace d3d12 {
 
         ~ResourceAllocation() override;
 
+        // Gets the CPU pointer to the specificed subresource of the resource allocation.
+        // If sub-allocated within the resource, the read or write range and
+        // pointer value will start from the allocation instead of the resource.
         HRESULT Map(uint32_t subresource, const D3D12_RANGE* readRange, void** dataOut);
         void Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange);
 
+        // Returns the resource owned by this allocation.
         ID3D12Resource* GetResource() const;
 
+        // Tracks the underlying resource heap for residency.
         HRESULT UpdateResidency(ResidencySet* residencySet);
+
+        // Returns the GPU virtual address of the resource allocation.
+        // If sub-allocated within the resource, the GPU virtual address will
+        // start from the allocation instead of the resource.
+        D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
+
+        // Returns the start of the allocation.
+        // If sub-allocated within the resource, the offset could be greater than zero.
+        uint64_t GetOffsetFromResource() const;
 
       protected:
         void DeleteThis() override;
@@ -60,6 +75,8 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocator* const mResourceAllocator;
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
+
+        const uint64_t mOffsetFromResource;
     };
 
 }}  // namespace gpgmm::d3d12
