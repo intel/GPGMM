@@ -15,7 +15,7 @@
 
 #include "src/MemoryAllocation.h"
 #include "common/Assert.h"
-#include "common/IntegerTypes.h"
+#include "common/Limits.h"
 #include "src/Memory.h"
 
 namespace gpgmm {

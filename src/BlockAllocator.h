@@ -15,7 +15,7 @@
 #ifndef GPGMM_BLOCKALLOCATOR_H_
 #define GPGMM_BLOCKALLOCATOR_H_
 
-#include "common/IntegerTypes.h"
+#include "common/Limits.h"
 #include "src/Allocator.h"
 
 #include <cstdint>

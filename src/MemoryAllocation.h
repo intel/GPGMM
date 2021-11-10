@@ -16,7 +16,7 @@
 #ifndef GPGMM_MEMORYALLOCATION_H_
 #define GPGMM_MEMORYALLOCATION_H_
 
-#include "common/IntegerTypes.h"
+#include "common/Limits.h"
 
 #include <cstdint>
 

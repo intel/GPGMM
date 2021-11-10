@@ -17,7 +17,7 @@
 #define GPGMM_MEMORYALLOCATOR_H_
 
 #include "common/Assert.h"
-#include "common/IntegerTypes.h"
+#include "common/Limits.h"
 #include "src/BlockAllocator.h"
 #include "src/Memory.h"
 #include "src/MemoryAllocation.h"

@@ -15,7 +15,7 @@
 #ifndef GPGMM_MEMORYPOOL_H_
 #define GPGMM_MEMORYPOOL_H_
 
-#include "common/IntegerTypes.h"
+#include "common/Limits.h"
 
 #include <memory>
 
