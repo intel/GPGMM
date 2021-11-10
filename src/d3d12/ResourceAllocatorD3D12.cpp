@@ -658,6 +658,8 @@ namespace gpgmm { namespace d3d12 {
 
     void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
         ASSERT(resourceHeap != nullptr);
+        ASSERT(resourceHeap->RefCount() == 0);
+
         delete resourceHeap;
     }
 
