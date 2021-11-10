@@ -141,31 +141,26 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
     };
 
-    // Resource heap types + flags combinations are named after the D3D constants.
-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
-    // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_type
-    enum ResourceHeapKind {
+    typedef enum RESOURCE_HEAP_TYPE {
 
         // Resource heap tier 2
-        // Allows resource heaps to contain all buffer and textures types.
-        // This enables better heap re-use by avoiding the need for separate heaps and
-        // also reduces fragmentation.
-        Readback_AllBuffersAndTextures,
-        Upload_AllBuffersAndTextures,
-        Default_AllBuffersAndTextures,
+        // Resource heaps contain all buffer and textures types.
+        RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x0,
+        RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x1,
+        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x2,
 
         // Resource heap tier 1
-        // Resource heaps only support types from a single resource category.
-        Readback_OnlyBuffers,
-        Upload_OnlyBuffers,
-        Default_OnlyBuffers,
+        // Resource heaps contain buffers or textures but not both.
+        RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS = 0x3,
+        RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS = 0x4,
+        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS = 0x5,
 
-        Default_OnlyNonRenderableOrDepthTextures,
-        Default_OnlyRenderableOrDepthTextures,
+        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 0x6,
+        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 0x7,
 
-        EnumCount,
-        InvalidEnum = EnumCount,
-    };
+        ENUMCOUNT,
+        INVALID = ENUMCOUNT,
+    } RESOURCE_HEAP_TYPE;
 
     class ResourceAllocator : public AllocatorBase, public IUnknownImpl {
       public:
@@ -236,12 +231,12 @@ namespace gpgmm { namespace d3d12 {
         bool mIsAlwaysInBudget;
         uint64_t mMaxResourceHeapSize;
 
-        std::array<std::unique_ptr<MemoryPool>, ResourceHeapKind::EnumCount>
-            mResourceHeapPoolOfKind;
-        std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount>
-            mResourceAllocatorOfKind;
-        std::array<std::unique_ptr<MemoryAllocator>, ResourceHeapKind::EnumCount>
-            mBufferAllocatorOfKind;
+        std::array<std::unique_ptr<MemoryPool>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
+            mResourceHeapPoolOfType;
+        std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
+            mResourceAllocatorOfType;
+        std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
+            mBufferAllocatorOfType;
     };
 
 }}  // namespace gpgmm::d3d12

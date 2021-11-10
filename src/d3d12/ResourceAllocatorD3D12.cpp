@@ -93,18 +93,18 @@ namespace gpgmm { namespace d3d12 {
             return resourceInfo;
         }
 
-        D3D12_HEAP_TYPE GetHeapType(ResourceHeapKind resourceHeapKind) {
-            switch (resourceHeapKind) {
-                case Readback_OnlyBuffers:
-                case Readback_AllBuffersAndTextures:
+        D3D12_HEAP_TYPE GetHeapType(RESOURCE_HEAP_TYPE resourceHeapType) {
+            switch (resourceHeapType) {
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                     return D3D12_HEAP_TYPE_READBACK;
-                case Default_AllBuffersAndTextures:
-                case Default_OnlyBuffers:
-                case Default_OnlyNonRenderableOrDepthTextures:
-                case Default_OnlyRenderableOrDepthTextures:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES:
                     return D3D12_HEAP_TYPE_DEFAULT;
-                case Upload_OnlyBuffers:
-                case Upload_AllBuffersAndTextures:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                     return D3D12_HEAP_TYPE_UPLOAD;
                 default:
                     UNREACHABLE();
@@ -112,19 +112,19 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
-        D3D12_HEAP_FLAGS GetHeapFlags(ResourceHeapKind resourceHeapKind) {
-            switch (resourceHeapKind) {
-                case Default_AllBuffersAndTextures:
-                case Readback_AllBuffersAndTextures:
-                case Upload_AllBuffersAndTextures:
+        D3D12_HEAP_FLAGS GetHeapFlags(RESOURCE_HEAP_TYPE resourceHeapType) {
+            switch (resourceHeapType) {
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                     return D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES;
-                case Default_OnlyBuffers:
-                case Readback_OnlyBuffers:
-                case Upload_OnlyBuffers:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS:
                     return D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
-                case Default_OnlyNonRenderableOrDepthTextures:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
                     return D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
-                case Default_OnlyRenderableOrDepthTextures:
+                case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES:
                     return D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
                 default:
                     UNREACHABLE();
@@ -146,21 +146,21 @@ namespace gpgmm { namespace d3d12 {
             return D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
         }
 
-        ResourceHeapKind GetResourceHeapKind(D3D12_RESOURCE_DIMENSION dimension,
-                                             D3D12_HEAP_TYPE heapType,
-                                             D3D12_RESOURCE_FLAGS flags,
-                                             uint32_t resourceHeapTier) {
+        RESOURCE_HEAP_TYPE GetResourceHeapType(D3D12_RESOURCE_DIMENSION dimension,
+                                               D3D12_HEAP_TYPE heapType,
+                                               D3D12_RESOURCE_FLAGS flags,
+                                               uint32_t resourceHeapTier) {
             if (resourceHeapTier >= 2) {
                 switch (heapType) {
                     case D3D12_HEAP_TYPE_UPLOAD:
-                        return Upload_AllBuffersAndTextures;
+                        return RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                     case D3D12_HEAP_TYPE_DEFAULT:
-                        return Default_AllBuffersAndTextures;
+                        return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                     case D3D12_HEAP_TYPE_READBACK:
-                        return Readback_AllBuffersAndTextures;
+                        return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                     default:
                         UNREACHABLE();
-                        return ResourceHeapKind::InvalidEnum;
+                        return RESOURCE_HEAP_TYPE::INVALID;
                 }
             }
 
@@ -168,11 +168,11 @@ namespace gpgmm { namespace d3d12 {
                 case D3D12_RESOURCE_DIMENSION_BUFFER: {
                     switch (heapType) {
                         case D3D12_HEAP_TYPE_UPLOAD:
-                            return Upload_OnlyBuffers;
+                            return RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS;
                         case D3D12_HEAP_TYPE_DEFAULT:
-                            return Default_OnlyBuffers;
+                            return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS;
                         case D3D12_HEAP_TYPE_READBACK:
-                            return Readback_OnlyBuffers;
+                            return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS;
                         default:
                             UNREACHABLE();
                     }
@@ -185,9 +185,9 @@ namespace gpgmm { namespace d3d12 {
                         case D3D12_HEAP_TYPE_DEFAULT: {
                             if ((flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ||
                                 (flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)) {
-                                return Default_OnlyRenderableOrDepthTextures;
+                                return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES;
                             }
-                            return Default_OnlyNonRenderableOrDepthTextures;
+                            return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES;
                         }
 
                         default:
@@ -197,10 +197,10 @@ namespace gpgmm { namespace d3d12 {
                 }
                 default:
                     UNREACHABLE();
-                    return ResourceHeapKind::InvalidEnum;
+                    return RESOURCE_HEAP_TYPE::INVALID;
             }
 
-            return ResourceHeapKind::InvalidEnum;
+            return RESOURCE_HEAP_TYPE::INVALID;
         }
 
         D3D12_RESOURCE_STATES GetInitialResourceState(D3D12_HEAP_TYPE heapType) {
@@ -302,12 +302,14 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceHeapSize(maxResourceHeapSize) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator", this);
 
-        for (uint32_t kindIndex = 0; kindIndex < ResourceHeapKind::EnumCount; kindIndex++) {
-            const ResourceHeapKind resourceHeapKind = static_cast<ResourceHeapKind>(kindIndex);
+        for (uint32_t resourceHeapTypeIndex = 0;
+             resourceHeapTypeIndex < RESOURCE_HEAP_TYPE::ENUMCOUNT; resourceHeapTypeIndex++) {
+            const RESOURCE_HEAP_TYPE resourceHeapType =
+                static_cast<RESOURCE_HEAP_TYPE>(resourceHeapTypeIndex);
 
-            const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapKind);
+            const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType);
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
-            const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapKind);
+            const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
             std::unique_ptr<CombinedMemoryAllocator> combinedAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
@@ -333,8 +335,8 @@ namespace gpgmm { namespace d3d12 {
                 placedResourcePooledSubAllocator, placedResourceSubAllocator,
                 maxResourceSizeForPooling));
 
-            mResourceAllocatorOfKind[kindIndex] = std::move(combinedAllocator);
-            mResourceHeapPoolOfKind[kindIndex] = std::move(resourceHeapPool);
+            mResourceAllocatorOfType[resourceHeapTypeIndex] = std::move(combinedAllocator);
+            mResourceHeapPoolOfType[resourceHeapTypeIndex] = std::move(resourceHeapPool);
 
             std::unique_ptr<CombinedMemoryAllocator> bufferSubAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
@@ -349,7 +351,7 @@ namespace gpgmm { namespace d3d12 {
                 mMaxResourceHeapSize, bufferAllocator->GetMemorySize(),
                 bufferAllocator->GetMemoryAlignment(), bufferAllocator));
 
-            mBufferAllocatorOfKind[kindIndex] = std::move(bufferSubAllocator);
+            mBufferAllocatorOfType[resourceHeapTypeIndex] = std::move(bufferSubAllocator);
         }
     }
 
@@ -359,7 +361,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeleteThis() {
-        for (auto& pool : mResourceHeapPoolOfKind) {
+        for (auto& pool : mResourceHeapPoolOfType) {
             ASSERT(pool != nullptr);
             pool->ReleasePool();
         }
@@ -396,8 +398,8 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        const ResourceHeapKind resourceHeapKind =
-            GetResourceHeapKind(newResourceDesc.Dimension, allocationDescriptor.HeapType,
+        const RESOURCE_HEAP_TYPE resourceHeapType =
+            GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
 
         const bool neverAllocate = allocationDescriptor.Flags & ALLOCATION_NEVER_ALLOCATE_MEMORY;
@@ -409,9 +411,9 @@ namespace gpgmm { namespace d3d12 {
         if ((allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
             resourceInfo.Alignment > resourceDescriptor.Width &&
             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-            GetInitialResourceState(GetHeapType(resourceHeapKind)) == initialResourceState &&
+            GetInitialResourceState(GetHeapType(resourceHeapType)) == initialResourceState &&
             mIsAlwaysCommitted == false) {
-            subAllocator = mBufferAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
+            subAllocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             const uint64_t subAllocatedAlignment =
                 (resourceDescriptor.Alignment == 0) ? 1 : resourceDescriptor.Alignment;
@@ -435,7 +437,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            subAllocator = mResourceAllocatorOfKind[static_cast<size_t>(resourceHeapKind)].get();
+            subAllocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
                 subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
@@ -463,7 +465,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResourceHeap(
-            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapKind), resourceInfo.SizeInBytes,
+            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
         AllocationInfo info = {};
