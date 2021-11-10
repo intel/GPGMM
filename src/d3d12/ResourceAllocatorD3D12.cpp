@@ -402,7 +402,8 @@ namespace gpgmm { namespace d3d12 {
             GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
 
-        const bool neverAllocate = allocationDescriptor.Flags & ALLOCATION_NEVER_ALLOCATE_MEMORY;
+        const bool neverAllocate =
+            allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
         // Attempt to sub-allocate using the most effective allocator.
         MemoryAllocator* subAllocator = nullptr;

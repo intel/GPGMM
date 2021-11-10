@@ -123,7 +123,7 @@ namespace gpgmm { namespace d3d12 {
         // Forbids creating a new resource heap when creating a resource. The created resource
         // must use an existing resource heap or E_OUTOFMEMORY. Effectively disables creating
         // standalone allocations whose memory cannot be reused.
-        ALLOCATION_NEVER_ALLOCATE_MEMORY = 0x1,
+        ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
 
         // Sub-allocates within the same resource down to a single byte. This is useful
         // for constant buffers (ie. index and vertex buffers) which will be used as read-only

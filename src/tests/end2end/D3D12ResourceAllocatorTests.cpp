@@ -150,7 +150,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     // Check we can't reuse memory if CreateResource was never called previously.
     ALLOCATION_DESC allocationDesc = {};
-    allocationDesc.Flags = ALLOCATION_NEVER_ALLOCATE_MEMORY;
+    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
     ComPtr<ResourceAllocation> allocation;
     ASSERT_FAILED(mDefaultAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize + 1),
@@ -165,7 +165,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     ASSERT_NE(allocationA, nullptr);
 
     // Re-check that the same resource heap is used once CreateResource gets called.
-    allocationDesc.Flags = ALLOCATION_NEVER_ALLOCATE_MEMORY;
+    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
     ComPtr<ResourceAllocation> allocationB;
     ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
