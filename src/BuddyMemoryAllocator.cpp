@@ -101,9 +101,6 @@ namespace gpgmm {
         ASSERT(subAllocation != nullptr);
 
         const AllocationInfo info = subAllocation->GetInfo();
-
-        ASSERT(info.Method == AllocationMethod::kSubAllocated);
-
         const uint64_t memoryIndex = GetMemoryIndex(info.Block->Offset);
 
         mBuddyBlockAllocator.DeallocateBlock(info.Block);

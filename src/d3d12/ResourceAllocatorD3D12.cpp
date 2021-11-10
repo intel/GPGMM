@@ -428,6 +428,9 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
+                    AllocationInfo info = subAllocation.GetInfo();
+                    info.Method = AllocationMethod::kSubAllocatedWithin;
+
                     *resourceAllocationOut = new ResourceAllocation{
                         mResidencyManager.get(),      subAllocator,
                         subAllocation.GetInfo(),      subAllocation.GetInfo().Offset,

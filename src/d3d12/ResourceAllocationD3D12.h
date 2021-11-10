@@ -50,8 +50,11 @@ namespace gpgmm { namespace d3d12 {
         // Gets the CPU pointer to the specificed subresource of the resource allocation.
         // If sub-allocated within the resource, the read or write range and
         // pointer value will start from the allocation instead of the resource.
-        HRESULT Map(uint32_t subresource, const D3D12_RANGE* readRange, void** dataOut);
-        void Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange);
+        HRESULT Map(uint32_t subresource = 0,
+                    const D3D12_RANGE* readRange = nullptr,
+                    void** dataOut = nullptr);
+
+        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* writtenRange = nullptr);
 
         // Returns the resource owned by this allocation.
         ID3D12Resource* GetResource() const;
