@@ -225,11 +225,11 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Device> mDevice;
         std::unique_ptr<ResidencyManager> mResidencyManager;
 
-        bool mIsUMA;
-        uint32_t mResourceHeapTier;
-        bool mIsAlwaysCommitted;
-        bool mIsAlwaysInBudget;
-        uint64_t mMaxResourceHeapSize;
+        const bool mIsUMA;
+        const uint32_t mResourceHeapTier;
+        const bool mIsAlwaysCommitted;
+        const bool mIsAlwaysInBudget;
+        const uint64_t mMaxResourceHeapSize;
 
         std::array<std::unique_ptr<MemoryPool>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
             mResourceHeapPoolOfType;
