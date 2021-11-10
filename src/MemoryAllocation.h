@@ -30,8 +30,11 @@ namespace gpgmm {
         // Not sub-divided.
         kStandalone,
 
-        // Sub-divided using one or more blocks.
+        // Sub-divided using one or more memory allocations.
         kSubAllocated,
+
+        // Sub-divided within a single memory allocation.
+        kSubAllocatedWithin,
 
         // Not yet allocated or invalid.
         kUndefined

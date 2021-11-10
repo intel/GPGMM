@@ -62,14 +62,12 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     ASSERT_EQ(allocator, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateResource) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     // Creating a resource without allocation should always fail.
     ASSERT_FAILED(mDefaultAllocator->CreateResource(
         {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
         nullptr, nullptr));
-}
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
     // Exceeding the max resource heap size should always fail.
     {
         ComPtr<ResourceAllocation> allocation;
@@ -87,6 +85,21 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMinMaxHeap) {
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         ASSERT_NE(allocation->GetResource(), nullptr);
+    }
+
+    // Mapping the entire buffer should always succeed.
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        ASSERT_NE(allocation->GetResource(), nullptr);
+
+        ASSERT_SUCCEEDED(allocation->Map());
     }
 }
 
@@ -180,7 +193,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     ASSERT_EQ(allocationC, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, SuballocateWithinResource) {
+TEST_F(D3D12ResourceAllocatorTests, SuballocateWithinBuffer) {
     ALLOCATION_DESC desc = {};
     desc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
     desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
@@ -208,6 +221,10 @@ TEST_F(D3D12ResourceAllocatorTests, SuballocateWithinResource) {
 
     EXPECT_EQ(tinyBufferAllocA->GetGPUVirtualAddress() + kSubAllocationSize,
               tinyBufferAllocB->GetGPUVirtualAddress());
+
+    // Mapping a resource allocation allocated within itself must use the entire resource.
+    ASSERT_FAILED(tinyBufferAllocA->Map(1));
+    ASSERT_FAILED(tinyBufferAllocB->Map(1));
 
     // Create another using a new heap type, it must be given it's own resource.
     desc.HeapType = D3D12_HEAP_TYPE_READBACK;

@@ -100,22 +100,32 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
+        // Allocation coordinates relative to the resource cannot be used when specifying
+        // subresource-relative coordinates.
+        if (subresource > 0 && GetInfo().Method == AllocationMethod::kSubAllocatedWithin) {
+            return E_INVALIDARG;
+        }
+
         if (mResidencyManager != nullptr) {
             ReturnIfFailed(mResidencyManager->LockHeap(resourceHeap));
         }
 
-        D3D12_RANGE readRangeFromOffset{};
-        D3D12_RANGE* readRangeFromOffsetPtr = nullptr;
-        if (readRange != nullptr) {
-            readRangeFromOffset = GetResourceRange(readRange, mOffsetFromResource);
-            readRangeFromOffsetPtr = &readRangeFromOffset;
+        // Range coordinates are always subresource-relative so the range should only be
+        // adjusted if the entire resource is being mapped where allocation coordinates are relative
+        // to entire resource.
+        D3D12_RANGE newReadRange{};
+        const D3D12_RANGE* newReadRangePtr = readRange;
+        if (newReadRangePtr != nullptr && mOffsetFromResource > 0) {
+            ASSERT(subresource == 0);
+            newReadRange = GetResourceRange(readRange, mOffsetFromResource);
+            newReadRangePtr = &newReadRange;
         }
 
-        void* mappedResourceBase = nullptr;
-        ReturnIfFailed(mResource->Map(subresource, readRangeFromOffsetPtr, &mappedResourceBase));
+        void* mappedData = nullptr;
+        ReturnIfFailed(mResource->Map(subresource, newReadRangePtr, &mappedData));
 
         if (dataOut != nullptr) {
-            *dataOut = static_cast<uint8_t*>(mappedResourceBase) + mOffsetFromResource;
+            *dataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;
         }
 
         return S_OK;
@@ -126,18 +136,24 @@ namespace gpgmm { namespace d3d12 {
         if (resourceHeap == nullptr) {
             return;
         }
+
+        // Allocation coordinates relative to the resource cannot be used when specifying
+        // subresource-relative coordinates.
+        ASSERT(subresource > 0 && GetInfo().Method == AllocationMethod::kSubAllocatedWithin);
+
         if (mResidencyManager != nullptr) {
             mResidencyManager->UnlockHeap(resourceHeap);
         }
 
-        D3D12_RANGE writtenRangeFromOffset{};
-        D3D12_RANGE* writtenRangeFromOffsetPtr = nullptr;
-        if (writtenRange != nullptr) {
-            writtenRangeFromOffset = GetResourceRange(writtenRange, mOffsetFromResource);
-            writtenRangeFromOffsetPtr = &writtenRangeFromOffset;
+        D3D12_RANGE newWrittenRange{};
+        const D3D12_RANGE* newWrittenRangePtr = writtenRange;
+        if (newWrittenRangePtr != nullptr && mOffsetFromResource > 0) {
+            ASSERT(subresource == 0);
+            newWrittenRange = GetResourceRange(newWrittenRangePtr, mOffsetFromResource);
+            newWrittenRangePtr = &newWrittenRange;
         }
 
-        mResource->Unmap(subresource, writtenRangeFromOffsetPtr);
+        mResource->Unmap(subresource, newWrittenRangePtr);
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
