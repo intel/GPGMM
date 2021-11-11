@@ -353,35 +353,30 @@ namespace gpgmm { namespace d3d12 {
         return hr;
     }
 
+    // Note that MakeResident is a synchronous function and can add a significant
+    // overhead to command recording. In the future, it may be possible to decrease this
+    // overhead by using MakeResident on a secondary thread, or by instead making use of
+    // the EnqueueMakeResident function (which is not available on all Windows 10
+    // platforms).
     HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
         ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
 
-        // Note that MakeResident is a synchronous function and can add a significant
-        // overhead to command recording. In the future, it may be possible to decrease this
-        // overhead by using MakeResident on a secondary thread, or by instead making use of
-        // the EnqueueMakeResident function (which is not available on all Windows 10
-        // platforms).
-        HRESULT hr = mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
-
         // A MakeResident call can fail if there's not enough available memory. This
         // could occur when there's significant fragmentation or if the allocation size
         // estimates are incorrect. We may be able to continue execution by evicting some
         // more memory and calling MakeResident again.
-        while (FAILED(hr)) {
+        while (FAILED(mDevice->MakeResident(numberOfObjectsToMakeResident, allocations))) {
+            // If nothing can be evicted after MakeResident has failed, we cannot continue
+            // execution and must throw a fatal error.
             uint64_t sizeEvicted = 0;
             ReturnIfFailed(
                 Evict(kDefaultResidentResourceEvictSize, memorySegmentGroup, &sizeEvicted));
-
-            // If nothing can be evicted after MakeResident has failed, we cannot continue
-            // execution and must throw a fatal error.
             if (sizeEvicted == 0) {
                 return E_OUTOFMEMORY;
             }
-
-            hr = mDevice->MakeResident(numberOfObjectsToMakeResident, allocations);
         }
 
         return S_OK;
