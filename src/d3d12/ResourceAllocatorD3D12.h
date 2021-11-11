@@ -188,14 +188,8 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
-        ResourceAllocator(ComPtr<ID3D12Device> device,
-                          std::unique_ptr<ResidencyManager> residencyManager,
-                          bool isUMA,
-                          uint32_t resourceHeapTier,
-                          ALLOCATOR_FLAGS allocatorFlags,
-                          uint64_t maxResourceSizeForPooling,
-                          uint64_t minResourceHeapSize,
-                          uint64_t maxResourceHeapSize);
+        ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+                          std::unique_ptr<ResidencyManager> residencyManager);
 
         HRESULT CreatePlacedResourceHeap(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
@@ -234,9 +228,9 @@ namespace gpgmm { namespace d3d12 {
         std::array<std::unique_ptr<MemoryPool>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
             mResourceHeapPoolOfType;
         std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
-            mResourceAllocatorOfType;
+            mResourceHeapSubAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
-            mBufferAllocatorOfType;
+            mBufferSubAllocatorOfType;
     };
 
 }}  // namespace gpgmm::d3d12

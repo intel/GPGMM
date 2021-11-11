@@ -248,14 +248,6 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        const uint64_t minResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
-                                                 ? descriptor.PreferredResourceHeapSize
-                                                 : kDefaultPreferredResourceHeapSize;
-
-        const uint64_t maxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
-                                                 ? descriptor.MaxResourceHeapSize
-                                                 : kDefaultMaxResourceHeapSize;
-
         bool enableEventTracer = descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_TRACE_EVENTS;
 #ifdef GPGMM_ALWAYS_RECORD_EVENT_TRACE
         enableEventTracer = true;
@@ -277,30 +269,26 @@ namespace gpgmm { namespace d3d12 {
             residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
         }
 
-        *resourceAllocator = new ResourceAllocator(
-            descriptor.Device, std::move(residencyManager), descriptor.IsUMA,
-            descriptor.ResourceHeapTier, descriptor.Flags, descriptor.MaxResourceSizeForPooling,
-            minResourceHeapSize, maxResourceHeapSize);
+        *resourceAllocator = new ResourceAllocator(descriptor, std::move(residencyManager));
 
         return S_OK;
     }
 
-    ResourceAllocator::ResourceAllocator(Microsoft::WRL::ComPtr<ID3D12Device> device,
-                                         std::unique_ptr<ResidencyManager> residencyManager,
-                                         bool isUMA,
-                                         uint32_t resourceHeapTier,
-                                         ALLOCATOR_FLAGS allocatorFlags,
-                                         uint64_t maxResourceSizeForPooling,
-                                         uint64_t minResourceHeapSize,
-                                         uint64_t maxResourceHeapSize)
-        : mDevice(std::move(device)),
+    ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+                                         std::unique_ptr<ResidencyManager> residencyManager)
+        : mDevice(std::move(descriptor.Device)),
           mResidencyManager(std::move(residencyManager)),
-          mIsUMA(isUMA),
-          mResourceHeapTier(resourceHeapTier),
-          mIsAlwaysCommitted(allocatorFlags & ALLOCATOR_ALWAYS_COMMITED),
-          mIsAlwaysInBudget(allocatorFlags & ALLOCATOR_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize(maxResourceHeapSize) {
+          mIsUMA(descriptor.IsUMA),
+          mResourceHeapTier(descriptor.ResourceHeapTier),
+          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
+          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
+          mMaxResourceHeapSize((descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
+                                                                    : kDefaultMaxResourceHeapSize) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator", this);
+
+        const uint64_t preferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
+                                                       ? descriptor.PreferredResourceHeapSize
+                                                       : kDefaultPreferredResourceHeapSize;
 
         for (uint32_t resourceHeapTypeIndex = 0;
              resourceHeapTypeIndex < RESOURCE_HEAP_TYPE::ENUMCOUNT; resourceHeapTypeIndex++) {
@@ -311,31 +299,33 @@ namespace gpgmm { namespace d3d12 {
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
             const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
-            std::unique_ptr<CombinedMemoryAllocator> combinedAllocator =
+            std::unique_ptr<CombinedMemoryAllocator> resourceHeapSubAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
 
-            MemoryAllocator* standaloneHeapAllocator = combinedAllocator->PushAllocator(
+            MemoryAllocator* standaloneHeapAllocator = resourceHeapSubAllocator->PushAllocator(
                 std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags));
 
-            MemoryAllocator* placedResourceSubAllocator = combinedAllocator->PushAllocator(
-                std::make_unique<BuddyMemoryAllocator>(mMaxResourceHeapSize, minResourceHeapSize,
-                                                       heapAlignment, standaloneHeapAllocator));
+            MemoryAllocator* placedResourceSubAllocator =
+                resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
+                    mMaxResourceHeapSize, preferredResourceHeapSize, heapAlignment,
+                    standaloneHeapAllocator));
 
             std::unique_ptr<MemoryPool> resourceHeapPool = std::make_unique<LIFOMemoryPool>();
             MemoryAllocator* standalonePooledHeapAllocator =
-                combinedAllocator->PushAllocator(std::make_unique<PooledMemoryAllocator>(
+                resourceHeapSubAllocator->PushAllocator(std::make_unique<PooledMemoryAllocator>(
                     standaloneHeapAllocator, resourceHeapPool.get()));
 
             MemoryAllocator* placedResourcePooledSubAllocator =
-                combinedAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, minResourceHeapSize, heapAlignment,
+                resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
+                    mMaxResourceHeapSize, preferredResourceHeapSize, heapAlignment,
                     standalonePooledHeapAllocator));
 
-            combinedAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
+            resourceHeapSubAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
                 placedResourcePooledSubAllocator, placedResourceSubAllocator,
-                maxResourceSizeForPooling));
+                descriptor.MaxResourceSizeForPooling));
 
-            mResourceAllocatorOfType[resourceHeapTypeIndex] = std::move(combinedAllocator);
+            mResourceHeapSubAllocatorOfType[resourceHeapTypeIndex] =
+                std::move(resourceHeapSubAllocator);
             mResourceHeapPoolOfType[resourceHeapTypeIndex] = std::move(resourceHeapPool);
 
             std::unique_ptr<CombinedMemoryAllocator> bufferSubAllocator =
@@ -351,7 +341,7 @@ namespace gpgmm { namespace d3d12 {
                 mMaxResourceHeapSize, bufferAllocator->GetMemorySize(),
                 bufferAllocator->GetMemoryAlignment(), bufferAllocator));
 
-            mBufferAllocatorOfType[resourceHeapTypeIndex] = std::move(bufferSubAllocator);
+            mBufferSubAllocatorOfType[resourceHeapTypeIndex] = std::move(bufferSubAllocator);
         }
     }
 
@@ -405,8 +395,8 @@ namespace gpgmm { namespace d3d12 {
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
-        // Attempt to sub-allocate using the most effective allocator.
-        MemoryAllocator* subAllocator = nullptr;
+        // Attempt to allocate using the most effective allocator.
+        MemoryAllocator* allocator = nullptr;
 
         // Attempt to create a resource allocation within the same resource.
         if ((allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
@@ -414,13 +404,13 @@ namespace gpgmm { namespace d3d12 {
             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             GetInitialResourceState(GetHeapType(resourceHeapType)) == initialResourceState &&
             mIsAlwaysCommitted == false) {
-            subAllocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+            allocator = mBufferSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             const uint64_t subAllocatedAlignment =
                 (resourceDescriptor.Alignment == 0) ? 1 : resourceDescriptor.Alignment;
 
             ReturnIfSucceeded(TryAllocateResource(
-                subAllocator, resourceDescriptor.Width, subAllocatedAlignment, neverAllocate,
+                allocator, resourceDescriptor.Width, subAllocatedAlignment, neverAllocate,
                 [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
@@ -432,7 +422,7 @@ namespace gpgmm { namespace d3d12 {
                     info.Method = AllocationMethod::kSubAllocatedWithin;
 
                     *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(),      subAllocator,
+                        mResidencyManager.get(),      subAllocation.GetAllocator(),
                         subAllocation.GetInfo(),      subAllocation.GetInfo().Offset,
                         std::move(committedResource), resourceHeap};
 
@@ -441,10 +431,11 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            subAllocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+            allocator =
+                mResourceHeapSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
-                subAllocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
+                allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
                 [&](const auto& subAllocation) -> HRESULT {
                     ComPtr<ID3D12Resource> placedResource;
                     Heap* resourceHeap = nullptr;
