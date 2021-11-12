@@ -49,7 +49,7 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -62,15 +62,15 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocation", this);
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }
 
     ResourceAllocation::~ResourceAllocation() {
-        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocation", this);
+        TRACE_EVENT_DELETE_OBJECT("ResourceAllocation", this);
     }
 
     void ResourceAllocation::DeleteThis() {
-        GPGMM_API_TRACE_FUNCTION_BEGIN();
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocation.DeleteThis");
 
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(this);
@@ -84,8 +84,6 @@ namespace gpgmm { namespace d3d12 {
         MemoryAllocation::Reset();
 
         IUnknownImpl::DeleteThis();
-
-        GPGMM_API_TRACE_FUNCTION_END();
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {

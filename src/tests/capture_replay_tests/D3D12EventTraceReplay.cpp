@@ -118,7 +118,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
              eventIndex++) {
             const Json::Value& event = traceEvents[eventIndex];
-            if (event["name"].asString() == "CreateAllocator") {
+            if (event["name"].asString() == "ResourceAllocator.CreateAllocator") {
                 // TODO: handle capture/re-play device mismatches.
                 allocatorDesc = CreateBasicAllocatorDesc();
 
@@ -143,33 +143,40 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                     args["TotalResourceBudgetLimit"].asUInt64();
 
                 // Defer CreateAllocator until ID is resolved by create object event.
-            } else if (event["name"].asString() == "CreateResource") {
-                const Json::Value& args = event["args"];
-                ASSERT_FALSE(args.empty());
+            } else if (event["name"].asString() == "ResourceAllocator.CreateResource") {
+                switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_INSTANT: {
+                        const Json::Value& args = event["args"];
+                        ASSERT_FALSE(args.empty());
 
-                const ALLOCATION_DESC allocationDescriptor =
-                    ConvertToAllocationDesc(args["allocationDescriptor"]);
+                        const ALLOCATION_DESC allocationDescriptor =
+                            ConvertToAllocationDesc(args["allocationDescriptor"]);
 
-                const D3D12_RESOURCE_STATES initialResourceState =
-                    static_cast<D3D12_RESOURCE_STATES>(args["initialResourceState"].asInt());
+                        const D3D12_RESOURCE_STATES initialResourceState =
+                            static_cast<D3D12_RESOURCE_STATES>(
+                                args["initialResourceState"].asInt());
 
-                const D3D12_CLEAR_VALUE* clearValuePtr = nullptr;
-                D3D12_CLEAR_VALUE clearValue = {};
-                const Json::Value& clearValueJsonValue = args["clearValue"];
-                if (!clearValueJsonValue.empty()) {
-                    clearValue = ConvertToD3D12ClearValue(clearValueJsonValue);
-                    clearValuePtr = &clearValue;
+                        const D3D12_CLEAR_VALUE* clearValuePtr = nullptr;
+                        D3D12_CLEAR_VALUE clearValue = {};
+                        const Json::Value& clearValueJsonValue = args["clearValue"];
+                        if (!clearValueJsonValue.empty()) {
+                            clearValue = ConvertToD3D12ClearValue(clearValueJsonValue);
+                            clearValuePtr = &clearValue;
+                        }
+
+                        const D3D12_RESOURCE_DESC resourceDescriptor =
+                            ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
+
+                        ASSERT_FALSE(allocatorInstanceID.empty());
+
+                        ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
+                            allocationDescriptor, resourceDescriptor, initialResourceState,
+                            clearValuePtr, &newAllocationWithoutID));
+                    } break;
+
+                    default:
+                        break;
                 }
-
-                const D3D12_RESOURCE_DESC resourceDescriptor =
-                    ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
-
-                ASSERT_FALSE(allocatorInstanceID.empty());
-
-                ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
-                    allocationDescriptor, resourceDescriptor, initialResourceState, clearValuePtr,
-                    &newAllocationWithoutID));
-
             } else if (event["name"].asString() == "ResourceAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
@@ -186,6 +193,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                     } break;
 
                     default:
+                        UNREACHABLE();
                         break;
                 }
             } else if (event["name"].asString() == "ResourceAllocator") {
@@ -210,6 +218,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                     } break;
 
                     default:
+                        UNREACHABLE();
                         break;
                 }
             }
