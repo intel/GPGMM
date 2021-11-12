@@ -55,14 +55,45 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
     ComPtr<ResourceAllocator> mDefaultAllocator;
 };
 
-TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
-    // Creating an empty allocator should fail.
-    ComPtr<ResourceAllocator> allocator;
-    ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &allocator));
-    ASSERT_EQ(allocator, nullptr);
+TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorBasic) {
+    // Creating an invalid allocator should always fail.
+    {
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &allocator));
+        ASSERT_EQ(allocator, nullptr);
+    }
+
+    // Creating an allocator without a device should always fail.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.Device = nullptr;
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_EQ(allocator, nullptr);
+    }
+
+    // Creating an allocator without an adapter should always fail.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.Adapter = nullptr;
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_EQ(allocator, nullptr);
+    }
+
+    // Creating a new allocator based on the default should always succeed.
+    {
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(
+            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
+        ASSERT_NE(allocator, nullptr);
+        ASSERT_NE(allocator, mDefaultAllocator);
+    }
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferBasic) {
     // Creating a resource without allocation should always fail.
     ASSERT_FAILED(mDefaultAllocator->CreateResource(
         {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
@@ -193,7 +224,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     ASSERT_EQ(allocationC, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, SuballocateWithinBuffer) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     ALLOCATION_DESC desc = {};
     desc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
     desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
