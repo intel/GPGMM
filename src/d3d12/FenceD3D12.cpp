@@ -18,17 +18,28 @@
 #include "src/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
-    Fence::Fence(ComPtr<ID3D12Device> device, uint64_t initialValue)
-        : mDevice(device),
+
+    // static
+    HRESULT Fence::CreateFence(ComPtr<ID3D12Device> device,
+                               uint64_t initialValue,
+                               Fence** fenceOut) {
+        ComPtr<ID3D12Fence> fence;
+        ReturnIfFailed(
+            device->CreateFence(initialValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
+        *fenceOut = new Fence(fence, initialValue);
+        return S_OK;
+    }
+
+    Fence::Fence(ComPtr<ID3D12Fence> fence, uint64_t initialValue)
+        : mFence(fence),
           mCompletionEvent(INVALID_HANDLE_VALUE),
           mCurrentFence(-1),
           mLastCompletedFence(-1),
           mLastSignaledFence(-1) {
+        ASSERT(mFence != nullptr);
+
         mCompletionEvent = CreateEvent(nullptr, false, false, nullptr);
         ASSERT(mCompletionEvent != INVALID_HANDLE_VALUE);
-
-        // TODO: check d3d error
-        mDevice->CreateFence(initialValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 
         mLastSignaledFence = GetAndCacheLastCompletedFence();
         mCurrentFence = mLastSignaledFence + 1;

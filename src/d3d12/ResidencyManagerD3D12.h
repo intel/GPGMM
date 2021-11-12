@@ -67,6 +67,7 @@ namespace gpgmm { namespace d3d12 {
 
         ResidencyManager(ComPtr<ID3D12Device> device,
                          ComPtr<IDXGIAdapter3> adapter3,
+                         std::unique_ptr<Fence> fence,
                          bool isUMA,
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit);
@@ -93,14 +94,15 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
+
+        std::unique_ptr<Fence> mFence;
+
         const bool mIsUMA;
         const float mVideoMemoryBudgetLimit;
         const uint64_t mAvailableForResourcesBudget;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
-
-        std::unique_ptr<Fence> mFence;
     };
 
 }}  // namespace gpgmm::d3d12

@@ -37,9 +37,18 @@ namespace gpgmm { namespace d3d12 {
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
         ReturnIfFailed(adapter.As(&adapter3));
 
+        // Residency manager needs it's own fence to know when heaps are no longer being used by the
+        // GPU.
+        std::unique_ptr<Fence> residencyFence;
+        {
+            Fence* ptr = nullptr;
+            ReturnIfFailed(Fence::CreateFence(device, 0, &ptr));
+            residencyFence.reset(ptr);
+        }
+
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(std::move(device), std::move(adapter3), isUMA, videoMemoryBudget,
-                                 availableForResourcesBudget));
+            new ResidencyManager(std::move(device), std::move(adapter3), std::move(residencyFence),
+                                 isUMA, videoMemoryBudget, availableForResourcesBudget));
 
         // Query and set the video memory limits per segment.
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
@@ -62,16 +71,21 @@ namespace gpgmm { namespace d3d12 {
 
     ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
                                        ComPtr<IDXGIAdapter3> adapter3,
+                                       std::unique_ptr<Fence> fence,
                                        bool isUMA,
                                        float videoMemoryBudgetLimit,
                                        uint64_t availableForResourcesBudget)
         : mDevice(device),
           mAdapter(adapter3),
+          mFence(std::move(fence)),
           mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
                                                               : videoMemoryBudgetLimit),
-          mAvailableForResourcesBudget(availableForResourcesBudget),
-          mFence(new Fence(device, 0)) {
+          mAvailableForResourcesBudget(availableForResourcesBudget) {
+        ASSERT(mDevice != nullptr);
+        ASSERT(mAdapter != nullptr);
+        ASSERT(mFence != nullptr);
+
         // There is a non-zero memory usage even before any resources have been created, and this
         // value can vary by enviroment. By adding this in addition to the artificial budget limit,
         // we can create a predictable and reproducible budget.

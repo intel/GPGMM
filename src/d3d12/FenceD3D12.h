@@ -23,7 +23,10 @@ namespace gpgmm { namespace d3d12 {
 
     class Fence {
       public:
-        Fence(ComPtr<ID3D12Device> device, uint64_t initialValue);
+        static HRESULT CreateFence(ComPtr<ID3D12Device> device,
+                                   uint64_t initialValue,
+                                   Fence** fenceOut);
+
         ~Fence();
 
         HRESULT WaitFor(uint64_t fenceValue);
@@ -33,10 +36,11 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetCurrentFence() const;
 
       private:
+        Fence(ComPtr<ID3D12Fence> fence, uint64_t initialValue);
+
         bool IsCompleted(uint64_t fenceValue);
         uint64_t GetAndCacheLastCompletedFence();
 
-        ComPtr<ID3D12Device> mDevice;
         ComPtr<ID3D12Fence> mFence;
 
         HANDLE mCompletionEvent;
