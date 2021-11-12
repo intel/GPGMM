@@ -37,13 +37,12 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetAndCacheLastCompletedFence();
 
         ComPtr<ID3D12Device> mDevice;
+        ComPtr<ID3D12Fence> mFence;
 
         HANDLE mCompletionEvent;
         uint64_t mCurrentFence;
         uint64_t mLastCompletedFence;
         uint64_t mLastSignaledFence;
-
-        ComPtr<ID3D12Fence> mFence;
     };
 
 }}  // namespace gpgmm::d3d12

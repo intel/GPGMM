@@ -38,7 +38,7 @@ namespace gpgmm { namespace d3d12 {
 
     typedef enum ALLOCATOR_FLAGS {
 
-        // Disables all flags. Enabled by default.
+        // Disables all allocator flags. Enabled by default.
         ALLOCATOR_FLAG_NONE = 0x0,
 
         // Forces standalone committed resource creation. Useful to debug problems with
@@ -117,7 +117,7 @@ namespace gpgmm { namespace d3d12 {
 
     typedef enum ALLOCATION_FLAGS {
 
-        // Disables all flags. Enabled by default.
+        // Disables all allocation flags. Enabled by default.
         ALLOCATION_FLAG_NONE = 0x0,
 
         // Forbids creating a new resource heap when creating a resource. The created resource
@@ -132,7 +132,7 @@ namespace gpgmm { namespace d3d12 {
         // allowed (or 64KB).
         // It is undefined behavior to use sub-allocations within the same resource betweem multiple
         // command queues since accesses are not guarenteed to be coherent.
-        ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE,
+        ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
     } ALLOCATION_FLAGS;
 
@@ -162,7 +162,7 @@ namespace gpgmm { namespace d3d12 {
         INVALID = ENUMCOUNT,
     } RESOURCE_HEAP_TYPE;
 
-    class ResourceAllocator : public AllocatorBase, public IUnknownImpl {
+    class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
                                        ResourceAllocator** resourceAllocationOut);

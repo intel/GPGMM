@@ -26,12 +26,12 @@ namespace gpgmm { namespace d3d12 {
         IUnknownImpl();
         virtual ~IUnknownImpl() = default;
 
-        // IUnknown interfaces
+        // IUnknown interface
         HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
         ULONG AddRef() override;
         ULONG Release() override;
 
-        // Derived class may override this if they require a customer deleter.
+        // Derived class may override this if they require a custom deleter.
         virtual void DeleteThis();
     };
 

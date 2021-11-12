@@ -29,10 +29,10 @@ namespace gpgmm {
         void Ref();
 
         // Decrements ref by one. If count is positive, returns false.
-        // Otherwise, when it reaches zero, returns true.
+        // Otherwise, returns true when it reaches zero.
         bool Unref();
 
-        // Get the reference count.
+        // Get the ref count.
         int_fast32_t RefCount() const;
 
       private:

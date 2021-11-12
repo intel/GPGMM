@@ -43,7 +43,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetMemoryAlignment() const override;
 
       private:
-        ResourceAllocator* mResourceAllocator;
+        ResourceAllocator* const mResourceAllocator;
 
         const D3D12_HEAP_TYPE mHeapType;
         const D3D12_RESOURCE_FLAGS mResourceFlags;

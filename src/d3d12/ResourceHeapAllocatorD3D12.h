@@ -39,7 +39,8 @@ namespace gpgmm { namespace d3d12 {
         void DeallocateMemory(MemoryAllocation* allocation) override;
 
       private:
-        ResourceAllocator* mResourceAllocator;
+        ResourceAllocator* const mResourceAllocator;
+
         D3D12_HEAP_TYPE mHeapType;
         D3D12_HEAP_FLAGS mHeapFlags;
     };

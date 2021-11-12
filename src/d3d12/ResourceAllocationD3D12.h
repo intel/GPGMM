@@ -28,7 +28,9 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
-    class ResourceAllocation : public MemoryAllocation, public NonCopyable, public IUnknownImpl {
+    class ResourceAllocation final : public MemoryAllocation,
+                                     public NonCopyable,
+                                     public IUnknownImpl {
       public:
         // Constructs a resource allocation using a memory allocator.
         ResourceAllocation(ResidencyManager* residencyManager,
@@ -44,8 +46,6 @@ namespace gpgmm { namespace d3d12 {
                            const AllocationInfo& info,
                            ComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);
-
-        ~ResourceAllocation() override;
 
         // Gets the CPU pointer to the specificed subresource of the resource allocation.
         // If sub-allocated within the resource, the read or write range and
@@ -71,10 +71,10 @@ namespace gpgmm { namespace d3d12 {
         // If sub-allocated within the resource, the offset could be greater than zero.
         uint64_t GetOffsetFromResource() const;
 
-      protected:
+      private:
+        ~ResourceAllocation() override;
         void DeleteThis() override;
 
-      private:
         ResourceAllocator* const mResourceAllocator;
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
