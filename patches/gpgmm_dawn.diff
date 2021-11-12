@@ -417,7 +417,7 @@ index 3b96092e..5ef2c02d 100644
 +        allocatorDesc.MaxResourceSizeForPooling = 0;                          // Always pool heaps
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
-+            allocatorDesc.Flags = gpgmm::d3d12::ALLOCATOR_ALWAYS_IN_BUDGET;
++            allocatorDesc.Flags = gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +            allocatorDesc.MaxVideoMemoryBudget = 0.95;  // Use up to 95%.
 +        }
 +

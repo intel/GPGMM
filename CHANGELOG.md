@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 New
-- `gpgmm::d3d12::ALLOCATOR_FLAGS::ALLOCATOR_ALWAYS_COMMITED` flag to help troubleshoot problems from using placed resource based sub-allocation.
-- `gpgmm::d3d12::ALLOCATOR_FLAGS::ALLOCATOR_ALWAYS_IN_BUDGET` flag to help troubleshoot
+- `gpgmm::d3d12::ALLOCATOR_FLAGS::ALLOCATOR_FLAG_ALWAYS_COMMITED` flag to help troubleshoot problems from using placed resource based sub-allocation.
+- `gpgmm::d3d12::ALLOCATOR_FLAGS::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET` flag to help troubleshoot
 problems from over committing when using residency.
 
 - `gpgmm::d3d12::ALLOCATOR_DESC::[PreferredResourceHeapSize|MaxResourceHeapSize]` option(s) to specify the (preferred) min and/or max heap sizes, respectively (vs hard coded).

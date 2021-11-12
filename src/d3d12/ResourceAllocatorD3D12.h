@@ -43,26 +43,26 @@ namespace gpgmm { namespace d3d12 {
 
         // Forces standalone committed resource creation. Useful to debug problems with
         // suballocation or needing to create very big resources.
-        ALLOCATOR_ALWAYS_COMMITED = 0x1,
+        ALLOCATOR_FLAG_ALWAYS_COMMITED = 0x1,
 
         // Ensures resources are always within the resource budget at creation time. Mostly used
         // to debug with residency being over committed.
-        ALLOCATOR_ALWAYS_IN_BUDGET = 0x2,
+        ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
     } ALLOCATOR_FLAGS;
 
     typedef enum ALLOCATOR_RECORD_FLAGS {
 
         // Disables all recording flags. Enabled by default.
-        ALLOCATOR_RECORD_FLAGS_NONE = 0x0,
+        ALLOCATOR_RECORD_FLAG_NONE = 0x0,
 
         // Configures event-based tracing using the Trace Event API.
-        ALLOCATOR_RECORD_TRACE_EVENTS = 0x1,
+        ALLOCATOR_RECORD_FLAG_TRACE_EVENTS = 0x1,
 
     } ALLOCATOR_RECORD_FLAGS;
 
     struct ALLOCATOR_RECORD_OPTIONS {
-        ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAGS_NONE;
+        ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
         // Path to trace file. Default is trace.json.
         const char* TraceFile = nullptr;

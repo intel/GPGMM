@@ -142,7 +142,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalidDesc) {
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
-    desc.Flags = ALLOCATOR_ALWAYS_COMMITED;
+    desc.Flags = ALLOCATOR_FLAG_ALWAYS_COMMITED;
 
     ComPtr<ResourceAllocator> allocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));

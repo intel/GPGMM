@@ -105,7 +105,7 @@ allocation.Release();
 ```
 
 To use basic residency:
-1. Create a `d3d12::ResourceAllocator` with `ALLOCATOR_ALWAYS_IN_BUDGET` flag.
+1. Create a `d3d12::ResourceAllocator` with `ALLOCATOR_FLAG_ALWAYS_IN_BUDGET` flag.
 2. Use `d3d12::ResourceAllocator::CreateResource` for every resource you want residency managed.
 3. Create a `d3d12::ResidencySet` to track a collection of allocations that should be resident for a given command-list (1:1 relationship).
 4. `d3d12::ResourceAllocation::UpdateResidency` tracks the underlying heap for the resident set.

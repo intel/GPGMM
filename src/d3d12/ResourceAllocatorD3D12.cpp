@@ -248,7 +248,8 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        bool enableEventTracer = descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_TRACE_EVENTS;
+        bool enableEventTracer =
+            descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
 #ifdef GPGMM_ALWAYS_RECORD_EVENT_TRACE
         enableEventTracer = true;
 #endif
@@ -280,8 +281,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(std::move(residencyManager)),
           mIsUMA(descriptor.IsUMA),
           mResourceHeapTier(descriptor.ResourceHeapTier),
-          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_ALWAYS_COMMITED),
-          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_ALWAYS_IN_BUDGET),
+          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
+          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize((descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
                                                                     : kDefaultMaxResourceHeapSize) {
         GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator", this);
