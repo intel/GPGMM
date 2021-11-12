@@ -2,10 +2,10 @@
   "traceEvents": [
     {},
     {
-      "name": "CreateAllocator",
+      "name": "ResourceAllocator.CreateAllocator",
       "cat": "0",
       "ph": "i",
-      "tid": 3324,
+      "tid": 1216,
       "ts": 0,
       "pid": "GPGMM",
       "args": {
@@ -15,10 +15,10 @@
         },
         "IsUMA": 0,
         "ResourceHeapTier": 1,
-        "PreferredResourceHeapSize": 0,
-        "MaxResourceHeapSize": 0,
+        "PreferredResourceHeapSize": 4194304,
+        "MaxResourceHeapSize": 34359738368,
         "MaxResourceSizeForPooling": 0,
-        "MaxVideoMemoryBudget": 0,
+        "MaxVideoMemoryBudget": 0.95,
         "TotalResourceBudgetLimit": 0
       }
     },
@@ -26,17 +26,17 @@
       "name": "ResourceAllocator",
       "cat": "0",
       "ph": "N",
-      "id": "0x1b5494fd410",
-      "tid": 3324,
-      "ts": 22,
+      "id": "0x209cd4da5c0",
+      "tid": 1216,
+      "ts": 43,
       "pid": "GPGMM"
     },
     {
-      "name": "CreateResource",
+      "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 3324,
-      "ts": 21436,
+      "tid": 1216,
+      "ts": 70533,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -63,20 +63,36 @@
       }
     },
     {
-      "name": "ResourceAllocation",
+      "name": "ResourceAllocator.CreateResource",
       "cat": "0",
-      "ph": "N",
-      "id": "0x1b548f30d90",
-      "tid": 3324,
-      "ts": 22514,
+      "ph": "B",
+      "tid": 1216,
+      "ts": 70534,
       "pid": "GPGMM"
     },
     {
-      "name": "CreateResource",
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x209ce3a5e80",
+      "tid": 1216,
+      "ts": 71875,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "E",
+      "tid": 1216,
+      "ts": 71878,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 3324,
-      "ts": 23427,
+      "tid": 1216,
+      "ts": 73221,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -103,39 +119,87 @@
       }
     },
     {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "B",
+      "tid": 1216,
+      "ts": 73222,
+      "pid": "GPGMM"
+    },
+    {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1b548f32690",
-      "tid": 3324,
-      "ts": 25343,
+      "id": "0x209ce3a5390",
+      "tid": 1216,
+      "ts": 73916,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "E",
+      "tid": 1216,
+      "ts": 73925,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.DeleteThis",
+      "cat": "0",
+      "ph": "B",
+      "tid": 1216,
+      "ts": 77455,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1b548f30d90",
-      "tid": 3324,
-      "ts": 29203,
+      "id": "0x209ce3a5e80",
+      "tid": 1216,
+      "ts": 77684,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.DeleteThis",
+      "cat": "0",
+      "ph": "E",
+      "tid": 1216,
+      "ts": 77685,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.DeleteThis",
+      "cat": "0",
+      "ph": "B",
+      "tid": 1216,
+      "ts": 77693,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1b548f32690",
-      "tid": 3324,
-      "ts": 29487,
+      "id": "0x209ce3a5390",
+      "tid": 1216,
+      "ts": 77920,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.DeleteThis",
+      "cat": "0",
+      "ph": "E",
+      "tid": 1216,
+      "ts": 77921,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator",
       "cat": "0",
       "ph": "D",
-      "id": "0x1b5494fd410",
-      "tid": 3324,
-      "ts": 29600,
+      "id": "0x209cd4da5c0",
+      "tid": 1216,
+      "ts": 78003,
       "pid": "GPGMM"
     }
   ]

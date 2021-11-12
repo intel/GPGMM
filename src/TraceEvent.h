@@ -42,41 +42,30 @@
 const uint64_t kNoId = 0;
 const std::string kNoArgs = "";
 
-#define GPGMM_API_TRACE_FUNCTION_BEGIN()     \
-    do {                                     \
-        if (gpgmm::IsEventTracerEnabled()) { \
-            TRACE_EVENT_BEGIN(__func__);     \
-        }                                    \
-    } while (false)
+#define TRACE_EVENT_CALL_SCOPED(name) \
+    struct ScopedTracedCall {         \
+        ScopedTracedCall() {          \
+            TRACE_EVENT_BEGIN(name);  \
+        }                             \
+        ~ScopedTracedCall() {         \
+            TRACE_EVENT_END(name);    \
+        }                             \
+    } scopedTracedCall {              \
+    }
 
-#define GPGMM_API_TRACE_FUNCTION_END()       \
-    do {                                     \
-        if (gpgmm::IsEventTracerEnabled()) { \
-            TRACE_EVENT_END(__func__);       \
-        }                                    \
-    } while (false)
-
-#define GPGMM_API_TRACE_FUNCTION_CALL(desc)                                \
+#define TRACE_EVENT_OBJECT_DESC(name, desc)                                \
     do {                                                                   \
         if (gpgmm::IsEventTracerEnabled()) {                               \
             auto GPGMM_LOCAL_ARGS = JSONSerializer::SerializeToJSON(desc); \
-            TRACE_EVENT_INSTANT(__func__, GPGMM_LOCAL_ARGS);               \
+            TRACE_EVENT_INSTANT(name, GPGMM_LOCAL_ARGS);                   \
         }                                                                  \
     } while (false)
 
-#define GPGMM_OBJECT_NEW_INSTANCE(className, objPtr)             \
-    do {                                                         \
-        if (gpgmm::IsEventTracerEnabled()) {                     \
-            TRACE_EVENT_OBJECT_CREATED_WITH_ID(className, this); \
-        }                                                        \
-    } while (false)
+#define TRACE_EVENT_NEW_OBJECT(className, objPtr) \
+    TRACE_EVENT_OBJECT_CREATED_WITH_ID(className, objPtr)
 
-#define GPGMM_OBJECT_DELETE_INSTANCE(className, objPtr)          \
-    do {                                                         \
-        if (gpgmm::IsEventTracerEnabled()) {                     \
-            TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, this); \
-        }                                                        \
-    } while (false)
+#define TRACE_EVENT_DELETE_OBJECT(className, objPtr) \
+    TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, objPtr)
 
 #define GPGMM_OBJECT_SNAPSHOT_INSTANCE(className, objPtr, desc)                           \
     do {                                                                                  \

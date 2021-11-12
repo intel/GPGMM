@@ -256,10 +256,8 @@ namespace gpgmm { namespace d3d12 {
 
         if (enableEventTracer) {
             StartupEventTracer(descriptor.RecordOptions.TraceFile);
+            TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateAllocator", descriptor);
         }
-
-        // Must StartupEventTracer before tracing any class.
-        GPGMM_API_TRACE_FUNCTION_CALL(descriptor);
 
         std::unique_ptr<ResidencyManager> residencyManager;
         ResidencyManager* residencyManagerPtr = nullptr;
@@ -285,7 +283,7 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize((descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
                                                                     : kDefaultMaxResourceHeapSize) {
-        GPGMM_OBJECT_NEW_INSTANCE("ResourceAllocator", this);
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocator", this);
 
         const uint64_t preferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                        ? descriptor.PreferredResourceHeapSize
@@ -347,7 +345,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        GPGMM_OBJECT_DELETE_INSTANCE("ResourceAllocator", this);
+        TRACE_EVENT_DELETE_OBJECT("ResourceAllocator", this);
         ShutdownEventTracer();
     }
 
@@ -365,8 +363,6 @@ namespace gpgmm { namespace d3d12 {
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** resourceAllocationOut) {
-        GPGMM_API_TRACE_FUNCTION_BEGIN();
-
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
@@ -374,7 +370,9 @@ namespace gpgmm { namespace d3d12 {
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor,
                                            initialResourceState, clearValue};
 
-        GPGMM_API_TRACE_FUNCTION_CALL(desc);
+        TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateResource", desc);
+
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
@@ -471,14 +469,11 @@ namespace gpgmm { namespace d3d12 {
                                                         /*allocator*/ this, info,
                                                         std::move(committedResource), resourceHeap};
 
-        GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
                                               ResourceAllocation** resourceAllocationOut) {
-        GPGMM_API_TRACE_FUNCTION_BEGIN();
-
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
@@ -488,7 +483,8 @@ namespace gpgmm { namespace d3d12 {
         }
 
         D3D12_RESOURCE_DESC desc = committedResource->GetDesc();
-        GPGMM_API_TRACE_FUNCTION_CALL(desc);
+        TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateResource", desc);
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
@@ -509,7 +505,6 @@ namespace gpgmm { namespace d3d12 {
             new ResourceAllocation{/*residencyManager*/ nullptr,
                                    /*allocator*/ this, info, std::move(committedResource), heap};
 
-        GPGMM_API_TRACE_FUNCTION_END();
         return S_OK;
     }
 
