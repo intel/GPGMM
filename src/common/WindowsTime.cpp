@@ -31,6 +31,20 @@ namespace gpgmm {
             return static_cast<double>(curTime.QuadPart) / GetFrequency();
         }
 
+        void StartElapsedTime() override {
+            LARGE_INTEGER startCount;
+            const bool success = QueryPerformanceCounter(&startCount);
+            ASSERT(success);
+            mCounterStart = startCount.QuadPart;
+        }
+
+        double EndElapsedTime() override {
+            LARGE_INTEGER endCount;
+            const bool success = QueryPerformanceCounter(&endCount);
+            ASSERT(success);
+            return static_cast<double>(endCount.QuadPart - mCounterStart) / GetFrequency();
+        }
+
       private:
         LONGLONG GetFrequency() {
             if (mFrequency == 0) {
@@ -44,6 +58,7 @@ namespace gpgmm {
         }
 
         LONGLONG mFrequency;
+        LONGLONG mCounterStart;
     };
 
     PlatformTime* CreatePlatformTime() {

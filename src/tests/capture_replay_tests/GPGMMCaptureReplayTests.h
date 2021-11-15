@@ -20,9 +20,24 @@
 #include <regex>
 #include <string>
 
+namespace gpgmm {
+    class PlatformTime;
+}
+
 struct TraceFile {
     std::string name;
     std::string path;
+};
+
+struct CaptureReplayCallStats {
+    std::string FuncLabel = "";
+    double TotalCpuTime = 0;
+    uint64_t TotalNumOfCalls = 0;
+};
+
+struct CaptureReplayMemoryStats {
+    uint64_t TotalAllocationSize = 0;
+    uint64_t TotalAllocationCount = 0;
 };
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);
@@ -40,6 +55,11 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
 
 class CaptureReplyTestWithParams : public testing::TestWithParam<TraceFile> {
   public:
+    CaptureReplyTestWithParams();
+
+    void LogCallStats(const CaptureReplayCallStats& stats) const;
+    void LogCallStats(const CaptureReplayMemoryStats& stats) const;
+
     template <class ParamType>
     static std::string CustomPrintToStringParamName(
         const ::testing::TestParamInfo<ParamType>& info) {
@@ -47,6 +67,9 @@ class CaptureReplyTestWithParams : public testing::TestWithParam<TraceFile> {
             std::regex_replace(info.param.name, std::regex("[^a-zA-Z0-9]+"), "_");
         return sanitizedTraceFileName;
     }
+
+  protected:
+    std::unique_ptr<gpgmm::PlatformTime> mPlatformTime;
 };
 
 #define GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(testSuiteName)                                 \

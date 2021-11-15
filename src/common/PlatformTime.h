@@ -22,9 +22,17 @@ namespace gpgmm {
         virtual ~PlatformTime() {
         }
 
+        // Return the current time (in seconds) of the platform.
+        virtual double GetAbsoluteTime() = 0;
+
+        // Return the elasped time (in seconds) since GetAbsoluteTime() was first called.
         double GetRelativeTime();
 
-        virtual double GetAbsoluteTime() = 0;
+        // Used to start a duration or interval of elapsed time (in seconds).
+        virtual void StartElapsedTime() = 0;
+
+        // Return the elapsed time (in seconds) since StartElapsedTime() was last called.
+        virtual double EndElapsedTime() = 0;
     };
 
     PlatformTime* CreatePlatformTime();
