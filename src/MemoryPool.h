@@ -23,7 +23,7 @@ namespace gpgmm {
 
     class MemoryAllocation;
 
-    // Stores memory blocks or heaps.
+    // Stores a collection of memory blocks or heaps.
     class MemoryPool {
       public:
         virtual ~MemoryPool() = default;
