@@ -164,20 +164,34 @@ namespace gpgmm { namespace d3d12 {
 
     class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
+        // Creates the main instance used to help manage video memory for the
+        // specified D3D12 device and adapter in the |descriptor|.
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
                                        ResourceAllocator** resourceAllocationOut);
 
         ~ResourceAllocator() override;
 
+        // Allocates memory and creates a D3D12 resource using it.
+        // Returns a ResourceAllocation which represents a resource allocated at a specific
+        // location in memory. The resource could be allocated within a resource heap, within the
+        // resource itself, or seperately using it's own memory (resource heap). Unlike a D3D12
+        // resource, a resource allocation can made resident. It is recommended but not strictly
+        // required to use the D3D12 resource equivalent methods (ex. Map, Unmap) through the
+        // returned ResourceAllocation.
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialResourceState,
                                const D3D12_CLEAR_VALUE* clearValue,
                                ResourceAllocation** resourceAllocationOut);
 
+        // Imports an existing D3D12 resource. Allows externally created D3D12 resources to be used
+        // as ResourceAllocations. Residency is not supported for imported resources.
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** resourceAllocationOut);
 
+        // Return the residency manager. The lifetime of the residency manager is fully owned by the
+        // allocator. CreateResource enables the returned resource allocation to be residency
+        // managed when non-null.
         ResidencyManager* GetResidencyManager() const;
 
       protected:
