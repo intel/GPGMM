@@ -40,6 +40,8 @@ class DummyMemoryAllocator : public MemoryAllocator {
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
+        ASSERT(allocation != nullptr);
+        delete allocation->GetMemory();
     }
 
     uint64_t GetMemorySize() const override {
