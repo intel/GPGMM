@@ -472,38 +472,36 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> committedResource,
+    HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
                                               ResourceAllocation** resourceAllocationOut) {
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
 
-        if (committedResource == nullptr) {
+        if (resource == nullptr) {
             return E_INVALIDARG;
         }
 
-        D3D12_RESOURCE_DESC desc = committedResource->GetDesc();
+        D3D12_RESOURCE_DESC desc = resource->GetDesc();
         TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateResource", desc);
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
 
-        D3D12_HEAP_PROPERTIES heapProp;
-        ReturnIfFailed(committedResource->GetHeapProperties(&heapProp, nullptr));
+        D3D12_HEAP_PROPERTIES heapProperties;
+        ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
-        // Do not track imported resources for purposes of residency.
-        Heap* heap =
-            new Heap(committedResource,
-                     GetPreferredMemorySegmentGroup(mDevice.Get(), /*IsUMA*/ false, heapProp.Type),
-                     resourceInfo.SizeInBytes);
+        Heap* resourceHeap = new Heap(
+            resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type),
+            resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
         info.Method = gpgmm::AllocationMethod::kStandalone;
 
         *resourceAllocationOut =
             new ResourceAllocation{/*residencyManager*/ nullptr,
-                                   /*allocator*/ this, info, std::move(committedResource), heap};
+                                   /*allocator*/ this, info, std::move(resource), resourceHeap};
 
         return S_OK;
     }
