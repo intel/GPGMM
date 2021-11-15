@@ -184,6 +184,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
         allocator->CreateResource({}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
                                   D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     ASSERT_NE(allocation, nullptr);
+    EXPECT_EQ(allocation->GetSize(), kDefaultPreferredResourceHeapSize);
 
     // Commmitted resources cannot be backed by a D3D12 heap.
     Heap* resourceHeap = static_cast<Heap*>(allocation->GetMemory());
@@ -207,6 +208,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
         allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
         D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationA));
     ASSERT_NE(allocationA, nullptr);
+    EXPECT_EQ(allocationA->GetSize(), kDefaultPreferredResourceHeapSize / 2);
 
     // Re-check that the same resource heap is used once CreateResource gets called.
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
@@ -215,6 +217,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
         allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize / 2),
         D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationB));
     ASSERT_NE(allocationB, nullptr);
+    EXPECT_EQ(allocationB->GetSize(), kDefaultPreferredResourceHeapSize / 2);
 
     // Must fail since the first resource heap is full and another CreateResource cannot allocate.
     ComPtr<ResourceAllocation> allocationC;
@@ -237,12 +240,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
         &tinyBufferAllocA));
     ASSERT_NE(tinyBufferAllocA, nullptr);
+    EXPECT_EQ(tinyBufferAllocA->GetSize(), kSubAllocationSize);
 
     ComPtr<ResourceAllocation> tinyBufferAllocB;
     ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
         &tinyBufferAllocB));
     ASSERT_NE(tinyBufferAllocB, nullptr);
+    EXPECT_EQ(tinyBufferAllocB->GetSize(), kSubAllocationSize);
 
     // Both buffers should be allocated in sequence, back-to-back.
     EXPECT_EQ(tinyBufferAllocA->GetInfo().Offset + kSubAllocationSize,
@@ -265,7 +270,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
         &tinyBufferAllocC));
     ASSERT_NE(tinyBufferAllocC, nullptr);
-
+    EXPECT_EQ(tinyBufferAllocC->GetSize(), kSubAllocationSize);
     EXPECT_EQ(tinyBufferAllocC->GetInfo().Offset, 0u);
     EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
 

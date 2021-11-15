@@ -20,10 +20,16 @@
 
 namespace gpgmm {
 
+    // Represents a memory block or heap.
     class MemoryBase : public RefCounted, public NonCopyable {
       public:
-        MemoryBase();
+        MemoryBase(uint64_t size);
         virtual ~MemoryBase();
+
+        uint64_t GetSize() const;
+
+      private:
+        const uint64_t mSize;
     };
 
 }  // namespace gpgmm

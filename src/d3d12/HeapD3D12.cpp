@@ -20,10 +20,10 @@ namespace gpgmm { namespace d3d12 {
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,
                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                uint64_t size)
-        : mPageable(std::move(pageable)),
+        : MemoryBase(size),
+          mPageable(std::move(pageable)),
           mMemorySegmentGroup(memorySegmentGroup),
-          mResidencyLock(0),
-          mSize(size) {
+          mResidencyLock(0) {
     }
 
     // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
@@ -55,10 +55,6 @@ namespace gpgmm { namespace d3d12 {
 
     DXGI_MEMORY_SEGMENT_GROUP Heap::GetMemorySegmentGroup() const {
         return mMemorySegmentGroup;
-    }
-
-    uint64_t Heap::GetSize() const {
-        return mSize;
     }
 
     bool Heap::IsInResidencyLRUCache() const {

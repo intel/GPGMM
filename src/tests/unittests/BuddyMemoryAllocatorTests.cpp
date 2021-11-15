@@ -36,7 +36,7 @@ class DummyMemoryAllocator : public MemoryAllocator {
         AllocationInfo info = {};
         info.Method = AllocationMethod::kStandalone;
         info.Offset = 0;
-        return std::make_unique<MemoryAllocation>(this, info, new MemoryBase());
+        return std::make_unique<MemoryAllocation>(this, info, new MemoryBase(0));
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
@@ -83,6 +83,7 @@ TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
+    ASSERT_EQ(allocation1->GetSize(), 128u);
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 1u);
 
@@ -129,6 +130,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
     std::unique_ptr<MemoryAllocation> allocation1 = allocator.AllocateMemory(
         kDefaultMemorySize, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation1, nullptr);
+    ASSERT_EQ(allocation1->GetSize(), kDefaultMemorySize);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -138,6 +140,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
     std::unique_ptr<MemoryAllocation> allocation2 = allocator.AllocateMemory(
         kDefaultMemorySize, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation2, nullptr);
+    ASSERT_EQ(allocation2->GetSize(), kDefaultMemorySize);
     ASSERT_EQ(allocation2->GetInfo().Block->Offset, kDefaultMemorySize);
     ASSERT_EQ(allocation2->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -173,6 +176,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     std::unique_ptr<MemoryAllocation> allocation1 = allocator.AllocateMemory(
         kDefaultMemorySize / 2, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation1, nullptr);
+    ASSERT_EQ(allocation1->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -182,6 +186,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     std::unique_ptr<MemoryAllocation> allocation2 = allocator.AllocateMemory(
         kDefaultMemorySize / 2, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation2, nullptr);
+    ASSERT_EQ(allocation2->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation2->GetInfo().Block->Offset, kDefaultMemorySize / 2);
     ASSERT_EQ(allocation2->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -192,6 +197,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     std::unique_ptr<MemoryAllocation> allocation3 = allocator.AllocateMemory(
         kDefaultMemorySize / 2, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation3, nullptr);
+    ASSERT_EQ(allocation3->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation3->GetInfo().Block->Offset, kDefaultMemorySize);
     ASSERT_EQ(allocation3->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -233,6 +239,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     std::unique_ptr<MemoryAllocation> allocation1 =
         allocator.AllocateMemory(64, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation1, nullptr);
+    ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -240,6 +247,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.AllocateMemory(64, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation2, nullptr);
+    ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetInfo().Block->Offset, 64u);
     ASSERT_EQ(allocation2->GetInfo().Offset, 64u);
     ASSERT_EQ(allocation2->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -251,6 +259,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     std::unique_ptr<MemoryAllocation> allocation3 =
         allocator.AllocateMemory(128, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation3, nullptr);
+    ASSERT_EQ(allocation3->GetSize(), 128u);
     ASSERT_EQ(allocation3->GetInfo().Block->Offset, 128u);
     ASSERT_EQ(allocation3->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -262,6 +271,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     std::unique_ptr<MemoryAllocation> allocation4 =
         allocator.AllocateMemory(64, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation4, nullptr);
+    ASSERT_EQ(allocation4->GetSize(), 64u);
     ASSERT_EQ(allocation4->GetInfo().Block->Offset, 256u);
     ASSERT_EQ(allocation4->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation4->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -273,6 +283,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     std::unique_ptr<MemoryAllocation> allocation5 =
         allocator.AllocateMemory(128, kDefaultMemoryAlignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation5, nullptr);
+    ASSERT_EQ(allocation5->GetSize(), 128u);
     ASSERT_EQ(allocation5->GetInfo().Block->Offset, 384u);
     ASSERT_EQ(allocation5->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation5->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -318,6 +329,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     std::unique_ptr<MemoryAllocation> allocation1 =
         allocator.AllocateMemory(64, 128, /*neverAllocate*/ true);
     ASSERT_NE(allocation1, nullptr);
+    ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -327,6 +339,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.AllocateMemory(64, 128, /*neverAllocate*/ true);
     ASSERT_NE(allocation2, nullptr);
+    ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetInfo().Block->Offset, 128u);
     ASSERT_EQ(allocation2->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation2->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -337,6 +350,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     std::unique_ptr<MemoryAllocation> allocation3 =
         allocator.AllocateMemory(64, 128, /*neverAllocate*/ true);
     ASSERT_NE(allocation3, nullptr);
+    ASSERT_EQ(allocation3->GetSize(), 64u);
     ASSERT_EQ(allocation3->GetInfo().Block->Offset, 256u);
     ASSERT_EQ(allocation3->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -347,6 +361,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     std::unique_ptr<MemoryAllocation> allocation4 =
         allocator.AllocateMemory(64, 64, /*neverAllocate*/ true);
     ASSERT_NE(allocation4, nullptr);
+    ASSERT_EQ(allocation4->GetSize(), 64u);
     ASSERT_EQ(allocation4->GetInfo().Block->Offset, 320u);
     ASSERT_EQ(allocation4->GetInfo().Offset, 64u);
     ASSERT_EQ(allocation4->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -390,6 +405,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     std::unique_ptr<MemoryAllocation> allocation1 =
         allocator.AllocateMemory(64, alignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation1, nullptr);
+    ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetInfo().Block->Offset, 0u);
     ASSERT_EQ(allocation1->GetInfo().Method, AllocationMethod::kSubAllocated);
 
@@ -398,6 +414,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.AllocateMemory(64, alignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation2, nullptr);
+    ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetInfo().Block->Offset, 64u);
     ASSERT_EQ(allocation2->GetInfo().Offset, 64u);
     ASSERT_EQ(allocation2->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -408,6 +425,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     std::unique_ptr<MemoryAllocation> allocation3 =
         allocator.AllocateMemory(128, alignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation3, nullptr);
+    ASSERT_EQ(allocation3->GetSize(), 128u);
     ASSERT_EQ(allocation3->GetInfo().Block->Offset, 128u);
     ASSERT_EQ(allocation3->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation3->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -418,6 +436,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     std::unique_ptr<MemoryAllocation> allocation4 =
         allocator.AllocateMemory(128, alignment, /*neverAllocate*/ true);
     ASSERT_NE(allocation4, nullptr);
+    ASSERT_EQ(allocation4->GetSize(), 128u);
     ASSERT_EQ(allocation4->GetInfo().Block->Offset, 256u);
     ASSERT_EQ(allocation4->GetInfo().Offset, 0u);
     ASSERT_EQ(allocation4->GetInfo().Method, AllocationMethod::kSubAllocated);
@@ -470,6 +489,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.AllocateMemory(4, kDefaultMemoryAlignment, /*neverAllocate*/ true);
         ASSERT_NE(allocation, nullptr);
+        ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetInfo().Method, AllocationMethod::kSubAllocated);
         heaps.insert(allocation->GetMemory());
         allocations.push_back(std::move(allocation));
@@ -492,6 +512,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.AllocateMemory(4, kDefaultMemoryAlignment, /*neverAllocate*/ true);
         ASSERT_NE(allocation, nullptr);
+        ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetInfo().Method, AllocationMethod::kSubAllocated);
         ASSERT_FALSE(heaps.insert(allocation->GetMemory()).second);
         allocations.push_back(std::move(allocation));
@@ -531,6 +552,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.AllocateMemory(4, kDefaultMemoryAlignment, /*neverAllocate*/ true);
         ASSERT_NE(allocation, nullptr);
+        ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetInfo().Method, AllocationMethod::kSubAllocated);
         heaps.insert(allocation->GetMemory());
         allocations.push_back(std::move(allocation));
