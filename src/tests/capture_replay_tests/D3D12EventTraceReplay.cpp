@@ -16,6 +16,7 @@
 #include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
 #include "src/TraceEvent.h"
+#include "src/common/PlatformTime.h"
 #include "src/d3d12/UtilsD3D12.h"
 #include "src/tests/D3D12Test.h"
 
@@ -169,9 +170,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
 
                         ASSERT_FALSE(allocatorInstanceID.empty());
 
+                        mPlatformTime->StartElapsedTime();
+
                         ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
                             clearValuePtr, &newAllocationWithoutID));
+
+                        mCreateResourceStats.TotalCpuTime += mPlatformTime->EndElapsedTime();
+                        mCreateResourceStats.TotalNumOfCalls++;
+
                     } break;
 
                     default:
@@ -184,12 +191,24 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                         const std::string& traceEventID = event["id"].asString();
                         ASSERT_TRUE(allocationToIDMap.insert({traceEventID, newAllocationWithoutID})
                                         .second);
+
+                        mResourceAllocationStats.TotalAllocationSize +=
+                            newAllocationWithoutID->GetSize();
+                        mResourceAllocationStats.TotalAllocationCount++;
+
                         ASSERT_TRUE(newAllocationWithoutID.Reset() == 1);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& traceEventID = event["id"].asString();
+
+                        mPlatformTime->StartElapsedTime();
+
                         ASSERT_EQ(allocationToIDMap.erase(traceEventID), 1u);
+
+                        mReleaseResourceStats.TotalCpuTime += mPlatformTime->EndElapsedTime();
+                        mReleaseResourceStats.TotalNumOfCalls++;
+
                     } break;
 
                     default:
@@ -226,7 +245,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
 
         ASSERT_TRUE(allocationToIDMap.empty());
         ASSERT_TRUE(allocatorToIDMap.empty());
+
+        LogCallStats(mCreateResourceStats);
+        LogCallStats(mReleaseResourceStats);
+        LogCallStats(mResourceAllocationStats);
     }
+
+    CaptureReplayCallStats mCreateResourceStats = {"CreateResource"};
+    CaptureReplayCallStats mReleaseResourceStats = {"ReleaseResource"};
+    CaptureReplayMemoryStats mResourceAllocationStats;
 };
 
 TEST_P(D3D12EventTraceReplay, Run) {

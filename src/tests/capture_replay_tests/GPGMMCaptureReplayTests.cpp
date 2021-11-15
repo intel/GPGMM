@@ -14,6 +14,8 @@
 
 #include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
+#include "src/common/Log.h"
+#include "src/common/PlatformTime.h"
 #include "src/common/SystemUtils.h"
 
 #include <json/json.h>
@@ -71,4 +73,19 @@ void GPGMMCaptureReplayTestEnvironment::SetUp() {
 void GPGMMCaptureReplayTestEnvironment::TearDown() {
     // TODO
     GPGMMTestEnvironment::TearDown();
+}
+
+CaptureReplyTestWithParams::CaptureReplyTestWithParams()
+    : mPlatformTime(gpgmm::CreatePlatformTime()) {
+}
+
+void CaptureReplyTestWithParams::LogCallStats(const CaptureReplayCallStats& stats) const {
+    const double avgCpuTimePerCall =
+        (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
+    gpgmm::InfoLog() << stats.FuncLabel << " avg call time (ms): " << avgCpuTimePerCall;
+}
+
+void CaptureReplyTestWithParams::LogCallStats(const CaptureReplayMemoryStats& stats) const {
+    gpgmm::InfoLog() << "total allocation size (bytes): " << stats.TotalAllocationSize;
+    gpgmm::InfoLog() << "total allocations (count): " << stats.TotalAllocationCount;
 }
