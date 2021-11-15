@@ -33,15 +33,11 @@
 
 namespace gpgmm { namespace d3d12 {
     namespace {
-        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
-                                                                 bool isUMA,
-                                                                 D3D12_HEAP_TYPE heapType) {
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(const D3D12_HEAP_PROPERTIES& heapProperties,
+                                                        bool isUMA) {
             if (isUMA) {
                 return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
             }
-
-            D3D12_HEAP_PROPERTIES heapProperties = device->GetCustomHeapProperties(0, heapType);
-
             if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
                 return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
             }
@@ -492,9 +488,8 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties;
         ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
-        Heap* resourceHeap = new Heap(
-            resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type),
-            resourceInfo.SizeInBytes);
+        Heap* resourceHeap = new Heap(resource, GetMemorySegmentGroup(heapProperties, false),
+                                      resourceInfo.SizeInBytes);
 
         gpgmm::AllocationInfo info;
         info.Method = gpgmm::AllocationMethod::kStandalone;
@@ -553,21 +548,15 @@ namespace gpgmm { namespace d3d12 {
                                                   D3D12_HEAP_FLAGS heapFlags,
                                                   uint64_t heapAlignment,
                                                   Heap** resourceHeapOut) {
+        const D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
         const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
-            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
+            GetMemorySegmentGroup(heapProperties, mIsUMA);
 
         // CreateHeap will implicitly make the created heap resident. We must ensure enough free
         // memory exists before allocating to avoid an out-of-memory error when overcommitted.
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
             mResidencyManager->Evict(heapSize, memorySegmentGroup);
         }
-
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        heapProperties.Type = heapType;
-        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapProperties.CreationNodeMask = 0;
-        heapProperties.VisibleNodeMask = 0;
 
         D3D12_HEAP_DESC heapDesc = {};
         heapDesc.Properties = heapProperties;
@@ -603,17 +592,13 @@ namespace gpgmm { namespace d3d12 {
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
-        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->Evict(
-                resourceSize, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType)));
-        }
+        const D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
+        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
+            GetMemorySegmentGroup(heapProperties, mIsUMA);
 
-        D3D12_HEAP_PROPERTIES heapProperties;
-        heapProperties.Type = heapType;
-        heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapProperties.CreationNodeMask = 0;
-        heapProperties.VisibleNodeMask = 0;
+        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
+            ReturnIfFailed(mResidencyManager->Evict(resourceSize, memorySegmentGroup));
+        }
 
         // Resource heap flags must be inferred by the resource descriptor and cannot be explicitly
         // provided to CreateCommittedResource.
@@ -626,9 +611,7 @@ namespace gpgmm { namespace d3d12 {
             IID_PPV_ARGS(&committedResource)));
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
-        Heap* resourceHeap =
-            new Heap(committedResource,
-                     GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType), resourceSize);
+        Heap* resourceHeap = new Heap(committedResource, memorySegmentGroup, resourceSize);
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
