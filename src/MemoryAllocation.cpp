@@ -16,6 +16,7 @@
 #include "src/MemoryAllocation.h"
 #include "common/Assert.h"
 #include "common/Limits.h"
+#include "src/BlockAllocator.h"
 #include "src/Memory.h"
 
 namespace gpgmm {
@@ -64,6 +65,23 @@ namespace gpgmm {
 
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
         return mAllocator;
+    }
+
+    uint64_t MemoryAllocation::GetSize() const {
+        switch (GetInfo().Method) {
+            case gpgmm::AllocationMethod::kStandalone:
+                ASSERT(mMemory != nullptr);
+                return mMemory->GetSize();
+            case gpgmm::AllocationMethod::kSubAllocated:
+            case gpgmm::AllocationMethod::kSubAllocatedWithin: {
+                ASSERT(GetInfo().Block != nullptr);
+                return GetInfo().Block->Size;
+            }
+            default: {
+                UNREACHABLE();
+                return kInvalidSize;
+            }
+        }
     }
 
 }  // namespace gpgmm

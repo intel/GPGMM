@@ -46,8 +46,6 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT UpdateResidency(ResidencySet* residencySet);
 
-        uint64_t GetSize() const;
-
         bool IsResident() const;
 
         // Testing only.
@@ -78,7 +76,6 @@ namespace gpgmm { namespace d3d12 {
         uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
         RefCounted mResidencyLock;
-        uint64_t mSize = 0;
     };
 }}  // namespace gpgmm::d3d12
 

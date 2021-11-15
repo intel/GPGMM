@@ -17,11 +17,15 @@
 
 namespace gpgmm {
 
-    MemoryBase::MemoryBase() : RefCounted(0) {
+    MemoryBase::MemoryBase(uint64_t size) : RefCounted(0), mSize(size) {
     }
 
     MemoryBase::~MemoryBase() {
         ASSERT(RefCount() == 0);
+    }
+
+    uint64_t MemoryBase::GetSize() const {
+        return mSize;
     }
 
 }  // namespace gpgmm

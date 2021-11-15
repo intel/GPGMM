@@ -77,6 +77,7 @@ namespace gpgmm {
         uint8_t* GetMappedPointer() const;
         AllocationInfo GetInfo() const;
         MemoryAllocator* GetAllocator() const;
+        uint64_t GetSize() const;
 
       protected:
         friend class MemoryAllocator;
