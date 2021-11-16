@@ -603,9 +603,11 @@ namespace gpgmm { namespace d3d12 {
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
+        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
+            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
+
         if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->Evict(
-                resourceSize, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType)));
+            ReturnIfFailed(mResidencyManager->Evict(resourceSize, memorySegmentGroup));
         }
 
         D3D12_HEAP_PROPERTIES heapProperties;
@@ -626,9 +628,7 @@ namespace gpgmm { namespace d3d12 {
             IID_PPV_ARGS(&committedResource)));
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
-        Heap* resourceHeap =
-            new Heap(committedResource,
-                     GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType), resourceSize);
+        Heap* resourceHeap = new Heap(committedResource, memorySegmentGroup, resourceSize);
 
         // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
         // track this to avoid calling MakeResident a second time.
