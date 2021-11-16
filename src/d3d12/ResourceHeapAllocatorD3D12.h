@@ -24,7 +24,7 @@ namespace gpgmm { namespace d3d12 {
 
     class ResourceAllocator;
 
-    // Wrapper to allocate a D3D12 heap.
+    // Wrapper to allocate a D3D12 heap for resources of a specific type.
     class ResourceHeapAllocator : public MemoryAllocator {
       public:
         ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
@@ -41,8 +41,8 @@ namespace gpgmm { namespace d3d12 {
       private:
         ResourceAllocator* const mResourceAllocator;
 
-        D3D12_HEAP_TYPE mHeapType;
-        D3D12_HEAP_FLAGS mHeapFlags;
+        const D3D12_HEAP_TYPE mHeapType;
+        const D3D12_HEAP_FLAGS mHeapFlags;
     };
 
 }}  // namespace gpgmm::d3d12

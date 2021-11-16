@@ -33,15 +33,15 @@ namespace gpgmm { namespace d3d12 {
             return {};
         }
 
-        Heap* heap = nullptr;
+        Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags, alignment,
-                                                          &heap))) {
+                                                          &resourceHeap))) {
             return nullptr;
         }
 
         AllocationInfo info = {};
         info.Method = AllocationMethod::kStandalone;
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, heap);
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, resourceHeap);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {
