@@ -79,13 +79,15 @@ CaptureReplyTestWithParams::CaptureReplyTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
-void CaptureReplyTestWithParams::LogCallStats(const CaptureReplayCallStats& stats) const {
+void CaptureReplyTestWithParams::LogCallStats(const std::string& name,
+                                              const CaptureReplayCallStats& stats) const {
     const double avgCpuTimePerCall =
         (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
-    gpgmm::InfoLog() << stats.FuncLabel << " avg call time (ms): " << avgCpuTimePerCall;
+    gpgmm::InfoLog() << name << " avg call time (ms): " << avgCpuTimePerCall;
 }
 
-void CaptureReplyTestWithParams::LogCallStats(const CaptureReplayMemoryStats& stats) const {
-    gpgmm::InfoLog() << "total allocation size (bytes): " << stats.TotalAllocationSize;
-    gpgmm::InfoLog() << "total allocations (count): " << stats.TotalAllocationCount;
+void CaptureReplyTestWithParams::LogMemoryStats(const std::string& name,
+                                                const CaptureReplayMemoryStats& stats) const {
+    gpgmm::InfoLog() << "total " << name << " size (bytes): " << stats.TotalSize;
+    gpgmm::InfoLog() << "total " << name << " count: " << stats.TotalCount;
 }
