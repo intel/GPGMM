@@ -417,13 +417,15 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
-                    AllocationInfo info = subAllocation.GetInfo();
-                    info.Method = AllocationMethod::kSubAllocatedWithin;
-
-                    *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(),      subAllocation.GetAllocator(),
-                        subAllocation.GetInfo(),      subAllocation.GetInfo().Offset,
-                        std::move(committedResource), resourceHeap};
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.get(),
+                                               subAllocation.GetAllocator(),
+                                               kInvalidOffset,
+                                               AllocationMethod::kSubAllocatedWithin,
+                                               subAllocation.GetBlock(),
+                                               subAllocation.GetOffset(),
+                                               std::move(committedResource),
+                                               resourceHeap};
 
                     return S_OK;
                 }));
@@ -444,7 +446,8 @@ namespace gpgmm { namespace d3d12 {
 
                     *resourceAllocationOut = new ResourceAllocation{
                         mResidencyManager.get(),   subAllocation.GetAllocator(),
-                        subAllocation.GetInfo(),   /*offsetFromResource*/ 0,
+                        subAllocation.GetOffset(), subAllocation.GetMethod(),
+                        subAllocation.GetBlock(),  /*offsetFromResource*/ 0,
                         std::move(placedResource), resourceHeap};
 
                     return S_OK;
@@ -462,11 +465,7 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
-        AllocationInfo info = {};
-        info.Method = AllocationMethod::kStandalone;
-
-        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(),
-                                                        /*allocator*/ this, info,
+        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(), this,
                                                         std::move(committedResource), resourceHeap};
 
         return S_OK;
@@ -496,12 +495,9 @@ namespace gpgmm { namespace d3d12 {
             resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type),
             resourceInfo.SizeInBytes);
 
-        gpgmm::AllocationInfo info;
-        info.Method = gpgmm::AllocationMethod::kStandalone;
-
         *resourceAllocationOut =
             new ResourceAllocation{/*residencyManager*/ nullptr,
-                                   /*allocator*/ this, info, std::move(resource), resourceHeap};
+                                   /*allocator*/ this, std::move(resource), resourceHeap};
 
         return S_OK;
     }
@@ -515,13 +511,12 @@ namespace gpgmm { namespace d3d12 {
         ID3D12Resource** placedResourceOut,
         Heap** resourceHeapOut) {
         // Must place a resource using a sub-allocated memory allocation.
-        if (subAllocation.GetInfo().Method != AllocationMethod::kSubAllocated) {
+        if (subAllocation.GetMethod() != AllocationMethod::kSubAllocated) {
             return E_FAIL;
         }
 
         // Sub-allocation cannot be smaller than the resource being placed.
-        if (subAllocation.GetInfo().Block == nullptr ||
-            subAllocation.GetInfo().Block->Size < resourceInfo.SizeInBytes) {
+        if (subAllocation.GetSize() < resourceInfo.SizeInBytes) {
             return E_FAIL;
         }
 
@@ -538,7 +533,7 @@ namespace gpgmm { namespace d3d12 {
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
             ScopedHeapLock scopedHeapLock(GetResidencyManager(), resourceHeap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
-                resourceHeap->GetHeap(), subAllocation.GetInfo().Offset, resourceDescriptor,
+                resourceHeap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor,
                 initialResourceState, clearValue, IID_PPV_ARGS(&placedResource)));
         }
 

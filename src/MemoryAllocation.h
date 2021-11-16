@@ -40,21 +40,6 @@ namespace gpgmm {
         kUndefined
     };
 
-    // Metadata that describes how the allocation was allocated.
-    struct AllocationInfo {
-        // AllocationInfo contains a separate offset to not confuse block vs memory offsets.
-        // The block offset is within the entire allocator memory range and only required by the
-        // sub-allocator to get the corresponding memory. Unlike the block offset, the
-        // allocation offset is always local to the memory.
-        uint64_t Offset = kInvalidOffset;
-
-        Block* Block = nullptr;
-
-        AllocationMethod Method = AllocationMethod::kUndefined;
-
-        bool operator==(const AllocationInfo& other) const;
-    };
-
     class MemoryBase;
     class MemoryAllocator;
 
@@ -62,10 +47,20 @@ namespace gpgmm {
     class MemoryAllocation {
       public:
         MemoryAllocation();
+
+        // Constructs a sub-allocated memory allocation.
         MemoryAllocation(MemoryAllocator* allocator,
-                         const AllocationInfo& info,
+                         MemoryBase* memory,
+                         uint64_t offset,
+                         AllocationMethod method,
+                         Block* block,
+                         uint8_t* mappedPointer = nullptr);
+
+        // Constructs a standalone memory allocation.
+        MemoryAllocation(MemoryAllocator* allocator,
                          MemoryBase* memory,
                          uint8_t* mappedPointer = nullptr);
+
         virtual ~MemoryAllocation() = default;
 
         MemoryAllocation(const MemoryAllocation&) = default;
@@ -75,9 +70,11 @@ namespace gpgmm {
 
         MemoryBase* GetMemory() const;
         uint8_t* GetMappedPointer() const;
-        AllocationInfo GetInfo() const;
         MemoryAllocator* GetAllocator() const;
         uint64_t GetSize() const;
+        uint64_t GetOffset() const;
+        AllocationMethod GetMethod() const;
+        Block* GetBlock() const;
 
       protected:
         friend class MemoryAllocator;
@@ -86,8 +83,16 @@ namespace gpgmm {
 
       private:
         MemoryAllocator* mAllocator;
-        AllocationInfo mInfo;
         MemoryBase* mMemory;
+
+        // AllocationInfo contains a separate offset to not confuse block vs memory offsets.
+        // The block offset is within the entire allocator memory range and only required by the
+        // sub-allocator to get the corresponding memory. Unlike the block offset, the
+        // allocation offset is always local to the memory.
+        uint64_t mOffset;
+        AllocationMethod mMethod;
+        Block* mBlock;
+
         uint8_t* mMappedPointer;
     };
 }  // namespace gpgmm

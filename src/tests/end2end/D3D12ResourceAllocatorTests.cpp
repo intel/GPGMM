@@ -250,8 +250,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     EXPECT_EQ(tinyBufferAllocB->GetSize(), kSubAllocationSize);
 
     // Both buffers should be allocated in sequence, back-to-back.
-    EXPECT_EQ(tinyBufferAllocA->GetInfo().Offset + kSubAllocationSize,
-              tinyBufferAllocB->GetInfo().Offset);
+    EXPECT_EQ(tinyBufferAllocA->GetOffsetFromResource() + kSubAllocationSize,
+              tinyBufferAllocB->GetOffsetFromResource());
 
     EXPECT_EQ(tinyBufferAllocA->GetResource(), tinyBufferAllocB->GetResource());
 
@@ -271,7 +271,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
         &tinyBufferAllocC));
     ASSERT_NE(tinyBufferAllocC, nullptr);
     EXPECT_EQ(tinyBufferAllocC->GetSize(), kSubAllocationSize);
-    EXPECT_EQ(tinyBufferAllocC->GetInfo().Offset, 0u);
+    EXPECT_EQ(tinyBufferAllocC->GetOffsetFromResource(), 0u);
     EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
 
     // Write kSubAllocationSize worth of bytes with value 0xAA in mapped subAllocation A.
