@@ -30,14 +30,13 @@ struct TraceFile {
 };
 
 struct CaptureReplayCallStats {
-    std::string FuncLabel = "";
     double TotalCpuTime = 0;
     uint64_t TotalNumOfCalls = 0;
 };
 
 struct CaptureReplayMemoryStats {
-    uint64_t TotalAllocationSize = 0;
-    uint64_t TotalAllocationCount = 0;
+    uint64_t TotalSize = 0;
+    uint64_t TotalCount = 0;
 };
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);
@@ -57,8 +56,8 @@ class CaptureReplyTestWithParams : public testing::TestWithParam<TraceFile> {
   public:
     CaptureReplyTestWithParams();
 
-    void LogCallStats(const CaptureReplayCallStats& stats) const;
-    void LogCallStats(const CaptureReplayMemoryStats& stats) const;
+    void LogCallStats(const std::string& name, const CaptureReplayCallStats& stats) const;
+    void LogMemoryStats(const std::string& name, const CaptureReplayMemoryStats& stats) const;
 
     template <class ParamType>
     static std::string CustomPrintToStringParamName(

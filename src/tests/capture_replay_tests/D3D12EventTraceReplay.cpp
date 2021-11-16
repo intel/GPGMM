@@ -23,6 +23,7 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <gpgmm_d3d12.h>
 #include <json/json.h>
@@ -108,6 +109,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToIDMap;
         std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
 
+        std::unordered_set<Heap*> resourceHeaps;
+
         ComPtr<ResourceAllocation> newAllocationWithoutID;
 
         std::string allocatorInstanceID;
@@ -192,9 +195,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                         ASSERT_TRUE(allocationToIDMap.insert({traceEventID, newAllocationWithoutID})
                                         .second);
 
-                        mResourceAllocationStats.TotalAllocationSize +=
-                            newAllocationWithoutID->GetSize();
-                        mResourceAllocationStats.TotalAllocationCount++;
+                        mResourceAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
+                        mResourceAllocationStats.TotalCount++;
+
+                        Heap* resourceHeap =
+                            static_cast<Heap*>(newAllocationWithoutID->GetMemory());
+                        ASSERT_TRUE(resourceHeap != nullptr);
+                        resourceHeaps.insert(resourceHeap);
 
                         ASSERT_TRUE(newAllocationWithoutID.Reset() == 1);
                     } break;
@@ -246,14 +253,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         ASSERT_TRUE(allocationToIDMap.empty());
         ASSERT_TRUE(allocatorToIDMap.empty());
 
-        LogCallStats(mCreateResourceStats);
-        LogCallStats(mReleaseResourceStats);
-        LogCallStats(mResourceAllocationStats);
+        for (Heap* resourceHeap : resourceHeaps) {
+            mResourceHeapStats.TotalSize += resourceHeap->GetSize();
+            mResourceHeapStats.TotalCount++;
+        }
+
+        LogCallStats("CreateResource", mCreateResourceStats);
+        LogCallStats("ReleaseResource", mReleaseResourceStats);
+
+        LogMemoryStats("ResourceAllocation", mResourceAllocationStats);
+        LogMemoryStats("ResourceHeap", mResourceHeapStats);
     }
 
-    CaptureReplayCallStats mCreateResourceStats = {"CreateResource"};
-    CaptureReplayCallStats mReleaseResourceStats = {"ReleaseResource"};
+    CaptureReplayCallStats mCreateResourceStats;
+    CaptureReplayCallStats mReleaseResourceStats;
+
     CaptureReplayMemoryStats mResourceAllocationStats;
+    CaptureReplayMemoryStats mResourceHeapStats;
 };
 
 TEST_P(D3D12EventTraceReplay, Run) {
