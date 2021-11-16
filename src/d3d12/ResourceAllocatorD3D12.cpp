@@ -421,9 +421,8 @@ namespace gpgmm { namespace d3d12 {
                     info.Method = AllocationMethod::kSubAllocatedWithin;
 
                     *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(),      subAllocation.GetAllocator(),
-                        subAllocation.GetInfo(),      subAllocation.GetInfo().Offset,
-                        std::move(committedResource), resourceHeap};
+                        mResidencyManager.get(),        subAllocation.GetAllocator(), info,
+                        subAllocation.GetInfo().Offset, std::move(committedResource), resourceHeap};
 
                     return S_OK;
                 }));

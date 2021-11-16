@@ -241,6 +241,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
         &tinyBufferAllocA));
     ASSERT_NE(tinyBufferAllocA, nullptr);
     EXPECT_EQ(tinyBufferAllocA->GetSize(), kSubAllocationSize);
+    EXPECT_EQ(tinyBufferAllocA->GetInfo().Method, gpgmm::AllocationMethod::kSubAllocatedWithin);
 
     ComPtr<ResourceAllocation> tinyBufferAllocB;
     ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
@@ -248,6 +249,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
         &tinyBufferAllocB));
     ASSERT_NE(tinyBufferAllocB, nullptr);
     EXPECT_EQ(tinyBufferAllocB->GetSize(), kSubAllocationSize);
+    EXPECT_EQ(tinyBufferAllocB->GetInfo().Method, gpgmm::AllocationMethod::kSubAllocatedWithin);
 
     // Both buffers should be allocated in sequence, back-to-back.
     EXPECT_EQ(tinyBufferAllocA->GetInfo().Offset + kSubAllocationSize,
@@ -273,6 +275,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     EXPECT_EQ(tinyBufferAllocC->GetSize(), kSubAllocationSize);
     EXPECT_EQ(tinyBufferAllocC->GetInfo().Offset, 0u);
     EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
+    EXPECT_EQ(tinyBufferAllocC->GetInfo().Method, gpgmm::AllocationMethod::kSubAllocatedWithin);
 
     // Write kSubAllocationSize worth of bytes with value 0xAA in mapped subAllocation A.
     std::vector<uint8_t> dataAA(kSubAllocationSize, 0xAA);
