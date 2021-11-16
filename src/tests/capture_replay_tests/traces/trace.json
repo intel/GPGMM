@@ -144,7 +144,7 @@
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocation.DeleteThis",
+      "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
       "tid": 1216,
@@ -161,7 +161,7 @@
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocation.DeleteThis",
+      "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
       "tid": 1216,
@@ -169,7 +169,7 @@
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocation.DeleteThis",
+      "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
       "tid": 1216,
@@ -186,7 +186,7 @@
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocation.DeleteThis",
+      "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
       "tid": 1216,

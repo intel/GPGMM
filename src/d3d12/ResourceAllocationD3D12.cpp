@@ -70,7 +70,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::DeleteThis() {
-        TRACE_EVENT_CALL_SCOPED("ResourceAllocation.DeleteThis");
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocation.Release");
 
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(this);
