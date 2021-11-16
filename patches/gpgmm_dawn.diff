@@ -411,7 +411,7 @@ index 3b96092e..5ef2c02d 100644
 +        allocatorDesc.Adapter = adapter->GetHardwareAdapter();
 +        allocatorDesc.Device = mD3d12Device;
 +        allocatorDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
-+        allocatorDesc.ResourceHeapTier = adapter->GetDeviceInfo().resourceHeapTier;
++        allocatorDesc.ResourceHeapTier =  static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;      // 4MB
 +        allocatorDesc.MaxResourceHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
 +        allocatorDesc.MaxResourceSizeForPooling = 0;                          // Always pool heaps
