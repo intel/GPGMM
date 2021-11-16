@@ -85,7 +85,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Determines if resource heaps can mix resource categories (both texture and
         // buffers). Use CheckFeatureSupport to get supported tier. Required parameter.
-        uint32_t ResourceHeapTier;
+        D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
 
         // Preferred size of the resource heap.
         // The preferred size of the resource heap is the minimum heap size to sub-allocate
@@ -234,7 +234,7 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<ResidencyManager> mResidencyManager;
 
         const bool mIsUMA;
-        const uint32_t mResourceHeapTier;
+        const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;

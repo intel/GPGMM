@@ -149,8 +149,8 @@ namespace gpgmm { namespace d3d12 {
         RESOURCE_HEAP_TYPE GetResourceHeapType(D3D12_RESOURCE_DIMENSION dimension,
                                                D3D12_HEAP_TYPE heapType,
                                                D3D12_RESOURCE_FLAGS flags,
-                                               uint32_t resourceHeapTier) {
-            if (resourceHeapTier >= 2) {
+                                               D3D12_RESOURCE_HEAP_TIER resourceHeapTier) {
+            if (resourceHeapTier >= D3D12_RESOURCE_HEAP_TIER_2) {
                 switch (heapType) {
                     case D3D12_HEAP_TYPE_UPLOAD:
                         return RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES;

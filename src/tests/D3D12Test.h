@@ -37,7 +37,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Device> mDevice;
 
         bool mIsUMA = false;
-        uint32_t mResourceHeapTier = 1;
+        D3D12_RESOURCE_HEAP_TIER mResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
     };
 
 }}  // namespace gpgmm::d3d12
