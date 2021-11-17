@@ -34,10 +34,11 @@ namespace gpgmm {
         // If memory cannot be allocated for the block, the block will also be
         // deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
-        MemoryBase* TrySubAllocateMemory(BlockAllocator* blockAllocator,
-                                         uint64_t blockSize,
-                                         uint64_t blockAlignment,
-                                         GetOrCreateMemoryFn&& GetOrCreateMemory) {
+        std::unique_ptr<MemoryAllocation> TrySubAllocateMemory(
+            BlockAllocator* blockAllocator,
+            uint64_t blockSize,
+            uint64_t blockAlignment,
+            GetOrCreateMemoryFn&& GetOrCreateMemory) {
             Block* block = blockAllocator->AllocateBlock(blockSize, blockAlignment);
             if (block == nullptr) {
                 return nullptr;
@@ -52,7 +53,8 @@ namespace gpgmm {
             ASSERT(memory != nullptr);
             memory->Ref();
 
-            return memory;
+            return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
+                                                      AllocationMethod::kSubAllocated, block);
         }
 
         virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
