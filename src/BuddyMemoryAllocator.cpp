@@ -63,7 +63,7 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        AllocationInfo info = {};
+        Block* memoryBlock = nullptr;
         MemoryBase* memory = TrySubAllocateMemory(
             &mBuddyBlockAllocator, size, alignment, [&](auto block) -> MemoryBase* {
                 const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
@@ -79,10 +79,7 @@ namespace gpgmm {
                     }
                 }
 
-                info.Block = block;
-                info.Method = AllocationMethod::kSubAllocated;
-                info.Offset = block->Offset %
-                              mMemorySize;  // Allocation offset is always local to the memory.
+                memoryBlock = block;
 
                 MemoryBase* memory = memoryAllocation->GetMemory();
                 mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
@@ -94,16 +91,19 @@ namespace gpgmm {
             return nullptr;
         }
 
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, memory);
+        // Allocation offset is always local to the memory.
+        const uint64_t memoryOffset = memoryBlock->Offset % mMemorySize;
+
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, memory, memoryOffset,
+                                                  AllocationMethod::kSubAllocated, memoryBlock);
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {
         ASSERT(subAllocation != nullptr);
 
-        const AllocationInfo info = subAllocation->GetInfo();
-        const uint64_t memoryIndex = GetMemoryIndex(info.Block->Offset);
+        const uint64_t memoryIndex = GetMemoryIndex(subAllocation->GetBlock()->Offset);
 
-        mBuddyBlockAllocator.DeallocateBlock(info.Block);
+        mBuddyBlockAllocator.DeallocateBlock(subAllocation->GetBlock());
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
 

@@ -242,7 +242,7 @@ index 39fcb839..cdb121d3 100644
 -    bool Buffer::CheckAllocationMethodForTesting(AllocationMethod allocationMethod) const {
 -        return mResourceAllocation.GetInfo().mMethod == allocationMethod;
 +    bool Buffer::CheckAllocationMethodForTesting(gpgmm::AllocationMethod allocationMethod) const {
-+        return mResourceAllocation->GetInfo().Method == allocationMethod;
++        return mResourceAllocation->GetMethod() == allocationMethod;
      }
  
      MaybeError Buffer::EnsureDataInitialized(CommandRecordingContext* commandContext) {

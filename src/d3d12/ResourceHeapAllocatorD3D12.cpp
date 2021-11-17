@@ -39,9 +39,7 @@ namespace gpgmm { namespace d3d12 {
             return nullptr;
         }
 
-        AllocationInfo info = {};
-        info.Method = AllocationMethod::kStandalone;
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, info, resourceHeap);
+        return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {

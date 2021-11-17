@@ -40,11 +40,13 @@ namespace gpgmm { namespace d3d12 {
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* memoryAllocator,
-                                           const AllocationInfo& info,
+                                           uint64_t offsetFromHeap,
+                                           AllocationMethod method,
+                                           Block* block,
                                            uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator, info, resourceHeap),
+        : MemoryAllocation(memoryAllocator, resourceHeap, offsetFromHeap, method, block),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
@@ -54,10 +56,13 @@ namespace gpgmm { namespace d3d12 {
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            ResourceAllocator* resourceAllocator,
-                                           const AllocationInfo& info,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(/*memoryAllocator*/ nullptr, info, resourceHeap),
+        : MemoryAllocation(/*memoryAllocator*/ nullptr,
+                           resourceHeap,
+                           kInvalidOffset,
+                           AllocationMethod::kStandalone,
+                           nullptr),
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
@@ -100,7 +105,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        if (subresource > 0 && GetInfo().Method == AllocationMethod::kSubAllocatedWithin) {
+        if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
             return E_INVALIDARG;
         }
 
@@ -137,7 +142,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        ASSERT(subresource == 0 || GetInfo().Method != AllocationMethod::kSubAllocatedWithin);
+        ASSERT(subresource == 0 || GetMethod() != AllocationMethod::kSubAllocatedWithin);
 
         if (mResidencyManager != nullptr) {
             mResidencyManager->UnlockHeap(resourceHeap);

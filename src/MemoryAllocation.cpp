@@ -22,22 +22,42 @@
 namespace gpgmm {
 
     MemoryAllocation::MemoryAllocation()
-        : mAllocator(nullptr), mMemory(nullptr), mMappedPointer(nullptr) {
+        : mAllocator(nullptr),
+          mMemory(nullptr),
+          mOffset(kInvalidOffset),
+          mMethod(AllocationMethod::kUndefined),
+          mBlock(nullptr),
+          mMappedPointer(nullptr) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
-                                       const AllocationInfo& info,
                                        MemoryBase* memory,
+                                       uint64_t offset,
+                                       AllocationMethod method,
+                                       Block* block,
                                        uint8_t* mappedPointer)
-        : mAllocator(allocator), mInfo(info), mMemory(memory), mMappedPointer(mappedPointer) {
+        : mAllocator(allocator),
+          mMemory(memory),
+          mOffset(offset),
+          mMethod(method),
+          mBlock(block),
+          mMappedPointer(mappedPointer) {
     }
 
-    bool AllocationInfo::operator==(const AllocationInfo& other) const {
-        return other.Block == Block && other.Offset == Offset && other.Method == Method;
+    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
+                                       MemoryBase* memory,
+                                       uint8_t* mappedPointer)
+        : mAllocator(allocator),
+          mMemory(memory),
+          mOffset(0),
+          mMethod(AllocationMethod::kStandalone),
+          mBlock(nullptr),
+          mMappedPointer(mappedPointer) {
     }
 
     bool MemoryAllocation::operator==(const MemoryAllocation& other) const {
-        return (other.mAllocator == mAllocator && other.mMemory == mMemory && other.mInfo == mInfo);
+        return (other.mAllocator == mAllocator && other.mMemory == mMemory &&
+                other.mOffset == mOffset && other.mMethod == mMethod && other.mBlock == mBlock);
     }
 
     bool MemoryAllocation::operator!=(const MemoryAllocation& other) const {
@@ -48,19 +68,17 @@ namespace gpgmm {
         return mMemory;
     }
 
-    AllocationInfo MemoryAllocation::GetInfo() const {
-        return mInfo;
-    }
-
     uint8_t* MemoryAllocation::GetMappedPointer() const {
         return mMappedPointer;
     }
 
     void MemoryAllocation::Reset() {
         mAllocator = nullptr;
-        mInfo = {};
         mMemory = nullptr;
         mMappedPointer = nullptr;
+        mOffset = kInvalidOffset;
+        mMethod = AllocationMethod::kUndefined;
+        mBlock = nullptr;
     }
 
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
@@ -68,20 +86,32 @@ namespace gpgmm {
     }
 
     uint64_t MemoryAllocation::GetSize() const {
-        switch (GetInfo().Method) {
+        switch (mMethod) {
             case gpgmm::AllocationMethod::kStandalone:
                 ASSERT(mMemory != nullptr);
                 return mMemory->GetSize();
             case gpgmm::AllocationMethod::kSubAllocated:
             case gpgmm::AllocationMethod::kSubAllocatedWithin: {
-                ASSERT(GetInfo().Block != nullptr);
-                return GetInfo().Block->Size;
+                ASSERT(mBlock != nullptr);
+                return mBlock->Size;
             }
             default: {
                 UNREACHABLE();
                 return kInvalidSize;
             }
         }
+    }
+
+    uint64_t MemoryAllocation::GetOffset() const {
+        return mOffset;
+    }
+
+    AllocationMethod MemoryAllocation::GetMethod() const {
+        return mMethod;
+    }
+
+    Block* MemoryAllocation::GetBlock() const {
+        return mBlock;
     }
 
 }  // namespace gpgmm
