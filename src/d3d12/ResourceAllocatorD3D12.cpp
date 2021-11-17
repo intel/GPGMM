@@ -417,15 +417,10 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
-                    *resourceAllocationOut =
-                        new ResourceAllocation{mResidencyManager.get(),
-                                               subAllocation.GetAllocator(),
-                                               kInvalidOffset,
-                                               AllocationMethod::kSubAllocatedWithin,
-                                               subAllocation.GetBlock(),
-                                               subAllocation.GetOffset(),
-                                               std::move(committedResource),
-                                               resourceHeap};
+                    *resourceAllocationOut = new ResourceAllocation{
+                        mResidencyManager.get(),      subAllocation.GetAllocator(),
+                        subAllocation.GetBlock(),     subAllocation.GetOffset(),
+                        std::move(committedResource), resourceHeap};
 
                     return S_OK;
                 }));
@@ -446,8 +441,7 @@ namespace gpgmm { namespace d3d12 {
 
                     *resourceAllocationOut = new ResourceAllocation{
                         mResidencyManager.get(),   subAllocation.GetAllocator(),
-                        subAllocation.GetOffset(), subAllocation.GetMethod(),
-                        subAllocation.GetBlock(),  /*offsetFromResource*/ 0,
+                        subAllocation.GetOffset(), subAllocation.GetBlock(),
                         std::move(placedResource), resourceHeap};
 
                     return S_OK;

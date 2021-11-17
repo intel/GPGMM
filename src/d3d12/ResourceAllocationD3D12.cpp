@@ -41,16 +41,18 @@ namespace gpgmm { namespace d3d12 {
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* memoryAllocator,
                                            uint64_t offsetFromHeap,
-                                           AllocationMethod method,
                                            Block* block,
-                                           uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator, resourceHeap, offsetFromHeap, method, block),
+        : MemoryAllocation(memoryAllocator,
+                           resourceHeap,
+                           offsetFromHeap,
+                           AllocationMethod::kSubAllocated,
+                           block),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
-          mOffsetFromResource(offsetFromResource) {
+          mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }
 
@@ -67,6 +69,24 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+    }
+
+    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
+                                           MemoryAllocator* memoryAllocator,
+                                           Block* block,
+                                           uint64_t offsetFromResource,
+                                           ComPtr<ID3D12Resource> resource,
+                                           Heap* resourceHeap)
+        : MemoryAllocation(memoryAllocator,
+                           resourceHeap,
+                           kInvalidOffset,
+                           AllocationMethod::kSubAllocatedWithin,
+                           block),
+          mResourceAllocator(nullptr),
+          mResidencyManager(residencyManager),
+          mResource(std::move(resource)),
+          mOffsetFromResource(offsetFromResource) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }
 
