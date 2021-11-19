@@ -248,6 +248,24 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
+        ALLOCATOR_DESC newDescriptor = descriptor;
+        newDescriptor.PreferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
+                                                      ? descriptor.PreferredResourceHeapSize
+                                                      : kDefaultPreferredResourceHeapSize;
+
+        newDescriptor.MaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
+                                                ? descriptor.MaxResourceHeapSize
+                                                : kDefaultMaxResourceHeapSize;
+
+        if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
+            return E_INVALIDARG;
+        }
+
+        if (newDescriptor.MaxResourceSizeForPooling > 0 &&
+            newDescriptor.MaxResourceSizeForPooling > newDescriptor.MaxResourceHeapSize) {
+            return E_INVALIDARG;
+        }
+
         bool enableEventTracer =
             descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
 #ifdef GPGMM_ALWAYS_RECORD_EVENT_TRACE
@@ -262,13 +280,13 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<ResidencyManager> residencyManager;
         ResidencyManager* residencyManagerPtr = nullptr;
         if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
-                descriptor.Device, descriptor.Adapter, descriptor.IsUMA,
-                descriptor.MaxVideoMemoryBudget, descriptor.TotalResourceBudgetLimit,
+                newDescriptor.Device, newDescriptor.Adapter, newDescriptor.IsUMA,
+                newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
                 &residencyManagerPtr))) {
             residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
         }
 
-        *resourceAllocator = new ResourceAllocator(descriptor, std::move(residencyManager));
+        *resourceAllocator = new ResourceAllocator(newDescriptor, std::move(residencyManager));
 
         return S_OK;
     }
@@ -281,13 +299,8 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize((descriptor.MaxResourceHeapSize > 0) ? descriptor.MaxResourceHeapSize
-                                                                    : kDefaultMaxResourceHeapSize) {
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocator", this);
-
-        const uint64_t preferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
-                                                       ? descriptor.PreferredResourceHeapSize
-                                                       : kDefaultPreferredResourceHeapSize;
 
         for (uint32_t resourceHeapTypeIndex = 0;
              resourceHeapTypeIndex < RESOURCE_HEAP_TYPE::ENUMCOUNT; resourceHeapTypeIndex++) {
@@ -306,7 +319,7 @@ namespace gpgmm { namespace d3d12 {
 
             MemoryAllocator* placedResourceSubAllocator =
                 resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, preferredResourceHeapSize, heapAlignment,
+                    mMaxResourceHeapSize, descriptor.PreferredResourceHeapSize, heapAlignment,
                     standaloneHeapAllocator));
 
             std::unique_ptr<MemoryPool> resourceHeapPool = std::make_unique<LIFOMemoryPool>();
@@ -316,7 +329,7 @@ namespace gpgmm { namespace d3d12 {
 
             MemoryAllocator* placedResourcePooledSubAllocator =
                 resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, preferredResourceHeapSize, heapAlignment,
+                    mMaxResourceHeapSize, descriptor.PreferredResourceHeapSize, heapAlignment,
                     standalonePooledHeapAllocator));
 
             resourceHeapSubAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
