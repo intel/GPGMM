@@ -14,6 +14,7 @@
 
 #include "src/PooledMemoryAllocator.h"
 #include "common/Assert.h"
+#include "src/MemoryPool.h"
 
 namespace gpgmm {
 
@@ -24,20 +25,12 @@ namespace gpgmm {
         ASSERT(mMemoryAllocator != nullptr);
     }
 
-    PooledMemoryAllocator::~PooledMemoryAllocator() {
-        ASSERT(mMemoryPool->GetPoolSize() == 0);
-    }
-
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::AllocateMemory(uint64_t size,
                                                                             uint64_t alignment,
                                                                             bool neverAllocate) {
-        if (GetMemorySize() != size || GetMemoryAlignment() != alignment) {
-            return {};
-        }
         std::unique_ptr<MemoryAllocation> allocation = mMemoryPool->AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->AllocateMemory(GetMemorySize(), GetMemoryAlignment(),
-                                                          neverAllocate);
+            allocation = mMemoryAllocator->AllocateMemory(size, alignment, neverAllocate);
         }
 
         return allocation;
@@ -45,13 +38,5 @@ namespace gpgmm {
 
     void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         mMemoryPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
-    }
-
-    uint64_t PooledMemoryAllocator::GetMemorySize() const {
-        return mMemoryAllocator->GetMemorySize();
-    }
-
-    uint64_t PooledMemoryAllocator::GetMemoryAlignment() const {
-        return mMemoryAllocator->GetMemoryAlignment();
     }
 }  // namespace gpgmm

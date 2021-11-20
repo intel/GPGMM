@@ -29,7 +29,7 @@ namespace gpgmm {
         uint64_t size,
         uint64_t alignment,
         bool neverAllocate) {
-        if (size < mConditionalSize) {
+        if (size <= mConditionalSize) {
             return mFirstAllocator->AllocateMemory(size, alignment, neverAllocate);
         } else {
             return mSecondAllocator->AllocateMemory(size, alignment, neverAllocate);

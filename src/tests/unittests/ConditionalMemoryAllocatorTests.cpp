@@ -40,33 +40,39 @@ class ConditionalMemoryAllocatorTests : public testing::Test {
 };
 
 TEST_F(ConditionalMemoryAllocatorTests, Basic) {
-    DummyMemoryAllocator allocA;
-    DummyMemoryAllocator allocB;
+    DummyMemoryAllocator firstAllocator;
+    DummyMemoryAllocator secondAllocator;
 
     constexpr uint64_t conditionalSize = 16u;
-    ConditionalMemoryAllocator alloc(&allocA, &allocB, conditionalSize);
+    ConditionalMemoryAllocator alloc(&firstAllocator, &secondAllocator, conditionalSize);
 
-    // Smaller allocation uses allocA.
+    // Smaller allocation uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
-        ASSERT_EQ(allocA.mAllocatedBytes, 4u);
+        ASSERT_EQ(firstAllocator.mAllocatedBytes, 4u);
     }
 
-    // Larger allocation uses allocB.
+    // Equal size allocation uses firstAllocator.
+    {
+        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(16, 1);
+        ASSERT_EQ(firstAllocator.mAllocatedBytes, 20u);
+    }
+
+    // Larger allocation uses secondAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
-        ASSERT_EQ(allocB.mAllocatedBytes, 24u);
+        ASSERT_EQ(secondAllocator.mAllocatedBytes, 24u);
     }
 
-    // Smaller allocation again uses allocA.
+    // Smaller allocation again uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
-        ASSERT_EQ(allocA.mAllocatedBytes, 8u);
+        ASSERT_EQ(firstAllocator.mAllocatedBytes, 24u);
     }
 
-    // Larger allocation again uses allocB.
+    // Larger allocation again uses secondAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
-        ASSERT_EQ(allocB.mAllocatedBytes, 48u);
+        ASSERT_EQ(secondAllocator.mAllocatedBytes, 48u);
     }
 }

@@ -83,13 +83,37 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorBasic) {
         ASSERT_EQ(allocator, nullptr);
     }
 
-    // Creating a new allocator based on the default should always succeed.
+    // Creating a new allocator using the defaults should always succeed.
     {
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(
             ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
         ASSERT_NE(allocator, nullptr);
         ASSERT_NE(allocator, mDefaultAllocator);
+    }
+
+    // Creating a new allocator with a preferred resource heap size larger then the max resource
+    // heap size should always fail.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.PreferredResourceHeapSize = kDefaultPreferredResourceHeapSize;
+        desc.MaxResourceHeapSize = kDefaultPreferredResourceHeapSize / 2;
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_EQ(allocator, nullptr);
+    }
+
+    // Creating a new allocator with a max resource heap pool size larger then the max resource heap
+    // size should always fail.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.MaxResourceSizeForPooling = kDefaultPreferredResourceHeapSize * 2;
+        desc.MaxResourceHeapSize = kDefaultPreferredResourceHeapSize;
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_EQ(allocator, nullptr);
     }
 }
 
@@ -160,7 +184,7 @@ TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
     ASSERT_EQ(internalAllocation->GetResource(), externalAllocation->GetResource());
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalidDesc) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalid) {
     // Garbage buffer descriptor should always fail.
     D3D12_RESOURCE_DESC badBufferDesc = CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize);
     badBufferDesc.Flags = static_cast<D3D12_RESOURCE_FLAGS>(0xFF);
@@ -171,7 +195,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalidDesc) {
     ASSERT_EQ(allocation, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommittedFlag) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
     desc.Flags = ALLOCATOR_FLAG_ALWAYS_COMMITED;
 

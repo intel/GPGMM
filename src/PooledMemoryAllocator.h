@@ -16,27 +16,26 @@
 #define GPGMM_POOLEDMEMORYALLOCATOR_H_
 
 #include "src/MemoryAllocator.h"
-#include "src/MemoryPool.h"
 
 namespace gpgmm {
+
+    class MemoryPool;
 
     // |PooledMemoryAllocator| allocates memory of fixed size and same alignment using a pool.
     class PooledMemoryAllocator : public MemoryAllocator {
       public:
         PooledMemoryAllocator(MemoryAllocator* memoryAllocator, MemoryPool* memoryPool);
-        ~PooledMemoryAllocator() override;
+        ~PooledMemoryAllocator() override = default;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                          uint64_t alignment,
                                                          bool neverAllocate) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
-        uint64_t GetMemorySize() const override;
-        uint64_t GetMemoryAlignment() const override;
 
       private:
-        MemoryAllocator* mMemoryAllocator = nullptr;
-        MemoryPool* mMemoryPool = nullptr;
+        MemoryAllocator* const mMemoryAllocator;
+        MemoryPool* const mMemoryPool;
     };
 
 }  // namespace gpgmm
