@@ -70,7 +70,9 @@ namespace gpgmm { namespace d3d12 {
 
     struct ALLOCATOR_DESC {
         // Device and adapter used by this allocator. The adapter must support DXGI 1.4
-        // to use residency. Required parameters.
+        // to use residency.
+        // Required parameters. Use CreateDevice and EnumAdapters get the device and adapter,
+        // respectively.
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
@@ -79,39 +81,49 @@ namespace gpgmm { namespace d3d12 {
         // Configures memory tracing.
         ALLOCATOR_RECORD_OPTIONS RecordOptions;
 
-        // Determines if resource heaps can exist in shared memory. Use CheckFeatureSupport
-        // to check for support. Required parameter.
+        // Determines if resource heaps can exist in shared memory.
+        // Required parameter. Use CheckFeatureSupport to determine if supported.
         bool IsUMA;
 
         // Determines if resource heaps can mix resource categories (both texture and
-        // buffers). Use CheckFeatureSupport to get supported tier. Required parameter.
+        // buffers).
+        // Required parameter. Use CheckFeatureSupport to get supported tier.
         D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
 
         // Preferred size of the resource heap.
         // The preferred size of the resource heap is the minimum heap size to sub-allocate
         // from. A larger resource heap consumes more memory but could be faster for sub-allocation.
+        // Optional parameter. When 0 is used, the API will automatically set the preferred
+        // resource heap size to the default value of 4MB.
         uint64_t PreferredResourceHeapSize;
 
         // Maximum size of the resource heap.
         // The maximum resource size restricts the total address range of available memory to
         // allocate.
+        // Optional parameter. When 0 is used, the API will automatically set the max
+        // resource heap size to the default value of 32GB.
         uint64_t MaxResourceHeapSize;
 
         // Maximum resource size allowed to be pool-allocated.
         // Pool-allocating larger resources consumes more memory but could be faster to allocate
         // from by using a pool of resource heaps.
+        // Optional parameter. When 0 is used, the API will automatically disabling pooling.
         uint64_t MaxResourceSizeForPooling;
 
         // Maximum video memory available to budget by the allocator, expressed as a
-        // percentage. By default, the max video memory available is 0.95 or 95% of video memory
-        // can be budgeted, always leaving 5% for the OS and other applications.
+        // percentage.
+        // Optional parameter. When 0 is used, the API will automatically set the max video memory
+        // budget to 95%, leaving 5% for the OS and other applications.
         float MaxVideoMemoryBudget;
 
         // Total memory available to budget for resources created by this allocator.
+        // Optional parameter. When 0 is used, the API will not restrict the resource budget.
         uint64_t TotalResourceBudgetLimit;
 
         // Total memory Size of resident resources that could be evicted, should there not be enough
         // residency budget available.
+        // Optional parameter. When 0 is used, the API will try to evict 50MB worth of resource
+        // memory before re-attempting to make them resident.
         uint64_t ResidentResourceEvictSize;
     };
 
