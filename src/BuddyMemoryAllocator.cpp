@@ -120,7 +120,7 @@ namespace gpgmm {
     }
 
     uint64_t BuddyMemoryAllocator::GetMemoryAlignment() const {
-        return mMemoryAllocator->GetMemoryAlignment();
+        return mMemoryAlignment;
     }
 
     uint64_t BuddyMemoryAllocator::GetPoolSizeForTesting() const {

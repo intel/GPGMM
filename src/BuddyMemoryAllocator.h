@@ -57,10 +57,10 @@ namespace gpgmm {
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;
 
-        MemoryAllocator* mMemoryAllocator;
+        MemoryAllocator* const mMemoryAllocator;
 
-        uint64_t mMemorySize = 0;
-        uint64_t mMemoryAlignment = 0;
+        const uint64_t mMemorySize;
+        const uint64_t mMemoryAlignment;
 
         BuddyBlockAllocator mBuddyBlockAllocator;
 

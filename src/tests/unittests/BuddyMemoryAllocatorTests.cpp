@@ -33,20 +33,12 @@ class DummyMemoryAllocator : public MemoryAllocator {
     std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
                                                      uint64_t alignment,
                                                      bool neverAllocate) override {
-        return std::make_unique<MemoryAllocation>(this, new MemoryBase(0));
+        return std::make_unique<MemoryAllocation>(this, new MemoryBase(size));
     }
 
     void DeallocateMemory(MemoryAllocation* allocation) override {
         ASSERT(allocation != nullptr);
         delete allocation->GetMemory();
-    }
-
-    uint64_t GetMemorySize() const override {
-        return kDefaultMemorySize;
-    }
-
-    uint64_t GetMemoryAlignment() const override {
-        return kDefaultMemoryAlignment;
     }
 };
 
