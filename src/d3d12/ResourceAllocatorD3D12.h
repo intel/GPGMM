@@ -62,6 +62,7 @@ namespace gpgmm { namespace d3d12 {
     } ALLOCATOR_RECORD_FLAGS;
 
     struct ALLOCATOR_RECORD_OPTIONS {
+        // Flags used to control how the allocator will record.
         ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
         // Path to trace file. Default is trace.json.
@@ -149,30 +150,12 @@ namespace gpgmm { namespace d3d12 {
     } ALLOCATION_FLAGS;
 
     struct ALLOCATION_DESC {
+        // Flags used to control how the resource will be allocated.
         ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
+
+        // Heap type that the resource to be allocated requires.
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
     };
-
-    typedef enum RESOURCE_HEAP_TYPE {
-
-        // Resource heap tier 2
-        // Resource heaps contain all buffer and textures types.
-        RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x0,
-        RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x1,
-        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x2,
-
-        // Resource heap tier 1
-        // Resource heaps contain buffers or textures but not both.
-        RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS = 0x3,
-        RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS = 0x4,
-        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS = 0x5,
-
-        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 0x6,
-        RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 0x7,
-
-        ENUMCOUNT,
-        INVALID = ENUMCOUNT,
-    } RESOURCE_HEAP_TYPE;
 
     class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
@@ -251,11 +234,12 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;
 
-        std::array<std::unique_ptr<MemoryPool>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
-            mResourceHeapPoolOfType;
-        std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
+        static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
+
+        std::array<std::unique_ptr<MemoryPool>, kNumOfResourceHeapTypes> mResourceHeapPoolOfType;
+        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mResourceHeapSubAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocator>, RESOURCE_HEAP_TYPE::ENUMCOUNT>
+        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mBufferSubAllocatorOfType;
     };
 
