@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
         }
         HRESULT hr = createResourceFn(*allocation);
         if (FAILED(hr)) {
-            allocator->DeallocateMemory(allocation.get());
+            allocator->DeallocateMemory(allocation.release());
         }
         return hr;
     }
