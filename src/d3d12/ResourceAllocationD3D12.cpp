@@ -100,6 +100,7 @@ namespace gpgmm { namespace d3d12 {
         if (GetAllocator() != nullptr) {
             GetAllocator()->DeallocateMemory(this);
         } else {
+            ASSERT(GetMethod() == AllocationMethod::kStandalone);
             ASSERT(mResourceAllocator != nullptr);
             Heap* resourceHeap = static_cast<Heap*>(GetMemory());
             mResourceAllocator->FreeResourceHeap(resourceHeap);

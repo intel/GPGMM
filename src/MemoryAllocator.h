@@ -53,8 +53,11 @@ namespace gpgmm {
             ASSERT(memory != nullptr);
             memory->Ref();
 
+            // Calling memory allocator must be responsible in fully initializing the memory
+            // allocation. This is because we do not yet know how to map the sub-allocated block to
+            // memory.
             return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
-                                                      AllocationMethod::kSubAllocated, block);
+                                                      AllocationMethod::kUndefined, block);
         }
 
         virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
