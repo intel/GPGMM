@@ -32,6 +32,7 @@ namespace gpgmm { namespace d3d12 {
                                                      bool isUMA,
                                                      float videoMemoryBudget,
                                                      uint64_t availableForResourcesBudget,
+                                                     uint64_t videoMemoryEvictSize,
                                                      ResidencyManager** residencyManagerOut) {
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
@@ -46,9 +47,10 @@ namespace gpgmm { namespace d3d12 {
             residencyFence.reset(ptr);
         }
 
-        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(std::move(device), std::move(adapter3), std::move(residencyFence),
-                                 isUMA, videoMemoryBudget, availableForResourcesBudget));
+        std::unique_ptr<ResidencyManager> residencyManager =
+            std::unique_ptr<ResidencyManager>(new ResidencyManager(
+                std::move(device), std::move(adapter3), std::move(residencyFence), isUMA,
+                videoMemoryBudget, availableForResourcesBudget, videoMemoryEvictSize));
 
         // Query and set the video memory limits per segment.
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
@@ -74,14 +76,17 @@ namespace gpgmm { namespace d3d12 {
                                        std::unique_ptr<Fence> fence,
                                        bool isUMA,
                                        float videoMemoryBudgetLimit,
-                                       uint64_t availableForResourcesBudget)
+                                       uint64_t availableForResourcesBudget,
+                                       uint64_t videoMemoryEvictSize)
         : mDevice(device),
           mAdapter(adapter3),
           mFence(std::move(fence)),
           mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
                                                               : videoMemoryBudgetLimit),
-          mAvailableForResourcesBudget(availableForResourcesBudget) {
+          mAvailableForResourcesBudget(availableForResourcesBudget),
+          mVideoMemoryEvictSize(videoMemoryEvictSize == 0 ? kDefaultVideoMemoryEvictSize
+                                                          : videoMemoryEvictSize) {
         ASSERT(mDevice != nullptr);
         ASSERT(mAdapter != nullptr);
         ASSERT(mFence != nullptr);
@@ -386,8 +391,7 @@ namespace gpgmm { namespace d3d12 {
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
             uint64_t sizeEvicted = 0;
-            ReturnIfFailed(
-                Evict(kDefaultResidentResourceEvictSize, memorySegmentGroup, &sizeEvicted));
+            ReturnIfFailed(Evict(mVideoMemoryEvictSize, memorySegmentGroup, &sizeEvicted));
             if (sizeEvicted == 0) {
                 return E_OUTOFMEMORY;
             }
