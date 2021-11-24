@@ -265,7 +265,8 @@ namespace gpgmm { namespace d3d12 {
 
     // static
     HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& descriptor,
-                                               ResourceAllocator** resourceAllocator) {
+                                               ResourceAllocator** resourceAllocatorOut,
+                                               ResidencyManager** residencyManagerOut) {
         if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
@@ -299,22 +300,24 @@ namespace gpgmm { namespace d3d12 {
             TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateAllocator", descriptor);
         }
 
-        std::unique_ptr<ResidencyManager> residencyManager;
-        ResidencyManager* residencyManagerPtr = nullptr;
+        ComPtr<ResidencyManager> residencyManager;
         if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
                 newDescriptor.Device, newDescriptor.Adapter, newDescriptor.IsUMA,
                 newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
-                newDescriptor.VideoMemoryEvictSize, &residencyManagerPtr))) {
-            residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
+                newDescriptor.VideoMemoryEvictSize, &residencyManager))) {
         }
 
-        *resourceAllocator = new ResourceAllocator(newDescriptor, std::move(residencyManager));
+        *resourceAllocatorOut = new ResourceAllocator(newDescriptor, residencyManager);
+
+        if (residencyManagerOut != nullptr) {
+            *residencyManagerOut = residencyManager.Detach();
+        }
 
         return S_OK;
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                                         std::unique_ptr<ResidencyManager> residencyManager)
+                                         ComPtr<ResidencyManager> residencyManager)
         : mDevice(std::move(descriptor.Device)),
           mResidencyManager(std::move(residencyManager)),
           mIsUMA(descriptor.IsUMA),
@@ -453,7 +456,7 @@ namespace gpgmm { namespace d3d12 {
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(),      subAllocation.GetAllocator(),
+                        mResidencyManager.Get(),      subAllocation.GetAllocator(),
                         subAllocation.GetBlock(),     subAllocation.GetOffset(),
                         std::move(committedResource), resourceHeap};
 
@@ -475,7 +478,7 @@ namespace gpgmm { namespace d3d12 {
                         initialResourceState, &placedResource, &resourceHeap));
 
                     *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.get(),   subAllocation.GetAllocator(),
+                        mResidencyManager.Get(),   subAllocation.GetAllocator(),
                         subAllocation.GetOffset(), subAllocation.GetBlock(),
                         std::move(placedResource), resourceHeap};
 
@@ -494,7 +497,7 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
-        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.get(), this,
+        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(), this,
                                                         std::move(committedResource), resourceHeap};
 
         return S_OK;
@@ -669,7 +672,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResidencyManager* ResourceAllocator::GetResidencyManager() const {
-        return mResidencyManager.get();
+        return mResidencyManager.Get();
     }
 
 }}  // namespace gpgmm::d3d12
