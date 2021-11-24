@@ -202,22 +202,22 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
                           ComPtr<ResidencyManager> residencyManager);
 
-        HRESULT CreatePlacedResourceHeap(const MemoryAllocation& subAllocation,
-                                         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
-                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                         const D3D12_CLEAR_VALUE* clearValue,
-                                         D3D12_RESOURCE_STATES initialResourceState,
-                                         ID3D12Resource** placedResourceOut,
-                                         Heap** resourceHeapOut);
+        HRESULT CreatePlacedResource(Heap* const resourceHeap,
+                                     uint64_t resourceOffset,
+                                     const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
+                                     const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                     const D3D12_CLEAR_VALUE* clearValue,
+                                     D3D12_RESOURCE_STATES initialResourceState,
+                                     ID3D12Resource** placedResourceOut);
 
-        HRESULT CreateCommittedResourceHeap(D3D12_HEAP_TYPE heapType,
-                                            D3D12_HEAP_FLAGS heapFlags,
-                                            uint64_t resourceSize,
-                                            const D3D12_RESOURCE_DESC* resourceDescriptor,
-                                            const D3D12_CLEAR_VALUE* clearValue,
-                                            D3D12_RESOURCE_STATES initialResourceState,
-                                            ID3D12Resource** commitedResourceOut,
-                                            Heap** resourceHeapOut);
+        HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
+                                        D3D12_HEAP_FLAGS heapFlags,
+                                        uint64_t resourceSize,
+                                        const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                        const D3D12_CLEAR_VALUE* clearValue,
+                                        D3D12_RESOURCE_STATES initialResourceState,
+                                        ID3D12Resource** commitedResourceOut,
+                                        Heap** resourceHeapOut);
 
         HRESULT CreateResourceHeap(uint64_t heapSize,
                                    D3D12_HEAP_TYPE heapType,

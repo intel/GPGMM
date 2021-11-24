@@ -471,11 +471,14 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
                 [&](const auto& subAllocation) -> HRESULT {
+                    // Resource is placed at an offset corresponding to the allocation offset.
+                    // Each allocation maps to a disjoint (physical) address range so no physical
+                    // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    Heap* resourceHeap = nullptr;
-                    ReturnIfFailed(CreatePlacedResourceHeap(
-                        subAllocation, resourceInfo, &newResourceDesc, clearValue,
-                        initialResourceState, &placedResource, &resourceHeap));
+                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
+                    ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
+                                                        resourceInfo, &newResourceDesc, clearValue,
+                                                        initialResourceState, &placedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
                         mResidencyManager.Get(),   subAllocation.GetAllocator(),
@@ -493,7 +496,7 @@ namespace gpgmm { namespace d3d12 {
         // TODO: Come up with a better heuristic to conditionally disable sub-allocation.
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(CreateCommittedResourceHeap(
+        ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
@@ -534,43 +537,29 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResourceHeap(
-        const MemoryAllocation& subAllocation,
+    HRESULT ResourceAllocator::CreatePlacedResource(
+        Heap* const resourceHeap,
+        uint64_t resourceOffset,
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
-        ID3D12Resource** placedResourceOut,
-        Heap** resourceHeapOut) {
-        // Must place a resource using a sub-allocated memory allocation.
-        if (subAllocation.GetMethod() != AllocationMethod::kSubAllocated) {
+        ID3D12Resource** placedResourceOut) {
+        if (resourceHeap == nullptr) {
             return E_FAIL;
         }
 
-        // Sub-allocation cannot be smaller than the resource being placed.
-        if (subAllocation.GetSize() < resourceInfo.SizeInBytes) {
-            return E_FAIL;
-        }
-
-        // Before calling CreatePlacedResource, we must ensure the target heap is resident.
-        // CreatePlacedResource will fail if it is not.
-        Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
-        ASSERT(resourceHeap != nullptr);
-
+        // Before calling CreatePlacedResource, we must ensure the target heap is resident or
+        // CreatePlacedResource will fail.
         ComPtr<ID3D12Resource> placedResource;
         {
-            // Resource is placed at an offset corresponding to the sub-allocation.
-            // Each sub-allocation maps to a disjoint (physical) address range so no heap memory is
-            // aliased or reused within a command-list.
-            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource
-            ScopedHeapLock scopedHeapLock(GetResidencyManager(), resourceHeap);
+            ScopedHeapLock scopedHeapLock(mResidencyManager.Get(), resourceHeap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
-                resourceHeap->GetHeap(), subAllocation.GetOffset(), resourceDescriptor,
-                initialResourceState, clearValue, IID_PPV_ARGS(&placedResource)));
+                resourceHeap->GetHeap(), resourceOffset, resourceDescriptor, initialResourceState,
+                clearValue, IID_PPV_ARGS(&placedResource)));
         }
 
         *placedResourceOut = placedResource.Detach();
-        *resourceHeapOut = resourceHeap;
 
         return S_OK;
     }
@@ -614,7 +603,7 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateCommittedResourceHeap(
+    HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
         D3D12_HEAP_FLAGS heapFlags,
         uint64_t resourceSize,

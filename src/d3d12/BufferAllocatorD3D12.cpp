@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Optimized clear is not supported for buffers.
         Heap* resourceHeap = nullptr;
-        if (FAILED(mResourceAllocator->CreateCommittedResourceHeap(
+        if (FAILED(mResourceAllocator->CreateCommittedResource(
                 mHeapType, D3D12_HEAP_FLAG_NONE, size, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, nullptr, &resourceHeap))) {
             return nullptr;
