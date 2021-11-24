@@ -345,26 +345,23 @@ namespace gpgmm { namespace d3d12 {
             InsertHeap(heap);
         }
 
-        HRESULT hr = S_OK;
         if (localSizeToMakeResident > 0) {
             const uint32_t numOfresources = static_cast<uint32_t>(localHeapsToMakeResident.size());
-            hr = MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
-                              numOfresources, localHeapsToMakeResident.data());
+            ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
+                                        numOfresources, localHeapsToMakeResident.data()));
         } else if (nonLocalSizeToMakeResident > 0) {
             ASSERT(!mIsUMA);
             const uint32_t numOfResources =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
-            hr = MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, nonLocalSizeToMakeResident,
-                              numOfResources, nonLocalHeapsToMakeResident.data());
+            ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
+                                        nonLocalSizeToMakeResident, numOfResources,
+                                        nonLocalHeapsToMakeResident.data()));
         }
 
         queue->ExecuteCommandLists(count, &commandList);
+        ReturnIfFailed(mFence->Signal(queue));
 
-        if (SUCCEEDED(hr)) {
-            ReturnIfFailed(mFence->Signal(queue));
-        }
-
-        return hr;
+        return S_OK;
     }
 
     // Note that MakeResident is a synchronous function and can add a significant
