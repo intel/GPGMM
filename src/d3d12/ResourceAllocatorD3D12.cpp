@@ -33,6 +33,28 @@
 
 namespace gpgmm { namespace d3d12 {
     namespace {
+
+        // Combines heap type and flags used to allocate memory for resources into a single type for
+        // allocator lookup.
+        typedef enum RESOURCE_HEAP_TYPE {
+            // Resource heap tier 2
+            // Resource heaps contain all buffer and textures types.
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x0,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x1,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x2,
+
+            // Resource heap tier 1
+            // Resource heaps contain buffers or textures but not both.
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS = 0x3,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS = 0x4,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS = 0x5,
+
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 0x6,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 0x7,
+
+            RESOURCE_HEAP_TYPE_INVALID,
+        } RESOURCE_HEAP_TYPE;
+
         DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                                  bool isUMA,
                                                                  D3D12_HEAP_TYPE heapType) {
@@ -160,7 +182,7 @@ namespace gpgmm { namespace d3d12 {
                         return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                     default:
                         UNREACHABLE();
-                        return RESOURCE_HEAP_TYPE::INVALID;
+                        return RESOURCE_HEAP_TYPE_INVALID;
                 }
             }
 
@@ -197,10 +219,10 @@ namespace gpgmm { namespace d3d12 {
                 }
                 default:
                     UNREACHABLE();
-                    return RESOURCE_HEAP_TYPE::INVALID;
+                    return RESOURCE_HEAP_TYPE_INVALID;
             }
 
-            return RESOURCE_HEAP_TYPE::INVALID;
+            return RESOURCE_HEAP_TYPE_INVALID;
         }
 
         D3D12_RESOURCE_STATES GetInitialResourceState(D3D12_HEAP_TYPE heapType) {
@@ -302,8 +324,8 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocator", this);
 
-        for (uint32_t resourceHeapTypeIndex = 0;
-             resourceHeapTypeIndex < RESOURCE_HEAP_TYPE::ENUMCOUNT; resourceHeapTypeIndex++) {
+        for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
+             resourceHeapTypeIndex++) {
             const RESOURCE_HEAP_TYPE resourceHeapType =
                 static_cast<RESOURCE_HEAP_TYPE>(resourceHeapTypeIndex);
 
