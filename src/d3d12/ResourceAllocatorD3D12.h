@@ -159,10 +159,12 @@ namespace gpgmm { namespace d3d12 {
 
     class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
-        // Creates the main instance used to help manage video memory for the
-        // specified D3D12 device and adapter in the |descriptor|.
+        // Creates the allocator and residency manager instance used to manage video memory for the
+        // App specified device and adapter. Residency manager only exists if this adapter at-least
+        // supports DXGI 1.4 and cannot outlive the resource allocator used to create it.
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
-                                       ResourceAllocator** resourceAllocationOut);
+                                       ResourceAllocator** resourceAllocatorOut,
+                                       ResidencyManager** residencyManagerOut = nullptr);
 
         ~ResourceAllocator() override;
 
@@ -198,7 +200,7 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceAllocation;
 
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                          std::unique_ptr<ResidencyManager> residencyManager);
+                          ComPtr<ResidencyManager> residencyManager);
 
         HRESULT CreatePlacedResourceHeap(const MemoryAllocation& subAllocation,
                                          const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
@@ -226,7 +228,7 @@ namespace gpgmm { namespace d3d12 {
         void FreeResourceHeap(Heap* resourceHeap);
 
         ComPtr<ID3D12Device> mDevice;
-        std::unique_ptr<ResidencyManager> mResidencyManager;
+        ComPtr<ResidencyManager> mResidencyManager;
 
         const bool mIsUMA;
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
