@@ -304,7 +304,7 @@ namespace gpgmm { namespace d3d12 {
         if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
                 newDescriptor.Device, newDescriptor.Adapter, newDescriptor.IsUMA,
                 newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
-                &residencyManagerPtr))) {
+                newDescriptor.VideoMemoryEvictSize, &residencyManagerPtr))) {
             residencyManager = std::unique_ptr<ResidencyManager>(residencyManagerPtr);
         }
 

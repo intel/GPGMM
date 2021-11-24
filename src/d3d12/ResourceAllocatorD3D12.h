@@ -121,11 +121,11 @@ namespace gpgmm { namespace d3d12 {
         // Optional parameter. When 0 is used, the API will not restrict the resource budget.
         uint64_t TotalResourceBudgetLimit;
 
-        // Total memory Size of resident resources that could be evicted, should there not be enough
-        // residency budget available.
-        // Optional parameter. When 0 is used, the API will try to evict 50MB worth of resource
-        // memory before re-attempting to make them resident.
-        uint64_t ResidentResourceEvictSize;
+        // Video memory to evict from residency in order to make more resource resident, should
+        // there not be enough budget available.
+        // Optional parameter. When 0 is used, the API will automatically set the video memory
+        // evict size to 50MB.
+        uint64_t VideoMemoryEvictSize;
     };
 
     typedef enum ALLOCATION_FLAGS {

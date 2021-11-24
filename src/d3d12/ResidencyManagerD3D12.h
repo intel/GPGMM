@@ -63,6 +63,7 @@ namespace gpgmm { namespace d3d12 {
                                               bool isUMA,
                                               float videoMemoryBudget,
                                               uint64_t availableForResourceBudget,
+                                              uint64_t videoMemoryEvictSize,
                                               ResidencyManager** residencyManagerOut);
 
         ResidencyManager(ComPtr<ID3D12Device> device,
@@ -70,7 +71,8 @@ namespace gpgmm { namespace d3d12 {
                          std::unique_ptr<Fence> fence,
                          bool isUMA,
                          float memorySegmentBudgetLimit,
-                         uint64_t totalResourceBudgetLimit);
+                         uint64_t totalResourceBudgetLimit,
+                         uint64_t videoMemoryEvictSize);
 
         using Cache = LinkedList<Heap>;
 
@@ -100,6 +102,7 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsUMA;
         const float mVideoMemoryBudgetLimit;
         const uint64_t mAvailableForResourcesBudget;
+        const uint64_t mVideoMemoryEvictSize;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
