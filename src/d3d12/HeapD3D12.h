@@ -29,6 +29,12 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
+    struct HEAP_DESC {
+        size_t Size;
+        bool IsResident;
+        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+    };
+
     // This class is used to represent ID3D12Heap allocations, as well as an implicit heap
     // representing a directly allocated resource, and also serves as a node within
     // the ResidencyManager's LRU cache. This node is inserted into the LRU-cache when it is first
@@ -51,6 +57,8 @@ namespace gpgmm { namespace d3d12 {
         // Testing only.
         bool IsInResidencyLRUCache() const;
         bool IsResidencyLocked() const;
+
+        HEAP_DESC GetDesc() const;
 
       private:
         friend ResidencyManager;

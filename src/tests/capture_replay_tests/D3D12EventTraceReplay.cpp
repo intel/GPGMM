@@ -239,6 +239,17 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
                         UNREACHABLE();
                         break;
                 }
+            } else if (event["name"].asString() == "ResourceAllocator.CreateResourceHeap") {
+                switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
+                        mResourceHeapStats.TotalCount++;
+                        mResourceHeapStats.TotalSize += event["args"]["snapshot"]["Size"].asUInt();
+                    } break;
+
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
             }
         }
 
@@ -248,12 +259,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         LogCallStats("CreateResource", mCreateResourceStats);
         LogCallStats("ReleaseResource", mReleaseResourceStats);
         LogMemoryStats("ResourceAllocation", mResourceAllocationStats);
+        LogMemoryStats("ResourceHeap", mResourceHeapStats);
     }
 
     CaptureReplayCallStats mCreateResourceStats;
     CaptureReplayCallStats mReleaseResourceStats;
 
     CaptureReplayMemoryStats mResourceAllocationStats;
+    CaptureReplayMemoryStats mResourceHeapStats;
 };
 
 TEST_P(D3D12EventTraceReplay, Run) {

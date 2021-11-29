@@ -53,11 +53,11 @@ const std::string kNoArgs = "";
     } scopedTracedCall {              \
     }
 
-#define TRACE_EVENT_OBJECT_DESC(name, desc)                                \
+#define TRACE_EVENT_CALL(funcName, desc)                                   \
     do {                                                                   \
         if (gpgmm::IsEventTracerEnabled()) {                               \
             auto GPGMM_LOCAL_ARGS = JSONSerializer::SerializeToJSON(desc); \
-            TRACE_EVENT_INSTANT(name, GPGMM_LOCAL_ARGS);                   \
+            TRACE_EVENT_INSTANT(funcName, GPGMM_LOCAL_ARGS);               \
         }                                                                  \
     } while (false)
 
@@ -67,7 +67,7 @@ const std::string kNoArgs = "";
 #define TRACE_EVENT_DELETE_OBJECT(className, objPtr) \
     TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, objPtr)
 
-#define GPGMM_OBJECT_SNAPSHOT_INSTANCE(className, objPtr, desc)                           \
+#define TRACE_EVENT_SNAPSHOT_OBJECT(className, objPtr, desc)                              \
     do {                                                                                  \
         if (gpgmm::IsEventTracerEnabled()) {                                              \
             auto GPGMM_LOCAL_SNAPSHOT = JSONSerializer::SerializeToJSON(desc);            \
@@ -94,7 +94,7 @@ const std::string kNoArgs = "";
 
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_NONE, "snapshot", snapshot)
+                                     TRACE_EVENT_FLAG_HAS_ID, "snapshot", snapshot)
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                   \
     do {                                                               \

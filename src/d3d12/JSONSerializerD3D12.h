@@ -24,6 +24,7 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATION_DESC;
     struct ALLOCATOR_DESC;
     struct ALLOCATOR_RECORD_OPTIONS;
+    struct HEAP_DESC;
 
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
@@ -38,6 +39,7 @@ namespace gpgmm { namespace d3d12 {
         std::string AppendTo(const CREATE_RESOURCE_DESC& desc);
         std::string AppendTo(const ALLOCATION_DESC& desc);
         std::string AppendTo(const D3D12_RESOURCE_DESC& desc);
+        std::string AppendTo(const HEAP_DESC& desc);
 
       private:
         std::string AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc);
