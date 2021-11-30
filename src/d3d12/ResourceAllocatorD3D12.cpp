@@ -495,8 +495,14 @@ namespace gpgmm { namespace d3d12 {
         if (!mIsAlwaysCommitted) {
             allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
+            // Resource alignment should be equal to or greater then the heap alignment to avoid
+            // fragmenting the OS VidMM.
+            const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType);
+            const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
+            const uint64_t heapSize = resourceInfo.SizeInBytes;
+
             ReturnIfSucceeded(TryAllocateResource(
-                allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
+                allocator, heapSize, heapAlignment, neverAllocate,
                 [&](const auto& allocation) -> HRESULT {
                     ComPtr<ID3D12Resource> placedResource;
                     Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
