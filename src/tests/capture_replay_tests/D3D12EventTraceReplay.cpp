@@ -88,7 +88,7 @@ namespace {
 
 }  // namespace
 
-class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithParams {
+class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
   protected:
     void SetUp() override {
         D3D12TestBase::SetUp();
@@ -98,7 +98,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile) {
+    void RunTest(const TraceFile& traceFile) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -255,11 +255,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
 
         ASSERT_TRUE(allocationToIDMap.empty());
         ASSERT_TRUE(allocatorToIDMap.empty());
-
-        LogCallStats("CreateResource", mCreateResourceStats);
-        LogCallStats("ReleaseResource", mReleaseResourceStats);
-        LogMemoryStats("ResourceAllocation", mResourceAllocationStats);
-        LogMemoryStats("ResourceHeap", mResourceHeapStats);
     }
 
     CaptureReplayCallStats mCreateResourceStats;
@@ -270,7 +265,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplyTestWithP
 };
 
 TEST_P(D3D12EventTraceReplay, Run) {
-    RunTest(GetParam());
+    RunTestLoop();
+
+    LogCallStats("CreateResource", mCreateResourceStats);
+    LogCallStats("ReleaseResource", mReleaseResourceStats);
+    LogMemoryStats("ResourceAllocation", mResourceAllocationStats);
+    LogMemoryStats("ResourceHeap", mResourceHeapStats);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);

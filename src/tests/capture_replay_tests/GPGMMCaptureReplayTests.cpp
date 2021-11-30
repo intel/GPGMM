@@ -38,9 +38,35 @@ void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
 
 GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, char** argv)
     : GPGMMTestEnvironment(argc, argv) {
+    for (int i = 1; i < argc; ++i) {
+        constexpr const char kIterationArg[] = "--iterations=";
+        size_t arglen = sizeof(kIterationArg) - 1;
+        if (strncmp(argv[i], kIterationArg, arglen) == 0) {
+            const char* iterations = argv[i] + arglen;
+            mIterations = strtoul(iterations, nullptr, 0);
+            continue;
+        }
+
+        if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
+            gpgmm::InfoLog() << "Additional Flags:"
+                             << " [--iterations=X]\n"
+                             << " --iterations: Number of times to replay the capture.\n";
+            continue;
+        }
+    }
 }
 
 GPGMMCaptureReplayTestEnvironment::~GPGMMCaptureReplayTestEnvironment() = default;
+
+void GPGMMCaptureReplayTestEnvironment::SetUp() {
+    GPGMMTestEnvironment::SetUp();
+    // TODO
+}
+
+void GPGMMCaptureReplayTestEnvironment::TearDown() {
+    // TODO
+    GPGMMTestEnvironment::TearDown();
+}
 
 // static
 std::vector<TraceFile> GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParams() {
@@ -65,29 +91,31 @@ std::vector<TraceFile> GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParam
     return traceFiles;
 }
 
-void GPGMMCaptureReplayTestEnvironment::SetUp() {
-    GPGMMTestEnvironment::SetUp();
-    // TODO
+uint64_t GPGMMCaptureReplayTestEnvironment::GetIterations() const {
+    return mIterations;
 }
 
-void GPGMMCaptureReplayTestEnvironment::TearDown() {
-    // TODO
-    GPGMMTestEnvironment::TearDown();
-}
-
-CaptureReplyTestWithParams::CaptureReplyTestWithParams()
+CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
-void CaptureReplyTestWithParams::LogCallStats(const std::string& name,
-                                              const CaptureReplayCallStats& stats) const {
+void CaptureReplayTestWithParams::RunTestLoop() {
+    for (uint32_t i = 0; i < gTestEnv->GetIterations(); i++) {
+        RunTest(GetParam());
+    }
+}
+
+void CaptureReplayTestWithParams::LogCallStats(const std::string& name,
+                                               const CaptureReplayCallStats& stats) const {
     const double avgCpuTimePerCall =
         (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
     gpgmm::InfoLog() << name << " avg call time (ms): " << avgCpuTimePerCall;
 }
 
-void CaptureReplyTestWithParams::LogMemoryStats(const std::string& name,
-                                                const CaptureReplayMemoryStats& stats) const {
-    gpgmm::InfoLog() << "total " << name << " size (bytes): " << stats.TotalSize;
-    gpgmm::InfoLog() << "total " << name << " count: " << stats.TotalCount;
+void CaptureReplayTestWithParams::LogMemoryStats(const std::string& name,
+                                                 const CaptureReplayMemoryStats& stats) const {
+    gpgmm::InfoLog() << "total " << name
+                     << " size (bytes): " << stats.TotalSize / gTestEnv->GetIterations();
+    gpgmm::InfoLog() << "total " << name
+                     << " count: " << stats.TotalCount / gTestEnv->GetIterations();
 }

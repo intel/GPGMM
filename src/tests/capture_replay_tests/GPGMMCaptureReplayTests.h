@@ -46,15 +46,20 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
     GPGMMCaptureReplayTestEnvironment(int argc, char** argv);
     ~GPGMMCaptureReplayTestEnvironment() override;
 
-    static std::vector<TraceFile> GenerateTraceFileParams();
-
     void SetUp() override;
     void TearDown() override;
+
+    static std::vector<TraceFile> GenerateTraceFileParams();
+
+    uint64_t GetIterations() const;
+
+  private:
+    uint64_t mIterations = 1;  // Number of test iterations to run.
 };
 
-class CaptureReplyTestWithParams : public testing::TestWithParam<TraceFile> {
+class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
   public:
-    CaptureReplyTestWithParams();
+    CaptureReplayTestWithParams();
 
     void LogCallStats(const std::string& name, const CaptureReplayCallStats& stats) const;
     void LogMemoryStats(const std::string& name, const CaptureReplayMemoryStats& stats) const;
@@ -67,15 +72,19 @@ class CaptureReplyTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
+    virtual void RunTest(const TraceFile& traceFile) = 0;
+
+    void RunTestLoop();
+
   protected:
     std::unique_ptr<gpgmm::PlatformTime> mPlatformTime;
 };
 
-#define GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(testSuiteName)                                 \
-    INSTANTIATE_TEST_SUITE_P(                                                                \
-        , testSuiteName,                                                                     \
-        ::testing::ValuesIn(GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParams()),   \
-        CaptureReplyTestWithParams::CustomPrintToStringParamName<testSuiteName::ParamType>); \
+#define GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(testSuiteName)                                  \
+    INSTANTIATE_TEST_SUITE_P(                                                                 \
+        , testSuiteName,                                                                      \
+        ::testing::ValuesIn(GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParams()),    \
+        CaptureReplayTestWithParams::CustomPrintToStringParamName<testSuiteName::ParamType>); \
     GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(testSuiteName)
 
 #endif  // TESTS_CAPTUREREPLAYTESTS_GPGMMCAPTUREREPLAYTESTS_H_
