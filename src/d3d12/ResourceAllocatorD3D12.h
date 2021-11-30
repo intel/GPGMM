@@ -24,8 +24,6 @@
 
 namespace gpgmm {
     class MemoryAllocator;
-    class MemoryAllocation;
-    class MemoryPool;
 }  // namespace gpgmm
 
 namespace gpgmm { namespace d3d12 {
