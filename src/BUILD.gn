@@ -127,8 +127,6 @@ source_set("gpgmm_sources") {
     "ObjectSerializer.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
-    "SegmentedMemoryAllocator.cpp",
-    "SegmentedMemoryAllocator.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
 

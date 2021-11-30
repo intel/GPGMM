@@ -38,8 +38,6 @@ target_sources(gpgmm PRIVATE
     "ObjectSerializer.h"
     "PooledMemoryAllocator.cpp"
     "PooledMemoryAllocator.h"
-    "SegmentedMemoryAllocator.cpp"
-    "SegmentedMemoryAllocator.h"
     "TraceEvent.cpp"
     "TraceEvent.h"
 )

@@ -20,26 +20,16 @@
 
 namespace gpgmm {
 
-    class MemoryPool;
-
-    // Represents a allocated memory block or heap.
-    // When memory is sub-allocated it will have a non-zero refcount.
+    // Represents a memory block or heap.
     class MemoryBase : public RefCounted, public NonCopyable {
       public:
         MemoryBase(uint64_t size);
         virtual ~MemoryBase();
 
-        // Return the size of the memory block or heap.
         uint64_t GetSize() const;
-
-        // Get the memory pool of the memory block or heap.
-        // When memory gets de-allocated, it will be returned to this pool.
-        MemoryPool* GetPool() const;
-        void SetPool(MemoryPool* pool);
 
       private:
         const uint64_t mSize;
-        MemoryPool* mPool = nullptr;
     };
 
 }  // namespace gpgmm

@@ -107,7 +107,6 @@ test("gpgmm_unittests") {
     "unittests/BuddyBlockAllocatorTests.cpp",
     "unittests/BuddyMemoryAllocatorTests.cpp",
     "unittests/ConditionalMemoryAllocatorTests.cpp",
-    "unittests/SegmentedMemoryAllocatorTests.cpp",
   ]
 
   # When building inside Chromium, use their gtest main function because it is

@@ -106,9 +106,8 @@ namespace gpgmm { namespace d3d12 {
         uint64_t MaxResourceHeapSize;
 
         // Maximum resource size allowed to be pool-allocated.
-        // Pool-allocating larger resources consumes more memory but is faster to create
-        // subsequent resources by using a pool of resource heaps. Apps must periodically call
-        // Trim() to free unused pool-allocated resource heaps.
+        // Pool-allocating larger resources consumes more memory but could be faster to allocate
+        // from by using a pool of resource heaps.
         // Optional parameter. When 0 is used, the API will automatically disabling pooling.
         uint64_t MaxResourceSizeForPooling;
 
@@ -139,18 +138,14 @@ namespace gpgmm { namespace d3d12 {
         // standalone allocations whose memory cannot be reused.
         ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
 
-        // Sub-allocate a resource allocation within the same resource. The resource alignment
-        // is allowed to be byte-aligned instead of always being page-aligned, which significantly
-        // reduces app memory usage. However, this is mostly limited for constant buffers (ie.
-        // index and vertex buffers) which will be used as read-only after creation since the
-        // resource can only be in one state at a time.
+        // Sub-allocates within the same resource down to a single byte. This is useful
+        // for constant buffers (ie. index and vertex buffers) which will be used as read-only
+        // after creation since the resource can only be in one state at a time. When this
+        // flag is not used, the minimum resource size is always equal to the smallest resource heap
+        // allowed (or 64KB).
         // It is undefined behavior to use sub-allocations within the same resource betweem multiple
         // command queues since accesses are not guarenteed to be coherent.
         ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
-
-        // Forbids allowing multiple resource allocations to be created from the same resource
-        // heap. The created resource will always be allocated with it's own resource heap.
-        ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
     } ALLOCATION_FLAGS;
 
@@ -196,12 +191,8 @@ namespace gpgmm { namespace d3d12 {
         // managed when non-null.
         ResidencyManager* GetResidencyManager() const;
 
-        // When pooling is enabled, the allocator will retain resource heaps in order to speed-up
-        // subsequent resource allocation requests. These resource allocations count against the
-        // app's memory usage and in general, will lead to increased memory usage by the overall
-        // system. Apps should call Trim() when going idle for a period of time since there is a
-        // brief performance hit when the internal resource heaps get reallocated by the OS.
-        void Trim();
+      protected:
+        void DeleteThis() override;
 
       private:
         friend BufferAllocator;
@@ -247,10 +238,9 @@ namespace gpgmm { namespace d3d12 {
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 
+        std::array<std::unique_ptr<MemoryPool>, kNumOfResourceHeapTypes> mResourceHeapPoolOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mResourceHeapAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mResourceSubAllocatorOfType;
+            mResourceHeapSubAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mBufferSubAllocatorOfType;
     };
