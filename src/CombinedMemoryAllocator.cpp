@@ -35,4 +35,11 @@ namespace gpgmm {
         mAllocators.back()->DeallocateMemory(allocation);
     }
 
+    void CombinedMemoryAllocator::ReleaseMemory() {
+        for (auto& allocator : mAllocators) {
+            ASSERT(allocator != nullptr);
+            allocator->ReleaseMemory();
+        }
+    }
+
 }  // namespace gpgmm

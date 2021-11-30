@@ -19,8 +19,7 @@
 #include "src/BuddyMemoryAllocator.h"
 #include "src/CombinedMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
-#include "src/LIFOMemoryPool.h"
-#include "src/PooledMemoryAllocator.h"
+#include "src/SegmentedMemoryAllocator.h"
 #include "src/TraceEvent.h"
 #include "src/d3d12/BufferAllocatorD3D12.h"
 #include "src/d3d12/DefaultsD3D12.h"
@@ -336,34 +335,25 @@ namespace gpgmm { namespace d3d12 {
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags);
             const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
-            std::unique_ptr<CombinedMemoryAllocator> resourceHeapSubAllocator =
+            std::unique_ptr<CombinedMemoryAllocator> resourceHeapAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
 
-            MemoryAllocator* standaloneHeapAllocator = resourceHeapSubAllocator->PushAllocator(
+            MemoryAllocator* heapAllocator = resourceHeapAllocator->PushAllocator(
                 std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags));
 
-            MemoryAllocator* placedResourceSubAllocator =
-                resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, descriptor.PreferredResourceHeapSize, heapAlignment,
-                    standaloneHeapAllocator));
+            MemoryAllocator* pooledHeapAllocator = resourceHeapAllocator->PushAllocator(
+                std::make_unique<SegmentedMemoryAllocator>(heapAllocator, heapAlignment));
 
-            std::unique_ptr<MemoryPool> resourceHeapPool = std::make_unique<LIFOMemoryPool>();
-            MemoryAllocator* standalonePooledHeapAllocator =
-                resourceHeapSubAllocator->PushAllocator(std::make_unique<PooledMemoryAllocator>(
-                    standaloneHeapAllocator, resourceHeapPool.get()));
+            resourceHeapAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
+                pooledHeapAllocator, heapAllocator, descriptor.MaxResourceSizeForPooling));
 
-            MemoryAllocator* placedResourcePooledSubAllocator =
-                resourceHeapSubAllocator->PushAllocator(std::make_unique<BuddyMemoryAllocator>(
-                    mMaxResourceHeapSize, descriptor.PreferredResourceHeapSize, heapAlignment,
-                    standalonePooledHeapAllocator));
+            std::unique_ptr<BuddyMemoryAllocator> resourceSubAllocator =
+                std::make_unique<BuddyMemoryAllocator>(mMaxResourceHeapSize,
+                                                       descriptor.PreferredResourceHeapSize,
+                                                       heapAlignment, resourceHeapAllocator.get());
 
-            resourceHeapSubAllocator->PushAllocator(std::make_unique<ConditionalMemoryAllocator>(
-                placedResourcePooledSubAllocator, placedResourceSubAllocator,
-                descriptor.MaxResourceSizeForPooling));
-
-            mResourceHeapSubAllocatorOfType[resourceHeapTypeIndex] =
-                std::move(resourceHeapSubAllocator);
-            mResourceHeapPoolOfType[resourceHeapTypeIndex] = std::move(resourceHeapPool);
+            mResourceSubAllocatorOfType[resourceHeapTypeIndex] = std::move(resourceSubAllocator);
+            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] = std::move(resourceHeapAllocator);
 
             std::unique_ptr<CombinedMemoryAllocator> bufferSubAllocator =
                 std::make_unique<CombinedMemoryAllocator>();
@@ -387,13 +377,11 @@ namespace gpgmm { namespace d3d12 {
         ShutdownEventTracer();
     }
 
-    void ResourceAllocator::DeleteThis() {
-        for (auto& pool : mResourceHeapPoolOfType) {
-            ASSERT(pool != nullptr);
-            pool->ReleasePool();
+    void ResourceAllocator::Trim() {
+        for (auto& allocator : mResourceHeapAllocatorOfType) {
+            ASSERT(allocator != nullptr);
+            allocator->ReleaseMemory();
         }
-
-        IUnknownImpl::DeleteThis();
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -432,15 +420,23 @@ namespace gpgmm { namespace d3d12 {
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
+        const bool neverSubAllocate =
+            allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+
         // Attempt to allocate using the most effective allocator.
         MemoryAllocator* allocator = nullptr;
 
         // Attempt to create a resource allocation within the same resource.
+        // This has the same performace as sub-allocating resource heaps without the
+        // drawback of requiring resource heaps to be 64KB size-aligned. However, this
+        // strategy only works in a few cases (ex. small constant buffers uploads) so it should be
+        // tried before sub-allocating resource heaps.
+        // The time and space complexity of is defined by the sub-allocation algorithm used.
         if ((allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
             resourceInfo.Alignment > resourceDescriptor.Width &&
             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             GetInitialResourceState(GetHeapType(resourceHeapType)) == initialResourceState &&
-            mIsAlwaysCommitted == false) {
+            !mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mBufferSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             const uint64_t subAllocatedAlignment =
@@ -464,9 +460,11 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
-        if (!mIsAlwaysCommitted) {
-            allocator =
-                mResourceHeapSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+        // Attempt to create a resource allocation by placing a resource in a sub-allocated
+        // resource heap.
+        // The time and space complexity of is determined by the sub-allocation algorithm used.
+        if (!mIsAlwaysCommitted && !neverSubAllocate) {
+            allocator = mResourceSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
@@ -489,11 +487,39 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
+        // Attempt to create a resource allocation by placing a single resource fully contained
+        // in a resource heap. This strategy is slightly better then creating a standalone committed
+        // resource because a resource heap will not be reallocated by the OS until Trim() is
+        // called.
+        // The time and space complexity is determined by the allocator type.
+        if (!mIsAlwaysCommitted) {
+            allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+
+            ReturnIfSucceeded(TryAllocateResource(
+                allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
+                [&](const auto& allocation) -> HRESULT {
+                    ComPtr<ID3D12Resource> placedResource;
+                    Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
+                    ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
+                                                        resourceInfo, &newResourceDesc, clearValue,
+                                                        initialResourceState, &placedResource));
+
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(), allocation.GetAllocator(),
+                                               std::move(placedResource), resourceHeap};
+
+                    return S_OK;
+                }));
+        }
+
+        // Attempt to create a standalone committed resource. This strategy is the safest but also
+        // the most expensive so it's used as a last resort or if the developer needs larger
+        // allocations where sub-allocation or pooling is otherwise ineffective.
+        // The time and space complexity of committed resource is driver-defined.
         if (neverAllocate) {
             return E_OUTOFMEMORY;
         }
 
-        // TODO: Come up with a better heuristic to conditionally disable sub-allocation.
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(

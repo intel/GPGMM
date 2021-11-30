@@ -42,7 +42,7 @@ namespace gpgmm { namespace d3d12 {
                                            MemoryAllocator* memoryAllocator,
                                            uint64_t offsetFromHeap,
                                            Block* block,
-                                           ComPtr<ID3D12Resource> resource,
+                                           ComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
         : MemoryAllocation(memoryAllocator,
                            resourceHeap,
@@ -51,7 +51,7 @@ namespace gpgmm { namespace d3d12 {
                            block),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
-          mResource(std::move(resource)),
+          mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }
@@ -64,10 +64,26 @@ namespace gpgmm { namespace d3d12 {
                            resourceHeap,
                            kInvalidOffset,
                            AllocationMethod::kStandalone,
-                           nullptr),
+                           /*block*/ nullptr),
           mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
+          mOffsetFromResource(0) {
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+    }
+
+    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
+                                           MemoryAllocator* memoryAllocator,
+                                           ComPtr<ID3D12Resource> placedResource,
+                                           Heap* resourceHeap)
+        : MemoryAllocation(memoryAllocator,
+                           resourceHeap,
+                           /*offsetFromHeap*/ 0,
+                           AllocationMethod::kStandalone,
+                           /*block*/ nullptr),
+          mResourceAllocator(nullptr),
+          mResidencyManager(residencyManager),
+          mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
     }

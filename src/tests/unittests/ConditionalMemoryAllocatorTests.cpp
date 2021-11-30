@@ -32,7 +32,7 @@ class ConditionalMemoryAllocatorTests : public testing::Test {
                                                          uint64_t alignment,
                                                          bool neverAllocate) override {
             mAllocatedBytes += size;
-            return std::make_unique<MemoryAllocation>(/*allocator*/ this, nullptr);
+            return std::make_unique<MemoryAllocation>(/*allocator*/ this, /*memory*/ nullptr);
         }
 
         uint64_t mAllocatedBytes = 0;

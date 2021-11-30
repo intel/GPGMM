@@ -13,11 +13,14 @@
 // limitations under the License.
 
 #include "src/Memory.h"
+
 #include "common/Assert.h"
+#include "src/MemoryPool.h"
 
 namespace gpgmm {
 
     MemoryBase::MemoryBase(uint64_t size) : RefCounted(0), mSize(size) {
+        ASSERT(mSize != kInvalidSize);
     }
 
     MemoryBase::~MemoryBase() {
@@ -26,6 +29,15 @@ namespace gpgmm {
 
     uint64_t MemoryBase::GetSize() const {
         return mSize;
+    }
+
+    MemoryPool* MemoryBase::GetPool() const {
+        return mPool;
+    }
+
+    void MemoryBase::SetPool(MemoryPool* pool) {
+        ASSERT(pool != nullptr);
+        mPool = pool;
     }
 
 }  // namespace gpgmm
