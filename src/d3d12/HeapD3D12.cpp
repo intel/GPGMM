@@ -14,6 +14,9 @@
 // limitations under the License.
 
 #include "src/d3d12/HeapD3D12.h"
+
+#include "src/TraceEvent.h"
+#include "src/d3d12/JSONSerializerD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -24,6 +27,7 @@ namespace gpgmm { namespace d3d12 {
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(memorySegmentGroup),
           mResidencyLock(0) {
+        TRACE_EVENT_NEW_OBJECT("Heap", this);
     }
 
     // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
@@ -33,6 +37,8 @@ namespace gpgmm { namespace d3d12 {
         if (IsInResidencyLRUCache()) {
             RemoveFromList();
         }
+
+        TRACE_EVENT_DELETE_OBJECT("Heap", this);
     }
 
     ComPtr<ID3D12Pageable> Heap::GetPageable() const {
@@ -79,5 +85,9 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT Heap::UpdateResidency(ResidencySet* residencySet) {
         return residencySet->Insert(this);
+    }
+
+    HEAP_DESC Heap::GetDesc() const {
+        return {GetSize(), IsResident(), mMemorySegmentGroup};
     }
 }}  // namespace gpgmm::d3d12

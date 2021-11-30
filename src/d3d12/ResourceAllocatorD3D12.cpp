@@ -296,7 +296,7 @@ namespace gpgmm { namespace d3d12 {
 
         if (enableEventTracer) {
             StartupEventTracer(descriptor.RecordOptions.TraceFile);
-            TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateAllocator", descriptor);
+            TRACE_EVENT_CALL("ResourceAllocator.CreateAllocator", descriptor);
         }
 
         ComPtr<ResidencyManager> residencyManager;
@@ -396,7 +396,7 @@ namespace gpgmm { namespace d3d12 {
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor,
                                            initialResourceState, clearValue};
 
-        TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateResource", desc);
+        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
 
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
@@ -543,7 +543,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
-        TRACE_EVENT_OBJECT_DESC("ResourceAllocator.CreateResource", desc);
+        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
@@ -617,6 +617,8 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
 
         Heap* resourceHeap = new Heap(std::move(d3d12Heap), memorySegmentGroup, heapSize);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocator.CreateResourceHeap", resourceHeap,
+                                    resourceHeap->GetDesc());
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.

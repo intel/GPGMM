@@ -1,0 +1,407 @@
+{
+  "traceEvents": [
+    {},
+    {
+      "name": "ResourceAllocator.CreateAllocator",
+      "cat": "0",
+      "ph": "i",
+      "tid": 26056,
+      "ts": 0,
+      "pid": "GPGMM",
+      "args": {
+        "Flags": 2,
+        "RecordOptions": {
+          "Flags": 0
+        },
+        "IsUMA": 0,
+        "ResourceHeapTier": 1,
+        "PreferredResourceHeapSize": 4194304,
+        "MaxResourceHeapSize": 34359738368,
+        "MaxResourceSizeForPooling": 4194304,
+        "MaxVideoMemoryBudget": 0.95,
+        "TotalResourceBudgetLimit": 0
+      }
+    },
+    {
+      "name": "ResourceAllocator",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec4b8e470",
+      "tid": 26056,
+      "ts": 34,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec6042ff0",
+      "tid": 26056,
+      "ts": 121,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec6043630",
+      "tid": 26056,
+      "ts": 1131,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 26056,
+      "ts": 1259,
+      "pid": "GPGMM",
+      "args": {
+        "allocationDescriptor": {
+          "Flags": 0,
+          "HeapType": 1
+        },
+        "resourceDescriptor": {
+          "Dimension": 1,
+          "Alignment": 0,
+          "Width": 4,
+          "Height": 1,
+          "DepthOrArraySize": 1,
+          "MipLevels": 1,
+          "Format": 0,
+          "Layout": 1,
+          "SampleDesc": {
+            "Count": 1,
+            "Quality": 0
+          },
+          "Flags": 0
+        },
+        "initialResourceState": 0,
+        "clearValue": {}
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 1268,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec6044170",
+      "tid": 26056,
+      "ts": 2068,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResourceHeap",
+      "cat": "0",
+      "ph": "O",
+      "id": "0x27ec6044170",
+      "tid": 26056,
+      "ts": 2073,
+      "pid": "GPGMM",
+      "args": {
+        "snapshot": {
+          "Size": 4194304,
+          "IsResident": 0,
+          "MemorySegmentGroup": 0
+        }
+      }
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec5a5ed00",
+      "tid": 26056,
+      "ts": 2181,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 2184,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 26056,
+      "ts": 2220,
+      "pid": "GPGMM",
+      "args": {
+        "allocationDescriptor": {
+          "Flags": 0,
+          "HeapType": 2
+        },
+        "resourceDescriptor": {
+          "Dimension": 1,
+          "Alignment": 0,
+          "Width": 4194304,
+          "Height": 1,
+          "DepthOrArraySize": 1,
+          "MipLevels": 1,
+          "Format": 0,
+          "Layout": 1,
+          "SampleDesc": {
+            "Count": 1,
+            "Quality": 0
+          },
+          "Flags": 0
+        },
+        "initialResourceState": 2755,
+        "clearValue": {}
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 2220,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec6044120",
+      "tid": 26056,
+      "ts": 4098,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResourceHeap",
+      "cat": "0",
+      "ph": "O",
+      "id": "0x27ec6044120",
+      "tid": 26056,
+      "ts": 4103,
+      "pid": "GPGMM",
+      "args": {
+        "snapshot": {
+          "Size": 4194304,
+          "IsResident": 0,
+          "MemorySegmentGroup": 1
+        }
+      }
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec5a5dfe0",
+      "tid": 26056,
+      "ts": 4123,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 4123,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 26056,
+      "ts": 5357,
+      "pid": "GPGMM",
+      "args": {
+        "allocationDescriptor": {
+          "Flags": 0,
+          "HeapType": 3
+        },
+        "resourceDescriptor": {
+          "Dimension": 1,
+          "Alignment": 0,
+          "Width": 4,
+          "Height": 1,
+          "DepthOrArraySize": 1,
+          "MipLevels": 1,
+          "Format": 0,
+          "Layout": 1,
+          "SampleDesc": {
+            "Count": 1,
+            "Quality": 0
+          },
+          "Flags": 0
+        },
+        "initialResourceState": 1024,
+        "clearValue": {}
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 5360,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec6043680",
+      "tid": 26056,
+      "ts": 6291,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResourceHeap",
+      "cat": "0",
+      "ph": "O",
+      "id": "0x27ec6043680",
+      "tid": 26056,
+      "ts": 6296,
+      "pid": "GPGMM",
+      "args": {
+        "snapshot": {
+          "Size": 4194304,
+          "IsResident": 0,
+          "MemorySegmentGroup": 1
+        }
+      }
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x27ec5a5ead0",
+      "tid": 26056,
+      "ts": 6314,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 6314,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 8337,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec5a5ed00",
+      "tid": 26056,
+      "ts": 8356,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 8356,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 8378,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec5a5ead0",
+      "tid": 26056,
+      "ts": 8383,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 8383,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "B",
+      "tid": 26056,
+      "ts": 8390,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec5a5dfe0",
+      "tid": 26056,
+      "ts": 8394,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocation.Release",
+      "cat": "0",
+      "ph": "E",
+      "tid": 26056,
+      "ts": 8394,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec6043680",
+      "tid": 26056,
+      "ts": 8395,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec6044120",
+      "tid": 26056,
+      "ts": 8584,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec6044170",
+      "tid": 26056,
+      "ts": 8767,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x27ec4b8e470",
+      "tid": 26056,
+      "ts": 8953,
+      "pid": "GPGMM"
+    }
+  ]
+}

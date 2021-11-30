@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include "src/d3d12/JSONSerializerD3D12.h"
+
+#include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
 
@@ -122,6 +124,15 @@ namespace gpgmm { namespace d3d12 {
         ss << "{ "
            << "\"Count\": " << desc.Count << ", "
            << "\"Quality\": " << desc.Quality << " }";
+        return ss.str();
+    }
+
+    std::string JSONSerializer::AppendTo(const HEAP_DESC& desc) {
+        std::stringstream ss;
+        ss << "{ "
+           << "\"Size\": " << desc.Size << ", "
+           << "\"IsResident\": " << desc.IsResident << ", "
+           << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << " }";
         return ss.str();
     }
 
