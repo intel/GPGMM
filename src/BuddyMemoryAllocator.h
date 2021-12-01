@@ -17,7 +17,7 @@
 #define GPGMM_BUDDYMEMORYALLOCATOR_H_
 
 #include "src/BuddyBlockAllocator.h"
-#include "src/LinearMemoryPool.h"
+#include "src/IndexedMemoryPool.h"
 #include "src/MemoryAllocator.h"
 
 #include <memory>
@@ -64,7 +64,7 @@ namespace gpgmm {
 
         BuddyBlockAllocator mBuddyBlockAllocator;
 
-        LinearMemoryPool mPool;
+        IndexedMemoryPool mPool;
     };
 
 }  // namespace gpgmm

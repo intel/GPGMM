@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/LinearMemoryPool.h"
-#include "common/Assert.h"
+#include "src/IndexedMemoryPool.h"
+
 #include "src/MemoryAllocator.h"
 
 namespace gpgmm {
 
-    std::unique_ptr<MemoryAllocation> LinearMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
+    std::unique_ptr<MemoryAllocation> IndexedMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
         if (memoryIndex >= mPool.size()) {
             mPool.resize(memoryIndex + 1);
         }
@@ -26,15 +26,15 @@ namespace gpgmm {
         return std::unique_ptr<MemoryAllocation>(mPool[memoryIndex].release());
     }
 
-    void LinearMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
-                                        uint64_t memoryIndex) {
+    void IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
+                                         uint64_t memoryIndex) {
         ASSERT(allocation != nullptr);
         ASSERT(memoryIndex < mPool.size());
 
         mPool[memoryIndex] = std::move(allocation);
     }
 
-    void LinearMemoryPool::ReleasePool() {
+    void IndexedMemoryPool::ReleasePool() {
         for (auto& allocation : mPool) {
             if (allocation != nullptr) {
                 allocation->GetAllocator()->DeallocateMemory(allocation.release());
@@ -44,7 +44,7 @@ namespace gpgmm {
         mPool.clear();
     }
 
-    uint64_t LinearMemoryPool::GetPoolSize() const {
+    uint64_t IndexedMemoryPool::GetPoolSize() const {
         uint64_t count = 0;
         for (auto& allocation : mPool) {
             if (allocation != nullptr) {

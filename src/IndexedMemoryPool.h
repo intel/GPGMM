@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_LINEARMEMORYPOOL_H_
-#define GPGMM_LINEARMEMORYPOOL_H_
+#ifndef GPGMM_INDEXEDMEMORYPOOL_H_
+#define GPGMM_INDEXEDMEMORYPOOL_H_
 
 #include "src/MemoryPool.h"
 
@@ -21,10 +21,10 @@
 
 namespace gpgmm {
 
-    class LinearMemoryPool : public MemoryPool {
+    class IndexedMemoryPool : public MemoryPool {
       public:
-        LinearMemoryPool() = default;
-        ~LinearMemoryPool() override = default;
+        IndexedMemoryPool() = default;
+        ~IndexedMemoryPool() override = default;
 
         // MemoryPool interface
         std::unique_ptr<MemoryAllocation> AcquireFromPool(uint64_t memoryIndex) override;
@@ -40,4 +40,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_LINEARMEMORYPOOL_H_
+#endif  // GPGMM_INDEXEDMEMORYPOOL_H_
