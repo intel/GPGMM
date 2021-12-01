@@ -116,6 +116,11 @@ void CaptureReplayTestWithParams::LogMemoryStats(const std::string& name,
                                                  const CaptureReplayMemoryStats& stats) const {
     gpgmm::InfoLog() << "total " << name
                      << " size (bytes): " << stats.TotalSize / gTestEnv->GetIterations();
+
+    if (stats.PeakUsage > 0) {
+        gpgmm::InfoLog() << "peak " << name << " usage (bytes): " << stats.PeakUsage;
+    }
+
     gpgmm::InfoLog() << "total " << name
                      << " count: " << stats.TotalCount / gTestEnv->GetIterations();
 }

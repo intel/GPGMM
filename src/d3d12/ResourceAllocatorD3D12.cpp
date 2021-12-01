@@ -627,8 +627,6 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
 
         Heap* resourceHeap = new Heap(std::move(d3d12Heap), memorySegmentGroup, heapSize);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocator.CreateResourceHeap", resourceHeap,
-                                    resourceHeap->GetDesc());
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
