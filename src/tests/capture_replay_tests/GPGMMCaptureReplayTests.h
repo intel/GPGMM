@@ -37,6 +37,8 @@ struct CaptureReplayCallStats {
 struct CaptureReplayMemoryStats {
     uint64_t TotalSize = 0;
     uint64_t TotalCount = 0;
+    uint64_t PeakUsage = 0;
+    uint64_t CurrentUsage = 0;
 };
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);

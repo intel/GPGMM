@@ -107,6 +107,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToIDMap;
         std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
+        std::unordered_map<std::string, HEAP_DESC> resourceHeapDescToIDMap;
 
         ComPtr<ResourceAllocation> newAllocationWithoutID;
 
@@ -239,15 +240,42 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         UNREACHABLE();
                         break;
                 }
-            } else if (event["name"].asString() == "ResourceAllocator.CreateResourceHeap") {
+            } else if (event["name"].asString() == "Heap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
+                        const Json::Value& snapshot = event["args"]["snapshot"];
+
+                        HEAP_DESC heapDesc = {};
+                        heapDesc.IsResident = snapshot["IsResident"].asBool();
+                        heapDesc.MemorySegmentGroup = static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
+                            snapshot["MemorySegmentGroup"].asInt());
+                        heapDesc.Size = snapshot["Size"].asUInt64();
+
                         mResourceHeapStats.TotalCount++;
-                        mResourceHeapStats.TotalSize += event["args"]["snapshot"]["Size"].asUInt();
+                        mResourceHeapStats.TotalSize += heapDesc.Size;
+                        mResourceHeapStats.CurrentUsage += heapDesc.Size;
+                        mResourceHeapStats.PeakUsage =
+                            std::max(mResourceHeapStats.PeakUsage, mResourceHeapStats.CurrentUsage);
+
+                        ASSERT_TRUE(
+                            resourceHeapDescToIDMap.insert({event["id"].asString(), heapDesc})
+                                .second);
+
+                    } break;
+
+                    case TRACE_EVENT_PHASE_DELETE_OBJECT: {
+                        const std::string& traceEventID = event["id"].asString();
+                        auto it = resourceHeapDescToIDMap.find(traceEventID);
+                        ASSERT_TRUE(it != resourceHeapDescToIDMap.end());
+
+                        HEAP_DESC heapDesc = it->second;
+                        mResourceHeapStats.CurrentUsage -= heapDesc.Size;
+
+                        ASSERT_EQ(resourceHeapDescToIDMap.erase(traceEventID), 1u);
+
                     } break;
 
                     default:
-                        UNREACHABLE();
                         break;
                 }
             }

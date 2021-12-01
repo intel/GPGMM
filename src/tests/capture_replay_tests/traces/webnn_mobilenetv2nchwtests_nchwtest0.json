@@ -5,7 +5,7 @@
       "name": "ResourceAllocator.CreateAllocator",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
+      "tid": 25108,
       "ts": 0,
       "pid": "GPGMM",
       "args": {
@@ -26,17 +26,17 @@
       "name": "ResourceAllocator",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dc9c711310",
-      "tid": 19828,
-      "ts": 36,
+      "id": "0x10e7e46eef0",
+      "tid": 25108,
+      "ts": 32,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 184035,
+      "tid": 25108,
+      "ts": 173676,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -66,26 +66,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 184037,
+      "tid": 25108,
+      "ts": 173678,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431cbc0",
-      "tid": 19828,
-      "ts": 190734,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 180792,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431cbc0",
-      "tid": 19828,
-      "ts": 190746,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 180808,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -99,25 +99,25 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422d810",
-      "tid": 19828,
-      "ts": 190868,
+      "id": "0x10e06303d10",
+      "tid": 25108,
+      "ts": 180968,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 190869,
+      "tid": 25108,
+      "ts": 180969,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 190879,
+      "tid": 25108,
+      "ts": 180983,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -147,26 +147,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 190883,
+      "tid": 25108,
+      "ts": 180987,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431d520",
-      "tid": 19828,
-      "ts": 192703,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 183027,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431d520",
-      "tid": 19828,
-      "ts": 192709,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 183052,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -180,25 +180,25 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422d730",
-      "tid": 19828,
-      "ts": 192740,
+      "id": "0x10e06303d80",
+      "tid": 25108,
+      "ts": 183082,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 192740,
+      "tid": 25108,
+      "ts": 183082,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 192750,
+      "tid": 25108,
+      "ts": 183094,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -228,26 +228,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 192750,
+      "tid": 25108,
+      "ts": 183095,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431d660",
-      "tid": 19828,
-      "ts": 193540,
+      "id": "0x10e0655e2a0",
+      "tid": 25108,
+      "ts": 183979,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431d660",
-      "tid": 19828,
-      "ts": 193563,
+      "id": "0x10e0655e2a0",
+      "tid": 25108,
+      "ts": 184007,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -261,25 +261,25 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422d6c0",
-      "tid": 19828,
-      "ts": 193581,
+      "id": "0x10e063043a0",
+      "tid": 25108,
+      "ts": 184034,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 193581,
+      "tid": 25108,
+      "ts": 184035,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 193591,
+      "tid": 25108,
+      "ts": 184045,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -309,26 +309,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 193591,
+      "tid": 25108,
+      "ts": 184046,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431d110",
-      "tid": 19828,
-      "ts": 195271,
+      "id": "0x10e0655e2f0",
+      "tid": 25108,
+      "ts": 185936,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431d110",
-      "tid": 19828,
-      "ts": 195291,
+      "id": "0x10e0655e2f0",
+      "tid": 25108,
+      "ts": 185963,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -342,68 +342,84 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422ca80",
-      "tid": 19828,
-      "ts": 195305,
+      "id": "0x10e06304410",
+      "tid": 25108,
+      "ts": 186005,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 195305,
+      "tid": 25108,
+      "ts": 186005,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca3e7d570",
-      "tid": 19828,
-      "ts": 196057,
+      "id": "0x10e0603dc40",
+      "tid": 25108,
+      "ts": 187068,
       "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "O",
+      "id": "0x10e0603dc40",
+      "tid": 25108,
+      "ts": 187089,
+      "pid": "GPGMM",
+      "args": {
+        "snapshot": {
+          "Size": 1,
+          "IsResident": 0,
+          "MemorySegmentGroup": 0
+        }
+      }
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 211432,
+      "tid": 25108,
+      "ts": 203409,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431cbc0",
-      "tid": 19828,
-      "ts": 211432,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 203410,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422d810",
-      "tid": 19828,
-      "ts": 211648,
+      "id": "0x10e06303d10",
+      "tid": 25108,
+      "ts": 203617,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 211648,
+      "tid": 25108,
+      "ts": 203618,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 211661,
+      "tid": 25108,
+      "ts": 203632,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -433,26 +449,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 211662,
+      "tid": 25108,
+      "ts": 203637,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431d200",
-      "tid": 19828,
-      "ts": 212108,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 204060,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431d200",
-      "tid": 19828,
-      "ts": 212113,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 204066,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -466,59 +482,59 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422ccb0",
-      "tid": 19828,
-      "ts": 212129,
+      "id": "0x10e06304170",
+      "tid": 25108,
+      "ts": 204083,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212129,
+      "tid": 25108,
+      "ts": 204083,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 212130,
+      "tid": 25108,
+      "ts": 204083,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431d520",
-      "tid": 19828,
-      "ts": 212130,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 204084,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422d730",
-      "tid": 19828,
-      "ts": 212321,
+      "id": "0x10e06303d80",
+      "tid": 25108,
+      "ts": 204249,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212321,
+      "tid": 25108,
+      "ts": 204249,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 212330,
+      "tid": 25108,
+      "ts": 204259,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -548,33 +564,33 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 212331,
+      "tid": 25108,
+      "ts": 204259,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422d730",
-      "tid": 19828,
-      "ts": 212345,
+      "id": "0x10e06304330",
+      "tid": 25108,
+      "ts": 204273,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212345,
+      "tid": 25108,
+      "ts": 204273,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 212352,
+      "tid": 25108,
+      "ts": 204280,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -604,26 +620,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 212352,
+      "tid": 25108,
+      "ts": 204280,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431c4e0",
-      "tid": 19828,
-      "ts": 212959,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 204922,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431c4e0",
-      "tid": 19828,
-      "ts": 212963,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 204926,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -637,25 +653,25 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422cd20",
-      "tid": 19828,
-      "ts": 212978,
+      "id": "0x10e063041e0",
+      "tid": 25108,
+      "ts": 204941,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212978,
+      "tid": 25108,
+      "ts": 204941,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 212985,
+      "tid": 25108,
+      "ts": 204949,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -685,58 +701,58 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 212986,
+      "tid": 25108,
+      "ts": 204950,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422cd90",
-      "tid": 19828,
-      "ts": 212994,
+      "id": "0x10e06303990",
+      "tid": 25108,
+      "ts": 204956,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212994,
+      "tid": 25108,
+      "ts": 204956,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 212994,
+      "tid": 25108,
+      "ts": 204956,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422d6c0",
-      "tid": 19828,
-      "ts": 212998,
+      "id": "0x10e063043a0",
+      "tid": 25108,
+      "ts": 204960,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 212998,
+      "tid": 25108,
+      "ts": 204960,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 19828,
-      "ts": 213004,
+      "tid": 25108,
+      "ts": 204966,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -766,26 +782,26 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 213004,
+      "tid": 25108,
+      "ts": 204966,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca431ce90",
-      "tid": 19828,
-      "ts": 214549,
+      "id": "0x10e0655f1f0",
+      "tid": 25108,
+      "ts": 206582,
       "pid": "GPGMM"
     },
     {
-      "name": "ResourceAllocator.CreateResourceHeap",
+      "name": "Heap",
       "cat": "0",
       "ph": "O",
-      "id": "0x1dca431ce90",
-      "tid": 19828,
-      "ts": 214554,
+      "id": "0x10e0655f1f0",
+      "tid": 25108,
+      "ts": 206600,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -799,248 +815,264 @@
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca422d030",
-      "tid": 19828,
-      "ts": 214567,
+      "id": "0x10e063037d0",
+      "tid": 25108,
+      "ts": 206621,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 214567,
+      "tid": 25108,
+      "ts": 206621,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca3e7d570",
-      "tid": 19828,
-      "ts": 214568,
+      "id": "0x10e0603dc40",
+      "tid": 25108,
+      "ts": 206627,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "N",
-      "id": "0x1dca3e7ca30",
-      "tid": 19828,
-      "ts": 215239,
+      "id": "0x10e0603df40",
+      "tid": 25108,
+      "ts": 207321,
       "pid": "GPGMM"
+    },
+    {
+      "name": "Heap",
+      "cat": "0",
+      "ph": "O",
+      "id": "0x10e0603df40",
+      "tid": 25108,
+      "ts": 207326,
+      "pid": "GPGMM",
+      "args": {
+        "snapshot": {
+          "Size": 512,
+          "IsResident": 0,
+          "MemorySegmentGroup": 0
+        }
+      }
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 232757,
+      "tid": 25108,
+      "ts": 224318,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431d110",
-      "tid": 19828,
-      "ts": 232758,
+      "id": "0x10e0655e2f0",
+      "tid": 25108,
+      "ts": 224319,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422ca80",
-      "tid": 19828,
-      "ts": 233045,
+      "id": "0x10e06304410",
+      "tid": 25108,
+      "ts": 224544,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 233045,
+      "tid": 25108,
+      "ts": 224544,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 233045,
+      "tid": 25108,
+      "ts": 224545,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431ce90",
-      "tid": 19828,
-      "ts": 233046,
+      "id": "0x10e0655f1f0",
+      "tid": 25108,
+      "ts": 224545,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422d030",
-      "tid": 19828,
-      "ts": 233262,
+      "id": "0x10e063037d0",
+      "tid": 25108,
+      "ts": 224763,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 233262,
+      "tid": 25108,
+      "ts": 224764,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 233262,
+      "tid": 25108,
+      "ts": 224764,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422cd90",
-      "tid": 19828,
-      "ts": 233267,
+      "id": "0x10e06303990",
+      "tid": 25108,
+      "ts": 224770,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 233267,
+      "tid": 25108,
+      "ts": 224770,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 233267,
+      "tid": 25108,
+      "ts": 224771,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431d660",
-      "tid": 19828,
-      "ts": 233270,
+      "id": "0x10e0655e2a0",
+      "tid": 25108,
+      "ts": 224774,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422d730",
-      "tid": 19828,
-      "ts": 233533,
+      "id": "0x10e06304330",
+      "tid": 25108,
+      "ts": 224990,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 233533,
+      "tid": 25108,
+      "ts": 224990,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 233533,
+      "tid": 25108,
+      "ts": 224990,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431c4e0",
-      "tid": 19828,
-      "ts": 233536,
+      "id": "0x10e0655e1b0",
+      "tid": 25108,
+      "ts": 224994,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422cd20",
-      "tid": 19828,
-      "ts": 233742,
+      "id": "0x10e063041e0",
+      "tid": 25108,
+      "ts": 225164,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 233742,
+      "tid": 25108,
+      "ts": 225164,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 19828,
-      "ts": 233742,
+      "tid": 25108,
+      "ts": 225164,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca431d200",
-      "tid": 19828,
-      "ts": 233745,
+      "id": "0x10e0655e110",
+      "tid": 25108,
+      "ts": 225166,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca422ccb0",
-      "tid": 19828,
-      "ts": 234021,
+      "id": "0x10e06304170",
+      "tid": 25108,
+      "ts": 225353,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 19828,
-      "ts": 234022,
+      "tid": 25108,
+      "ts": 225354,
       "pid": "GPGMM"
     },
     {
       "name": "Heap",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dca3e7ca30",
-      "tid": 19828,
-      "ts": 234022,
+      "id": "0x10e0603df40",
+      "tid": 25108,
+      "ts": 225355,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator",
       "cat": "0",
       "ph": "D",
-      "id": "0x1dc9c711310",
-      "tid": 19828,
-      "ts": 235945,
+      "id": "0x10e7e46eef0",
+      "tid": 25108,
+      "ts": 226771,
       "pid": "GPGMM"
     }
   ]
