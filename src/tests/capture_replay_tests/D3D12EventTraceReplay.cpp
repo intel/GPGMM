@@ -98,7 +98,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile) override {
+    void RunTest(const TraceFile& traceFile, bool isStandaloneOnly) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -128,6 +128,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 ASSERT_FALSE(args.empty());
 
                 allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                if (isStandaloneOnly) {
+                    allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
+                        allocatorDesc.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED);
+                }
 
                 const Json::Value& recordOptions = args["RecordOptions"];
                 ASSERT_FALSE(recordOptions.empty());

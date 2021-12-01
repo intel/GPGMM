@@ -47,13 +47,21 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        if (strcmp("--standalone-only", argv[i]) == 0) {
+            mIsStandaloneOnly = true;
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
-                             << " --iterations: Number of times to replay the capture.\n";
+                             << " --iterations: Number of times to replay the capture.\n"
+                             << " --standalone-only: Disable sub-allocation.\n";
             continue;
         }
     }
+
+    PrintCaptureReplayEnviromentSettings();
 }
 
 GPGMMCaptureReplayTestEnvironment::~GPGMMCaptureReplayTestEnvironment() = default;
@@ -66,6 +74,14 @@ void GPGMMCaptureReplayTestEnvironment::SetUp() {
 void GPGMMCaptureReplayTestEnvironment::TearDown() {
     // TODO
     GPGMMTestEnvironment::TearDown();
+}
+
+void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplayEnviromentSettings() const {
+    std::cout << "Capture replay enviroment settings\n"
+                 "------------------------\n"
+              << "Use standalone allocations only: " << (mIsStandaloneOnly ? "true" : "false")
+              << "\n"
+              << std::endl;
 }
 
 // static
@@ -95,13 +111,17 @@ uint64_t GPGMMCaptureReplayTestEnvironment::GetIterations() const {
     return mIterations;
 }
 
+bool GPGMMCaptureReplayTestEnvironment::IsStandaloneOnly() const {
+    return mIsStandaloneOnly;
+}
+
 CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
 void CaptureReplayTestWithParams::RunTestLoop() {
     for (uint32_t i = 0; i < gTestEnv->GetIterations(); i++) {
-        RunTest(GetParam());
+        RunTest(GetParam(), gTestEnv->IsStandaloneOnly());
     }
 }
 
