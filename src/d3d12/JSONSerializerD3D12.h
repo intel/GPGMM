@@ -24,14 +24,8 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATION_DESC;
     struct ALLOCATOR_DESC;
     struct ALLOCATOR_RECORD_OPTIONS;
+    struct CREATE_RESOURCE_DESC;
     struct HEAP_DESC;
-
-    struct CREATE_RESOURCE_DESC {
-        const ALLOCATION_DESC& allocationDescriptor;
-        const D3D12_RESOURCE_DESC& resourceDescriptor;
-        D3D12_RESOURCE_STATES initialResourceState;
-        const D3D12_CLEAR_VALUE* clearValue;
-    };
 
     class JSONSerializer : public ObjectSerializer<JSONSerializer> {
       public:
