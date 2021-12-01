@@ -374,6 +374,10 @@ namespace gpgmm { namespace d3d12 {
 
     ResourceAllocator::~ResourceAllocator() {
         TRACE_EVENT_DELETE_OBJECT("ResourceAllocator", this);
+
+        // Destroy resource heaps before event tracer shutdown so we can track delete events.
+        mResourceHeapAllocatorOfType = {};
+
         ShutdownEventTracer();
     }
 
