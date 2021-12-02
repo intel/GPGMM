@@ -143,7 +143,8 @@ namespace gpgmm { namespace d3d12 {
            << "\"Size\": " << desc.Size << ", "
            << "\"HeapOffset\": " << desc.HeapOffset << ", "
            << "\"OffsetFromResource\": " << desc.OffsetFromResource << ", "
-           << "\"Method\": " << desc.Method << " }";
+           << "\"Method\": " << desc.Method << ", "
+           << "\"IsPooled\": " << desc.IsPooled << " }";
         return ss.str();
     }
 

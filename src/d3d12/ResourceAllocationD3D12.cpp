@@ -224,6 +224,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_DESC ResourceAllocation::GetDesc() const {
-        return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod()};
+        ASSERT(GetMemory() != nullptr);
+        return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod(),
+                GetMemory()->GetPool() != nullptr};
     }
 }}  // namespace gpgmm::d3d12
