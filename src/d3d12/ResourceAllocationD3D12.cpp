@@ -18,6 +18,7 @@
 #include "src/MemoryAllocator.h"
 #include "src/TraceEvent.h"
 #include "src/d3d12/HeapD3D12.h"
+#include "src/d3d12/JSONSerializerD3D12.h"
 #include "src/d3d12/ResidencyManagerD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
@@ -54,6 +55,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -70,6 +72,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -86,6 +89,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -104,6 +108,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
         TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::~ResourceAllocation() {
@@ -216,5 +221,9 @@ namespace gpgmm { namespace d3d12 {
 
     uint64_t ResourceAllocation::GetOffsetFromResource() const {
         return mOffsetFromResource;
+    }
+
+    RESOURCE_ALLOCATION_DESC ResourceAllocation::GetDesc() const {
+        return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod()};
     }
 }}  // namespace gpgmm::d3d12

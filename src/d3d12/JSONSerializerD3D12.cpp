@@ -15,6 +15,7 @@
 #include "src/d3d12/JSONSerializerD3D12.h"
 
 #include "src/d3d12/HeapD3D12.h"
+#include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
 
@@ -133,6 +134,16 @@ namespace gpgmm { namespace d3d12 {
            << "\"Size\": " << desc.Size << ", "
            << "\"IsResident\": " << desc.IsResident << ", "
            << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << " }";
+        return ss.str();
+    }
+
+    std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_DESC& desc) {
+        std::stringstream ss;
+        ss << "{ "
+           << "\"Size\": " << desc.Size << ", "
+           << "\"HeapOffset\": " << desc.HeapOffset << ", "
+           << "\"OffsetFromResource\": " << desc.OffsetFromResource << ", "
+           << "\"Method\": " << desc.Method << " }";
         return ss.str();
     }
 

@@ -25,19 +25,19 @@ namespace gpgmm {
     struct Block;
 
     // Represents how memory was allocated.
-    enum class AllocationMethod {
+    enum AllocationMethod {
 
         // Not sub-divided.
-        kStandalone,
+        kStandalone = 0x0,
 
         // Sub-divided using one or more memory allocations.
-        kSubAllocated,
+        kSubAllocated = 0x2,
 
         // Sub-divided within a single memory allocation.
-        kSubAllocatedWithin,
+        kSubAllocatedWithin = 0x4,
 
         // Not yet allocated or invalid.
-        kUndefined
+        kUndefined = 0x8
     };
 
     class MemoryBase;
