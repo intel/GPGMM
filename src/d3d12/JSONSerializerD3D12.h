@@ -26,6 +26,7 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATOR_RECORD_OPTIONS;
     struct CREATE_RESOURCE_DESC;
     struct HEAP_DESC;
+    struct RESOURCE_ALLOCATION_DESC;
 
     class JSONSerializer : public ObjectSerializer<JSONSerializer> {
       public:
@@ -34,6 +35,7 @@ namespace gpgmm { namespace d3d12 {
         std::string AppendTo(const ALLOCATION_DESC& desc);
         std::string AppendTo(const D3D12_RESOURCE_DESC& desc);
         std::string AppendTo(const HEAP_DESC& desc);
+        std::string AppendTo(const RESOURCE_ALLOCATION_DESC& desc);
 
       private:
         std::string AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc);
