@@ -133,7 +133,8 @@ namespace gpgmm { namespace d3d12 {
         ss << "{ "
            << "\"Size\": " << desc.Size << ", "
            << "\"IsResident\": " << desc.IsResident << ", "
-           << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << " }";
+           << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << ", "
+           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs << " }";
         return ss.str();
     }
 
