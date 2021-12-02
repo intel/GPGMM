@@ -499,4 +499,21 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize / 2),
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
     }
+
+    // Creating a new allocator using a misaligned max resource size for pooling should succeed.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.MaxResourceSizeForPooling = 1023;
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            allocator->CreateResource(standaloneAllocationDesc, CreateBasicBufferDesc(1024),
+                                      D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+    }
 }
