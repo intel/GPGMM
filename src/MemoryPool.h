@@ -26,7 +26,8 @@ namespace gpgmm {
     // Stores a collection of fixed-size memory blocks.
     class MemoryPool {
       public:
-        virtual ~MemoryPool() = default;
+        MemoryPool();
+        virtual ~MemoryPool();
 
         // Retrieves a memory allocation from the pool using an optional index.
         virtual std::unique_ptr<MemoryAllocation> AcquireFromPool(

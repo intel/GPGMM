@@ -33,6 +33,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
         AllocationMethod Method;
+        bool IsPooled;
     };
 
     class ResourceAllocation final : public MemoryAllocation,
