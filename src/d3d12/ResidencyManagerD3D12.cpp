@@ -15,9 +15,11 @@
 
 #include "src/d3d12/ResidencyManagerD3D12.h"
 
+#include "src/TraceEvent.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/FenceD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
+#include "src/d3d12/JSONSerializerD3D12.h"
 #include "src/d3d12/ResidencySetD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
 
@@ -126,6 +128,8 @@ namespace gpgmm { namespace d3d12 {
 
         heap->AddResidencyLockRef();
 
+        TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
+
         return S_OK;
     }
 
@@ -153,7 +157,11 @@ namespace gpgmm { namespace d3d12 {
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        return InsertHeap(heap);
+        ReturnIfFailed(InsertHeap(heap));
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
+
+        return S_OK;
     }
 
     DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemorySegmentInfo(
@@ -288,6 +296,8 @@ namespace gpgmm { namespace d3d12 {
 
             sizeEvicted += heap->GetSize();
             resourcesToEvict.push_back(heap->GetPageable().Get());
+
+            TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
         }
 
         if (resourcesToEvict.size() > 0) {
@@ -348,6 +358,8 @@ namespace gpgmm { namespace d3d12 {
 
             // Insert the heap into the appropriate LRU.
             InsertHeap(heap);
+
+            TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
         }
 
         if (localSizeToMakeResident > 0) {
