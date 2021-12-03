@@ -98,7 +98,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile, bool isStandaloneOnly) override {
+    void RunTest(const TraceFile& traceFile, bool isStandaloneOnly, bool IsRecordEvents) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -130,7 +130,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
                 if (isStandaloneOnly) {
                     allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
-                        allocatorDesc.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED);
+                        allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED);
                 }
 
                 const Json::Value& recordOptions = args["RecordOptions"];
@@ -138,6 +138,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                 allocatorDesc.RecordOptions.Flags =
                     static_cast<ALLOCATOR_RECORD_FLAGS>(recordOptions["Flags"].asInt());
+
+                if (IsRecordEvents) {
+                    allocatorDesc.RecordOptions.Flags = static_cast<ALLOCATOR_RECORD_FLAGS>(
+                        allocatorDesc.RecordOptions.Flags | ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
+                    allocatorDesc.RecordOptions.TraceFile =
+                        std::string(traceFile.name + ".json").data();
+                }
 
                 allocatorDesc.PreferredResourceHeapSize =
                     args["PreferredResourceHeapSize"].asUInt64();

@@ -55,12 +55,14 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
 
     uint64_t GetIterations() const;
     bool IsStandaloneOnly() const;
+    bool IsRecordEvents() const;
 
   private:
     void PrintCaptureReplayEnviromentSettings() const;
 
     uint64_t mIterations = 1;  // Number of test iterations to run.
     bool mIsStandaloneOnly = false;
+    bool mIsRecordEvents = false;
 };
 
 class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
@@ -78,7 +80,9 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
-    virtual void RunTest(const TraceFile& traceFile, bool isStandaloneOnly) = 0;
+    virtual void RunTest(const TraceFile& traceFile,
+                         bool isStandaloneOnly,
+                         bool IsRecordEvents) = 0;
 
     void RunTestLoop();
 

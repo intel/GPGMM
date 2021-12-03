@@ -78,7 +78,7 @@ namespace gpgmm { namespace d3d12 {
            << "\"Flags\": " << desc.Flags;
         if (desc.TraceFile != nullptr) {
             ss << ", "
-               << "\"TraceFile\": " << desc.TraceFile;
+               << "\"TraceFile\": \"" << desc.TraceFile << "\"";
         }
         ss << " }";
         return ss.str();

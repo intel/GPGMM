@@ -52,11 +52,17 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        if (strcmp("--record-events", argv[i]) == 0) {
+            mIsRecordEvents = true;
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
                              << " --iterations: Number of times to replay the capture.\n"
-                             << " --standalone-only: Disable sub-allocation.\n";
+                             << " --standalone-only: Disable sub-allocation.\n"
+                             << " --record-events: Re-record events upon replay.\n";
             continue;
         }
     }
@@ -81,6 +87,7 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplayEnviromentSettings() c
                  "------------------------\n"
               << "Use standalone allocations only: " << (mIsStandaloneOnly ? "true" : "false")
               << "\n"
+              << "Re-record event trace on replay: " << (mIsRecordEvents ? "true" : "false") << "\n"
               << std::endl;
 }
 
@@ -115,13 +122,17 @@ bool GPGMMCaptureReplayTestEnvironment::IsStandaloneOnly() const {
     return mIsStandaloneOnly;
 }
 
+bool GPGMMCaptureReplayTestEnvironment::IsRecordEvents() const {
+    return mIsRecordEvents;
+}
+
 CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
 void CaptureReplayTestWithParams::RunTestLoop() {
     for (uint32_t i = 0; i < gTestEnv->GetIterations(); i++) {
-        RunTest(GetParam(), gTestEnv->IsStandaloneOnly());
+        RunTest(GetParam(), gTestEnv->IsStandaloneOnly(), gTestEnv->IsRecordEvents());
     }
 }
 
