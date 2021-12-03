@@ -216,7 +216,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     } break;
 
                     default:
-                        UNREACHABLE();
                         break;
                 }
             } else if (event["name"].asString() == "ResourceAllocator") {
@@ -241,7 +240,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     } break;
 
                     default:
-                        UNREACHABLE();
                         break;
                 }
             } else if (event["name"].asString() == "Heap") {
