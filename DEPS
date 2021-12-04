@@ -27,7 +27,7 @@ deps = {
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@22da31cf43e13b6aa57d66d89983ea6c5f5b094e',
+    'url': '{dawn_git}/dawn.git@80646c10a7452a23f0e08a9fe59b5d935834b23d',
     'condition': 'checkout_dawn or checkout_webnn',
   },
 

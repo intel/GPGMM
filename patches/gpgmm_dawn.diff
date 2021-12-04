@@ -1,8 +1,9 @@
-From 3a0dbc72046f32cd3917575ed76e9e7dbb65ea01 Mon Sep 17 00:00:00 2001
+From 4b97ba3727cb67b5be77d3bc058ddcf7d144f87e Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
-Date: Fri, 19 Nov 2021 13:05:17 -0800
+Date: Mon, 11 Oct 2021 15:05:34 -0700
 Subject: [PATCH] Use GPGMM for D3D12 backend.
 
+Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
 ---
  .gitignore                                    |  1 +
  DEPS                                          |  5 ++
@@ -11,12 +12,12 @@ Subject: [PATCH] Use GPGMM for D3D12 backend.
  src/dawn_native/BUILD.gn                      |  7 +-
  src/dawn_native/Toggles.cpp                   |  4 +
  src/dawn_native/Toggles.h                     |  1 +
- src/dawn_native/d3d12/BufferD3D12.cpp         | 37 +++-----
+ src/dawn_native/d3d12/BufferD3D12.cpp         | 37 ++++-----
  src/dawn_native/d3d12/BufferD3D12.h           |  7 +-
  .../d3d12/CommandRecordingContext.cpp         | 21 +++--
  .../d3d12/CommandRecordingContext.h           |  4 +-
  src/dawn_native/d3d12/D3D12Backend.cpp        | 17 +++-
- src/dawn_native/d3d12/DeviceD3D12.cpp         | 85 +++++++++++++++----
+ src/dawn_native/d3d12/DeviceD3D12.cpp         | 83 +++++++++++++++----
  src/dawn_native/d3d12/DeviceD3D12.h           | 16 ++--
  .../ShaderVisibleDescriptorAllocatorD3D12.cpp | 26 ++++--
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  6 +-
@@ -27,14 +28,14 @@ Subject: [PATCH] Use GPGMM for D3D12 backend.
  src/dawn_native/d3d12/UtilsD3D12.cpp          | 11 +++
  src/dawn_native/d3d12/UtilsD3D12.h            |  2 +
  src/tests/white_box/D3D12ResidencyTests.cpp   | 18 ++--
- 23 files changed, 230 insertions(+), 136 deletions(-)
+ 23 files changed, 229 insertions(+), 135 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
-index d1da2c1c..d7b89dfc 100644
+index c79ec549..8db3630e 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -24,6 +24,7 @@
+@@ -25,6 +25,7 @@
  /third_party/vulkan-deps
  /third_party/vulkan_memory_allocator
  /third_party/zlib
@@ -43,15 +44,15 @@ index d1da2c1c..d7b89dfc 100644
  /out
  
 diff --git a/DEPS b/DEPS
-index 94a2d512..540c653c 100644
+index 7f1b5b5b..67f758d4 100644
 --- a/DEPS
 +++ b/DEPS
-@@ -137,6 +137,11 @@ deps = {
+@@ -140,6 +140,11 @@ deps = {
      'condition': 'dawn_standalone',
    },
  
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@d370f29db790da924ecf341c2a30b0342f497d07',
++    'url': '{github_git}/intel/gpgmm.git@dd26967b6b263f3df2936439ab071213fbf1c63f',
 +    'condition': 'dawn_standalone',
 +  },
 +
@@ -93,10 +94,10 @@ index 00000000..354882ae
 +# GPGMM and non-standalone GPGMM has no dependencies to override but GN
 +# must import a gpgmm.gni file to build without overrides.
 diff --git a/src/dawn_native/BUILD.gn b/src/dawn_native/BUILD.gn
-index 37254d73..c9cc6696 100644
+index cd977fa9..dd5dd1f0 100644
 --- a/src/dawn_native/BUILD.gn
 +++ b/src/dawn_native/BUILD.gn
-@@ -159,6 +159,7 @@ source_set("dawn_native_sources") {
+@@ -160,6 +160,7 @@ source_set("dawn_native_sources") {
    deps = [
      ":dawn_native_headers",
      ":dawn_native_utils_gen",
@@ -104,7 +105,7 @@ index 37254d73..c9cc6696 100644
      "${dawn_root}/src/common",
      "${dawn_spirv_tools_dir}:spvtools_opt",
      "${dawn_spirv_tools_dir}:spvtools_val",
-@@ -398,10 +399,6 @@ source_set("dawn_native_sources") {
+@@ -399,10 +400,6 @@ source_set("dawn_native_sources") {
        "d3d12/Forward.h",
        "d3d12/GPUDescriptorHeapAllocationD3D12.cpp",
        "d3d12/GPUDescriptorHeapAllocationD3D12.h",
@@ -115,7 +116,7 @@ index 37254d73..c9cc6696 100644
        "d3d12/IntegerTypes.h",
        "d3d12/NativeSwapChainImplD3D12.cpp",
        "d3d12/NativeSwapChainImplD3D12.h",
-@@ -421,8 +418,6 @@ source_set("dawn_native_sources") {
+@@ -422,8 +419,6 @@ source_set("dawn_native_sources") {
        "d3d12/RenderPipelineD3D12.h",
        "d3d12/ResidencyManagerD3D12.cpp",
        "d3d12/ResidencyManagerD3D12.h",
@@ -125,7 +126,7 @@ index 37254d73..c9cc6696 100644
        "d3d12/ResourceHeapAllocationD3D12.h",
        "d3d12/SamplerD3D12.cpp",
 diff --git a/src/dawn_native/Toggles.cpp b/src/dawn_native/Toggles.cpp
-index e7f844d5..ef6c016e 100644
+index b0e2dea2..fb095ff2 100644
 --- a/src/dawn_native/Toggles.cpp
 +++ b/src/dawn_native/Toggles.cpp
 @@ -90,6 +90,10 @@ namespace dawn_native {
@@ -140,7 +141,7 @@ index e7f844d5..ef6c016e 100644
               {"skip_validation", "Skip expensive validation of Dawn commands.",
                "https://crbug.com/dawn/271"}},
 diff --git a/src/dawn_native/Toggles.h b/src/dawn_native/Toggles.h
-index 09885987..4c9201b3 100644
+index 4682cbd5..7c664f8e 100644
 --- a/src/dawn_native/Toggles.h
 +++ b/src/dawn_native/Toggles.h
 @@ -33,6 +33,7 @@ namespace dawn_native {
@@ -152,11 +153,11 @@ index 09885987..4c9201b3 100644
          VulkanUseD32S8,
          MetalDisableSamplerCompare,
 diff --git a/src/dawn_native/d3d12/BufferD3D12.cpp b/src/dawn_native/d3d12/BufferD3D12.cpp
-index 39fcb839..f4367a59 100644
+index a05eec07..d8d3a6e5 100644
 --- a/src/dawn_native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn_native/d3d12/BufferD3D12.cpp
-@@ -190,7 +190,11 @@ namespace dawn_native { namespace d3d12 {
-     }
+@@ -188,7 +188,11 @@ namespace dawn_native { namespace d3d12 {
+     Buffer::~Buffer() = default;
  
      ID3D12Resource* Buffer::GetD3D12Resource() const {
 -        return mResourceAllocation.GetD3D12Resource();
@@ -168,7 +169,7 @@ index 39fcb839..f4367a59 100644
      }
  
      // When true is returned, a D3D12_RESOURCE_BARRIER has been created and must be used in a
-@@ -200,8 +204,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -198,8 +202,7 @@ namespace dawn_native { namespace d3d12 {
                                                   D3D12_RESOURCE_BARRIER* barrier,
                                                   wgpu::BufferUsage newUsage) {
          // Track the underlying heap to ensure residency.
@@ -178,7 +179,7 @@ index 39fcb839..f4367a59 100644
  
          // Return the resource barrier.
          return TransitionUsageAndGetResourceBarrier(commandContext, barrier, newUsage);
-@@ -300,7 +303,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -298,7 +301,7 @@ namespace dawn_native { namespace d3d12 {
      }
  
      D3D12_GPU_VIRTUAL_ADDRESS Buffer::GetVA() const {
@@ -187,7 +188,7 @@ index 39fcb839..f4367a59 100644
      }
  
      bool Buffer::IsCPUWritableAtCreation() const {
-@@ -320,11 +323,6 @@ namespace dawn_native { namespace d3d12 {
+@@ -318,11 +321,6 @@ namespace dawn_native { namespace d3d12 {
                                     size_t offset,
                                     size_t size,
                                     const char* contextInfo) {
@@ -199,7 +200,7 @@ index 39fcb839..f4367a59 100644
          D3D12_RANGE range = {offset, offset + size};
          // mMappedData is the pointer to the start of the resource, irrespective of offset.
          // MSDN says (note the weird use of "never"):
-@@ -333,7 +331,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -331,7 +329,7 @@ namespace dawn_native { namespace d3d12 {
          //   pReadRange.
          //
          // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12resource-map
@@ -208,7 +209,7 @@ index 39fcb839..f4367a59 100644
  
          if (isWrite) {
              mWrittenMappedRange = range;
-@@ -364,14 +362,9 @@ namespace dawn_native { namespace d3d12 {
+@@ -362,14 +360,9 @@ namespace dawn_native { namespace d3d12 {
      }
  
      void Buffer::UnmapImpl() {
@@ -224,9 +225,9 @@ index 39fcb839..f4367a59 100644
      }
  
      void* Buffer::GetMappedPointerImpl() {
-@@ -389,16 +382,15 @@ namespace dawn_native { namespace d3d12 {
-             UnmapImpl();
+@@ -387,16 +380,15 @@ namespace dawn_native { namespace d3d12 {
          }
+         BufferBase::DestroyImpl();
  
 -        ToBackend(GetDevice())->DeallocateMemory(mResourceAllocation);
 +        ToBackend(GetDevice())->DeallocateMemory(std::move(mResourceAllocation));
@@ -245,7 +246,7 @@ index 39fcb839..f4367a59 100644
      }
  
      MaybeError Buffer::EnsureDataInitialized(CommandRecordingContext* commandContext) {
-@@ -446,8 +438,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -441,8 +433,7 @@ namespace dawn_native { namespace d3d12 {
      }
  
      void Buffer::SetLabelImpl() {
@@ -256,7 +257,7 @@ index 39fcb839..f4367a59 100644
  
      MaybeError Buffer::InitializeToZero(CommandRecordingContext* commandContext) {
 diff --git a/src/dawn_native/d3d12/BufferD3D12.h b/src/dawn_native/d3d12/BufferD3D12.h
-index d6fcbbdc..14ef9df2 100644
+index 8e9e01e7..c8f4a452 100644
 --- a/src/dawn_native/d3d12/BufferD3D12.h
 +++ b/src/dawn_native/d3d12/BufferD3D12.h
 @@ -17,9 +17,10 @@
@@ -280,7 +281,7 @@ index d6fcbbdc..14ef9df2 100644
          bool CheckIsResidentForTesting() const;
  
          MaybeError EnsureDataInitialized(CommandRecordingContext* commandContext);
-@@ -75,7 +76,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -77,7 +78,7 @@ namespace dawn_native { namespace d3d12 {
                                 uint64_t offset = 0,
                                 uint64_t size = 0);
  
@@ -367,12 +368,12 @@ index 6c6dc37d..7f8aa756 100644
          std::vector<Ref<Buffer>> mTempBuffers;
      };
 diff --git a/src/dawn_native/d3d12/D3D12Backend.cpp b/src/dawn_native/d3d12/D3D12Backend.cpp
-index bc9df608..b33c2d12 100644
+index f84b2364..a710fe25 100644
 --- a/src/dawn_native/d3d12/D3D12Backend.cpp
 +++ b/src/dawn_native/d3d12/D3D12Backend.cpp
-@@ -168,8 +168,21 @@ namespace dawn_native { namespace d3d12 {
+@@ -167,8 +167,21 @@ namespace dawn_native { namespace d3d12 {
                                            MemorySegment memorySegment) {
-         Device* backendDevice = reinterpret_cast<Device*>(device);
+         Device* backendDevice = ToBackend(FromAPI(device));
  
 -        return backendDevice->GetResidencyManager()->SetExternalMemoryReservation(
 -            memorySegment, requestedReservationSize);
@@ -395,10 +396,10 @@ index bc9df608..b33c2d12 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions(ComPtr<IDXGIAdapter> adapter)
 diff --git a/src/dawn_native/d3d12/DeviceD3D12.cpp b/src/dawn_native/d3d12/DeviceD3D12.cpp
-index 3b96092e..10813012 100644
+index 21047893..9c330e64 100644
 --- a/src/dawn_native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn_native/d3d12/DeviceD3D12.cpp
-@@ -121,8 +121,30 @@ namespace dawn_native { namespace d3d12 {
+@@ -126,8 +126,32 @@ namespace dawn_native { namespace d3d12 {
  
          mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
  
@@ -414,7 +415,7 @@ index 3b96092e..10813012 100644
 +            static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;      // 4MB
 +        allocatorDesc.MaxResourceHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-+        allocatorDesc.MaxResourceSizeForPooling = 4ll * 1024ll * 1024ll;      // 4MB
++        allocatorDesc.MaxResourceSizeForPooling = 0;                          // Always pool heaps
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
 +            allocatorDesc.Flags = gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
@@ -425,13 +426,15 @@ index 3b96092e..10813012 100644
 +            allocatorDesc.TotalResourceBudgetLimit = 100000000;  // 100MB
 +        }
 +
++        gpgmm::d3d12::ResourceAllocator* resourceAllocator = nullptr;
 +        DAWN_TRY(CheckHRESULT(
-+            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &mResourceAllocator),
++            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator),
 +            "D3D12 create resource allocator"));
++        mResourceAllocator.reset(resourceAllocator);
  
          // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
          DAWN_TRY_ASSIGN(
-@@ -237,8 +259,8 @@ namespace dawn_native { namespace d3d12 {
+@@ -245,8 +269,8 @@ namespace dawn_native { namespace d3d12 {
          return mCommandAllocatorManager.get();
      }
  
@@ -442,7 +445,7 @@ index 3b96092e..10813012 100644
      }
  
      ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -254,7 +276,6 @@ namespace dawn_native { namespace d3d12 {
+@@ -315,7 +339,6 @@ namespace dawn_native { namespace d3d12 {
          // Perform cleanup operations to free unused objects
          ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -450,7 +453,7 @@ index 3b96092e..10813012 100644
          DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
          mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
          mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -456,16 +477,51 @@ namespace dawn_native { namespace d3d12 {
+@@ -518,16 +541,51 @@ namespace dawn_native { namespace d3d12 {
          return {};
      }
  
@@ -507,15 +510,15 @@ index 3b96092e..10813012 100644
      }
  
      Ref<TextureBase> Device::CreateExternalTexture(
-@@ -516,6 +572,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -578,6 +636,7 @@ namespace dawn_native { namespace d3d12 {
          SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
          SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
          SetToggle(Toggle::UseD3D12ResidencyManagement, true);
 +        SetToggle(Toggle::UseD3D12SmallResidencyBudgetForTesting, false);
          SetToggle(Toggle::UseDXC, false);
  
- #if defined(_DEBUG)
-@@ -612,14 +669,12 @@ namespace dawn_native { namespace d3d12 {
+         // Disable optimizations when using FXC
+@@ -673,10 +732,6 @@ namespace dawn_native { namespace d3d12 {
              ::CloseHandle(mFenceEvent);
          }
  
@@ -523,18 +526,11 @@ index 3b96092e..10813012 100644
 -        if (mResourceAllocatorManager != nullptr) {
 -            mResourceAllocatorManager->DestroyPool();
 -        }
--
+ 
          // We need to handle clearing up com object refs that were enqeued after TickImpl
          mUsedComObjectRefs.ClearUpTo(std::numeric_limits<ExecutionSerial>::max());
- 
-+        // Release recycled resource heaps.
-+        mResourceAllocator->Release();
-+
-         ASSERT(mUsedComObjectRefs.Empty());
-         ASSERT(!mPendingCommands.IsOpen());
-     }
 diff --git a/src/dawn_native/d3d12/DeviceD3D12.h b/src/dawn_native/d3d12/DeviceD3D12.h
-index 186e29ee..dfd4c55b 100644
+index e6b72347..8c829595 100644
 --- a/src/dawn_native/d3d12/DeviceD3D12.h
 +++ b/src/dawn_native/d3d12/DeviceD3D12.h
 @@ -22,12 +22,12 @@
@@ -552,7 +548,7 @@ index 186e29ee..dfd4c55b 100644
      class SamplerHeapCache;
      class ShaderVisibleDescriptorAllocator;
      class StagingDescriptorAllocator;
-@@ -61,7 +61,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -62,7 +62,7 @@ namespace dawn_native { namespace d3d12 {
          ComPtr<ID3D12CommandSignature> GetDrawIndexedIndirectSignature() const;
  
          CommandAllocatorManager* GetCommandAllocatorManager() const;
@@ -561,7 +557,7 @@ index 186e29ee..dfd4c55b 100644
  
          const PlatformFunctions* GetFunctions() const;
          ComPtr<IDXGIFactory4> GetFactory() const;
-@@ -99,12 +99,15 @@ namespace dawn_native { namespace d3d12 {
+@@ -105,12 +105,15 @@ namespace dawn_native { namespace d3d12 {
                                              TextureCopy* dst,
                                              const Extent3D& copySizePixels) override;
  
@@ -579,13 +575,13 @@ index 186e29ee..dfd4c55b 100644
  
          ShaderVisibleDescriptorAllocator* GetViewShaderVisibleDescriptorAllocator() const;
          ShaderVisibleDescriptorAllocator* GetSamplerShaderVisibleDescriptorAllocator() const;
-@@ -208,8 +211,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -218,8 +221,7 @@ namespace dawn_native { namespace d3d12 {
          SerialQueue<ExecutionSerial, ComPtr<IUnknown>> mUsedComObjectRefs;
  
          std::unique_ptr<CommandAllocatorManager> mCommandAllocatorManager;
 -        std::unique_ptr<ResourceAllocatorManager> mResourceAllocatorManager;
 -        std::unique_ptr<ResidencyManager> mResidencyManager;
-+        ComPtr<gpgmm::d3d12::ResourceAllocator> mResourceAllocator;
++        std::unique_ptr<gpgmm::d3d12::ResourceAllocator> mResourceAllocator;
  
          static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup =
              3 * kMaxSamplersPerShaderStage;
@@ -763,10 +759,10 @@ index aafe60d3..5b9ab342 100644
  }}  // namespace dawn_native::d3d12
  
 diff --git a/src/dawn_native/d3d12/TextureD3D12.cpp b/src/dawn_native/d3d12/TextureD3D12.cpp
-index 81c4ba05..07bcfdaa 100644
+index dfdef5b6..286519e3 100644
 --- a/src/dawn_native/d3d12/TextureD3D12.cpp
 +++ b/src/dawn_native/d3d12/TextureD3D12.cpp
-@@ -561,12 +561,8 @@ namespace dawn_native { namespace d3d12 {
+@@ -571,12 +571,8 @@ namespace dawn_native { namespace d3d12 {
          D3D12_RESOURCE_DESC desc = d3d12Texture->GetDesc();
          mD3D12ResourceFlags = desc.Flags;
  
@@ -781,7 +777,7 @@ index 81c4ba05..07bcfdaa 100644
  
          SetLabelHelper("Dawn_ExternalTexture");
  
-@@ -623,15 +619,10 @@ namespace dawn_native { namespace d3d12 {
+@@ -633,15 +629,10 @@ namespace dawn_native { namespace d3d12 {
      }
  
      MaybeError Texture::InitializeAsSwapChainTexture(ComPtr<ID3D12Resource> d3d12Texture) {
@@ -799,7 +795,7 @@ index 81c4ba05..07bcfdaa 100644
          return {};
      }
  
-@@ -660,11 +651,11 @@ namespace dawn_native { namespace d3d12 {
+@@ -671,11 +662,11 @@ namespace dawn_native { namespace d3d12 {
          if (mSwapChainTexture) {
              ID3D12SharingContract* d3dSharingContract = device->GetSharingContract();
              if (d3dSharingContract != nullptr) {
@@ -813,7 +809,7 @@ index 81c4ba05..07bcfdaa 100644
  
          // Now that we've deallocated the memory, the texture is no longer a swap chain texture.
          // We can set mSwapChainTexture to false to avoid passing a nullptr to
-@@ -681,7 +672,10 @@ namespace dawn_native { namespace d3d12 {
+@@ -692,7 +683,10 @@ namespace dawn_native { namespace d3d12 {
      }
  
      ID3D12Resource* Texture::GetD3D12Resource() const {
@@ -825,7 +821,7 @@ index 81c4ba05..07bcfdaa 100644
      }
  
      DXGI_FORMAT Texture::GetD3D12CopyableSubresourceFormat(Aspect aspect) const {
-@@ -723,10 +717,9 @@ namespace dawn_native { namespace d3d12 {
+@@ -734,10 +728,9 @@ namespace dawn_native { namespace d3d12 {
      void Texture::TrackUsageAndTransitionNow(CommandRecordingContext* commandContext,
                                               D3D12_RESOURCE_STATES newState,
                                               const SubresourceRange& range) {
@@ -839,7 +835,7 @@ index 81c4ba05..07bcfdaa 100644
          }
  
          std::vector<D3D12_RESOURCE_BARRIER> barriers;
-@@ -877,10 +870,9 @@ namespace dawn_native { namespace d3d12 {
+@@ -888,10 +881,9 @@ namespace dawn_native { namespace d3d12 {
          CommandRecordingContext* commandContext,
          std::vector<D3D12_RESOURCE_BARRIER>* barriers,
          const TextureSubresourceUsage& textureUsages) {
@@ -853,7 +849,7 @@ index 81c4ba05..07bcfdaa 100644
          }
  
          HandleTransitionSpecialCases(commandContext);
-@@ -1114,8 +1106,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -1135,8 +1127,7 @@ namespace dawn_native { namespace d3d12 {
      }
  
      void Texture::SetLabelHelper(const char* prefix) {
@@ -864,7 +860,7 @@ index 81c4ba05..07bcfdaa 100644
  
      void Texture::SetLabelImpl() {
 diff --git a/src/dawn_native/d3d12/TextureD3D12.h b/src/dawn_native/d3d12/TextureD3D12.h
-index c414a8ae..c1399b51 100644
+index 4d49d6fa..eb10a0f5 100644
 --- a/src/dawn_native/d3d12/TextureD3D12.h
 +++ b/src/dawn_native/d3d12/TextureD3D12.h
 @@ -21,9 +21,10 @@
@@ -879,7 +875,7 @@ index c414a8ae..c1399b51 100644
  namespace dawn_native { namespace d3d12 {
  
      class CommandRecordingContext;
-@@ -129,7 +130,7 @@ namespace dawn_native { namespace d3d12 {
+@@ -132,7 +133,7 @@ namespace dawn_native { namespace d3d12 {
  
          SubresourceStorage<StateAndDecay> mSubresourceStateAndDecay;
  
@@ -924,7 +920,7 @@ index 2a3f3d5b..7fa9506d 100644
                        ID3D12Object* object,
                        const char* prefix,
 diff --git a/src/tests/white_box/D3D12ResidencyTests.cpp b/src/tests/white_box/D3D12ResidencyTests.cpp
-index 124cd442..8ff216d4 100644
+index ec60e794..042ee872 100644
 --- a/src/tests/white_box/D3D12ResidencyTests.cpp
 +++ b/src/tests/white_box/D3D12ResidencyTests.cpp
 @@ -40,11 +40,6 @@ class D3D12ResidencyTestBase : public DawnTest {
@@ -933,7 +929,7 @@ index 124cd442..8ff216d4 100644
  
 -        // Restrict Dawn's budget to create an artificial budget.
 -        dawn_native::d3d12::Device* d3dDevice =
--            reinterpret_cast<dawn_native::d3d12::Device*>(device.Get());
+-            dawn_native::d3d12::ToBackend(dawn_native::FromAPI((device.Get())));
 -        d3dDevice->GetResidencyManager()->RestrictBudgetForTesting(kRestrictedBudgetSize);
 -
          // Initialize a source buffer on the GPU to serve as a source to quickly copy data to other
@@ -946,9 +942,9 @@ index 124cd442..8ff216d4 100644
 -                               dawn_native::AllocationMethod allocationMethod) const {
 +                               gpgmm::AllocationMethod allocationMethod) const {
          dawn_native::d3d12::Buffer* d3dBuffer =
-             reinterpret_cast<dawn_native::d3d12::Buffer*>(buffer.Get());
+             dawn_native::d3d12::ToBackend(dawn_native::FromAPI((buffer.Get())));
          return d3dBuffer->CheckAllocationMethodForTesting(allocationMethod);
-@@ -125,8 +120,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitSmallResources) {
+@@ -127,8 +122,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitSmallResources) {
      // internally.
      for (uint32_t i = 0; i < bufferSet1.size(); i++) {
          EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
@@ -958,7 +954,7 @@ index 124cd442..8ff216d4 100644
      }
  
      // Create enough directly-allocated buffers to use the entire budget.
-@@ -164,7 +158,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitLargeResources) {
+@@ -166,7 +160,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitLargeResources) {
      // allocated internally.
      for (uint32_t i = 0; i < bufferSet1.size(); i++) {
          EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
@@ -967,7 +963,7 @@ index 124cd442..8ff216d4 100644
      }
  
      // Create enough directly-allocated buffers to use the entire budget.
-@@ -418,6 +412,8 @@ TEST_P(D3D12DescriptorResidencyTests, SwitchedViewHeapResidency) {
+@@ -420,6 +414,8 @@ TEST_P(D3D12DescriptorResidencyTests, SwitchedViewHeapResidency) {
      EXPECT_FALSE(allocator->IsLastShaderVisibleHeapInLRUForTesting());
  }
  
