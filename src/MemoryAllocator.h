@@ -30,6 +30,30 @@ namespace gpgmm {
       public:
         virtual ~MemoryAllocator() = default;
 
+        // Return a memory allocation that is at-least of the requested |size| that's also
+        // sized-aligned or a multiple of |alignment|. If not, return nullptr instead.
+        // The returned MemoryAllocation is only valid for the lifetime of this allocator.
+        virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
+                                                                 uint64_t alignment,
+                                                                 bool neverAllocate) = 0;
+
+        // Free the allocation by deallocating the block used to sub-allocate it and the underlying
+        // memory block used with it. The |allocation| will be considered invalid after
+        // DeallocateMemory.
+        virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
+
+        // Free memory retained by this memory allocator.
+        // Used to reuse memory blocks between calls to AllocateMemory.
+        virtual void ReleaseMemory() {
+        }
+
+        // Return the fixed-size or alignment of this memory allocator. If the parent allocator
+        // always calls AllocateMemory with the same memory |size| and |alignment|, they do not need
+        // to be overridden by the child allocator.
+        virtual uint64_t GetMemorySize() const;
+        virtual uint64_t GetMemoryAlignment() const;
+
+      protected:
         // Combine AllocateBlock and AllocateMemory into a single call so a partial
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
@@ -59,29 +83,6 @@ namespace gpgmm {
             return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
                                                       AllocationMethod::kUndefined, block);
         }
-
-        // Return a memory allocation that is at-least of the requested |size| that's also
-        // sized-aligned or a multiple of |alignment|. If not, return nullptr instead.
-        // The returned MemoryAllocation is only valid for the lifetime of this allocator.
-        virtual std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
-                                                                 uint64_t alignment,
-                                                                 bool neverAllocate) = 0;
-
-        // Free the allocation by deallocating the block used to sub-allocate it and the underlying
-        // memory block used with it. The |allocation| will be considered invalid after
-        // DeallocateMemory.
-        virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
-
-        // Free memory retained by this memory allocator.
-        // Used to reuse memory blocks between calls to AllocateMemory.
-        virtual void ReleaseMemory() {
-        }
-
-        // Return the fixed-size or alignment of this memory allocator. If the parent allocator
-        // always calls AllocateMemory with the same memory |size| and |alignment|, they do not need
-        // to be overridden by the child allocator.
-        virtual uint64_t GetMemorySize() const;
-        virtual uint64_t GetMemoryAlignment() const;
     };
 
 }  // namespace gpgmm
