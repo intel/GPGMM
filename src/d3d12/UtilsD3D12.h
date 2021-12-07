@@ -49,7 +49,7 @@ namespace gpgmm { namespace d3d12 {
                                 bool neverAllocate,
                                 CreateResourceFn&& createResourceFn) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator->AllocateMemory(size, alignment, neverAllocate);
+            allocator->TryAllocateMemory(size, alignment, neverAllocate);
         if (allocation == nullptr) {
             return E_FAIL;
         }

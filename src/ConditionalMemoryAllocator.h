@@ -30,9 +30,9 @@ namespace gpgmm {
         ~ConditionalMemoryAllocator() override = default;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
-                                                         uint64_t alignment,
-                                                         bool neverAllocate = true) override;
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+                                                            uint64_t alignment,
+                                                            bool neverAllocate = true) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
 
       private:

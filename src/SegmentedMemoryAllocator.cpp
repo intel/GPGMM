@@ -136,9 +136,10 @@ namespace gpgmm {
         return newFreeSegment;
     }
 
-    std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                               uint64_t alignment,
-                                                                               bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
+        uint64_t size,
+        uint64_t alignment,
+        bool neverAllocate) {
         if (size == 0 || alignment != mMemoryAlignment) {
             return {};
         }
@@ -148,7 +149,7 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> allocation = segment->GetPool()->AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->AllocateMemory(size, mMemoryAlignment, neverAllocate);
+            allocation = mMemoryAllocator->TryAllocateMemory(size, mMemoryAlignment, neverAllocate);
             if (allocation == nullptr) {
                 return nullptr;
             }

@@ -28,9 +28,9 @@ class ConditionalMemoryAllocatorTests : public testing::Test {
             return;
         }
 
-        std::unique_ptr<MemoryAllocation> AllocateMemory(uint64_t size,
-                                                         uint64_t alignment,
-                                                         bool neverAllocate) override {
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+                                                            uint64_t alignment,
+                                                            bool neverAllocate) override {
             mAllocatedBytes += size;
             return std::make_unique<MemoryAllocation>(/*allocator*/ this, /*memory*/ nullptr);
         }
@@ -48,31 +48,31 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
 
     // Smaller allocation uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1);
         ASSERT_EQ(firstAllocator.mAllocatedBytes, 4u);
     }
 
     // Equal size allocation uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(16, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(16, 1);
         ASSERT_EQ(firstAllocator.mAllocatedBytes, 20u);
     }
 
     // Larger allocation uses secondAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1);
         ASSERT_EQ(secondAllocator.mAllocatedBytes, 24u);
     }
 
     // Smaller allocation again uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(4, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1);
         ASSERT_EQ(firstAllocator.mAllocatedBytes, 24u);
     }
 
     // Larger allocation again uses secondAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.AllocateMemory(24, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1);
         ASSERT_EQ(secondAllocator.mAllocatedBytes, 48u);
     }
 }

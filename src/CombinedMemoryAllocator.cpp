@@ -23,11 +23,12 @@ namespace gpgmm {
         return mAllocators.back().get();
     }
 
-    std::unique_ptr<MemoryAllocation> CombinedMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                              uint64_t alignment,
-                                                                              bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> CombinedMemoryAllocator::TryAllocateMemory(
+        uint64_t size,
+        uint64_t alignment,
+        bool neverAllocate) {
         ASSERT(!mAllocators.empty());
-        return mAllocators.back()->AllocateMemory(size, alignment, neverAllocate);
+        return mAllocators.back()->TryAllocateMemory(size, alignment, neverAllocate);
     }
 
     void CombinedMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {

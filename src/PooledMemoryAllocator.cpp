@@ -25,12 +25,12 @@ namespace gpgmm {
         ASSERT(mMemoryAllocator != nullptr);
     }
 
-    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                            uint64_t alignment,
-                                                                            bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(uint64_t size,
+                                                                               uint64_t alignment,
+                                                                               bool neverAllocate) {
         std::unique_ptr<MemoryAllocation> allocation = mMemoryPool->AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->AllocateMemory(size, alignment, neverAllocate);
+            allocation = mMemoryAllocator->TryAllocateMemory(size, alignment, neverAllocate);
         }
 
         return allocation;

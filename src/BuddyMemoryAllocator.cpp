@@ -42,9 +42,9 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::AllocateMemory(uint64_t size,
-                                                                           uint64_t alignment,
-                                                                           bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t size,
+                                                                              uint64_t alignment,
+                                                                              bool neverAllocate) {
         if (size == 0) {
             return nullptr;
         }
@@ -71,7 +71,7 @@ namespace gpgmm {
 
                 // No existing, allocate new memory for the block.
                 if (memoryAllocation == nullptr) {
-                    memoryAllocation = mMemoryAllocator->AllocateMemory(
+                    memoryAllocation = mMemoryAllocator->TryAllocateMemory(
                         mMemorySize, mMemoryAlignment, neverAllocate);
                     if (memoryAllocation == nullptr) {
                         return nullptr;

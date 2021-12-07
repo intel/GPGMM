@@ -33,9 +33,9 @@ namespace gpgmm { namespace d3d12 {
           mResourceAlignment(resourceAlignment) {
     }
 
-    std::unique_ptr<MemoryAllocation> BufferAllocator::AllocateMemory(uint64_t size,
-                                                                      uint64_t alignment,
-                                                                      bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t size,
+                                                                         uint64_t alignment,
+                                                                         bool neverAllocate) {
         if (GetMemorySize() != size || GetMemoryAlignment() != alignment || neverAllocate) {
             return {};
         }
