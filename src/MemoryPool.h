@@ -23,6 +23,10 @@ namespace gpgmm {
 
     class MemoryAllocation;
 
+    struct POOL_DESC {
+        size_t UnusedPoolSize;
+    };
+
     // Stores a collection of fixed-size memory blocks.
     class MemoryPool {
       public:
@@ -42,6 +46,8 @@ namespace gpgmm {
 
         // Returns number of memory allocations in the pool.
         virtual uint64_t GetPoolSize() const = 0;
+
+        POOL_DESC GetDesc() const;
     };
 
 }  // namespace gpgmm

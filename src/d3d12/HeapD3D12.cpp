@@ -89,6 +89,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_DESC Heap::GetDesc() const {
-        return {GetSize(), IsResident(), mMemorySegmentGroup, RefCount()};
+        return {GetSize(), IsResident(), mMemorySegmentGroup, RefCount(), GetPool()};
     }
 }}  // namespace gpgmm::d3d12

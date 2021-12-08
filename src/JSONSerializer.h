@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_OBJECTSERIALIZER_H_
-#define GPGMM_OBJECTSERIALIZER_H_
+#ifndef GPGMM_JSONSERIALIZER_H_
+#define GPGMM_JSONSERIALIZER_H_
 
 #include <string>
 
 namespace gpgmm {
 
+    // Uses the "curiously recurring template pattern" (CRTP) to allow an derived class to provide
+    // overloaded methods used to serialize backend structures to disk.
     template <typename D>
     class ObjectSerializer {
       public:
@@ -29,6 +31,13 @@ namespace gpgmm {
         }
     };
 
+    struct POOL_DESC;
+
+    class JSONSerializer : public ObjectSerializer<JSONSerializer> {
+      public:
+        std::string AppendTo(const POOL_DESC& desc);
+    };
+
 }  // namespace gpgmm
 
-#endif  // GPGMM_OBJECTSERIALIZER_H_
+#endif  // GPGMM_JSONSERIALIZER_H_

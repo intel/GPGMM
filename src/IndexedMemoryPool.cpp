@@ -14,7 +14,9 @@
 
 #include "src/IndexedMemoryPool.h"
 
+#include "src/JSONSerializer.h"
 #include "src/MemoryAllocator.h"
+#include "src/TraceEvent.h"
 
 namespace gpgmm {
 
@@ -22,6 +24,8 @@ namespace gpgmm {
         if (memoryIndex >= mPool.size()) {
             mPool.resize(memoryIndex + 1);
         }
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
 
         return std::unique_ptr<MemoryAllocation>(mPool[memoryIndex].release());
     }
@@ -32,6 +36,8 @@ namespace gpgmm {
         ASSERT(memoryIndex < mPool.size());
 
         mPool[memoryIndex] = std::move(allocation);
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
     }
 
     void IndexedMemoryPool::ReleasePool() {

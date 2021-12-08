@@ -14,6 +14,7 @@
 
 #include "src/d3d12/JSONSerializerD3D12.h"
 
+#include "src/TraceEvent.h"
 #include "src/d3d12/HeapD3D12.h"
 #include "src/d3d12/ResourceAllocationD3D12.h"
 #include "src/d3d12/ResourceAllocatorD3D12.h"
@@ -129,23 +130,34 @@ namespace gpgmm { namespace d3d12 {
     }
 
     std::string JSONSerializer::AppendTo(const HEAP_DESC& desc) {
+        std::stringstream memoryPoolID;
+        memoryPoolID << std::hex << TraceEventID(desc.MemoryPool).GetID();
+
         std::stringstream ss;
         ss << "{ "
            << "\"Size\": " << desc.Size << ", "
            << "\"IsResident\": " << desc.IsResident << ", "
            << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << ", "
-           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs << " }";
+           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs << ", "
+           << "\"MemoryPool\": {"
+           << "\"id_ref\": \"0x" << memoryPoolID.str() << "\" }"
+           << " }";
         return ss.str();
     }
 
     std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_DESC& desc) {
+        std::stringstream resourceHeapID;
+        resourceHeapID << std::hex << TraceEventID(desc.ResourceHeap).GetID();
+
         std::stringstream ss;
         ss << "{ "
            << "\"Size\": " << desc.Size << ", "
            << "\"HeapOffset\": " << desc.HeapOffset << ", "
            << "\"OffsetFromResource\": " << desc.OffsetFromResource << ", "
            << "\"Method\": " << desc.Method << ", "
-           << "\"IsPooled\": " << desc.IsPooled << " }";
+           << "\"ResourceHeap\": {"
+           << "\"id_ref\": \"0x" << resourceHeapID.str() << "\" }"
+           << " }";
         return ss.str();
     }
 
