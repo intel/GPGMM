@@ -16,6 +16,7 @@
 #include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
 #include "src/TraceEvent.h"
+#include "src/common/Log.h"
 #include "src/common/PlatformTime.h"
 #include "src/d3d12/UtilsD3D12.h"
 #include "src/tests/D3D12Test.h"
@@ -144,6 +145,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         allocatorDesc.RecordOptions.Flags | ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
                     allocatorDesc.RecordOptions.TraceFile =
                         std::string(traceFile.name + ".json").data();
+                }
+
+                if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
+                    gpgmm::WarningLog() << "Capture device does not match replay device (IsUMA).";
+                }
+
+                if (allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
+                    gpgmm::WarningLog()
+                        << "Capture device does not match replay device (ResourceHeapTier).";
                 }
 
                 allocatorDesc.PreferredResourceHeapSize =
