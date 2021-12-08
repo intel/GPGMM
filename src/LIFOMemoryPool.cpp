@@ -13,9 +13,12 @@
 // limitations under the License.
 
 #include "src/LIFOMemoryPool.h"
+
 #include "common/Assert.h"
+#include "src/JSONSerializer.h"
 #include "src/MemoryAllocation.h"
 #include "src/MemoryAllocator.h"
+#include "src/TraceEvent.h"
 
 namespace gpgmm {
 
@@ -28,6 +31,8 @@ namespace gpgmm {
             mPool.pop_front();
         }
 
+        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
+
         return allocation;
     }
 
@@ -37,6 +42,8 @@ namespace gpgmm {
         ASSERT(allocation != nullptr);
 
         mPool.push_front(std::move(allocation));
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
     }
 
     void LIFOMemoryPool::ReleasePool() {

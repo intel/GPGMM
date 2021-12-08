@@ -15,7 +15,7 @@
 #ifndef GPGMM_D3D12_JSONSERIALIZERD3D12_H_
 #define GPGMM_D3D12_JSONSERIALIZERD3D12_H_
 
-#include "src/ObjectSerializer.h"
+#include "src/JSONSerializer.h"
 
 #include "src/d3d12/d3d12_platform.h"
 

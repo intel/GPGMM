@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "src/JSONSerializer.h"
+
 #include "src/MemoryPool.h"
 
-#include "src/TraceEvent.h"
+#include <sstream>
 
 namespace gpgmm {
 
-    MemoryPool::MemoryPool() {
-        TRACE_EVENT_NEW_OBJECT("MemoryPool", this);
-    }
-
-    MemoryPool::~MemoryPool() {
-        TRACE_EVENT_DELETE_OBJECT("MemoryPool", this);
-    }
-
-    POOL_DESC MemoryPool::GetDesc() const {
-        return {GetPoolSize()};
+    std::string JSONSerializer::AppendTo(const POOL_DESC& desc) {
+        std::stringstream ss;
+        ss << "{ "
+           << "\"UnusedPoolSize\": " << desc.UnusedPoolSize << " }";
+        return ss.str();
     }
 
 }  // namespace gpgmm
