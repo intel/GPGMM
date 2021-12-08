@@ -76,12 +76,7 @@ namespace gpgmm { namespace d3d12 {
     std::string JSONSerializer::AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc) {
         std::stringstream ss;
         ss << "{ "
-           << "\"Flags\": " << desc.Flags;
-        if (desc.TraceFile != nullptr) {
-            ss << ", "
-               << "\"TraceFile\": \"" << desc.TraceFile << "\"";
-        }
-        ss << " }";
+           << "\"Flags\": " << desc.Flags << " }";
         return ss.str();
     }
 

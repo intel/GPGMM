@@ -143,8 +143,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 if (IsRecordEvents) {
                     allocatorDesc.RecordOptions.Flags = static_cast<ALLOCATOR_RECORD_FLAGS>(
                         allocatorDesc.RecordOptions.Flags | ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
-                    allocatorDesc.RecordOptions.TraceFile =
-                        std::string(traceFile.name + ".json").data();
+                    allocatorDesc.RecordOptions.TraceFile = std::string(traceFile.name + ".json");
                 }
 
                 if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
@@ -276,9 +275,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         mResourceHeapStats.PeakUsage =
                             std::max(mResourceHeapStats.PeakUsage, mResourceHeapStats.CurrentUsage);
 
-                        ASSERT_TRUE(
-                            resourceHeapDescToIDMap.insert({event["id"].asString(), heapDesc})
-                                .second);
+                        resourceHeapDescToIDMap.insert({event["id"].asString(), heapDesc});
 
                     } break;
 
