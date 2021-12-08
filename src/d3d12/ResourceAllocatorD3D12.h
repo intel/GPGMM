@@ -21,6 +21,7 @@
 
 #include <array>
 #include <memory>
+#include <string>
 
 namespace gpgmm {
     class MemoryAllocator;
@@ -64,7 +65,7 @@ namespace gpgmm { namespace d3d12 {
         ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
         // Path to trace file. Default is trace.json.
-        const char* TraceFile = nullptr;
+        std::string TraceFile;
     };
 
     struct ALLOCATOR_DESC {

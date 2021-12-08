@@ -295,7 +295,7 @@ namespace gpgmm { namespace d3d12 {
 #endif
 
         if (enableEventTracer) {
-            StartupEventTracer(descriptor.RecordOptions.TraceFile);
+            StartupEventTracer(descriptor.RecordOptions.TraceFile.c_str());
             TRACE_EVENT_CALL("ResourceAllocator.CreateAllocator", descriptor);
         }
 
