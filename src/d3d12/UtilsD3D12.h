@@ -17,6 +17,8 @@
 #include "src/MemoryAllocator.h"
 #include "src/d3d12/d3d12_platform.h"
 
+namespace gpgmm { namespace d3d12 {
+
 #define ReturnIfFailed(expr) \
     {                        \
         HRESULT hr = expr;   \
@@ -36,8 +38,6 @@
     }                           \
     for (;;)                    \
     break
-
-namespace gpgmm { namespace d3d12 {
 
     // Combines AllocatorMemory and Create*Resource into a single call.
     // If the memory allocation was successful, the resource will be created using it.
