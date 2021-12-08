@@ -24,6 +24,7 @@
 
 namespace gpgmm { namespace d3d12 {
 
+    // static
     std::string JSONSerializer::AppendTo(const ALLOCATOR_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -39,6 +40,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const CREATE_RESOURCE_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -49,6 +51,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const ALLOCATION_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -57,6 +60,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const D3D12_RESOURCE_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -73,6 +77,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -80,6 +85,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue) {
         std::stringstream ss;
         ss << "{ "
@@ -88,6 +94,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const FLOAT rgba[4]) {
         std::stringstream ss;
         ss << "{ "
@@ -98,6 +105,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const D3D12_CLEAR_VALUE* clearValue) {
         if (clearValue == nullptr) {
             return "{}";
@@ -116,6 +124,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const DXGI_SAMPLE_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
@@ -124,6 +133,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const HEAP_DESC& desc) {
         std::stringstream memoryPoolID;
         memoryPoolID << std::hex << TraceEventID(desc.MemoryPool).GetID();
@@ -140,6 +150,7 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    // static
     std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_DESC& desc) {
         std::stringstream resourceHeapID;
         resourceHeapID << std::hex << TraceEventID(desc.ResourceHeap).GetID();

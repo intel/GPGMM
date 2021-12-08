@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/JSONSerializer.h"
+#include "src/ObjectSerializer.h"
 
 #include "src/MemoryPool.h"
 
@@ -20,8 +20,7 @@
 
 namespace gpgmm {
 
-    // static
-    std::string JSONSerializer::AppendTo(const POOL_DESC& desc) {
+    std::string JSONSerializer::Serialize(const POOL_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
            << "\"UnusedPoolSize\": " << desc.UnusedPoolSize << " }";

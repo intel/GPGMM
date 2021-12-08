@@ -35,7 +35,7 @@ namespace gpgmm {
 
     class JSONSerializer : public ObjectSerializer<JSONSerializer> {
       public:
-        std::string AppendTo(const POOL_DESC& desc);
+        static std::string AppendTo(const POOL_DESC& desc);
     };
 
 }  // namespace gpgmm
