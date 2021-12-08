@@ -626,10 +626,10 @@ namespace gpgmm { namespace d3d12 {
         heapDesc.Alignment = heapAlignment;
         heapDesc.Flags = heapFlags;
 
-        ComPtr<ID3D12Heap> d3d12Heap;
-        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&d3d12Heap)));
+        ComPtr<ID3D12Heap> heap;
+        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
 
-        Heap* resourceHeap = new Heap(std::move(d3d12Heap), memorySegmentGroup, heapSize);
+        Heap* resourceHeap = new Heap(std::move(heap), memorySegmentGroup, heapSize);
 
         // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
         // avoid calling MakeResident a second time.
