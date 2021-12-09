@@ -47,12 +47,12 @@ config("gpgmm_common_config") {
   defines = []
   if (gpgmm_always_assert || dcheck_always_on || is_debug ||
       use_fuzzing_engine) {
-    defines += [ "DAWN_ENABLE_ASSERTS" ]
+    defines += [ "GPGMM_ENABLE_ASSERTS" ]
   }
 
   if (use_fuzzing_engine) {
     # Does a hard abort when an assertion fails so that fuzzers catch and parse the failure.
-    defines += [ "DAWN_ABORT_ON_ASSERT" ]
+    defines += [ "GPGMM_ABORT_ON_ASSERT" ]
   }
 
   # Only internal build targets can use this config, this means only targets in

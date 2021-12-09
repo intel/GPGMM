@@ -17,16 +17,16 @@
 #define GPGMM_COMMON_COMPILER_H_
 
 // Defines macros for compiler-specific functionality
-//  - DAWN_COMPILER_[CLANG|GCC|MSVC]: Compiler detection
-//  - DAWN_BREAKPOINT(): Raises an exception and breaks in the debugger
-//  - DAWN_BUILTIN_UNREACHABLE(): Hints the compiler that a code path is unreachable
-//  - DAWN_NO_DISCARD: An attribute that is C++17 [[nodiscard]] where available
-//  - DAWN_(UN)?LIKELY(EXPR): Where available, hints the compiler that the expression will be true
+//  - GPGMM_COMPILER_[CLANG|GCC|MSVC]: Compiler detection
+//  - GPGMM_BREAKPOINT(): Raises an exception and breaks in the debugger
+//  - GPGMM_BUILTIN_UNREACHABLE(): Hints the compiler that a code path is unreachable
+//  - GPGMM_NO_DISCARD: An attribute that is C++17 [[nodiscard]] where available
+//  - GPGMM_(UN)?LIKELY(EXPR): Where available, hints the compiler that the expression will be true
 //      (resp. false) to help it generate code that leads to better branch prediction.
-//  - DAWN_UNUSED(EXPR): Prevents unused variable/expression warnings on EXPR.
-//  - DAWN_UNUSED_FUNC(FUNC): Prevents unused function warnings on FUNC.
-//  - DAWN_DECLARE_UNUSED:    Prevents unused function warnings a subsequent declaration.
-//  Both DAWN_UNUSED_FUNC and DAWN_DECLARE_UNUSED may be necessary, e.g. to suppress clang's
+//  - GPGMM_UNUSED(EXPR): Prevents unused variable/expression warnings on EXPR.
+//  - GPGMM_UNUSED_FUNC(FUNC): Prevents unused function warnings on FUNC.
+//  - GPGMM_DECLARE_UNUSED:    Prevents unused function warnings a subsequent declaration.
+//  Both GPGMM_UNUSED_FUNC and GPGMM_DECLARE_UNUSED may be necessary, e.g. to suppress clang's
 //  unneeded-internal-declaration warning.
 
 // Clang and GCC, check for __clang__ too to catch clang-cl masquarading as MSVC
@@ -34,19 +34,19 @@
 #    if defined(__clang__)
 #        define GPGMM_COMPILER_CLANG
 #    else
-#        define DAWN_COMPILER_GCC
+#        define GPGMM_COMPILER_GCC
 #    endif
 
 #    if defined(__i386__) || defined(__x86_64__)
-#        define DAWN_BREAKPOINT() __asm__ __volatile__("int $3\n\t")
+#        define GPGMM_BREAKPOINT() __asm__ __volatile__("int $3\n\t")
 #    else
 // TODO(cwallez@chromium.org): Implement breakpoint on all supported architectures
-#        define DAWN_BREAKPOINT()
+#        define GPGMM_BREAKPOINT()
 #    endif
 
-#    define DAWN_BUILTIN_UNREACHABLE() __builtin_unreachable()
-#    define DAWN_LIKELY(x) __builtin_expect(!!(x), 1)
-#    define DAWN_UNLIKELY(x) __builtin_expect(!!(x), 0)
+#    define GPGMM_BUILTIN_UNREACHABLE() __builtin_unreachable()
+#    define GPGMM_LIKELY(x) __builtin_expect(!!(x), 1)
+#    define GPGMM_UNLIKELY(x) __builtin_expect(!!(x), 0)
 
 #    if !defined(__has_cpp_attribute)
 #        define __has_cpp_attribute(name) 0
@@ -56,14 +56,14 @@
 // Also avoid warn_unused_result with GCC because it is only a function attribute and not a type
 // attribute.
 #    if __has_cpp_attribute(warn_unused_result) && defined(__clang__)
-#        define DAWN_NO_DISCARD __attribute__((warn_unused_result))
+#        define GPGMM_NO_DISCARD __attribute__((warn_unused_result))
 #    elif DAWN_CPP_VERSION >= 17 && __has_cpp_attribute(nodiscard)
-#        define DAWN_NO_DISCARD [[nodiscard]]
+#        define GPGMM_NO_DISCARD [[nodiscard]]
 #    endif
 
-#    define DAWN_DECLARE_UNUSED __attribute__((unused))
+#    define GPGMM_DECLARE_UNUSED __attribute__((unused))
 #    if defined(NDEBUG)
-#        define DAWN_FORCE_INLINE inline __attribute__((always_inline))
+#        define GPGMM_FORCE_INLINE inline __attribute__((always_inline))
 #    endif
 
 // MSVC
@@ -71,18 +71,18 @@
 #    define GPGMM_COMPILER_MSVC
 
 extern void __cdecl __debugbreak(void);
-#    define DAWN_BREAKPOINT() __debugbreak()
+#    define GPGMM_BREAKPOINT() __debugbreak()
 
-#    define DAWN_BUILTIN_UNREACHABLE() __assume(false)
+#    define GPGMM_BUILTIN_UNREACHABLE() __assume(false)
 
 // Visual Studio 2017 15.3 adds support for [[nodiscard]]
 #    if _MSC_VER >= 1911 && DAWN_CPP_VERSION >= 17
-#        define DAWN_NO_DISCARD [[nodiscard]]
+#        define GPGMM_NO_DISCARD [[nodiscard]]
 #    endif
 
-#    define DAWN_DECLARE_UNUSED
+#    define GPGMM_DECLARE_UNUSED
 #    if defined(NDEBUG)
-#        define DAWN_FORCE_INLINE __forceinline
+#        define GPGMM_FORCE_INLINE __forceinline
 #    endif
 
 #else
@@ -90,28 +90,28 @@ extern void __cdecl __debugbreak(void);
 #endif
 
 // It seems that (void) EXPR works on all compilers to silence the unused variable warning.
-#define DAWN_UNUSED(EXPR) (void)EXPR
+#define GPGMM_UNUSED(EXPR) (void)EXPR
 // Likewise using static asserting on sizeof(&FUNC) seems to make it tagged as used
-#define DAWN_UNUSED_FUNC(FUNC) static_assert(sizeof(&FUNC) == sizeof(void (*)()), "")
+#define GPGMM_UNUSED_FUNC(FUNC) static_assert(sizeof(&FUNC) == sizeof(void (*)()), "")
 
 // Add noop replacements for macros for features that aren't supported by the compiler.
-#if !defined(DAWN_LIKELY)
-#    define DAWN_LIKELY(X) X
+#if !defined(GPGMM_LIKELY)
+#    define GPGMM_LIKELY(X) X
 #endif
-#if !defined(DAWN_UNLIKELY)
-#    define DAWN_UNLIKELY(X) X
+#if !defined(GPGMM_UNLIKELY)
+#    define GPGMM_UNLIKELY(X) X
 #endif
-#if !defined(DAWN_NO_DISCARD)
-#    define DAWN_NO_DISCARD
+#if !defined(GPGMM_NO_DISCARD)
+#    define GPGMM_NO_DISCARD
 #endif
-#if !defined(DAWN_FORCE_INLINE)
-#    define DAWN_FORCE_INLINE inline
+#if !defined(GPGMM_FORCE_INLINE)
+#    define GPGMM_FORCE_INLINE inline
 #endif
 
 #if defined(__clang__)
-#    define DAWN_FALLTHROUGH [[clang::fallthrough]]
+#    define GPGMM_FALLTHROUGH [[clang::fallthrough]]
 #else
-#    define DAWN_FALLTHROUGH
+#    define GPGMM_FALLTHROUGH
 #endif
 
 #endif  // GPGMM_COMMON_COMPILER_H_
