@@ -517,3 +517,111 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 }
+
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
+    // Calculate stats for two standalone allocations.
+    {
+        ALLOCATION_DESC standaloneAllocationDesc = {};
+        standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+
+        ComPtr<ResourceAllocation> firstAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            standaloneAllocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
+        ASSERT_NE(firstAllocation, nullptr);
+        EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+
+        QUERY_RESOURCE_ALLOCATOR_INFO stats = {};
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 1u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, kDefaultPreferredResourceHeapSize);
+        EXPECT_EQ(stats.UsedBlockCount, 0u);
+        EXPECT_EQ(stats.UsedBlockUsage, 0u);
+
+        ComPtr<ResourceAllocation> secondAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            standaloneAllocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
+        ASSERT_NE(secondAllocation, nullptr);
+        EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 2u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, kDefaultPreferredResourceHeapSize * 2);
+        EXPECT_EQ(stats.UsedBlockCount, 0u);
+        EXPECT_EQ(stats.UsedBlockUsage, 0u);
+    }
+
+    // Calculate stats for two sub-allocations.
+    {
+        constexpr uint64_t kBufferSize = kDefaultPreferredResourceHeapSize / 2;
+        ComPtr<ResourceAllocation> firstAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kBufferSize),
+                                                           D3D12_RESOURCE_STATE_GENERIC_READ,
+                                                           nullptr, &firstAllocation));
+        ASSERT_NE(firstAllocation, nullptr);
+        EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
+
+        QUERY_RESOURCE_ALLOCATOR_INFO stats = {};
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 1u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, kDefaultPreferredResourceHeapSize);
+        EXPECT_EQ(stats.UsedBlockCount, 1u);
+        EXPECT_EQ(stats.UsedBlockUsage, kBufferSize);
+
+        ComPtr<ResourceAllocation> secondAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kBufferSize),
+                                                           D3D12_RESOURCE_STATE_GENERIC_READ,
+                                                           nullptr, &secondAllocation));
+        ASSERT_NE(secondAllocation, nullptr);
+        EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
+
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 1u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, kDefaultPreferredResourceHeapSize);
+        EXPECT_EQ(stats.UsedBlockCount, 2u);
+        EXPECT_EQ(stats.UsedBlockUsage, kBufferSize * 2);
+    }
+
+    // Calculate stats for two sub-allocations within the same resource.
+    {
+        ALLOCATION_DESC allocationWithinDesc = {};
+        allocationWithinDesc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
+        allocationWithinDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        constexpr uint32_t kBufferSize = 4u;  // Must less than 64KB
+
+        ComPtr<ResourceAllocation> firstAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
+        ASSERT_NE(firstAllocation, nullptr);
+        EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+
+        QUERY_RESOURCE_ALLOCATOR_INFO stats = {};
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 1u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, 64u * 1024u);
+        EXPECT_EQ(stats.UsedBlockCount, 1u);
+        EXPECT_EQ(stats.UsedBlockUsage, kBufferSize);
+
+        ComPtr<ResourceAllocation> secondAllocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
+        ASSERT_NE(secondAllocation, nullptr);
+        EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+
+        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&stats));
+
+        EXPECT_EQ(stats.UsedResourceHeapCount, 1u);
+        EXPECT_EQ(stats.UsedResourceHeapUsage, 64u * 1024u);
+        EXPECT_EQ(stats.UsedBlockCount, 2u);
+        EXPECT_EQ(stats.UsedBlockUsage, kBufferSize * 2);
+    }
+}
