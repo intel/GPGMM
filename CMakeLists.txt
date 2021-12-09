@@ -86,7 +86,7 @@ target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
 # Compile definitions for the common config
 if (GPGMM_ALWAYS_ASSERT OR $<CONFIG:Debug>)
     # TODO: rename definition
-    target_compile_definitions(gpgmm_common_config INTERFACE "DAWN_ENABLE_ASSERTS")
+    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
 endif()
 if (GPGMM_ENABLE_D3D12)
     target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_D3D12")

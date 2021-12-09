@@ -22,8 +22,6 @@
 // yet, you should start now!). In debug ASSERT(condition) will trigger an error, otherwise in
 // release it does nothing at runtime.
 //
-// In case of name clashes (with for example a testing library), you can define the
-// DAWN_SKIP_ASSERT_SHORTHANDS to only define the DAWN_ prefixed macros.
 //
 // These asserts feature:
 //     - Logging of the error with file, line and function information.
@@ -33,44 +31,51 @@
 // MSVC triggers a warning in /W4 for do {} while(0). SDL worked around this by using (0,0) and
 // points out that it looks like an owl face.
 #if defined(GPGMM_COMPILER_MSVC)
-#    define DAWN_ASSERT_LOOP_CONDITION (0, 0)
+#    define GPGMM_ASSERT_LOOP_CONDITION (0, 0)
 #else
-#    define DAWN_ASSERT_LOOP_CONDITION (0)
+#    define GPGMM_ASSERT_LOOP_CONDITION (0)
 #endif
 
-// DAWN_ASSERT_CALLSITE_HELPER generates the actual assert code. In Debug it does what you would
+// GPGMM_ASSERT_CALLSITE_HELPER generates the actual assert code. In Debug it does what you would
 // expect of an assert and in release it tries to give hints to make the compiler generate better
 // code.
-#if defined(DAWN_ENABLE_ASSERTS)
-#    define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition)  \
+#if defined(GPGMM_ENABLE_ASSERTS)
+#    define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
         do {                                                          \
             if (!(condition)) {                                       \
                 HandleAssertionFailure(file, func, line, #condition); \
             }                                                         \
-        } while (DAWN_ASSERT_LOOP_CONDITION)
+        } while (GPGMM_ASSERT_LOOP_CONDITION)
 #else
 #    if defined(GPGMM_COMPILER_MSVC)
-#        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) __assume(condition)
+#        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) __assume(condition)
 #    elif defined(GPGMM_COMPILER_CLANG) && defined(__builtin_assume)
-#        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) __builtin_assume(condition)
+#        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
+            __builtin_assume(condition)
 #    else
-#        define DAWN_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
-            do {                                                         \
-                DAWN_UNUSED(sizeof(condition));                          \
-            } while (DAWN_ASSERT_LOOP_CONDITION)
+#        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
+            do {                                                          \
+                GPGMM_UNUSED(sizeof(condition));                          \
+            } while (GPGMM_ASSERT_LOOP_CONDITION)
 #    endif
 #endif
 
-#define DAWN_ASSERT(condition) DAWN_ASSERT_CALLSITE_HELPER(__FILE__, __func__, __LINE__, condition)
-#define DAWN_UNREACHABLE()                                                 \
-    do {                                                                   \
-        DAWN_ASSERT(DAWN_ASSERT_LOOP_CONDITION && "Unreachable code hit"); \
-        DAWN_BUILTIN_UNREACHABLE();                                        \
-    } while (DAWN_ASSERT_LOOP_CONDITION)
+#define GPGMM_ASSERT(condition) \
+    GPGMM_ASSERT_CALLSITE_HELPER(__FILE__, __func__, __LINE__, condition)
+#define GPGMM_UNREACHABLE()                                                  \
+    do {                                                                     \
+        GPGMM_ASSERT(GPGMM_ASSERT_LOOP_CONDITION && "Unreachable code hit"); \
+        GPGMM_BUILTIN_UNREACHABLE();                                         \
+    } while (GPGMM_ASSERT_LOOP_CONDITION)
 
-#if !defined(DAWN_SKIP_ASSERT_SHORTHANDS)
-#    define ASSERT DAWN_ASSERT
-#    define UNREACHABLE DAWN_UNREACHABLE
+// Disable short-hand defined macros due to possible name clash.
+// Instead, GPGMM will always use the already defined one.
+#if !defined(ASSERT)
+#    define ASSERT GPGMM_ASSERT
+#endif
+
+#if !defined(UNREACHABLE)
+#    define UNREACHABLE GPGMM_UNREACHABLE
 #endif
 
 void HandleAssertionFailure(const char* file,
