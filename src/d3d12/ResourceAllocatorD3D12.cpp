@@ -703,4 +703,36 @@ namespace gpgmm { namespace d3d12 {
         return mResidencyManager.Get();
     }
 
+    HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
+        QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut) const {
+        QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
+        for (auto& allocator : mResourceSubAllocatorOfType) {
+            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
+            infoOut.UsedBlockCount += info.UsedBlockCount;
+            infoOut.UsedBlockUsage += info.UsedBlockUsage;
+        }
+
+        for (auto& allocator : mResourceHeapAllocatorOfType) {
+            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
+            infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
+            infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
+        }
+
+        for (auto& allocator : mBufferSubAllocatorOfType) {
+            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
+            infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
+            infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
+            infoOut.UsedBlockCount += info.UsedBlockCount;
+            infoOut.UsedBlockUsage += info.UsedBlockUsage;
+        }
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocator", this, infoOut);
+
+        if (resorceAllocationInfoOut != nullptr) {
+            *resorceAllocationInfoOut = infoOut;
+        }
+
+        return S_OK;
+    }
+
 }}  // namespace gpgmm::d3d12

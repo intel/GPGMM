@@ -36,6 +36,8 @@ namespace gpgmm {
 
         void ReleaseMemory() override;
 
+        MEMORY_ALLOCATOR_INFO QueryInfo() const override;
+
       private:
         std::vector<std::unique_ptr<MemoryAllocator>> mAllocators;
     };

@@ -26,6 +26,20 @@
 
 namespace gpgmm {
 
+    struct MEMORY_ALLOCATOR_INFO {
+        // Number of used sub-allocated blocks within the same memory.
+        uint32_t UsedBlockCount;
+
+        // Total size (in bytes) of used sub-allocated blocks.
+        uint64_t UsedBlockUsage;
+
+        // Number of used memory allocations.
+        uint32_t UsedMemoryCount;
+
+        // Total size (in bytes) of used memory.
+        uint64_t UsedMemoryUsage;
+    };
+
     class MemoryAllocator : public AllocatorBase {
       public:
         virtual ~MemoryAllocator() = default;
@@ -52,6 +66,12 @@ namespace gpgmm {
         // need to be overridden by the child allocator.
         virtual uint64_t GetMemorySize() const;
         virtual uint64_t GetMemoryAlignment() const;
+
+        // Collect and return the number and size of memory blocks allocated by this allocator.
+        // Will be overridden if a nested allocator or a seperate block allocator is used.
+        virtual MEMORY_ALLOCATOR_INFO QueryInfo() const {
+            return mStats;
+        }
 
       protected:
         // Combine AllocateBlock and TryAllocateMemory into a single call so a partial
@@ -83,6 +103,8 @@ namespace gpgmm {
             return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
                                                       AllocationMethod::kUndefined, block);
         }
+
+        MEMORY_ALLOCATOR_INFO mStats = {};
     };
 
 }  // namespace gpgmm

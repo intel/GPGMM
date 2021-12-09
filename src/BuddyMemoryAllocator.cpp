@@ -88,16 +88,23 @@ namespace gpgmm {
             return nullptr;
         }
 
+        Block* block = subAllocation->GetBlock();
+        mStats.UsedBlockCount++;
+        mStats.UsedBlockUsage += block->Size;
+
         // Memory allocation offset is always memory-relative.
-        const uint64_t memoryOffset = subAllocation->GetBlock()->Offset % mMemorySize;
+        const uint64_t memoryOffset = block->Offset % mMemorySize;
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, subAllocation->GetMemory(),
                                                   memoryOffset, AllocationMethod::kSubAllocated,
-                                                  subAllocation->GetBlock());
+                                                  block);
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {
         ASSERT(subAllocation != nullptr);
+
+        mStats.UsedBlockCount--;
+        mStats.UsedBlockUsage -= subAllocation->GetSize();
 
         const uint64_t memoryIndex = GetMemoryIndex(subAllocation->GetBlock()->Offset);
 

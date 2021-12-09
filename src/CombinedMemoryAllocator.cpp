@@ -43,4 +43,16 @@ namespace gpgmm {
         }
     }
 
+    MEMORY_ALLOCATOR_INFO CombinedMemoryAllocator::QueryInfo() const {
+        MEMORY_ALLOCATOR_INFO combinedInfo = {};
+        for (auto& allocator : mAllocators) {
+            const MEMORY_ALLOCATOR_INFO info = allocator->QueryInfo();
+            combinedInfo.UsedBlockCount += info.UsedBlockCount;
+            combinedInfo.UsedMemoryCount += info.UsedMemoryCount;
+            combinedInfo.UsedMemoryUsage += info.UsedMemoryUsage;
+            combinedInfo.UsedBlockUsage += info.UsedBlockUsage;
+        }
+        return combinedInfo;
+    }
+
 }  // namespace gpgmm

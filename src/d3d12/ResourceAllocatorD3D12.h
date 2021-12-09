@@ -168,6 +168,13 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_CLEAR_VALUE* clearValue;
     };
 
+    struct QUERY_RESOURCE_ALLOCATOR_INFO {
+        uint32_t UsedBlockCount;
+        uint64_t UsedBlockUsage;
+        uint32_t UsedResourceHeapCount;
+        uint64_t UsedResourceHeapUsage;
+    };
+
     class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
         // Creates the allocator and residency manager instance used to manage video memory for the
@@ -208,6 +215,11 @@ namespace gpgmm { namespace d3d12 {
         // system. Apps should call Trim() when going idle for a period of time since there is a
         // brief performance hit when the internal resource heaps get reallocated by the OS.
         void Trim();
+
+        // Informs the app of the current allocator usage.
+        // If the allocator info is nullptr, info will only be recorded for trace.
+        HRESULT QueryResourceAllocatorInfo(
+            QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut = nullptr) const;
 
       private:
         friend BufferAllocator;

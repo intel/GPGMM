@@ -252,6 +252,17 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& traceEventID = event["id"].asString();
+
+                        auto it = allocatorToIDMap.find(traceEventID);
+                        ASSERT_TRUE(it != allocatorToIDMap.end());
+
+                        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
+                        ComPtr<ResourceAllocator> allocator = it->second;
+                        ASSERT_SUCCEEDED(allocator->QueryResourceAllocatorInfo(&info));
+
+                        mHeapStats.TotalCount = info.UsedResourceHeapCount;
+                        mHeapStats.TotalSize = info.UsedResourceHeapUsage;
+
                         ASSERT_EQ(allocatorToIDMap.erase(traceEventID), 1u);
                     } break;
 
@@ -274,8 +285,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             snapshot["MemorySegmentGroup"].asInt());
                         heapDesc.Size = snapshot["Size"].asUInt64();
 
-                        mHeapStats.TotalCount++;
-                        mHeapStats.TotalSize += heapDesc.Size;
                         mHeapStats.CurrentUsage += heapDesc.Size;
                         mHeapStats.PeakUsage =
                             std::max(mHeapStats.PeakUsage, mHeapStats.CurrentUsage);
