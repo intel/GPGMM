@@ -137,12 +137,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 const Json::Value& recordOptions = args["RecordOptions"];
                 ASSERT_FALSE(recordOptions.empty());
 
-                allocatorDesc.RecordOptions.Flags =
-                    static_cast<ALLOCATOR_RECORD_FLAGS>(recordOptions["Flags"].asInt());
-
                 if (IsRecordEvents) {
-                    allocatorDesc.RecordOptions.Flags = static_cast<ALLOCATOR_RECORD_FLAGS>(
-                        allocatorDesc.RecordOptions.Flags | ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
+                    allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
                     allocatorDesc.RecordOptions.TraceFile = std::string(traceFile.name + ".json");
                 }
 
