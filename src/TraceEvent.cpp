@@ -19,16 +19,17 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
+#include <string>
 
 static constexpr const char* kDefaultTraceFile = "trace.json";
 
 namespace gpgmm {
 
-    EventTracer* gEventTracer = nullptr;
+    FileEventTrace* gEventTracer = nullptr;
 
-    void StartupEventTracer(const char* eventTraceFile) {
+    void StartupEventTracer(std::string traceFile) {
         gEventTracer =
-            new EventTracer((eventTraceFile != nullptr) ? eventTraceFile : kDefaultTraceFile);
+            new FileEventTrace(traceFile.empty() ? std::string(kDefaultTraceFile) : traceFile);
     }
 
     void ShutdownEventTracer() {
@@ -58,7 +59,7 @@ namespace gpgmm {
           mArgs(args) {
     }
 
-    void EventTracing::AddTraceEvent(char phase,
+    void EventTracer::AddTraceEvent(char phase,
                                      const char* name,
                                      uint64_t id,
                                      uint32_t flags,
@@ -68,7 +69,7 @@ namespace gpgmm {
         }
     }
 
-    void EventTracing::AddTraceEvent(char phase,
+    void EventTracer::AddTraceEvent(char phase,
                                      const char* name,
                                      uint64_t id,
                                      uint32_t flags,
@@ -83,31 +84,30 @@ namespace gpgmm {
         }
     }
 
-    EventTracer::EventTracer(const char* traceFile)
+    FileEventTrace::FileEventTrace(std::string traceFile)
         : mTraceFile(traceFile), mPlatformTime(CreatePlatformTime()) {
-        if (mTraceFile != nullptr) {
-            std::ofstream outFile;
-            outFile.open(mTraceFile);
-            outFile << "{ \"traceEvents\": [";
-            outFile << "{}";  // Dummy object so trace events can always prepend a comma
-            outFile.flush();
-            outFile.close();
-        }
+        ASSERT(!mTraceFile.empty());
+
+        std::ofstream outFile;
+        outFile.open(mTraceFile);
+        outFile << "{ \"traceEvents\": [";
+        outFile << "{}";  // Dummy object so trace events can always prepend a comma
+        outFile.flush();
+        outFile.close();
+
     }
 
-    EventTracer::~EventTracer() {
-        if (mTraceFile != nullptr) {
-            FlushQueuedEventsToDisk();
+    FileEventTrace::~FileEventTrace() {
+        FlushQueuedEventsToDisk();
 
-            std::ofstream outFile;
-            outFile.open(mTraceFile, std::ios_base::app);
-            outFile << "]}";
-            outFile << std::endl;
-            outFile.close();
-        }
+        std::ofstream outFile;
+        outFile.open(mTraceFile, std::ios_base::app);
+        outFile << "]}";
+        outFile << std::endl;
+        outFile.close();
     }
 
-    void EventTracer::EnqueueTraceEvent(char phase,
+    void FileEventTrace::EnqueueTraceEvent(char phase,
                                         const char* name,
                                         uint64_t id,
                                         uint32_t flags,
@@ -119,7 +119,7 @@ namespace gpgmm {
         }
     }
 
-    void EventTracer::FlushQueuedEventsToDisk() {
+    void FileEventTrace::FlushQueuedEventsToDisk() {
         std::ofstream outFile;
         outFile.open(mTraceFile, std::ios_base::app);
 

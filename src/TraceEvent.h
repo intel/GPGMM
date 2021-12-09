@@ -98,18 +98,18 @@ const std::string kNoArgs = "";
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                   \
     do {                                                               \
-        gpgmm::EventTracing::AddTraceEvent(phase, name, kNoId, flags); \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, flags); \
     } while (false)
 
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags, ...)                              \
     do {                                                                                           \
         gpgmm::TraceEventID traceEventID(id);                                                      \
-        gpgmm::EventTracing::AddTraceEvent(phase, name, traceEventID.GetID(), flags, __VA_ARGS__); \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, traceEventID.GetID(), flags, __VA_ARGS__); \
     } while (false)
 
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(phase, name, flags, args)         \
     do {                                                                     \
-        gpgmm::EventTracing::AddTraceEvent(phase, name, kNoId, flags, args); \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, flags, args); \
     } while (false)
 
 namespace gpgmm {
@@ -118,10 +118,10 @@ namespace gpgmm {
         Default = 0,
     };
 
-    class EventTracer;
+    class FileEventTrace;
     class PlatformTime;
 
-    void StartupEventTracer(const char* eventTraceFile);
+    void StartupEventTracer(std::string traceFile);
     void ShutdownEventTracer();
 
     bool IsEventTracerEnabled();
@@ -155,7 +155,7 @@ namespace gpgmm {
         ~TraceEvent() = default;
 
       private:
-        friend EventTracer;
+        friend FileEventTrace;
 
         char mPhase = 0;
         TraceEventCategory mCategory;
@@ -167,7 +167,7 @@ namespace gpgmm {
         std::string mArgs;
     };
 
-    class EventTracing {
+    class EventTracer {
       public:
         static void AddTraceEvent(char phase,
                                   const char* name,
@@ -183,10 +183,10 @@ namespace gpgmm {
                                   std::string arg1Value);
     };
 
-    class EventTracer {
+    class FileEventTrace {
       public:
-        EventTracer(const char* traceFile);
-        ~EventTracer();
+        FileEventTrace(std::string traceFile);
+        ~FileEventTrace();
 
         void EnqueueTraceEvent(char phase,
                                const char* name,
@@ -197,7 +197,7 @@ namespace gpgmm {
 
       private:
         std::vector<TraceEvent> mTraceEventQueue;
-        const char* mTraceFile = nullptr;
+        std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
     };
 
