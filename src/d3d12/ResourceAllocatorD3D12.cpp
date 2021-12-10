@@ -403,9 +403,7 @@ namespace gpgmm { namespace d3d12 {
         const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor,
                                            initialResourceState, clearValue};
 
-        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
-
-        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
+        TRACE_EVENT_CALL_SCOPED_ARGS("ResourceAllocator.CreateResource", desc);
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
@@ -556,8 +554,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
-        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
-        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
+        TRACE_EVENT_CALL_SCOPED_ARGS("ResourceAllocator.CreateResource", desc);
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
