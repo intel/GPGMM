@@ -140,7 +140,7 @@ void CaptureReplayTestWithParams::LogCallStats(const std::string& name,
                                                const CaptureReplayCallStats& stats) const {
     const double avgCpuTimePerCall =
         (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
-    gpgmm::InfoLog() << name << " avg call time (ms): " << avgCpuTimePerCall;
+    gpgmm::InfoLog() << name << " avg cpu time (ms): " << avgCpuTimePerCall;
 }
 
 void CaptureReplayTestWithParams::LogMemoryStats(const std::string& name,
