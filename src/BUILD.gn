@@ -90,8 +90,8 @@ source_set("gpgmm_sources") {
   ]
   defines = []
 
-  if (gpgmm_always_record_event_trace) {
-    defines += [ "GPGMM_ALWAYS_RECORD_EVENT_TRACE" ]
+  if (gpgmm_always_record_trace_events) {
+    defines += [ "GPGMM_ALWAYS_RECORD_TRACE_EVENTS" ]
   }
 
   libs = []

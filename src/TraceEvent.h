@@ -124,7 +124,7 @@ namespace gpgmm {
         Default = 0,
     };
 
-    class FileEventTrace;
+    class FileEventTracer;
     class PlatformTime;
 
     void StartupEventTracer(std::string traceFile);
@@ -161,7 +161,7 @@ namespace gpgmm {
         ~TraceEvent() = default;
 
       private:
-        friend FileEventTrace;
+        friend FileEventTracer;
 
         char mPhase = 0;
         TraceEventCategory mCategory;
@@ -189,10 +189,10 @@ namespace gpgmm {
                                   std::string arg1Value);
     };
 
-    class FileEventTrace {
+    class FileEventTracer {
       public:
-        FileEventTrace(std::string traceFile);
-        ~FileEventTrace();
+        FileEventTracer(std::string traceFile);
+        ~FileEventTracer();
 
         void EnqueueTraceEvent(char phase,
                                const char* name,
@@ -202,7 +202,7 @@ namespace gpgmm {
         void FlushQueuedEventsToDisk();
 
       private:
-        std::vector<TraceEvent> mTraceEventQueue;
+        std::vector<TraceEvent> mQueue;
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
     };

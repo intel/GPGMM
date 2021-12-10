@@ -17,9 +17,9 @@ import("//build/config/gclient_args.gni")
 # Enable the compilation for UWP
 gpgmm_is_winuwp = is_win && target_os == "winuwp"
 
-# Non-standalone builds cannot checkout test integrations.
+# Non-standalone builds should not checkout integrations used for testing.
 # Rather then require GN clients to modify DEPS to disable,
-# always disable them here if undefined.
+# always disable them here by default or when undefined.
 if (!defined(checkout_dawn)) {
   checkout_dawn = false
 }
@@ -33,14 +33,14 @@ declare_args() {
   gpgmm_always_assert = false
 
   # Enables GPGMM's memory tracing even if disabled by recording flags.
-  gpgmm_always_record_event_trace = false
+  gpgmm_always_record_trace_events = false
 
-  # Enables the compilation of GPGMM's D3D12 backend
+  # Enables the compilation of the D3D12 backend
   gpgmm_enable_d3d12 = is_win
 
-  # Enable the compilation of GPGMM's Dawn integration for testing.
+  # Enables compilation of Dawn end2end tests.
   enable_dawn = checkout_dawn
 
-  # Enable the compilation of GPGMM's WebNN integration for testing.
+  # Enables compilation of WebNN end2nd tests.
   enable_webnn = checkout_webnn
 }

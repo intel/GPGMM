@@ -25,11 +25,11 @@ static constexpr const char* kDefaultTraceFile = "trace.json";
 
 namespace gpgmm {
 
-    FileEventTrace* gEventTracer = nullptr;
+    FileEventTracer* gEventTracer = nullptr;
 
     void StartupEventTracer(std::string traceFile) {
         gEventTracer =
-            new FileEventTrace(traceFile.empty() ? std::string(kDefaultTraceFile) : traceFile);
+            new FileEventTracer(traceFile.empty() ? std::string(kDefaultTraceFile) : traceFile);
     }
 
     void ShutdownEventTracer() {
@@ -84,7 +84,7 @@ namespace gpgmm {
         }
     }
 
-    FileEventTrace::FileEventTrace(std::string traceFile)
+    FileEventTracer::FileEventTracer(std::string traceFile)
         : mTraceFile(traceFile), mPlatformTime(CreatePlatformTime()) {
         ASSERT(!mTraceFile.empty());
 
@@ -97,7 +97,7 @@ namespace gpgmm {
 
     }
 
-    FileEventTrace::~FileEventTrace() {
+    FileEventTracer::~FileEventTracer() {
         FlushQueuedEventsToDisk();
 
         std::ofstream outFile;
@@ -107,23 +107,23 @@ namespace gpgmm {
         outFile.close();
     }
 
-    void FileEventTrace::EnqueueTraceEvent(char phase,
+    void FileEventTracer::EnqueueTraceEvent(char phase,
                                         const char* name,
                                         uint64_t id,
                                         uint32_t flags,
                                         std::string args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
-            mTraceEventQueue.push_back(
+            mQueue.push_back(
                 {phase, TraceEventCategory::Default, name, id, timestamp, flags, args});
         }
     }
 
-    void FileEventTrace::FlushQueuedEventsToDisk() {
+    void FileEventTracer::FlushQueuedEventsToDisk() {
         std::ofstream outFile;
         outFile.open(mTraceFile, std::ios_base::app);
 
-        for (const TraceEvent& traceEvent : mTraceEventQueue) {
+        for (const TraceEvent& traceEvent : mQueue) {
             // TODO: Support per thread event tracing via traceEvent.mThread.
             outFile << ", { "
                     << "\"name\": \"" << traceEvent.mName << "\", "
@@ -171,6 +171,6 @@ namespace gpgmm {
             outFile << " }";
         }
         outFile.close();
-        mTraceEventQueue.clear();
+        mQueue.clear();
     }
 }  // namespace gpgmm
