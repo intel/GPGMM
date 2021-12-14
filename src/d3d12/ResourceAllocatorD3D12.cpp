@@ -290,7 +290,7 @@ namespace gpgmm { namespace d3d12 {
 
         bool enableEventTracer =
             descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
-#ifdef GPGMM_ALWAYS_RECORD_TRACE_EVENTS
+#ifdef GPGMM_ALWAYS_RECORD
         enableEventTracer = true;
 #endif
 

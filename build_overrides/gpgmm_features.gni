@@ -33,14 +33,14 @@ declare_args() {
   gpgmm_always_assert = false
 
   # Enables GPGMM's memory tracing even if disabled by recording flags.
-  gpgmm_always_record_trace_events = false
+  gpgmm_always_record = false
 
   # Enables the compilation of the D3D12 backend
   gpgmm_enable_d3d12 = is_win
 
-  # Enables compilation of Dawn end2end tests.
-  enable_dawn = checkout_dawn
+  # Enables compilation of Dawn's end2end tests.
+  gpgmm_enable_dawn = checkout_dawn
 
-  # Enables compilation of WebNN end2nd tests.
-  enable_webnn = checkout_webnn
+  # Enables compilation of WebNN's end2end tests.
+  gpgmm_enable_webnn = checkout_webnn
 }
