@@ -24,7 +24,7 @@ namespace gpgmm { namespace d3d12 {
     static constexpr uint64_t kDefaultPreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
     static constexpr uint32_t kDefaultVideoMemoryEvictSize = 50ll * 1024ll * 1024ll;      // 50MB
     static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;                          // 95%
-
+    static constexpr const char* kDefaultTraceFile = "gpgmm_event_trace.json";
 }}  // namespace gpgmm::d3d12
 
 #endif  // COMMON_LIMITS_H_

@@ -178,4 +178,12 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
+    std::string JSONSerializer::AppendTo(const ALLOCATOR_MESSAGE& desc) {
+        std::stringstream ss;
+        ss << "{ "
+           << "\"Description\": \"" << desc.Description << "\", "
+           << "\"ID\": " << desc.ID << " }";
+        return ss.str();
+    }
+
 }}  // namespace gpgmm::d3d12

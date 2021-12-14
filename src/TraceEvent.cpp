@@ -14,22 +14,20 @@
 
 #include "src/TraceEvent.h"
 #include "common/Assert.h"
+#include "common/Log.h"
 #include "common/PlatformTime.h"
 
 #include <fstream>
 #include <sstream>
-#include <thread>
 #include <string>
-
-static constexpr const char* kDefaultTraceFile = "trace.json";
+#include <thread>
 
 namespace gpgmm {
 
     FileEventTracer* gEventTracer = nullptr;
 
-    void StartupEventTracer(std::string traceFile) {
-        gEventTracer =
-            new FileEventTracer(traceFile.empty() ? std::string(kDefaultTraceFile) : traceFile);
+    void StartupEventTracer(const std::string& traceFile) {
+        gEventTracer = new FileEventTracer(traceFile);
     }
 
     void ShutdownEventTracer() {
@@ -60,21 +58,21 @@ namespace gpgmm {
     }
 
     void EventTracer::AddTraceEvent(char phase,
-                                     const char* name,
-                                     uint64_t id,
-                                     uint32_t flags,
-                                     std::string args) {
+                                    const char* name,
+                                    uint64_t id,
+                                    uint32_t flags,
+                                    std::string args) {
         if (gEventTracer != nullptr) {
             gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args);
         }
     }
 
     void EventTracer::AddTraceEvent(char phase,
-                                     const char* name,
-                                     uint64_t id,
-                                     uint32_t flags,
-                                     std::string arg1Name,
-                                     std::string arg1Value) {
+                                    const char* name,
+                                    uint64_t id,
+                                    uint32_t flags,
+                                    std::string arg1Name,
+                                    std::string arg1Value) {
         if (gEventTracer != nullptr) {
             std::stringstream args;
             args << "{"
@@ -94,7 +92,6 @@ namespace gpgmm {
         outFile << "{}";  // Dummy object so trace events can always prepend a comma
         outFile.flush();
         outFile.close();
-
     }
 
     FileEventTracer::~FileEventTracer() {
@@ -108,10 +105,10 @@ namespace gpgmm {
     }
 
     void FileEventTracer::EnqueueTraceEvent(char phase,
-                                        const char* name,
-                                        uint64_t id,
-                                        uint32_t flags,
-                                        std::string args) {
+                                            const char* name,
+                                            uint64_t id,
+                                            uint32_t flags,
+                                            std::string args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back(
@@ -170,6 +167,9 @@ namespace gpgmm {
 
             outFile << " }";
         }
+
+        gpgmm::DebugLog() << "Recorded " << mQueue.size() << " events to " << mTraceFile << ".";
+
         outFile.close();
         mQueue.clear();
     }

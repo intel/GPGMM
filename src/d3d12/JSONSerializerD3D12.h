@@ -15,6 +15,7 @@
 #ifndef GPGMM_D3D12_JSONSERIALIZERD3D12_H_
 #define GPGMM_D3D12_JSONSERIALIZERD3D12_H_
 
+#include "../common/Log.h"
 #include "src/JSONSerializer.h"
 
 #include "src/d3d12/d3d12_platform.h"
@@ -28,6 +29,7 @@ namespace gpgmm { namespace d3d12 {
     struct HEAP_DESC;
     struct RESOURCE_ALLOCATION_DESC;
     struct QUERY_RESOURCE_ALLOCATOR_INFO;
+    struct ALLOCATOR_MESSAGE;
 
     class JSONSerializer : public ObjectSerializer<JSONSerializer> {
       public:
@@ -38,6 +40,7 @@ namespace gpgmm { namespace d3d12 {
         static std::string AppendTo(const HEAP_DESC& desc);
         static std::string AppendTo(const RESOURCE_ALLOCATION_DESC& desc);
         static std::string AppendTo(const QUERY_RESOURCE_ALLOCATOR_INFO& desc);
+        static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
 
       private:
         static std::string AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc);
@@ -46,6 +49,23 @@ namespace gpgmm { namespace d3d12 {
         static std::string AppendTo(const D3D12_CLEAR_VALUE* clearValue);
         static std::string AppendTo(const DXGI_SAMPLE_DESC& desc);
     };
+
+    template <typename T>
+    static void LogEvent(const char* name, const T& desc) {
+        return gpgmm::LogEvent<T, JSONSerializer>(name, desc);
+    }
+
+    template <typename... Args>
+    static void LogMessageEvent(const LogSeverity& severity,
+                                const char* name,
+                                const Args&... args) {
+        return gpgmm::LogMessageEvent<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    }
+
+    template <typename T, typename... Args>
+    static void LogCallEvent(const char* name, const Args&... args) {
+        return gpgmm::LogEvent<T, JSONSerializer>(name, args...);
+    }
 
 }}  // namespace gpgmm::d3d12
 

@@ -50,6 +50,13 @@ namespace gpgmm { namespace d3d12 {
 
     } ALLOCATOR_FLAGS;
 
+    typedef enum ALLOCATOR_MESSAGE_SEVERITY {
+        ALLOCATOR_MESSAGE_SEVERITY_MESSAGE = 0,
+        ALLOCATOR_MESSAGE_SEVERITY_INFO = 1,
+        ALLOCATOR_MESSAGE_SEVERITY_WARNING = 2,
+        ALLOCATOR_MESSAGE_SEVERITY_ERROR = 3,
+    } ALLOCATOR_MESSAGE_SEVERITY;
+
     typedef enum ALLOCATOR_RECORD_FLAGS {
 
         // Disables all recording flags. Enabled by default.
@@ -64,6 +71,10 @@ namespace gpgmm { namespace d3d12 {
         // Flags used to control how the allocator will record.
         ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
+        // Minimum severity level to record messages. Messages with lower severity
+        // will be ignored.
+        ALLOCATOR_MESSAGE_SEVERITY MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+
         // Path to trace file. Default is trace.json.
         std::string TraceFile;
     };
@@ -77,6 +88,10 @@ namespace gpgmm { namespace d3d12 {
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
         ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
+
+        // Minimum severity level to log messages to console. Messages with lower severity
+        // will be ignored.
+        ALLOCATOR_MESSAGE_SEVERITY MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
 
         // Configures memory tracing.
         ALLOCATOR_RECORD_OPTIONS RecordOptions;
@@ -173,6 +188,36 @@ namespace gpgmm { namespace d3d12 {
         uint64_t UsedBlockUsage;
         uint32_t UsedResourceHeapCount;
         uint64_t UsedResourceHeapUsage;
+    };
+
+    typedef enum ALLOCATOR_MESSAGE_ID {
+        // D3D12 rejected the resource alignment specified.
+        // The alignment value could be incorrect or use a resource that is unsupported by the
+        // driver.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED = 0x0,
+
+        // Suballocation was requested but did not succeed.
+        // Suballocation failure occurs when the resource or heap size are misaligned.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED = 0x1,
+
+        // D3D12 heap was created with a size that is not a multiple of the alignment, which wastes
+        // memory unknowingly. D3D12 only supports misaligned heap sizes for convenience.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT = 0x2,
+
+        // D3D12 resource was created with a size that is larger then alignment, which wastes memory
+        // unknowingly. D3D12 only supports a resource size that is a multiple of 64KB.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT = 0x3,
+
+        // Resource allocation size exceeds the D3D12 resource size, which wastes memory
+        // unknowingly. The allocator did not support allocation of a block equal to the resource
+        // size.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT = 0x4,
+
+    } ALLOCATOR_MESSAGE_ID;
+
+    struct ALLOCATOR_MESSAGE {
+        std::string Description;
+        ALLOCATOR_MESSAGE_ID ID;
     };
 
     class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
