@@ -34,3 +34,13 @@ group("default") {
   testonly = true
   deps = [ ":all" ]
 }
+
+# Shared and static library build targets are used to re-distributable GPGMM as a linkable binary.
+static_library("gpgmm_static") {
+  complete_static_lib = true
+  deps = [ "src:gpgmm" ]
+}
+
+shared_library("gpgmm_shared") {
+  deps = [ "src:gpgmm" ]
+}

@@ -138,6 +138,17 @@ target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/)
 target_link_libraries(proj PRIVATE gpgmm ...)
 ```
 
+### Visual Studio (MSVC)
+
+```sh
+> gn gen out/gpgmm_static --args='is_clang=false'
+> ninja -C out/gpgmm_static gpgmm_static
+> xcopy out/gpgmm_static/obj/gpgmm_static.lib $(ProjectDir)
+```
+1. Right click solution project ("Property pages") > Configuration Properties.
+2. Add `gpgmm_static.lib` to Linker > Additional Dependencies.
+3. Add path(s) 1. `gpgmm` and 2. `gpgmm\src\include` to Include Directories.
+
 Then import:
 ```cpp
 #include <gpgmm_d3d12.h> // or gpgmm_vulkan.h
