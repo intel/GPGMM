@@ -143,10 +143,15 @@ namespace gpgmm { namespace d3d12 {
            << "\"Size\": " << desc.Size << ", "
            << "\"IsResident\": " << desc.IsResident << ", "
            << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << ", "
-           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs << ", "
-           << "\"MemoryPool\": {"
-           << "\"id_ref\": \"0x" << memoryPoolID.str() << "\" }"
-           << " }";
+           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs;
+
+        if (desc.MemoryPool != nullptr) {
+            ss << ", "
+               << "\"MemoryPool\": {"
+               << "\"id_ref\": \"0x" << memoryPoolID.str() << "\" }";
+        }
+
+        ss << " }";
         return ss.str();
     }
 
