@@ -117,6 +117,70 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     }
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
+    ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+    desc.RecordOptions.Flags =
+        static_cast<ALLOCATOR_RECORD_FLAGS>(ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
+
+    // Creating a new allocator that uses default record options should always succeed.
+    {
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+
+    // Creating a new allocator that specifies a trace name should always succeed.
+    {
+        ALLOCATOR_DESC newDesc = desc;
+        newDesc.RecordOptions.TraceFile = "test.json";
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+
+    // Creating a new allocator using various recording levels should always succeed.
+    {
+        ALLOCATOR_DESC newDesc = desc;
+        newDesc.RecordOptions.MinLogLevel =
+            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_MESSAGE);
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+
+    {
+        ALLOCATOR_DESC newDesc = desc;
+        newDesc.RecordOptions.MinLogLevel =
+            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_INFO);
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+
+    {
+        ALLOCATOR_DESC newDesc = desc;
+        newDesc.RecordOptions.MinLogLevel =
+            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_WARNING);
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+
+    {
+        ALLOCATOR_DESC newDesc = desc;
+        newDesc.RecordOptions.MinLogLevel =
+            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_ERROR);
+
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
+        ASSERT_NE(allocator, nullptr);
+    }
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     // Creating a resource without allocation should always fail.
     ASSERT_FAILED(mDefaultAllocator->CreateResource(
