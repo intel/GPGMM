@@ -16,6 +16,7 @@
 
 #include "common/Assert.h"
 #include "src/LIFOMemoryPool.h"
+#include "src/TraceEvent.h"
 
 namespace gpgmm {
 
@@ -140,6 +141,8 @@ namespace gpgmm {
         uint64_t size,
         uint64_t alignment,
         bool neverAllocate) {
+        TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
+
         if (size == 0 || alignment != mMemoryAlignment) {
             return {};
         }
@@ -161,6 +164,8 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.DeallocateMemory");
+
         ASSERT(allocation != nullptr);
 
         MemoryBase* memory = allocation->GetMemory();

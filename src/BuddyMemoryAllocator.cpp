@@ -17,6 +17,7 @@
 
 #include "common/Math.h"
 #include "src/Memory.h"
+#include "src/TraceEvent.h"
 
 namespace gpgmm {
 
@@ -45,12 +46,10 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t size,
                                                                               uint64_t alignment,
                                                                               bool neverAllocate) {
-        if (size == 0) {
-            return nullptr;
-        }
+        TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (size > mMemorySize) {
+        if (size == 0 || size > mMemorySize) {
             return nullptr;
         }
 
@@ -101,6 +100,8 @@ namespace gpgmm {
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {
+        TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.DeallocateMemory");
+
         ASSERT(subAllocation != nullptr);
 
         mStats.UsedBlockCount--;

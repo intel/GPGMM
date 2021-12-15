@@ -660,6 +660,8 @@ namespace gpgmm { namespace d3d12 {
                                                   D3D12_HEAP_FLAGS heapFlags,
                                                   uint64_t heapAlignment,
                                                   Heap** resourceHeapOut) {
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResourceHeap");
+
         const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
 
@@ -709,6 +711,8 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
         Heap** resourceHeapOut) {
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateCommittedResource");
+
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
         // overcommitted.
