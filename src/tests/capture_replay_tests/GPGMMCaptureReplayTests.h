@@ -17,6 +17,8 @@
 
 #include "src/tests/GPGMMTest.h"
 
+#include "src/common/Log.h"
+
 #include <regex>
 #include <string>
 
@@ -56,13 +58,19 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
     uint64_t GetIterations() const;
     bool IsStandaloneOnly() const;
     bool IsRecordEvents() const;
+    const gpgmm::LogSeverity& GetRecordLevel() const;
+    const gpgmm::LogSeverity& GetLogLevel() const;
 
   private:
     void PrintCaptureReplayEnviromentSettings() const;
 
+    // Options for RunTest.
     uint64_t mIterations = 1;  // Number of test iterations to run.
     bool mIsStandaloneOnly = false;
     bool mIsRecordEvents = false;
+
+    gpgmm::LogSeverity mLogLevel = gpgmm::LogSeverity::Info;
+    gpgmm::LogSeverity mRecordLevel = gpgmm::LogSeverity::Warning;
 };
 
 class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
@@ -82,7 +90,9 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
 
     virtual void RunTest(const TraceFile& traceFile,
                          bool isStandaloneOnly,
-                         bool IsRecordEvents) = 0;
+                         bool isRecordEvents,
+                         const gpgmm::LogSeverity& recordLogLevel,
+                         const gpgmm::LogSeverity& logMessageLevel) = 0;
 
     void RunTestLoop();
 

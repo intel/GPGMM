@@ -26,6 +26,10 @@
 
 namespace gpgmm {
 
+    // Messages with equal or greater to severity will be logged.
+    LogSeverity gEventLogMessageLevel = LogSeverity::Info;
+    LogSeverity gLogMessageLevel = LogSeverity::Warning;
+
     namespace {
 
         const char* SeverityName(LogSeverity severity) {
@@ -63,6 +67,24 @@ namespace gpgmm {
 #endif  // defined(GPGMM_PLATFORM_ANDROID)
 
     }  // anonymous namespace
+
+    void SetRecordLogLevel(const LogSeverity& level) {
+        gEventLogMessageLevel = level;
+    }
+
+    const LogSeverity& GetRecordLevel() {
+        return gEventLogMessageLevel;
+    }
+
+    void SetLogMessageLevel(const LogSeverity& level) {
+        gLogMessageLevel = level;
+    }
+
+    const LogSeverity& GetLogLevel() {
+        return gLogMessageLevel;
+    }
+
+    // LogMessage
 
     LogMessage::LogMessage(LogSeverity severity) : mSeverity(severity) {
     }

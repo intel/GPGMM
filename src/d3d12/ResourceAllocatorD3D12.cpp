@@ -15,12 +15,12 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
+#include "../common/Log.h"
 #include "../common/Math.h"
 #include "src/BuddyMemoryAllocator.h"
 #include "src/CombinedMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/SegmentedMemoryAllocator.h"
-#include "src/TraceEvent.h"
 #include "src/d3d12/BufferAllocatorD3D12.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"
@@ -103,6 +103,10 @@ namespace gpgmm { namespace d3d12 {
             // required alignment is for this resource.
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
+                LogMessageEvent(LogSeverity::Info, "ResourceAllocator.GetResourceAllocationInfo",
+                                "D3D12 rejected the requested alignment",
+                                ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED);
+
                 resourceDescriptor.Alignment = 0;
                 resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
             }
@@ -295,9 +299,18 @@ namespace gpgmm { namespace d3d12 {
 #endif
 
         if (enableEventTracer) {
-            StartupEventTracer(descriptor.RecordOptions.TraceFile);
-            TRACE_EVENT_CALL("ResourceAllocator.CreateAllocator", descriptor);
+            const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
+                                               ? std::string(kDefaultTraceFile)
+                                               : descriptor.RecordOptions.TraceFile;
+            const LogSeverity& recordLogLevel =
+                static_cast<LogSeverity>(descriptor.RecordOptions.MinLogLevel);
+
+            StartupEventTracer(traceFile);
+            SetRecordLogLevel(recordLogLevel);
         }
+
+        const LogSeverity& consoleEventLevel = static_cast<LogSeverity>(descriptor.MinLogLevel);
+        SetLogMessageLevel(consoleEventLevel);
 
         ComPtr<ResidencyManager> residencyManager;
         if (SUCCEEDED(ResidencyManager::CreateResidencyManager(
@@ -324,6 +337,7 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
+        LogEvent("ResourceAllocator", descriptor);
         TRACE_EVENT_NEW_OBJECT("ResourceAllocator", this);
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
@@ -400,10 +414,8 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        const CREATE_RESOURCE_DESC desc = {allocationDescriptor, resourceDescriptor,
-                                           initialResourceState, clearValue};
-
-        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
+        LogCallEvent<CREATE_RESOURCE_DESC>("ResourceAllocator.CreateResource", allocationDescriptor,
+                                           resourceDescriptor, initialResourceState, clearValue);
 
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
@@ -424,6 +436,12 @@ namespace gpgmm { namespace d3d12 {
             GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
 
+        if (resourceInfo.SizeInBytes < resourceInfo.Alignment) {
+            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Resource size is smaller then the alignment.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT);
+        }
+
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
@@ -431,6 +449,7 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
         // Attempt to allocate using the most effective allocator.
+        bool didTrySubAllocate = false;
         MemoryAllocator* allocator = nullptr;
 
         // Attempt to create a resource allocation within the same resource.
@@ -463,8 +482,17 @@ namespace gpgmm { namespace d3d12 {
                         subAllocation.GetBlock(),     subAllocation.GetOffset(),
                         std::move(committedResource), resourceHeap};
 
+                    if (subAllocation.GetSize() > resourceDescriptor.Width) {
+                        LogMessageEvent(
+                            LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Resource allocation size is larger then the resource size.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                    }
+
                     return S_OK;
                 }));
+
+            didTrySubAllocate = true;
         }
 
         // Attempt to create a resource allocation by placing a resource in a sub-allocated
@@ -490,8 +518,23 @@ namespace gpgmm { namespace d3d12 {
                         subAllocation.GetOffset(), subAllocation.GetBlock(),
                         std::move(placedResource), resourceHeap};
 
+                    if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
+                        LogMessageEvent(
+                            LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Resource allocation size is larger then the resource size.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                    }
+
                     return S_OK;
                 }));
+
+            didTrySubAllocate = true;
+        }
+
+        if (didTrySubAllocate) {
+            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Suballocation was attempted but failed.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED);
         }
 
         // Attempt to create a resource allocation by placing a single resource fully contained
@@ -521,6 +564,13 @@ namespace gpgmm { namespace d3d12 {
                         new ResourceAllocation{mResidencyManager.Get(), allocation.GetAllocator(),
                                                std::move(placedResource), resourceHeap};
 
+                    if (allocation.GetSize() > heapSize) {
+                        LogMessageEvent(
+                            LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Resource allocation size is larger then the resource size.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                    }
+
                     return S_OK;
                 }));
         }
@@ -542,6 +592,8 @@ namespace gpgmm { namespace d3d12 {
         *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(), this,
                                                         std::move(committedResource), resourceHeap};
 
+        // TODO: emit log message for effective mis-alignment of a commited resource.
+
         return S_OK;
     }
 
@@ -556,7 +608,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
-        TRACE_EVENT_CALL("ResourceAllocator.CreateResource", desc);
+        LogEvent("ResourceAllocator.CreateResource", desc);
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
@@ -625,6 +677,12 @@ namespace gpgmm { namespace d3d12 {
         heapDesc.SizeInBytes = heapSize;
         heapDesc.Alignment = heapAlignment;
         heapDesc.Flags = heapFlags;
+
+        if (heapSize % heapAlignment != 0) {
+            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResourceHeap",
+                            "Heap size is not a multiple of the alignment.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);
+        }
 
         ComPtr<ID3D12Heap> heap;
         ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));

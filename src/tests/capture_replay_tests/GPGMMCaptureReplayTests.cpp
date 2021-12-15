@@ -14,7 +14,7 @@
 
 #include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
-#include "src/common/Log.h"
+#include "src/common/Assert.h"
 #include "src/common/PlatformTime.h"
 #include "src/common/SystemUtils.h"
 
@@ -27,6 +27,22 @@ static const std::string kTraceIndex = GPGMM_CAPTURE_REPLAY_TESTS_TRACE_INDEX;
 namespace {
 
     GPGMMCaptureReplayTestEnvironment* gTestEnv = nullptr;
+
+    std::string LogSeverityToString(const gpgmm::LogSeverity& severity) {
+        switch (severity) {
+            case gpgmm::LogSeverity::Debug:
+                return "DEBUG";
+            case gpgmm::LogSeverity::Info:
+                return "INFO";
+            case gpgmm::LogSeverity::Warning:
+                return "WARN";
+            case gpgmm::LogSeverity::Error:
+                return "ERROR";
+            default:
+                UNREACHABLE();
+                return "";
+        }
+    }
 
 }  // namespace
 
@@ -57,11 +73,61 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        constexpr const char kRecordLevel[] = "--record-level";
+        arglen = sizeof(kRecordLevel) - 1;
+        if (strncmp(argv[i], kRecordLevel, arglen) == 0) {
+            const char* level = argv[i] + arglen;
+            if (level[0] != '\0') {
+                if (strcmp(level, "=DEBUG") == 0) {
+                    mRecordLevel = gpgmm::LogSeverity::Debug;
+                } else if (strcmp(level, "=INFO") == 0) {
+                    mRecordLevel = gpgmm::LogSeverity::Info;
+                } else if (strcmp(level, "=WARN") == 0) {
+                    mRecordLevel = gpgmm::LogSeverity::Warning;
+                } else if (strcmp(level, "=ERROR") == 0) {
+                    mRecordLevel = gpgmm::LogSeverity::Error;
+                } else {
+                    gpgmm::ErrorLog() << "Invalid record log level " << level;
+                    UNREACHABLE();
+                }
+            } else {
+                mRecordLevel = gpgmm::LogSeverity::Info;
+            }
+            continue;
+        }
+
+        constexpr const char kLogLevel[] = "--log-level";
+        arglen = sizeof(kLogLevel) - 1;
+        if (strncmp(argv[i], kLogLevel, arglen) == 0) {
+            const char* level = argv[i] + arglen;
+            if (level[0] != '\0') {
+                if (strcmp(level, "=DEBUG") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Debug;
+                } else if (strcmp(level, "=INFO") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Info;
+                } else if (strcmp(level, "=WARN") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Warning;
+                } else if (strcmp(level, "=ERROR") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Error;
+                } else {
+                    gpgmm::ErrorLog() << "Invalid log message level " << level;
+                    UNREACHABLE();
+                }
+            } else {
+                mLogLevel = gpgmm::LogSeverity::Warning;
+            }
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
                              << " --iterations: Number of times to replay the capture.\n"
                              << " --standalone-only: Disable sub-allocation.\n"
+                             << " --record-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
+                                "level to record logs.\n"
+                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
+                                "level for logs.\n"
                              << " --record-events: Re-record events upon replay.\n";
             continue;
         }
@@ -88,6 +154,8 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplayEnviromentSettings() c
               << "Use standalone allocations only: " << (mIsStandaloneOnly ? "true" : "false")
               << "\n"
               << "Re-record event trace on replay: " << (mIsRecordEvents ? "true" : "false") << "\n"
+              << "Record level: " << LogSeverityToString(mRecordLevel) << "\n"
+              << "Log level: " << LogSeverityToString(mLogLevel) << "\n"
               << std::endl;
 }
 
@@ -126,13 +194,22 @@ bool GPGMMCaptureReplayTestEnvironment::IsRecordEvents() const {
     return mIsRecordEvents;
 }
 
+const gpgmm::LogSeverity& GPGMMCaptureReplayTestEnvironment::GetRecordLevel() const {
+    return mRecordLevel;
+}
+
+const gpgmm::LogSeverity& GPGMMCaptureReplayTestEnvironment::GetLogLevel() const {
+    return mLogLevel;
+}
+
 CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
 void CaptureReplayTestWithParams::RunTestLoop() {
     for (uint32_t i = 0; i < gTestEnv->GetIterations(); i++) {
-        RunTest(GetParam(), gTestEnv->IsStandaloneOnly(), gTestEnv->IsRecordEvents());
+        RunTest(GetParam(), gTestEnv->IsStandaloneOnly(), gTestEnv->IsRecordEvents(),
+                gTestEnv->GetRecordLevel(), gTestEnv->GetLogLevel());
     }
 }
 

@@ -35,16 +35,18 @@
 // It creates a LogMessage object that isn't stored anywhere and gets its destructor called
 // immediately which outputs the stored ostringstream in the right place.
 //
-// This file also contains DAWN_DEBUG for "printf debugging" which works on Android and
+// This file also contains GPGMM_DEBUG for "printf debugging" which works on Android and
 // additionally outputs the file, line and function name. Use it this way:
 //
 //   // Pepper this throughout code to get a log of the execution
-//   DAWN_DEBUG();
+//   GPGMM_DEBUG();
 //
 //   // Get more information
-//   DAWN_DEBUG() << texture.GetFormat();
+//   GPGMM_DEBUG() << texture.GetFormat();
 
 #include <sstream>
+
+#include "src/TraceEvent.h"
 
 namespace gpgmm {
 
@@ -56,6 +58,14 @@ namespace gpgmm {
         Warning,
         Error,
     };
+
+    // Log messages of a given severity to be logged as events.
+    void SetRecordLogLevel(const LogSeverity& level);
+    const LogSeverity& GetRecordLevel();
+
+    // Log messages of a given severity to be logged to console.
+    void SetLogMessageLevel(const LogSeverity& level);
+    const LogSeverity& GetLogLevel();
 
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
@@ -86,11 +96,41 @@ namespace gpgmm {
     LogMessage WarningLog();
     LogMessage ErrorLog();
 
-    // DAWN_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
+    // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information
     LogMessage DebugLog(const char* file, const char* function, int line);
-#define DAWN_DEBUG() ::dawn::DebugLog(__FILE__, __func__, __LINE__)
+#define GPGMM_DEBUG() ::gpgmm::DebugLog(__FILE__, __func__, __LINE__)
 
+    template <typename T, typename SerializerT>
+    static void LogEvent(const char* name, const T& obj) {
+        if (IsEventTracerEnabled()) {
+            auto args = SerializerT::SerializeToJSON(obj);
+            TRACE_EVENT_INSTANT(name, args);
+        }
+    }
+
+    template <typename T, typename SerializerT, typename... Args>
+    static void LogEvent(const char* name, const Args&... args) {
+        if (IsEventTracerEnabled()) {
+            const T& obj{args...};
+            return LogEvent<T, SerializerT>(name, obj);
+        }
+    }
+
+    template <typename T, typename SerializerT, typename... Args>
+    static void LogMessageEvent(const LogSeverity& severity,
+                                const char* name,
+                                const Args&... args) {
+        const T& obj{args...};
+        if (severity >= GetLogLevel()) {
+            LogMessage logMessage(severity);
+            logMessage << name << SerializerT::SerializeToJSON(obj);
+        }
+
+        if (severity >= GetRecordLevel()) {
+            return LogEvent<T, SerializerT>(name, obj);
+        }
+    }
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_LOG_H_

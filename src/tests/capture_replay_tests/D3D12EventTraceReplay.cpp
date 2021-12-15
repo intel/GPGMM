@@ -87,6 +87,10 @@ namespace {
         return resourceDescriptor;
     }
 
+    bool IsErrorEvent(const Json::Value& args) {
+        return (args.isMember("Description") && args.isMember("ID"));
+    }
+
 }  // namespace
 
 class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
@@ -99,7 +103,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile, bool isStandaloneOnly, bool IsRecordEvents) override {
+    void RunTest(const TraceFile& traceFile,
+                 bool isStandaloneOnly,
+                 bool isRecordEvents,
+                 const gpgmm::LogSeverity& recordLogLevel,
+                 const gpgmm::LogSeverity& logMessageLevel) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -121,51 +129,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
              eventIndex++) {
             const Json::Value& event = traceEvents[eventIndex];
-            if (event["name"].asString() == "ResourceAllocator.CreateAllocator") {
-                // TODO: handle capture/re-play device mismatches.
-                allocatorDesc = CreateBasicAllocatorDesc();
-
-                const Json::Value& args = event["args"];
-                ASSERT_FALSE(args.empty());
-
-                allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
-                if (isStandaloneOnly) {
-                    allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
-                        allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED);
-                }
-
-                const Json::Value& recordOptions = args["RecordOptions"];
-                ASSERT_FALSE(recordOptions.empty());
-
-                if (IsRecordEvents) {
-                    allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
-                    allocatorDesc.RecordOptions.TraceFile = std::string(traceFile.name + ".json");
-                }
-
-                if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
-                    gpgmm::WarningLog() << "Capture device does not match replay device (IsUMA).";
-                }
-
-                if (allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
-                    gpgmm::WarningLog()
-                        << "Capture device does not match replay device (ResourceHeapTier).";
-                }
-
-                allocatorDesc.PreferredResourceHeapSize =
-                    args["PreferredResourceHeapSize"].asUInt64();
-                allocatorDesc.MaxResourceHeapSize = args["MaxResourceHeapSize"].asUInt64();
-                allocatorDesc.MaxResourceSizeForPooling =
-                    args["MaxResourceSizeForPooling"].asUInt64();
-                allocatorDesc.MaxVideoMemoryBudget = args["MaxVideoMemoryBudget"].asFloat();
-                allocatorDesc.TotalResourceBudgetLimit =
-                    args["TotalResourceBudgetLimit"].asUInt64();
-
-                // Defer CreateAllocator until ID is resolved by create object event.
-            } else if (event["name"].asString() == "ResourceAllocator.CreateResource") {
+            if (event["name"].asString() == "ResourceAllocator.CreateResource") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_INSTANT: {
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
+
+                        // TODO: Consider encoding type instead of checking fields.
+                        if (IsErrorEvent(args)) {
+                            continue;
+                        }
 
                         const ALLOCATION_DESC allocationDescriptor =
                             ConvertToAllocationDesc(args["allocationDescriptor"]);
@@ -232,6 +205,54 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 }
             } else if (event["name"].asString() == "ResourceAllocator") {
                 switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_INSTANT: {
+                        allocatorDesc = CreateBasicAllocatorDesc();
+
+                        const Json::Value& args = event["args"];
+                        ASSERT_FALSE(args.empty());
+
+                        allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                        if (isStandaloneOnly) {
+                            allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
+                                allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED);
+                        }
+
+                        const Json::Value& recordOptions = args["RecordOptions"];
+                        ASSERT_FALSE(recordOptions.empty());
+
+                        if (isRecordEvents) {
+                            allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
+                            allocatorDesc.RecordOptions.TraceFile =
+                                std::string(traceFile.name + ".json");
+                            allocatorDesc.RecordOptions.MinLogLevel =
+                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(recordLogLevel);
+                        }
+
+                        allocatorDesc.MinLogLevel =
+                            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(logMessageLevel);
+
+                        // TODO: handle capture/re-play device mismatches.
+                        if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
+                            gpgmm::WarningLog()
+                                << "Capture device does not match replay device (IsUMA).";
+                        }
+
+                        if (allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
+                            gpgmm::WarningLog() << "Capture device does not match replay device "
+                                                   "(ResourceHeapTier).";
+                        }
+
+                        allocatorDesc.PreferredResourceHeapSize =
+                            args["PreferredResourceHeapSize"].asUInt64();
+                        allocatorDesc.MaxResourceHeapSize = args["MaxResourceHeapSize"].asUInt64();
+                        allocatorDesc.MaxResourceSizeForPooling =
+                            args["MaxResourceSizeForPooling"].asUInt64();
+                        allocatorDesc.MaxVideoMemoryBudget = args["MaxVideoMemoryBudget"].asFloat();
+                        allocatorDesc.TotalResourceBudgetLimit =
+                            args["TotalResourceBudgetLimit"].asUInt64();
+
+                    } break;
+
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         ComPtr<ResourceAllocator> resourceAllocator;
                         ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator);
