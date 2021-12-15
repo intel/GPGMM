@@ -43,6 +43,14 @@ struct CaptureReplayMemoryStats {
     uint64_t CurrentUsage = 0;
 };
 
+struct TestEnviromentParams {
+    uint64_t Iterations = 1;  // Number of test iterations to run.
+    bool IsStandaloneOnly = false;
+    bool IsRegenerate = false;                                     // Should the allocator record.
+    gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;        // Level of logging.
+    gpgmm::LogSeverity RecordLevel = gpgmm::LogSeverity::Warning;  // Level of recording.
+};
+
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);
 
 class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
@@ -55,22 +63,12 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
 
     static std::vector<TraceFile> GenerateTraceFileParams();
 
-    uint64_t GetIterations() const;
-    bool IsStandaloneOnly() const;
-    bool IsRecordEvents() const;
-    const gpgmm::LogSeverity& GetRecordLevel() const;
-    const gpgmm::LogSeverity& GetLogLevel() const;
+    const TestEnviromentParams& GetParams() const;
 
   private:
     void PrintCaptureReplayEnviromentSettings() const;
 
-    // Options for RunTest.
-    uint64_t mIterations = 1;  // Number of test iterations to run.
-    bool mIsStandaloneOnly = false;
-    bool mIsRecordEvents = false;
-
-    gpgmm::LogSeverity mLogLevel = gpgmm::LogSeverity::Info;
-    gpgmm::LogSeverity mRecordLevel = gpgmm::LogSeverity::Warning;
+    TestEnviromentParams mParams = {};
 };
 
 class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
@@ -88,11 +86,7 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
-    virtual void RunTest(const TraceFile& traceFile,
-                         bool isStandaloneOnly,
-                         bool isRecordEvents,
-                         const gpgmm::LogSeverity& recordLogLevel,
-                         const gpgmm::LogSeverity& logMessageLevel) = 0;
+    virtual void RunTest(const TraceFile& traceFile, const TestEnviromentParams& envParams) = 0;
 
     void RunTestLoop();
 

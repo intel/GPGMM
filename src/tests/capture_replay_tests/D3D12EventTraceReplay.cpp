@@ -103,11 +103,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile,
-                 bool isStandaloneOnly,
-                 bool isRecordEvents,
-                 const gpgmm::LogSeverity& recordLogLevel,
-                 const gpgmm::LogSeverity& logMessageLevel) override {
+    void RunTest(const TraceFile& traceFile, const TestEnviromentParams& envParams) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -212,7 +208,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_FALSE(args.empty());
 
                         allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
-                        if (isStandaloneOnly) {
+                        if (envParams.IsStandaloneOnly) {
                             allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
                                 allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED);
                         }
@@ -220,16 +216,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& recordOptions = args["RecordOptions"];
                         ASSERT_FALSE(recordOptions.empty());
 
-                        if (isRecordEvents) {
+                        if (envParams.IsRegenerate) {
                             allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
                             allocatorDesc.RecordOptions.TraceFile =
                                 std::string(traceFile.name + ".json");
                             allocatorDesc.RecordOptions.MinLogLevel =
-                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(recordLogLevel);
+                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.RecordLevel);
                         }
 
                         allocatorDesc.MinLogLevel =
-                            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(logMessageLevel);
+                            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
 
                         // TODO: handle capture/re-play device mismatches.
                         if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
