@@ -159,8 +159,6 @@ namespace gpgmm { namespace d3d12 {
         // the corresponding LRU.
         ReturnIfFailed(InsertHeap(heap));
 
-        TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
-
         return S_OK;
     }
 
@@ -358,8 +356,6 @@ namespace gpgmm { namespace d3d12 {
 
             // Insert the heap into the appropriate LRU.
             InsertHeap(heap);
-
-            TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
         }
 
         if (localSizeToMakeResident > 0) {
@@ -430,6 +426,8 @@ namespace gpgmm { namespace d3d12 {
         cache->Append(heap);
 
         ASSERT(heap->IsInList());
+
+        TRACE_EVENT_SNAPSHOT_OBJECT("Heap", heap, heap->GetDesc());
 
         return S_OK;
     }
