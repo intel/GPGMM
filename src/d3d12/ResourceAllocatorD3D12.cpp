@@ -510,7 +510,7 @@ namespace gpgmm { namespace d3d12 {
                     ComPtr<ID3D12Resource> placedResource;
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
-                                                        resourceInfo, &newResourceDesc, clearValue,
+                                                        &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
@@ -538,9 +538,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // Attempt to create a resource allocation by placing a single resource fully contained
-        // in a resource heap. This strategy is slightly better then creating a standalone committed
-        // resource because a resource heap will not be reallocated by the OS until Trim() is
-        // called.
+        // in a resource heap. This strategy is slightly better then creating a committed
+        // resource because a placed resource's heap will not be reallocated by the OS until Trim()
+        // is called.
         // The time and space complexity is determined by the allocator type.
         if (!mIsAlwaysCommitted) {
             allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
@@ -554,10 +554,17 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, heapSize, heapAlignment, neverAllocate,
                 [&](const auto& allocation) -> HRESULT {
-                    ComPtr<ID3D12Resource> placedResource;
+                    // If the resource's heap cannot be pooled then it is no better then
+                    // calling CreateCommittedResource if the allocation is not fully contained.
                     Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
+                    if (resourceHeap->GetPool() == nullptr &&
+                        allocation.GetSize() % heapSize != 0) {
+                        return E_FAIL;
+                    }
+
+                    ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
-                                                        resourceInfo, &newResourceDesc, clearValue,
+                                                        &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
                     *resourceAllocationOut =
@@ -583,6 +590,12 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
+        if (!mIsAlwaysCommitted) {
+            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                            "Resource allocation could not be created from memory pool.",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED);
+        }
+
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(
@@ -591,8 +604,6 @@ namespace gpgmm { namespace d3d12 {
 
         *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(), this,
                                                         std::move(committedResource), resourceHeap};
-
-        // TODO: emit log message for effective mis-alignment of a commited resource.
 
         return S_OK;
     }
@@ -628,14 +639,12 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResource(
-        Heap* const resourceHeap,
-        uint64_t resourceOffset,
-        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
-        const D3D12_RESOURCE_DESC* resourceDescriptor,
-        const D3D12_CLEAR_VALUE* clearValue,
-        D3D12_RESOURCE_STATES initialResourceState,
-        ID3D12Resource** placedResourceOut) {
+    HRESULT ResourceAllocator::CreatePlacedResource(Heap* const resourceHeap,
+                                                    uint64_t resourceOffset,
+                                                    const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                                    const D3D12_CLEAR_VALUE* clearValue,
+                                                    D3D12_RESOURCE_STATES initialResourceState,
+                                                    ID3D12Resource** placedResourceOut) {
         if (resourceHeap == nullptr) {
             return E_FAIL;
         }

@@ -213,6 +213,10 @@ namespace gpgmm { namespace d3d12 {
         // size.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT = 0x4,
 
+        // Resource allocation was unable to be pool-allocated. This introduces OS VidMM overhead
+        // because non-pool allocated memory cannot be reused by the allocator.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED = 0x5,
+
     } ALLOCATOR_MESSAGE_ID;
 
     struct ALLOCATOR_MESSAGE {
@@ -276,7 +280,6 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
-                                     const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
                                      D3D12_RESOURCE_STATES initialResourceState,
