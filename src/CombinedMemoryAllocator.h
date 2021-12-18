@@ -29,11 +29,11 @@ namespace gpgmm {
 
         MemoryAllocator* PushAllocator(std::unique_ptr<MemoryAllocator> allocator);
 
+        // MemoryAllocator interface.
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                             uint64_t alignment,
                                                             bool neverAllocate) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
-
         void ReleaseMemory() override;
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;

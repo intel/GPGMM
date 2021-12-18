@@ -14,6 +14,7 @@
 
 #include "src/tests/D3D12Test.h"
 
+#include "src/common/Math.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/UtilsD3D12.h"
 
@@ -49,6 +50,30 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
         resourceDesc.SampleDesc.Quality = 0;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+        return resourceDesc;
+    }
+
+    static D3D12_RESOURCE_DESC CreateBasicTextureDesc(DXGI_FORMAT format,
+                                                      uint64_t width,
+                                                      uint64_t height,
+                                                      uint32_t sampleCount = 1) {
+        D3D12_RESOURCE_DESC resourceDesc;
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        resourceDesc.Alignment = 0;
+        resourceDesc.Width = width;
+        resourceDesc.Height = height;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = format;
+        resourceDesc.SampleDesc.Count = sampleCount;
+        resourceDesc.SampleDesc.Quality = 0;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
+        // A multisampled resource must have either D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET or
+        // D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL set.
+        resourceDesc.Flags =
+            (sampleCount > 1) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
+
         return resourceDesc;
     }
 
@@ -219,6 +244,34 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ASSERT_NE(allocation->GetResource(), nullptr);
 
         ASSERT_SUCCEEDED(allocation->Map());
+    }
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
+    // DXGI_FORMAT_R8G8B8A8_UNORM
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_TRUE(
+            gpgmm::IsAligned(allocation->GetSize(),
+                             static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)));
+    }
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateMultisampledTexture) {
+    // DXGI_FORMAT_R8G8B8A8_UNORM
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 4),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_TRUE(gpgmm::IsAligned(
+            allocation->GetSize(),
+            static_cast<uint32_t>(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)));
     }
 }
 
@@ -687,5 +740,59 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         EXPECT_EQ(stats.UsedResourceHeapUsage, 64u * 1024u);
         EXPECT_EQ(stats.UsedBlockCount, 2u);
         EXPECT_EQ(stats.UsedBlockUsage, kBufferSize * 2);
+    }
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
+    ComPtr<ResourceAllocator> poolAllocator;
+    {
+        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        allocatorDesc.MaxResourceSizeForPooling = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &poolAllocator));
+        ASSERT_NE(poolAllocator, nullptr);
+    }
+
+    // Only standalone allocations can be pool-allocated.
+    ALLOCATION_DESC standaloneAllocationDesc = {};
+    standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+
+    // Create a small texture of size A with it's own resource heap that will be returned to the
+    // pool.
+    {
+        ComPtr<ResourceAllocation> firstAllocation;
+        ASSERT_SUCCEEDED(poolAllocator->CreateResource(
+            standaloneAllocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
+        ASSERT_NE(firstAllocation, nullptr);
+        EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+        EXPECT_EQ(firstAllocation->GetSize(),
+                  static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
+    }
+
+    ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
+    reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(standaloneAllocationDesc.Flags |
+                                                            ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+
+    // Check the first small texture of size A was pool-allocated by creating it again.
+    {
+        ComPtr<ResourceAllocation> secondAllocation;
+        ASSERT_SUCCEEDED(poolAllocator->CreateResource(
+            reusePoolOnlyDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
+        ASSERT_NE(secondAllocation, nullptr);
+        EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+        EXPECT_EQ(secondAllocation->GetSize(),
+                  static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
+    }
+
+    // Check the first small texture of size A cannot be reused when creating a larger texture of
+    // size B.
+    {
+        ComPtr<ResourceAllocation> thirdAllocation;
+        ASSERT_FAILED(poolAllocator->CreateResource(
+            reusePoolOnlyDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 128, 128),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &thirdAllocation));
+        ASSERT_EQ(thirdAllocation, nullptr);
     }
 }
