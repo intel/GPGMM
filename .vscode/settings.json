@@ -21,8 +21,8 @@
     // approximate syntax highlighting. Ignore the linter warnings!
     // There's an extension for these files, excluding the linter headaches.
     // https://marketplace.visualstudio.com/items?itemName=npclaudiu.vscode-gn
-    "*.gni": "javascript",
-    "*.gn": "javascript",
+    "*.gni": "gn",
+    "*.gn": "gn",
     "*.ipp": "cpp"
   },
   "files.exclude": {
