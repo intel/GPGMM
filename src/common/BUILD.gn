@@ -121,6 +121,16 @@ config("gpgmm_common_config") {
         "/EHsc",
       ]
     }
+
+    # MSVC requires a dynamically linked library (.dll) to use a multi-thread
+    # dynamic runtime.
+    if (gpgmm_shared_library) {
+      if (is_debug) {
+        cflags += [ "/MDd" ]
+      } else {
+        cflags += [ "/MD" ]
+      }
+    }
   }
 }
 

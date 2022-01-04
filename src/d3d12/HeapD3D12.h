@@ -18,6 +18,7 @@
 
 #include "../common/LinkedList.h"
 #include "../common/RefCount.h"
+#include "../include/gpgmm_export.h"
 #include "src/Memory.h"
 #include "src/d3d12/d3d12_platform.h"
 
@@ -43,7 +44,7 @@ namespace gpgmm { namespace d3d12 {
     // allocated, and any time it is scheduled to be used by the GPU. This node is removed from the
     // LRU cache when it is evicted from resident memory due to budget constraints, or when the
     // pageable allocation is released.
-    class Heap : public MemoryBase, public LinkNode<Heap> {
+    class GPGMM_EXPORT Heap : public MemoryBase, public LinkNode<Heap> {
       public:
         Heap(ComPtr<ID3D12Pageable> pageable,
              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,

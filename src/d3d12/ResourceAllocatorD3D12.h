@@ -18,6 +18,7 @@
 
 #include "src/Allocator.h"
 #include "src/d3d12/IUnknownImplD3D12.h"
+#include "src/include/gpgmm_export.h"
 
 #include <array>
 #include <memory>
@@ -224,7 +225,7 @@ namespace gpgmm { namespace d3d12 {
         ALLOCATOR_MESSAGE_ID ID;
     };
 
-    class ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
+    class GPGMM_EXPORT ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
       public:
         // Creates the allocator and residency manager instance used to manage video memory for the
         // App specified device and adapter. Residency manager only exists if this adapter at-least
