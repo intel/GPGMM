@@ -62,3 +62,21 @@ jobs:
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
         ninja -C out\Release
+
+    - name: Run gpgmm_end2end_tests
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_end2end_tests.exe --check-device-leaks
+
+    - name: Run gpgmm_unittests
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_unittests.exe
+
+    - name: Run gpgmm_capture_replay_tests
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_capture_replay_tests.exe --check-device-leaks --log-level=DEBUG
