@@ -17,6 +17,15 @@
 
 namespace gpgmm {
 
+    CombinedMemoryAllocator::~CombinedMemoryAllocator() {
+        // Allocators must be destroyed in the reverse order they were created.
+        // Since the order of std::vector destruction differs between library
+        // implementations, explicitly unwind the allocator stack.
+        while (!mAllocators.empty()) {
+            mAllocators.pop_back();
+        }
+    }
+
     MemoryAllocator* CombinedMemoryAllocator::PushAllocator(
         std::unique_ptr<MemoryAllocator> allocator) {
         mAllocators.push_back(std::move(allocator));

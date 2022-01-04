@@ -25,7 +25,7 @@ namespace gpgmm {
     class CombinedMemoryAllocator : public MemoryAllocator {
       public:
         CombinedMemoryAllocator() = default;
-        ~CombinedMemoryAllocator() override = default;
+        ~CombinedMemoryAllocator() override;
 
         MemoryAllocator* PushAllocator(std::unique_ptr<MemoryAllocator> allocator);
 
