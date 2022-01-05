@@ -112,7 +112,7 @@ namespace gpgmm { namespace d3d12 {
             }
 
             if (resourceInfo.SizeInBytes == 0) {
-                resourceInfo.SizeInBytes = std::numeric_limits<uint64_t>::max();
+                resourceInfo.SizeInBytes = kInvalidSize;
             }
 
             return resourceInfo;
@@ -424,7 +424,7 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
-        if (resourceInfo.SizeInBytes == std::numeric_limits<uint64_t>::max()) {
+        if (resourceInfo.SizeInBytes == kInvalidSize) {
             return E_OUTOFMEMORY;
         }
 
