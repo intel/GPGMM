@@ -209,8 +209,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
                         if (envParams.IsStandaloneOnly) {
-                            allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(
-                                allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED);
+                            allocatorDesc.Flags =
+                                allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED;
                         }
 
                         const Json::Value& recordOptions = args["RecordOptions"];

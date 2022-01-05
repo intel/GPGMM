@@ -18,6 +18,7 @@ target_sources(gpgmm_common PRIVATE
   "Assert.cpp"
   "Assert.h"
   "Compiler.h"
+  "Flags.h"
   "Limits.h"
   "LinkedList.h"
   "Log.cpp"
