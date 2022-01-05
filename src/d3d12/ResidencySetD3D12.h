@@ -16,6 +16,7 @@
 #define GPGMM_D3D12_RESIDENCYSETD3D12_H_
 
 #include "src/d3d12/d3d12_platform.h"
+#include "src/include/gpgmm_export.h"
 
 #include <set>
 #include <vector>
@@ -27,7 +28,7 @@ namespace gpgmm { namespace d3d12 {
 
     // Represents a set of resource allocations which are referenced by a command list.
     // The set must be updated to ensure each allocations is resident for execution.
-    class ResidencySet {
+    class GPGMM_EXPORT ResidencySet {
       public:
         ResidencySet() = default;
         ~ResidencySet() = default;

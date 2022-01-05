@@ -17,6 +17,7 @@
 #define GPGMM_MEMORYALLOCATION_H_
 
 #include "common/Limits.h"
+#include "include/gpgmm_export.h"
 
 #include <cstdint>
 
@@ -44,7 +45,7 @@ namespace gpgmm {
     class MemoryAllocator;
 
     // Represents a location in memory.
-    class MemoryAllocation {
+    class GPGMM_EXPORT MemoryAllocation {
       public:
         MemoryAllocation();
 

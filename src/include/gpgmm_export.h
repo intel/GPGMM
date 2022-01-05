@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// export.h : Defines GPGMM_EXPORT, a macro for exporting functions from the DLL
+
 #ifndef GPGMM_EXPORT_H_
 #define GPGMM_EXPORT_H_
 

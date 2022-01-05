@@ -88,7 +88,12 @@ source_set("gpgmm_sources") {
     ":gpgmm_headers",
     "${gpgmm_root_dir}/src/common:gpgmm_common_sources",
   ]
-  defines = []
+
+  defines = [ "GPGMM_IMPLEMENTATION" ]
+
+  if (gpgmm_shared_library) {
+    defines += [ "GPGMM_SHARED_LIBRARY" ]
+  }
 
   if (gpgmm_always_record) {
     defines += [ "GPGMM_ALWAYS_RECORD" ]
@@ -199,7 +204,18 @@ source_set("gpgmm_sources") {
   }
 }
 
-source_set("gpgmm") {
+# Defines the type of target for GN to build.
+# GN source set acts as a stand-in replacement for a static library.
+# Unlike a static library, GN source set generates no intermediate object file
+# and all compiled object files are linked into the final target.
+# The GN style guide recommends source set over a static library to avoid
+# generating this extra lib (docs/style_guide.md).
+target_type = "source_set"
+if (gpgmm_shared_library) {
+  target_type = "shared_library"
+}
+
+target(target_type, "gpgmm") {
   public_deps = [ ":gpgmm_headers" ]
   deps = [ ":gpgmm_sources" ]
 }

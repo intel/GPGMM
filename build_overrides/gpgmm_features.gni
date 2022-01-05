@@ -43,4 +43,7 @@ declare_args() {
 
   # Enables compilation of WebNN's end2end tests.
   gpgmm_enable_webnn = checkout_webnn
+
+  # Build GPGMM as a shared library.
+  gpgmm_shared_library = false
 }

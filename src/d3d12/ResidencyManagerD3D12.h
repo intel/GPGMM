@@ -17,6 +17,7 @@
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
 #include "../common/LinkedList.h"
+#include "../include/gpgmm_export.h"
 #include "src/d3d12/IUnknownImplD3D12.h"
 
 #include <memory>
@@ -28,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
     class ResidencySet;
     class ResourceAllocator;
 
-    class ResidencyManager : public IUnknownImpl {
+    class GPGMM_EXPORT ResidencyManager : public IUnknownImpl {
       public:
         ~ResidencyManager();
 

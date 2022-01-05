@@ -47,6 +47,22 @@ jobs:
         copy scripts\standalone.gclient .gclient
         gclient sync
 
+    - name: Generate shared library for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        gn gen out\Debug --args="is_debug=true is_clang=false gpgmm_shared_library=true"
+
+    - name: Build shared library for main branch (with patch)
+      shell: cmd
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        cd test
+        ninja -C out\Debug gpgmm
+
     - name: Generate project for main branch (with patch)
       shell: cmd
       run: |

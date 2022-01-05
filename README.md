@@ -36,13 +36,13 @@ Get the source code as follows:
 ### Setting up the build
 Generate build files using `gn args out/Debug` or `gn args out/Release`.
 
-A text editor will appear asking build options, the most common option is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
+A text editor will appear asking build arguments, the most common argument is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
 
-To build with a backend, please set the corresponding option from following table.
+To build with a backend, please set the corresponding argument from following table.
 
-| Backend | Option |
+| Backend | Build argument |
 |---------|--------------|
-| D3D12 | `gpgmm_enable_d3d12=true` (default on winos) |
+| DirectX 12 | `gpgmm_enable_d3d12=true` (default on winos) |
 | Vulkan | `gpgmm_enable_vulkan=true` |
 
 ### Build
@@ -58,12 +58,12 @@ Run unit tests:
 
 Run end2end tests:
 ```sh
-> out/Release/gpgmm_end2end_tests
+> out/Debug/gpgmm_end2end_tests
 ```
 
 Run capture replay tests:
 ```sh
-> out/Release/gpgmm_capture_replay_tests
+> out/Debug/gpgmm_capture_replay_tests
 ```
 
 ## How do I use it?
@@ -140,14 +140,16 @@ target_link_libraries(proj PRIVATE gpgmm ...)
 
 ### Visual Studio (MSVC)
 
-```sh
-> gn gen out/gpgmm_static --args='is_clang=false'
-> ninja -C out/gpgmm_static gpgmm_static
-> xcopy out/gpgmm_static/obj/gpgmm_static.lib $(ProjectDir)
-```
-1. Right click solution project ("Property pages") > Configuration Properties.
-2. Add `gpgmm_static.lib` to Linker > Additional Dependencies.
-3. Add path(s) 1. `gpgmm` and 2. `gpgmm\src\include` to Include Directories.
+Dynamic Linked Library (DLL)
+
+Use `is_clang=false gpgmm_shared_library=true` when [Setting up the build](#Setting-up-the-build).
+Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the shared library (DLL).
+
+Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
+1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
+2. Under **Configuration Properties > C/C++ > General**, add `gpgmm` and `gpgmm\src\include` to **Additional Include Directories**.
+3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
+4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
 Then import:
 ```cpp

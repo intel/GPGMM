@@ -16,12 +16,13 @@
 #define GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
 
 #include "src/d3d12/d3d12_platform.h"
+#include "src/include/gpgmm_export.h"
 
 #include "../common/RefCount.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    class IUnknownImpl : public IUnknown, public RefCounted {
+    class GPGMM_EXPORT IUnknownImpl : public IUnknown, public RefCounted {
       public:
         IUnknownImpl();
         virtual ~IUnknownImpl() = default;
