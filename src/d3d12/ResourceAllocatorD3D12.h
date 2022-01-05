@@ -17,6 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "src/Allocator.h"
+#include "src/common/Flags.h"
 #include "src/d3d12/IUnknownImplD3D12.h"
 #include "src/include/gpgmm_export.h"
 
@@ -51,6 +52,9 @@ namespace gpgmm { namespace d3d12 {
 
     } ALLOCATOR_FLAGS;
 
+    using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
+    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_FLAGS_TYPE)
+
     typedef enum ALLOCATOR_MESSAGE_SEVERITY {
         ALLOCATOR_MESSAGE_SEVERITY_MESSAGE = 0,
         ALLOCATOR_MESSAGE_SEVERITY_INFO = 1,
@@ -68,9 +72,12 @@ namespace gpgmm { namespace d3d12 {
 
     } ALLOCATOR_RECORD_FLAGS;
 
+    using ALLOCATOR_RECORD_FLAGS_TYPE = Flags<ALLOCATOR_RECORD_FLAGS>;
+    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_FLAGS_TYPE)
+
     struct ALLOCATOR_RECORD_OPTIONS {
         // Flags used to control how the allocator will record.
-        ALLOCATOR_RECORD_FLAGS Flags = ALLOCATOR_RECORD_FLAG_NONE;
+        ALLOCATOR_RECORD_FLAGS_TYPE Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
         // Minimum severity level to record messages. Messages with lower severity
         // will be ignored.
@@ -88,7 +95,7 @@ namespace gpgmm { namespace d3d12 {
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
-        ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
+        ALLOCATOR_FLAGS_TYPE Flags = ALLOCATOR_FLAG_NONE;
 
         // Minimum severity level to log messages to console. Messages with lower severity
         // will be ignored.
@@ -169,9 +176,12 @@ namespace gpgmm { namespace d3d12 {
 
     } ALLOCATION_FLAGS;
 
+    using ALLOCATION_FLAGS_TYPE = Flags<ALLOCATION_FLAGS>;
+    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATION_FLAGS_TYPE)
+
     struct ALLOCATION_DESC {
         // Flags used to control how the resource will be allocated.
-        ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
+        ALLOCATION_FLAGS_TYPE Flags = ALLOCATION_FLAG_NONE;
 
         // Heap type that the resource to be allocated requires.
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;

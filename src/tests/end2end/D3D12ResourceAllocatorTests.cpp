@@ -464,8 +464,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
         EXPECT_NE(subAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
     }
 
-    allocationDesc.Flags = static_cast<ALLOCATION_FLAGS>(ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY |
-                                                         ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+    allocationDesc.Flags =
+        ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
     {
         ComPtr<ResourceAllocation> subAllocation;
         ASSERT_FAILED(mDefaultAllocator->CreateResource(
@@ -565,8 +565,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     // Create buffer of size A again with it's own resource heap from the pool.
     {
         ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-        reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        reusePoolOnlyDesc.Flags =
+            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize),
@@ -580,8 +580,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     // Create buffer of size B again with it's own resource heap from the pool.
     {
         ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-        reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        reusePoolOnlyDesc.Flags =
+            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize / 2),
@@ -598,8 +598,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     // Create buffer of size A again with it's own resource heap from the empty pool.
     {
         ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-        reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        reusePoolOnlyDesc.Flags =
+            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
         ComPtr<ResourceAllocation> allocation;
         ASSERT_FAILED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize),
@@ -609,8 +609,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     // Create buffer of size A again with it's own resource heap from the empty pool.
     {
         ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-        reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        reusePoolOnlyDesc.Flags =
+            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
         ComPtr<ResourceAllocation> allocation;
         ASSERT_FAILED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize / 2),
@@ -771,8 +771,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
     }
 
     ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-    reusePoolOnlyDesc.Flags = static_cast<ALLOCATION_FLAGS>(standaloneAllocationDesc.Flags |
-                                                            ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+    reusePoolOnlyDesc.Flags =
+        standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
     // Check the first small texture of size A was pool-allocated by creating it again.
     {
