@@ -27,8 +27,12 @@ namespace gpgmm { namespace d3d12 {
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(memorySegmentGroup),
           mResidencyLock(0) {
+        ASSERT(mPageable != nullptr);
+
         TRACE_EVENT_NEW_OBJECT("Heap", this);
         TRACE_EVENT_SNAPSHOT_OBJECT("Heap", this, GetDesc());
+
+        mPageable->SetName(L"GPGMM managed heap");
     }
 
     // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
