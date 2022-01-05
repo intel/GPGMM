@@ -37,7 +37,7 @@ namespace gpgmm { namespace d3d12 {
     class ResourceAllocation;
     class ResourceHeapAllocator;
 
-    typedef enum ALLOCATOR_FLAGS {
+    enum ALLOCATOR_FLAGS {
 
         // Disables all allocator flags. Enabled by default.
         ALLOCATOR_FLAG_NONE = 0x0,
@@ -50,19 +50,19 @@ namespace gpgmm { namespace d3d12 {
         // to debug with residency being over committed.
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
-    } ALLOCATOR_FLAGS;
+    };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_FLAGS_TYPE)
 
-    typedef enum ALLOCATOR_MESSAGE_SEVERITY {
+    enum ALLOCATOR_MESSAGE_SEVERITY {
         ALLOCATOR_MESSAGE_SEVERITY_MESSAGE = 0,
         ALLOCATOR_MESSAGE_SEVERITY_INFO = 1,
         ALLOCATOR_MESSAGE_SEVERITY_WARNING = 2,
         ALLOCATOR_MESSAGE_SEVERITY_ERROR = 3,
-    } ALLOCATOR_MESSAGE_SEVERITY;
+    };
 
-    typedef enum ALLOCATOR_RECORD_FLAGS {
+    enum ALLOCATOR_RECORD_FLAGS {
 
         // Disables all recording flags. Enabled by default.
         ALLOCATOR_RECORD_FLAG_NONE = 0x0,
@@ -70,7 +70,7 @@ namespace gpgmm { namespace d3d12 {
         // Configures event-based tracing using the Trace Event API.
         ALLOCATOR_RECORD_FLAG_TRACE_EVENTS = 0x1,
 
-    } ALLOCATOR_RECORD_FLAGS;
+    };
 
     using ALLOCATOR_RECORD_FLAGS_TYPE = Flags<ALLOCATOR_RECORD_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_FLAGS_TYPE)
@@ -151,7 +151,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t VideoMemoryEvictSize;
     };
 
-    typedef enum ALLOCATION_FLAGS {
+    enum ALLOCATION_FLAGS {
 
         // Disables all allocation flags. Enabled by default.
         ALLOCATION_FLAG_NONE = 0x0,
@@ -174,7 +174,7 @@ namespace gpgmm { namespace d3d12 {
         // heap. The created resource will always be allocated with it's own resource heap.
         ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
-    } ALLOCATION_FLAGS;
+    };
 
     using ALLOCATION_FLAGS_TYPE = Flags<ALLOCATION_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATION_FLAGS_TYPE)
@@ -201,7 +201,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t UsedResourceHeapUsage;
     };
 
-    typedef enum ALLOCATOR_MESSAGE_ID {
+    enum ALLOCATOR_MESSAGE_ID {
         // D3D12 rejected the resource alignment specified.
         // The alignment value could be incorrect or use a resource that is unsupported by the
         // driver.
@@ -228,7 +228,7 @@ namespace gpgmm { namespace d3d12 {
         // because non-pool allocated memory cannot be reused by the allocator.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED = 0x5,
 
-    } ALLOCATOR_MESSAGE_ID;
+    };
 
     struct ALLOCATOR_MESSAGE {
         std::string Description;

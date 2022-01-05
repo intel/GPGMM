@@ -35,7 +35,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Combines heap type and flags used to allocate memory for resources into a single type for
         // allocator lookup.
-        typedef enum RESOURCE_HEAP_TYPE {
+        enum RESOURCE_HEAP_TYPE {
             // Resource heap tier 2
             // Resource heaps contain all buffer and textures types.
             RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x0,
@@ -52,7 +52,7 @@ namespace gpgmm { namespace d3d12 {
             RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 0x7,
 
             RESOURCE_HEAP_TYPE_INVALID,
-        } RESOURCE_HEAP_TYPE;
+        };
 
         DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                                  bool isUMA,
