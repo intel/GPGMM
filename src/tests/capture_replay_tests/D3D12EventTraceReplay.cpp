@@ -263,8 +263,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         ComPtr<ResourceAllocator> resourceAllocator;
-                        ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator);
-                        ASSERT_NE(resourceAllocator, nullptr);
+                        ASSERT_SUCCEEDED(
+                            ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
 
                         // Assume subsequent events are always against this allocator instance.
                         // This is because call trace events have no ID associated with them.
@@ -280,14 +280,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         auto it = allocatorToIDMap.find(traceEventID);
                         ASSERT_TRUE(it != allocatorToIDMap.end());
-
-                        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-                        ComPtr<ResourceAllocator> allocator = it->second;
-                        ASSERT_SUCCEEDED(allocator->QueryResourceAllocatorInfo(&info));
-
-                        mHeapStats.TotalCount = info.UsedResourceHeapCount;
-                        mHeapStats.TotalSize = info.UsedResourceHeapUsage;
-
                         ASSERT_EQ(allocatorToIDMap.erase(traceEventID), 1u);
                     } break;
 
@@ -310,6 +302,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             snapshot["MemorySegmentGroup"].asInt());
                         heapDesc.Size = snapshot["Size"].asUInt64();
 
+                        mHeapStats.TotalSize += heapDesc.Size;
+                        mHeapStats.TotalCount++;
                         mHeapStats.CurrentUsage += heapDesc.Size;
                         mHeapStats.PeakUsage =
                             std::max(mHeapStats.PeakUsage, mHeapStats.CurrentUsage);
