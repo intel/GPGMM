@@ -66,7 +66,7 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
     const TestEnviromentParams& GetParams() const;
 
   private:
-    void PrintCaptureReplayEnviromentSettings() const;
+    void PrintCaptureReplaySettings() const;
 
     TestEnviromentParams mParams = {};
 };

@@ -133,7 +133,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         }
     }
 
-    PrintCaptureReplayEnviromentSettings();
+    PrintCaptureReplaySettings();
 }
 
 GPGMMCaptureReplayTestEnvironment::~GPGMMCaptureReplayTestEnvironment() = default;
@@ -148,11 +148,12 @@ void GPGMMCaptureReplayTestEnvironment::TearDown() {
     GPGMMTestEnvironment::TearDown();
 }
 
-void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplayEnviromentSettings() const {
-    std::cout << "Playback enviroment settings\n"
+void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
+    std::cout << "Playback environment settings\n"
                  "------------------------\n"
-              << "Use standalone allocations only: "
-              << (mParams.IsStandaloneOnly ? "true" : "false") << "\n"
+              << "Iterations per test: " << mParams.Iterations << "\n"
+              << "Standalone allocations only: " << (mParams.IsStandaloneOnly ? "true" : "false")
+              << "\n"
               << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false") << "\n"
               << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
               << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
