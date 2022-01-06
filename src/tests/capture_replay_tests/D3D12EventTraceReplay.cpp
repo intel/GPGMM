@@ -228,12 +228,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
 
                         // TODO: handle capture/re-play device mismatches.
-                        if (allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
+                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
+                            allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match replay device (IsUMA).";
                         }
 
-                        if (allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
+                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
+                            allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
                             gpgmm::WarningLog() << "Capture device does not match replay device "
                                                    "(ResourceHeapTier).";
                         }
