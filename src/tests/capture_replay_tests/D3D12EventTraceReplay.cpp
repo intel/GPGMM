@@ -180,12 +180,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         mResourceAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
                         mResourceAllocationStats.TotalCount++;
+                        mResourceAllocationStats.CurrentUsage += newAllocationWithoutID->GetSize();
+                        mResourceAllocationStats.PeakUsage =
+                            std::max(mResourceAllocationStats.PeakUsage,
+                                     mResourceAllocationStats.CurrentUsage);
 
                         ASSERT_TRUE(newAllocationWithoutID.Reset() == 1);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& traceEventID = event["id"].asString();
+
+                        auto it = allocationToIDMap.find(traceEventID);
+                        ASSERT_TRUE(it != allocationToIDMap.end());
+                        {
+                            ResourceAllocation* allocation = it->second.Get();
+                            mResourceAllocationStats.CurrentUsage -= allocation->GetSize();
+                        }
 
                         mPlatformTime->StartElapsedTime();
 
@@ -227,7 +238,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         allocatorDesc.MinLogLevel =
                             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
 
-                        // TODO: handle capture/re-play device mismatches.
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
                             gpgmm::WarningLog()
