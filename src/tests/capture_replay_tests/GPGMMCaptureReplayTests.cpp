@@ -24,6 +24,8 @@
 
 static const std::string kTraceIndex = GPGMM_CAPTURE_REPLAY_TESTS_TRACE_INDEX;
 
+static TraceFile gSingleTraceFile = {"SingleTrace", ""};
+
 namespace {
 
     GPGMMCaptureReplayTestEnvironment* gTestEnv = nullptr;
@@ -119,6 +121,19 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        constexpr const char kPlaybackFile[] = "--playback-file=";
+        arglen = sizeof(kPlaybackFile) - 1;
+        if (strncmp(argv[i], kPlaybackFile, arglen) == 0) {
+            const char* path = argv[i] + arglen;
+            if (path[0] != '\0') {
+                gSingleTraceFile.path = std::string(path);
+            } else {
+                gpgmm::ErrorLog() << "Invalid playback file path " << path;
+                UNREACHABLE();
+            }
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
@@ -128,7 +143,8 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                                 "level to record logs.\n"
                              << " --log-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
                                 "level for logs.\n"
-                             << " --regenerate: Capture again upon playback.\n";
+                             << " --regenerate: Capture again upon playback.\n"
+                             << " --playback-file: Path to single capture file to playback.\n";
             continue;
         }
     }
@@ -162,12 +178,17 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
 
 // static
 std::vector<TraceFile> GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParams() {
+    // Playback only the trace file specified in command-line.
+    if (!gSingleTraceFile.path.empty()) {
+        return {gSingleTraceFile};
+    }
+
     Json::Value root;
     Json::Reader reader;
     std::ifstream traceIndex(kTraceIndex, std::ifstream::binary);
     bool result = reader.parse(traceIndex, root, false);
     if (!result) {
-        std::cout << "Unable to parse: " << kTraceIndex << "." << std::endl;
+        gpgmm::ErrorLog() << "Unable to parse: " << kTraceIndex;
         return {};
     }
 
