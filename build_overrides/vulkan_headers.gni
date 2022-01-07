@@ -4,4 +4,4 @@
 
 import("//build/config/ui.gni")
 
-vulkan_use_x11 = use_x11
+vulkan_use_x11 = false

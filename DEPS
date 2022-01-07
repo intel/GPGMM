@@ -70,7 +70,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@df0528b581a1709ccad790c205d3c11d0b657ed6',
+    'url': '{chromium_git}/vulkan-deps@b2b44c000ee6dd3beaf2a381bbc9a24a270c84a1',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
