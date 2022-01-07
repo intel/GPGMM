@@ -4,6 +4,7 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
   'checkout_dawn',
   'checkout_webnn',
+  'generate_location_tags',
 ]
 
 vars = {
@@ -18,6 +19,9 @@ vars = {
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,
+
+  # Required by Chromium's //testing to generate directory->tags mapping used by ResultDB.
+  'generate_location_tags': False,
 }
 
 deps = {
@@ -62,7 +66,7 @@ deps = {
 
   # Testing, GTest and GMock
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@3e2640a325dc34ec3d9cb2802b8da874aecaf52d',
+    'url': '{chromium_git}/chromium/src/testing@d485ae97b7900c1fb7edfbe2901ae5adcb120865',
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
@@ -71,6 +75,11 @@ deps = {
   },
   'third_party/vulkan-deps': {
     'url': '{chromium_git}/vulkan-deps@df0528b581a1709ccad790c205d3c11d0b657ed6',
+    'condition': 'gpgmm_standalone',
+  },
+  # Dependency of //testing
+  'third_party/catapult': {
+    'url': '{chromium_git}/catapult.git@fa35beefb3429605035f98211ddb8750dee6a13d',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
