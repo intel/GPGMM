@@ -173,8 +173,26 @@ hooks = [
   },
   # Apply Dawn-GPGMM integration patch.
   # Patch can be removed should GPGMM be merged into upstream.
+  # Removes un-tracked files from previous apply.
   {
-    'name': 'apply_dawn_integration_patch',
+    'name': 'apply_dawn_integration_patch_1',
+    'pattern': '.',
+    'condition': 'checkout_dawn',
+    'action': [ 'git', '-C', './third_party/dawn/',
+                'clean', '-f', '-x',
+    ],
+  },
+  # Removes un-staged changes from previous apply.
+  {
+    'name': 'apply_dawn_integration_patch_2',
+    'pattern': '.',
+    'condition': 'checkout_dawn',
+    'action': [ 'git', '-C', './third_party/dawn/',
+                'checkout', '--', '.',
+    ],
+  },
+  {
+    'name': 'apply_dawn_integration_patch_3',
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
