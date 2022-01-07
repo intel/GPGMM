@@ -32,7 +32,7 @@ deps = {
   },
 
   'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@f59b5bb7d349be685c99962a2047b84580fcdcfd',
+    'url': '{github_git}/webmachinelearning/webnn-native.git@462c43fffe89d40a4e5db171895b5e608500ee6c',
     'condition': 'checkout_webnn',
   },
 
