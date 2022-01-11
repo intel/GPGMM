@@ -15,8 +15,6 @@
 
 buildconfig = "//build/config/BUILDCONFIG.gn"
 
-script_executable = "python3"
-
 default_args = {
   clang_use_chrome_plugins = false
 

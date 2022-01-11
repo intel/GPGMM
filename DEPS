@@ -85,14 +85,14 @@ hooks = [
     'name': 'sysroot_x86',
     'pattern': '.',
     'condition': 'checkout_linux and ((checkout_x86 or checkout_x64) and gpgmm_standalone)',
-    'action': ['python3', 'build/linux/sysroot_scripts/install-sysroot.py',
+    'action': ['python', 'build/linux/sysroot_scripts/install-sysroot.py',
                '--arch=x86'],
   },
   {
     'name': 'sysroot_x64',
     'pattern': '.',
     'condition': 'checkout_linux and (checkout_x64 and gpgmm_standalone)',
-    'action': ['python3', 'build/linux/sysroot_scripts/install-sysroot.py',
+    'action': ['python', 'build/linux/sysroot_scripts/install-sysroot.py',
                '--arch=x64'],
   },
   {
@@ -101,20 +101,20 @@ hooks = [
     'name': 'mac_toolchain',
     'pattern': '.',
     'condition': 'checkout_mac',
-    'action': ['python3', 'build/mac_toolchain.py'],
+    'action': ['python', 'build/mac_toolchain.py'],
   },
   {
     # Update the Windows toolchain if necessary. Must run before 'clang' below.
     'name': 'win_toolchain',
     'pattern': '.',
     'condition': 'checkout_win and gpgmm_standalone',
-    'action': ['python3', 'build/vs_toolchain.py', 'update', '--force'],
+    'action': ['python', 'build/vs_toolchain.py', 'update', '--force'],
   },
   {
     # Note: On Win, this should run after win_toolchain, as it may use it.
     'name': 'clang',
     'pattern': '.',
-    'action': ['python3', 'tools/clang/scripts/update.py'],
+    'action': ['python', 'tools/clang/scripts/update.py'],
     'condition': 'gpgmm_standalone',
   },
   {
@@ -168,7 +168,7 @@ hooks = [
     'name': 'lastchange',
     'pattern': '.',
     'condition': 'gpgmm_standalone',
-    'action': ['python3', 'build/util/lastchange.py',
+    'action': ['python', 'build/util/lastchange.py',
                '-o', 'build/util/LASTCHANGE'],
   },
   # Apply Dawn-GPGMM integration patch.
