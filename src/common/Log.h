@@ -46,8 +46,6 @@
 
 #include <sstream>
 
-#include "src/TraceEvent.h"
-
 namespace gpgmm {
 
     // Log levels mostly used to signal intent where the log message is produced and used to route
@@ -101,36 +99,6 @@ namespace gpgmm {
     LogMessage DebugLog(const char* file, const char* function, int line);
 #define GPGMM_DEBUG() ::gpgmm::DebugLog(__FILE__, __func__, __LINE__)
 
-    template <typename T, typename SerializerT>
-    static void LogEvent(const char* name, const T& obj) {
-        if (IsEventTracerEnabled()) {
-            auto args = SerializerT::SerializeToJSON(obj);
-            TRACE_EVENT_INSTANT(name, args);
-        }
-    }
-
-    template <typename T, typename SerializerT, typename... Args>
-    static void LogEvent(const char* name, const Args&... args) {
-        if (IsEventTracerEnabled()) {
-            const T& obj{args...};
-            return LogEvent<T, SerializerT>(name, obj);
-        }
-    }
-
-    template <typename T, typename SerializerT, typename... Args>
-    static void LogMessageEvent(const LogSeverity& severity,
-                                const char* name,
-                                const Args&... args) {
-        const T& obj{args...};
-        if (severity >= GetLogLevel()) {
-            LogMessage logMessage(severity);
-            logMessage << name << SerializerT::SerializeToJSON(obj);
-        }
-
-        if (severity >= GetRecordLevel()) {
-            return LogEvent<T, SerializerT>(name, obj);
-        }
-    }
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_LOG_H_
