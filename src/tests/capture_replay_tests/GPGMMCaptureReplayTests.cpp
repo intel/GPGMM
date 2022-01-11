@@ -65,7 +65,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--standalone-only", argv[i]) == 0) {
+        if (strcmp("--disable-suballocation", argv[i]) == 0) {
             mParams.IsStandaloneOnly = true;
             continue;
         }
@@ -138,7 +138,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
                              << " --iterations: Number of times to playback the capture.\n"
-                             << " --standalone-only: Disable sub-allocation.\n"
+                             << " --disable-suballocation: Disable sub-allocation.\n"
                              << " --record-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
                                 "level to record logs.\n"
                              << " --log-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
