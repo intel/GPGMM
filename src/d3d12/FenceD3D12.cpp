@@ -14,7 +14,7 @@
 
 #include "src/d3d12/FenceD3D12.h"
 
-#include "../common/Assert.h"
+#include "src/common/Assert.h"
 #include "src/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {

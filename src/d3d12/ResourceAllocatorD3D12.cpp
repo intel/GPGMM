@@ -15,12 +15,12 @@
 
 #include "src/d3d12/ResourceAllocatorD3D12.h"
 
-#include "../common/Log.h"
-#include "../common/Math.h"
 #include "src/BuddyMemoryAllocator.h"
 #include "src/CombinedMemoryAllocator.h"
 #include "src/ConditionalMemoryAllocator.h"
 #include "src/SegmentedMemoryAllocator.h"
+#include "src/common/Log.h"
+#include "src/common/Math.h"
 #include "src/d3d12/BufferAllocatorD3D12.h"
 #include "src/d3d12/DefaultsD3D12.h"
 #include "src/d3d12/HeapD3D12.h"

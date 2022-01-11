@@ -18,7 +18,7 @@
 #include "src/d3d12/d3d12_platform.h"
 #include "src/include/gpgmm_export.h"
 
-#include "../common/RefCount.h"
+#include "src/common/RefCount.h"
 
 namespace gpgmm { namespace d3d12 {
 

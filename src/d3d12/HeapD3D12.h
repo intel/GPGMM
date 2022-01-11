@@ -16,11 +16,11 @@
 #ifndef GPGMM_D3D12_HEAPD3D12_H_
 #define GPGMM_D3D12_HEAPD3D12_H_
 
-#include "../common/LinkedList.h"
-#include "../common/RefCount.h"
-#include "../include/gpgmm_export.h"
 #include "src/Memory.h"
+#include "src/common/LinkedList.h"
+#include "src/common/RefCount.h"
 #include "src/d3d12/d3d12_platform.h"
+#include "src/include/gpgmm_export.h"
 
 #include <memory>
 
