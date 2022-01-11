@@ -15,6 +15,9 @@
 #ifndef GPGMM_JSONSERIALIZER_H_
 #define GPGMM_JSONSERIALIZER_H_
 
+#include "common/Log.h"
+#include "src/TraceEvent.h"
+
 #include <string>
 
 namespace gpgmm {
@@ -30,6 +33,37 @@ namespace gpgmm {
             return static_cast<D*>(&serializer)->AppendTo(value);
         }
     };
+
+    template <typename T, typename SerializerT>
+    static void LogEvent(const char* name, const T& obj) {
+        if (IsEventTracerEnabled()) {
+            auto args = SerializerT::SerializeToJSON(obj);
+            TRACE_EVENT_INSTANT(name, args);
+        }
+    }
+
+    template <typename T, typename SerializerT, typename... Args>
+    static void LogEvent(const char* name, const Args&... args) {
+        if (IsEventTracerEnabled()) {
+            const T& obj{args...};
+            return LogEvent<T, SerializerT>(name, obj);
+        }
+    }
+
+    template <typename T, typename SerializerT, typename... Args>
+    static void LogMessageEvent(const LogSeverity& severity,
+                                const char* name,
+                                const Args&... args) {
+        const T& obj{args...};
+        if (severity >= GetLogLevel()) {
+            LogMessage logMessage(severity);
+            logMessage << name << SerializerT::SerializeToJSON(obj);
+        }
+
+        if (severity >= GetRecordLevel()) {
+            return LogEvent<T, SerializerT>(name, obj);
+        }
+    }
 
     struct POOL_DESC;
 
