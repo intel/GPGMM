@@ -23,8 +23,6 @@
 
 namespace gpgmm {
 
-    struct Block;
-
     // Represents how memory was allocated.
     enum AllocationMethod {
 
@@ -41,6 +39,7 @@ namespace gpgmm {
         kUndefined = 0x8
     };
 
+    struct Block;
     class MemoryBase;
     class MemoryAllocator;
 
