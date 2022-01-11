@@ -40,16 +40,33 @@ namespace gpgmm { namespace d3d12 {
     }  // namespace
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* memoryAllocator,
+                                           MemoryAllocator* subAllocator,
                                            uint64_t offsetFromHeap,
                                            Block* block,
                                            ComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator,
+        : MemoryAllocation(subAllocator,
                            resourceHeap,
                            offsetFromHeap,
                            AllocationMethod::kSubAllocated,
                            block),
+          mResourceAllocator(nullptr),
+          mResidencyManager(residencyManager),
+          mResource(std::move(placedResource)),
+          mOffsetFromResource(0) {
+        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
+    }
+
+    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
+                                           MemoryAllocator* standaloneAllocator,
+                                           ComPtr<ID3D12Resource> placedResource,
+                                           Heap* resourceHeap)
+        : MemoryAllocation(standaloneAllocator,
+                           resourceHeap,
+                           /*offsetFromHeap*/ 0,
+                           AllocationMethod::kStandalone,
+                           /*block*/ nullptr),
           mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
@@ -76,29 +93,12 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* memoryAllocator,
-                                           ComPtr<ID3D12Resource> placedResource,
-                                           Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator,
-                           resourceHeap,
-                           /*offsetFromHeap*/ 0,
-                           AllocationMethod::kStandalone,
-                           /*block*/ nullptr),
-          mResourceAllocator(nullptr),
-          mResidencyManager(residencyManager),
-          mResource(std::move(placedResource)),
-          mOffsetFromResource(0) {
-        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
-    }
-
-    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* memoryAllocator,
+                                           MemoryAllocator* subAllocator,
                                            Block* block,
                                            uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(memoryAllocator,
+        : MemoryAllocation(subAllocator,
                            resourceHeap,
                            kInvalidOffset,
                            AllocationMethod::kSubAllocatedWithin,

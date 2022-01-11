@@ -43,15 +43,15 @@ namespace gpgmm { namespace d3d12 {
       public:
         // Constructs a sub-allocated resource allocation.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* memoryAllocator,
+                           MemoryAllocator* subAllocator,
                            uint64_t offsetFromHeap,
                            Block* block,
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
-        // Constructs a standalone resource allocation using a memory allocator.
+        // Constructs a standalone resource allocation with a seperate memory block.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* memoryAllocator,
+                           MemoryAllocator* standaloneAllocator,
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
@@ -63,7 +63,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Constructs a sub-allocated allocation within a resource.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* memoryAllocator,
+                           MemoryAllocator* subAllocator,
                            Block* block,
                            uint64_t offsetFromResource,
                            ComPtr<ID3D12Resource> resource,
