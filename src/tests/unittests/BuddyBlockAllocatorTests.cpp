@@ -15,7 +15,7 @@
 
 #include <gtest/gtest.h>
 
-#include "src/BuddyBlockAllocator.h"
+#include "gpgmm/BuddyBlockAllocator.h"
 
 using namespace gpgmm;
 

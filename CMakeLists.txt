@@ -76,7 +76,7 @@ option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types"
 
 add_library(gpgmm_public_config INTERFACE)
 target_include_directories(gpgmm_public_config INTERFACE
-    "${GPGMM_ROOT_DIR}"
+    "${GPGMM_ROOT_DIR}/src"
     "${GPGMM_ROOT_DIR}/src/include"
 )
 
@@ -103,4 +103,4 @@ set(CMAKE_CXX_STANDARD "14")
 ################################################################################
 # Build subdirectories
 ################################################################################
-add_subdirectory(src)
+add_subdirectory(src/gpgmm)

@@ -14,9 +14,9 @@
 
 #include <gtest/gtest.h>
 
-#include <memory>
+#include "gpgmm/ConditionalMemoryAllocator.h"
 
-#include "src/ConditionalMemoryAllocator.h"
+#include <memory>
 
 using namespace gpgmm;
 

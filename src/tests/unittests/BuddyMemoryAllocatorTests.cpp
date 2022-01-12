@@ -15,10 +15,10 @@
 
 #include <gtest/gtest.h>
 
-#include "src/BuddyMemoryAllocator.h"
-#include "src/LIFOMemoryPool.h"
-#include "src/Memory.h"
-#include "src/PooledMemoryAllocator.h"
+#include "gpgmm/BuddyMemoryAllocator.h"
+#include "gpgmm/LIFOMemoryPool.h"
+#include "gpgmm/Memory.h"
+#include "gpgmm/PooledMemoryAllocator.h"
 
 #include <set>
 #include <vector>

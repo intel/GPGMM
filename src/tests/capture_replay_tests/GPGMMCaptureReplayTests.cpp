@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
+#include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
-#include "src/common/Assert.h"
-#include "src/common/PlatformTime.h"
-#include "src/common/SystemUtils.h"
+#include "gpgmm/common/Assert.h"
+#include "gpgmm/common/PlatformTime.h"
+#include "gpgmm/common/SystemUtils.h"
 
 #include <json/json.h>
 #include <fstream>

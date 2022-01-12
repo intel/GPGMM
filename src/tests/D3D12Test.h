@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/GPGMMTest.h"
+#include "tests/GPGMMTest.h"
 
-#include "src/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/d3d12_platform.h"
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
 #define ASSERT_SUCCEEDED(expr) ASSERT_TRUE(SUCCEEDED(expr))
