@@ -47,25 +47,25 @@ namespace gpgmm {
     }
 
     struct Desc {
-        enum Count {
-            kZero,
-            kOne = 1,
-            kTwo = 2,
-            kThree = 3,
+        enum Option {
+            kNone,
+            kFirst = 1,
+            kSecond = 2,
+            kThird = 3,
         };
 
-        using CountFlags = Flags<Count>;
+        using OptionFlags = Flags<Option>;
     };
 
-    DEFINE_OPERATORS_FOR_FLAGS(Desc::CountFlags)
+    DEFINE_OPERATORS_FOR_FLAGS(Desc::OptionFlags)
 
-    TEST(FlagsTests, struct) {
-        Desc::CountFlags a;
-        a |= Desc::kOne;
-        EXPECT_TRUE(a == Desc::kOne);
+    TEST(FlagsTests, Struct) {
+        Desc::OptionFlags a;
+        a |= Desc::kFirst;
+        EXPECT_TRUE(a == Desc::kFirst);
 
-        a |= Desc::kTwo;
-        EXPECT_TRUE(a == Desc::kThree);
+        a |= Desc::kSecond;
+        EXPECT_TRUE(a == Desc::kThird);
     }
 
 }  // namespace gpgmm
