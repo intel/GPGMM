@@ -31,7 +31,6 @@ namespace gpgmm { namespace d3d12 {
     class GPGMM_EXPORT ResidencySet {
       public:
         ResidencySet() = default;
-        ~ResidencySet() = default;
 
         HRESULT Insert(Heap* heap);
         HRESULT Reset();
