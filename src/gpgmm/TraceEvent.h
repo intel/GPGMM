@@ -144,7 +144,6 @@ namespace gpgmm {
                    double timestamp,
                    uint32_t flags,
                    std::string args);
-        ~TraceEvent() = default;
 
       private:
         friend FileEventTracer;

@@ -23,7 +23,6 @@ namespace gpgmm {
     class RefCounted {
       public:
         RefCounted(int_fast32_t initialRefCount);
-        ~RefCounted() = default;
 
         // Increments ref by one.
         void Ref();
