@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "gpgmm/common/Math.h"
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "tests/D3D12Test.h"
@@ -327,7 +328,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     EXPECT_EQ(allocation->GetSize(), kDefaultPreferredResourceHeapSize);
 
     // Commmitted resources cannot be backed by a D3D12 heap.
-    Heap* resourceHeap = static_cast<Heap*>(allocation->GetMemory());
+    Heap* resourceHeap = ToBackendType(allocation->GetMemory());
     ASSERT_NE(resourceHeap, nullptr);
     ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
 }
