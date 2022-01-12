@@ -13,13 +13,13 @@
 // limitations under the License.
 //
 
-#include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
+#include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
-#include "src/TraceEvent.h"
-#include "src/common/Log.h"
-#include "src/common/PlatformTime.h"
-#include "src/d3d12/UtilsD3D12.h"
-#include "src/tests/D3D12Test.h"
+#include "gpgmm/TraceEvent.h"
+#include "gpgmm/common/Log.h"
+#include "gpgmm/common/PlatformTime.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
+#include "tests/D3D12Test.h"
 
 #include <fstream>
 #include <string>

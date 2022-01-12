@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "src/common/Flags.h"
+#include "gpgmm/common/Flags.h"
 
 namespace gpgmm {
 

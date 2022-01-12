@@ -34,3 +34,8 @@ group("default") {
   testonly = true
   deps = [ ":all" ]
 }
+
+# This target is built when under third_party.
+group("gpgmm") {
+  deps = [ "src/gpgmm:gpgmm" ]
+}

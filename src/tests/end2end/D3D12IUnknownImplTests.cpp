@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "src/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/IUnknownImplD3D12.h"
 
 using namespace gpgmm::d3d12;
 

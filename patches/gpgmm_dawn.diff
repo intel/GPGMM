@@ -100,7 +100,7 @@ index 37254d73..c9cc6696 100644
    deps = [
      ":dawn_native_headers",
      ":dawn_native_utils_gen",
-+    "${dawn_gpgmm_dir}/src:gpgmm",
++    "${dawn_gpgmm_dir}:gpgmm",
      "${dawn_root}/src/common",
      "${dawn_spirv_tools_dir}:spvtools_opt",
      "${dawn_spirv_tools_dir}:spvtools_val",

@@ -15,9 +15,9 @@
 #ifndef TESTS_CAPTUREREPLAYTESTS_GPGMMCAPTUREREPLAYTESTS_H_
 #define TESTS_CAPTUREREPLAYTESTS_GPGMMCAPTUREREPLAYTESTS_H_
 
-#include "src/tests/GPGMMTest.h"
+#include "tests/GPGMMTest.h"
 
-#include "src/common/Log.h"
+#include "gpgmm/common/Log.h"
 
 #include <regex>
 #include <string>

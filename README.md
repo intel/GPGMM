@@ -124,7 +124,7 @@ GPGMM has built-in GN or CMake build targets.
 BUILD.gn
 ```gn
 source_set("proj") {
-  deps = [ "${gpgmm_dir}/src:gpgmm" ]
+  deps = [ "${gpgmm_dir}:gpgmm" ]
 }
 ```
 Create `build_overrides/gpgmm.gni` file in root directory.
@@ -134,7 +134,7 @@ Create `build_overrides/gpgmm.gni` file in root directory.
 CMakeLists.txt
 ```cmake
 add_subdirectory(gpgmm)
-target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/)
+target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/src)
 target_link_libraries(proj PRIVATE gpgmm ...)
 ```
 
@@ -147,7 +147,7 @@ Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the
 
 Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
-2. Under **Configuration Properties > C/C++ > General**, add `gpgmm` and `gpgmm\src\include` to **Additional Include Directories**.
+2. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src` and `gpgmm\src\include` to **Additional Include Directories**.
 3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
 4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
