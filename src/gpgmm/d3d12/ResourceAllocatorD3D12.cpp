@@ -21,6 +21,7 @@
 #include "gpgmm/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/Math.h"
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -474,7 +475,7 @@ namespace gpgmm { namespace d3d12 {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
-                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
+                    Heap* resourceHeap = ToBackendType(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
@@ -508,7 +509,7 @@ namespace gpgmm { namespace d3d12 {
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
+                    Heap* resourceHeap = ToBackendType(subAllocation.GetMemory());
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
@@ -556,7 +557,7 @@ namespace gpgmm { namespace d3d12 {
                 [&](const auto& allocation) -> HRESULT {
                     // If the resource's heap cannot be pooled then it is no better then
                     // calling CreateCommittedResource if the allocation is not fully contained.
-                    Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
+                    Heap* resourceHeap = ToBackendType(allocation.GetMemory());
                     if (resourceHeap->GetPool() == nullptr &&
                         allocation.GetSize() % heapSize != 0) {
                         return E_FAIL;

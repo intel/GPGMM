@@ -17,6 +17,7 @@
 
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/TraceEvent.h"
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
@@ -123,7 +124,7 @@ namespace gpgmm { namespace d3d12 {
         } else {
             ASSERT(GetMethod() == AllocationMethod::kStandalone);
             ASSERT(mResourceAllocator != nullptr);
-            Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+            Heap* resourceHeap = ToBackendType(GetMemory());
             mResourceAllocator->FreeResourceHeap(resourceHeap);
         }
 
@@ -140,7 +141,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocation::Map(uint32_t subresource,
                                     const D3D12_RANGE* readRange,
                                     void** dataOut) {
-        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        Heap* resourceHeap = ToBackendType(GetMemory());
         if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
@@ -177,7 +178,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
-        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        Heap* resourceHeap = ToBackendType(GetMemory());
         if (resourceHeap == nullptr) {
             return;
         }
@@ -202,7 +203,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
-        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        Heap* resourceHeap = ToBackendType(GetMemory());
         if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
@@ -224,7 +225,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_DESC ResourceAllocation::GetDesc() const {
-        Heap* resourceHeap = static_cast<Heap*>(GetMemory());
+        Heap* resourceHeap = ToBackendType(GetMemory());
         ASSERT(resourceHeap != nullptr);
 
         return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod(), resourceHeap};

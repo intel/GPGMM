@@ -14,6 +14,7 @@
 
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
@@ -70,7 +71,7 @@ namespace gpgmm { namespace d3d12 {
 
     void BufferAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         ASSERT(allocation != nullptr);
-        Heap* heap = static_cast<Heap*>(allocation->GetMemory());
+        Heap* heap = ToBackendType(allocation->GetMemory());
 
         mStats.UsedMemoryCount--;
         mStats.UsedMemoryUsage -= heap->GetSize();
