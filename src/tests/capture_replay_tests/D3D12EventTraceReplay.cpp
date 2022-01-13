@@ -162,7 +162,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocationDescriptor, resourceDescriptor, initialResourceState,
                             clearValuePtr, &newAllocationWithoutID));
 
-                        mCreateResourceStats.TotalCpuTime += mPlatformTime->EndElapsedTime();
+                        const double elapsedTime = mPlatformTime->EndElapsedTime();
+
+                        mCreateResourceStats.TotalCpuTime += elapsedTime;
+                        mCreateResourceStats.PeakCpuTime =
+                            std::max(elapsedTime, mCreateResourceStats.PeakCpuTime);
                         mCreateResourceStats.TotalNumOfCalls++;
 
                     } break;
@@ -202,7 +206,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ASSERT_EQ(allocationToIDMap.erase(traceEventID), 1u);
 
-                        mReleaseResourceStats.TotalCpuTime += mPlatformTime->EndElapsedTime();
+                        const double elapsedTime = mPlatformTime->EndElapsedTime();
+
+                        mReleaseResourceStats.TotalCpuTime += elapsedTime;
+                        mReleaseResourceStats.PeakCpuTime =
+                            std::max(elapsedTime, mReleaseResourceStats.PeakCpuTime);
                         mReleaseResourceStats.TotalNumOfCalls++;
 
                     } break;

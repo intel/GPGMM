@@ -33,6 +33,7 @@ struct TraceFile {
 
 struct CaptureReplayCallStats {
     double TotalCpuTime = 0;
+    double PeakCpuTime = 0;
     uint64_t TotalNumOfCalls = 0;
 };
 
