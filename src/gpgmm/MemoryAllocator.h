@@ -17,6 +17,7 @@
 #define GPGMM_MEMORYALLOCATOR_H_
 
 #include "gpgmm/BlockAllocator.h"
+#include "gpgmm/Error.h"
 #include "gpgmm/Memory.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/common/Assert.h"
@@ -83,10 +84,8 @@ namespace gpgmm {
             uint64_t blockSize,
             uint64_t blockAlignment,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
-            Block* block = blockAllocator->AllocateBlock(blockSize, blockAlignment);
-            if (block == nullptr) {
-                return nullptr;
-            }
+            Block* block = nullptr;
+            GPGMM_TRY_ASSIGN(blockAllocator->AllocateBlock(blockSize, blockAlignment), block);
 
             MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {

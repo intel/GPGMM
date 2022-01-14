@@ -120,6 +120,7 @@ source_set("gpgmm_sources") {
     "CombinedMemoryAllocator.h",
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
+    "Error.h",
     "IndexedMemoryPool.cpp",
     "IndexedMemoryPool.h",
     "JSONSerializer.cpp",

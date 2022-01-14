@@ -23,6 +23,7 @@ target_sources(gpgmm PRIVATE
     "BuddyMemoryAllocator.h"
     "ConditionalMemoryAllocator.cpp"
     "ConditionalMemoryAllocator.h"
+    "Error.h"
     "IndexedMemoryPool.cpp"
     "IndexedMemoryPool.h"
     "JSONSerializer.cpp"

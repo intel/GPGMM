@@ -152,10 +152,9 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> allocation = segment->GetPool()->AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->TryAllocateMemory(size, mMemoryAlignment, neverAllocate);
-            if (allocation == nullptr) {
-                return nullptr;
-            }
+            GPGMM_TRY_ASSIGN(
+                mMemoryAllocator->TryAllocateMemory(size, mMemoryAlignment, neverAllocate),
+                allocation);
         }
 
         allocation->GetMemory()->SetPool(segment->GetPool());

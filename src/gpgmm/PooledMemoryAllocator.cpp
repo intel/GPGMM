@@ -30,7 +30,8 @@ namespace gpgmm {
                                                                                bool neverAllocate) {
         std::unique_ptr<MemoryAllocation> allocation = mMemoryPool->AcquireFromPool();
         if (allocation == nullptr) {
-            allocation = mMemoryAllocator->TryAllocateMemory(size, alignment, neverAllocate);
+            GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(size, alignment, neverAllocate),
+                             allocation);
         }
 
         return allocation;
