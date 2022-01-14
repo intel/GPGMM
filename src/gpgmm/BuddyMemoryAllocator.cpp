@@ -70,11 +70,9 @@ namespace gpgmm {
 
                 // No existing, allocate new memory for the block.
                 if (memoryAllocation == nullptr) {
-                    memoryAllocation = mMemoryAllocator->TryAllocateMemory(
-                        mMemorySize, mMemoryAlignment, neverAllocate);
-                    if (memoryAllocation == nullptr) {
-                        return nullptr;
-                    }
+                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(
+                                         mMemorySize, mMemoryAlignment, neverAllocate),
+                                     memoryAllocation);
                 }
 
                 MemoryBase* memory = memoryAllocation->GetMemory();

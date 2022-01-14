@@ -16,6 +16,16 @@
 /tools
 /out
 
+# Files and directories added by CMake build
+CMakeFiles
+CMakeCache.txt
+[Dd]ebug/
+[Rr]elease/
+[Ll]og/
+
+*.pdb
+*.filters
+
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 
 ### Emacs ###
