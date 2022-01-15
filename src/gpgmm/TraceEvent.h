@@ -53,20 +53,6 @@ const std::string kNoArgs = "";
     } scopedTracedCall {              \
     }
 
-#define TRACE_EVENT_NEW_OBJECT(className, objPtr) \
-    TRACE_EVENT_OBJECT_CREATED_WITH_ID(className, objPtr)
-
-#define TRACE_EVENT_DELETE_OBJECT(className, objPtr) \
-    TRACE_EVENT_OBJECT_DELETED_WITH_ID(className, objPtr)
-
-#define TRACE_EVENT_SNAPSHOT_OBJECT(className, objPtr, desc)                              \
-    do {                                                                                  \
-        if (gpgmm::IsEventTracerEnabled()) {                                              \
-            auto GPGMM_LOCAL_SNAPSHOT = JSONSerializer::SerializeToJSON(desc);            \
-            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(className, objPtr, GPGMM_LOCAL_SNAPSHOT); \
-        }                                                                                 \
-    } while (false)
-
 #define TRACE_EVENT_INSTANT(name, args) \
     INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(TRACE_EVENT_PHASE_INSTANT, name, TRACE_EVENT_FLAG_NONE, args)
 

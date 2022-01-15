@@ -22,22 +22,25 @@
 
 namespace gpgmm {
 
-    // Uses the "curiously recurring template pattern" (CRTP) to allow an derived class to provide
-    // overloaded methods used to serialize backend structures to disk.
-    template <typename D>
-    class ObjectSerializer {
+    struct POOL_DESC;
+
+    class JSONSerializer {
       public:
-        template <typename T>
-        static std::string SerializeToJSON(const T& value) {
-            ObjectSerializer<D> serializer;
-            return static_cast<D*>(&serializer)->AppendTo(value);
-        }
+        static std::string AppendTo(const POOL_DESC& desc);
     };
+
+    template <typename T, typename DescT, typename SerializerT = JSONSerializer>
+    static void LogObject(const char* name, T* objPtr, const DescT& desc) {
+        if (IsEventTracerEnabled()) {
+            auto args = SerializerT::AppendTo(desc);
+            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, args);
+        }
+    }
 
     template <typename T, typename SerializerT>
     static void LogEvent(const char* name, const T& obj) {
         if (IsEventTracerEnabled()) {
-            auto args = SerializerT::SerializeToJSON(obj);
+            auto args = SerializerT::AppendTo(obj);
             TRACE_EVENT_INSTANT(name, args);
         }
     }
@@ -57,21 +60,13 @@ namespace gpgmm {
         const T& obj{args...};
         if (severity >= GetLogLevel()) {
             LogMessage logMessage(severity);
-            logMessage << name << SerializerT::SerializeToJSON(obj);
+            logMessage << name << SerializerT::AppendTo(obj);
         }
 
         if (severity >= GetRecordLevel()) {
             return LogEvent<T, SerializerT>(name, obj);
         }
     }
-
-    struct POOL_DESC;
-
-    class JSONSerializer : public ObjectSerializer<JSONSerializer> {
-      public:
-        static std::string AppendTo(const POOL_DESC& desc);
-    };
-
 }  // namespace gpgmm
 
 #endif  // GPGMM_JSONSERIALIZER_H_

@@ -31,7 +31,7 @@ namespace gpgmm {
             mPool.pop_front();
         }
 
-        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
+        LogObject("MemoryPool", this, GetDesc());
 
         return allocation;
     }
@@ -43,7 +43,7 @@ namespace gpgmm {
 
         mPool.push_front(std::move(allocation));
 
-        TRACE_EVENT_SNAPSHOT_OBJECT("MemoryPool", this, GetDesc());
+        LogObject("MemoryPool", this, GetDesc());
     }
 
     void LIFOMemoryPool::ReleasePool() {
