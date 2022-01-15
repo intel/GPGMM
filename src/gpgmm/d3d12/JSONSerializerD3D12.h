@@ -30,7 +30,7 @@ namespace gpgmm { namespace d3d12 {
     struct QUERY_RESOURCE_ALLOCATOR_INFO;
     struct ALLOCATOR_MESSAGE;
 
-    class JSONSerializer : public ObjectSerializer<JSONSerializer> {
+    class JSONSerializer {
       public:
         static std::string AppendTo(const ALLOCATOR_DESC& desc);
         static std::string AppendTo(const CREATE_RESOURCE_DESC& desc);
@@ -62,8 +62,13 @@ namespace gpgmm { namespace d3d12 {
     }
 
     template <typename T, typename... Args>
-    static void LogCallEvent(const char* name, const Args&... args) {
+    static void LogEvent(const char* name, const Args&... args) {
         return gpgmm::LogEvent<T, JSONSerializer>(name, args...);
+    }
+
+    template <typename T, typename DescT>
+    static void LogObject(const char* name, T* objPtr, const DescT& desc) {
+        return gpgmm::LogObject<T, DescT, JSONSerializer>(name, objPtr, desc);
     }
 
 }}  // namespace gpgmm::d3d12

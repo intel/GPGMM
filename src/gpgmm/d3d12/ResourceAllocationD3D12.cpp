@@ -55,8 +55,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
-        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("ResourceAllocation", this);
+        d3d12::LogObject("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -72,8 +72,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
-        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("ResourceAllocation", this);
+        d3d12::LogObject("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -89,8 +89,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
-        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("ResourceAllocation", this);
+        d3d12::LogObject("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -108,12 +108,12 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
-        TRACE_EVENT_NEW_OBJECT("ResourceAllocation", this);
-        TRACE_EVENT_SNAPSHOT_OBJECT("ResourceAllocation", this, GetDesc());
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("ResourceAllocation", this);
+        d3d12::LogObject("ResourceAllocation", this, GetDesc());
     }
 
     ResourceAllocation::~ResourceAllocation() {
-        TRACE_EVENT_DELETE_OBJECT("ResourceAllocation", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID("ResourceAllocation", this);
     }
 
     void ResourceAllocation::DeleteThis() {
