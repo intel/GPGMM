@@ -46,7 +46,8 @@ namespace gpgmm {
     // variable-size memory blocks.
     class SegmentedMemoryAllocator : public MemoryAllocator {
       public:
-        SegmentedMemoryAllocator(MemoryAllocator* memoryAllocator, uint64_t memoryAlignment);
+        SegmentedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
+                                 uint64_t memoryAlignment);
         ~SegmentedMemoryAllocator() override;
 
         // MemoryAllocator interface
@@ -60,8 +61,6 @@ namespace gpgmm {
 
       private:
         MemorySegment* GetOrCreateFreeSegment(uint64_t memorySize);
-
-        MemoryAllocator* const mMemoryAllocator;
 
         LinkedList<MemorySegment> mFreeSegments;
 

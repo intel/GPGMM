@@ -87,9 +87,10 @@ namespace gpgmm {
 
     // SegmentedMemoryAllocator
 
-    SegmentedMemoryAllocator::SegmentedMemoryAllocator(MemoryAllocator* memoryAllocator,
-                                                       uint64_t memoryAlignment)
-        : mMemoryAllocator(memoryAllocator), mMemoryAlignment(memoryAlignment) {
+    SegmentedMemoryAllocator::SegmentedMemoryAllocator(
+        std::unique_ptr<MemoryAllocator> memoryAllocator,
+        uint64_t memoryAlignment)
+        : MemoryAllocator(std::move(memoryAllocator)), mMemoryAlignment(memoryAlignment) {
     }
 
     SegmentedMemoryAllocator::~SegmentedMemoryAllocator() {
@@ -153,7 +154,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> allocation = segment->GetPool()->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(
-                mMemoryAllocator->TryAllocateMemory(size, mMemoryAlignment, neverAllocate),
+                GetFirstChild()->TryAllocateMemory(size, mMemoryAlignment, neverAllocate),
                 allocation);
         }
 
@@ -174,7 +175,7 @@ namespace gpgmm {
         ASSERT(pool != nullptr);
 
         pool->ReturnToPool(
-            std::make_unique<MemoryAllocation>(mMemoryAllocator, allocation->GetMemory()));
+            std::make_unique<MemoryAllocation>(GetFirstChild(), allocation->GetMemory()));
     }
 
     void SegmentedMemoryAllocator::ReleaseMemory() {

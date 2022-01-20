@@ -40,7 +40,7 @@ namespace gpgmm {
         BuddyMemoryAllocator(uint64_t systemSize,
                              uint64_t memorySize,
                              uint64_t memoryAlignment,
-                             MemoryAllocator* memoryAllocator);
+                             std::unique_ptr<MemoryAllocator> memoryAllocator);
         ~BuddyMemoryAllocator() override;
 
         // MemoryAllocator interface
@@ -56,8 +56,6 @@ namespace gpgmm {
 
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;
-
-        MemoryAllocator* const mMemoryAllocator;
 
         const uint64_t mMemorySize;
         const uint64_t mMemoryAlignment;

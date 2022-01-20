@@ -16,6 +16,16 @@
 
 namespace gpgmm {
 
+    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> childAllocator) {
+        AppendChild(std::move(childAllocator));
+    }
+
+    void MemoryAllocator::ReleaseMemory() {
+        for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
+            alloc->value()->ReleaseMemory();
+        }
+    }
+
     uint64_t MemoryAllocator::GetMemorySize() const {
         ASSERT(false);
         return kInvalidSize;
@@ -25,4 +35,21 @@ namespace gpgmm {
         ASSERT(false);
         return kInvalidOffset;
     }
+
+    MEMORY_ALLOCATOR_INFO MemoryAllocator::QueryInfo() const {
+        if (!HasChild()) {
+            return mStats;
+        }
+
+        MEMORY_ALLOCATOR_INFO combinedStats = mStats;
+        for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
+            const MEMORY_ALLOCATOR_INFO stats = alloc->value()->QueryInfo();
+            combinedStats.UsedBlockCount += stats.UsedBlockCount;
+            combinedStats.UsedMemoryCount += stats.UsedMemoryCount;
+            combinedStats.UsedMemoryUsage += stats.UsedMemoryUsage;
+            combinedStats.UsedBlockUsage += stats.UsedBlockUsage;
+        }
+        return combinedStats;
+    }
+
 }  // namespace gpgmm

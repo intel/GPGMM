@@ -39,8 +39,8 @@ class SegmentedMemoryAllocatorTests : public testing::Test {
 };
 
 TEST_F(SegmentedMemoryAllocatorTests, SingleHeap) {
-    DummyMemoryAllocator memoryAllocator;
-    SegmentedMemoryAllocator segmentedAllocator(&memoryAllocator, kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
+                                                kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocation> invalidAllocation =
         segmentedAllocator.TryAllocateMemory(0, kDefaultMemoryAlignment, false);
@@ -61,8 +61,8 @@ TEST_F(SegmentedMemoryAllocatorTests, SingleHeap) {
 }
 
 TEST_F(SegmentedMemoryAllocatorTests, MultipleHeaps) {
-    DummyMemoryAllocator memoryAllocator;
-    SegmentedMemoryAllocator segmentedAllocator(&memoryAllocator, kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
+                                                kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocation> firstAllocation =
         segmentedAllocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false);
@@ -86,8 +86,8 @@ TEST_F(SegmentedMemoryAllocatorTests, MultipleHeaps) {
 }
 
 TEST_F(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
-    DummyMemoryAllocator memoryAllocator;
-    SegmentedMemoryAllocator segmentedAllocator(&memoryAllocator, kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
+                                                kDefaultMemoryAlignment);
 
     // Append the 1st and 3rd segment, in sequence.
     uint64_t firstMemorySize = kDefaultMemorySize / 2;
@@ -159,8 +159,8 @@ TEST_F(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 }
 
 TEST_F(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
-    DummyMemoryAllocator memoryAllocator;
-    SegmentedMemoryAllocator segmentedAllocator(&memoryAllocator, kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
+                                                kDefaultMemoryAlignment);
     {
         std::unique_ptr<MemoryAllocation> allocation = segmentedAllocator.TryAllocateMemory(
             kDefaultMemorySize, kDefaultMemoryAlignment, false);

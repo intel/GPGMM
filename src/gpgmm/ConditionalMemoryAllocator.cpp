@@ -17,11 +17,12 @@
 
 namespace gpgmm {
 
-    ConditionalMemoryAllocator::ConditionalMemoryAllocator(MemoryAllocator* firstAllocator,
-                                                           MemoryAllocator* secondAllocator,
-                                                           uint64_t conditionalSize)
-        : mFirstAllocator(firstAllocator),
-          mSecondAllocator(secondAllocator),
+    ConditionalMemoryAllocator::ConditionalMemoryAllocator(
+        std::unique_ptr<MemoryAllocator> firstAllocator,
+        std::unique_ptr<MemoryAllocator> secondAllocator,
+        uint64_t conditionalSize)
+        : mFirstAllocator(AppendChild(std::move(firstAllocator))),
+          mSecondAllocator(AppendChild(std::move(secondAllocator))),
           mConditionalSize(conditionalSize) {
     }
 
@@ -39,6 +40,14 @@ namespace gpgmm {
     void ConditionalMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
         allocation->GetAllocator()->DeallocateMemory(allocation);
+    }
+
+    MemoryAllocator* ConditionalMemoryAllocator::GetFirstAllocatorForTesting() const {
+        return mFirstAllocator;
+    }
+
+    MemoryAllocator* ConditionalMemoryAllocator::GetSecondAllocatorForTesting() const {
+        return mSecondAllocator;
     }
 
 }  // namespace gpgmm
