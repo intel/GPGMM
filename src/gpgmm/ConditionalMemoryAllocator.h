@@ -24,8 +24,8 @@ namespace gpgmm {
     // will be used.
     class ConditionalMemoryAllocator : public MemoryAllocator {
       public:
-        ConditionalMemoryAllocator(MemoryAllocator* firstAllocator,
-                                   MemoryAllocator* secondAllocator,
+        ConditionalMemoryAllocator(std::unique_ptr<MemoryAllocator> firstAllocator,
+                                   std::unique_ptr<MemoryAllocator> secondAllocator,
                                    uint64_t conditionalSize);
         ~ConditionalMemoryAllocator() override = default;
 
@@ -34,6 +34,9 @@ namespace gpgmm {
                                                             uint64_t alignment,
                                                             bool neverAllocate = true) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
+
+        MemoryAllocator* GetFirstAllocatorForTesting() const;
+        MemoryAllocator* GetSecondAllocatorForTesting() const;
 
       private:
         MemoryAllocator* mFirstAllocator = nullptr;

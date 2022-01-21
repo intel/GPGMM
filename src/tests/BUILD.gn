@@ -108,6 +108,7 @@ test("gpgmm_unittests") {
     "unittests/BuddyMemoryAllocatorTests.cpp",
     "unittests/ConditionalMemoryAllocatorTests.cpp",
     "unittests/FlagsTests.cpp",
+    "unittests/MemoryAllocatorTests.cpp",
     "unittests/SegmentedMemoryAllocatorTests.cpp",
   ]
 

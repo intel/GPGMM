@@ -18,6 +18,7 @@
 
 #include "gpgmm/BlockAllocator.h"
 #include "gpgmm/Error.h"
+#include "gpgmm/GraphNode.h"
 #include "gpgmm/Memory.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/common/Assert.h"
@@ -41,8 +42,13 @@ namespace gpgmm {
         uint64_t UsedMemoryUsage;
     };
 
-    class MemoryAllocator : public AllocatorBase {
+    class MemoryAllocator : public AllocatorBase, public GraphNode<MemoryAllocator> {
       public:
+        MemoryAllocator() = default;
+
+        // Constructs a parent MemoryAllocator with only a single child allocator.
+        MemoryAllocator(std::unique_ptr<MemoryAllocator> childAllocator);
+
         virtual ~MemoryAllocator() = default;
 
         // Attempts to allocate and return a memory allocation that is at-least of the requested
@@ -59,8 +65,7 @@ namespace gpgmm {
 
         // Free memory retained by this memory allocator.
         // Used to reuse memory blocks between calls to TryAllocateMemory.
-        virtual void ReleaseMemory() {
-        }
+        virtual void ReleaseMemory();
 
         // Return the fixed-size or alignment of this memory allocator. If the parent allocator
         // always calls TryAllocateMemory with the same memory |size| and |alignment|, they do not
@@ -70,9 +75,7 @@ namespace gpgmm {
 
         // Collect and return the number and size of memory blocks allocated by this allocator.
         // Will be overridden if a nested allocator or a seperate block allocator is used.
-        virtual MEMORY_ALLOCATOR_INFO QueryInfo() const {
-            return mStats;
-        }
+        virtual MEMORY_ALLOCATOR_INFO QueryInfo() const;
 
       protected:
         // Combine AllocateBlock and TryAllocateMemory into a single call so a partial

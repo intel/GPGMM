@@ -24,8 +24,8 @@ namespace gpgmm {
     BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t systemSize,
                                                uint64_t memorySize,
                                                uint64_t memoryAlignment,
-                                               MemoryAllocator* memoryAllocator)
-        : mMemoryAllocator(memoryAllocator),
+                                               std::unique_ptr<MemoryAllocator> memoryAllocator)
+        : MemoryAllocator(std::move(memoryAllocator)),
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
           mBuddyBlockAllocator(systemSize) {
@@ -70,7 +70,7 @@ namespace gpgmm {
 
                 // No existing, allocate new memory for the block.
                 if (memoryAllocation == nullptr) {
-                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(
+                    GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
                                          mMemorySize, mMemoryAlignment, neverAllocate),
                                      memoryAllocation);
                 }
@@ -115,7 +115,7 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
-            mMemoryAllocator->DeallocateMemory(memoryAllocation.release());
+            GetFirstChild()->DeallocateMemory(memoryAllocation.release());
         } else {
             mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
         }
