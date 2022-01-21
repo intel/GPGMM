@@ -174,7 +174,10 @@
       "dependsOn": [
         "Build debug"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run debug unittests",
@@ -189,7 +192,10 @@
       "dependsOn": [
         "Build debug"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run release end2end tests",
@@ -204,7 +210,10 @@
       "dependsOn": [
         "Build release"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run release unittests",
@@ -219,7 +228,10 @@
       "dependsOn": [
         "Build release"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run debug Dawn end2end tests",
@@ -240,7 +252,10 @@
       "dependsOn": [
         "Build debug"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run release Dawn end2end tests",
@@ -261,7 +276,10 @@
       "dependsOn": [
         "Build release"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run debug WebNN end2end tests",
@@ -280,7 +298,10 @@
       "dependsOn": [
         "Build debug"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run release WebNN end2end tests",
@@ -299,7 +320,10 @@
       "dependsOn": [
         "Build release"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run all debug tests",
@@ -310,7 +334,10 @@
         "Run debug end2end tests",
         "Run debug Dawn end2end tests",
         "Run debug WebNN end2end tests"
-      ]
+      ],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "Run all release tests",
@@ -321,7 +348,10 @@
         "Run release end2end tests",
         "Run release Dawn end2end tests",
         "Run release WebNN end2end tests"
-      ]
+      ],
+      "presentation": {
+        "reveal": "silent"
+      }
     },
   ],
 }
