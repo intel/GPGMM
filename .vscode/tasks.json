@@ -222,7 +222,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Run debug Dawn-GPGMM end2end tests",
+      "label": "Run debug Dawn end2end tests",
       "group": "test",
       "type": "shell",
       "windows": {
@@ -243,7 +243,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Run release Dawn-GPGMM end2end tests",
+      "label": "Run release Dawn end2end tests",
       "group": "test",
       "type": "shell",
       "windows": {
@@ -264,7 +264,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Run debug WebNN-GPGMM end2end tests",
+      "label": "Run debug WebNN end2end tests",
       "group": "test",
       "type": "shell",
       "windows": {
@@ -283,7 +283,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Run release WebNN-GPGMM end2end tests",
+      "label": "Run release WebNN end2end tests",
       "group": "test",
       "type": "shell",
       "windows": {
@@ -308,8 +308,8 @@
       "dependsOn": [
         "Run debug unittests",
         "Run debug end2end tests",
-        "Run debug Dawn-GPGMM end2end tests",
-        "Run debug WebNN-GPGMM end2end tests"
+        "Run debug Dawn end2end tests",
+        "Run debug WebNN end2end tests"
       ]
     },
     {
@@ -319,8 +319,8 @@
       "dependsOn": [
         "Run release unittests",
         "Run release end2end tests",
-        "Run release Dawn-GPGMM end2end tests",
-        "Run release WebNN-GPGMM end2end tests"
+        "Run release Dawn end2end tests",
+        "Run release WebNN end2end tests"
       ]
     },
   ],

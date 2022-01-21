@@ -21,7 +21,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug end2end",
+      "name": "Debug end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
@@ -55,7 +55,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug WebNN-GPGMM end2end",
+      "name": "Debug WebNN end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
@@ -72,7 +72,7 @@
       "externalConsole": true
     },
     {
-      "name": "Debug Dawn-GPGMM end2end",
+      "name": "Debug Dawn end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
       "windows": {
