@@ -17,6 +17,17 @@
 
 #include "gtest/gtest.h"
 
+#include "gpgmm/common/Log.h"
+
+#define GPGMM_SKIP_TEST_IF(expr)                            \
+    do {                                                    \
+        if (expr) {                                         \
+            gpgmm::InfoLog() << "Test skipped: " #expr "."; \
+            GTEST_SKIP();                                   \
+            return;                                         \
+        }                                                   \
+    } while (0)
+
 class GPGMMTestBase {
   protected:
     virtual ~GPGMMTestBase();
