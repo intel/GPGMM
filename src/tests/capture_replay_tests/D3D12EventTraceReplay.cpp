@@ -174,7 +174,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "ResourceAllocation") {
+            } else if (event["name"].asString() == "GPUMemoryAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         ASSERT_TRUE(newAllocationWithoutID != nullptr);
@@ -218,7 +218,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "ResourceAllocator") {
+            } else if (event["name"].asString() == "GPUMemoryAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_INSTANT: {
                         allocatorDesc = CreateBasicAllocatorDesc();
@@ -294,7 +294,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "Heap") {
+            } else if (event["name"].asString() == "GPUMemoryBlock") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& heapID = event["id"].asString();
@@ -351,10 +351,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 TEST_P(D3D12EventTraceReplay, Run) {
     RunTestLoop();
 
-    LogCallStats("CreateResource", mCreateResourceStats);
-    LogCallStats("ReleaseResource", mReleaseResourceStats);
-    LogMemoryStats("ResourceAllocation", mResourceAllocationStats);
-    LogMemoryStats("Heap", mHeapStats);
+    LogCallStats("Allocation", mCreateResourceStats);
+    LogCallStats("Deallocation", mReleaseResourceStats);
+    LogMemoryStats("GPUMemoryAllocation", mResourceAllocationStats);
+    LogMemoryStats("GPUMemoryBlock", mHeapStats);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);

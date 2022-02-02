@@ -337,8 +337,8 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
-        LogEvent("ResourceAllocator", descriptor);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("ResourceAllocator", this);
+        LogEvent("GPUMemoryAllocator", descriptor);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocator", this);
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
@@ -403,7 +403,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID("ResourceAllocator", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryAllocator", this);
 
         // Destroy allocators in the reverse order they were created so we can record delete events
         // before event tracer shutdown.
@@ -815,7 +815,7 @@ namespace gpgmm { namespace d3d12 {
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
         }
 
-        d3d12::LogObject("ResourceAllocator", this, infoOut);
+        d3d12::LogObject("GPUMemoryAllocator", this, infoOut);
 
         if (resorceAllocationInfoOut != nullptr) {
             *resorceAllocationInfoOut = infoOut;
