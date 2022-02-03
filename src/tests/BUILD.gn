@@ -104,6 +104,7 @@ test("gpgmm_unittests") {
   ]
 
   sources = [
+    "DummyMemoryAllocator.h",
     "unittests/BuddyBlockAllocatorTests.cpp",
     "unittests/BuddyMemoryAllocatorTests.cpp",
     "unittests/ConditionalMemoryAllocatorTests.cpp",

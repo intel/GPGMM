@@ -17,8 +17,8 @@
 
 #include "gpgmm/BuddyMemoryAllocator.h"
 #include "gpgmm/LIFOMemoryPool.h"
-#include "gpgmm/Memory.h"
 #include "gpgmm/PooledMemoryAllocator.h"
+#include "tests/DummyMemoryAllocator.h"
 
 #include <set>
 #include <vector>
@@ -28,24 +28,8 @@ using namespace gpgmm;
 static constexpr uint64_t kDefaultMemorySize = 128u;
 static constexpr uint64_t kDefaultMemoryAlignment = 1u;
 
-class DummyMemoryAllocator : public MemoryAllocator {
-  public:
-    std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
-                                                        uint64_t alignment,
-                                                        bool neverAllocate) override {
-        return std::make_unique<MemoryAllocation>(this, new MemoryBase(size));
-    }
-
-    void DeallocateMemory(MemoryAllocation* allocation) override {
-        ASSERT(allocation != nullptr);
-        delete allocation->GetMemory();
-    }
-};
-
-class BuddyMemoryAllocatorTests : public testing::Test {};
-
 // Verify a single resource allocation in a single heap.
-TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
+TEST(BuddyMemoryAllocatorTests, SingleHeap) {
     // After one 128 byte resource allocation:
     //
     // max block size -> ---------------------------
@@ -85,7 +69,7 @@ TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
 }
 
 // Verify that multiple allocation are created in separate heaps.
-TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
+TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     // After two 128 byte resource allocations:
     //
     // max block size -> ---------------------------
@@ -143,7 +127,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
 }
 
 // Verify multiple sub-allocations can re-use heaps.
-TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
+TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     // After two 64 byte allocations with 128 byte heaps.
     //
     // max block size -> ---------------------------
@@ -204,7 +188,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
 }
 
 // Verify resource sub-allocation of various sizes over multiple heaps.
-TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
+TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     // After three 64 byte allocations and two 128 byte allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -295,7 +279,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 }
 
 // Verify resource sub-allocation of same sizes with various alignments.
-TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
+TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     // After three 64 byte and one 128 byte resource allocations.
     //
     // max block size -> -------------------------------------------------------
@@ -369,7 +353,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
-TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
+TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     // After two 64 byte and two 128 byte resource allocations:
     //
     // max block size -> -------------------------------------------------------
@@ -444,7 +428,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 }
 
 // Verify allocating a very large resource does not overflow.
-TEST_F(BuddyMemoryAllocatorTests, AllocationOverflow) {
+TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
     constexpr uint64_t maxBlockSize = 512;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::make_unique<DummyMemoryAllocator>());
@@ -456,7 +440,7 @@ TEST_F(BuddyMemoryAllocatorTests, AllocationOverflow) {
 }
 
 // Verify resource heaps will be reused from a pool.
-TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
+TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     LIFOMemoryPool memoryPool;
@@ -518,7 +502,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
-TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
+TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     LIFOMemoryPool memoryPool;
