@@ -38,7 +38,7 @@ namespace gpgmm {
     //
     class BuddyBlockAllocator : public BlockAllocator {
       public:
-        BuddyBlockAllocator(uint64_t maxBlockSize);
+        explicit BuddyBlockAllocator(uint64_t maxBlockSize);
         ~BuddyBlockAllocator() override;
 
         // BlockAllocator interface

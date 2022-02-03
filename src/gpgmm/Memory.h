@@ -26,7 +26,7 @@ namespace gpgmm {
     // When memory is sub-allocated it will have a non-zero refcount.
     class MemoryBase : public RefCounted, public NonCopyable {
       public:
-        MemoryBase(uint64_t size);
+        explicit MemoryBase(uint64_t size);
         virtual ~MemoryBase();
 
         // Return the size of the memory block or heap.
