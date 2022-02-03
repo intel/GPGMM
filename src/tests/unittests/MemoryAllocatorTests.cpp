@@ -15,11 +15,24 @@
 #include <gtest/gtest.h>
 
 #include "gpgmm/MemoryAllocator.h"
+#include "tests/DummyMemoryAllocator.h"
 
 using namespace gpgmm;
 
 static uint64_t DestructCount = 0;
 static uint64_t ReleaseMemoryCount = 0;
+
+class TestMemoryAllocator : public DummyMemoryAllocator {
+  public:
+    ~TestMemoryAllocator() override {
+        DestructCount++;
+    }
+
+    void ReleaseMemory() override {
+        MemoryAllocator::ReleaseMemory();
+        ReleaseMemoryCount++;
+    }
+};
 
 class MemoryAllocatorTests : public testing::Test {
   public:
@@ -27,33 +40,11 @@ class MemoryAllocatorTests : public testing::Test {
         DestructCount = 0;
         ReleaseMemoryCount = 0;
     }
-
-    struct DummyMemoryAllocator : public MemoryAllocator {
-        ~DummyMemoryAllocator() override {
-            DestructCount++;
-        }
-
-        void ReleaseMemory() override {
-            MemoryAllocator::ReleaseMemory();
-            ReleaseMemoryCount++;
-        }
-
-        // MemoryAllocator interface (no-op).
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate) override {
-            return {};
-        }
-
-        void DeallocateMemory(MemoryAllocation* allocation) override {
-            return;
-        }
-    };
 };
 
 TEST_F(MemoryAllocatorTests, SingleAllocatorNode) {
-    auto child = std::make_unique<DummyMemoryAllocator>();
-    auto parent = std::make_unique<DummyMemoryAllocator>();
+    auto child = std::make_unique<TestMemoryAllocator>();
+    auto parent = std::make_unique<TestMemoryAllocator>();
 
     parent->AppendChild(std::move(child));
 
@@ -67,11 +58,11 @@ TEST_F(MemoryAllocatorTests, SingleAllocatorNode) {
 }
 
 TEST_F(MemoryAllocatorTests, MultipleAllocatorNodes) {
-    auto firstChild = std::make_unique<DummyMemoryAllocator>();
-    auto secondChild = std::make_unique<DummyMemoryAllocator>();
-    auto thirdChild = std::make_unique<DummyMemoryAllocator>();
+    auto firstChild = std::make_unique<TestMemoryAllocator>();
+    auto secondChild = std::make_unique<TestMemoryAllocator>();
+    auto thirdChild = std::make_unique<TestMemoryAllocator>();
 
-    auto parent = std::make_unique<DummyMemoryAllocator>();
+    auto parent = std::make_unique<TestMemoryAllocator>();
 
     parent->AppendChild(std::move(firstChild));
     parent->AppendChild(std::move(secondChild));
@@ -87,9 +78,9 @@ TEST_F(MemoryAllocatorTests, MultipleAllocatorNodes) {
 }
 
 TEST_F(MemoryAllocatorTests, HieraticalAllocatorNodes) {
-    auto grandChild = std::make_unique<DummyMemoryAllocator>();
-    auto child = std::make_unique<DummyMemoryAllocator>();
-    auto parent = std::make_unique<DummyMemoryAllocator>();
+    auto grandChild = std::make_unique<TestMemoryAllocator>();
+    auto child = std::make_unique<TestMemoryAllocator>();
+    auto parent = std::make_unique<TestMemoryAllocator>();
 
     child->AppendChild(std::move(grandChild));
     parent->AppendChild(std::move(child));

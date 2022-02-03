@@ -15,30 +15,14 @@
 #include <gtest/gtest.h>
 
 #include "gpgmm/SegmentedMemoryAllocator.h"
+#include "tests/DummyMemoryAllocator.h"
 
 using namespace gpgmm;
 
-class SegmentedMemoryAllocatorTests : public testing::Test {
-  protected:
-    class DummyMemoryAllocator : public MemoryAllocator {
-      public:
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate) override {
-            return std::make_unique<MemoryAllocation>(this, new MemoryBase(size));
-        }
+static constexpr uint64_t kDefaultMemorySize = 128u;
+static constexpr uint64_t kDefaultMemoryAlignment = 1u;
 
-        void DeallocateMemory(MemoryAllocation* allocation) override {
-            ASSERT(allocation != nullptr);
-            delete allocation->GetMemory();
-        }
-    } mMemoryAllocator;
-
-    static constexpr uint64_t kDefaultMemorySize = 128u;
-    static constexpr uint64_t kDefaultMemoryAlignment = 1u;
-};
-
-TEST_F(SegmentedMemoryAllocatorTests, SingleHeap) {
+TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
     SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
                                                 kDefaultMemoryAlignment);
 
@@ -60,7 +44,7 @@ TEST_F(SegmentedMemoryAllocatorTests, SingleHeap) {
     EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
 }
 
-TEST_F(SegmentedMemoryAllocatorTests, MultipleHeaps) {
+TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
     SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
                                                 kDefaultMemoryAlignment);
 
@@ -85,7 +69,7 @@ TEST_F(SegmentedMemoryAllocatorTests, MultipleHeaps) {
     EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
 }
 
-TEST_F(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
+TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
     SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
                                                 kDefaultMemoryAlignment);
 
@@ -158,7 +142,7 @@ TEST_F(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
     EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
 }
 
-TEST_F(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
+TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
     SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
                                                 kDefaultMemoryAlignment);
     {

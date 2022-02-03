@@ -15,29 +15,11 @@
 #include <gtest/gtest.h>
 
 #include "gpgmm/ConditionalMemoryAllocator.h"
-
-#include <memory>
+#include "tests/DummyMemoryAllocator.h"
 
 using namespace gpgmm;
 
-class ConditionalMemoryAllocatorTests : public testing::Test {
-  public:
-    class DummyMemoryAllocator : public MemoryAllocator {
-      public:
-        void DeallocateMemory(MemoryAllocation* allocation) override {
-            return;
-        }
-
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate) override {
-            mStats.UsedMemoryUsage += size;
-            return std::make_unique<MemoryAllocation>(/*allocator*/ this, /*memory*/ nullptr);
-        }
-    };
-};
-
-TEST_F(ConditionalMemoryAllocatorTests, Basic) {
+TEST(ConditionalMemoryAllocatorTests, Basic) {
     constexpr uint64_t conditionalSize = 16u;
     ConditionalMemoryAllocator alloc(std::make_unique<DummyMemoryAllocator>(),
                                      std::make_unique<DummyMemoryAllocator>(), conditionalSize);
