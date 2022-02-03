@@ -14,7 +14,6 @@
 #ifndef GPGMM_D3D12_UTILSD3D12_H_
 #define GPGMM_D3D12_UTILSD3D12_H_
 
-#include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -38,27 +37,6 @@ namespace gpgmm { namespace d3d12 {
     }                           \
     for (;;)                    \
     break
-
-    // Combines AllocatorMemory and Create*Resource into a single call.
-    // If the memory allocation was successful, the resource will be created using it.
-    // Else, if the resource creation fails, the memory allocation will be cleaned up.
-    template <typename CreateResourceFn>
-    HRESULT TryAllocateResource(MemoryAllocator* allocator,
-                                uint64_t size,
-                                uint64_t alignment,
-                                bool neverAllocate,
-                                CreateResourceFn&& createResourceFn) {
-        std::unique_ptr<MemoryAllocation> allocation =
-            allocator->TryAllocateMemory(size, alignment, neverAllocate);
-        if (allocation == nullptr) {
-            return E_FAIL;
-        }
-        HRESULT hr = createResourceFn(*allocation);
-        if (FAILED(hr)) {
-            allocator->DeallocateMemory(allocation.release());
-        }
-        return hr;
-    }
 
     bool IsDepthFormat(DXGI_FORMAT format);
 

@@ -264,6 +264,27 @@ namespace gpgmm { namespace d3d12 {
             Heap* const mHeap;
         };
 
+        // Combines AllocatorMemory and Create*Resource into a single call.
+        // If the memory allocation was successful, the resource will be created using it.
+        // Else, if the resource creation fails, the memory allocation will be cleaned up.
+        template <typename CreateResourceFn>
+        HRESULT TryAllocateResource(MemoryAllocator* allocator,
+                                    uint64_t size,
+                                    uint64_t alignment,
+                                    bool neverAllocate,
+                                    CreateResourceFn&& createResourceFn) {
+            std::unique_ptr<MemoryAllocation> allocation =
+                allocator->TryAllocateMemory(size, alignment, neverAllocate);
+            if (allocation == nullptr) {
+                return E_FAIL;
+            }
+            HRESULT hr = createResourceFn(*allocation);
+            if (FAILED(hr)) {
+                allocator->DeallocateMemory(allocation.release());
+            }
+            return hr;
+        }
+
     }  // namespace
 
     // static
