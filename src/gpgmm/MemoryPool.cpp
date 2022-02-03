@@ -19,11 +19,11 @@
 namespace gpgmm {
 
     MemoryPool::MemoryPool() {
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("MemoryPool", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryPool", this);
     }
 
     MemoryPool::~MemoryPool() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID("MemoryPool", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryPool", this);
     }
 
     POOL_DESC MemoryPool::GetDesc() const {
