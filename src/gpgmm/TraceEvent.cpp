@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "gpgmm/TraceEvent.h"
+
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"

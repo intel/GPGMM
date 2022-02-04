@@ -17,7 +17,6 @@
 #include "gpgmm/JSONSerializer.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {

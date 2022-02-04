@@ -15,7 +15,6 @@
 
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"

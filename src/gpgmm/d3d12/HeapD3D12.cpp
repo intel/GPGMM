@@ -15,7 +15,6 @@
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 
