@@ -62,28 +62,28 @@ namespace gpgmm {
         }
 
         // Attempt to sub-allocate a block of the requested size.
-        std::unique_ptr<MemoryAllocation> subAllocation = TrySubAllocateMemory(
-            &mBuddyBlockAllocator, size, alignment, [&](auto block) -> MemoryBase* {
-                const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                std::unique_ptr<MemoryAllocation> memoryAllocation =
-                    mPool.AcquireFromPool(memoryIndex);
+        std::unique_ptr<MemoryAllocation> subAllocation;
+        GPGMM_TRY_ASSIGN(
+            TrySubAllocateMemory(&mBuddyBlockAllocator, size, alignment,
+                                 [&](const auto& block) -> MemoryBase* {
+                                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
+                                     std::unique_ptr<MemoryAllocation> memoryAllocation =
+                                         mPool.AcquireFromPool(memoryIndex);
 
-                // No existing, allocate new memory for the block.
-                if (memoryAllocation == nullptr) {
-                    GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
-                                         mMemorySize, mMemoryAlignment, neverAllocate),
-                                     memoryAllocation);
-                }
+                                     // No existing, allocate new memory for the block.
+                                     if (memoryAllocation == nullptr) {
+                                         GPGMM_TRY_ASSIGN(
+                                             GetFirstChild()->TryAllocateMemory(
+                                                 mMemorySize, mMemoryAlignment, neverAllocate),
+                                             memoryAllocation);
+                                     }
 
-                MemoryBase* memory = memoryAllocation->GetMemory();
-                mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+                                     MemoryBase* memory = memoryAllocation->GetMemory();
+                                     mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
-                return memory;
-            });
-
-        if (subAllocation == nullptr) {
-            return nullptr;
-        }
+                                     return memory;
+                                 }),
+            subAllocation);
 
         Block* block = subAllocation->GetBlock();
         mStats.UsedBlockCount++;
