@@ -65,7 +65,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--disable-suballocation", argv[i]) == 0) {
+        if (strcmp("--force-standalone", argv[i]) == 0) {
             mParams.IsStandaloneOnly = true;
             continue;
         }
@@ -138,7 +138,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             gpgmm::InfoLog() << "Additional Flags:"
                              << " [--iterations=X]\n"
                              << " --iterations: Number of times to playback the capture.\n"
-                             << " --disable-suballocation: Disable sub-allocation.\n"
+                             << " --force-standalone: Disable memory reuse by sub-allocation.\n"
                              << " --record-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
                                 "level to record logs.\n"
                              << " --log-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
@@ -173,8 +173,7 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     std::cout << "Playback environment settings\n"
                  "------------------------\n"
               << "Iterations per test: " << mParams.Iterations << "\n"
-              << "Standalone allocations only: " << (mParams.IsStandaloneOnly ? "true" : "false")
-              << "\n"
+              << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false") << "\n"
               << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false") << "\n"
               << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
               << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
