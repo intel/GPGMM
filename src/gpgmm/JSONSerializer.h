@@ -23,10 +23,12 @@
 namespace gpgmm {
 
     struct POOL_DESC;
+    struct ALLOCATOR_MESSAGE;
 
     class JSONSerializer {
       public:
         static std::string AppendTo(const POOL_DESC& desc);
+        static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
     };
 
     template <typename T, typename DescT, typename SerializerT = JSONSerializer>
@@ -53,7 +55,7 @@ namespace gpgmm {
         }
     }
 
-    template <typename T, typename SerializerT, typename... Args>
+    template <typename T, typename SerializerT = JSONSerializer, typename... Args>
     static void LogMessageEvent(const LogSeverity& severity,
                                 const char* name,
                                 const Args&... args) {

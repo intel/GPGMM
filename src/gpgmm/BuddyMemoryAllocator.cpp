@@ -15,8 +15,8 @@
 
 #include "gpgmm/BuddyMemoryAllocator.h"
 
+#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/Memory.h"
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Math.h"
 
 namespace gpgmm {
@@ -50,6 +50,9 @@ namespace gpgmm {
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size == 0 || size > mMemorySize) {
+            LogMessageEvent<ALLOCATOR_MESSAGE>(
+                LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
+                "Allocation size exceeded the memory size.", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return nullptr;
         }
 
@@ -58,6 +61,11 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (size > mMemorySize) {
+            LogMessageEvent<ALLOCATOR_MESSAGE>(LogSeverity::Info,
+                                               "BuddyMemoryAllocator.TryAllocateMemory",
+                                               "Aligned allocation size exceeded the memory size.",
+                                               ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+
             return nullptr;
         }
 

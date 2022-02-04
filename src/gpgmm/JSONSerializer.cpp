@@ -14,6 +14,7 @@
 
 #include "gpgmm/JSONSerializer.h"
 
+#include "gpgmm/Allocator.h"
 #include "gpgmm/MemoryPool.h"
 
 #include <sstream>
@@ -25,6 +26,15 @@ namespace gpgmm {
         std::stringstream ss;
         ss << "{ "
            << "\"UnusedPoolSize\": " << desc.UnusedPoolSize << " }";
+        return ss.str();
+    }
+
+    // static
+    std::string JSONSerializer::AppendTo(const ALLOCATOR_MESSAGE& desc) {
+        std::stringstream ss;
+        ss << "{ "
+           << "\"Description\": \"" << desc.Description << "\", "
+           << "\"ID\": " << desc.ID << " }";
         return ss.str();
     }
 
