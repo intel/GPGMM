@@ -17,7 +17,20 @@
 
 #include "gpgmm/common/NonCopyable.h"
 
+#include <string>
+
 namespace gpgmm {
+
+    enum ALLOCATOR_MESSAGE_ID {
+        ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+        ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH,
+        ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED,
+    };
+
+    struct ALLOCATOR_MESSAGE {
+        std::string Description;
+        ALLOCATOR_MESSAGE_ID ID;
+    };
 
     class AllocatorBase : public NonCopyable {
       public:

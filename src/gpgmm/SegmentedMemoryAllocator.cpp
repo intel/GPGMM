@@ -14,8 +14,8 @@
 
 #include "gpgmm/SegmentedMemoryAllocator.h"
 
+#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/LIFOMemoryPool.h"
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -145,6 +145,10 @@ namespace gpgmm {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
 
         if (size == 0 || alignment != mMemoryAlignment) {
+            LogMessageEvent<ALLOCATOR_MESSAGE>(
+                LogSeverity::Info, "SegmentedMemoryAllocator.TryAllocateMemory",
+                "Allocation alignment does not match memory alignment.",
+                ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);
             return {};
         }
 
