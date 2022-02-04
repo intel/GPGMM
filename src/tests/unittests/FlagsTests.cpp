@@ -16,6 +16,8 @@
 
 #include "gpgmm/common/Flags.h"
 
+#include <sstream>
+
 namespace gpgmm {
 
     enum Count {
@@ -64,8 +66,20 @@ namespace gpgmm {
         a |= Desc::kFirst;
         EXPECT_TRUE(a == Desc::kFirst);
 
+        {
+            std::stringstream ss;
+            ss << a;
+            EXPECT_EQ(ss.str(), "1");
+        }
+
         a |= Desc::kSecond;
         EXPECT_TRUE(a == Desc::kThird);
+
+        {
+            std::stringstream ss;
+            ss << a;
+            EXPECT_EQ(ss.str(), "3");
+        }
     }
 
 }  // namespace gpgmm
