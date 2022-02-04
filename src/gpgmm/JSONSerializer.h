@@ -55,7 +55,7 @@ namespace gpgmm {
         }
     }
 
-    template <typename T, typename SerializerT = JSONSerializer, typename... Args>
+    template <typename T, typename SerializerT, typename... Args>
     static void LogMessageEvent(const LogSeverity& severity,
                                 const char* name,
                                 const Args&... args) {
@@ -69,6 +69,14 @@ namespace gpgmm {
             return LogEvent<T, SerializerT>(name, obj);
         }
     }
+
+    template <typename... Args>
+    static void LogMessageEvent(const LogSeverity& severity,
+                                const char* name,
+                                const Args&... args) {
+        return gpgmm::LogMessageEvent<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    }
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_JSONSERIALIZER_H_

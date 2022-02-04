@@ -50,9 +50,9 @@ namespace gpgmm {
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size == 0 || size > mMemorySize) {
-            LogMessageEvent<ALLOCATOR_MESSAGE>(
-                LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
-                "Allocation size exceeded the memory size.", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            LogMessageEvent(LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
+                            "Allocation size exceeded the memory size.",
+                            ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return nullptr;
         }
 
@@ -61,10 +61,9 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (size > mMemorySize) {
-            LogMessageEvent<ALLOCATOR_MESSAGE>(LogSeverity::Info,
-                                               "BuddyMemoryAllocator.TryAllocateMemory",
-                                               "Aligned allocation size exceeded the memory size.",
-                                               ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            LogMessageEvent(LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
+                            "Aligned allocation size exceeded the memory size.",
+                            ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
 
             return nullptr;
         }

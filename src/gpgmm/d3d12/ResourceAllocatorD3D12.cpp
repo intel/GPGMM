@@ -103,9 +103,10 @@ namespace gpgmm { namespace d3d12 {
             // required alignment is for this resource.
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
-                LogMessageEvent(LogSeverity::Info, "ResourceAllocator.GetResourceAllocationInfo",
-                                "D3D12 rejected the requested alignment",
-                                ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED);
+                d3d12::LogMessageEvent(LogSeverity::Info,
+                                       "ResourceAllocator.GetResourceAllocationInfo",
+                                       "D3D12 rejected the requested alignment",
+                                       ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED);
 
                 resourceDescriptor.Alignment = 0;
                 resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
@@ -474,9 +475,9 @@ namespace gpgmm { namespace d3d12 {
                                 newResourceDesc.Flags, mResourceHeapTier);
 
         if (resourceInfo.SizeInBytes < resourceInfo.Alignment) {
-            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Resource size is smaller then the alignment.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT);
+            d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                                   "Resource size is smaller then the alignment.",
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT);
         }
 
         const bool neverAllocate =
@@ -520,7 +521,7 @@ namespace gpgmm { namespace d3d12 {
                         std::move(committedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > resourceDescriptor.Width) {
-                        LogMessageEvent(
+                        d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
                             "Resource allocation size is larger then the resource size.",
                             ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
@@ -556,7 +557,7 @@ namespace gpgmm { namespace d3d12 {
                         std::move(placedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
-                        LogMessageEvent(
+                        d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
                             "Resource allocation size is larger then the resource size.",
                             ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
@@ -569,9 +570,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (didTrySubAllocate) {
-            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Suballocation was attempted but failed.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED);
+            d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                                   "Suballocation was attempted but failed.",
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED);
         }
 
         // Attempt to create a resource allocation by placing a single resource fully contained
@@ -609,7 +610,7 @@ namespace gpgmm { namespace d3d12 {
                                                std::move(placedResource), resourceHeap};
 
                     if (allocation.GetSize() > heapSize) {
-                        LogMessageEvent(
+                        d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
                             "Resource allocation size is larger then the resource size.",
                             ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
@@ -628,9 +629,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Resource allocation could not be created from memory pool.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED);
+            d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
+                                   "Resource allocation could not be created from memory pool.",
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED);
         }
 
         ComPtr<ID3D12Resource> committedResource;
@@ -727,9 +728,9 @@ namespace gpgmm { namespace d3d12 {
         heapDesc.Flags = heapFlags;
 
         if (heapSize % heapAlignment != 0) {
-            LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResourceHeap",
-                            "Heap size is not a multiple of the alignment.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);
+            d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResourceHeap",
+                                   "Heap size is not a multiple of the alignment.",
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);
         }
 
         ComPtr<ID3D12Heap> heap;
