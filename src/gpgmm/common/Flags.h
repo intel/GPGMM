@@ -42,6 +42,11 @@ namespace gpgmm {
             return mValue != static_cast<ValueT>(flag);
         }
 
+        constexpr friend std::ostream& operator<<(std::ostream& out, const Flags& flag) {
+            out << flag.mValue;
+            return out;
+        }
+
         // Compound assignment between Flags.
 
         Flags& operator&=(const Flags& flags) {
