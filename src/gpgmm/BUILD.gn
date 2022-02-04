@@ -111,6 +111,8 @@ source_set("gpgmm_sources") {
   #   public_deps = [ "${gpgmm_root_dir}/src/gpgmm_platform" ]
 
   sources = [
+    "AllocatorNode.cpp",
+    "AllocatorNode.h",
     "BlockAllocator.h",
     "BuddyBlockAllocator.cpp",
     "BuddyBlockAllocator.h",
@@ -119,8 +121,6 @@ source_set("gpgmm_sources") {
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
     "Error.h",
-    "GraphNode.cpp",
-    "GraphNode.h",
     "IndexedMemoryPool.cpp",
     "IndexedMemoryPool.h",
     "JSONSerializer.cpp",
@@ -133,12 +133,17 @@ source_set("gpgmm_sources") {
     "MemoryAllocation.h",
     "MemoryAllocator.cpp",
     "MemoryAllocator.h",
+    "MemoryCache.h",
     "MemoryPool.cpp",
     "MemoryPool.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
     "SegmentedMemoryAllocator.cpp",
     "SegmentedMemoryAllocator.h",
+    "SlabBlockAllocator.cpp",
+    "SlabBlockAllocator.h",
+    "SlabMemoryAllocator.cpp",
+    "SlabMemoryAllocator.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
 

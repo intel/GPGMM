@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "RefCount.h"
-#include "Assert.h"
 
 namespace gpgmm {
 
@@ -33,6 +32,10 @@ namespace gpgmm {
 
     int_fast32_t RefCounted::RefCount() const {
         return mRef.load(std::memory_order_acquire);
+    }
+
+    bool RefCounted::HasOneRef() const {
+        return RefCount() == 1;
     }
 
 }  // namespace gpgmm

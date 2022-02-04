@@ -16,9 +16,9 @@
 #ifndef GPGMM_MEMORYALLOCATOR_H_
 #define GPGMM_MEMORYALLOCATOR_H_
 
+#include "gpgmm/AllocatorNode.h"
 #include "gpgmm/BlockAllocator.h"
 #include "gpgmm/Error.h"
-#include "gpgmm/GraphNode.h"
 #include "gpgmm/Memory.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/common/Assert.h"
@@ -42,7 +42,7 @@ namespace gpgmm {
         uint64_t UsedMemoryUsage;
     };
 
-    class MemoryAllocator : public AllocatorBase, public GraphNode<MemoryAllocator> {
+    class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
       public:
         MemoryAllocator() = default;
 
@@ -74,7 +74,7 @@ namespace gpgmm {
         virtual uint64_t GetMemoryAlignment() const;
 
         // Collect and return the number and size of memory blocks allocated by this allocator.
-        // Will be overridden if a nested allocator or a seperate block allocator is used.
+        // Should be overridden when a child allocator or block allocator is used.
         virtual MEMORY_ALLOCATOR_INFO QueryInfo() const;
 
       protected:

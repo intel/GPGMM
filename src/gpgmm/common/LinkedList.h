@@ -9,6 +9,8 @@
 
 #include "Assert.h"
 
+#include <utility>
+
 namespace gpgmm {
 
     // Simple LinkedList type. (See the Q&A section to understand how this
@@ -175,6 +177,11 @@ namespace gpgmm {
             root_.RemoveFromList();
         }
 
+        // Using LinkedList in std::vector or STL container requires the move constructor to not
+        // throw.
+        LinkedList(LinkedList&& other) noexcept : root_(std::move(other.root_)) {
+        }
+
         // Appends |e| to the end of the linked list.
         void Append(LinkNode<T>* e) {
             e->InsertBefore(&root_);
@@ -194,6 +201,17 @@ namespace gpgmm {
 
         bool empty() const {
             return head() == end();
+        }
+
+        // Deletes all nodes by calling ~T.
+        // ~T should call RemoveFromList if IsInList is true to unlink itself.
+        void DeleteAll() const {
+            auto curr = head();
+            while (curr != end()) {
+                auto next = curr->next();
+                delete curr->value();
+                curr = next;
+            }
         }
 
       private:
