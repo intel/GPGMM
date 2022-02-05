@@ -16,7 +16,7 @@
 
 namespace gpgmm {
 
-    RefCounted::RefCounted(int_fast32_t initialRefCount) : mRef(initialRefCount) {
+    RefCounted::RefCounted(int_fast32_t initialCount) : mRef(initialCount) {
     }
 
     void RefCounted::Ref() {

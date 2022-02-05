@@ -26,7 +26,7 @@ namespace gpgmm {
         // what is being referenced (count vs object).
         RefCounted() = delete;
 
-        RefCounted(int_fast32_t initialRefCount);
+        explicit RefCounted(int_fast32_t initialCount);
 
         // Increments ref by one.
         void Ref();
