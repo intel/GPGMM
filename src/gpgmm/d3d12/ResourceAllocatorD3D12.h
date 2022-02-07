@@ -88,8 +88,8 @@ namespace gpgmm { namespace d3d12 {
     };
 
     struct ALLOCATOR_DESC {
-        // Device and adapter used by this allocator. The adapter must support DXGI 1.4
-        // to use residency.
+        // Device and adapter used by this allocator.
+        // If the adapter does not support DXGI 1.4, residency is not supported.
         // Required parameters. Use CreateDevice and EnumAdapters get the device and adapter,
         // respectively.
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
@@ -116,37 +116,37 @@ namespace gpgmm { namespace d3d12 {
         // Preferred size of the resource heap.
         // The preferred size of the resource heap is the minimum heap size to sub-allocate
         // from. A larger resource heap consumes more memory but could be faster for sub-allocation.
-        // Optional parameter. When 0 is used, the API will automatically set the preferred
+        // Optional parameter. When 0 is specified, the API will automatically set the preferred
         // resource heap size to the default value of 4MB.
         uint64_t PreferredResourceHeapSize;
 
         // Maximum size of the resource heap.
-        // The maximum resource size restricts the total address range of available memory to
-        // allocate.
-        // Optional parameter. When 0 is used, the API will automatically set the max
+        // The maximum resource size is equal to the total address range of available memory to
+        // allocate resources.
+        // Optional parameter. When 0 is specified, the API will automatically set the max
         // resource heap size to the default value of 32GB.
         uint64_t MaxResourceHeapSize;
 
-        // Maximum resource size allowed to be pool-allocated.
-        // Pool-allocating larger resources consumes more memory but is faster to create
-        // subsequent resources by using a pool of resource heaps. Apps must periodically call
-        // Trim() to free unused pool-allocated resource heaps.
-        // Optional parameter. When 0 is used, the API will automatically disabling pooling.
+        // Maximum size of resource that can be pool-allocated.
+        // Pool-allocating larger resources consumes more memory then smaller ones but is faster to
+        // create subsequent resources by using a pool of resource heaps. Apps must periodically
+        // call Trim() to free unused pool-allocated resource heaps.
+        // Optional parameter. When 0 is specified, the API will automatically disabling pooling.
         uint64_t MaxResourceSizeForPooling;
 
         // Maximum video memory available to budget by the allocator, expressed as a
         // percentage.
-        // Optional parameter. When 0 is used, the API will automatically set the max video memory
-        // budget to 95%, leaving 5% for the OS and other applications.
+        // Optional parameter. When 0 is specified, the API will automatically set the max video
+        // memory budget to 95%, leaving 5% for the OS and other applications.
         float MaxVideoMemoryBudget;
 
         // Total memory available to budget for resources created by this allocator.
-        // Optional parameter. When 0 is used, the API will not restrict the resource budget.
+        // Optional parameter. When 0 is specified, the API will not restrict the resource budget.
         uint64_t TotalResourceBudgetLimit;
 
         // Video memory to evict from residency in order to make more resource resident, should
         // there not be enough budget available.
-        // Optional parameter. When 0 is used, the API will automatically set the video memory
+        // Optional parameter. When 0 is specified, the API will automatically set the video memory
         // evict size to 50MB.
         uint64_t VideoMemoryEvictSize;
     };
