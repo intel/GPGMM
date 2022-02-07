@@ -228,6 +228,8 @@ namespace gpgmm { namespace d3d12 {
         // because non-pool allocated memory cannot be reused by the allocator.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED = 0x5,
 
+        // Resource allocator failed to allocate memory for the resource.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED = 0x6,
     };
 
     struct ALLOCATOR_MESSAGE {

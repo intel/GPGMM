@@ -24,12 +24,12 @@
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
-#include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {
@@ -278,10 +278,16 @@ namespace gpgmm { namespace d3d12 {
             std::unique_ptr<MemoryAllocation> allocation =
                 allocator->TryAllocateMemory(size, alignment, neverAllocate);
             if (allocation == nullptr) {
+                d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.TryAllocateResource",
+                                       "Resource memory could not be allocated.",
+                                       ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED);
                 return E_FAIL;
             }
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
+                d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.TryAllocateResource",
+                                       "Resource failed to be created: " + GetErrorMessage(hr),
+                                       ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED);
                 allocator->DeallocateMemory(allocation.release());
             }
             return hr;

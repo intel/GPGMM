@@ -15,7 +15,7 @@
 #include "gpgmm/common/Math.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
-#include "gpgmm/d3d12/UtilsD3D12.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "tests/D3D12Test.h"
 
 #include <gpgmm_d3d12.h>

@@ -11,15 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef GPGMM_D3D12_UTILSD3D12_H_
-#define GPGMM_D3D12_UTILSD3D12_H_
 
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
+
+#include <comdef.h>
+#include <iomanip>
+#include <sstream>
 
 namespace gpgmm { namespace d3d12 {
 
-    bool IsDepthFormat(DXGI_FORMAT format);
+    std::string GetErrorMessage(HRESULT error) {
+        std::stringstream ss;
+        ss << _com_error(error).ErrorMessage() << " (0x" << std::hex << std::uppercase
+           << std::setfill('0') << std::setw(8) << error << ")";
+        return ss.str();
+    }
 
 }}  // namespace gpgmm::d3d12
-
-#endif  // GPGMM_D3D12_UTILSD3D12_H_
