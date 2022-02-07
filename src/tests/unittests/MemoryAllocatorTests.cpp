@@ -38,6 +38,14 @@ class TestMemoryAllocator : public DummyMemoryAllocator {
         MemoryAllocator::ReleaseMemory();
         ReleaseMemoryCount++;
     }
+
+    TestMemoryAllocator* AppendChild(std::unique_ptr<TestMemoryAllocator> obj) {
+        return static_cast<TestMemoryAllocator*>(MemoryAllocator::AppendChild(std::move(obj)));
+    }
+
+    bool HasChild() const {
+        return MemoryAllocator::HasChild();
+    }
 };
 
 class MemoryAllocatorTests : public testing::Test {
