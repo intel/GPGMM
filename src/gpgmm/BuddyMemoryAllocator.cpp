@@ -31,7 +31,7 @@ namespace gpgmm {
           mBuddyBlockAllocator(systemSize) {
         ASSERT(mMemorySize <= systemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
-        ASSERT(systemSize % mMemorySize == 0);
+        ASSERT(IsAligned(systemSize, mMemorySize));
     }
 
     BuddyMemoryAllocator::~BuddyMemoryAllocator() {

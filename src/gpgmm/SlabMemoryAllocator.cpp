@@ -241,7 +241,7 @@ namespace gpgmm {
                                                                             bool neverAllocate) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.TryAllocateMemory");
 
-        const uint64_t blockSize = Align(size, mMinBlockSize);
+        const uint64_t blockSize = AlignTo(size, mMinBlockSize);
 
         // Attempting to allocate a block larger then the slab will always fail.
         if (mSlabSize != 0 && blockSize > mSlabSize) {
