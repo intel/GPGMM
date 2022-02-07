@@ -40,59 +40,60 @@ namespace gpgmm {
 #endif
     }
 
-    uint32_t Log2(uint32_t value) {
-        ASSERT(value != 0);
+    uint32_t Log2(uint32_t number) {
+        ASSERT(number != 0);
 #if defined(GPGMM_COMPILER_MSVC)
         unsigned long firstBitIndex = 0ul;
-        unsigned char ret = _BitScanReverse(&firstBitIndex, value);
+        unsigned char ret = _BitScanReverse(&firstBitIndex, number);
         ASSERT(ret != 0);
         return firstBitIndex;
 #else
-        return 31 - static_cast<uint32_t>(__builtin_clz(value));
+        return 31 - static_cast<uint32_t>(__builtin_clz(number));
 #endif
     }
 
-    uint32_t Log2(uint64_t value) {
-        ASSERT(value != 0);
+    uint32_t Log2(uint64_t number) {
+        ASSERT(number != 0);
 #if defined(GPGMM_COMPILER_MSVC)
 #    if defined(GPGMM_PLATFORM_64_BIT)
         unsigned long firstBitIndex = 0ul;
-        unsigned char ret = _BitScanReverse64(&firstBitIndex, value);
+        unsigned char ret = _BitScanReverse64(&firstBitIndex, number);
         ASSERT(ret != 0);
         return firstBitIndex;
 #    else   // defined(GPGMM_PLATFORM_64_BIT)
         unsigned long firstBitIndex = 0ul;
-        if (_BitScanReverse(&firstBitIndex, value >> 32)) {
+        if (_BitScanReverse(&firstBitIndex, number >> 32)) {
             return firstBitIndex + 32;
         }
-        unsigned char ret = _BitScanReverse(&firstBitIndex, value & 0xFFFFFFFF);
+        unsigned char ret = _BitScanReverse(&firstBitIndex, number & 0xFFFFFFFF);
         ASSERT(ret != 0);
         return firstBitIndex;
 #    endif  // defined(GPGMM_PLATFORM_64_BIT)
 #else       // defined(GPGMM_COMPILER_MSVC)
-        return 63 - static_cast<uint32_t>(__builtin_clzll(value));
+        return 63 - static_cast<uint32_t>(__builtin_clzll(number));
 #endif      // defined(GPGMM_COMPILER_MSVC)
     }
 
-    uint64_t NextPowerOfTwo(uint64_t n) {
-        if (n <= 1) {
+    uint64_t NextPowerOfTwo(uint64_t number) {
+        if (number <= 1) {
             return 1;
         }
 
-        return 1ull << (Log2(n - 1) + 1);
+        return 1ull << (Log2(number - 1) + 1);
     }
 
-    bool IsPowerOfTwo(uint64_t n) {
-        ASSERT(n != 0);
-        return (n & (n - 1)) == 0;
+    bool IsPowerOfTwo(uint64_t number) {
+        return (number == 0) ? false : (number & (number - 1)) == 0;
     }
 
-    bool IsAligned(uint32_t value, size_t alignment) {
-        ASSERT(alignment <= UINT32_MAX);
-        ASSERT(IsPowerOfTwo(alignment));
-        ASSERT(alignment != 0);
-        uint32_t alignment32 = static_cast<uint32_t>(alignment);
-        return (value & (alignment32 - 1)) == 0;
+    bool IsAligned(uint32_t number, size_t multiple) {
+        ASSERT(multiple <= UINT32_MAX);
+        ASSERT(multiple != 0);
+        if (IsPowerOfTwo(multiple)) {
+            uint32_t multiple32 = static_cast<uint32_t>(multiple);
+            return (number & (multiple32 - 1)) == 0;
+        }
+        return number % multiple == 0;
     }
 
 }  // namespace gpgmm

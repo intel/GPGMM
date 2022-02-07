@@ -78,8 +78,9 @@ namespace gpgmm { namespace d3d12 {
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo
             if (resourceDescriptor.Alignment == 0 &&
                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
-                return {Align(resourceDescriptor.Width, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
-                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
+                return {
+                    AlignTo(resourceDescriptor.Width, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
+                    D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
             }
 
             // Small textures can take advantage of smaller alignments. For example,
@@ -610,7 +611,7 @@ namespace gpgmm { namespace d3d12 {
                     // calling CreateCommittedResource if the allocation is not fully contained.
                     Heap* resourceHeap = ToBackendType(allocation.GetMemory());
                     if (resourceHeap->GetPool() == nullptr &&
-                        allocation.GetSize() % heapSize != 0) {
+                        !IsAligned(allocation.GetSize(), heapSize)) {
                         return E_FAIL;
                     }
 
@@ -741,7 +742,7 @@ namespace gpgmm { namespace d3d12 {
         heapDesc.Alignment = heapAlignment;
         heapDesc.Flags = heapFlags;
 
-        if (heapSize % heapAlignment != 0) {
+        if (!IsAligned(heapSize, heapAlignment)) {
             d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResourceHeap",
                                    "Heap size is not a multiple of the alignment.",
                                    ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);

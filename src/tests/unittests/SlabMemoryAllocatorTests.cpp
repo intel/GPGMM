@@ -246,7 +246,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
-        EXPECT_GE(allocation->GetSize(), Align(allocationSize, kMinkBlockSize));
+        EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinkBlockSize));
 
         allocator.DeallocateMemory(allocation.release());
     }
@@ -257,7 +257,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
-        EXPECT_GE(allocation->GetSize(), Align(allocationSize, kMinkBlockSize));
+        EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinkBlockSize));
 
         allocator.DeallocateMemory(allocation.release());
     }
@@ -268,7 +268,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
-        EXPECT_GE(allocation->GetSize(), Align(allocationSize, kMinkBlockSize));
+        EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinkBlockSize));
 
         allocator.DeallocateMemory(allocation.release());
     }

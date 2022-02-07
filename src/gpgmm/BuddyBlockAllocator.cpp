@@ -90,7 +90,7 @@ namespace gpgmm {
         for (size_t ii = 0; ii <= allocationBlockLevel; ++ii) {
             size_t currLevel = allocationBlockLevel - ii;
             BuddyBlock* freeBlock = mFreeLists[currLevel].head;
-            if (freeBlock && (freeBlock->Offset % alignment == 0)) {
+            if (freeBlock && IsAligned(freeBlock->Offset, alignment)) {
                 return currLevel;
             }
         }
