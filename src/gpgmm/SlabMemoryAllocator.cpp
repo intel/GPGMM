@@ -19,10 +19,6 @@
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
 
-// A limit, expressed as a percentage of the slab size, that is acceptable to be
-// wasted due to fragmentation.
-static constexpr double kMemoryFragmentationLimit = 0.125;
-
 namespace gpgmm {
 
     // SlabMemoryAllocator
@@ -31,11 +27,13 @@ namespace gpgmm {
                                              uint64_t maxSlabSize,
                                              uint64_t slabSize,
                                              uint64_t slabAlignment,
+                                             double slabFragmentationLimit,
                                              MemoryAllocator* memoryAllocator)
         : mBlockSize(blockSize),
           mMaxSlabSize(maxSlabSize),
-          mSlabSize(slabSize == 0 ? blockSize : slabSize),
+          mSlabSize(slabSize),
           mSlabAlignment(slabAlignment),
+          mSlabFragmentationLimit(slabFragmentationLimit),
           mMemoryAllocator(memoryAllocator) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
         ASSERT(mMemoryAllocator != nullptr);
@@ -50,14 +48,17 @@ namespace gpgmm {
     }
 
     uint64_t SlabMemoryAllocator::ComputeSlabSize(uint64_t allocationSize) const {
-        // Figure out the slab size. If the left over empty space is less than
-        // |kMemoryFragmentationLimit| x total slab size, then the fragmentation is acceptable
-        // and we are done. For example, a 4MB slab and and a 512KB block fits exactly 8 blocks with
-        // no wasted space. But a 3MB block has 1MB worth of empty space leftover which exceeds
-        // |kMemoryFragmentationLimit| x total slab or 500KB. Slabs are grown in multiple of powers
-        // of two of the block size.
-        uint64_t slabSize = mSlabSize;
-        while (allocationSize % mBlockSize > (kMemoryFragmentationLimit * slabSize)) {
+        // If the left over empty space is less than |mSlabFragmentationLimit| x slab size,
+        // then the fragmentation is acceptable and we are done. For example, a 4MB slab and and a
+        // 512KB block fits exactly 8 blocks with no wasted space. But a 3MB block has 1MB worth of
+        // empty space leftover which exceeds |mSlabFragmentationLimit| x slab size or 500KB.
+        ASSERT(allocationSize <= mBlockSize);
+
+        // Slabs are grown in multiple of powers of two of the block size or |mSlabSize|
+        // if specified.
+        uint64_t slabSize = std::max(mSlabSize, mBlockSize);
+        const uint64_t wastedBytes = mBlockSize - allocationSize;
+        while (wastedBytes > (mSlabFragmentationLimit * slabSize)) {
             slabSize *= 2;
         }
 
@@ -223,11 +224,13 @@ namespace gpgmm {
                                            uint64_t maxSlabSize,
                                            uint64_t slabSize,
                                            uint64_t slabAlignment,
+                                           double slabFragmentationLimit,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
         : mMinBlockSize(minBlockSize),
           mMaxSlabSize(maxSlabSize),
           mSlabSize(slabSize),
           mSlabAlignment(slabAlignment),
+          mSlabFragmentationLimit(slabFragmentationLimit),
           mMemoryAllocator(std::move(memoryAllocator)) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
     }
@@ -261,14 +264,15 @@ namespace gpgmm {
         if (slabAllocator == nullptr) {
             slabAllocator = static_cast<SlabMemoryAllocator*>(
                 SlabCacheAllocator::AppendChild(std::make_unique<SlabMemoryAllocator>(
-                    blockSize, mMaxSlabSize, mSlabSize, mSlabAlignment, mMemoryAllocator.get())));
+                    blockSize, mMaxSlabSize, mSlabSize, mSlabAlignment, mSlabFragmentationLimit,
+                    mMemoryAllocator.get())));
             entry->GetValue().SlabAllocator = slabAllocator;
         }
 
         ASSERT(slabAllocator != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(blockSize, alignment, neverAllocate),
+        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(size, alignment, neverAllocate),
                          subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
@@ -289,7 +293,8 @@ namespace gpgmm {
 
         slabAllocator->DeallocateMemory(allocation);
 
-        // Remove the cached allocator if this is the last allocation.
+        // Remove the cached allocator if this is the last allocation. Once |entry| goes out of
+        // scope, it will unlink itself from the cache.
         entry->Unref();
         if (entry->HasOneRef()) {
             SlabCacheAllocator::RemoveChild(slabAllocator);

@@ -149,6 +149,18 @@ namespace gpgmm { namespace d3d12 {
         // Optional parameter. When 0 is specified, the API will automatically set the video memory
         // evict size to 50MB.
         uint64_t VideoMemoryEvictSize;
+
+        // A limit, expressed as a percentage of the resource heap size, that is acceptable to be
+        // wasted due to internal fragmentation. Internal fragmentation is when the resource
+        // allocation size is larger then the resource size specified. This occurs when the type of
+        // resource (buffer or texture) and sub-allocation algorithm (buddy, slab, etc) prefer
+        // different alignments. For example, a 192KB page-aligned resource may need to allocate
+        // 256KB of binary-allocated space, which if allowed, is a fragmentation limit of 1/3rd.
+        // If |PreferredResourceHeapSize| is non-zero, then |ResourceFragmentationLimit| could be
+        // exceeded.
+        // Optional parameter. When 0 is specified, the API will automatically set the resource
+        // fragmentation limit to 1/8th the resource heap size.
+        double ResourceFragmentationLimit;
     };
 
     enum ALLOCATION_FLAGS {

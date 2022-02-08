@@ -47,6 +47,7 @@ namespace gpgmm {
                             uint64_t maxSlabSize,
                             uint64_t slabSize,
                             uint64_t slabAlignment,
+                            double slabFragmentationLimit,
                             MemoryAllocator* memoryAllocator);
         ~SlabMemoryAllocator() override;
 
@@ -101,6 +102,8 @@ namespace gpgmm {
         const uint64_t mMaxSlabSize;
         const uint64_t mSlabSize;
         const uint64_t mSlabAlignment;
+        const double mSlabFragmentationLimit;
+
         MemoryAllocator* mMemoryAllocator = nullptr;
     };
 
@@ -112,6 +115,7 @@ namespace gpgmm {
                            uint64_t maxSlabSize,
                            uint64_t slabSize,
                            uint64_t slabAlignment,
+                           double slabFragmentationLimit,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         ~SlabCacheAllocator() override;
@@ -143,6 +147,7 @@ namespace gpgmm {
         const uint64_t mMaxSlabSize;
         const uint64_t mSlabSize;  // Optional size when non-zero.
         const uint64_t mSlabAlignment;
+        const double mSlabFragmentationLimit;
 
         std::unique_ptr<MemoryAllocator> mMemoryAllocator;
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;

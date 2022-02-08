@@ -313,6 +313,10 @@ namespace gpgmm { namespace d3d12 {
                                                 ? descriptor.MaxResourceHeapSize
                                                 : kDefaultMaxResourceHeapSize;
 
+        newDescriptor.ResourceFragmentationLimit = (descriptor.ResourceFragmentationLimit > 0)
+                                                       ? descriptor.ResourceFragmentationLimit
+                                                       : kDefaultResourceFragmentationLimit;
+
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             return E_INVALIDARG;
         }
@@ -403,7 +407,7 @@ namespace gpgmm { namespace d3d12 {
                     std::make_unique<SlabCacheAllocator>(
                         D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT, mMaxResourceHeapSize,
                         descriptor.PreferredResourceHeapSize, heapAlignment,
-                        std::move(buddySubAllocator));
+                        descriptor.ResourceFragmentationLimit, std::move(buddySubAllocator));
             }
 
             {
