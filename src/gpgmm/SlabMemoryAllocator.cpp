@@ -280,7 +280,7 @@ namespace gpgmm {
 
         return std::make_unique<MemoryAllocation>(
             this, subAllocation->GetMemory(), subAllocation->GetOffset(),
-            AllocationMethod::kSubAllocated, subAllocation->GetBlock());
+            subAllocation->GetMethod(), subAllocation->GetBlock());
     }
 
     void SlabCacheAllocator::DeallocateMemory(MemoryAllocation* allocation) {
