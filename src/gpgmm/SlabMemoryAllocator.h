@@ -133,14 +133,17 @@ namespace gpgmm {
       private:
         class SlabAllocatorCacheEntry {
           public:
-            SlabAllocatorCacheEntry(uint64_t blockSize) : BlockSize(blockSize) {
+            explicit SlabAllocatorCacheEntry(uint64_t blockSize) : mBlockSize(blockSize) {
             }
+
             size_t GetKey() const {
-                return BlockSize;
+                return mBlockSize;
             }
 
             SlabMemoryAllocator* SlabAllocator = nullptr;
-            const uint64_t BlockSize;
+
+          private:
+            const uint64_t mBlockSize;
         };
 
         const uint64_t mMinBlockSize;
