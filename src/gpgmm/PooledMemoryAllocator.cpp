@@ -13,30 +13,33 @@
 // limitations under the License.
 
 #include "gpgmm/PooledMemoryAllocator.h"
+
 #include "gpgmm/MemoryPool.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
 
     PooledMemoryAllocator::PooledMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
-                                                 MemoryPool* memoryPool)
-        : MemoryAllocator(std::move(memoryAllocator)), mMemoryPool(memoryPool) {
-        ASSERT(mMemoryPool != nullptr);
+                                                 MemoryPool* pool)
+        : MemoryAllocator(std::move(memoryAllocator)), mPool(pool) {
+        ASSERT(mPool != nullptr);
     }
 
-    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(uint64_t size,
-                                                                               uint64_t alignment,
-                                                                               bool neverAllocate) {
-        std::unique_ptr<MemoryAllocation> allocation = mMemoryPool->AcquireFromPool();
+    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
+        uint64_t allocationSize,
+        uint64_t alignment,
+        bool neverAllocate) {
+        std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(size, alignment, neverAllocate),
-                             allocation);
+            GPGMM_TRY_ASSIGN(
+                GetFirstChild()->TryAllocateMemory(allocationSize, alignment, neverAllocate),
+                allocation);
         }
 
         return allocation;
     }
 
     void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        mMemoryPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
+        mPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
     }
 }  // namespace gpgmm
