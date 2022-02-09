@@ -383,6 +383,9 @@ namespace gpgmm { namespace d3d12 {
             const uint64_t& heapAlignment = GetHeapAlignment(heapFlags);
             const D3D12_HEAP_TYPE& heapType = GetHeapType(resourceHeapType);
 
+            // General-purpose allocators.
+            // Used for dynamic resource allocation or when the resource size is not known at
+            // compile-time.
             {
                 std::unique_ptr<MemoryAllocator> standaloneAllocator =
                     std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags);
@@ -403,7 +406,7 @@ namespace gpgmm { namespace d3d12 {
                         std::move(conditionalHeapAllocator));
 
                 // TODO: Figure out the optimal slab size to heap ratio.
-                mResourceSubAllocatorOfType[resourceHeapTypeIndex] =
+                mResourceAllocatorOfType[resourceHeapTypeIndex] =
                     std::make_unique<SlabCacheAllocator>(
                         D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT, mMaxResourceHeapSize,
                         descriptor.PreferredResourceHeapSize, heapAlignment,
@@ -425,20 +428,25 @@ namespace gpgmm { namespace d3d12 {
                         descriptor.MaxResourceSizeForPooling);
             }
 
+            // Dedicated allocators.
             {
+                // Buffers are always 64KB aligned.
+                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
                 std::unique_ptr<MemoryAllocator> bufferAllocator =
                     std::make_unique<BufferAllocator>(
                         this, heapType, D3D12_RESOURCE_FLAG_NONE, GetInitialResourceState(heapType),
                         /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*resourceAlignment*/ 0);
+                        /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
 
-                std::unique_ptr<BuddyMemoryAllocator> bufferSubAllocator =
-                    std::make_unique<BuddyMemoryAllocator>(
-                        mMaxResourceHeapSize,
-                        /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*resourceAlignment*/ 0, std::move(bufferAllocator));
-
-                mBufferSubAllocatorOfType[resourceHeapTypeIndex] = std::move(bufferSubAllocator);
+                // Buffers are byte-addressable when sub-allocated within and cannot internally
+                // fragment by definition.
+                mBufferAllocatorOfType[resourceHeapTypeIndex] =
+                    std::make_unique<SlabCacheAllocator>(
+                        /*minBlockSize*/ 1,
+                        /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabFragmentationLimit*/ 0, std::move(bufferAllocator));
             }
         }
     }
@@ -448,8 +456,8 @@ namespace gpgmm { namespace d3d12 {
 
         // Destroy allocators in the reverse order they were created so we can record delete events
         // before event tracer shutdown.
-        mBufferSubAllocatorOfType = {};
-        mResourceSubAllocatorOfType = {};
+        mBufferAllocatorOfType = {};
+        mResourceAllocatorOfType = {};
         mResourceHeapAllocatorOfType = {};
 
         ShutdownEventTracer();
@@ -520,7 +528,7 @@ namespace gpgmm { namespace d3d12 {
             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             GetInitialResourceState(GetHeapType(resourceHeapType)) == initialResourceState &&
             !mIsAlwaysCommitted && !neverSubAllocate) {
-            allocator = mBufferSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+            allocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             const uint64_t subAllocatedAlignment =
                 (resourceDescriptor.Alignment == 0) ? 1 : resourceDescriptor.Alignment;
@@ -556,7 +564,7 @@ namespace gpgmm { namespace d3d12 {
         // resource heap.
         // The time and space complexity of is determined by the sub-allocation algorithm used.
         if (!mIsAlwaysCommitted && !neverSubAllocate) {
-            allocator = mResourceSubAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+            allocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
@@ -834,7 +842,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
         QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut) const {
         QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
-        for (auto& allocator : mResourceSubAllocatorOfType) {
+        for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
@@ -842,13 +850,13 @@ namespace gpgmm { namespace d3d12 {
             infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
         }
 
-        for (auto& allocator : mResourceHeapAllocatorOfType) {
+        for (const auto& allocator : mResourceHeapAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
             infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
         }
 
-        for (auto& allocator : mBufferSubAllocatorOfType) {
+        for (const auto& allocator : mBufferAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
             infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
