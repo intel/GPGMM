@@ -341,9 +341,9 @@ namespace gpgmm { namespace d3d12 {
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mResourceHeapAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mResourceSubAllocatorOfType;
+            mResourceAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mBufferSubAllocatorOfType;
+            mBufferAllocatorOfType;
     };
 
 }}  // namespace gpgmm::d3d12
