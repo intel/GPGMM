@@ -311,11 +311,11 @@ namespace gpgmm { namespace d3d12 {
 
         newDescriptor.MaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
                                                 ? descriptor.MaxResourceHeapSize
-                                                : kDefaultMaxResourceHeapSize;
+                                                : kDefaultMaxMemorySize;
 
         newDescriptor.ResourceFragmentationLimit = (descriptor.ResourceFragmentationLimit > 0)
                                                        ? descriptor.ResourceFragmentationLimit
-                                                       : kDefaultResourceFragmentationLimit;
+                                                       : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             return E_INVALIDARG;

@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMON_LIMITS_H_
-#define COMMON_LIMITS_H_
+#ifndef GPGMM_D3D12_DEFAULTSD3D12_H_
+#define GPGMM_D3D12_DEFAULTSD3D12_H_
 
-#include <cstdint>
+#include "gpgmm/Defaults.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    static constexpr uint64_t kDefaultMaxResourceHeapSize =
-        32ll * 1024ll * 1024ll * 1024ll;                                                  // 32GB
+    // Common defaults using D3D12 alias.
+    static constexpr uint64_t kDefaultMaxResourceHeapSize = kDefaultMaxMemorySize;
+
+    // D3D12-specific defaults.
     static constexpr uint64_t kDefaultPreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
     static constexpr uint32_t kDefaultVideoMemoryEvictSize = 50ll * 1024ll * 1024ll;      // 50MB
     static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;                          // 95%
-    static constexpr const char* kDefaultTraceFile = "gpgmm_event_trace.json";
-    static constexpr double kDefaultResourceFragmentationLimit = 0.125;  // 1/8th or 12.5%
-}}                                                                       // namespace gpgmm::d3d12
 
-#endif  // COMMON_LIMITS_H_
+}}  // namespace gpgmm::d3d12
+
+#endif  // GPGMM_D3D12_DEFAULTSD3D12_H_

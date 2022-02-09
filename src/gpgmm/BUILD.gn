@@ -120,6 +120,7 @@ source_set("gpgmm_sources") {
     "BuddyMemoryAllocator.h",
     "ConditionalMemoryAllocator.cpp",
     "ConditionalMemoryAllocator.h",
+    "Defaults.h",
     "Error.h",
     "IndexedMemoryPool.cpp",
     "IndexedMemoryPool.h",

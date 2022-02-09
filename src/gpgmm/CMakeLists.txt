@@ -23,6 +23,7 @@ target_sources(gpgmm PRIVATE
     "BuddyMemoryAllocator.h"
     "ConditionalMemoryAllocator.cpp"
     "ConditionalMemoryAllocator.h"
+    "Defaults.h"
     "Error.h"
     "AllocatorNode.cpp"
     "AllocatorNode.h"
