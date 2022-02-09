@@ -4,7 +4,6 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
   'checkout_dawn',
   'checkout_webnn',
-  'generate_location_tags',
 ]
 
 vars = {
@@ -19,12 +18,6 @@ vars = {
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,
-
-  # Required by Chromium's //testing to generate directory->tags mapping used by ResultDB.
-  'generate_location_tags': False,
-
-  # GN CIPD package version.
-  'gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
 }
 
 deps = {
@@ -34,64 +27,26 @@ deps = {
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@e009ad7edd6882ca0f749bf1d8d52b844ffb56ae',
+    'url': '{dawn_git}/dawn.git@22da31cf43e13b6aa57d66d89983ea6c5f5b094e',
     'condition': 'checkout_dawn or checkout_webnn',
   },
 
   'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@9add656df0e715aa9cf1d28536c132dd6506f784',
+    'url': '{github_git}/webmachinelearning/webnn-native.git@462c43fffe89d40a4e5db171895b5e608500ee6c',
     'condition': 'checkout_webnn',
   },
 
   # Dependencies required to use GN/Clang in standalone
   'build': {
-    'url': '{chromium_git}/chromium/src/build@555c8b467c21e2c4b22d00e87e3faa0431df9ac2',
+    'url': '{chromium_git}/chromium/src/build@3769c3b43c3804f9f7f14c6e37f545639fda2852',
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools@f78b4b9f33bd8ef9944d5ce643daff1c31880189',
-    'condition': 'gpgmm_standalone',
-  },
-  'buildtools/clang_format/script': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/clang/tools/clang-format.git@99803d74e35962f63a775f29477882afd4d57d94',
-    'condition': 'gpgmm_standalone',
-  },
-
-  'buildtools/linux64': {
-    'packages': [{
-      'package': 'gn/gn/linux-amd64',
-      'version': Var('gn_version'),
-    }],
-    'dep_type': 'cipd',
-    'condition': 'gpgmm_standalone and host_os == "linux"',
-  },
-  'buildtools/mac': {
-    'packages': [{
-      'package': 'gn/gn/mac-${{arch}}',
-      'version': Var('gn_version'),
-    }],
-    'dep_type': 'cipd',
-    'condition': 'gpgmm_standalone and host_os == "mac"',
-  },
-  'buildtools/win': {
-    'packages': [{
-      'package': 'gn/gn/windows-amd64',
-      'version': Var('gn_version'),
-    }],
-    'dep_type': 'cipd',
-    'condition': 'gpgmm_standalone and host_os == "win"',
-  },
-
-  'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@79a2e924d96e2fc1e4b937c42efd08898fa472d7',
-    'condition': 'gpgmm_standalone',
-  },
-  'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@2715a6c0de8dac4c7674934a6b3d30ba0c685271',
+    'url': '{chromium_git}/chromium/src/buildtools@235cfe435ca5a9826569ee4ef603e226216bd768',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang@8b7330592cb85ba09505a6be7bacabd0ad6160a3',
+    'url': '{chromium_git}/chromium/src/tools/clang@b12d1c836e2bb21b966bf86f7245bab9d257bb6b',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang/dsymutil': {
@@ -107,20 +62,15 @@ deps = {
 
   # Testing, GTest and GMock
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@d485ae97b7900c1fb7edfbe2901ae5adcb120865',
+    'url': '{chromium_git}/chromium/src/testing@3e2640a325dc34ec3d9cb2802b8da874aecaf52d',
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
-    'url': '{chromium_git}/external/github.com/google/googletest@6b74da4757a549563d7c37c8fae3e704662a043b',
+    'url': '{chromium_git}/external/github.com/google/googletest@2828773179fa425ee406df61890a150577178ea2',
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
     'url': '{chromium_git}/vulkan-deps@b2b44c000ee6dd3beaf2a381bbc9a24a270c84a1',
-    'condition': 'gpgmm_standalone',
-  },
-  # Dependency of //testing
-  'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@fa35beefb3429605035f98211ddb8750dee6a13d',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
@@ -223,26 +173,8 @@ hooks = [
   },
   # Apply Dawn-GPGMM integration patch.
   # Patch can be removed should GPGMM be merged into upstream.
-  # Removes un-tracked files from previous apply.
   {
-    'name': 'apply_dawn_integration_patch_1',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'clean', '-f', '-x',
-    ],
-  },
-  # Removes un-staged changes from previous apply.
-  {
-    'name': 'apply_dawn_integration_patch_2',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'checkout', '--', '.',
-    ],
-  },
-  {
-    'name': 'apply_dawn_integration_patch_3',
+    'name': 'apply_dawn_integration_patch',
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
@@ -253,6 +185,9 @@ hooks = [
 ]
 
 recursedeps = [
+  # buildtools provides clang_format, libc++, and libc++abi
+  'buildtools',
+
   # vulkan-deps provides vulkan-headers, spirv-tools, and gslang
   'third_party/vulkan-deps',
 
