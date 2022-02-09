@@ -106,7 +106,7 @@ namespace gpgmm {
                                                       AllocationMethod::kUndefined, block);
         }
 
-        MEMORY_ALLOCATOR_INFO mStats = {};
+        MEMORY_ALLOCATOR_INFO mInfo = {};
     };
 
 }  // namespace gpgmm

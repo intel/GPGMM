@@ -150,8 +150,8 @@ namespace gpgmm {
         blockInSlab->Size = subAllocation->GetBlock()->Size;
         blockInSlab->Offset = slab->SlabMemory->GetOffset() + subAllocation->GetBlock()->Offset;
 
-        mStats.UsedBlockCount++;
-        mStats.UsedBlockUsage += blockInSlab->Size;
+        mInfo.UsedBlockCount++;
+        mInfo.UsedBlockUsage += blockInSlab->Size;
 
         return std::make_unique<MemoryAllocation>(this, subAllocation->GetMemory(),
                                                   blockInSlab->Offset,
@@ -178,8 +178,8 @@ namespace gpgmm {
             slab->InsertBefore(cache->FreeList.head());
         }
 
-        mStats.UsedBlockCount--;
-        mStats.UsedBlockUsage -= blockInSlab->Size;
+        mInfo.UsedBlockCount--;
+        mInfo.UsedBlockUsage -= blockInSlab->Size;
 
         Block* block = blockInSlab->pBlock;
         slab->Allocator.DeallocateBlock(block);
@@ -195,8 +195,8 @@ namespace gpgmm {
 
     MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::QueryInfo() const {
         MEMORY_ALLOCATOR_INFO info = {};
-        info.UsedBlockUsage += mStats.UsedBlockUsage;
-        info.UsedBlockCount += mStats.UsedBlockCount;
+        info.UsedBlockUsage += mInfo.UsedBlockUsage;
+        info.UsedBlockCount += mInfo.UsedBlockCount;
         return info;
     }
 

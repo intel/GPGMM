@@ -94,8 +94,8 @@ namespace gpgmm {
             subAllocation);
 
         Block* block = subAllocation->GetBlock();
-        mStats.UsedBlockCount++;
-        mStats.UsedBlockUsage += block->Size;
+        mInfo.UsedBlockCount++;
+        mInfo.UsedBlockUsage += block->Size;
 
         // Memory allocation offset is always memory-relative.
         const uint64_t memoryOffset = block->Offset % mMemorySize;
@@ -110,8 +110,8 @@ namespace gpgmm {
 
         ASSERT(subAllocation != nullptr);
 
-        mStats.UsedBlockCount--;
-        mStats.UsedBlockUsage -= subAllocation->GetSize();
+        mInfo.UsedBlockCount--;
+        mInfo.UsedBlockUsage -= subAllocation->GetSize();
 
         const uint64_t memoryIndex = GetMemoryIndex(subAllocation->GetBlock()->Offset);
 

@@ -38,10 +38,10 @@ namespace gpgmm {
 
     MEMORY_ALLOCATOR_INFO MemoryAllocator::QueryInfo() const {
         if (!HasChild()) {
-            return mStats;
+            return mInfo;
         }
 
-        MEMORY_ALLOCATOR_INFO combinedStats = mStats;
+        MEMORY_ALLOCATOR_INFO combinedStats = mInfo;
         for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
             const MEMORY_ALLOCATOR_INFO stats = alloc->value()->QueryInfo();
             combinedStats.UsedBlockCount += stats.UsedBlockCount;
