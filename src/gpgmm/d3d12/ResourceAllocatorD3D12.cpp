@@ -531,7 +531,7 @@ namespace gpgmm { namespace d3d12 {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
-                    Heap* resourceHeap = ToBackendType(subAllocation.GetMemory());
+                    Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
@@ -565,7 +565,7 @@ namespace gpgmm { namespace d3d12 {
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    Heap* resourceHeap = ToBackendType(subAllocation.GetMemory());
+                    Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
@@ -613,7 +613,7 @@ namespace gpgmm { namespace d3d12 {
                 [&](const auto& allocation) -> HRESULT {
                     // If the resource's heap cannot be pooled then it is no better then
                     // calling CreateCommittedResource if the allocation is not fully contained.
-                    Heap* resourceHeap = ToBackendType(allocation.GetMemory());
+                    Heap* resourceHeap = ToBackend(allocation.GetMemory());
                     if (resourceHeap->GetPool() == nullptr &&
                         !IsAligned(allocation.GetSize(), heapSize)) {
                         return E_FAIL;

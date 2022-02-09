@@ -23,23 +23,25 @@ namespace gpgmm {
     template <typename CommonType, typename BackendTrait>
     struct CommonTrait;
 
+    // Define common types.
+
     template <typename BackendTrait>
     struct CommonTrait<MemoryBase, BackendTrait> {
         using CommonType = typename BackendTrait::MemoryType;
     };
 
-    // Converts common to backend type.
+    // Convert common to backend type.
 
     template <typename BackendTrait, typename CommonT>
-    typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackendType(CommonT* obj) {
-        return reinterpret_cast<typename CommonTrait<CommonT, BackendTrait>::CommonType*>(obj);
+    typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackend(CommonT* common) {
+        return reinterpret_cast<typename CommonTrait<CommonT, BackendTrait>::CommonType*>(common);
     }
 
     template <typename BackendTrait, typename CommonT>
-    const typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackendType(
-        const CommonT* obj) {
+    const typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackend(
+        const CommonT* common) {
         return reinterpret_cast<const typename CommonTrait<CommonT, BackendTrait>::CommonType*>(
-            obj);
+            common);
     }
 
 }  // namespace gpgmm

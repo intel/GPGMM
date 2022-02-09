@@ -123,7 +123,7 @@ namespace gpgmm { namespace d3d12 {
         } else {
             ASSERT(GetMethod() == AllocationMethod::kStandalone);
             ASSERT(mResourceAllocator != nullptr);
-            Heap* resourceHeap = ToBackendType(GetMemory());
+            Heap* resourceHeap = ToBackend(GetMemory());
             mResourceAllocator->FreeResourceHeap(resourceHeap);
         }
 
@@ -140,7 +140,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocation::Map(uint32_t subresource,
                                     const D3D12_RANGE* readRange,
                                     void** dataOut) {
-        Heap* resourceHeap = ToBackendType(GetMemory());
+        Heap* resourceHeap = ToBackend(GetMemory());
         if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
@@ -177,7 +177,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
-        Heap* resourceHeap = ToBackendType(GetMemory());
+        Heap* resourceHeap = ToBackend(GetMemory());
         if (resourceHeap == nullptr) {
             return;
         }
@@ -202,7 +202,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
-        Heap* resourceHeap = ToBackendType(GetMemory());
+        Heap* resourceHeap = ToBackend(GetMemory());
         if (resourceHeap == nullptr) {
             return E_INVALIDARG;
         }
@@ -224,7 +224,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_DESC ResourceAllocation::GetDesc() const {
-        Heap* resourceHeap = ToBackendType(GetMemory());
+        Heap* resourceHeap = ToBackend(GetMemory());
         ASSERT(resourceHeap != nullptr);
 
         return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod(), resourceHeap};

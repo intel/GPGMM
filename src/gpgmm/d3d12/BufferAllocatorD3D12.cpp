@@ -71,7 +71,7 @@ namespace gpgmm { namespace d3d12 {
 
     void BufferAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         ASSERT(allocation != nullptr);
-        Heap* heap = ToBackendType(allocation->GetMemory());
+        Heap* heap = ToBackend(allocation->GetMemory());
 
         mStats.UsedMemoryCount--;
         mStats.UsedMemoryUsage -= heap->GetSize();

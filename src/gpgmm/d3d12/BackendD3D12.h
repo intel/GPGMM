@@ -26,8 +26,8 @@ namespace gpgmm { namespace d3d12 {
     };
 
     template <typename T>
-    auto ToBackendType(T&& obj) -> decltype(gpgmm::ToBackendType<BackendTrait>(obj)) {
-        return gpgmm::ToBackendType<BackendTrait>(obj);
+    auto ToBackend(T&& common) -> decltype(gpgmm::ToBackend<BackendTrait>(common)) {
+        return gpgmm::ToBackend<BackendTrait>(common);
     }
 
 }}  // namespace gpgmm::d3d12

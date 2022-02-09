@@ -328,7 +328,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     EXPECT_EQ(allocation->GetSize(), kDefaultPreferredResourceHeapSize);
 
     // Commmitted resources cannot be backed by a D3D12 heap.
-    Heap* resourceHeap = ToBackendType(allocation->GetMemory());
+    Heap* resourceHeap = ToBackend(allocation->GetMemory());
     ASSERT_NE(resourceHeap, nullptr);
     ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
 }
