@@ -28,21 +28,22 @@ namespace gpgmm { namespace d3d12 {
         : mResourceAllocator(resourceAllocator), mHeapType(heapType), mHeapFlags(heapFlags) {
     }
 
-    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(uint64_t size,
-                                                                               uint64_t alignment,
-                                                                               bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
+        uint64_t allocationSize,
+        uint64_t alignment,
+        bool neverAllocate) {
         if (neverAllocate) {
             return {};
         }
 
         Heap* resourceHeap = nullptr;
-        if (FAILED(mResourceAllocator->CreateResourceHeap(size, mHeapType, mHeapFlags, alignment,
-                                                          &resourceHeap))) {
+        if (FAILED(mResourceAllocator->CreateResourceHeap(allocationSize, mHeapType, mHeapFlags,
+                                                          alignment, &resourceHeap))) {
             return nullptr;
         }
 
         mStats.UsedMemoryCount++;
-        mStats.UsedMemoryUsage += size;
+        mStats.UsedMemoryUsage += allocationSize;
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
     }

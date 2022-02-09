@@ -43,13 +43,14 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t size,
-                                                                              uint64_t alignment,
-                                                                              bool neverAllocate) {
+    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
+        uint64_t allocationSize,
+        uint64_t alignment,
+        bool neverAllocate) {
         TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (size == 0 || size > mMemorySize) {
+        if (allocationSize == 0 || allocationSize > mMemorySize) {
             LogMessageEvent(LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
                             "Allocation size exceeded the memory size.",
                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -57,10 +58,10 @@ namespace gpgmm {
         }
 
         // Round allocation size to nearest power-of-two.
-        size = NextPowerOfTwo(size);
+        allocationSize = NextPowerOfTwo(allocationSize);
 
         // Allocation cannot exceed the memory size.
-        if (size > mMemorySize) {
+        if (allocationSize > mMemorySize) {
             LogMessageEvent(LogSeverity::Info, "BuddyMemoryAllocator.TryAllocateMemory",
                             "Aligned allocation size exceeded the memory size.",
                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -71,7 +72,7 @@ namespace gpgmm {
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(
-            TrySubAllocateMemory(&mBuddyBlockAllocator, size, alignment,
+            TrySubAllocateMemory(&mBuddyBlockAllocator, allocationSize, alignment,
                                  [&](const auto& block) -> MemoryBase* {
                                      const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
                                      std::unique_ptr<MemoryAllocation> memoryAllocation =

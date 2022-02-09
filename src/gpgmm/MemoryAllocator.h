@@ -54,7 +54,7 @@ namespace gpgmm {
         // Attempts to allocate and return a memory allocation that is at-least of the requested
         // |size| that's also sized-aligned or a multiple of |alignment|. If not, return nullptr
         // instead. The returned MemoryAllocation is only valid for the lifetime of this allocator.
-        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
                                                                     uint64_t alignment,
                                                                     bool neverAllocate) = 0;
 
