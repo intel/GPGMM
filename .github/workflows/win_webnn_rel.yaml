@@ -49,6 +49,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
+        copy scripts\webnn.deps DEPS
         copy scripts\webnn.gclient .gclient
         gclient sync
 
