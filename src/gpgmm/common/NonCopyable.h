@@ -27,7 +27,7 @@ namespace gpgmm {
         NonCopyable& operator=(NonCopyable&&) = default;
 
       private:
-        // Not copyable constructor and aassignment.
+        // Not copyable constructor and assignment.
         NonCopyable(const NonCopyable&) = delete;
         NonCopyable& operator=(const NonCopyable&) = delete;
     };
