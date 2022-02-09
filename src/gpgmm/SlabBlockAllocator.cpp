@@ -25,11 +25,11 @@ namespace gpgmm {
         SlabBlock* head = new SlabBlock{};
         head->Offset = 0;
         head->Size = blockSize;
-        mFreeList.head = head;
+        mFreeList.pHead = head;
     }
 
     SlabBlockAllocator::~SlabBlockAllocator() {
-        SlabBlock* head = mFreeList.head;
+        SlabBlock* head = mFreeList.pHead;
         while (head != nullptr) {
             ASSERT(head != nullptr);
             SlabBlock* next = head->pNext;
@@ -58,18 +58,18 @@ namespace gpgmm {
         }
 
         // Pop off HEAD in the free-list.
-        SlabBlock* head = mFreeList.head;
+        SlabBlock* head = mFreeList.pHead;
         if (head == nullptr) {
-            mFreeList.head = nullptr;
+            mFreeList.pHead = nullptr;
         } else {
-            mFreeList.head = mFreeList.head->pNext;
+            mFreeList.pHead = mFreeList.pHead->pNext;
         }
 
         // And push new block at HEAD if not full.
-        if (mFreeList.head == nullptr && mNextFreeBlockIndex + 1 < mBlockCount) {
-            mFreeList.head = new SlabBlock{};
-            mFreeList.head->Offset = ++mNextFreeBlockIndex * mBlockSize;
-            mFreeList.head->Size = mBlockSize;
+        if (mFreeList.pHead == nullptr && mNextFreeBlockIndex + 1 < mBlockCount) {
+            mFreeList.pHead = new SlabBlock{};
+            mFreeList.pHead->Offset = ++mNextFreeBlockIndex * mBlockSize;
+            mFreeList.pHead->Size = mBlockSize;
         }
 
         return head;
@@ -81,13 +81,13 @@ namespace gpgmm {
         SlabBlock* currBlock = static_cast<SlabBlock*>(block);
 
         // Push block to HEAD
-        SlabBlock* head = mFreeList.head;
-        mFreeList.head = currBlock;
+        SlabBlock* head = mFreeList.pHead;
+        mFreeList.pHead = currBlock;
         currBlock->pNext = head;
     }
 
     bool SlabBlockAllocator::IsFull() const {
-        return mFreeList.head == nullptr;
+        return mFreeList.pHead == nullptr;
     }
 
 }  // namespace gpgmm

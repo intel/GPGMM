@@ -44,7 +44,7 @@ namespace gpgmm {
         };
 
         struct BlockList {
-            SlabBlock* head = nullptr;  // First free block in slab.
+            SlabBlock* pHead = nullptr;  // First free block in slab.
         };
 
         BlockList mFreeList;
