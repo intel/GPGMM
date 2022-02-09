@@ -77,11 +77,9 @@ namespace gpgmm {
             std::unique_ptr<MemoryAllocation> SlabMemory;
         };
 
-        // Stores a reference to the containing slab on the allocation so DeallocateMemory
+        // Stores a reference back to the slab containing the block so DeallocateMemory
         // knows which slab (and block allocator) to use.
-        struct SlabControlBlock : public Block {
-            SlabControlBlock(Block* block, Slab* slab) : pBlock(block), pSlab(slab) {
-            }
+        struct BlockInSlab : public Block {
             Block* pBlock = nullptr;
             Slab* pSlab = nullptr;
         };

@@ -146,7 +146,9 @@ namespace gpgmm {
         // Wrap the block in the containing slab. Since the slab's block could reside in another
         // allocated block, the slab's allocation offset must be made relative to slab's underlying
         // memory and not the slab.
-        SlabControlBlock* blockInSlab = new SlabControlBlock{subAllocation->GetBlock(), slab};
+        BlockInSlab* blockInSlab = new BlockInSlab();
+        blockInSlab->pBlock = subAllocation->GetBlock();
+        blockInSlab->pSlab = slab;
         blockInSlab->Size = subAllocation->GetBlock()->Size;
         blockInSlab->Offset = slab->SlabMemory->GetOffset() + subAllocation->GetBlock()->Offset;
 
@@ -161,8 +163,7 @@ namespace gpgmm {
     void SlabMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.DeallocateMemory");
 
-        const SlabControlBlock* blockInSlab =
-            static_cast<SlabControlBlock*>(allocation->GetBlock());
+        const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(allocation->GetBlock());
         ASSERT(blockInSlab != nullptr);
 
         Slab* slab = blockInSlab->pSlab;
