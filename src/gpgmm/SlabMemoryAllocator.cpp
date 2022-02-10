@@ -242,12 +242,12 @@ namespace gpgmm {
         ASSERT(mSizeCache.GetSize() == 0);
     }
 
-    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t allocationSize,
                                                                             uint64_t alignment,
                                                                             bool neverAllocate) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.TryAllocateMemory");
 
-        const uint64_t blockSize = AlignTo(size, mMinBlockSize);
+        const uint64_t blockSize = AlignTo(allocationSize, mMinBlockSize);
 
         // Attempting to allocate a block larger then the slab will always fail.
         if (mSlabSize != 0 && blockSize > mSlabSize) {
@@ -275,7 +275,7 @@ namespace gpgmm {
         ASSERT(slabAllocator != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(size, alignment, neverAllocate),
+        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(allocationSize, alignment, neverAllocate),
                          subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
