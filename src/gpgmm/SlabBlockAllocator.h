@@ -36,8 +36,6 @@ namespace gpgmm {
         Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
         void DeallocateBlock(Block* block) override;
 
-        bool IsFull() const;
-
       private:
         struct SlabBlock : public Block {
             SlabBlock* pNext = nullptr;
