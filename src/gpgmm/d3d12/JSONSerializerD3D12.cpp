@@ -90,7 +90,7 @@ namespace gpgmm { namespace d3d12 {
         std::stringstream ss;
         ss << "{ "
            << "\"Depth\": " << depthStencilValue.Depth << ", "
-           << "\"Stencil\": " << depthStencilValue.Stencil << " }";
+           << "\"Stencil\": " << static_cast<uint32_t>(depthStencilValue.Stencil) << " }";
         return ss.str();
     }
 

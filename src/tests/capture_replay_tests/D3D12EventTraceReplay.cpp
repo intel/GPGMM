@@ -47,7 +47,7 @@ namespace {
         if (IsDepthFormat(clearValue.Format)) {
             const Json::Value& depthStencilValue = clearValueJsonValue["DepthStencil"];
             clearValue.DepthStencil.Depth = depthStencilValue["Depth"].asFloat();
-            clearValue.DepthStencil.Stencil = *depthStencilValue["Stencil"].asCString();
+            clearValue.DepthStencil.Stencil = depthStencilValue["Stencil"].asUInt();
         } else {
             const Json::Value& rgba = clearValueJsonValue["Color"];
             clearValue.Color[0] = rgba["R"].asFloat();
