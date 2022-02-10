@@ -503,7 +503,9 @@ namespace gpgmm { namespace d3d12 {
 
         if (resourceInfo.SizeInBytes < resourceInfo.Alignment) {
             d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResource",
-                                   "Resource size is smaller then the alignment.",
+                                   "Resource size is smaller then the alignment (" +
+                                       std::to_string(resourceInfo.SizeInBytes) + " vs " +
+                                       std::to_string(resourceInfo.Alignment) + " bytes).",
                                    ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT);
         }
 
@@ -550,8 +552,10 @@ namespace gpgmm { namespace d3d12 {
                     if (subAllocation.GetSize() > resourceDescriptor.Width) {
                         d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Resource allocation size is larger then the resource size.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                            "Resource allocation size is larger then the resource size (" +
+                                std::to_string(subAllocation.GetSize()) + " vs " +
+                                std::to_string(resourceDescriptor.Width) + " bytes).",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
                     }
 
                     return S_OK;
@@ -586,8 +590,10 @@ namespace gpgmm { namespace d3d12 {
                     if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
                         d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Resource allocation size is larger then the resource size.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                            "Resource allocation size is larger then the resource size (" +
+                                std::to_string(subAllocation.GetSize()) + " vs " +
+                                std::to_string(resourceInfo.SizeInBytes) + " bytes).",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
                     }
 
                     return S_OK;
@@ -639,8 +645,10 @@ namespace gpgmm { namespace d3d12 {
                     if (allocation.GetSize() > heapSize) {
                         d3d12::LogMessageEvent(
                             LogSeverity::Info, "ResourceAllocator.CreateResource",
-                            "Resource allocation size is larger then the resource size.",
-                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT);
+                            "Resource allocation size is larger then the heap size (" +
+                                std::to_string(allocation.GetSize()) + " vs " +
+                                std::to_string(heapSize) + " bytes).",
+                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
                     }
 
                     return S_OK;
@@ -756,7 +764,9 @@ namespace gpgmm { namespace d3d12 {
 
         if (!IsAligned(heapSize, heapAlignment)) {
             d3d12::LogMessageEvent(LogSeverity::Info, "ResourceAllocator.CreateResourceHeap",
-                                   "Heap size is not a multiple of the alignment.",
+                                   "Heap size is not a multiple of the alignment (" +
+                                       std::to_string(heapSize) + " vs " +
+                                       std::to_string(heapAlignment) + " bytes).",
                                    ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);
         }
 

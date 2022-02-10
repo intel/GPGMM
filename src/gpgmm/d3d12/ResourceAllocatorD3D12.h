@@ -234,7 +234,7 @@ namespace gpgmm { namespace d3d12 {
         // Resource allocation size exceeds the D3D12 resource size, which wastes memory
         // unknowingly. The allocator did not support allocation of a block equal to the resource
         // size.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIONAL_ALIGNMENT = 0x4,
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT = 0x4,
 
         // Resource allocation was unable to be pool-allocated. This introduces OS VidMM overhead
         // because non-pool allocated memory cannot be reused by the allocator.

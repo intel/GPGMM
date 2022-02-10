@@ -82,7 +82,7 @@ namespace gpgmm {
         TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.TryAllocateMemory");
         if (allocationSize > mBlockSize) {
             LogMessageEvent(LogSeverity::Info, "SlabMemoryAllocator.TryAllocateMemory",
-                            "Allocation size exceeded the block size.  (" +
+                            "Allocation size exceeded the block size (" +
                                 std::to_string(allocationSize) + " vs " +
                                 std::to_string(mBlockSize) + " bytes).",
                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -92,7 +92,7 @@ namespace gpgmm {
         const uint64_t slabSize = ComputeSlabSize(allocationSize);
         if (slabSize > mMaxSlabSize) {
             LogMessageEvent(LogSeverity::Info, "SlabMemoryAllocator.TryAllocateMemory",
-                            "Slab size exceeded the max slab size. (" + std::to_string(slabSize) +
+                            "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
                                 " vs " + std::to_string(mMaxSlabSize) + " bytes).",
                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return {};
