@@ -59,12 +59,14 @@ namespace gpgmm {
     class CacheEntry : public RefCounted {
       public:
         // Constructs entry for lookup.
-        explicit CacheEntry(T value) : RefCounted(0), mValue(std::move(value)) {
+        explicit CacheEntry(const T& value) : RefCounted(0), mValue(std::move(value)) {
             ASSERT(mCache == nullptr);
         }
 
+        // Constructs entry to store.
         CacheEntry(MemoryCache<T>* cache, const T& value)
             : RefCounted(0), mCache(cache), mValue(std::move(value)) {
+            ASSERT(mCache != nullptr);
         }
 
         ~CacheEntry() {
@@ -126,6 +128,10 @@ namespace gpgmm {
 
         MemoryCache() = default;
 
+        ~MemoryCache() {
+            ASSERT(GetSize() == 0);
+        }
+
         ScopedRef<CacheEntryT> GetOrCreate(const T& value) {
             CacheEntryT tmp(std::move(value));
             const auto& iter = mCache.find(&tmp);
@@ -138,6 +144,7 @@ namespace gpgmm {
             return ScopedRef<CacheEntryT>(entry);
         }
 
+        // Return number of entries.
         size_t GetSize() const {
             return mCache.size();
         }
@@ -163,6 +170,7 @@ namespace gpgmm {
         friend CacheEntryT;
 
         void RemoveCacheEntry(CacheEntryT* entry) {
+            ASSERT(entry != nullptr);
             ASSERT(entry->RefCount() == 0);
             const size_t removedCount = mCache.erase(entry);
             ASSERT(removedCount == 1);
