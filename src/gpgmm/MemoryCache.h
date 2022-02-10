@@ -58,16 +58,15 @@ namespace gpgmm {
     template <typename T, typename KeyT = size_t>
     class CacheEntry : public RefCounted {
       public:
-        CacheEntry() = delete;
-
-        // Constructs temp entry for lookup.
-        CacheEntry(T value) : RefCounted(0), mValue(std::move(value)) {
+        // Constructs entry for lookup.
+        explicit CacheEntry(T value) : RefCounted(0), mValue(std::move(value)) {
             ASSERT(mCache == nullptr);
         }
 
         CacheEntry(MemoryCache<T>* cache, const T& value)
             : RefCounted(0), mCache(cache), mValue(std::move(value)) {
         }
+
         ~CacheEntry() {
             if (mCache != nullptr) {  // for lookup or not
                 mCache->RemoveCacheEntry(this);
@@ -80,7 +79,13 @@ namespace gpgmm {
             return mValue;
         }
 
+        const T& GetValue() const {
+            return mValue;
+        }
+
       private:
+        CacheEntry() = delete;
+
         friend MemoryCache<T>;
 
         KeyT GetKey() const {
@@ -123,7 +128,7 @@ namespace gpgmm {
 
         ScopedRef<CacheEntryT> GetOrCreate(const T& value) {
             CacheEntryT tmp(std::move(value));
-            auto iter = mCache.find(&tmp);
+            const auto& iter = mCache.find(&tmp);
             if (iter != mCache.end()) {
                 return (*iter);
             }
