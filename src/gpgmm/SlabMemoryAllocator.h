@@ -138,7 +138,7 @@ namespace gpgmm {
                 return mBlockSize;
             }
 
-            SlabMemoryAllocator* SlabAllocator = nullptr;
+            SlabMemoryAllocator* pSlabAllocator = nullptr;
 
           private:
             const uint64_t mBlockSize;

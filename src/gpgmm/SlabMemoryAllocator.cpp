@@ -263,13 +263,13 @@ namespace gpgmm {
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize));
 
         // Create a slab allocator for the new entry.
-        SlabMemoryAllocator* slabAllocator = entry->GetValue().SlabAllocator;
+        SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator = static_cast<SlabMemoryAllocator*>(
                 SlabCacheAllocator::AppendChild(std::make_unique<SlabMemoryAllocator>(
                     blockSize, mMaxSlabSize, mSlabSize, mSlabAlignment, mSlabFragmentationLimit,
                     mMemoryAllocator.get())));
-            entry->GetValue().SlabAllocator = slabAllocator;
+            entry->GetValue().pSlabAllocator = slabAllocator;
         }
 
         ASSERT(slabAllocator != nullptr);
@@ -291,7 +291,7 @@ namespace gpgmm {
 
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()));
 
-        SlabMemoryAllocator* slabAllocator = entry->GetValue().SlabAllocator;
+        SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         ASSERT(slabAllocator != nullptr);
 
         slabAllocator->DeallocateMemory(allocation);
@@ -309,7 +309,7 @@ namespace gpgmm {
         // Underlying memory allocator is weakly shared between cached slab allocators so it
         // should only be counted once (by the SlabCacheAllocator).
         for (const auto& entry : mSizeCache) {
-            const MEMORY_ALLOCATOR_INFO& childInfo = entry->GetValue().SlabAllocator->QueryInfo();
+            const MEMORY_ALLOCATOR_INFO& childInfo = entry->GetValue().pSlabAllocator->QueryInfo();
             info.UsedBlockCount += childInfo.UsedBlockCount;
             info.UsedBlockUsage += childInfo.UsedBlockUsage;
         }
@@ -324,7 +324,7 @@ namespace gpgmm {
     uint64_t SlabCacheAllocator::GetPoolSizeForTesting() const {
         uint64_t count = 0;
         for (const auto& entry : mSizeCache) {
-            const SlabMemoryAllocator* allocator = entry->GetValue().SlabAllocator;
+            const SlabMemoryAllocator* allocator = entry->GetValue().pSlabAllocator;
             ASSERT(allocator != nullptr);
             count += allocator->GetPoolSizeForTesting();
         }
