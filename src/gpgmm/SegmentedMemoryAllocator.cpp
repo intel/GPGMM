@@ -15,7 +15,6 @@
 #include "gpgmm/SegmentedMemoryAllocator.h"
 
 #include "gpgmm/JSONSerializer.h"
-#include "gpgmm/LIFOMemoryPool.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -48,10 +47,10 @@ namespace gpgmm {
             if (middle == nullptr) {
                 return nullptr;
             }
-            if (middle->value()->GetSize() == size) {
+            if (middle->value()->GetMemorySize() == size) {
                 return middle;
 
-            } else if (middle->value()->GetSize() > size) {
+            } else if (middle->value()->GetMemorySize() > size) {
                 // Smaller then middle, go left.
                 right = middle;
 
@@ -65,24 +64,14 @@ namespace gpgmm {
 
     // MemorySegment
 
-    MemorySegment::MemorySegment(uint64_t memorySize, std::unique_ptr<MemoryPool> pool)
-        : mMemorySize(memorySize), mPool(std::move(pool)) {
+    MemorySegment::MemorySegment(uint64_t memorySize) : LIFOMemoryPool(memorySize) {
     }
 
     MemorySegment::~MemorySegment() {
         if (IsInList()) {
             RemoveFromList();
         }
-
-        mPool->ReleasePool();
-    }
-
-    uint64_t MemorySegment::GetSize() const {
-        return mMemorySize;
-    }
-
-    MemoryPool* MemorySegment::GetPool() const {
-        return mPool.get();
+        ReleasePool();
     }
 
     // SegmentedMemoryAllocator
@@ -112,8 +101,7 @@ namespace gpgmm {
         // List is empty, append it at end.
         if (existingFreeSegment == mFreeSegments.end()) {
             ASSERT(mFreeSegments.empty());
-            MemorySegment* newFreeSegment =
-                new MemorySegment{memorySize, std::make_unique<LIFOMemoryPool>()};
+            MemorySegment* newFreeSegment = new MemorySegment{memorySize};
             mFreeSegments.Append(newFreeSegment);
             return newFreeSegment;
         }
@@ -121,15 +109,14 @@ namespace gpgmm {
         ASSERT(existingFreeSegment->value() != nullptr);
 
         // Segment already exists, reuse it.
-        if (existingFreeSegment->value()->GetSize() == memorySize) {
+        if (existingFreeSegment->value()->GetMemorySize() == memorySize) {
             return existingFreeSegment->value();
         }
 
-        MemorySegment* newFreeSegment =
-            new MemorySegment{memorySize, std::make_unique<LIFOMemoryPool>()};
+        MemorySegment* newFreeSegment = new MemorySegment{memorySize};
 
         // Or insert a new segment in sorted order.
-        if (memorySize > existingFreeSegment->value()->GetSize()) {
+        if (memorySize > existingFreeSegment->value()->GetMemorySize()) {
             newFreeSegment->InsertAfter(existingFreeSegment);
         } else {
             newFreeSegment->InsertBefore(existingFreeSegment);
@@ -154,14 +141,14 @@ namespace gpgmm {
         MemorySegment* segment = GetOrCreateFreeSegment(size);
         ASSERT(segment != nullptr);
 
-        std::unique_ptr<MemoryAllocation> allocation = segment->GetPool()->AcquireFromPool();
+        std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(
                 GetFirstChild()->TryAllocateMemory(size, mMemoryAlignment, neverAllocate),
                 allocation);
         }
 
-        allocation->GetMemory()->SetPool(segment->GetPool());
+        allocation->GetMemory()->SetPool(segment);
 
         return std::make_unique<MemoryAllocation>(this, allocation->GetMemory());
     }
@@ -185,11 +172,7 @@ namespace gpgmm {
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
-
-            MemoryPool* pool = segment->GetPool();
-            ASSERT(pool != nullptr);
-
-            pool->ReleasePool();
+            segment->ReleasePool();
         }
     }
 
@@ -198,11 +181,7 @@ namespace gpgmm {
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
-
-            MemoryPool* pool = segment->GetPool();
-            ASSERT(pool != nullptr);
-
-            count += pool->GetPoolSize();
+            count += segment->GetPoolSize();
         }
         return count;
     }

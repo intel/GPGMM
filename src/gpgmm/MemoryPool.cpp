@@ -18,7 +18,7 @@
 
 namespace gpgmm {
 
-    MemoryPool::MemoryPool() {
+    MemoryPool::MemoryPool(uint64_t memorySize) : mMemorySize(memorySize) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryPool", this);
     }
 
@@ -26,8 +26,12 @@ namespace gpgmm {
         TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryPool", this);
     }
 
+    uint64_t MemoryPool::GetMemorySize() const {
+        return mMemorySize;
+    }
+
     POOL_DESC MemoryPool::GetDesc() const {
-        return {GetPoolSize()};
+        return {GetPoolSize() * mMemorySize};
     }
 
 }  // namespace gpgmm

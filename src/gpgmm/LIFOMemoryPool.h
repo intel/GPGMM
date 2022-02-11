@@ -21,10 +21,10 @@
 
 namespace gpgmm {
 
-    // Pools memory using LIFO queue (newest are recycled first).
+    // Pool using LIFO (newest are recycled first).
     class LIFOMemoryPool : public MemoryPool {
       public:
-        LIFOMemoryPool() = default;
+        explicit LIFOMemoryPool(uint64_t memorySize);
         ~LIFOMemoryPool() override = default;
 
         // MemoryPool interface

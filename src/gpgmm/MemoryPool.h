@@ -30,7 +30,7 @@ namespace gpgmm {
     // Stores a collection of fixed-size memory blocks.
     class MemoryPool {
       public:
-        MemoryPool();
+        explicit MemoryPool(uint64_t memorySize);
         virtual ~MemoryPool();
 
         // Retrieves a memory allocation from the pool using an optional index.
@@ -47,7 +47,13 @@ namespace gpgmm {
         // Returns number of memory allocations in the pool.
         virtual uint64_t GetPoolSize() const = 0;
 
+        /// Returns the size of the memory blocks being pooled.
+        virtual uint64_t GetMemorySize() const;
+
         POOL_DESC GetDesc() const;
+
+      private:
+        uint64_t mMemorySize;
     };
 
 }  // namespace gpgmm

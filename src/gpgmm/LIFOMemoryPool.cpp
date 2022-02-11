@@ -21,6 +21,9 @@
 
 namespace gpgmm {
 
+    LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPool(memorySize) {
+    }
+
     std::unique_ptr<MemoryAllocation> LIFOMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
         ASSERT(memoryIndex == kInvalidIndex);
 
