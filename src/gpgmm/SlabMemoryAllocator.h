@@ -68,11 +68,12 @@ namespace gpgmm {
         // and a reference to the underlying memory.
         struct Slab : public LinkNode<Slab>, public RefCounted {
             Slab(uint64_t blockCount, uint64_t blockSize)
-                : RefCounted(0), Allocator(blockCount, blockSize) {
+                : RefCounted(0), BlockCount(blockCount), Allocator(blockCount, blockSize) {
             }
             bool IsFull() const {
-                return Allocator.IsFull();
+                return static_cast<uint32_t>(RefCount()) == BlockCount;
             }
+            uint64_t BlockCount = 0;
             SlabBlockAllocator Allocator;
             std::unique_ptr<MemoryAllocation> SlabMemory;
         };

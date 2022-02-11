@@ -86,8 +86,4 @@ namespace gpgmm {
         currBlock->pNext = head;
     }
 
-    bool SlabBlockAllocator::IsFull() const {
-        return mFreeList.pHead == nullptr;
-    }
-
 }  // namespace gpgmm
