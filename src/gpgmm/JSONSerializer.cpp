@@ -21,6 +21,17 @@
 
 namespace gpgmm {
 
+    // Messages with equal or greater to severity will be logged.
+    LogSeverity gRecordEventLevel = LogSeverity::Info;
+
+    void SetRecordEventLevel(const LogSeverity& level) {
+        gRecordEventLevel = level;
+    }
+
+    const LogSeverity& GetRecordEventLevel() {
+        return gRecordEventLevel;
+    }
+
     // static
     std::string JSONSerializer::AppendTo(const POOL_DESC& desc) {
         std::stringstream ss;

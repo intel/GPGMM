@@ -57,13 +57,7 @@ namespace gpgmm {
         Error,
     };
 
-    // Log messages of a given severity to be logged as events.
-    void SetRecordLogLevel(const LogSeverity& level);
-    const LogSeverity& GetRecordLevel();
-
-    // Log messages of a given severity to be logged to console.
     void SetLogMessageLevel(const LogSeverity& level);
-    const LogSeverity& GetLogLevel();
 
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
@@ -93,6 +87,9 @@ namespace gpgmm {
     LogMessage InfoLog();
     LogMessage WarningLog();
     LogMessage ErrorLog();
+
+    // Create a LogMessage based on severity.
+    LogMessage Log(const LogSeverity& level);
 
     // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information
