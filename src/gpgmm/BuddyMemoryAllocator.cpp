@@ -28,7 +28,8 @@ namespace gpgmm {
         : MemoryAllocator(std::move(memoryAllocator)),
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
-          mBuddyBlockAllocator(systemSize) {
+          mBuddyBlockAllocator(systemSize),
+          mPool(mMemorySize) {
         ASSERT(mMemorySize <= systemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
         ASSERT(IsAligned(systemSize, mMemorySize));

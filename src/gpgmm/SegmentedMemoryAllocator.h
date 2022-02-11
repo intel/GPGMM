@@ -15,6 +15,7 @@
 #ifndef GPGMM_SEGMENTEDMEMORYALLOCATOR_H_
 #define GPGMM_SEGMENTEDMEMORYALLOCATOR_H_
 
+#include "gpgmm/LIFOMemoryPool.h"
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/common/LinkedList.h"
 
@@ -25,21 +26,10 @@ namespace gpgmm {
     // Represents one or more memory blocks managed in a pool.
     // A memory segment is a node in a linked-list so it may be cached and reuse by the segmented
     // allocator.
-    class MemorySegment : public LinkNode<MemorySegment> {
+    class MemorySegment : public LIFOMemoryPool, public LinkNode<MemorySegment> {
       public:
-        MemorySegment(uint64_t memorySize, std::unique_ptr<MemoryPool> pool);
+        explicit MemorySegment(uint64_t memorySize);
         virtual ~MemorySegment();
-
-        // Return the size of the memory segment which is defined as the size of any memory block in
-        // the pool. The size is used to lookup a free memory block in a segment.
-        uint64_t GetSize() const;
-
-        // Return the pool managed by this segment.
-        MemoryPool* GetPool() const;
-
-      private:
-        const uint64_t mMemorySize;
-        std::unique_ptr<MemoryPool> mPool;
     };
 
     // SegmentedMemoryAllocator maintains a sorted segmented list of memory pools to allocate

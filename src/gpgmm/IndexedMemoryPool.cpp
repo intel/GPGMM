@@ -19,6 +19,9 @@
 
 namespace gpgmm {
 
+    IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPool(memorySize) {
+    }
+
     std::unique_ptr<MemoryAllocation> IndexedMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
         if (memoryIndex >= mPool.size()) {
             mPool.resize(memoryIndex + 1);

@@ -443,9 +443,9 @@ TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
 TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    LIFOMemoryPool memoryPool;
-    std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        std::make_unique<DummyMemoryAllocator>(), &memoryPool);
+    LIFOMemoryPool pool(kDefaultMemorySize);
+    std::unique_ptr<PooledMemoryAllocator> poolAllocator =
+        std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(), &pool);
 
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
@@ -466,7 +466,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
+    ASSERT_EQ(pool.GetPoolSize(), 0u);
 
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
@@ -474,7 +474,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocator.DeallocateMemory(allocation.release());
     }
 
-    ASSERT_EQ(memoryPool.GetPoolSize(), heaps.size());
+    ASSERT_EQ(pool.GetPoolSize(), heaps.size());
 
     allocations.clear();
 
@@ -489,7 +489,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
+    ASSERT_EQ(pool.GetPoolSize(), 0u);
 
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
@@ -498,16 +498,16 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 
     ASSERT_EQ(allocator.GetPoolSizeForTesting(), 0u);
 
-    memoryPool.ReleasePool();
+    pool.ReleasePool();
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
 TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    LIFOMemoryPool memoryPool;
-    std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        std::make_unique<DummyMemoryAllocator>(), &memoryPool);
+    LIFOMemoryPool pool(kDefaultMemorySize);
+    std::unique_ptr<PooledMemoryAllocator> poolAllocator =
+        std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(), &pool);
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
 
@@ -529,7 +529,7 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(memoryPool.GetPoolSize(), 0u);
+    ASSERT_EQ(pool.GetPoolSize(), 0u);
 
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
@@ -537,7 +537,7 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
         allocator.DeallocateMemory(allocation.release());
     }
 
-    ASSERT_EQ(memoryPool.GetPoolSize(), kNumOfHeaps);
+    ASSERT_EQ(pool.GetPoolSize(), kNumOfHeaps);
 
-    memoryPool.ReleasePool();
+    pool.ReleasePool();
 }
