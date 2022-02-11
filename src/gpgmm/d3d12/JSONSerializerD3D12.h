@@ -50,20 +50,18 @@ namespace gpgmm { namespace d3d12 {
     };
 
     template <typename T>
-    static void LogEvent(const char* name, const T& desc) {
-        return gpgmm::LogEvent<T, JSONSerializer>(name, desc);
+    static void LogObject(const char* name, const T& desc) {
+        return gpgmm::LogObject<T, JSONSerializer>(name, desc);
     }
 
     template <typename... Args>
-    static void LogMessageEvent(const LogSeverity& severity,
-                                const char* name,
-                                const Args&... args) {
-        return gpgmm::LogMessageEvent<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    static void Log(const LogSeverity& severity, const char* name, const Args&... args) {
+        return gpgmm::Log<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
     }
 
     template <typename T, typename... Args>
-    static void LogEvent(const char* name, const Args&... args) {
-        return gpgmm::LogEvent<T, JSONSerializer>(name, args...);
+    static void LogObject(const char* name, const Args&... args) {
+        return gpgmm::LogObject<T, JSONSerializer>(name, args...);
     }
 
     template <typename T, typename DescT>

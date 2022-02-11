@@ -27,7 +27,6 @@
 namespace gpgmm {
 
     // Messages with equal or greater to severity will be logged.
-    LogSeverity gEventLogMessageLevel = LogSeverity::Info;
     LogSeverity gLogMessageLevel = LogSeverity::Warning;
 
     namespace {
@@ -68,20 +67,8 @@ namespace gpgmm {
 
     }  // anonymous namespace
 
-    void SetRecordLogLevel(const LogSeverity& level) {
-        gEventLogMessageLevel = level;
-    }
-
-    const LogSeverity& GetRecordLevel() {
-        return gEventLogMessageLevel;
-    }
-
     void SetLogMessageLevel(const LogSeverity& level) {
         gLogMessageLevel = level;
-    }
-
-    const LogSeverity& GetLogLevel() {
-        return gLogMessageLevel;
     }
 
     // LogMessage
@@ -94,6 +81,11 @@ namespace gpgmm {
 
         // If this message has been moved, its stream is empty.
         if (fullMessage.empty()) {
+            return;
+        }
+
+        // If this message is below the global severity level, do not print it.
+        if (gLogMessageLevel > mSeverity) {
             return;
         }
 
@@ -134,6 +126,22 @@ namespace gpgmm {
         LogMessage message = DebugLog();
         message << file << ":" << line << "(" << function << ")";
         return message;
+    }
+
+    LogMessage Log(const LogSeverity& level) {
+        switch (level) {
+            case LogSeverity::Debug:
+                return DebugLog();
+            case LogSeverity::Info:
+                return InfoLog();
+            case LogSeverity::Warning:
+                return WarningLog();
+            case LogSeverity::Error:
+                return ErrorLog();
+            default:
+                UNREACHABLE();
+                return {level};
+        }
     }
 
 }  // namespace gpgmm

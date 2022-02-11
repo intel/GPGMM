@@ -25,6 +25,10 @@ namespace gpgmm {
     struct POOL_DESC;
     struct ALLOCATOR_MESSAGE;
 
+    // Messages of a given severity to be recorded as events.
+    void SetRecordEventLevel(const LogSeverity& level);
+    const LogSeverity& GetRecordEventLevel();
+
     class JSONSerializer {
       public:
         static std::string AppendTo(const POOL_DESC& desc);
@@ -40,7 +44,7 @@ namespace gpgmm {
     }
 
     template <typename T, typename SerializerT>
-    static void LogEvent(const char* name, const T& obj) {
+    static void LogObject(const char* name, const T& obj) {
         if (IsEventTracerEnabled()) {
             auto args = SerializerT::AppendTo(obj);
             TRACE_EVENT_INSTANT(name, args);
@@ -48,33 +52,25 @@ namespace gpgmm {
     }
 
     template <typename T, typename SerializerT, typename... Args>
-    static void LogEvent(const char* name, const Args&... args) {
+    static void LogObject(const char* name, const Args&... args) {
         if (IsEventTracerEnabled()) {
             const T& obj{args...};
-            return LogEvent<T, SerializerT>(name, obj);
+            return LogObject<T, SerializerT>(name, obj);
         }
     }
 
     template <typename T, typename SerializerT, typename... Args>
-    static void LogMessageEvent(const LogSeverity& severity,
-                                const char* name,
-                                const Args&... args) {
+    static void Log(const LogSeverity& severity, const char* name, const Args&... args) {
         const T& obj{args...};
-        if (severity >= GetLogLevel()) {
-            LogMessage logMessage(severity);
-            logMessage << name << SerializerT::AppendTo(obj);
-        }
-
-        if (severity >= GetRecordLevel()) {
-            return LogEvent<T, SerializerT>(name, obj);
+        gpgmm::Log(severity) << name << SerializerT::AppendTo(obj);
+        if (severity >= GetRecordEventLevel()) {
+            return LogObject<T, SerializerT>(name, obj);
         }
     }
 
     template <typename... Args>
-    static void LogMessageEvent(const LogSeverity& severity,
-                                const char* name,
-                                const Args&... args) {
-        return gpgmm::LogMessageEvent<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    static void Log(const LogSeverity& severity, const char* name, const Args&... args) {
+        return gpgmm::Log<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
     }
 
 }  // namespace gpgmm
