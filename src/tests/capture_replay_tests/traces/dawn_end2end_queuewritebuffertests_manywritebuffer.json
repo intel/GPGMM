@@ -15,7 +15,7 @@
         },
         "IsUMA": 0,
         "ResourceHeapTier": 1,
-        "PreferredResourceHeapSize": 4194304,
+        "PreferredResourceHeapSize": 0,
         "MaxResourceHeapSize": 34359738368,
         "MaxResourceSizeForPooling": 4194304,
         "MaxVideoMemoryBudget": 0.95,
