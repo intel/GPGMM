@@ -24,7 +24,7 @@
 
 static const std::string kTraceIndex = GPGMM_CAPTURE_REPLAY_TESTS_TRACE_INDEX;
 
-static TraceFile gSingleTraceFile = {"SingleTrace", ""};
+static std::string gSingleTraceFilePath = "";  // Always empty unless set by command-line option.
 
 namespace {
 
@@ -112,7 +112,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 } else if (strcmp(level, "=ERROR") == 0) {
                     mParams.LogLevel = gpgmm::LogSeverity::Error;
                 } else {
-                    gpgmm::ErrorLog() << "Invalid log message level " << level;
+                    gpgmm::ErrorLog() << "Invalid log message level " << level << ".\n";
                     UNREACHABLE();
                 }
             } else {
@@ -126,25 +126,25 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         if (strncmp(argv[i], kPlaybackFile, arglen) == 0) {
             const char* path = argv[i] + arglen;
             if (path[0] != '\0') {
-                gSingleTraceFile.path = std::string(path);
+                gSingleTraceFilePath = std::string(path);
             } else {
-                gpgmm::ErrorLog() << "Invalid playback file path " << path;
+                gpgmm::ErrorLog() << "Invalid playback file " << path << ".\n";
                 UNREACHABLE();
             }
             continue;
         }
 
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
-            gpgmm::InfoLog() << "Additional Flags:"
+            gpgmm::InfoLog() << "Additional options:"
                              << " [--iterations=X]\n"
-                             << " --iterations: Number of times to playback the capture.\n"
+                             << " --iterations: Number of times to run playback.\n"
                              << " --force-standalone: Disable memory reuse by sub-allocation.\n"
-                             << " --record-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
-                                "level to record logs.\n"
-                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Message severity "
-                                "level for logs.\n"
+                             << " --record-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                                "level to record events.\n"
+                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                                "level for log messages.\n"
                              << " --regenerate: Capture again upon playback.\n"
-                             << " --playback-file: Path to single capture file to playback.\n";
+                             << " --playback-file: Path to captured file to playback.\n";
             continue;
         }
     }
@@ -171,7 +171,7 @@ void GPGMMCaptureReplayTestEnvironment::TearDown() {
 
 void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     std::cout << "Playback environment settings\n"
-                 "------------------------\n"
+                 "-----------------------------\n"
               << "Iterations per test: " << mParams.Iterations << "\n"
               << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false") << "\n"
               << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false") << "\n"
@@ -182,17 +182,18 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
 
 // static
 std::vector<TraceFile> GPGMMCaptureReplayTestEnvironment::GenerateTraceFileParams() {
-    // Playback only the trace file specified in command-line.
-    if (!gSingleTraceFile.path.empty()) {
-        return {gSingleTraceFile};
+    // Playback only the file specified in command-line option.
+    if (!gSingleTraceFilePath.empty()) {
+        return {TraceFile{"SingleTrace", gSingleTraceFilePath}};
     }
 
+    // Playback all files contained in traces folder.
     Json::Value root;
     Json::Reader reader;
     std::ifstream traceIndex(kTraceIndex, std::ifstream::binary);
     bool result = reader.parse(traceIndex, root, false);
     if (!result) {
-        gpgmm::ErrorLog() << "Unable to parse: " << kTraceIndex;
+        gpgmm::ErrorLog() << "Unable to parse: " << kTraceIndex << ".\n";
         return {};
     }
 
