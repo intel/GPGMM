@@ -36,7 +36,7 @@ namespace gpgmm {
     std::string JSONSerializer::AppendTo(const POOL_DESC& desc) {
         std::stringstream ss;
         ss << "{ "
-           << "\"UnusedPoolSize\": " << desc.UnusedPoolSize << " }";
+           << "\"PoolSize\": " << desc.PoolSize << " }";
         return ss.str();
     }
 

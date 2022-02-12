@@ -5,8 +5,8 @@
       "name": "GPUMemoryAllocator",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 777428,
+      "tid": 23108,
+      "ts": 1123830,
       "pid": "GPGMM",
       "args": {
         "Flags": 0,
@@ -26,89 +26,89 @@
       "name": "GPUMemoryAllocator",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743e0fcd50",
-      "tid": 16852,
-      "ts": 777432,
+      "id": "0x2b77eaa0af0",
+      "tid": 23108,
+      "ts": 1123835,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de43d98",
-      "tid": 16852,
-      "ts": 777454,
+      "id": "0x2b77e9a3068",
+      "tid": 23108,
+      "ts": 1123843,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de44b98",
-      "tid": 16852,
-      "ts": 777480,
+      "id": "0x2b77e9a3568",
+      "tid": 23108,
+      "ts": 1123852,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de44e98",
-      "tid": 16852,
-      "ts": 777485,
+      "id": "0x2b77e9a3768",
+      "tid": 23108,
+      "ts": 1123868,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de43698",
-      "tid": 16852,
-      "ts": 777492,
+      "id": "0x2b77e9a3668",
+      "tid": 23108,
+      "ts": 1123874,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de44398",
-      "tid": 16852,
-      "ts": 777518,
+      "id": "0x2b77e9a3968",
+      "tid": 23108,
+      "ts": 1123895,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 777523,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1123921,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de44c98",
-      "tid": 16852,
-      "ts": 777528,
+      "id": "0x2b77e9a2d68",
+      "tid": 23108,
+      "ts": 1123927,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de43998",
-      "tid": 16852,
-      "ts": 777535,
+      "id": "0x2b77e9a4168",
+      "tid": 23108,
+      "ts": 1123949,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 777615,
+      "tid": 23108,
+      "ts": 1124017,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -138,54 +138,90 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 777617,
+      "tid": 23108,
+      "ts": 1124019,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 777619,
+      "tid": 23108,
+      "ts": 1124020,
       "pid": "GPGMM"
+    },
+    {
+      "name": "SlabMemoryAllocator.TryAllocateMemory",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1124039,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Aligned allocation size exceeded the slab size (134217728 vs 4194304 bytes).",
+        "ID": 0
+      }
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 777624,
+      "tid": 23108,
+      "ts": 1124041,
       "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.TryAllocateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1124055,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Resource memory could not be allocated.",
+        "ID": 6
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1124068,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Suballocation was attempted but failed.",
+        "ID": 1
+      }
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 777627,
+      "tid": 23108,
+      "ts": 1124073,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743de4edf0",
-      "tid": 16852,
-      "ts": 777627,
+      "id": "0x2b77eaef110",
+      "tid": 23108,
+      "ts": 1124073,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de4edf0",
-      "tid": 16852,
-      "ts": 777634,
+      "id": "0x2b77eaef110",
+      "tid": 23108,
+      "ts": 1124079,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -193,26 +229,26 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 777639,
+      "tid": 23108,
+      "ts": 1124081,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 826219,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1132682,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 826284,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1132716,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -227,9 +263,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 826308,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1132736,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -244,25 +280,25 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 826310,
+      "tid": 23108,
+      "ts": 1132738,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 826313,
+      "tid": 23108,
+      "ts": 1132741,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 826329,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1132759,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -271,7 +307,7 @@
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743de4edf0"
+            "id_ref": "0x2b77eaef110"
           }
         }
       }
@@ -280,9 +316,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 826394,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1132817,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -291,7 +327,7 @@
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743de4edf0"
+            "id_ref": "0x2b77eaef110"
           }
         }
       }
@@ -300,18 +336,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defe890",
-      "tid": 16852,
-      "ts": 826397,
+      "id": "0x2b77cc34a20",
+      "tid": 23108,
+      "ts": 1132819,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defe890",
-      "tid": 16852,
-      "ts": 826412,
+      "id": "0x2b77cc34a20",
+      "tid": 23108,
+      "ts": 1132834,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -320,7 +356,7 @@
           "OffsetFromResource": 0,
           "Method": 0,
           "ResourceHeap": {
-            "id_ref": "0x1743c127180"
+            "id_ref": "0x2b77eaeedb0"
           }
         }
       }
@@ -329,16 +365,16 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 826414,
+      "tid": 23108,
+      "ts": 1132836,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 826523,
+      "tid": 23108,
+      "ts": 1132943,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -368,54 +404,90 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 826525,
+      "tid": 23108,
+      "ts": 1132945,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 826527,
+      "tid": 23108,
+      "ts": 1132952,
       "pid": "GPGMM"
+    },
+    {
+      "name": "SlabMemoryAllocator.TryAllocateMemory",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1132970,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Aligned allocation size exceeded the slab size (134217728 vs 4194304 bytes).",
+        "ID": 0
+      }
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 826532,
+      "tid": 23108,
+      "ts": 1132972,
       "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.TryAllocateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1132987,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Resource memory could not be allocated.",
+        "ID": 6
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1133000,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Suballocation was attempted but failed.",
+        "ID": 1
+      }
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 826535,
+      "tid": 23108,
+      "ts": 1133002,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 826542,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1133003,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 826549,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1133008,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -423,26 +495,26 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 826551,
+      "tid": 23108,
+      "ts": 1133010,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 837589,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1144022,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 837651,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1144076,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -457,9 +529,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 837682,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1144092,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -474,25 +546,25 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 837684,
+      "tid": 23108,
+      "ts": 1144094,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 837686,
+      "tid": 23108,
+      "ts": 1144096,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 837701,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1144110,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -501,7 +573,7 @@
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df00250"
+            "id_ref": "0x2b77eaef470"
           }
         }
       }
@@ -510,9 +582,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 837772,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1144143,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -521,7 +593,7 @@
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df00250"
+            "id_ref": "0x2b77eaef470"
           }
         }
       }
@@ -530,18 +602,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defeec0",
-      "tid": 16852,
-      "ts": 837774,
+      "id": "0x2b77cc35100",
+      "tid": 23108,
+      "ts": 1144146,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defeec0",
-      "tid": 16852,
-      "ts": 837802,
+      "id": "0x2b77cc35100",
+      "tid": 23108,
+      "ts": 1144160,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -550,7 +622,7 @@
           "OffsetFromResource": 0,
           "Method": 0,
           "ResourceHeap": {
-            "id_ref": "0x1743deff710"
+            "id_ref": "0x2b77eaef860"
           }
         }
       }
@@ -559,16 +631,16 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 837804,
+      "tid": 23108,
+      "ts": 1144162,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 838007,
+      "tid": 23108,
+      "ts": 1144262,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -598,45 +670,45 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838009,
+      "tid": 23108,
+      "ts": 1144264,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838011,
+      "tid": 23108,
+      "ts": 1144265,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838017,
+      "tid": 23108,
+      "ts": 1144270,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838025,
+      "tid": 23108,
+      "ts": 1144275,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 838040,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1144288,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -644,30 +716,30 @@
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838042,
+      "tid": 23108,
+      "ts": 1144290,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 838043,
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1144291,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 838061,
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1144295,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -675,30 +747,30 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 838063,
+      "tid": 23108,
+      "ts": 1144297,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 839780,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1145393,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 839803,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1145413,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 0,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0
@@ -709,13 +781,13 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 839819,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1145428,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0
@@ -726,29 +798,29 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839821,
+      "tid": 23108,
+      "ts": 1145437,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839823,
+      "tid": 23108,
+      "ts": 1145439,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 839830,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1145447,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -756,42 +828,42 @@
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839832,
+      "tid": 23108,
+      "ts": 1145450,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839834,
+      "tid": 23108,
+      "ts": 1145451,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839835,
+      "tid": 23108,
+      "ts": 1145452,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 839857,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1145466,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -800,18 +872,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 839897,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1145500,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -820,18 +892,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defdfa0",
-      "tid": 16852,
-      "ts": 839899,
+      "id": "0x2b77cc35520",
+      "tid": 23108,
+      "ts": 1145502,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defdfa0",
-      "tid": 16852,
-      "ts": 839913,
+      "id": "0x2b77cc35520",
+      "tid": 23108,
+      "ts": 1145516,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -840,7 +912,7 @@
           "OffsetFromResource": 0,
           "Method": 2,
           "ResourceHeap": {
-            "id_ref": "0x1743df01450"
+            "id_ref": "0x2b77eaee6f0"
           }
         }
       }
@@ -849,16 +921,16 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 839915,
+      "tid": 23108,
+      "ts": 1145518,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 840018,
+      "tid": 23108,
+      "ts": 1145669,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -888,45 +960,81 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 840020,
+      "tid": 23108,
+      "ts": 1145682,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 840021,
+      "tid": 23108,
+      "ts": 1145683,
       "pid": "GPGMM"
+    },
+    {
+      "name": "SlabMemoryAllocator.TryAllocateMemory",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1145701,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Aligned allocation size exceeded the slab size (134217728 vs 4194304 bytes).",
+        "ID": 0
+      }
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 840026,
+      "tid": 23108,
+      "ts": 1145702,
       "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.TryAllocateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1145715,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Resource memory could not be allocated.",
+        "ID": 6
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1145727,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Suballocation was attempted but failed.",
+        "ID": 1
+      }
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 840028,
+      "tid": 23108,
+      "ts": 1145729,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 840034,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1145734,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -934,26 +1042,26 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 840036,
+      "tid": 23108,
+      "ts": 1145736,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 850976,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1156706,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 851024,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1156728,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -968,9 +1076,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 851041,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1156744,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -985,25 +1093,25 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 851042,
+      "tid": 23108,
+      "ts": 1156745,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 851044,
+      "tid": 23108,
+      "ts": 1156747,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 851069,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1156761,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -1012,7 +1120,7 @@
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df00250"
+            "id_ref": "0x2b77eaef470"
           }
         }
       }
@@ -1021,9 +1129,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 851147,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1156793,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -1032,7 +1140,7 @@
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df00250"
+            "id_ref": "0x2b77eaef470"
           }
         }
       }
@@ -1041,18 +1149,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deff230",
-      "tid": 16852,
-      "ts": 851149,
+      "id": "0x2b77cc35730",
+      "tid": 23108,
+      "ts": 1156795,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff230",
-      "tid": 16852,
-      "ts": 851178,
+      "id": "0x2b77cc35730",
+      "tid": 23108,
+      "ts": 1156809,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -1061,7 +1169,7 @@
           "OffsetFromResource": 0,
           "Method": 0,
           "ResourceHeap": {
-            "id_ref": "0x1743deffe60"
+            "id_ref": "0x2b77eaef230"
           }
         }
       }
@@ -1070,37 +1178,37 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 851182,
+      "tid": 23108,
+      "ts": 1156811,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851264,
+      "tid": 23108,
+      "ts": 1156881,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851264,
+      "tid": 23108,
+      "ts": 1156882,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de4edf0",
-      "tid": 16852,
-      "ts": 851276,
+      "id": "0x2b77eaef110",
+      "tid": 23108,
+      "ts": 1156894,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 134217728
+          "PoolSize": 134217728
         }
       }
     },
@@ -1108,33 +1216,33 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 851277,
+      "tid": 23108,
+      "ts": 1156895,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defe890",
-      "tid": 16852,
-      "ts": 851284,
+      "id": "0x2b77cc34a20",
+      "tid": 23108,
+      "ts": 1156901,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 851284,
+      "tid": 23108,
+      "ts": 1156902,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 851330,
+      "tid": 23108,
+      "ts": 1156948,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -1164,45 +1272,45 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851332,
+      "tid": 23108,
+      "ts": 1156949,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851333,
+      "tid": 23108,
+      "ts": 1156950,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851338,
+      "tid": 23108,
+      "ts": 1156955,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851341,
+      "tid": 23108,
+      "ts": 1156959,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de44398",
-      "tid": 16852,
-      "ts": 851353,
+      "id": "0x2b77e9a3968",
+      "tid": 23108,
+      "ts": 1156970,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -1210,30 +1318,30 @@
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851356,
+      "tid": 23108,
+      "ts": 1156973,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deffef0",
-      "tid": 16852,
-      "ts": 851356,
+      "id": "0x2b77eaeeb70",
+      "tid": 23108,
+      "ts": 1156974,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffef0",
-      "tid": 16852,
-      "ts": 851361,
+      "id": "0x2b77eaeeb70",
+      "tid": 23108,
+      "ts": 1156978,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -1241,30 +1349,30 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 851363,
+      "tid": 23108,
+      "ts": 1156980,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 859673,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1157531,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 859698,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1157566,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 0,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0
@@ -1275,13 +1383,13 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 859715,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1157581,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0
@@ -1292,29 +1400,29 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859717,
+      "tid": 23108,
+      "ts": 1157583,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859719,
+      "tid": 23108,
+      "ts": 1157584,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de44398",
-      "tid": 16852,
-      "ts": 859726,
+      "id": "0x2b77e9a3968",
+      "tid": 23108,
+      "ts": 1157590,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -1322,42 +1430,42 @@
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859729,
+      "tid": 23108,
+      "ts": 1157593,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859731,
+      "tid": 23108,
+      "ts": 1157594,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859732,
+      "tid": 23108,
+      "ts": 1157595,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 859747,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1157609,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743deffef0"
+            "id_ref": "0x2b77eaeeb70"
           }
         }
       }
@@ -1366,18 +1474,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 859787,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1157638,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743deffef0"
+            "id_ref": "0x2b77eaeeb70"
           }
         }
       }
@@ -1386,18 +1494,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743deff440",
-      "tid": 16852,
-      "ts": 859789,
+      "id": "0x2b77cc35940",
+      "tid": 23108,
+      "ts": 1157640,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deff440",
-      "tid": 16852,
-      "ts": 859803,
+      "id": "0x2b77cc35940",
+      "tid": 23108,
+      "ts": 1157654,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -1406,7 +1514,7 @@
           "OffsetFromResource": 0,
           "Method": 2,
           "ResourceHeap": {
-            "id_ref": "0x1743deffd40"
+            "id_ref": "0x2b77eaee780"
           }
         }
       }
@@ -1415,37 +1523,37 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859805,
+      "tid": 23108,
+      "ts": 1157656,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859881,
+      "tid": 23108,
+      "ts": 1157739,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859882,
+      "tid": 23108,
+      "ts": 1157740,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 859893,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1157750,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 134217728
+          "PoolSize": 134217728
         }
       }
     },
@@ -1453,33 +1561,33 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859897,
+      "tid": 23108,
+      "ts": 1157763,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defeec0",
-      "tid": 16852,
-      "ts": 859903,
+      "id": "0x2b77cc35100",
+      "tid": 23108,
+      "ts": 1157766,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 859904,
+      "tid": 23108,
+      "ts": 1157767,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 859950,
+      "tid": 23108,
+      "ts": 1157813,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -1509,45 +1617,45 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859951,
+      "tid": 23108,
+      "ts": 1157814,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859953,
+      "tid": 23108,
+      "ts": 1157815,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859956,
+      "tid": 23108,
+      "ts": 1157818,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859960,
+      "tid": 23108,
+      "ts": 1157830,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 859969,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1157839,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -1555,21 +1663,21 @@
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859991,
+      "tid": 23108,
+      "ts": 1157841,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 859997,
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1157846,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -1577,30 +1685,30 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 859998,
+      "tid": 23108,
+      "ts": 1157847,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 862152,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1158782,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 862172,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1158815,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 0,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0
@@ -1611,13 +1719,13 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 862187,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1158830,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 0
@@ -1628,29 +1736,29 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862189,
+      "tid": 23108,
+      "ts": 1158832,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862191,
+      "tid": 23108,
+      "ts": 1158834,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 862197,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1158840,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 33554432
+          "PoolSize": 8388608
         }
       }
     },
@@ -1658,42 +1766,42 @@
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862200,
+      "tid": 23108,
+      "ts": 1158843,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862201,
+      "tid": 23108,
+      "ts": 1158844,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862202,
+      "tid": 23108,
+      "ts": 1158845,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 862216,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1158859,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -1702,18 +1810,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 862247,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1158889,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -1722,18 +1830,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defe260",
-      "tid": 16852,
-      "ts": 862249,
+      "id": "0x2b77cc35b50",
+      "tid": 23108,
+      "ts": 1158892,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defe260",
-      "tid": 16852,
-      "ts": 862264,
+      "id": "0x2b77cc35b50",
+      "tid": 23108,
+      "ts": 1158905,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -1742,7 +1850,7 @@
           "OffsetFromResource": 0,
           "Method": 2,
           "ResourceHeap": {
-            "id_ref": "0x1743df00880"
+            "id_ref": "0x2b77eaefd70"
           }
         }
       }
@@ -1751,16 +1859,16 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 862266,
+      "tid": 23108,
+      "ts": 1158907,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 862337,
+      "tid": 23108,
+      "ts": 1159017,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -1790,45 +1898,45 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862338,
+      "tid": 23108,
+      "ts": 1159018,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862340,
+      "tid": 23108,
+      "ts": 1159019,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862346,
+      "tid": 23108,
+      "ts": 1159023,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862349,
+      "tid": 23108,
+      "ts": 1159026,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43698",
-      "tid": 16852,
-      "ts": 862360,
+      "id": "0x2b77e9a3668",
+      "tid": 23108,
+      "ts": 1159037,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -1836,30 +1944,30 @@
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862363,
+      "tid": 23108,
+      "ts": 1159039,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df00eb0",
-      "tid": 16852,
-      "ts": 862363,
+      "id": "0x2b77eaee810",
+      "tid": 23108,
+      "ts": 1159039,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00eb0",
-      "tid": 16852,
-      "ts": 862369,
+      "id": "0x2b77eaee810",
+      "tid": 23108,
+      "ts": 1159044,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -1867,30 +1975,30 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 862370,
+      "tid": 23108,
+      "ts": 1159045,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 863431,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1159548,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 863466,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1159602,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 0,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0
@@ -1901,13 +2009,13 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 863481,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1159618,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 0
@@ -1918,29 +2026,29 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863483,
+      "tid": 23108,
+      "ts": 1159619,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863484,
+      "tid": 23108,
+      "ts": 1159621,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43698",
-      "tid": 16852,
-      "ts": 863490,
+      "id": "0x2b77e9a3668",
+      "tid": 23108,
+      "ts": 1159627,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -1948,42 +2056,42 @@
       "name": "BuddyMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863493,
+      "tid": 23108,
+      "ts": 1159630,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863494,
+      "tid": 23108,
+      "ts": 1159631,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863495,
+      "tid": 23108,
+      "ts": 1159632,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 863509,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1159646,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df00eb0"
+            "id_ref": "0x2b77eaee810"
           }
         }
       }
@@ -1992,18 +2100,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 863541,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1159684,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 1,
           "SubAllocatedRefs": 2,
           "MemoryPool": {
-            "id_ref": "0x1743df00eb0"
+            "id_ref": "0x2b77eaee810"
           }
         }
       }
@@ -2012,18 +2120,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defde40",
-      "tid": 16852,
-      "ts": 863544,
+      "id": "0x2b77cc35c00",
+      "tid": 23108,
+      "ts": 1159687,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defde40",
-      "tid": 16852,
-      "ts": 863558,
+      "id": "0x2b77cc35c00",
+      "tid": 23108,
+      "ts": 1159700,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -2032,7 +2140,7 @@
           "OffsetFromResource": 0,
           "Method": 2,
           "ResourceHeap": {
-            "id_ref": "0x1743defff80"
+            "id_ref": "0x2b77eaefa10"
           }
         }
       }
@@ -2041,16 +2149,16 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863560,
+      "tid": 23108,
+      "ts": 1159702,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 863657,
+      "tid": 23108,
+      "ts": 1159814,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -2080,58 +2188,58 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863659,
+      "tid": 23108,
+      "ts": 1159816,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863660,
+      "tid": 23108,
+      "ts": 1159817,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863661,
+      "tid": 23108,
+      "ts": 1159818,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863663,
+      "tid": 23108,
+      "ts": 1159821,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863664,
+      "tid": 23108,
+      "ts": 1159822,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 863678,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1159835,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 3,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -2140,18 +2248,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 863705,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1159861,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "Size": 16777216,
+          "Size": 4194304,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
           "SubAllocatedRefs": 3,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaef740"
           }
         }
       }
@@ -2160,18 +2268,18 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defe1b0",
-      "tid": 16852,
-      "ts": 863707,
+      "id": "0x2b77cc34c30",
+      "tid": 23108,
+      "ts": 1159864,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defe1b0",
-      "tid": 16852,
-      "ts": 863720,
+      "id": "0x2b77cc34c30",
+      "tid": 23108,
+      "ts": 1159877,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -2180,7 +2288,7 @@
           "OffsetFromResource": 0,
           "Method": 2,
           "ResourceHeap": {
-            "id_ref": "0x1743df01450"
+            "id_ref": "0x2b77eaee6f0"
           }
         }
       }
@@ -2189,73 +2297,73 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863722,
+      "tid": 23108,
+      "ts": 1159879,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863769,
+      "tid": 23108,
+      "ts": 1159929,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863769,
+      "tid": 23108,
+      "ts": 1159929,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863770,
+      "tid": 23108,
+      "ts": 1159930,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863771,
+      "tid": 23108,
+      "ts": 1159931,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863772,
+      "tid": 23108,
+      "ts": 1159931,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defdfa0",
-      "tid": 16852,
-      "ts": 863775,
+      "id": "0x2b77cc35520",
+      "tid": 23108,
+      "ts": 1159935,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 863776,
+      "tid": 23108,
+      "ts": 1159936,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "i",
-      "tid": 16852,
-      "ts": 863819,
+      "tid": 23108,
+      "ts": 1159979,
       "pid": "GPGMM",
       "args": {
         "allocationDescriptor": {
@@ -2285,67 +2393,90 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863821,
+      "tid": 23108,
+      "ts": 1159981,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863822,
+      "tid": 23108,
+      "ts": 1159981,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.TryAllocateMemory",
       "cat": "0",
-      "ph": "B",
-      "tid": 16852,
-      "ts": 863826,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "BuddyMemoryAllocator.TryAllocateMemory",
-      "cat": "0",
-      "ph": "B",
-      "tid": 16852,
-      "ts": 863829,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "GPUMemoryPool",
-      "cat": "0",
-      "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 863837,
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1160005,
       "pid": "GPGMM",
       "args": {
-        "snapshot": {
-          "UnusedPoolSize": 33554432
-        }
+        "Description": "Aligned allocation size exceeded the slab size (16777216 vs 4194304 bytes).",
+        "ID": 0
+      }
+    },
+    {
+      "name": "SlabCacheAllocator.TryAllocateMemory",
+      "cat": "0",
+      "ph": "E",
+      "tid": 23108,
+      "ts": 1160007,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "ResourceAllocator.TryAllocateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1160019,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Resource memory could not be allocated.",
+        "ID": 6
+      }
+    },
+    {
+      "name": "ResourceAllocator.CreateResource",
+      "cat": "0",
+      "ph": "i",
+      "tid": 23108,
+      "ts": 1160032,
+      "pid": "GPGMM",
+      "args": {
+        "Description": "Suballocation was attempted but failed.",
+        "ID": 1
       }
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863839,
+      "tid": 23108,
+      "ts": 1160034,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "GPUMemoryPool",
+      "cat": "0",
+      "ph": "N",
+      "id": "0x2b77eaee390",
+      "tid": 23108,
+      "ts": 1160034,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 863845,
+      "id": "0x2b77eaee390",
+      "tid": 23108,
+      "ts": 1160039,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 0
+          "PoolSize": 0
         }
       }
     },
@@ -2353,26 +2484,26 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 863847,
+      "tid": 23108,
+      "ts": 1160041,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 865367,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1161581,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 865402,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1161600,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -2387,9 +2518,9 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 865418,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1161615,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
@@ -2404,72 +2535,34 @@
       "name": "ResourceAllocator.CreateResourceHeap",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865419,
+      "tid": 23108,
+      "ts": 1161617,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.TryAllocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865421,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "GPUMemoryPool",
-      "cat": "0",
-      "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 865456,
-      "pid": "GPGMM",
-      "args": {
-        "snapshot": {
-          "UnusedPoolSize": 50331648
-        }
-      }
-    },
-    {
-      "name": "BuddyMemoryAllocator.TryAllocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865458,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "SlabMemoryAllocator.TryAllocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865460,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "SlabCacheAllocator.TryAllocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865461,
+      "tid": 23108,
+      "ts": 1161618,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 865475,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1161632,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
           "Size": 16777216,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
-          "SubAllocatedRefs": 2,
+          "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaee390"
           }
         }
       }
@@ -2478,18 +2571,18 @@
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 865518,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1161659,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
           "Size": 16777216,
           "IsResident": 1,
           "MemorySegmentGroup": 0,
-          "SubAllocatedRefs": 2,
+          "SubAllocatedRefs": 0,
           "MemoryPool": {
-            "id_ref": "0x1743df013c0"
+            "id_ref": "0x2b77eaee390"
           }
         }
       }
@@ -2498,27 +2591,27 @@
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "N",
-      "id": "0x1743defef70",
-      "tid": 16852,
-      "ts": 865520,
+      "id": "0x2b77ea36040",
+      "tid": 23108,
+      "ts": 1161661,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743defef70",
-      "tid": 16852,
-      "ts": 865534,
+      "id": "0x2b77ea36040",
+      "tid": 23108,
+      "ts": 1161675,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
           "Size": 16777216,
           "HeapOffset": 0,
           "OffsetFromResource": 0,
-          "Method": 2,
+          "Method": 0,
           "ResourceHeap": {
-            "id_ref": "0x1743df00910"
+            "id_ref": "0x2b77eaefc50"
           }
         }
       }
@@ -2527,37 +2620,37 @@
       "name": "ResourceAllocator.CreateResource",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865536,
+      "tid": 23108,
+      "ts": 1161677,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865606,
+      "tid": 23108,
+      "ts": 1161760,
       "pid": "GPGMM"
     },
     {
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865606,
+      "tid": 23108,
+      "ts": 1161761,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 865614,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1161768,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 268435456
+          "PoolSize": 268435456
         }
       }
     },
@@ -2565,92 +2658,54 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865616,
+      "tid": 23108,
+      "ts": 1161770,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deff230",
-      "tid": 16852,
-      "ts": 865620,
+      "id": "0x2b77cc35730",
+      "tid": 23108,
+      "ts": 1161774,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865621,
+      "tid": 23108,
+      "ts": 1161775,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865648,
+      "tid": 23108,
+      "ts": 1161813,
       "pid": "GPGMM"
-    },
-    {
-      "name": "SlabCacheAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "B",
-      "tid": 16852,
-      "ts": 865648,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "SlabMemoryAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "B",
-      "tid": 16852,
-      "ts": 865649,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "BuddyMemoryAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "B",
-      "tid": 16852,
-      "ts": 865650,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "GPUMemoryPool",
-      "cat": "0",
-      "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 865658,
-      "pid": "GPGMM",
-      "args": {
-        "snapshot": {
-          "UnusedPoolSize": 50331648
-        }
-      }
     },
     {
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865660,
+      "tid": 23108,
+      "ts": 1161814,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 865668,
+      "id": "0x2b77eaee390",
+      "tid": 23108,
+      "ts": 1161823,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 16777216
         }
       }
     },
@@ -2658,94 +2713,70 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865669,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "BuddyMemoryAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865670,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "SlabMemoryAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865670,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "SlabCacheAllocator.DeallocateMemory",
-      "cat": "0",
-      "ph": "E",
-      "tid": 16852,
-      "ts": 865674,
+      "tid": 23108,
+      "ts": 1161825,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defef70",
-      "tid": 16852,
-      "ts": 865677,
+      "id": "0x2b77ea36040",
+      "tid": 23108,
+      "ts": 1161827,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865677,
+      "tid": 23108,
+      "ts": 1161827,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865698,
+      "tid": 23108,
+      "ts": 1161865,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865699,
+      "tid": 23108,
+      "ts": 1161866,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865700,
+      "tid": 23108,
+      "ts": 1161867,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865700,
+      "tid": 23108,
+      "ts": 1161868,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 865707,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1161875,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 33554432
+          "PoolSize": 8388608
         }
       }
     },
@@ -2753,21 +2784,21 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865709,
+      "tid": 23108,
+      "ts": 1161877,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 865715,
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1161887,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 33554432
+          "PoolSize": 4194304
         }
       }
     },
@@ -2775,94 +2806,94 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865716,
+      "tid": 23108,
+      "ts": 1161889,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865717,
+      "tid": 23108,
+      "ts": 1161889,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865717,
+      "tid": 23108,
+      "ts": 1161889,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865720,
+      "tid": 23108,
+      "ts": 1161894,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defe1b0",
-      "tid": 16852,
-      "ts": 865723,
+      "id": "0x2b77cc34c30",
+      "tid": 23108,
+      "ts": 1161896,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865723,
+      "tid": 23108,
+      "ts": 1161897,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865749,
+      "tid": 23108,
+      "ts": 1161936,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865750,
+      "tid": 23108,
+      "ts": 1161936,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865750,
+      "tid": 23108,
+      "ts": 1161937,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865751,
+      "tid": 23108,
+      "ts": 1161938,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 865761,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1161949,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -2870,21 +2901,21 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865763,
+      "tid": 23108,
+      "ts": 1161950,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 865768,
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1161956,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 50331648
+          "PoolSize": 8388608
         }
       }
     },
@@ -2892,94 +2923,94 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865770,
+      "tid": 23108,
+      "ts": 1161958,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865770,
+      "tid": 23108,
+      "ts": 1161958,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865770,
+      "tid": 23108,
+      "ts": 1161958,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865773,
+      "tid": 23108,
+      "ts": 1161961,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defe260",
-      "tid": 16852,
-      "ts": 865776,
+      "id": "0x2b77cc35b50",
+      "tid": 23108,
+      "ts": 1161964,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865776,
+      "tid": 23108,
+      "ts": 1161964,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865803,
+      "tid": 23108,
+      "ts": 1162003,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865840,
+      "tid": 23108,
+      "ts": 1162037,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865841,
+      "tid": 23108,
+      "ts": 1162038,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865842,
+      "tid": 23108,
+      "ts": 1162038,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de43698",
-      "tid": 16852,
-      "ts": 865852,
+      "id": "0x2b77e9a3668",
+      "tid": 23108,
+      "ts": 1162049,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -2987,21 +3018,21 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865854,
+      "tid": 23108,
+      "ts": 1162051,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743df00eb0",
-      "tid": 16852,
-      "ts": 865861,
+      "id": "0x2b77eaee810",
+      "tid": 23108,
+      "ts": 1162058,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -3009,94 +3040,94 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865863,
+      "tid": 23108,
+      "ts": 1162060,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865863,
+      "tid": 23108,
+      "ts": 1162060,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865864,
+      "tid": 23108,
+      "ts": 1162060,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865867,
+      "tid": 23108,
+      "ts": 1162063,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defde40",
-      "tid": 16852,
-      "ts": 865870,
+      "id": "0x2b77cc35c00",
+      "tid": 23108,
+      "ts": 1162066,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865871,
+      "tid": 23108,
+      "ts": 1162067,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865898,
+      "tid": 23108,
+      "ts": 1162106,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865898,
+      "tid": 23108,
+      "ts": 1162107,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865899,
+      "tid": 23108,
+      "ts": 1162107,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865900,
+      "tid": 23108,
+      "ts": 1162108,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743de44398",
-      "tid": 16852,
-      "ts": 865910,
+      "id": "0x2b77e9a3968",
+      "tid": 23108,
+      "ts": 1162118,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -3104,21 +3135,21 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "B",
-      "tid": 16852,
-      "ts": 865912,
+      "tid": 23108,
+      "ts": 1162120,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "O",
-      "id": "0x1743deffef0",
-      "tid": 16852,
-      "ts": 865919,
+      "id": "0x2b77eaeeb70",
+      "tid": 23108,
+      "ts": 1162127,
       "pid": "GPGMM",
       "args": {
         "snapshot": {
-          "UnusedPoolSize": 16777216
+          "PoolSize": 4194304
         }
       }
     },
@@ -3126,247 +3157,256 @@
       "name": "SegmentedMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865920,
+      "tid": 23108,
+      "ts": 1162128,
       "pid": "GPGMM"
     },
     {
       "name": "BuddyMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865921,
+      "tid": 23108,
+      "ts": 1162129,
       "pid": "GPGMM"
     },
     {
       "name": "SlabMemoryAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865921,
+      "tid": 23108,
+      "ts": 1162129,
       "pid": "GPGMM"
     },
     {
       "name": "SlabCacheAllocator.DeallocateMemory",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865924,
+      "tid": 23108,
+      "ts": 1162132,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocation",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deff440",
-      "tid": 16852,
-      "ts": 865926,
+      "id": "0x2b77cc35940",
+      "tid": 23108,
+      "ts": 1162134,
       "pid": "GPGMM"
     },
     {
       "name": "ResourceAllocation.Release",
       "cat": "0",
       "ph": "E",
-      "tid": 16852,
-      "ts": 865926,
+      "tid": 23108,
+      "ts": 1162135,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryAllocator",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743e0fcd50",
-      "tid": 16852,
-      "ts": 865937,
+      "id": "0x2b77eaa0af0",
+      "tid": 23108,
+      "ts": 1162145,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de43d98",
-      "tid": 16852,
-      "ts": 865943,
+      "id": "0x2b77e9a3068",
+      "tid": 23108,
+      "ts": 1162182,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de44b98",
-      "tid": 16852,
-      "ts": 865947,
+      "id": "0x2b77e9a3568",
+      "tid": 23108,
+      "ts": 1162186,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de44e98",
-      "tid": 16852,
-      "ts": 865950,
+      "id": "0x2b77e9a3768",
+      "tid": 23108,
+      "ts": 1162189,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de43698",
-      "tid": 16852,
-      "ts": 865953,
+      "id": "0x2b77e9a3668",
+      "tid": 23108,
+      "ts": 1162192,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743defff80",
-      "tid": 16852,
-      "ts": 865955,
+      "id": "0x2b77eaefa10",
+      "tid": 23108,
+      "ts": 1162193,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df00eb0",
-      "tid": 16852,
-      "ts": 866164,
+      "id": "0x2b77eaee810",
+      "tid": 23108,
+      "ts": 1162475,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de44398",
-      "tid": 16852,
-      "ts": 866168,
+      "id": "0x2b77e9a3968",
+      "tid": 23108,
+      "ts": 1162479,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deffd40",
-      "tid": 16852,
-      "ts": 866170,
+      "id": "0x2b77eaee780",
+      "tid": 23108,
+      "ts": 1162482,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deffef0",
-      "tid": 16852,
-      "ts": 866358,
+      "id": "0x2b77eaeeb70",
+      "tid": 23108,
+      "ts": 1162681,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de43598",
-      "tid": 16852,
-      "ts": 866362,
+      "id": "0x2b77e9a3a68",
+      "tid": 23108,
+      "ts": 1162684,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df00880",
-      "tid": 16852,
-      "ts": 866363,
+      "id": "0x2b77eaefd70",
+      "tid": 23108,
+      "ts": 1162686,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df01450",
-      "tid": 16852,
-      "ts": 866523,
+      "id": "0x2b77eaee6f0",
+      "tid": 23108,
+      "ts": 1162872,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "GPUMemoryPool",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x2b77eaef740",
+      "tid": 23108,
+      "ts": 1163112,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "GPUMemoryPool",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x2b77e9a2d68",
+      "tid": 23108,
+      "ts": 1163116,
+      "pid": "GPGMM"
+    },
+    {
+      "name": "GPUMemoryPool",
+      "cat": "0",
+      "ph": "D",
+      "id": "0x2b77e9a4168",
+      "tid": 23108,
+      "ts": 1163119,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df00910",
-      "tid": 16852,
-      "ts": 866685,
+      "id": "0x2b77eaeedb0",
+      "tid": 23108,
+      "ts": 1163126,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df013c0",
-      "tid": 16852,
-      "ts": 866838,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "GPUMemoryPool",
-      "cat": "0",
-      "ph": "D",
-      "id": "0x1743de44c98",
-      "tid": 16852,
-      "ts": 866842,
-      "pid": "GPGMM"
-    },
-    {
-      "name": "GPUMemoryPool",
-      "cat": "0",
-      "ph": "D",
-      "id": "0x1743de43998",
-      "tid": 16852,
-      "ts": 866845,
+      "id": "0x2b77eaef110",
+      "tid": 23108,
+      "ts": 1163434,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743c127180",
-      "tid": 16852,
-      "ts": 866851,
+      "id": "0x2b77eaefc50",
+      "tid": 23108,
+      "ts": 1163438,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743de4edf0",
-      "tid": 16852,
-      "ts": 867039,
+      "id": "0x2b77eaee390",
+      "tid": 23108,
+      "ts": 1163701,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deffe60",
-      "tid": 16852,
-      "ts": 867042,
+      "id": "0x2b77eaef230",
+      "tid": 23108,
+      "ts": 1163703,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryBlock",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743deff710",
-      "tid": 16852,
-      "ts": 867224,
+      "id": "0x2b77eaef860",
+      "tid": 23108,
+      "ts": 1163910,
       "pid": "GPGMM"
     },
     {
       "name": "GPUMemoryPool",
       "cat": "0",
       "ph": "D",
-      "id": "0x1743df00250",
-      "tid": 16852,
-      "ts": 872799,
+      "id": "0x2b77eaef470",
+      "tid": 23108,
+      "ts": 1168409,
       "pid": "GPGMM"
     }
   ]
