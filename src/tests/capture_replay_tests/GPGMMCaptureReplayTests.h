@@ -47,9 +47,9 @@ struct CaptureReplayMemoryStats {
 struct TestEnviromentParams {
     uint64_t Iterations = 1;  // Number of test iterations to run.
     bool IsStandaloneOnly = false;
-    bool IsRegenerate = false;                                     // Should the allocator record.
-    gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Error;       // Level of logging.
-    gpgmm::LogSeverity RecordLevel = gpgmm::LogSeverity::Warning;  // Level of recording.
+    bool IsRegenerate = false;                                   // Should the allocator record.
+    gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;      // Level of logging.
+    gpgmm::LogSeverity RecordLevel = gpgmm::LogSeverity::Debug;  // Level of recording.
 };
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);

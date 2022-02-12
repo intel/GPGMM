@@ -40,7 +40,7 @@ namespace gpgmm {
 
     Block* SlabBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
         if (size == 0 || size > mBlockSize) {
-            Log(LogSeverity::Info, "SlabBlockAllocator.AllocateBlock",
+            Log(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",
                 "Allocation size exceeded the block size. (" + std::to_string(size) + " vs " +
                     std::to_string(mBlockSize) + " bytes).",
                 ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -49,7 +49,7 @@ namespace gpgmm {
 
         // Offset must be equal to a multiple of |mBlockSize|.
         if (!IsAligned(mBlockSize, alignment)) {
-            Log(LogSeverity::Info, "SlabBlockAllocator.AllocateBlock",
+            Log(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",
                 "Allocation alignment is not a multiple of the block size. (" +
                     std::to_string(alignment) + " vs " + std::to_string(mBlockSize) + " bytes).",
                 ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);

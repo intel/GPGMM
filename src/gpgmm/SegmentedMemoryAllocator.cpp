@@ -132,7 +132,7 @@ namespace gpgmm {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
 
         if (size == 0 || alignment != mMemoryAlignment) {
-            Log(LogSeverity::Info, "SegmentedMemoryAllocator.TryAllocateMemory",
+            Log(LogSeverity::Debug, "SegmentedMemoryAllocator.TryAllocateMemory",
                 "Allocation alignment does not match memory alignment.",
                 ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);
             return {};
