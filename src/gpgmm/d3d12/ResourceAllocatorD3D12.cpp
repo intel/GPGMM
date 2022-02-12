@@ -354,6 +354,8 @@ namespace gpgmm { namespace d3d12 {
 
         *resourceAllocatorOut = new ResourceAllocator(newDescriptor, residencyManager);
 
+        d3d12::LogObject("GPUMemoryAllocator", descriptor);
+
         if (residencyManagerOut != nullptr) {
             *residencyManagerOut = residencyManager.Detach();
         }
@@ -370,7 +372,6 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
-        LogObject("GPUMemoryAllocator", descriptor);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocator", this);
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;

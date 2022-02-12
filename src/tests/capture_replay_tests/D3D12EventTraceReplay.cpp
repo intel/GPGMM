@@ -154,11 +154,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const D3D12_RESOURCE_DESC resourceDescriptor =
                             ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
 
-                        ASSERT_FALSE(allocatorInstanceID.empty());
+                        auto it = allocatorToIDMap.find(allocatorInstanceID);
+                        ASSERT_TRUE(it != allocatorToIDMap.end());
+
+                        ResourceAllocator* resourceAllocator =
+                            allocatorToIDMap[allocatorInstanceID].Get();
+                        ASSERT_NE(resourceAllocator, nullptr);
 
                         mPlatformTime->StartElapsedTime();
 
-                        ASSERT_SUCCEEDED(allocatorToIDMap[allocatorInstanceID]->CreateResource(
+                        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
                             clearValuePtr, &newAllocationWithoutID));
 
@@ -266,20 +271,21 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         allocatorDesc.TotalResourceBudgetLimit =
                             args["TotalResourceBudgetLimit"].asUInt64();
 
-                    } break;
-
-                    case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         ComPtr<ResourceAllocator> resourceAllocator;
                         ASSERT_SUCCEEDED(
                             ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
 
-                        // Assume subsequent events are always against this allocator instance.
-                        // This is because call trace events have no ID associated with them.
-                        allocatorInstanceID = event["id"].asString();
+                        ASSERT_FALSE(allocatorInstanceID.empty());
 
                         ASSERT_TRUE(allocatorToIDMap
                                         .insert({allocatorInstanceID, std::move(resourceAllocator)})
                                         .second);
+                    } break;
+
+                    case TRACE_EVENT_PHASE_CREATE_OBJECT: {
+                        // Assume subsequent events are always against this allocator instance.
+                        // This is because call trace events have no ID associated with them.
+                        allocatorInstanceID = event["id"].asString();
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
