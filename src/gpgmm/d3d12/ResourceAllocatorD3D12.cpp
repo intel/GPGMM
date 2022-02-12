@@ -106,8 +106,10 @@ namespace gpgmm { namespace d3d12 {
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
                 d3d12::Log(LogSeverity::Debug, "ResourceAllocator.GetResourceAllocationInfo",
-                           "D3D12 rejected the requested alignment",
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED);
+                           "Resource alignment is much larger due to D3D12 (" +
+                               std::to_string(resourceDescriptor.Alignment) + " vs " +
+                               std::to_string(resourceInfo.Alignment) + " bytes).",
+                           ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT);
 
                 resourceDescriptor.Alignment = 0;
                 resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
@@ -280,14 +282,14 @@ namespace gpgmm { namespace d3d12 {
             if (allocation == nullptr) {
                 d3d12::Log(LogSeverity::Debug, "ResourceAllocator.TryAllocateResource",
                            "Resource memory could not be allocated.",
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED);
+                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATOR_FAILED);
                 return E_FAIL;
             }
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
                 d3d12::Log(LogSeverity::Debug, "ResourceAllocator.TryAllocateResource",
                            "Resource failed to be created: " + GetErrorMessage(hr),
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED);
+                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATOR_FAILED);
                 allocator->DeallocateMemory(allocation.release());
             }
             return hr;
@@ -501,14 +503,6 @@ namespace gpgmm { namespace d3d12 {
             GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
 
-        if (resourceInfo.SizeInBytes < resourceInfo.Alignment) {
-            d3d12::Log(LogSeverity::Debug, "ResourceAllocator.CreateResource",
-                       "Resource size is smaller then the alignment (" +
-                           std::to_string(resourceInfo.SizeInBytes) + " vs " +
-                           std::to_string(resourceInfo.Alignment) + " bytes).",
-                       ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT);
-        }
-
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
@@ -554,7 +548,7 @@ namespace gpgmm { namespace d3d12 {
                                    "Resource allocation size is larger then the resource size (" +
                                        std::to_string(subAllocation.GetSize()) + " vs " +
                                        std::to_string(resourceDescriptor.Width) + " bytes).",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT);
                     }
 
                     return S_OK;
@@ -591,7 +585,7 @@ namespace gpgmm { namespace d3d12 {
                                    "Resource allocation size is larger then the resource size (" +
                                        std::to_string(subAllocation.GetSize()) + " vs " +
                                        std::to_string(resourceInfo.SizeInBytes) + " bytes).",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT);
                     }
 
                     return S_OK;
@@ -645,7 +639,7 @@ namespace gpgmm { namespace d3d12 {
                                    "Resource allocation size is larger then the heap size (" +
                                        std::to_string(allocation.GetSize()) + " vs " +
                                        std::to_string(heapSize) + " bytes).",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT);
+                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT);
                     }
 
                     return S_OK;
@@ -763,7 +757,7 @@ namespace gpgmm { namespace d3d12 {
             d3d12::Log(LogSeverity::Debug, "ResourceAllocator.CreateResourceHeap",
                        "Heap size is not a multiple of the alignment (" + std::to_string(heapSize) +
                            " vs " + std::to_string(heapAlignment) + " bytes).",
-                       ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT);
+                       ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_MISALIGNMENT);
         }
 
         ComPtr<ID3D12Heap> heap;

@@ -214,34 +214,29 @@ namespace gpgmm { namespace d3d12 {
     };
 
     enum ALLOCATOR_MESSAGE_ID {
-        // D3D12 rejected the resource alignment specified.
-        // The alignment value could be incorrect or use a resource that is unsupported by the
-        // driver.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_ALIGNMENT_REJECTED = 0x0,
-
         // Suballocation was requested but did not succeed.
         // Suballocation failure occurs when the resource or heap size are misaligned.
         ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED = 0x1,
 
         // D3D12 heap was created with a size that is not a multiple of the alignment, which wastes
         // memory unknowingly. D3D12 only supports misaligned heap sizes for convenience.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_SUBOPTIMAL_ALIGNMENT = 0x2,
+        ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_MISALIGNMENT = 0x2,
 
-        // D3D12 resource was created with a size that is larger then alignment, which wastes memory
-        // unknowingly. D3D12 only supports a resource size that is a multiple of 64KB.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_SUBOPTIMAL_ALIGNMENT = 0x3,
+        // D3D12 resource was size-aligned using a larger D3D12 alignment, which wastes memory
+        // unknowingly.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT = 0x3,
 
         // Resource allocation size exceeds the D3D12 resource size, which wastes memory
         // unknowingly. The allocator did not support allocation of a block equal to the resource
         // size.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_SUBOPTIMAL_ALIGNMENT = 0x4,
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT = 0x4,
 
         // Resource allocation was unable to be pool-allocated. This introduces OS VidMM overhead
         // because non-pool allocated memory cannot be reused by the allocator.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED = 0x5,
 
         // Resource allocator failed to allocate memory for the resource.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED = 0x6,
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATOR_FAILED = 0x6,
     };
 
     struct ALLOCATOR_MESSAGE {
