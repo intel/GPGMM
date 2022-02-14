@@ -70,6 +70,11 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        if (strcmp("--never-allocate", argv[i]) == 0) {
+            mParams.IsNeverAllocate = true;
+            continue;
+        }
+
         if (strcmp("--regenerate", argv[i]) == 0) {
             mParams.IsRegenerate = true;
             continue;
@@ -135,16 +140,19 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         }
 
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
-            gpgmm::InfoLog() << "Additional options:"
+            gpgmm::InfoLog() << "Playback options:"
                              << " [--iterations=X]\n"
                              << " --iterations: Number of times to run playback.\n"
-                             << " --force-standalone: Disable memory reuse by sub-allocation.\n"
                              << " --record-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                                 "level to record events.\n"
                              << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                                 "level for log messages.\n"
                              << " --regenerate: Capture again upon playback.\n"
                              << " --playback-file: Path to captured file to playback.\n";
+
+            gpgmm::InfoLog() << "Experiment options:"
+                             << " --force-standalone: Disable memory reuse by sub-allocation.\n"
+                             << " --never-allocate: Disable creating backend memory.\n";
             continue;
         }
     }
@@ -170,14 +178,21 @@ void GPGMMCaptureReplayTestEnvironment::TearDown() {
 }
 
 void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
-    std::cout << "Playback environment settings\n"
-                 "-----------------------------\n"
-              << "Iterations per test: " << mParams.Iterations << "\n"
-              << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false") << "\n"
-              << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false") << "\n"
-              << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
-              << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
-              << std::endl;
+    gpgmm::InfoLog() << "Playback settings\n"
+                        "-----------------\n"
+                     << "Iterations per test: " << mParams.Iterations << "\n"
+                     << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false")
+                     << "\n"
+                     << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false")
+                     << "\n"
+                     << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
+                     << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n";
+
+    gpgmm::InfoLog() << "Experiment settings\n"
+                        "-------------------\n"
+                     << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false")
+                     << "\n"
+                     << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n";
 }
 
 // static
