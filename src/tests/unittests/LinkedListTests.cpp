@@ -29,7 +29,7 @@ class FakeObject : public LinkNode<FakeObject> {
     }
 };
 
-TEST(LinkedListTests, DeleteAll) {
+TEST(LinkedListTests, RemoveAndDeleteAll) {
     LinkNode<FakeObject>* first = new FakeObject();
     LinkNode<FakeObject>* second = new FakeObject();
     LinkNode<FakeObject>* third = new FakeObject();
@@ -39,6 +39,6 @@ TEST(LinkedListTests, DeleteAll) {
     list.Append(second);
     list.Append(third);
 
-    list.DeleteAll();
+    list.RemoveAndDeleteAll();
     EXPECT_TRUE(list.empty());
 }
