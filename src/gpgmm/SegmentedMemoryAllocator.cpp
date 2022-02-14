@@ -164,8 +164,7 @@ namespace gpgmm {
         MemoryPool* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
-        pool->ReturnToPool(
-            std::make_unique<MemoryAllocation>(GetFirstChild(), allocation->GetMemory()));
+        pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
     }
 
     void SegmentedMemoryAllocator::ReleaseMemory() {
