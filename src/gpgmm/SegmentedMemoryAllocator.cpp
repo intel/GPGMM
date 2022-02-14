@@ -126,25 +126,25 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
-        uint64_t size,
+        uint64_t allocationSize,
         uint64_t alignment,
         bool neverAllocate) {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
 
-        if (size == 0 || alignment != mMemoryAlignment) {
+        if (allocationSize == 0 || alignment != mMemoryAlignment) {
             Log(LogSeverity::Debug, "SegmentedMemoryAllocator.TryAllocateMemory",
                 "Allocation alignment does not match memory alignment.",
                 ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);
             return {};
         }
 
-        MemorySegment* segment = GetOrCreateFreeSegment(size);
+        MemorySegment* segment = GetOrCreateFreeSegment(allocationSize);
         ASSERT(segment != nullptr);
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(
-                GetFirstChild()->TryAllocateMemory(size, mMemoryAlignment, neverAllocate),
+                GetFirstChild()->TryAllocateMemory(allocationSize, mMemoryAlignment, neverAllocate),
                 allocation);
         }
 

@@ -39,7 +39,7 @@ namespace gpgmm {
         ~SegmentedMemoryAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate) override;
         void DeallocateMemory(MemoryAllocation* allocation) override;
