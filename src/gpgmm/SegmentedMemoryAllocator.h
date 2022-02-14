@@ -21,8 +21,6 @@
 
 namespace gpgmm {
 
-    class MemoryPool;
-
     // Represents one or more memory blocks managed in a pool.
     // A memory segment is a node in a linked-list so it may be cached and reuse by the segmented
     // allocator.
