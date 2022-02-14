@@ -136,7 +136,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        const ALLOCATION_DESC allocationDescriptor =
+                        ALLOCATION_DESC allocationDescriptor =
                             ConvertToAllocationDesc(args["allocationDescriptor"]);
 
                         const D3D12_RESOURCE_STATES initialResourceState =
@@ -161,13 +161,19 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorToIDMap[allocatorInstanceID].Get();
                         ASSERT_NE(resourceAllocator, nullptr);
 
+                        if (envParams.IsNeverAllocate) {
+                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
+                        }
+
                         mPlatformTime->StartElapsedTime();
 
-                        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+                        HRESULT hr = resourceAllocator->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
-                            clearValuePtr, &newAllocationWithoutID));
+                            clearValuePtr, &newAllocationWithoutID);
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
+
+                        ASSERT_TRUE(SUCCEEDED(hr) || envParams.IsNeverAllocate);
 
                         mCreateResourceStats.TotalCpuTime += elapsedTime;
                         mCreateResourceStats.PeakCpuTime =
@@ -182,9 +188,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             } else if (event["name"].asString() == "GPUMemoryAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
+                        if (newAllocationWithoutID == nullptr) {
+                            ASSERT_TRUE(envParams.IsNeverAllocate);
+                            continue;
+                        }
+
                         ASSERT_TRUE(newAllocationWithoutID != nullptr);
-                        const std::string& traceEventID = event["id"].asString();
-                        ASSERT_TRUE(allocationToIDMap.insert({traceEventID, newAllocationWithoutID})
+                        const std::string& allocationID = event["id"].asString();
+                        ASSERT_TRUE(allocationToIDMap.insert({allocationID, newAllocationWithoutID})
                                         .second);
 
                         mResourceAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
@@ -198,18 +209,19 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
-                        const std::string& traceEventID = event["id"].asString();
-
-                        auto it = allocationToIDMap.find(traceEventID);
-                        ASSERT_TRUE(it != allocationToIDMap.end());
-                        {
-                            ResourceAllocation* allocation = it->second.Get();
-                            mResourceAllocationStats.CurrentUsage -= allocation->GetSize();
+                        const std::string& allocationID = event["id"].asString();
+                        auto it = allocationToIDMap.find(allocationID);
+                        if (it == allocationToIDMap.end()) {
+                            ASSERT_TRUE(envParams.IsNeverAllocate);
+                            continue;
                         }
+
+                        ResourceAllocation* allocation = it->second.Get();
+                        mResourceAllocationStats.CurrentUsage -= allocation->GetSize();
 
                         mPlatformTime->StartElapsedTime();
 
-                        ASSERT_EQ(allocationToIDMap.erase(traceEventID), 1u);
+                        ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
