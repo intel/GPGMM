@@ -253,13 +253,18 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
                             gpgmm::WarningLog()
-                                << "Capture device does not match replay device (IsUMA).";
+                                << "Capture device does not match playback device (IsUMA: " +
+                                       std::to_string(args["IsUMA"].asBool()) + " vs " +
+                                       std::to_string(allocatorDesc.IsUMA) + ").";
                         }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
-                            gpgmm::WarningLog() << "Capture device does not match replay device "
-                                                   "(ResourceHeapTier).";
+                            gpgmm::WarningLog()
+                                << "Capture device does not match playback device "
+                                   "(ResourceHeapTier: " +
+                                       std::to_string(args["ResourceHeapTier"].asInt()) + " vs " +
+                                       std::to_string(allocatorDesc.ResourceHeapTier) + ").";
                         }
 
                         allocatorDesc.PreferredResourceHeapSize =
