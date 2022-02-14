@@ -358,8 +358,8 @@ TEST_P(D3D12EventTraceReplay, Run) {
 
     LogCallStats("Allocation", mCreateResourceStats);
     LogCallStats("Deallocation", mReleaseResourceStats);
-    LogMemoryStats("GPUMemoryAllocation", mResourceAllocationStats);
-    LogMemoryStats("GPUMemoryBlock", mHeapStats);
+    LogMemoryStats("Allocation", mResourceAllocationStats);
+    LogMemoryStats("Memory", mHeapStats);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
