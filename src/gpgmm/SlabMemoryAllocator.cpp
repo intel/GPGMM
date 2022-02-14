@@ -42,8 +42,8 @@ namespace gpgmm {
 
     SlabMemoryAllocator::~SlabMemoryAllocator() {
         for (SlabCache& cache : mCaches) {
-            cache.FreeList.DeleteAll();
-            cache.FullList.DeleteAll();
+            cache.FreeList.RemoveAndDeleteAll();
+            cache.FullList.RemoveAndDeleteAll();
         }
     }
 

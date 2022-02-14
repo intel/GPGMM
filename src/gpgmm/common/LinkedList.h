@@ -203,15 +203,17 @@ namespace gpgmm {
             return head() == end();
         }
 
-        // Deletes all nodes by calling ~T.
-        // ~T should call RemoveFromList if IsInList is true to unlink itself.
-        void DeleteAll() const {
+        // Empty the list by deleting all nodes.
+        // ~T must check if IsInList and call RemoveFromList to unlink itself or RemoveAndDeleteAll
+        // will ASSERT to indicate programmer error.
+        void RemoveAndDeleteAll() const {
             auto curr = head();
             while (curr != end()) {
                 auto next = curr->next();
                 delete curr->value();
                 curr = next;
             }
+            ASSERT(empty());
         }
 
       private:

@@ -70,6 +70,11 @@ namespace gpgmm {
             Slab(uint64_t blockCount, uint64_t blockSize)
                 : RefCounted(0), BlockCount(blockCount), Allocator(blockCount, blockSize) {
             }
+            ~Slab() {
+                if (IsInList()) {
+                    RemoveFromList();
+                }
+            }
             bool IsFull() const {
                 return static_cast<uint32_t>(RefCount()) == BlockCount;
             }
