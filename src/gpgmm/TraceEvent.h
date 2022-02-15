@@ -162,7 +162,7 @@ namespace gpgmm {
 
     class FileEventTracer {
       public:
-        FileEventTracer(std::string traceFile);
+        explicit FileEventTracer(const std::string& traceFile);
         ~FileEventTracer();
 
         void EnqueueTraceEvent(char phase,

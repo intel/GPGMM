@@ -83,7 +83,7 @@ namespace gpgmm {
         }
     }
 
-    FileEventTracer::FileEventTracer(std::string traceFile)
+    FileEventTracer::FileEventTracer(const std::string& traceFile)
         : mTraceFile(traceFile), mPlatformTime(CreatePlatformTime()) {
         ASSERT(!mTraceFile.empty());
 
