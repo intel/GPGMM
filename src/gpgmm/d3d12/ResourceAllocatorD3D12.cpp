@@ -17,6 +17,7 @@
 
 #include "gpgmm/BuddyMemoryAllocator.h"
 #include "gpgmm/ConditionalMemoryAllocator.h"
+#include "gpgmm/MemorySize.h"
 #include "gpgmm/SegmentedMemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
 #include "gpgmm/common/Log.h"
@@ -277,9 +278,10 @@ namespace gpgmm { namespace d3d12 {
                                     uint64_t allocationSize,
                                     uint64_t alignment,
                                     bool neverAllocate,
+                                    bool cacheSize,
                                     CreateResourceFn&& createResourceFn) {
             std::unique_ptr<MemoryAllocation> allocation =
-                allocator->TryAllocateMemory(allocationSize, alignment, neverAllocate);
+                allocator->TryAllocateMemory(allocationSize, alignment, neverAllocate, cacheSize);
             if (allocation == nullptr) {
                 d3d12::LogAllocatorMessage(LogSeverity::Debug,
                                            "ResourceAllocator.TryAllocateResource",
@@ -453,6 +455,35 @@ namespace gpgmm { namespace d3d12 {
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabFragmentationLimit*/ 0, std::move(bufferAllocator));
             }
+
+            // Cache resource sizes per general-purpose allocator.
+            // Ensures next available block is made available upon first request without increasing
+            // the actual memory footprint. Since resources are always sized-aligned, the cached
+            // size must be requested per possible multiple or alignment {4KB, 64KB, or 4MB}.
+            // To avoid unbounded cache growth, a set of pre-defined sizes initializes the
+            // allocators.
+
+            // Temporary suppress log messages emitted from internal cache-miss requests.
+            const LogSeverity& prevLevel = SetLogMessageLevel(LogSeverity::Info);
+
+            for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
+                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*neverAllocate*/ true, /*cacheSize*/ true);
+
+                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*neverAllocate*/ true, /*cacheSize*/ true);
+
+                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*neverAllocate*/ true, /*cacheSize*/ true);
+            }
+
+            SetLogMessageLevel(prevLevel);
         }
     }
 
@@ -534,7 +565,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceDescriptor.Width, subAllocatedAlignment, neverAllocate,
-                [&](const auto& subAllocation) -> HRESULT {
+                /*cachedSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -569,7 +600,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
-                [&](const auto& subAllocation) -> HRESULT {
+                /*cachedSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -620,7 +651,7 @@ namespace gpgmm { namespace d3d12 {
             const uint64_t heapSize = resourceInfo.SizeInBytes;
 
             ReturnIfSucceeded(TryAllocateResource(
-                allocator, heapSize, heapAlignment, neverAllocate,
+                allocator, heapSize, heapAlignment, neverAllocate, /*cachedSize*/ false,
                 [&](const auto& allocation) -> HRESULT {
                     // If the resource's heap cannot be pooled then it is no better then
                     // calling CreateCommittedResource if the allocation is not fully contained.

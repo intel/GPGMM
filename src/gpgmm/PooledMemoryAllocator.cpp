@@ -28,12 +28,13 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
         uint64_t allocationSize,
         uint64_t alignment,
-        bool neverAllocate) {
+        bool neverAllocate,
+        bool cacheSize) {
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(
-                GetFirstChild()->TryAllocateMemory(allocationSize, alignment, neverAllocate),
-                allocation);
+            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(allocationSize, alignment,
+                                                                neverAllocate, cacheSize),
+                             allocation);
         }
 
         return allocation;

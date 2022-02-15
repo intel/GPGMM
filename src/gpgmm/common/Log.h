@@ -57,7 +57,7 @@ namespace gpgmm {
         Error,
     };
 
-    void SetLogMessageLevel(const LogSeverity& level);
+    LogSeverity SetLogMessageLevel(const LogSeverity& level);
 
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {

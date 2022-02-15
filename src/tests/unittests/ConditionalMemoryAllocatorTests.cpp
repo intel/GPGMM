@@ -26,31 +26,31 @@ TEST(ConditionalMemoryAllocatorTests, Basic) {
 
     // Smaller allocation uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1, false, false);
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->QueryInfo().UsedMemoryUsage, 4u);
     }
 
     // Equal size allocation uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(16, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(16, 1, false, false);
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->QueryInfo().UsedMemoryUsage, 20u);
     }
 
     // Larger allocation uses secondAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1, false, false);
         ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->QueryInfo().UsedMemoryUsage, 24u);
     }
 
     // Smaller allocation again uses firstAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(4, 1, false, false);
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->QueryInfo().UsedMemoryUsage, 24u);
     }
 
     // Larger allocation again uses secondAllocator.
     {
-        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1);
+        std::unique_ptr<MemoryAllocation> allocation = alloc.TryAllocateMemory(24, 1, false, false);
         ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->QueryInfo().UsedMemoryUsage, 48u);
     }
 }

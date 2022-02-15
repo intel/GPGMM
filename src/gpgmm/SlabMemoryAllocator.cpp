@@ -78,7 +78,8 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(
         uint64_t allocationSize,
         uint64_t alignment,
-        bool neverAllocate) {
+        bool neverAllocate,
+        bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.TryAllocateMemory");
         if (allocationSize > mBlockSize) {
             LogAllocatorMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
@@ -127,16 +128,17 @@ namespace gpgmm {
         ASSERT(slab != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
-                             &slab->Allocator, mBlockSize, alignment,
-                             [&](const auto& block) -> MemoryBase* {
-                                 if (slab->SlabMemory == nullptr) {
-                                     GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(
-                                                          slabSize, mSlabAlignment, neverAllocate),
-                                                      slab->SlabMemory);
-                                 }
-                                 return slab->SlabMemory->GetMemory();
-                             }),
+        GPGMM_TRY_ASSIGN(TrySubAllocateMemory(&slab->Allocator, mBlockSize, alignment,
+                                              [&](const auto& block) -> MemoryBase* {
+                                                  if (slab->SlabMemory == nullptr) {
+                                                      GPGMM_TRY_ASSIGN(
+                                                          mMemoryAllocator->TryAllocateMemory(
+                                                              slabSize, mSlabAlignment,
+                                                              neverAllocate, cacheSize),
+                                                          slab->SlabMemory);
+                                                  }
+                                                  return slab->SlabMemory->GetMemory();
+                                              }),
                          subAllocation);
 
         // Slab must be referenced seperately from its memory because slab memory could be already
@@ -240,12 +242,13 @@ namespace gpgmm {
     }
 
     SlabCacheAllocator::~SlabCacheAllocator() {
-        ASSERT(mSizeCache.GetSize() == 0);
+        mSizeCache.RemoveAndDeleteAll();
     }
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t allocationSize,
                                                                             uint64_t alignment,
-                                                                            bool neverAllocate) {
+                                                                            bool neverAllocate,
+                                                                            bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.TryAllocateMemory");
 
         const uint64_t blockSize = AlignTo(allocationSize, mMinBlockSize);
@@ -261,7 +264,7 @@ namespace gpgmm {
         }
 
         // Create a slab allocator for the new entry.
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize));
+        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), cacheSize);
 
         // Create a slab allocator for the new entry.
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
@@ -276,8 +279,9 @@ namespace gpgmm {
         ASSERT(slabAllocator != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(allocationSize, alignment, neverAllocate),
-                         subAllocation);
+        GPGMM_TRY_ASSIGN(
+            slabAllocator->TryAllocateMemory(allocationSize, alignment, neverAllocate, cacheSize),
+            subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();
@@ -290,7 +294,7 @@ namespace gpgmm {
     void SlabCacheAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.DeallocateMemory");
 
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()));
+        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()), false);
 
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         ASSERT(slabAllocator != nullptr);
