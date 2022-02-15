@@ -27,7 +27,7 @@
 namespace gpgmm {
 
     // Messages with equal or greater to severity will be logged.
-    LogSeverity gLogMessageLevel = LogSeverity::Warning;
+    LogSeverity gLogMessageLevel = LogSeverity::Info;
 
     namespace {
 
