@@ -27,7 +27,7 @@ namespace gpgmm {
             mPool.resize(memoryIndex + 1);
         }
 
-        LogObject("GPUMemoryPool", this, GetDesc());
+        LogEvent("GPUMemoryPool", this, GetDesc());
 
         return std::unique_ptr<MemoryAllocation>(mPool[memoryIndex].release());
     }
@@ -39,7 +39,7 @@ namespace gpgmm {
 
         mPool[memoryIndex] = std::move(allocation);
 
-        LogObject("GPUMemoryPool", this, GetDesc());
+        LogEvent("GPUMemoryPool", this, GetDesc());
     }
 
     void IndexedMemoryPool::ReleasePool() {

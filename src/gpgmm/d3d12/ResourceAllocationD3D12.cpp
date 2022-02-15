@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogObject("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -72,7 +72,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogObject("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -89,7 +89,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogObject("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -108,7 +108,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogObject("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
     }
 
     ResourceAllocation::~ResourceAllocation() {

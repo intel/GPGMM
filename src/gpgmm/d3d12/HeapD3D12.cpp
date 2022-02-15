@@ -29,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(mPageable != nullptr);
 
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryBlock", this);
-        d3d12::LogObject("GPUMemoryBlock", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryBlock", this, GetDesc());
 
         mPageable->SetName(L"GPGMM managed heap");
     }
