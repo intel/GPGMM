@@ -89,7 +89,9 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
-    virtual void RunTest(const TraceFile& traceFile, const TestEnviromentParams& envParams) = 0;
+    virtual void RunTest(const TraceFile& traceFile,
+                         const TestEnviromentParams& envParams,
+                         uint64_t iterationIndex) = 0;
 
     void RunTestLoop();
 

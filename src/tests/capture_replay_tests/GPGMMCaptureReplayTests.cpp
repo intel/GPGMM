@@ -237,7 +237,7 @@ CaptureReplayTestWithParams::CaptureReplayTestWithParams()
 void CaptureReplayTestWithParams::RunTestLoop() {
     const TestEnviromentParams& envParams = gTestEnv->GetParams();
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
-        RunTest(GetParam(), envParams);
+        RunTest(GetParam(), envParams, i);
     }
 }
 

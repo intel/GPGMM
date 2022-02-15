@@ -103,7 +103,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
-    void RunTest(const TraceFile& traceFile, const TestEnviromentParams& envParams) override {
+    void RunTest(const TraceFile& traceFile,
+                 const TestEnviromentParams& envParams,
+                 uint64_t iterationIndex) override {
         std::ifstream traceFileStream(traceFile.path, std::ifstream::binary);
 
         Json::Value root;
@@ -263,7 +265,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.IsUMA != args["IsUMA"].asBool()) {
+                            allocatorDesc.IsUMA != args["IsUMA"].asBool() && iterationIndex == 0) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(args["IsUMA"].asBool()) + " vs " +
@@ -271,7 +273,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt()) {
+                            allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt() &&
+                            iterationIndex == 0) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match playback device "
                                    "(ResourceHeapTier: " +
