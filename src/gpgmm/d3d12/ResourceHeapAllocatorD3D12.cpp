@@ -31,7 +31,8 @@ namespace gpgmm { namespace d3d12 {
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
         uint64_t allocationSize,
         uint64_t alignment,
-        bool neverAllocate) {
+        bool neverAllocate,
+        bool cacheSize) {
         if (neverAllocate) {
             return {};
         }

@@ -27,11 +27,11 @@ TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
                                                 kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocation> invalidAllocation =
-        segmentedAllocator.TryAllocateMemory(0, kDefaultMemoryAlignment, false);
+        segmentedAllocator.TryAllocateMemory(0, kDefaultMemoryAlignment, false, false);
     ASSERT_EQ(invalidAllocation, nullptr);
 
-    std::unique_ptr<MemoryAllocation> allocation =
-        segmentedAllocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> allocation = segmentedAllocator.TryAllocateMemory(
+        kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
@@ -48,13 +48,13 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
     SegmentedMemoryAllocator segmentedAllocator(std::make_unique<DummyMemoryAllocator>(),
                                                 kDefaultMemoryAlignment);
 
-    std::unique_ptr<MemoryAllocation> firstAllocation =
-        segmentedAllocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> firstAllocation = segmentedAllocator.TryAllocateMemory(
+        kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(firstAllocation, nullptr);
     EXPECT_EQ(firstAllocation->GetSize(), kDefaultMemorySize);
 
-    std::unique_ptr<MemoryAllocation> secondAllocation =
-        segmentedAllocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> secondAllocation = segmentedAllocator.TryAllocateMemory(
+        kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(secondAllocation, nullptr);
     EXPECT_EQ(secondAllocation->GetSize(), kDefaultMemorySize);
 
@@ -75,52 +75,52 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 
     // Append the 1st and 3rd segment, in sequence.
     uint64_t firstMemorySize = kDefaultMemorySize / 2;
-    std::unique_ptr<MemoryAllocation> firstAllocation =
-        segmentedAllocator.TryAllocateMemory(firstMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> firstAllocation = segmentedAllocator.TryAllocateMemory(
+        firstMemorySize, kDefaultMemoryAlignment, false, false);
     EXPECT_EQ(firstAllocation->GetMethod(), AllocationMethod::kStandalone);
     ASSERT_NE(firstAllocation, nullptr);
     EXPECT_EQ(firstAllocation->GetSize(), firstMemorySize);
 
     uint64_t secondMemorySize = kDefaultMemorySize / 8;
-    std::unique_ptr<MemoryAllocation> secondAllocation =
-        segmentedAllocator.TryAllocateMemory(secondMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> secondAllocation = segmentedAllocator.TryAllocateMemory(
+        secondMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(secondAllocation, nullptr);
     EXPECT_EQ(secondAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(secondAllocation->GetSize(), secondMemorySize);
 
     // Insert a 3rd segment in the middle or between the 1st and 2nd segment.
     uint64_t thirdMemorySize = kDefaultMemorySize / 4;
-    std::unique_ptr<MemoryAllocation> thirdAllocation =
-        segmentedAllocator.TryAllocateMemory(thirdMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> thirdAllocation = segmentedAllocator.TryAllocateMemory(
+        thirdMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(thirdAllocation, nullptr);
     EXPECT_EQ(thirdAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(thirdAllocation->GetSize(), thirdMemorySize);
 
     // Insert a 4th segment at the end.
     uint64_t fourthMemorySize = kDefaultMemorySize;
-    std::unique_ptr<MemoryAllocation> fourthAllocation =
-        segmentedAllocator.TryAllocateMemory(fourthMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> fourthAllocation = segmentedAllocator.TryAllocateMemory(
+        fourthMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(fourthAllocation, nullptr);
     EXPECT_EQ(fourthAllocation->GetSize(), fourthMemorySize);
 
     // Insert a 5th segment at the start.
     uint64_t fifthMemorySize = kDefaultMemorySize / 16;
-    std::unique_ptr<MemoryAllocation> fifthAllocation =
-        segmentedAllocator.TryAllocateMemory(fifthMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> fifthAllocation = segmentedAllocator.TryAllocateMemory(
+        fifthMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(fifthAllocation, nullptr);
     EXPECT_EQ(fifthAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(fifthAllocation->GetSize(), fifthMemorySize);
 
     // Reuse the 3rd segment.
-    std::unique_ptr<MemoryAllocation> sixthAllocation =
-        segmentedAllocator.TryAllocateMemory(thirdMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> sixthAllocation = segmentedAllocator.TryAllocateMemory(
+        thirdMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(sixthAllocation, nullptr);
     EXPECT_EQ(sixthAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(sixthAllocation->GetSize(), thirdMemorySize);
 
     // Reuse the 1st segment.
-    std::unique_ptr<MemoryAllocation> seventhAllocation =
-        segmentedAllocator.TryAllocateMemory(firstMemorySize, kDefaultMemoryAlignment, false);
+    std::unique_ptr<MemoryAllocation> seventhAllocation = segmentedAllocator.TryAllocateMemory(
+        firstMemorySize, kDefaultMemoryAlignment, false, false);
     ASSERT_NE(seventhAllocation, nullptr);
     EXPECT_EQ(seventhAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(seventhAllocation->GetSize(), firstMemorySize);
@@ -147,7 +147,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
                                                 kDefaultMemoryAlignment);
     {
         std::unique_ptr<MemoryAllocation> allocation = segmentedAllocator.TryAllocateMemory(
-            kDefaultMemorySize, kDefaultMemoryAlignment, false);
+            kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
@@ -158,7 +158,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
 
     {
         std::unique_ptr<MemoryAllocation> allocation = segmentedAllocator.TryAllocateMemory(
-            kDefaultMemorySize, kDefaultMemoryAlignment, false);
+            kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);

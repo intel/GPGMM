@@ -129,16 +129,22 @@ namespace gpgmm {
         MemoryCache() = default;
 
         ~MemoryCache() {
+            RemoveAndDeleteAll();
             ASSERT(GetSize() == 0);
         }
 
-        ScopedRef<CacheEntryT> GetOrCreate(const T& value) {
+        // Inserts |value| into a cache. The |value| may be kept alive until the cache destructs
+        // when |keepAlive| is true.
+        ScopedRef<CacheEntryT> GetOrCreate(const T& value, bool keepAlive) {
             CacheEntryT tmp(std::move(value));
             const auto& iter = mCache.find(&tmp);
             if (iter != mCache.end()) {
                 return (*iter);
             }
             CacheEntryT* entry = new CacheEntryT(this, tmp.AcquireValue());
+            if (keepAlive) {
+                entry->Ref();
+            }
             const bool success = mCache.insert(entry).second;
             ASSERT(success);
             return ScopedRef<CacheEntryT>(entry);
@@ -164,6 +170,18 @@ namespace gpgmm {
 
         const_iterator cend() const {
             return mCache.cend();
+        }
+
+        void RemoveAndDeleteAll() {
+            for (auto it = mCache.begin(); it != mCache.end();) {
+                if ((*it)->Unref()) {
+                    auto curr = it;
+                    it++;
+                    RemoveCacheEntry(*curr);
+                } else {
+                    it++;
+                }
+            }
         }
 
       private:

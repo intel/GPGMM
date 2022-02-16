@@ -47,7 +47,8 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
         uint64_t allocationSize,
         uint64_t alignment,
-        bool neverAllocate) {
+        bool neverAllocate,
+        bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
@@ -85,10 +86,10 @@ namespace gpgmm {
 
                                      // No existing, allocate new memory for the block.
                                      if (memoryAllocation == nullptr) {
-                                         GPGMM_TRY_ASSIGN(
-                                             GetFirstChild()->TryAllocateMemory(
-                                                 mMemorySize, mMemoryAlignment, neverAllocate),
-                                             memoryAllocation);
+                                         GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
+                                                              mMemorySize, mMemoryAlignment,
+                                                              neverAllocate, cacheSize),
+                                                          memoryAllocation);
                                      }
 
                                      MemoryBase* memory = memoryAllocation->GetMemory();

@@ -67,8 +67,11 @@ namespace gpgmm {
 
     }  // anonymous namespace
 
-    void SetLogMessageLevel(const LogSeverity& level) {
-        gLogMessageLevel = level;
+    // Set the new level and returns the previous level so it may be restored by the caller.
+    LogSeverity SetLogMessageLevel(const LogSeverity& newLevel) {
+        LogSeverity oldLevel = gLogMessageLevel;
+        gLogMessageLevel = newLevel;
+        return oldLevel;
     }
 
     // LogMessage

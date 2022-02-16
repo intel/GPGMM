@@ -32,7 +32,8 @@ namespace gpgmm {
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
                                                             uint64_t alignment,
-                                                            bool neverAllocate = true) override;
+                                                            bool neverAllocate,
+                                                            bool cacheSize) override;
         void DeallocateMemory(MemoryAllocation* pAllocation) override;
 
         MemoryAllocator* GetFirstAllocatorForTesting() const;

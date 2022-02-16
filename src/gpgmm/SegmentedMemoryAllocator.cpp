@@ -128,7 +128,8 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
         uint64_t allocationSize,
         uint64_t alignment,
-        bool neverAllocate) {
+        bool neverAllocate,
+        bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
 
         if (allocationSize == 0 || alignment != mMemoryAlignment) {
@@ -143,9 +144,9 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(
-                GetFirstChild()->TryAllocateMemory(allocationSize, mMemoryAlignment, neverAllocate),
-                allocation);
+            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(allocationSize, mMemoryAlignment,
+                                                                neverAllocate, cacheSize),
+                             allocation);
         }
 
         allocation->GetMemory()->SetPool(segment);

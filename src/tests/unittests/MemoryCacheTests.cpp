@@ -31,11 +31,11 @@ struct FakeObject {
 TEST(MemoryCacheTests, SingleEntry) {
     MemoryCache<FakeObject> cache;
 
-    auto firstEntry = cache.GetOrCreate(FakeObject{0});
+    auto firstEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(firstEntry.Get(), nullptr);
     EXPECT_EQ(firstEntry.Get()->RefCount(), 1);
 
-    auto secondEntry = cache.GetOrCreate(FakeObject{0});
+    auto secondEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(secondEntry.Get(), nullptr);
     EXPECT_EQ(secondEntry.Get()->RefCount(), 2);
 
@@ -48,20 +48,20 @@ TEST(MemoryCacheTests, SingleEntry) {
 TEST(MemoryCacheTests, MultipleEntries) {
     MemoryCache<FakeObject> cache;
 
-    auto firstEntry = cache.GetOrCreate(FakeObject{1});
+    auto firstEntry = cache.GetOrCreate(FakeObject{1}, false);
     ASSERT_NE(firstEntry.Get(), nullptr);
 
-    auto secondEntry = cache.GetOrCreate(FakeObject{2});
+    auto secondEntry = cache.GetOrCreate(FakeObject{2}, false);
     ASSERT_NE(firstEntry.Get(), nullptr);
 
     EXPECT_NE(firstEntry.Get(), secondEntry.Get());
     EXPECT_EQ(firstEntry.Get()->RefCount(), 1);
     EXPECT_EQ(secondEntry.Get()->RefCount(), 1);
 
-    auto thirdEntry = cache.GetOrCreate(FakeObject{1});
+    auto thirdEntry = cache.GetOrCreate(FakeObject{1}, false);
     ASSERT_NE(thirdEntry.Get(), nullptr);
 
-    auto forthEntry = cache.GetOrCreate(FakeObject{2});
+    auto forthEntry = cache.GetOrCreate(FakeObject{2}, false);
     ASSERT_NE(forthEntry.Get(), nullptr);
 
     EXPECT_EQ(firstEntry.Get(), thirdEntry.Get());
@@ -74,17 +74,17 @@ TEST(MemoryCacheTests, MultipleEntries) {
 TEST(MemoryCacheTests, ShrinkCache) {
     MemoryCache<FakeObject> cache;
     {
-        auto entry = cache.GetOrCreate(FakeObject{1});
+        auto entry = cache.GetOrCreate(FakeObject{1}, false);
         EXPECT_EQ(cache.GetSize(), 1u);
     }
     {
-        auto entry = cache.GetOrCreate(FakeObject{1});
+        auto entry = cache.GetOrCreate(FakeObject{1}, false);
         EXPECT_EQ(cache.GetSize(), 1u);
     }
 
     EXPECT_EQ(cache.GetSize(), 0u);
 
-    auto entryOne = cache.GetOrCreate(FakeObject{1});
-    auto entryTwo = cache.GetOrCreate(FakeObject{1});
+    auto entryOne = cache.GetOrCreate(FakeObject{1}, false);
+    auto entryTwo = cache.GetOrCreate(FakeObject{1}, false);
     EXPECT_EQ(entryOne.Get()->RefCount(), 2);
 }
