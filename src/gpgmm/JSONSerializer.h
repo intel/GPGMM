@@ -70,7 +70,9 @@ namespace gpgmm {
     }
 
     template <typename... Args>
-    static void LogMessage(const LogSeverity& severity, const char* name, const Args&... args) {
+    static void LogAllocatorMessage(const LogSeverity& severity,
+                                    const char* name,
+                                    const Args&... args) {
         return gpgmm::LogCommon<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
     }
 
