@@ -70,10 +70,10 @@ namespace gpgmm { namespace d3d12 {
                          uint64_t totalResourceBudgetLimit,
                          uint64_t videoMemoryEvictSize);
 
-        using Cache = LinkedList<Heap>;
+        using LRUCache = LinkedList<Heap>;
 
         struct VideoMemorySegment {
-            Cache lruCache = {};
+            LRUCache cache = {};
             DXGI_QUERY_VIDEO_MEMORY_INFO Info = {};
         };
 
@@ -85,7 +85,7 @@ namespace gpgmm { namespace d3d12 {
         DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemorySegmentInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        Cache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemoryInfo) const;

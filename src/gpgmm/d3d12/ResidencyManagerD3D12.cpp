@@ -175,14 +175,14 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
-    ResidencyManager::Cache* ResidencyManager::GetVideoMemorySegmentCache(
+    ResidencyManager::LRUCache* ResidencyManager::GetVideoMemorySegmentCache(
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         switch (memorySegmentGroup) {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
-                return &mLocalVideoMemorySegment.lruCache;
+                return &mLocalVideoMemorySegment.cache;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
                 ASSERT(!mIsUMA);
-                return &mNonLocalVideoMemorySegment.lruCache;
+                return &mNonLocalVideoMemorySegment.cache;
             default:
                 UNREACHABLE();
                 return nullptr;
@@ -267,7 +267,7 @@ namespace gpgmm { namespace d3d12 {
             // emptying the cache is undesirable, because it can mean either 1) the cache is not
             // accurately accounting for GPU allocations, or 2) an external component is
             // using all of the budget and is starving us, which will cause thrash.
-            Cache* cache = GetVideoMemorySegmentCache(memorySegmentGroup);
+            LRUCache* cache = GetVideoMemorySegmentCache(memorySegmentGroup);
             ASSERT(cache != nullptr);
 
             if (cache->empty()) {
@@ -424,7 +424,7 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        Cache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
+        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
         ASSERT(cache != nullptr);
 
         cache->Append(heap);
