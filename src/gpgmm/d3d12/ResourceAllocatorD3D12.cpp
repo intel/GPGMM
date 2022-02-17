@@ -758,6 +758,8 @@ namespace gpgmm { namespace d3d12 {
             return E_FAIL;
         }
 
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreatePlacedResource");
+
         // Before calling CreatePlacedResource, we must ensure the target heap is resident or
         // CreatePlacedResource will fail.
         ComPtr<ID3D12Resource> placedResource;
@@ -887,6 +889,8 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
         QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut) const {
+        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.QueryResourceAllocatorInfo");
+
         QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
