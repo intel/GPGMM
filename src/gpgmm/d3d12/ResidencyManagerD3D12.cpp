@@ -316,7 +316,12 @@ namespace gpgmm { namespace d3d12 {
                                                   ResidencySet* const* residencySets,
                                                   uint32_t count) {
         // TODO: support multiple command lists.
-        ASSERT(count == 1);
+        if (count > 1) {
+            return E_NOTIMPL;
+        }
+
+        TRACE_EVENT_CALL_SCOPED("ResidencyManager.ExecuteCommandLists");
+
         ID3D12CommandList* commandList = commandLists[0];
         ResidencySet* residencySet = residencySets[0];
 
