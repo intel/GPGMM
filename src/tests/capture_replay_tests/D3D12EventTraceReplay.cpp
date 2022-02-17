@@ -382,4 +382,32 @@ TEST_P(D3D12EventTraceReplay, Run) {
     LogMemoryStats("Memory", mHeapStats);
 }
 
+// Verify a re-generated trace will always playback the same result.
+TEST_P(D3D12EventTraceReplay, Regen) {
+    // Regenerate capture.
+    TestEnviromentParams testEnv = {};
+    testEnv.IsRegenerate = true;
+    RunTest(GetParam(), testEnv, 0);
+
+    CaptureReplayCallStats beforeCreateResourceStats = mCreateResourceStats;
+    CaptureReplayCallStats beforeReleaseResourceStats = mReleaseResourceStats;
+    CaptureReplayMemoryStats beforeResourceAllocationStats = mResourceAllocationStats;
+    CaptureReplayMemoryStats beforeHeapStats = mHeapStats;
+
+    // Reset stats
+    mCreateResourceStats = {};
+    mReleaseResourceStats = {};
+    mResourceAllocationStats = {};
+    mHeapStats = {};
+
+    // Playback re-generated capture.
+    testEnv.IsRegenerate = false;
+    RunTest(GetParam(), testEnv, 0);
+
+    EXPECT_EQ(beforeCreateResourceStats.TotalNumOfCalls, mCreateResourceStats.TotalNumOfCalls);
+    EXPECT_EQ(beforeReleaseResourceStats.TotalNumOfCalls, mReleaseResourceStats.TotalNumOfCalls);
+    EXPECT_EQ(beforeResourceAllocationStats.TotalCount, mResourceAllocationStats.TotalCount);
+    EXPECT_EQ(beforeHeapStats.TotalCount, mHeapStats.TotalCount);
+}
+
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
