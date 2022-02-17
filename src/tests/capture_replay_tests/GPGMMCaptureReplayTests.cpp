@@ -181,8 +181,6 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false")
-                     << "\n"
                      << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false")
                      << "\n"
                      << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"

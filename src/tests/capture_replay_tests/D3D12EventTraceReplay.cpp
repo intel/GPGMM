@@ -418,8 +418,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 TEST_P(D3D12EventTraceReplay, Run) {
     RunTestLoop();
 
-    LogCallStats("Allocation", mCreateResourceStats);
-    LogCallStats("Deallocation", mReleaseResourceStats);
+    LogCallStats("Allocation(s)", mCreateResourceStats);
+    LogCallStats("Deallocation(s)", mReleaseResourceStats);
+
     LogMemoryStats("Allocation", mResourceAllocationStats);
     LogMemoryStats("Memory", mHeapStats);
 
