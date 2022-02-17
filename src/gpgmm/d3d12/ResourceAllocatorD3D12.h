@@ -50,6 +50,11 @@ namespace gpgmm { namespace d3d12 {
         // to debug with residency being over committed.
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
+        // Checks for leaked device objects created by GPGMM.
+        // Requires the debug layers to be enabled by installing Graphics Tools in Windows and
+        // calling EnableDebugLayer before creation.
+        // Will assert if a leak is detected during destruction.
+        ALLOCATOR_CHECK_DEVICE_LEAKS = 0x4,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
@@ -321,6 +326,9 @@ namespace gpgmm { namespace d3d12 {
                                    Heap** resourceHeapOut);
 
         void FreeResourceHeap(Heap* resourceHeap);
+
+        HRESULT EnableDeviceObjectLeakChecks() const;
+        HRESULT CheckForDeviceObjectLeaks() const;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<ResidencyManager> mResidencyManager;
