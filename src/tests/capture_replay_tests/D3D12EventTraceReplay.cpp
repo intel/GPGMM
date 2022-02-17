@@ -112,11 +112,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToIDMap;
-        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
+        std::unordered_map<std::string, RESOURCE_ALLOCATION_DESC> allocationToIDMap;
         std::unordered_map<std::string, HEAP_DESC> heapDescToIDMap;
 
         ComPtr<ResourceAllocation> newAllocationWithoutID;
+
+        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
+        std::unordered_map<std::string, ComPtr<ResourceAllocation>> newAllocationToIDMap;
 
         std::string allocatorInstanceID;
         ALLOCATOR_DESC allocatorDesc = {};
@@ -189,6 +191,33 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 }
             } else if (event["name"].asString() == "GPUMemoryAllocation") {
                 switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
+                        const std::string& allocationID = event["id"].asString();
+                        if (allocationToIDMap.find(allocationID) != allocationToIDMap.end()) {
+                            continue;
+                        }
+
+                        const Json::Value& snapshot = event["args"]["snapshot"];
+
+                        RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                        allocationDesc.Size = snapshot["Size"].asUInt64();
+                        allocationDesc.HeapOffset = snapshot["HeapOffset"].asUInt64();
+                        allocationDesc.OffsetFromResource =
+                            snapshot["OffsetFromResource"].asUInt64();
+                        allocationDesc.Method =
+                            static_cast<gpgmm::AllocationMethod>(snapshot["Method"].asInt());
+
+                        mResourceAllocationStats.TotalSize += allocationDesc.Size;
+                        mResourceAllocationStats.TotalCount++;
+                        mResourceAllocationStats.CurrentUsage += allocationDesc.Size;
+                        mResourceAllocationStats.PeakUsage =
+                            std::max(mResourceAllocationStats.PeakUsage,
+                                     mResourceAllocationStats.CurrentUsage);
+
+                        ASSERT_TRUE(
+                            allocationToIDMap.insert({allocationID, allocationDesc}).second);
+                    } break;
+
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (newAllocationWithoutID == nullptr) {
                             ASSERT_TRUE(envParams.IsNeverAllocate);
@@ -197,35 +226,31 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ASSERT_TRUE(newAllocationWithoutID != nullptr);
                         const std::string& allocationID = event["id"].asString();
-                        ASSERT_TRUE(allocationToIDMap.insert({allocationID, newAllocationWithoutID})
-                                        .second);
-
-                        mResourceAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
-                        mResourceAllocationStats.TotalCount++;
-                        mResourceAllocationStats.CurrentUsage += newAllocationWithoutID->GetSize();
-                        mResourceAllocationStats.PeakUsage =
-                            std::max(mResourceAllocationStats.PeakUsage,
-                                     mResourceAllocationStats.CurrentUsage);
+                        ASSERT_TRUE(
+                            newAllocationToIDMap.insert({allocationID, newAllocationWithoutID})
+                                .second);
 
                         ASSERT_TRUE(newAllocationWithoutID.Reset() == 1);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
+
                         auto it = allocationToIDMap.find(allocationID);
-                        if (it == allocationToIDMap.end()) {
-                            ASSERT_TRUE(envParams.IsNeverAllocate);
-                            continue;
-                        }
+                        ASSERT_TRUE(it != allocationToIDMap.end());
 
-                        ResourceAllocation* allocation = it->second.Get();
-                        mResourceAllocationStats.CurrentUsage -= allocation->GetSize();
-
-                        mPlatformTime->StartElapsedTime();
+                        RESOURCE_ALLOCATION_DESC allocationDesc = it->second;
+                        mResourceAllocationStats.CurrentUsage -= allocationDesc.Size;
 
                         ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
 
+                        mPlatformTime->StartElapsedTime();
+
+                        const bool didDeallocate = newAllocationToIDMap.erase(allocationID);
+
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
+
+                        ASSERT_TRUE(didDeallocate || envParams.IsNeverAllocate);
 
                         mReleaseResourceStats.TotalCpuTime += elapsedTime;
                         mReleaseResourceStats.PeakCpuTime =
@@ -364,6 +389,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         ASSERT_TRUE(allocationToIDMap.empty());
         ASSERT_TRUE(allocatorToIDMap.empty());
+        ASSERT_TRUE(heapDescToIDMap.empty());
     }
 
     CaptureReplayCallStats mCreateResourceStats;
