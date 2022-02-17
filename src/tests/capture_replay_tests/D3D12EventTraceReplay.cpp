@@ -179,6 +179,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ASSERT_TRUE(SUCCEEDED(hr) || envParams.IsNeverAllocate);
 
+                        mNewResourceAllocationStats.CurrentUsage +=
+                            newAllocationWithoutID->GetSize();
+                        mNewResourceAllocationStats.PeakUsage =
+                            std::max(mNewResourceAllocationStats.CurrentUsage,
+                                     mNewResourceAllocationStats.PeakUsage);
+                        mNewResourceAllocationStats.TotalCount++;
+                        mNewResourceAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
+
                         mCreateResourceStats.TotalCpuTime += elapsedTime;
                         mCreateResourceStats.PeakCpuTime =
                             std::max(elapsedTime, mCreateResourceStats.PeakCpuTime);
@@ -239,10 +247,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         auto it = allocationToIDMap.find(allocationID);
                         ASSERT_TRUE(it != allocationToIDMap.end());
 
-                        RESOURCE_ALLOCATION_DESC allocationDesc = it->second;
+                        const RESOURCE_ALLOCATION_DESC& allocationDesc = it->second;
                         mResourceAllocationStats.CurrentUsage -= allocationDesc.Size;
 
                         ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
+
+                        ASSERT_TRUE(newAllocationToIDMap.find(allocationID) !=
+                                    newAllocationToIDMap.end());
+
+                        mNewResourceAllocationStats.CurrentUsage -=
+                            newAllocationToIDMap[allocationID]->GetSize();
 
                         mPlatformTime->StartElapsedTime();
 
@@ -396,6 +410,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayCallStats mReleaseResourceStats;
 
     CaptureReplayMemoryStats mResourceAllocationStats;
+    CaptureReplayMemoryStats mNewResourceAllocationStats;
+
     CaptureReplayMemoryStats mHeapStats;
 };
 
@@ -406,6 +422,12 @@ TEST_P(D3D12EventTraceReplay, Run) {
     LogCallStats("Deallocation", mReleaseResourceStats);
     LogMemoryStats("Allocation", mResourceAllocationStats);
     LogMemoryStats("Memory", mHeapStats);
+
+    // Verify captured allocation usage did not regress (ie. consume more memory) than the allocator
+    // usage upon playback.
+    EXPECT_LE(mNewResourceAllocationStats.TotalSize, mResourceAllocationStats.TotalSize);
+    EXPECT_LE(mNewResourceAllocationStats.PeakUsage, mResourceAllocationStats.PeakUsage);
+    EXPECT_EQ(mNewResourceAllocationStats.TotalCount, mResourceAllocationStats.TotalCount);
 }
 
 // Verify a re-generated trace will always playback the same result.
