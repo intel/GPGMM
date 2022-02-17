@@ -219,9 +219,6 @@ namespace gpgmm { namespace d3d12 {
     };
 
     enum ALLOCATOR_MESSAGE_ID {
-        // Suballocation was requested but did not succeed.
-        // Suballocation failure occurs when the resource or heap size are misaligned.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED = 0x1,
 
         // D3D12 heap was created with a size that is not a multiple of the alignment, which wastes
         // memory unknowingly. D3D12 only supports misaligned heap sizes for convenience.

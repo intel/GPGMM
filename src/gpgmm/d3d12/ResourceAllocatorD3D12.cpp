@@ -551,8 +551,7 @@ namespace gpgmm { namespace d3d12 {
         const bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
-        // Attempt to allocate using the most effective allocator.
-        bool didTrySubAllocate = false;
+        // Attempt to allocate using the most effective allocator.;
         MemoryAllocator* allocator = nullptr;
 
         // Attempt to create a resource allocation within the same resource.
@@ -596,8 +595,6 @@ namespace gpgmm { namespace d3d12 {
 
                     return S_OK;
                 }));
-
-            didTrySubAllocate = true;
         }
 
         // Attempt to create a resource allocation by placing a resource in a sub-allocated
@@ -634,14 +631,6 @@ namespace gpgmm { namespace d3d12 {
 
                     return S_OK;
                 }));
-
-            didTrySubAllocate = true;
-        }
-
-        if (didTrySubAllocate) {
-            d3d12::LogAllocatorMessage(LogSeverity::Debug, "ResourceAllocator.CreateResource",
-                                       "Suballocation was attempted but failed.",
-                                       ALLOCATOR_MESSAGE_ID_RESOURCE_SUBALLOCATION_FAILED);
         }
 
         // Attempt to create a resource allocation by placing a single resource fully contained
