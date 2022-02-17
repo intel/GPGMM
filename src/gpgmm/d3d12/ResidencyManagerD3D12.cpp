@@ -82,7 +82,6 @@ namespace gpgmm { namespace d3d12 {
         : mDevice(device),
           mAdapter(adapter3),
           mFence(std::move(fence)),
-          mIsUMA(isUMA),
           mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
                                                               : videoMemoryBudgetLimit),
           mAvailableForResourcesBudget(availableForResourcesBudget),
@@ -98,7 +97,7 @@ namespace gpgmm { namespace d3d12 {
         if (mAvailableForResourcesBudget > 0) {
             mLocalVideoMemorySegment.Info.Budget =
                 mLocalVideoMemorySegment.Info.CurrentUsage + mAvailableForResourcesBudget;
-            if (!mIsUMA) {
+            if (!isUMA) {
                 mNonLocalVideoMemorySegment.Info.Budget =
                     mNonLocalVideoMemorySegment.Info.CurrentUsage + mAvailableForResourcesBudget;
             }
@@ -167,7 +166,6 @@ namespace gpgmm { namespace d3d12 {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
                 return &mLocalVideoMemorySegment.Info;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
-                ASSERT(!mIsUMA);
                 return &mNonLocalVideoMemorySegment.Info;
             default:
                 UNREACHABLE();
@@ -181,7 +179,6 @@ namespace gpgmm { namespace d3d12 {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
                 return &mLocalVideoMemorySegment.cache;
             case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
-                ASSERT(!mIsUMA);
                 return &mNonLocalVideoMemorySegment.cache;
             default:
                 UNREACHABLE();
@@ -367,7 +364,6 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
                                         numOfresources, localHeapsToMakeResident.data()));
         } else if (nonLocalSizeToMakeResident > 0) {
-            ASSERT(!mIsUMA);
             const uint32_t numOfResources =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,

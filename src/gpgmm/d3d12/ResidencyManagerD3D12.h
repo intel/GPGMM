@@ -95,7 +95,6 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<Fence> mFence;
 
-        const bool mIsUMA;
         const float mVideoMemoryBudgetLimit;
         const uint64_t mAvailableForResourcesBudget;
         const uint64_t mVideoMemoryEvictSize;
