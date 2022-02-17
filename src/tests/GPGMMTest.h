@@ -53,7 +53,7 @@ class GPGMMTestEnvironment : public testing::Environment {
   private:
     void PrintTestEnviromentSettings() const;
 
-    bool mEnableCheckDeviceLeaks = false;
+    bool mEnableDeviceLeakChecks = false;
 };
 
 #endif  // TESTS_GPGMM_TEST_H_

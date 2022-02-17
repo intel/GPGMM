@@ -46,6 +46,34 @@ namespace {
         }
     }
 
+    std::string AllocatorProfileToString(const AllocatorProfile& profile) {
+        switch (profile) {
+            case AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE:
+                return "Max Performance";
+            case AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY:
+                return "Low Memory";
+            case AllocatorProfile::ALLOCATOR_PROFILE_BLENDED:
+                return "Blended mode";
+            case AllocatorProfile::ALLOCATOR_PROFILE_NONE:
+                return "None";
+            default:
+                UNREACHABLE();
+                return "";
+        }
+    }
+
+    AllocatorProfile StringToAllocatorProfile(std::string profile) {
+        if (profile == "MAXPERF" || profile == "PERF" || profile == "MAX") {
+            return AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE;
+        } else if (profile == "LOWMEM" || profile == "LOW" || profile == "MEM") {
+            return AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY;
+        } else if (profile == "BLENDED" || profile == "MIXED") {
+            return AllocatorProfile::ALLOCATOR_PROFILE_BLENDED;
+        } else {
+            return AllocatorProfile::ALLOCATOR_PROFILE_NONE;
+        }
+    }
+
 }  // namespace
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
@@ -139,6 +167,19 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        constexpr const char kProfile[] = "--profile=";
+        arglen = sizeof(kProfile) - 1;
+        if (strncmp(argv[i], kProfile, arglen) == 0) {
+            const char* profile = argv[i] + arglen;
+            if (profile[0] != '\0') {
+                mParams.AllocatorProfile = StringToAllocatorProfile(std::string(profile));
+            } else {
+                gpgmm::ErrorLog() << "Invalid profile " << profile << ".\n";
+                UNREACHABLE();
+            }
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Playback options:"
                              << " [--iterations=X]\n"
@@ -152,7 +193,8 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
 
             gpgmm::InfoLog() << "Experiment options:"
                              << " --force-standalone: Disable memory reuse by sub-allocation.\n"
-                             << " --never-allocate: Disable creating backend memory.\n";
+                             << " --never-allocate: Disable creating backend memory.\n"
+                             << " --profile=[MAXPERF|LOWMEM|BLENDED|NONE]: Allocator profile.\n";
             continue;
         }
     }
@@ -190,7 +232,8 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                         "-------------------\n"
                      << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false")
                      << "\n"
-                     << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n";
+                     << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n"
+                     << "Profile: " << AllocatorProfileToString(mParams.AllocatorProfile) << "\n";
 }
 
 // static
