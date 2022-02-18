@@ -40,17 +40,16 @@ namespace gpgmm { namespace d3d12 {
     }  // namespace
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* subAllocator,
+                                           MemoryAllocator* allocator,
                                            uint64_t offsetFromHeap,
                                            Block* block,
                                            ComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(subAllocator,
+        : MemoryAllocation(allocator,
                            resourceHeap,
                            offsetFromHeap,
                            AllocationMethod::kSubAllocated,
                            block),
-          mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
@@ -59,32 +58,15 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* standaloneAllocator,
-                                           ComPtr<ID3D12Resource> placedResource,
-                                           Heap* resourceHeap)
-        : MemoryAllocation(standaloneAllocator,
-                           resourceHeap,
-                           /*offsetFromHeap*/ 0,
-                           AllocationMethod::kStandalone,
-                           /*block*/ nullptr),
-          mResourceAllocator(nullptr),
-          mResidencyManager(residencyManager),
-          mResource(std::move(placedResource)),
-          mOffsetFromResource(0) {
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
-    }
-
-    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           ResourceAllocator* resourceAllocator,
+                                           MemoryAllocator* allocator,
+                                           uint64_t offsetFromHeap,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(/*memoryAllocator*/ nullptr,
+        : MemoryAllocation(allocator,
                            resourceHeap,
-                           kInvalidOffset,
+                           offsetFromHeap,
                            AllocationMethod::kStandalone,
                            /*block*/ nullptr),
-          mResourceAllocator(resourceAllocator),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
@@ -93,17 +75,16 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* subAllocator,
+                                           MemoryAllocator* allocator,
                                            Block* block,
                                            uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(subAllocator,
+        : MemoryAllocation(allocator,
                            resourceHeap,
                            kInvalidOffset,
                            AllocationMethod::kSubAllocatedWithin,
                            block),
-          mResourceAllocator(nullptr),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
@@ -118,14 +99,7 @@ namespace gpgmm { namespace d3d12 {
     void ResourceAllocation::DeleteThis() {
         TRACE_EVENT_CALL_SCOPED("ResourceAllocation.Release");
 
-        if (GetAllocator() != nullptr) {
-            GetAllocator()->DeallocateMemory(this);
-        } else {
-            ASSERT(GetMethod() == AllocationMethod::kStandalone);
-            ASSERT(mResourceAllocator != nullptr);
-            Heap* resourceHeap = ToBackend(GetMemory());
-            mResourceAllocator->FreeResourceHeap(resourceHeap);
-        }
+        GetAllocator()->DeallocateMemory(this);
 
         mResource.Reset();
         MemoryAllocation::Reset();

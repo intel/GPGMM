@@ -16,7 +16,7 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
-#include "gpgmm/Allocator.h"
+#include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/common/Flags.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "include/gpgmm_export.h"
@@ -258,7 +258,7 @@ namespace gpgmm { namespace d3d12 {
         ALLOCATOR_MESSAGE_ID ID;
     };
 
-    class GPGMM_EXPORT ResourceAllocator final : public AllocatorBase, public IUnknownImpl {
+    class GPGMM_EXPORT ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
         // Creates the allocator and residency manager instance used to manage video memory for the
         // App specified device and adapter. Residency manager only exists if this adapter at-least
@@ -334,10 +334,11 @@ namespace gpgmm { namespace d3d12 {
                                    uint64_t heapAlignment,
                                    Heap** resourceHeapOut);
 
-        void FreeResourceHeap(Heap* resourceHeap);
-
         HRESULT EnableDeviceObjectLeakChecks() const;
         HRESULT CheckForDeviceObjectLeaks() const;
+
+        // MemoryAllocator interface
+        void DeallocateMemory(MemoryAllocation* allocation) override;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<ResidencyManager> mResidencyManager;
@@ -347,6 +348,7 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;
+        const uint64_t mMaxResourceSizeForPooling;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 

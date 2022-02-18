@@ -61,7 +61,7 @@ namespace gpgmm {
         virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
                                                                     uint64_t alignment,
                                                                     bool neverAllocate,
-                                                                    bool cacheSize) = 0;
+                                                                    bool cacheSize);
 
         // Free the allocation by deallocating the block used to sub-allocate it and the underlying
         // memory block used with it. The |allocation| will be considered invalid after

@@ -311,18 +311,11 @@ namespace gpgmm {
 
     MEMORY_ALLOCATOR_INFO SlabCacheAllocator::QueryInfo() const {
         MEMORY_ALLOCATOR_INFO info = {};
-        // Underlying memory allocator is weakly shared between cached slab allocators so it
-        // should only be counted once (by the SlabCacheAllocator).
         for (const auto& entry : mSizeCache) {
             const MEMORY_ALLOCATOR_INFO& childInfo = entry->GetValue().pSlabAllocator->QueryInfo();
             info.UsedBlockCount += childInfo.UsedBlockCount;
             info.UsedBlockUsage += childInfo.UsedBlockUsage;
         }
-
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = mMemoryAllocator->QueryInfo();
-        info.UsedMemoryUsage += memoryInfo.UsedMemoryUsage;
-        info.UsedMemoryCount += memoryInfo.UsedMemoryCount;
-
         return info;
     }
 
