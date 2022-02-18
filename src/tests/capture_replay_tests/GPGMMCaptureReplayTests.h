@@ -56,6 +56,7 @@ struct TestEnviromentParams {
     bool IsRegenerate = false;                               // Should the allocator record.
     gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
     gpgmm::LogSeverity RecordLevel = gpgmm::LogSeverity::Debug;  // Level of recording.
+    bool IsCapturedCapsCompat = false;  // Caps of test device must match capture caps.
 
     bool IsStandaloneOnly = false;
     bool IsNeverAllocate = false;

@@ -322,6 +322,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(args["IsUMA"].asBool()) + " vs " +
                                        std::to_string(allocatorDesc.IsUMA) + ").";
+                            GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
                         }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
@@ -332,6 +333,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                    "(ResourceHeapTier: " +
                                        std::to_string(args["ResourceHeapTier"].asInt()) + " vs " +
                                        std::to_string(allocatorDesc.ResourceHeapTier) + ").";
+                            GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
                         }
 
                         allocatorDesc.PreferredResourceHeapSize =
@@ -427,7 +429,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
-TEST_P(D3D12EventTraceReplay, Run) {
+TEST_P(D3D12EventTraceReplay, AllocatorPerf) {
     RunTestLoop();
 
     LogCallStats("Allocation(s)", mReplayedAllocateStats);
@@ -435,16 +437,21 @@ TEST_P(D3D12EventTraceReplay, Run) {
 
     LogMemoryStats("Allocation", mCapturedAllocationStats);
     LogMemoryStats("Memory", mCapturedMemoryStats);
+}
 
-    // Verify captured allocation usage did not regress (ie. consume more memory) than the allocator
-    // usage upon playback.
+// Verify captured does not regress (ie. consume more memory) upon playback.
+TEST_P(D3D12EventTraceReplay, AllocationUsage) {
+    TestEnviromentParams testEnv = {};
+    testEnv.IsCapturedCapsCompat = true;
+    RunTest(GetParam(), testEnv, /*iterations*/ 0);
+
     EXPECT_LE(mReplayedAllocationStats.TotalSize, mCapturedAllocationStats.TotalSize);
     EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
     EXPECT_EQ(mReplayedAllocationStats.TotalCount, mCapturedAllocationStats.TotalCount);
 }
 
 // Verify a re-generated trace will always playback the same result.
-TEST_P(D3D12EventTraceReplay, Regen) {
+TEST_P(D3D12EventTraceReplay, RegenerateSame) {
     // Regenerate capture.
     TestEnviromentParams testEnv = {};
     testEnv.IsRegenerate = true;

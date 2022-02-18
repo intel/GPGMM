@@ -108,6 +108,11 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        if (strcmp("--check-caps", argv[i]) == 0) {
+            mParams.IsCapturedCapsCompat = true;
+            continue;
+        }
+
         constexpr const char kRecordLevel[] = "--record-level";
         arglen = sizeof(kRecordLevel) - 1;
         if (strncmp(argv[i], kRecordLevel, arglen) == 0) {
@@ -181,15 +186,17 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         }
 
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
-            gpgmm::InfoLog() << "Playback options:"
-                             << " [--iterations=X]\n"
-                             << " --iterations: Number of times to run playback.\n"
-                             << " --record-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                                "level to record events.\n"
-                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                                "level for log messages.\n"
-                             << " --regenerate: Capture again upon playback.\n"
-                             << " --playback-file: Path to captured file to playback.\n";
+            gpgmm::InfoLog()
+                << "Playback options:"
+                << " [--iterations=X]\n"
+                << " --iterations: Number of times to run playback.\n"
+                << " --record-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                   "level to record events.\n"
+                << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                   "level for log messages.\n"
+                << " --regenerate: Capture again upon playback.\n"
+                << " --playback-file: Path to captured file to playback.\n"
+                << " --caps-compatible: Captured caps must be compatible with playback device.\n";
 
             gpgmm::InfoLog() << "Experiment options:"
                              << " --force-standalone: Disable memory reuse by sub-allocation.\n"
@@ -226,7 +233,8 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                      << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false")
                      << "\n"
                      << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
-                     << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n";
+                     << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
+                     << "Check caps: " << (mParams.IsCapturedCapsCompat ? "true" : "false") << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"
