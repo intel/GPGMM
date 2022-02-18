@@ -72,9 +72,21 @@ namespace gpgmm { namespace d3d12 {
         // Disables all recording flags. Enabled by default.
         ALLOCATOR_RECORD_FLAG_NONE = 0x0,
 
-        // Configures event-based tracing using the Trace Event API.
-        ALLOCATOR_RECORD_FLAG_TRACE_EVENTS = 0x1,
+        // Record lifetimes of GPGMM created objects.
+        ALLOCATOR_RECORD_FLAG_LIVE_OBJECTS = 0x1,
 
+        // Record API calls made to GPGMM.
+        ALLOCATOR_RECORD_FLAG_API_CALLS = 0x2,
+
+        // Record API call durations.
+        ALLOCATOR_RECORD_FLAG_API_TIMINGS = 0x4,
+
+        // Aliases that combine flags per activity.
+        ALLOCATOR_RECORD_FLAG_CAPTURE = 0x3,
+        ALLOCATOR_RECORD_FLAG_PROFILING = 0x4,
+
+        // Record all event types.
+        ALLOCATOR_RECORD_FLAG_ALL_EVENTS = 0xFF,
     };
 
     using ALLOCATOR_RECORD_FLAGS_TYPE = Flags<ALLOCATOR_RECORD_FLAGS>;

@@ -332,24 +332,29 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        bool enableEventTracer =
-            descriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_TRACE_EVENTS;
+        bool enableEventTracer = (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE);
 #ifdef GPGMM_ALWAYS_RECORD
         enableEventTracer = true;
+        newDescriptor.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
 #endif
 
         if (enableEventTracer) {
             const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
                                                ? std::string(kDefaultTraceFile)
                                                : descriptor.RecordOptions.TraceFile;
-            const LogSeverity& recordEventLogLevel =
-                static_cast<LogSeverity>(descriptor.RecordOptions.MinLogLevel);
 
-            StartupEventTracer(traceFile);
+            StartupEventTracer(
+                traceFile, !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
+                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_LIVE_OBJECTS),
+                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS));
+
+            const LogSeverity& recordEventLogLevel =
+                static_cast<LogSeverity>(newDescriptor.RecordOptions.MinLogLevel);
+
             SetRecordEventLevel(recordEventLogLevel);
         }
 
-        const LogSeverity& logLevel = static_cast<LogSeverity>(descriptor.MinLogLevel);
+        const LogSeverity& logLevel = static_cast<LogSeverity>(newDescriptor.MinLogLevel);
         SetLogMessageLevel(logLevel);
 
         ComPtr<ResidencyManager> residencyManager;

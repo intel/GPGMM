@@ -99,7 +99,10 @@ namespace gpgmm {
     class FileEventTracer;
     class PlatformTime;
 
-    void StartupEventTracer(const std::string& traceFile);
+    void StartupEventTracer(const std::string& traceFile,
+                            bool skipDurationEvents,
+                            bool skipObjectEvents,
+                            bool skipInstantEvents);
     void ShutdownEventTracer();
 
     bool IsEventTracerEnabled();
@@ -162,7 +165,10 @@ namespace gpgmm {
 
     class FileEventTracer {
       public:
-        explicit FileEventTracer(const std::string& traceFile);
+        explicit FileEventTracer(const std::string& traceFile,
+                                 bool skipDurationEvents,
+                                 bool skipObjectEvents,
+                                 bool skipInstantEvents);
         ~FileEventTracer();
 
         void EnqueueTraceEvent(char phase,
@@ -176,6 +182,10 @@ namespace gpgmm {
         std::vector<TraceEvent> mQueue;
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
+
+        bool mSkipDurationEvents = false;
+        bool mSkipObjectEvents = false;
+        bool mSkipInstantEvents = false;
     };
 
 }  // namespace gpgmm

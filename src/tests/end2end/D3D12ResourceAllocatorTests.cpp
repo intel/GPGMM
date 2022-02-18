@@ -145,7 +145,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
     desc.RecordOptions.Flags =
-        static_cast<ALLOCATOR_RECORD_FLAGS>(ALLOCATOR_RECORD_FLAG_TRACE_EVENTS);
+        static_cast<ALLOCATOR_RECORD_FLAGS>(ALLOCATOR_RECORD_FLAG_ALL_EVENTS);
 
     // Creating a new allocator that uses default record options should always succeed.
     {

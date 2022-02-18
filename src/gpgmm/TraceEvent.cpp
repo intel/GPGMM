@@ -27,8 +27,12 @@ namespace gpgmm {
 
     FileEventTracer* gEventTracer = nullptr;
 
-    void StartupEventTracer(const std::string& traceFile) {
-        gEventTracer = new FileEventTracer(traceFile);
+    void StartupEventTracer(const std::string& traceFile,
+                            bool skipDurationEvents,
+                            bool skipObjectEvents,
+                            bool skipInstantEvents) {
+        gEventTracer =
+            new FileEventTracer(traceFile, skipDurationEvents, skipObjectEvents, skipInstantEvents);
     }
 
     void ShutdownEventTracer() {
@@ -83,8 +87,17 @@ namespace gpgmm {
         }
     }
 
-    FileEventTracer::FileEventTracer(const std::string& traceFile)
-        : mTraceFile(traceFile), mPlatformTime(CreatePlatformTime()) {
+    // FileEventTracer
+
+    FileEventTracer::FileEventTracer(const std::string& traceFile,
+                                     bool skipDurationEvents,
+                                     bool skipObjectEvents,
+                                     bool skipInstantEvents)
+        : mTraceFile(traceFile),
+          mPlatformTime(CreatePlatformTime()),
+          mSkipDurationEvents(skipDurationEvents),
+          mSkipObjectEvents(skipObjectEvents),
+          mSkipInstantEvents(skipInstantEvents) {
         ASSERT(!mTraceFile.empty());
 
         std::ofstream outFile;
@@ -122,6 +135,20 @@ namespace gpgmm {
         outFile.open(mTraceFile, std::ios_base::app);
 
         for (const TraceEvent& traceEvent : mQueue) {
+            if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||
+                                        traceEvent.mPhase == TRACE_EVENT_PHASE_END)) {
+                continue;
+            }
+
+            if (mSkipObjectEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_CREATE_OBJECT ||
+                                      traceEvent.mPhase == TRACE_EVENT_PHASE_DELETE_OBJECT)) {
+                continue;
+            }
+
+            if (mSkipInstantEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_INSTANT)) {
+                continue;
+            }
+
             // TODO: Support per thread event tracing via traceEvent.mThread.
             outFile << ", { "
                     << "\"name\": \"" << traceEvent.mName << "\", "
