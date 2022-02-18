@@ -121,7 +121,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         std::unordered_map<std::string, ComPtr<ResourceAllocation>> newAllocationToIDMap;
 
         std::string allocatorInstanceID;
-        ALLOCATOR_DESC allocatorDesc = {};
+
+        // Apply profile defaults (if specified).
+        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        if (envParams.AllocatorProfile == AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
+            // Pool-allocate everything. Reuse is possible by recycling heaps and sub-allocation.
+            allocatorDesc.MaxResourceHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+            allocatorDesc.MaxResourceSizeForPooling = allocatorDesc.MaxResourceHeapSize;
+
+            // Any amount of internal fragment is acceptable.
+            allocatorDesc.ResourceFragmentationLimit = 1.0f;
+
+        } else if (envParams.AllocatorProfile == AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
+            // Do not pool allocate. Reuse is only possible through sub-allocation.
+            allocatorDesc.MaxResourceSizeForPooling = 0;
+
+            allocatorDesc.ResourceFragmentationLimit = 0.125;  // 1/8th of 4MB
+        }
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
@@ -279,8 +295,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             } else if (event["name"].asString() == "GPUMemoryAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_INSTANT: {
-                        allocatorDesc = CreateBasicAllocatorDesc();
-
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
 

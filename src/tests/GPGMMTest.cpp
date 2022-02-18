@@ -41,7 +41,7 @@ void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {
 GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         if (strcmp("--check-device-leaks", argv[i]) == 0) {
-            mEnableCheckDeviceLeaks = true;
+            mEnableDeviceLeakChecks = true;
             continue;
         }
     }
@@ -58,13 +58,13 @@ void GPGMMTestEnvironment::SetUp() {
 }
 
 bool GPGMMTestEnvironment::IsDeviceLeakChecksEnabled() const {
-    return mEnableCheckDeviceLeaks;
+    return mEnableDeviceLeakChecks;
 }
 
 void GPGMMTestEnvironment::PrintTestEnviromentSettings() const {
     std::cout << "Test enviroment settings\n"
                  "------------------------\n"
-              << "Enable check device leaks: " << (mEnableCheckDeviceLeaks ? "true" : "false")
+              << "Enable device leak checks: " << (mEnableDeviceLeakChecks ? "true" : "false")
               << "\n"
               << std::endl;
 }
