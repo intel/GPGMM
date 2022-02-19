@@ -462,7 +462,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
             nullptr, &subAllocation));
         ASSERT_NE(subAllocation, nullptr);
         EXPECT_NE(subAllocation->GetResource(), nullptr);
-        EXPECT_EQ(subAllocation->GetSize(), bufferSize);
         EXPECT_NE(subAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
     }
 
@@ -497,7 +496,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize * 2);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 
@@ -520,7 +518,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize * 3);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 }
@@ -548,7 +545,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 
@@ -560,7 +556,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize / 2);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 
@@ -575,7 +570,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 
@@ -590,7 +584,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetSize(), bufferSize / 2);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
 
@@ -772,8 +765,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
-        EXPECT_EQ(firstAllocation->GetSize(),
-                  static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
     }
 
     ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
@@ -788,8 +779,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
-        EXPECT_EQ(secondAllocation->GetSize(),
-                  static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
     }
 
     // Check the first small texture of size A cannot be reused when creating a larger texture of

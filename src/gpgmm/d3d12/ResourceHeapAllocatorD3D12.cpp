@@ -16,6 +16,7 @@
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 
 #include "gpgmm/common/Limits.h"
+#include "gpgmm/common/Math.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
@@ -37,14 +38,19 @@ namespace gpgmm { namespace d3d12 {
             return {};
         }
 
+        // D3D12 requests (but not requires) the |allocationSize| be always a multiple of
+        // |alignment| to avoid wasting bytes.
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_desc
+        const uint64_t heapSize = AlignTo(allocationSize, alignment);
+
         Heap* resourceHeap = nullptr;
-        if (FAILED(mResourceAllocator->CreateResourceHeap(allocationSize, mHeapType, mHeapFlags,
+        if (FAILED(mResourceAllocator->CreateResourceHeap(heapSize, mHeapType, mHeapFlags,
                                                           alignment, &resourceHeap))) {
             return nullptr;
         }
 
         mInfo.UsedMemoryCount++;
-        mInfo.UsedMemoryUsage += allocationSize;
+        mInfo.UsedMemoryUsage += heapSize;
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
     }
