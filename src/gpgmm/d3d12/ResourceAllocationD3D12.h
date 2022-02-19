@@ -41,29 +41,24 @@ namespace gpgmm { namespace d3d12 {
                                                   public NonCopyable,
                                                   public IUnknownImpl {
       public:
-        // Constructs a sub-allocation using a placed resource.
+        // Constructs a sub-allocated heap containing one or more resources.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* subAllocator,
+                           MemoryAllocator* allocator,
                            uint64_t offsetFromHeap,
                            Block* block,
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
-        // Constructs a standalone allocation using a placed resource.
+        // Constructs a heap with only one resource.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* standaloneAllocator,
-                           ComPtr<ID3D12Resource> placedResource,
-                           Heap* resourceHeap);
-
-        // Constructs a standalone resource allocation.
-        ResourceAllocation(ResidencyManager* residencyManager,
-                           ResourceAllocator* resourceAllocator,
+                           MemoryAllocator* allocator,
+                           uint64_t offsetFromHeap,
                            ComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);
 
-        // Constructs a sub-allocated allocation within a resource.
+        // Constructs a sub-allocated resource within itself.
         ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* subAllocator,
+                           MemoryAllocator* allocator,
                            Block* block,
                            uint64_t offsetFromResource,
                            ComPtr<ID3D12Resource> resource,
@@ -99,7 +94,6 @@ namespace gpgmm { namespace d3d12 {
         ~ResourceAllocation() override;
         void DeleteThis() override;
 
-        ResourceAllocator* const mResourceAllocator;
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
 

@@ -383,7 +383,8 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
+          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocator", this);
 
         if (descriptor.Flags & ALLOCATOR_CHECK_DEVICE_LEAKS &&
@@ -413,9 +414,9 @@ namespace gpgmm { namespace d3d12 {
                         heapAlignment);
 
                 std::unique_ptr<MemoryAllocator> conditionalHeapAllocator =
-                    std::make_unique<ConditionalMemoryAllocator>(
-                        std::move(pooledHeapAllocator), std::move(standaloneAllocator),
-                        descriptor.MaxResourceSizeForPooling);
+                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledHeapAllocator),
+                                                                 std::move(standaloneAllocator),
+                                                                 mMaxResourceSizeForPooling);
 
                 std::unique_ptr<MemoryAllocator> buddySubAllocator =
                     std::make_unique<BuddyMemoryAllocator>(
@@ -440,9 +441,9 @@ namespace gpgmm { namespace d3d12 {
                         heapAlignment);
 
                 mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                    std::make_unique<ConditionalMemoryAllocator>(
-                        std::move(pooledHeapAllocator), std::move(standaloneAllocator),
-                        descriptor.MaxResourceSizeForPooling);
+                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledHeapAllocator),
+                                                                 std::move(standaloneAllocator),
+                                                                 mMaxResourceSizeForPooling);
             }
 
             // Dedicated allocators.
@@ -645,7 +646,7 @@ namespace gpgmm { namespace d3d12 {
         // resource because a placed resource's heap will not be reallocated by the OS until Trim()
         // is called.
         // The time and space complexity is determined by the allocator type.
-        if (!mIsAlwaysCommitted) {
+        if (!mIsAlwaysCommitted && mMaxResourceSizeForPooling != 0) {
             allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
@@ -657,9 +658,9 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut =
-                        new ResourceAllocation{mResidencyManager.Get(), allocation.GetAllocator(),
-                                               std::move(placedResource), resourceHeap};
+                    *resourceAllocationOut = new ResourceAllocation{
+                        mResidencyManager.Get(), allocation.GetAllocator(),
+                        /*offsetFromHeap*/ 0, std::move(placedResource), resourceHeap};
 
                     if (allocation.GetSize() > resourceInfo.SizeInBytes) {
                         d3d12::LogAllocatorMessage(
@@ -694,8 +695,9 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
             &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
 
-        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(), this,
-                                                        std::move(committedResource), resourceHeap};
+        *resourceAllocationOut =
+            new ResourceAllocation{mResidencyManager.Get(), this, /*offsetFromHeap*/ kInvalidOffset,
+                                   std::move(committedResource), resourceHeap};
 
         return S_OK;
     }
@@ -726,7 +728,8 @@ namespace gpgmm { namespace d3d12 {
 
         *resourceAllocationOut =
             new ResourceAllocation{/*residencyManager*/ nullptr,
-                                   /*allocator*/ this, std::move(resource), resourceHeap};
+                                   /*allocator*/ this, /*offsetFromHeap*/ kInvalidOffset,
+                                   std::move(resource), resourceHeap};
 
         return S_OK;
     }
@@ -794,6 +797,9 @@ namespace gpgmm { namespace d3d12 {
             mResidencyManager->InsertHeap(resourceHeap);
         }
 
+        mInfo.UsedMemoryUsage += heapSize;
+        mInfo.UsedMemoryCount++;
+
         *resourceHeapOut = resourceHeap;
 
         return S_OK;
@@ -846,16 +852,12 @@ namespace gpgmm { namespace d3d12 {
             *commitedResourceOut = committedResource.Detach();
         }
 
+        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
+        mInfo.UsedMemoryCount++;
+
         *resourceHeapOut = resourceHeap;
 
         return S_OK;
-    }
-
-    void ResourceAllocator::FreeResourceHeap(Heap* resourceHeap) {
-        ASSERT(resourceHeap != nullptr);
-        ASSERT(resourceHeap->RefCount() == 0);
-
-        delete resourceHeap;
     }
 
     ResidencyManager* ResourceAllocator::GetResidencyManager() const {
@@ -871,23 +873,16 @@ namespace gpgmm { namespace d3d12 {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
-            infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
-            infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
-        }
-
-        for (const auto& allocator : mResourceHeapAllocatorOfType) {
-            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
-            infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
         }
 
         for (const auto& allocator : mBufferAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            infoOut.UsedResourceHeapCount += info.UsedMemoryCount;
-            infoOut.UsedResourceHeapUsage += info.UsedMemoryUsage;
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
         }
+
+        infoOut.UsedResourceHeapUsage = mInfo.UsedMemoryUsage;
+        infoOut.UsedResourceHeapCount = mInfo.UsedMemoryCount;
 
         d3d12::LogEvent("GPUMemoryAllocator", this, infoOut);
 
@@ -946,6 +941,19 @@ namespace gpgmm { namespace d3d12 {
 
         leakMessageQueue->PopRetrievalFilter();
         return (totalLiveObjects > 0u) ? E_FAIL : S_OK;
+    }
+
+    void ResourceAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
+
+        Heap* resourceHeap = ToBackend(allocation->GetMemory());
+        ASSERT(resourceHeap != nullptr);
+        ASSERT(resourceHeap->RefCount() == 0);
+
+        mInfo.UsedMemoryUsage -= resourceHeap->GetSize();
+        mInfo.UsedMemoryCount--;
+
+        delete resourceHeap;
     }
 
 }}  // namespace gpgmm::d3d12

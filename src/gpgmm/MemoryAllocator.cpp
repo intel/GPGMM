@@ -20,6 +20,14 @@ namespace gpgmm {
         AppendChild(std::move(childAllocator));
     }
 
+    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t allocationSize,
+                                                                         uint64_t alignment,
+                                                                         bool neverAllocate,
+                                                                         bool cacheSize) {
+        ASSERT(false);
+        return {};
+    }
+
     void MemoryAllocator::ReleaseMemory() {
         for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
             alloc->value()->ReleaseMemory();

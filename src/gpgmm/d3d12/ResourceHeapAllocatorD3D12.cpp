@@ -49,20 +49,12 @@ namespace gpgmm { namespace d3d12 {
             return nullptr;
         }
 
-        mInfo.UsedMemoryCount++;
-        mInfo.UsedMemoryUsage += heapSize;
-
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(MemoryAllocation* allocation) {
         ASSERT(allocation != nullptr);
-        Heap* heap = ToBackend(allocation->GetMemory());
-
-        mInfo.UsedMemoryCount--;
-        mInfo.UsedMemoryUsage -= heap->GetSize();
-
-        mResourceAllocator->FreeResourceHeap(heap);
+        mResourceAllocator->DeallocateMemory(allocation);
     }
 
 }}  // namespace gpgmm::d3d12
