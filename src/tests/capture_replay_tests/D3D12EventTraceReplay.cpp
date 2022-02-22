@@ -440,21 +440,21 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
-TEST_P(D3D12EventTraceReplay, AllocatorPerf) {
-    RunTestLoop();
+TEST_P(D3D12EventTraceReplay, AllocationPerf) {
+    RunTestLoop(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ false,
+                /*forceSingleIteration*/ false);
 
     LogCallStats("Allocation(s)", mReplayedAllocateStats);
     LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
-
-    LogMemoryStats("Allocation", mCapturedAllocationStats);
-    LogMemoryStats("Memory", mCapturedMemoryStats);
 }
 
 // Verify captured does not regress (ie. consume more memory) upon playback.
-TEST_P(D3D12EventTraceReplay, AllocationUsage) {
-    TestEnviromentParams testEnv = {};
-    testEnv.IsCapturedCapsCompat = true;
-    RunTest(GetParam(), testEnv, /*iterations*/ 0);
+TEST_P(D3D12EventTraceReplay, MemoryUsage) {
+    RunTestLoop(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ true,
+                /*forceSingleIteration*/ true);
+
+    LogMemoryStats("Allocation", mCapturedAllocationStats);
+    LogMemoryStats("Memory", mCapturedMemoryStats);
 
     EXPECT_LE(mReplayedAllocationStats.TotalSize, mCapturedAllocationStats.TotalSize);
     EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
@@ -464,9 +464,8 @@ TEST_P(D3D12EventTraceReplay, AllocationUsage) {
 // Verify a re-generated trace will always playback the same result.
 TEST_P(D3D12EventTraceReplay, RegenerateSame) {
     // Regenerate capture.
-    TestEnviromentParams testEnv = {};
-    testEnv.IsRegenerate = true;
-    RunTest(GetParam(), testEnv, /*iterations*/ 0);
+    RunTestLoop(/*forceRegenerate*/ true, /*forceIsCapturedCapsCompat*/ false,
+                /*forceSingleIteration*/ true);
 
     const CaptureReplayCallStats beforeReplayedAllocateStats = mReplayedAllocateStats;
     const CaptureReplayCallStats beforeReplayedDeallocateStats = mReplayedDeallocateStats;
@@ -480,8 +479,8 @@ TEST_P(D3D12EventTraceReplay, RegenerateSame) {
     mCapturedMemoryStats = {};
 
     // Playback re-generated capture.
-    testEnv.IsRegenerate = false;
-    RunTest(GetParam(), testEnv, /*iterations*/ 0);
+    RunTestLoop(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ true,
+                /*forceSingleIteration*/ true);
 
     EXPECT_EQ(beforeReplayedAllocateStats.TotalNumOfCalls, mReplayedAllocateStats.TotalNumOfCalls);
     EXPECT_EQ(beforeReplayedDeallocateStats.TotalNumOfCalls,

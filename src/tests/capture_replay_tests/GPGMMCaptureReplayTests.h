@@ -103,7 +103,9 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
                          const TestEnviromentParams& envParams,
                          uint64_t iterationIndex) = 0;
 
-    void RunTestLoop();
+    void RunTestLoop(bool forceRegenerate,
+                     bool forceIsCapturedCapsCompat,
+                     bool forceSingleIteration);
 
   protected:
     std::unique_ptr<gpgmm::PlatformTime> mPlatformTime;
