@@ -40,6 +40,9 @@ namespace gpgmm {
 
         // Total size (in bytes) of used memory.
         uint64_t UsedMemoryUsage;
+
+        // Total size (in bytes) of free memory.
+        uint64_t FreeMemoryUsage;
     };
 
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {

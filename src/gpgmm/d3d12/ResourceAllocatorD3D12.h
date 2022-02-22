@@ -223,12 +223,7 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_CLEAR_VALUE* clearValue;
     };
 
-    struct QUERY_RESOURCE_ALLOCATOR_INFO {
-        uint32_t UsedBlockCount;
-        uint64_t UsedBlockUsage;
-        uint32_t UsedResourceHeapCount;
-        uint64_t UsedResourceHeapUsage;
-    };
+    using QUERY_RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
 
     enum ALLOCATOR_MESSAGE_ID {
 
