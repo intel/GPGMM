@@ -193,7 +193,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
-                        ASSERT_TRUE(SUCCEEDED(hr) || envParams.IsNeverAllocate);
+                        if (!envParams.IsNeverAllocate && FAILED(hr)) {
+                            gpgmm::ErrorLog() << "CreateResource failed with :" << args << ".\n";
+                        }
+
+                        ASSERT_SUCCEEDED(hr);
 
                         mReplayedAllocationStats.CurrentUsage += newAllocationWithoutID->GetSize();
                         mReplayedAllocationStats.PeakUsage =
