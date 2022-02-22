@@ -156,6 +156,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
+                        // Imported resources cannot be used for playback.
+                        if (args["allocationDescriptor"].empty()) {
+                            continue;
+                        }
+
                         ALLOCATION_DESC allocationDescriptor =
                             ConvertToAllocationDesc(args["allocationDescriptor"]);
 
@@ -247,7 +252,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (newAllocationWithoutID == nullptr) {
-                            ASSERT_TRUE(envParams.IsNeverAllocate);
                             continue;
                         }
 
@@ -264,15 +268,18 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const std::string& allocationID = event["id"].asString();
 
                         auto it = allocationToIDMap.find(allocationID);
-                        ASSERT_TRUE(it != allocationToIDMap.end());
+                        if (it == allocationToIDMap.end()) {
+                            continue;
+                        }
 
                         const RESOURCE_ALLOCATION_INFO& allocationDesc = it->second;
                         mCapturedAllocationStats.CurrentUsage -= allocationDesc.SizeInBytes;
 
                         ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
 
-                        ASSERT_TRUE(newAllocationToIDMap.find(allocationID) !=
-                                    newAllocationToIDMap.end());
+                        if (newAllocationToIDMap.find(allocationID) == newAllocationToIDMap.end()) {
+                            continue;
+                        }
 
                         mReplayedAllocationStats.CurrentUsage -=
                             newAllocationToIDMap[allocationID]->GetSize();
