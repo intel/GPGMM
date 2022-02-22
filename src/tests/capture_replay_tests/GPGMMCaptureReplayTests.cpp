@@ -283,8 +283,22 @@ CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 
-void CaptureReplayTestWithParams::RunTestLoop() {
-    const TestEnviromentParams& envParams = gTestEnv->GetParams();
+void CaptureReplayTestWithParams::RunTestLoop(bool forceRegenerate,
+                                              bool forceIsCapturedCapsCompat,
+                                              bool forceSingleIteration) {
+    TestEnviromentParams envParams = gTestEnv->GetParams();
+    if (forceRegenerate) {
+        envParams.IsRegenerate = true;
+    }
+
+    if (forceIsCapturedCapsCompat) {
+        envParams.IsCapturedCapsCompat = true;
+    }
+
+    if (forceSingleIteration) {
+        envParams.Iterations = 1;
+    }
+
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
         RunTest(GetParam(), envParams, i);
     }
