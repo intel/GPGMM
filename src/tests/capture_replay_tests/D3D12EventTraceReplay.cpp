@@ -112,8 +112,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, RESOURCE_ALLOCATION_DESC> allocationToIDMap;
-        std::unordered_map<std::string, HEAP_DESC> heapDescToIDMap;
+        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> allocationToIDMap;
+        std::unordered_map<std::string, HEAP_INFO> heapDescToIDMap;
 
         ComPtr<ResourceAllocation> newAllocationWithoutID;
 
@@ -222,17 +222,17 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         const Json::Value& snapshot = event["args"]["snapshot"];
 
-                        RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                        allocationDesc.Size = snapshot["Size"].asUInt64();
+                        RESOURCE_ALLOCATION_INFO allocationDesc = {};
+                        allocationDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
                         allocationDesc.HeapOffset = snapshot["HeapOffset"].asUInt64();
                         allocationDesc.OffsetFromResource =
                             snapshot["OffsetFromResource"].asUInt64();
                         allocationDesc.Method =
                             static_cast<gpgmm::AllocationMethod>(snapshot["Method"].asInt());
 
-                        mCapturedAllocationStats.TotalSize += allocationDesc.Size;
+                        mCapturedAllocationStats.TotalSize += allocationDesc.SizeInBytes;
                         mCapturedAllocationStats.TotalCount++;
-                        mCapturedAllocationStats.CurrentUsage += allocationDesc.Size;
+                        mCapturedAllocationStats.CurrentUsage += allocationDesc.SizeInBytes;
                         mCapturedAllocationStats.PeakUsage =
                             std::max(mCapturedAllocationStats.PeakUsage,
                                      mCapturedAllocationStats.CurrentUsage);
@@ -262,8 +262,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         auto it = allocationToIDMap.find(allocationID);
                         ASSERT_TRUE(it != allocationToIDMap.end());
 
-                        const RESOURCE_ALLOCATION_DESC& allocationDesc = it->second;
-                        mCapturedAllocationStats.CurrentUsage -= allocationDesc.Size;
+                        const RESOURCE_ALLOCATION_INFO& allocationDesc = it->second;
+                        mCapturedAllocationStats.CurrentUsage -= allocationDesc.SizeInBytes;
 
                         ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
 
@@ -383,15 +383,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         const Json::Value& snapshot = event["args"]["snapshot"];
 
-                        HEAP_DESC heapDesc = {};
+                        HEAP_INFO heapDesc = {};
                         heapDesc.IsResident = snapshot["IsResident"].asBool();
                         heapDesc.MemorySegmentGroup = static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
                             snapshot["MemorySegmentGroup"].asInt());
-                        heapDesc.Size = snapshot["Size"].asUInt64();
+                        heapDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
-                        mCapturedMemoryStats.TotalSize += heapDesc.Size;
+                        mCapturedMemoryStats.TotalSize += heapDesc.SizeInBytes;
                         mCapturedMemoryStats.TotalCount++;
-                        mCapturedMemoryStats.CurrentUsage += heapDesc.Size;
+                        mCapturedMemoryStats.CurrentUsage += heapDesc.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
 
@@ -403,8 +403,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         auto it = heapDescToIDMap.find(traceEventID);
                         ASSERT_TRUE(it != heapDescToIDMap.end());
 
-                        HEAP_DESC heapDesc = it->second;
-                        mCapturedMemoryStats.CurrentUsage -= heapDesc.Size;
+                        HEAP_INFO heapDesc = it->second;
+                        mCapturedMemoryStats.CurrentUsage -= heapDesc.SizeInBytes;
 
                         ASSERT_EQ(heapDescToIDMap.erase(traceEventID), 1u);
 

@@ -29,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(mPageable != nullptr);
 
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryBlock", this);
-        d3d12::LogEvent("GPUMemoryBlock", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryBlock", this, GetHeapInfo());
 
         mPageable->SetName(L"GPGMM managed heap");
     }
@@ -91,7 +91,7 @@ namespace gpgmm { namespace d3d12 {
         return residencySet->Insert(this);
     }
 
-    HEAP_DESC Heap::GetDesc() const {
+    HEAP_INFO Heap::GetHeapInfo() const {
         return {GetSize(), IsResident(), mMemorySegmentGroup, RefCount(), GetPool()};
     }
 }}  // namespace gpgmm::d3d12

@@ -134,13 +134,13 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const HEAP_DESC& desc) {
+    std::string JSONSerializer::AppendTo(const HEAP_INFO& desc) {
         std::stringstream memoryPoolID;
         memoryPoolID << std::hex << TraceEventID(desc.MemoryPool).GetID();
 
         std::stringstream ss;
         ss << "{ "
-           << "\"Size\": " << desc.Size << ", "
+           << "\"SizeInBytes\": " << desc.SizeInBytes << ", "
            << "\"IsResident\": " << desc.IsResident << ", "
            << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << ", "
            << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs;
@@ -156,13 +156,13 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_DESC& desc) {
+    std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_INFO& desc) {
         std::stringstream resourceHeapID;
         resourceHeapID << std::hex << TraceEventID(desc.ResourceHeap).GetID();
 
         std::stringstream ss;
         ss << "{ "
-           << "\"Size\": " << desc.Size << ", "
+           << "\"SizeInBytes\": " << desc.SizeInBytes << ", "
            << "\"HeapOffset\": " << desc.HeapOffset << ", "
            << "\"OffsetFromResource\": " << desc.OffsetFromResource << ", "
            << "\"Method\": " << desc.Method << ", "
