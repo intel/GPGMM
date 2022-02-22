@@ -30,8 +30,8 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
-    struct HEAP_DESC {
-        size_t Size;
+    struct HEAP_INFO {
+        uint64_t SizeInBytes;
         bool IsResident;
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
         int SubAllocatedRefs;
@@ -61,7 +61,7 @@ namespace gpgmm { namespace d3d12 {
         bool IsInResidencyLRUCache() const;
         bool IsResidencyLocked() const;
 
-        HEAP_DESC GetDesc() const;
+        HEAP_INFO GetHeapInfo() const;
 
       private:
         friend ResidencyManager;

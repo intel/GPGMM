@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetAllocationInfo());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -70,7 +70,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetAllocationInfo());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -88,7 +88,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
-        d3d12::LogEvent("GPUMemoryAllocation", this, GetDesc());
+        d3d12::LogEvent("GPUMemoryAllocation", this, GetAllocationInfo());
     }
 
     ResourceAllocation::~ResourceAllocation() {
@@ -196,7 +196,7 @@ namespace gpgmm { namespace d3d12 {
         return mOffsetFromResource;
     }
 
-    RESOURCE_ALLOCATION_DESC ResourceAllocation::GetDesc() const {
+    RESOURCE_ALLOCATION_INFO ResourceAllocation::GetAllocationInfo() const {
         Heap* resourceHeap = ToBackend(GetMemory());
         ASSERT(resourceHeap != nullptr);
 

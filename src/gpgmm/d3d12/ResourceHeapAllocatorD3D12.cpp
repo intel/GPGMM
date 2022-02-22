@@ -40,7 +40,7 @@ namespace gpgmm { namespace d3d12 {
 
         // D3D12 requests (but not requires) the |allocationSize| be always a multiple of
         // |alignment| to avoid wasting bytes.
-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_desc
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
         const uint64_t heapSize = AlignTo(allocationSize, alignment);
 
         Heap* resourceHeap = nullptr;

@@ -25,8 +25,8 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATOR_DESC;
     struct ALLOCATOR_RECORD_OPTIONS;
     struct CREATE_RESOURCE_DESC;
-    struct HEAP_DESC;
-    struct RESOURCE_ALLOCATION_DESC;
+    struct HEAP_INFO;
+    struct RESOURCE_ALLOCATION_INFO;
     struct QUERY_RESOURCE_ALLOCATOR_INFO;
     struct ALLOCATOR_MESSAGE;
 
@@ -36,8 +36,8 @@ namespace gpgmm { namespace d3d12 {
         static std::string AppendTo(const CREATE_RESOURCE_DESC& desc);
         static std::string AppendTo(const ALLOCATION_DESC& desc);
         static std::string AppendTo(const D3D12_RESOURCE_DESC& desc);
-        static std::string AppendTo(const HEAP_DESC& desc);
-        static std::string AppendTo(const RESOURCE_ALLOCATION_DESC& desc);
+        static std::string AppendTo(const HEAP_INFO& desc);
+        static std::string AppendTo(const RESOURCE_ALLOCATION_INFO& desc);
         static std::string AppendTo(const QUERY_RESOURCE_ALLOCATOR_INFO& desc);
         static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
 
@@ -55,7 +55,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     template <typename... Args>
-    static void LogAllocatorMessage(const LogSeverity& severity, const char* name, const Args&... args) {
+    static void LogAllocatorMessage(const LogSeverity& severity,
+                                    const char* name,
+                                    const Args&... args) {
         return gpgmm::LogCommon<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
     }
 

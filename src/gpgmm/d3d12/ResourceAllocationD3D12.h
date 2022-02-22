@@ -29,8 +29,8 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
-    struct RESOURCE_ALLOCATION_DESC {
-        uint64_t Size;
+    struct RESOURCE_ALLOCATION_INFO {
+        uint64_t SizeInBytes;
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
         AllocationMethod Method;
@@ -88,7 +88,7 @@ namespace gpgmm { namespace d3d12 {
         // If sub-allocated within the resource, the offset could be greater than zero.
         uint64_t GetOffsetFromResource() const;
 
-        RESOURCE_ALLOCATION_DESC GetDesc() const;
+        RESOURCE_ALLOCATION_INFO GetAllocationInfo() const;
 
       private:
         ~ResourceAllocation() override;
