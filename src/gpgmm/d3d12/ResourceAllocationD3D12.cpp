@@ -21,7 +21,6 @@
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
-#include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 
 #include <utility>
 
