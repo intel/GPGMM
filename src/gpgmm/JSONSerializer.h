@@ -23,8 +23,9 @@
 namespace gpgmm {
 
     // Forward declare common types.
-    struct POOL_DESC;
     struct ALLOCATOR_MESSAGE;
+    struct POOL_DESC;
+    struct MEMORY_ALLOCATOR_INFO;
 
     // Messages of a given severity to be recorded as events.
     void SetRecordEventLevel(const LogSeverity& level);
@@ -32,8 +33,9 @@ namespace gpgmm {
 
     class JSONSerializer {
       public:
-        static std::string AppendTo(const POOL_DESC& desc);
         static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
+        static std::string AppendTo(const MEMORY_ALLOCATOR_INFO& info);
+        static std::string AppendTo(const POOL_DESC& desc);
     };
 
     template <typename T, typename DescT, typename SerializerT = JSONSerializer>

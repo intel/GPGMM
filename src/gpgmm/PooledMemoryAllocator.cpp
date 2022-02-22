@@ -37,10 +37,13 @@ namespace gpgmm {
                              allocation);
         }
 
+        mInfo.FreeMemoryUsage -= allocation->GetSize();
+
         return allocation;
     }
 
     void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+        mInfo.FreeMemoryUsage += allocation->GetSize();
         mPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
     }
 }  // namespace gpgmm

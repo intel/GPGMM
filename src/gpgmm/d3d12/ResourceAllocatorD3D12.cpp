@@ -868,7 +868,7 @@ namespace gpgmm { namespace d3d12 {
         QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut) const {
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.QueryResourceAllocatorInfo");
 
-        QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
+        MEMORY_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
@@ -881,10 +881,16 @@ namespace gpgmm { namespace d3d12 {
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
         }
 
-        infoOut.UsedResourceHeapUsage = mInfo.UsedMemoryUsage;
-        infoOut.UsedResourceHeapCount = mInfo.UsedMemoryCount;
+        // Only ResourceAllocator can create/destroy resource heaps.
+        infoOut.UsedMemoryUsage = mInfo.UsedMemoryUsage;
+        infoOut.UsedMemoryCount = mInfo.UsedMemoryCount;
 
-        d3d12::LogEvent("GPUMemoryAllocator", this, infoOut);
+        for (const auto& allocator : mResourceHeapAllocatorOfType) {
+            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
+            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
+        }
+
+        gpgmm::LogEvent("GPUMemoryAllocator", this, infoOut);
 
         if (resorceAllocationInfoOut != nullptr) {
             *resorceAllocationInfoOut = infoOut;
