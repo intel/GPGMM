@@ -204,7 +204,7 @@ namespace gpgmm {
         return info;
     }
 
-    uint64_t SlabMemoryAllocator::GetPoolSizeForTesting() const {
+    uint64_t SlabMemoryAllocator::GetSlabSizeForTesting() const {
         uint64_t slabMemoryCount = 0;
         for (const SlabCache& cache : mCaches) {
             for (auto* node = cache.FreeList.head(); node != cache.FreeList.end();
@@ -319,12 +319,12 @@ namespace gpgmm {
         return info;
     }
 
-    uint64_t SlabCacheAllocator::GetPoolSizeForTesting() const {
+    uint64_t SlabCacheAllocator::GetSlabCacheSizeForTesting() const {
         uint64_t count = 0;
         for (const auto& entry : mSizeCache) {
             const SlabMemoryAllocator* allocator = entry->GetValue().pSlabAllocator;
             ASSERT(allocator != nullptr);
-            count += allocator->GetPoolSizeForTesting();
+            count += allocator->GetSlabSizeForTesting();
         }
         return count;
     }

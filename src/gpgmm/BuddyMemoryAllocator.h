@@ -53,7 +53,7 @@ namespace gpgmm {
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
 
-        uint64_t GetPoolSizeForTesting() const;
+        uint64_t GetBuddyMemorySizeForTesting() const;
 
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;

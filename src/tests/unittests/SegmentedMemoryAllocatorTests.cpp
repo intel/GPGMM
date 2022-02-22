@@ -35,13 +35,13 @@ TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 
     segmentedAllocator.DeallocateMemory(allocation.release());
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 1u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 
     segmentedAllocator.ReleaseMemory();
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 }
 
 TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
@@ -58,15 +58,15 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_NE(secondAllocation, nullptr);
     EXPECT_EQ(secondAllocation->GetSize(), kDefaultMemorySize);
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 
     segmentedAllocator.DeallocateMemory(firstAllocation.release());
     segmentedAllocator.DeallocateMemory(secondAllocation.release());
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 2u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 
     segmentedAllocator.ReleaseMemory();
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 }
 
 TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
@@ -125,7 +125,7 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
     EXPECT_EQ(seventhAllocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(seventhAllocation->GetSize(), firstMemorySize);
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 5u);
 
     segmentedAllocator.DeallocateMemory(firstAllocation.release());
     segmentedAllocator.DeallocateMemory(secondAllocation.release());
@@ -135,11 +135,11 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
     segmentedAllocator.DeallocateMemory(sixthAllocation.release());
     segmentedAllocator.DeallocateMemory(seventhAllocation.release());
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 7u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 5u);
 
     segmentedAllocator.ReleaseMemory();
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 5u);
 }
 
 TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
@@ -154,7 +154,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
         segmentedAllocator.DeallocateMemory(allocation.release());
     }
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 1u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 
     {
         std::unique_ptr<MemoryAllocation> allocation = segmentedAllocator.TryAllocateMemory(
@@ -165,5 +165,5 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
         segmentedAllocator.DeallocateMemory(allocation.release());
     }
 
-    EXPECT_EQ(segmentedAllocator.GetPoolSizeForTesting(), 1u);
+    EXPECT_EQ(segmentedAllocator.GetSegmentSizeForTesting(), 1u);
 }

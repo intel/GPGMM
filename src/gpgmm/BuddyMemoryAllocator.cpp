@@ -143,7 +143,7 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
-    uint64_t BuddyMemoryAllocator::GetPoolSizeForTesting() const {
+    uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
         return mPool.GetPoolSize();
     }
 

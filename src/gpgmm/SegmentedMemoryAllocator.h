@@ -46,7 +46,7 @@ namespace gpgmm {
         void DeallocateMemory(MemoryAllocation* allocation) override;
         void ReleaseMemory() override;
 
-        uint64_t GetPoolSizeForTesting() const;
+        uint64_t GetSegmentSizeForTesting() const;
 
       private:
         MemorySegment* GetOrCreateFreeSegment(uint64_t memorySize);

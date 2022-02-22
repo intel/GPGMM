@@ -60,7 +60,7 @@ namespace gpgmm {
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;
 
-        uint64_t GetPoolSizeForTesting() const;
+        uint64_t GetSlabSizeForTesting() const;
 
       private:
         uint64_t ComputeSlabSize(uint64_t allocationSize) const;
@@ -134,7 +134,7 @@ namespace gpgmm {
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;
 
-        uint64_t GetPoolSizeForTesting() const;
+        uint64_t GetSlabCacheSizeForTesting() const;
 
       private:
         class SlabAllocatorCacheEntry {

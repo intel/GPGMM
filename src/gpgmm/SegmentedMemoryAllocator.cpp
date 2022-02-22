@@ -176,12 +176,10 @@ namespace gpgmm {
         }
     }
 
-    uint64_t SegmentedMemoryAllocator::GetPoolSizeForTesting() const {
+    uint64_t SegmentedMemoryAllocator::GetSegmentSizeForTesting() const {
         uint64_t count = 0;
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
-            MemorySegment* segment = node->value();
-            ASSERT(segment != nullptr);
-            count += segment->GetPoolSize();
+            count += 1;
         }
         return count;
     }

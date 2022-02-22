@@ -156,14 +156,14 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         allocations.push_back(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetPoolSizeForTesting(), 2u);
+    EXPECT_EQ(allocator.GetSlabSizeForTesting(), 2u);
 
     // Free both slabs.
     for (auto& allocation : allocations) {
         allocator.DeallocateMemory(allocation.release());
     }
 
-    EXPECT_EQ(allocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
 }
 
 // Verify a very large allocation does not overflow.
@@ -311,7 +311,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
         allocator.DeallocateMemory(allocation.release());
     }
 
-    EXPECT_EQ(allocator.GetPoolSizeForTesting(), 0u);
+    EXPECT_EQ(allocator.GetSlabCacheSizeForTesting(), 0u);
 }
 
 TEST(SlabMemoryAllocatorTests, SingleSlabInBuddy) {
