@@ -122,6 +122,7 @@ source_set("gpgmm_sources") {
     "ConditionalMemoryAllocator.h",
     "Defaults.h",
     "Error.h",
+    "GPUInfo.h",
     "IndexedMemoryPool.cpp",
     "IndexedMemoryPool.h",
     "JSONSerializer.cpp",
@@ -186,6 +187,8 @@ source_set("gpgmm_sources") {
     sources += [
       "d3d12/BufferAllocatorD3D12.cpp",
       "d3d12/BufferAllocatorD3D12.h",
+      "d3d12/CapsD3D12.cpp",
+      "d3d12/CapsD3D12.h",
       "d3d12/DefaultsD3D12.h",
       "d3d12/ErrorD3D12.cpp",
       "d3d12/ErrorD3D12.h",

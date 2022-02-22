@@ -32,6 +32,7 @@ namespace gpgmm {
 namespace gpgmm { namespace d3d12 {
 
     class BufferAllocator;
+    class Caps;
     class Heap;
     class ResidencyManager;
     class ResourceAllocation;
@@ -191,12 +192,12 @@ namespace gpgmm { namespace d3d12 {
         ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
 
         // Sub-allocate a resource allocation within the same resource. The resource alignment
-        // is allowed to be byte-aligned instead of always being page-aligned, which significantly
-        // reduces app memory usage. However, this is mostly limited for constant buffers (ie.
-        // index and vertex buffers) which will be used as read-only after creation since the
-        // resource can only be in one state at a time.
-        // It is undefined behavior to use sub-allocations within the same resource betweem multiple
-        // command queues since accesses are not guarenteed to be coherent.
+        // is allowed to be byte-aligned instead of being resource-aligned, which significantly
+        // reduces app memory usage (1B vs 64KB per allocation). Since the resource can only be in
+        // one state at a time, this is mostly restricted for constant buffers (index and vertex
+        // buffers) which will stay read-only after creation. This flag is automatically
+        // enabled for devices that already guarentee command queue accesses are always coherent
+        // between sub-allocations within the same resource.
         ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
         // Forbids allowing multiple resource allocations to be created from the same resource
@@ -305,7 +306,8 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceAllocation;
 
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                          ComPtr<ResidencyManager> residencyManager);
+                          ComPtr<ResidencyManager> residencyManager,
+                          std::unique_ptr<Caps> caps);
 
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
@@ -337,6 +339,8 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<ResidencyManager> mResidencyManager;
+
+        std::unique_ptr<Caps> mCaps;
 
         const bool mIsUMA;
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
