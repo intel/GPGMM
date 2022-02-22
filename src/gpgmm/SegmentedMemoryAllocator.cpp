@@ -149,9 +149,13 @@ namespace gpgmm {
                              allocation);
         }
 
-        allocation->GetMemory()->SetPool(segment);
+        MemoryBase* memory = allocation->GetMemory();
+        ASSERT(memory != nullptr);
 
-        return std::make_unique<MemoryAllocation>(this, allocation->GetMemory());
+        memory->SetPool(segment);
+        mInfo.FreeMemoryUsage -= memory->GetSize();
+
+        return std::make_unique<MemoryAllocation>(this, memory);
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
@@ -164,6 +168,8 @@ namespace gpgmm {
 
         MemoryPool* pool = memory->GetPool();
         ASSERT(pool != nullptr);
+
+        mInfo.FreeMemoryUsage += memory->GetSize();
 
         pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
     }

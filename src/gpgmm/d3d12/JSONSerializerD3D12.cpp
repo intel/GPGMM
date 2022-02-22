@@ -172,17 +172,6 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
-    // static
-    std::string JSONSerializer::AppendTo(const QUERY_RESOURCE_ALLOCATOR_INFO& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"UsedBlockCount\": " << desc.UsedBlockCount << ", "
-           << "\"UsedResourceHeapCount\": " << desc.UsedResourceHeapCount << ", "
-           << "\"UsedBlockUsage\": " << desc.UsedBlockUsage << ", "
-           << "\"UsedResourceHeapUsage\": " << desc.UsedResourceHeapUsage << " }";
-        return ss.str();
-    }
-
     std::string JSONSerializer::AppendTo(const ALLOCATOR_MESSAGE& desc) {
         std::stringstream ss;
         ss << "{ "
