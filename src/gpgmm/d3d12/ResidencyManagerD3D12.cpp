@@ -114,9 +114,8 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!heap->IsResident()) {
-            ID3D12Pageable* pageable = heap->GetPageable().Get();
-            ReturnIfFailed(
-                MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1, &pageable));
+            ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
+                                        heap->GetPageable().GetAddressOf()));
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -160,6 +159,33 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
+    // Inserts a heap at the bottom of the LRU. The passed heap must be resident or scheduled to
+    // become resident within the current serial. Failing to call this function when an allocation
+    // is implicitly made resident will cause the residency manager to view the allocation as
+    // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
+    // the allocation out of sync with Dawn.
+    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+        if (heap == nullptr) {
+            return E_INVALIDARG;
+        }
+
+        // Heap already exists in the cache.
+        if (heap->IsInList()) {
+            return E_INVALIDARG;
+        }
+
+        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
+        ASSERT(cache != nullptr);
+
+        cache->Append(heap);
+
+        ASSERT(heap->IsInList());
+
+        d3d12::LogEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
+
+        return S_OK;
+    }
+
     DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemorySegmentInfo(
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         switch (memorySegmentGroup) {
@@ -193,6 +219,8 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         uint64_t reservation,
         uint64_t* reservationOut) {
+        TRACE_EVENT_CALL_SCOPED("ResidencyManager.SetVideoMemoryReservation");
+
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
 
@@ -243,6 +271,8 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
+        TRACE_EVENT_CALL_SCOPED("ResidencyManager.Evict");
+
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
         ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
@@ -386,6 +416,8 @@ namespace gpgmm { namespace d3d12 {
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
+        TRACE_EVENT_CALL_SCOPED("ResidencyManager.MakeResident");
+
         ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
 
         // A MakeResident call can fail if there's not enough available memory. This
@@ -401,33 +433,6 @@ namespace gpgmm { namespace d3d12 {
                 return E_OUTOFMEMORY;
             }
         }
-
-        return S_OK;
-    }
-
-    // Inserts a heap at the bottom of the LRU. The passed heap must be resident or scheduled to
-    // become resident within the current serial. Failing to call this function when an allocation
-    // is implicitly made resident will cause the residency manager to view the allocation as
-    // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
-    // the allocation out of sync with Dawn.
-    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
-        if (heap == nullptr) {
-            return E_INVALIDARG;
-        }
-
-        // Heap already exists in the cache.
-        if (heap->IsInList()) {
-            return E_INVALIDARG;
-        }
-
-        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
-        ASSERT(cache != nullptr);
-
-        cache->Append(heap);
-
-        ASSERT(heap->IsInList());
-
-        d3d12::LogEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
 
         return S_OK;
     }
