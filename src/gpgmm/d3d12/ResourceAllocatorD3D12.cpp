@@ -24,6 +24,7 @@
 #include "gpgmm/common/Math.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
+#include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -364,7 +365,13 @@ namespace gpgmm { namespace d3d12 {
                 newDescriptor.VideoMemoryEvictSize, &residencyManager))) {
         }
 
-        *resourceAllocatorOut = new ResourceAllocator(newDescriptor, residencyManager);
+        Caps* capPtr = nullptr;
+        ReturnIfFailed(
+            Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &capPtr));
+        std::unique_ptr<Caps> caps(capPtr);
+
+        *resourceAllocatorOut =
+            new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
 
         d3d12::LogEvent("GPUMemoryAllocator", descriptor);
 
@@ -376,9 +383,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                                         ComPtr<ResidencyManager> residencyManager)
+                                         ComPtr<ResidencyManager> residencyManager,
+                                         std::unique_ptr<Caps> caps)
         : mDevice(std::move(descriptor.Device)),
           mResidencyManager(std::move(residencyManager)),
+          mCaps(std::move(caps)),
           mIsUMA(descriptor.IsUMA),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
@@ -566,18 +575,19 @@ namespace gpgmm { namespace d3d12 {
         // strategy only works in a few cases (ex. small constant buffers uploads) so it should be
         // tried before sub-allocating resource heaps.
         // The time and space complexity of is defined by the sub-allocation algorithm used.
-        if ((allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
-            resourceInfo.Alignment > resourceDescriptor.Width &&
-            resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-            GetInitialResourceState(GetHeapType(resourceHeapType)) == initialResourceState &&
+        if ((mCaps->IsSuballocationWithinResourceCoherent() ||
+             allocationDescriptor.Flags & ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE) &&
+            resourceInfo.Alignment > newResourceDesc.Width &&
+            newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
+            GetInitialResourceState(allocationDescriptor.HeapType) == initialResourceState &&
             !mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            const uint64_t subAllocatedAlignment =
-                (resourceDescriptor.Alignment == 0) ? 1 : resourceDescriptor.Alignment;
+            const uint64_t alignment =
+                (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
 
             ReturnIfSucceeded(TryAllocateResource(
-                allocator, resourceDescriptor.Width, subAllocatedAlignment, neverAllocate,
+                allocator, newResourceDesc.Width, alignment, neverAllocate,
                 /*cachedSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
@@ -590,12 +600,12 @@ namespace gpgmm { namespace d3d12 {
                         subAllocation.GetBlock(),     subAllocation.GetOffset(),
                         std::move(committedResource), resourceHeap};
 
-                    if (subAllocation.GetSize() > resourceDescriptor.Width) {
+                    if (subAllocation.GetSize() > newResourceDesc.Width) {
                         d3d12::LogAllocatorMessage(
                             LogSeverity::Debug, "ResourceAllocator.CreateResource",
                             "Resource allocation size is larger then the resource size (" +
                                 std::to_string(subAllocation.GetSize()) + " vs " +
-                                std::to_string(resourceDescriptor.Width) + " bytes).",
+                                std::to_string(newResourceDesc.Width) + " bytes).",
                             ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT);
                     }
 
