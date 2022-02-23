@@ -35,6 +35,7 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT LockHeap(Heap* heap);
         HRESULT UnlockHeap(Heap* heap);
+        HRESULT InsertHeap(Heap* heap);
 
         HRESULT Evict(uint64_t sizeToMakeResident,
                       const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
@@ -48,8 +49,6 @@ namespace gpgmm { namespace d3d12 {
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                           uint64_t reservation,
                                           uint64_t* reservationOut = nullptr);
-
-        HRESULT InsertHeap(Heap* heap);
 
       private:
         friend ResourceAllocator;
