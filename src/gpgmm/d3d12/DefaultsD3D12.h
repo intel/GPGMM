@@ -19,10 +19,6 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    // Common defaults using D3D12 alias.
-    static constexpr uint64_t kDefaultMaxResourceHeapSize = kDefaultMaxMemorySize;
-
-    // D3D12-specific defaults.
     static constexpr uint64_t kDefaultPreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
     static constexpr uint32_t kDefaultVideoMemoryEvictSize = 50ll * 1024ll * 1024ll;      // 50MB
     static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;                          // 95%

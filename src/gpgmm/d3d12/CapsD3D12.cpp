@@ -16,9 +16,30 @@
 
 #include "gpgmm/d3d12/ErrorD3D12.h"
 
+#include <cmath>
 #include <memory>
 
 namespace gpgmm { namespace d3d12 {
+
+    HRESULT SetMaxResourceSize(ID3D12Device* device, uint64_t* sizeOut) {
+        D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
+        ReturnIfFailed(
+            device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
+                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+
+        *sizeOut = std::pow(2, feature.MaxGPUVirtualAddressBitsPerResource) - 1;
+        return S_OK;
+    }
+
+    HRESULT SetMaxResourceHeapSize(ID3D12Device* device, uint64_t* sizeOut) {
+        D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
+        ReturnIfFailed(
+            device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
+                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+
+        *sizeOut = std::pow(2, feature.MaxGPUVirtualAddressBitsPerProcess) - 1;
+        return S_OK;
+    }
 
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
@@ -31,12 +52,23 @@ namespace gpgmm { namespace d3d12 {
             caps->mIsSuballocationWithinResourceCoherent = true;
         }
 
+        ReturnIfFailed(SetMaxResourceSize(device, &caps->mMaxResourceSize));
+        ReturnIfFailed(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
+
         *capsOut = caps;
         return S_OK;
     }
 
     bool Caps::IsSuballocationWithinResourceCoherent() const {
         return mIsSuballocationWithinResourceCoherent;
+    }
+
+    uint64_t Caps::GetMaxResourceSize() const {
+        return mMaxResourceSize;
+    }
+
+    uint64_t Caps::GetMaxResourceHeapSize() const {
+        return mMaxResourceHeapSize;
     }
 
 }}  // namespace gpgmm::d3d12

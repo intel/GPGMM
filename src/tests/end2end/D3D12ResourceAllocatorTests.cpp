@@ -214,10 +214,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
 
     // Exceeding the max resource heap size should always fail.
     {
+        constexpr uint64_t kOversizedBuffer = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(mDefaultAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(kDefaultMaxResourceHeapSize + 1), D3D12_RESOURCE_STATE_COMMON,
-            nullptr, &allocation));
+        ASSERT_FAILED(
+            mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_EQ(allocation, nullptr);
     }
 

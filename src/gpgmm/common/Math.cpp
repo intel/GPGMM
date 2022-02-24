@@ -82,6 +82,11 @@ namespace gpgmm {
         return 1ull << (Log2(number - 1) + 1);
     }
 
+    uint64_t PrevPowerOfTwo(uint64_t number) {
+        ASSERT(number != 0);
+        return 1ull << Log2(number);
+    }
+
     bool IsPowerOfTwo(uint64_t number) {
         return (number == 0) ? false : (number & (number - 1)) == 0;
     }

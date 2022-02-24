@@ -18,7 +18,6 @@
 #include <cstdint>
 
 namespace gpgmm {
-    static constexpr uint64_t kDefaultMaxMemorySize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
     static constexpr const char* kDefaultTraceFile = "gpgmm_event_trace.json";
     static constexpr double kDefaultFragmentationLimit = 0.125;  // 1/8th or 12.5%
 }  // namespace gpgmm
