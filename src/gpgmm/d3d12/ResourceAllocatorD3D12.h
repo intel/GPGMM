@@ -198,7 +198,7 @@ namespace gpgmm { namespace d3d12 {
         // buffers) which will stay read-only after creation. This flag is automatically
         // enabled for devices that already guarentee command queue accesses are always coherent
         // between sub-allocations within the same resource.
-        ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
+        ALLOCATION_FLAG_ALWAYS_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
         // Forbids allowing multiple resource allocations to be created from the same resource
         // heap. The created resource will always be allocated with it's own resource heap.

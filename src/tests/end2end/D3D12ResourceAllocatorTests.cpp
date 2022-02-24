@@ -372,7 +372,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     ALLOCATION_DESC desc = {};
-    desc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
+    desc.Flags = ALLOCATION_FLAG_ALWAYS_SUBALLOCATE_WITHIN_RESOURCE;
     desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
     constexpr uint32_t kSubAllocationSize = 4u;
@@ -744,7 +744,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(resourceAllocator, nullptr);
 
         ALLOCATION_DESC allocationWithinDesc = {};
-        allocationWithinDesc.Flags = ALLOCATION_FLAG_SUBALLOCATE_WITHIN_RESOURCE;
+        allocationWithinDesc.Flags = ALLOCATION_FLAG_ALWAYS_SUBALLOCATE_WITHIN_RESOURCE;
         allocationWithinDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
         constexpr uint32_t kBufferSize = 4u;  // Must less than 64KB
