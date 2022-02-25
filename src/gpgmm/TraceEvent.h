@@ -120,6 +120,8 @@ namespace gpgmm {
             return mID;
         }
 
+        static constexpr const char* kIdRefKey = "id_ref";
+
       private:
         uint64_t mID;
     };

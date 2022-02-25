@@ -20,164 +20,140 @@
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
-#include <sstream>
-
 namespace gpgmm { namespace d3d12 {
 
     // static
-    std::string JSONSerializer::AppendTo(const ALLOCATOR_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Flags\": " << desc.Flags << ", "
-           << "\"RecordOptions\": " << AppendTo(desc.RecordOptions) << ", "
-           << "\"IsUMA\": " << desc.IsUMA << ", "
-           << "\"ResourceHeapTier\": " << desc.ResourceHeapTier << ", "
-           << "\"PreferredResourceHeapSize\": " << desc.PreferredResourceHeapSize << ", "
-           << "\"MaxResourceHeapSize\": " << desc.MaxResourceHeapSize << ", "
-           << "\"MaxResourceSizeForPooling\": " << desc.MaxResourceSizeForPooling << ", "
-           << "\"MaxVideoMemoryBudget\": " << desc.MaxVideoMemoryBudget << ", "
-           << "\"TotalResourceBudgetLimit\": " << desc.TotalResourceBudgetLimit << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
+        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
+        dict.AddItem("IsUMA", desc.IsUMA);
+        dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
+        dict.AddItem("PreferredResourceHeapSize", desc.PreferredResourceHeapSize);
+        dict.AddItem("MaxResourceHeapSize", desc.MaxResourceHeapSize);
+        dict.AddItem("MaxResourceSizeForPooling", desc.MaxResourceSizeForPooling);
+        dict.AddItem("MaxVideoMemoryBudget", desc.MaxVideoMemoryBudget);
+        dict.AddItem("TotalResourceBudgetLimit", desc.TotalResourceBudgetLimit);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const CREATE_RESOURCE_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"allocationDescriptor\": " << AppendTo(desc.allocationDescriptor) << ", "
-           << "\"resourceDescriptor\": " << AppendTo(desc.resourceDescriptor) << ", "
-           << "\"initialResourceState\": " << desc.initialResourceState << ", "
-           << "\"clearValue\": " << AppendTo(desc.clearValue) << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const CREATE_RESOURCE_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("allocationDescriptor", Serialize(desc.allocationDescriptor));
+        dict.AddItem("resourceDescriptor", Serialize(desc.resourceDescriptor));
+        dict.AddItem("initialResourceState", desc.initialResourceState);
+        dict.AddItem("clearValue", Serialize(desc.clearValue));
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const ALLOCATION_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Flags\": " << desc.Flags << ", "
-           << "\"HeapType\": " << desc.HeapType << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const ALLOCATION_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
+        dict.AddItem("HeapType", desc.HeapType);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const D3D12_RESOURCE_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Dimension\": " << desc.Dimension << ", "
-           << "\"Alignment\": " << desc.Alignment << ", "
-           << "\"Width\": " << desc.Width << ", "
-           << "\"Height\": " << desc.Height << ", "
-           << "\"DepthOrArraySize\": " << desc.DepthOrArraySize << ", "
-           << "\"MipLevels\": " << desc.MipLevels << ", "
-           << "\"Format\": " << desc.Format << ", "
-           << "\"Layout\": " << desc.Layout << ", "
-           << "\"SampleDesc\": " << AppendTo(desc.SampleDesc) << ", "
-           << "\"Flags\": " << desc.Flags << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const D3D12_RESOURCE_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("Dimension", desc.Dimension);
+        dict.AddItem("Alignment", desc.Alignment);
+        dict.AddItem("Width", desc.Width);
+        dict.AddItem("Height", desc.Height);
+        dict.AddItem("DepthOrArraySize", desc.DepthOrArraySize);
+        dict.AddItem("MipLevels", desc.MipLevels);
+        dict.AddItem("Format", desc.Format);
+        dict.AddItem("Layout", desc.Layout);
+        dict.AddItem("SampleDesc", Serialize(desc.SampleDesc));
+        dict.AddItem("Flags", desc.Flags);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Flags\": " << desc.Flags << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_RECORD_OPTIONS& desc) {
+        JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Depth\": " << depthStencilValue.Depth << ", "
-           << "\"Stencil\": " << static_cast<uint32_t>(depthStencilValue.Stencil) << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue) {
+        JSONDict dict;
+        dict.AddItem("Depth", depthStencilValue.Depth);
+        dict.AddItem("Stencil", depthStencilValue.Stencil);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const FLOAT rgba[4]) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"R\": " << rgba[0] << ", "
-           << "\"G\": " << rgba[1] << ", "
-           << "\"B\": " << rgba[2] << ", "
-           << "\"A\": " << rgba[3] << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const FLOAT rgba[4]) {
+        JSONDict dict;
+        dict.AddItem("R", rgba[0]);
+        dict.AddItem("G", rgba[1]);
+        dict.AddItem("B", rgba[2]);
+        dict.AddItem("A", rgba[3]);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const D3D12_CLEAR_VALUE* clearValue) {
+    JSONDict JSONSerializer::Serialize(const D3D12_CLEAR_VALUE* clearValue) {
+        JSONDict dict;
         if (clearValue == nullptr) {
-            return "{}";
+            return dict;
         }
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Format\": " << clearValue->Format << ", ";
+
+        dict.AddItem("Format", clearValue->Format);
 
         if (IsDepthFormat(clearValue->Format)) {
-            ss << "\"DepthStencil\": " << AppendTo(clearValue->DepthStencil);
+            dict.AddItem("DepthStencil", Serialize(clearValue->DepthStencil));
         } else {
-            ss << "\"Color\": " << AppendTo(clearValue->Color);
+            dict.AddItem("Color", Serialize(clearValue->Color));
         }
 
-        ss << " }";
-        return ss.str();
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const DXGI_SAMPLE_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Count\": " << desc.Count << ", "
-           << "\"Quality\": " << desc.Quality << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const DXGI_SAMPLE_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("Count", desc.Count);
+        dict.AddItem("Quality", desc.Quality);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const HEAP_INFO& desc) {
-        std::stringstream memoryPoolID;
-        memoryPoolID << std::hex << TraceEventID(desc.MemoryPool).GetID();
-
-        std::stringstream ss;
-        ss << "{ "
-           << "\"SizeInBytes\": " << desc.SizeInBytes << ", "
-           << "\"IsResident\": " << desc.IsResident << ", "
-           << "\"MemorySegmentGroup\": " << desc.MemorySegmentGroup << ", "
-           << "\"SubAllocatedRefs\": " << desc.SubAllocatedRefs;
+    JSONDict JSONSerializer::Serialize(const HEAP_INFO& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("IsResident", desc.IsResident);
+        dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
+        dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
+        dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
 
         if (desc.MemoryPool != nullptr) {
-            ss << ", "
-               << "\"MemoryPool\": {"
-               << "\"id_ref\": \"0x" << memoryPoolID.str() << "\" }";
+            dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
         }
 
-        ss << " }";
-        return ss.str();
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const RESOURCE_ALLOCATION_INFO& desc) {
-        std::stringstream resourceHeapID;
-        resourceHeapID << std::hex << TraceEventID(desc.ResourceHeap).GetID();
-
-        std::stringstream ss;
-        ss << "{ "
-           << "\"SizeInBytes\": " << desc.SizeInBytes << ", "
-           << "\"HeapOffset\": " << desc.HeapOffset << ", "
-           << "\"OffsetFromResource\": " << desc.OffsetFromResource << ", "
-           << "\"Method\": " << desc.Method << ", "
-           << "\"ResourceHeap\": {"
-           << "\"id_ref\": \"0x" << resourceHeapID.str() << "\" }"
-           << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_INFO& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("HeapOffset", desc.HeapOffset);
+        dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
+        dict.AddItem("Method", desc.Method);
+        dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
+        return dict;
     }
 
-    std::string JSONSerializer::AppendTo(const ALLOCATOR_MESSAGE& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Description\": \"" << desc.Description << "\", "
-           << "\"ID\": " << desc.ID << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_MESSAGE& desc) {
+        JSONDict dict;
+        dict.AddItem("Description", desc.Description);
+        dict.AddItem("ID", desc.ID);
+        return dict;
     }
 
 }}  // namespace gpgmm::d3d12
