@@ -29,6 +29,19 @@ TEST(MathTests, IsPowerOfTwo) {
     EXPECT_FALSE(IsPowerOfTwo(3u));
 }
 
+TEST(MathTests, PrevPowerOfTwo) {
+    // Check number from POT.
+    EXPECT_EQ(PrevPowerOfTwo(1u), 1u);
+    EXPECT_EQ(PrevPowerOfTwo(2u), 2u);
+
+    // Check number from NPOT.
+    EXPECT_EQ(PrevPowerOfTwo(3u), 2u);
+    EXPECT_EQ(PrevPowerOfTwo(9u), 8u);
+    EXPECT_EQ(PrevPowerOfTwo(15u), 8u);
+
+    EXPECT_EQ(PrevPowerOfTwo((2ull << 31) + 1), 2ull << 31);
+}
+
 TEST(MathTests, IsAligned) {
     // Check if a POT number is NOT aligned with a NPOT multiple.
     EXPECT_FALSE(IsAligned(2u, 3u));

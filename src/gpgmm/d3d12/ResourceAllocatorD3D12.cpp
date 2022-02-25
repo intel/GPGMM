@@ -311,6 +311,11 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
+        Caps* capPtr = nullptr;
+        ReturnIfFailed(
+            Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &capPtr));
+        std::unique_ptr<Caps> caps(capPtr);
+
         ALLOCATOR_DESC newDescriptor = descriptor;
         newDescriptor.PreferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
                                                       ? descriptor.PreferredResourceHeapSize
@@ -318,7 +323,7 @@ namespace gpgmm { namespace d3d12 {
 
         newDescriptor.MaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
                                                 ? descriptor.MaxResourceHeapSize
-                                                : kDefaultMaxMemorySize;
+                                                : caps->GetMaxResourceHeapSize();
 
         newDescriptor.ResourceFragmentationLimit = (descriptor.ResourceFragmentationLimit > 0)
                                                        ? descriptor.ResourceFragmentationLimit
@@ -364,11 +369,6 @@ namespace gpgmm { namespace d3d12 {
                 newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
                 newDescriptor.VideoMemoryEvictSize, &residencyManager))) {
         }
-
-        Caps* capPtr = nullptr;
-        ReturnIfFailed(
-            Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &capPtr));
-        std::unique_ptr<Caps> caps(capPtr);
 
         *resourceAllocatorOut =
             new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
@@ -429,15 +429,16 @@ namespace gpgmm { namespace d3d12 {
 
                 std::unique_ptr<MemoryAllocator> buddySubAllocator =
                     std::make_unique<BuddyMemoryAllocator>(
-                        mMaxResourceHeapSize, descriptor.PreferredResourceHeapSize, heapAlignment,
-                        std::move(conditionalHeapAllocator));
+                        PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
+                        heapAlignment, std::move(conditionalHeapAllocator));
 
                 // TODO: Figure out the optimal slab size to heap ratio.
                 mResourceAllocatorOfType[resourceHeapTypeIndex] =
                     std::make_unique<SlabCacheAllocator>(
-                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT, mMaxResourceHeapSize,
-                        descriptor.PreferredResourceHeapSize, heapAlignment,
-                        descriptor.ResourceFragmentationLimit, std::move(buddySubAllocator));
+                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
+                        heapAlignment, descriptor.ResourceFragmentationLimit,
+                        std::move(buddySubAllocator));
             }
 
             {
@@ -552,7 +553,8 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
+        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize ||
+            resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
             return E_OUTOFMEMORY;
         }
 

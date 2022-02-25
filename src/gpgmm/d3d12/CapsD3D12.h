@@ -18,6 +18,8 @@
 #include "gpgmm/GPUInfo.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
+#include <cstdint>
+
 namespace gpgmm { namespace d3d12 {
 
     class Caps {
@@ -28,10 +30,18 @@ namespace gpgmm { namespace d3d12 {
         // different queues is always coherent.
         bool IsSuballocationWithinResourceCoherent() const;
 
+        // Largest resource size that this device can make available.
+        uint64_t GetMaxResourceSize() const;
+
+        // Largest resource heap that this device can make available.
+        uint64_t GetMaxResourceHeapSize() const;
+
       private:
         Caps() = default;
 
         bool mIsSuballocationWithinResourceCoherent = false;
+        uint64_t mMaxResourceSize = 0;
+        uint64_t mMaxResourceHeapSize = 0;
     };
 
 }}  // namespace gpgmm::d3d12

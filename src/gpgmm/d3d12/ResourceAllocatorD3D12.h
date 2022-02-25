@@ -106,76 +106,94 @@ namespace gpgmm { namespace d3d12 {
     };
 
     struct ALLOCATOR_DESC {
-        // Device and adapter used by this allocator.
-        // If the adapter does not support DXGI 1.4, residency is not supported.
-        // Required parameters. Use CreateDevice and EnumAdapters get the device and adapter,
-        // respectively.
+        // Specifies the device and adapter used by this allocator. Use CreateDevice and
+        // EnumAdapters to get the device and adapter, respectively.
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 
+        // Specifies allocator options, such as wheather the allocator can sub-allocate or not, and
+        // whether resources should be resident upon creation.
         ALLOCATOR_FLAGS_TYPE Flags = ALLOCATOR_FLAG_NONE;
 
         // Minimum severity level to log messages to console. Messages with lower severity
         // will be ignored.
         ALLOCATOR_MESSAGE_SEVERITY MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
 
-        // Configures memory tracing.
+        // Specifies recording options, such as what events to record, and where to record them.
         ALLOCATOR_RECORD_OPTIONS RecordOptions;
 
-        // Determines if resource heaps can exist in shared memory.
+        // Supports unified memory architecture.
+        //
+        // Used to determine if resource heaps can exist in shared memory.
+        //
         // Required parameter. Use CheckFeatureSupport to determine if supported.
         bool IsUMA;
 
-        // Determines if resource heaps can mix resource categories (both texture and
-        // buffers).
+        // Adapter's tier of resource heap support.
+        //
+        // Used to determine if resource categories (both texture and buffers) can co-exist in the
+        // same resource heap.
+        //
         // Required parameter. Use CheckFeatureSupport to get supported tier.
         D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
 
         // Preferred size of the resource heap.
+        //
         // The preferred size of the resource heap is the minimum heap size to sub-allocate
         // from. A larger resource heap consumes more memory but could be faster for sub-allocation.
+        //
         // Optional parameter. When 0 is specified, the API will automatically set the preferred
         // resource heap size to the default value of 4MB.
         uint64_t PreferredResourceHeapSize;
 
         // Maximum size of the resource heap.
-        // The maximum resource size is equal to the total address range of available memory to
-        // allocate resources.
-        // Optional parameter. When 0 is specified, the API will automatically set the max
-        // resource heap size to the default value of 32GB.
+        //
+        // The maximum resource heap size is equal to the total virtual address range of available
+        // memory used to allocate resources.
+        //
+        // Optional parameter. When 0 is specified, the API will automatically set the max resource
+        // heap size based on the adapter's GPU virtual address range.
         uint64_t MaxResourceHeapSize;
 
-        // Maximum size of resource that can be pool-allocated.
+        // Maximum resource size that can be pool-allocated.
+        //
         // Pool-allocating larger resources consumes more memory then smaller ones but is faster to
         // create subsequent resources by using a pool of resource heaps. Apps must periodically
         // call Trim() to free unused pool-allocated resource heaps.
+        //
         // Optional parameter. When 0 is specified, the API will automatically disabling pooling.
         uint64_t MaxResourceSizeForPooling;
 
         // Maximum video memory available to budget by the allocator, expressed as a
         // percentage.
+        //
         // Optional parameter. When 0 is specified, the API will automatically set the max video
         // memory budget to 95%, leaving 5% for the OS and other applications.
         float MaxVideoMemoryBudget;
 
-        // Total memory available to budget for resources created by this allocator.
+        // Total memory available to budget for resources.
+        //
         // Optional parameter. When 0 is specified, the API will not restrict the resource budget.
         uint64_t TotalResourceBudgetLimit;
 
         // Video memory to evict from residency in order to make more resource resident, should
         // there not be enough budget available.
+        //
         // Optional parameter. When 0 is specified, the API will automatically set the video memory
         // evict size to 50MB.
         uint64_t VideoMemoryEvictSize;
 
-        // A limit, expressed as a percentage of the resource heap size, that is acceptable to be
-        // wasted due to internal fragmentation. Internal fragmentation is when the resource
-        // allocation size is larger then the resource size specified. This occurs when the type of
-        // resource (buffer or texture) and sub-allocation algorithm (buddy, slab, etc) prefer
-        // different alignments. For example, a 192KB page-aligned resource may need to allocate
-        // 256KB of binary-allocated space, which if allowed, is a fragmentation limit of 1/3rd.
-        // If |PreferredResourceHeapSize| is non-zero, then |ResourceFragmentationLimit| could be
+        // Resource fragmentation limit, expressed as a percentage of the resource heap size, that
+        // is acceptable to be wasted due to internal fragmentation.
+        //
+        // Internal fragmentation is when the resource allocation size is larger then the resource
+        // size requested. This occurs when the type of resource (buffer or texture) and
+        // sub-allocation algorithm (buddy, slab, etc) have different alignment requirements. For
+        // example, a 192KB page-aligned resource may need to allocate 256KB of binary-allocated
+        // space, which if allowed, has a fragmentation limit of 1/3rd.
+        // When |PreferredResourceHeapSize| is non-zero, |ResourceFragmentationLimit| could be
         // exceeded.
+        //
         // Optional parameter. When 0 is specified, the API will automatically set the resource
         // fragmentation limit to 1/8th the resource heap size.
         double ResourceFragmentationLimit;
