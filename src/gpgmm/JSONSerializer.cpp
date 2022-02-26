@@ -33,33 +33,92 @@ namespace gpgmm {
         return gRecordEventLevel;
     }
 
+    // JSONDict
+
+    JSONDict::JSONDict() {
+        mSS << "{ ";
+    }
+
+    std::string JSONDict::ToString() const {
+        return mSS.str() + " }";
+    }
+
+    void JSONDict::AddItem(const std::string& name, std::string value) {
+        return AddString(name, "\"" + value + "\"");
+    }
+
+    void JSONDict::AddItem(const std::string& name, uint64_t value) {
+        return AddString(name, std::to_string(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, uint32_t value) {
+        return AddString(name, std::to_string(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, bool value) {
+        return AddString(name, std::to_string(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, float value) {
+        return AddString(name, std::to_string(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, int value) {
+        return AddString(name, std::to_string(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, unsigned char value) {
+        return AddItem(name, static_cast<uint32_t>(value));
+    }
+
+    void JSONDict::AddItem(const std::string& name, const JSONDict& object) {
+        return AddString(name, object.ToString());
+    }
+
+    void JSONDict::AddString(const std::string& name, const std::string& value) {
+        if (mHasItem) {
+            mSS << ", ";
+        }
+        mSS << "\"" + name + "\": " << value;
+        mHasItem = true;
+    }
+
+    // JSONSerializer
+
     // static
-    std::string JSONSerializer::AppendTo(const POOL_DESC& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"PoolSize\": " << desc.PoolSize << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const POOL_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("PoolSize", desc.PoolSize);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const ALLOCATOR_MESSAGE& desc) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"Description\": \"" << desc.Description << "\", "
-           << "\"ID\": " << desc.ID << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_MESSAGE& desc) {
+        JSONDict dict;
+        dict.AddItem("Description", desc.Description);
+        dict.AddItem("ID", desc.ID);
+        return dict;
     }
 
     // static
-    std::string JSONSerializer::AppendTo(const MEMORY_ALLOCATOR_INFO& info) {
-        std::stringstream ss;
-        ss << "{ "
-           << "\"UsedBlockCount\": " << info.UsedBlockCount << ", "
-           << "\"UsedMemoryCount\": " << info.UsedMemoryCount << ", "
-           << "\"UsedBlockUsage\": " << info.UsedBlockUsage << ", "
-           << "\"FreeMemoryUsage\": " << info.FreeMemoryUsage << ", "
-           << "\"UsedMemoryUsage\": " << info.UsedMemoryUsage << " }";
-        return ss.str();
+    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+        JSONDict dict;
+        dict.AddItem("UsedBlockCount", info.UsedBlockCount);
+        dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);
+        dict.AddItem("UsedBlockUsage", info.UsedBlockUsage);
+        dict.AddItem("FreeMemoryUsage", info.FreeMemoryUsage);
+        dict.AddItem("UsedMemoryUsage", info.UsedMemoryUsage);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(void* ptr) {
+        std::stringstream objectRef;
+        objectRef << std::hex << TraceEventID(ptr).GetID();
+
+        JSONDict dict;
+        dict.AddItem(TraceEventID::kIdRefKey, "0x" + objectRef.str());
+        return dict;
     }
 
 }  // namespace gpgmm

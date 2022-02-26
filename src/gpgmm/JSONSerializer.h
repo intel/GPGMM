@@ -18,30 +18,55 @@
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Log.h"
 
+#include <sstream>
 #include <string>
 
 namespace gpgmm {
+
+    // Messages of a given severity to be recorded.
+    void SetRecordEventLevel(const LogSeverity& level);
+    const LogSeverity& GetRecordEventLevel();
+
+    class JSONDict {
+      public:
+        JSONDict();
+
+        std::string ToString() const;
+
+        // Per JSON data type
+        void AddItem(const std::string& name, std::string value);
+        void AddItem(const std::string& name, uint64_t value);
+        void AddItem(const std::string& name, uint32_t value);
+        void AddItem(const std::string& name, bool value);
+        void AddItem(const std::string& name, float value);
+        void AddItem(const std::string& name, int value);
+        void AddItem(const std::string& name, unsigned char value);
+        void AddItem(const std::string& name, const JSONDict& object);
+
+      private:
+        void AddString(const std::string& name, const std::string& value);
+
+        bool mHasItem = false;
+        std::stringstream mSS;
+    };
 
     // Forward declare common types.
     struct ALLOCATOR_MESSAGE;
     struct POOL_DESC;
     struct MEMORY_ALLOCATOR_INFO;
 
-    // Messages of a given severity to be recorded as events.
-    void SetRecordEventLevel(const LogSeverity& level);
-    const LogSeverity& GetRecordEventLevel();
-
     class JSONSerializer {
       public:
-        static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
-        static std::string AppendTo(const MEMORY_ALLOCATOR_INFO& info);
-        static std::string AppendTo(const POOL_DESC& desc);
+        static JSONDict Serialize(const ALLOCATOR_MESSAGE& desc);
+        static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
+        static JSONDict Serialize(const POOL_DESC& desc);
+        static JSONDict Serialize(void* ptr);
     };
 
     template <typename T, typename DescT, typename SerializerT = JSONSerializer>
     static void LogEvent(const char* name, T* objPtr, const DescT& desc) {
         if (IsEventTracerEnabled()) {
-            auto args = SerializerT::AppendTo(desc);
+            auto args = SerializerT::Serialize(desc).ToString();
             TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, args);
         }
     }
@@ -49,7 +74,7 @@ namespace gpgmm {
     template <typename T, typename SerializerT>
     static void LogEvent(const char* name, const T& obj) {
         if (IsEventTracerEnabled()) {
-            auto args = SerializerT::AppendTo(obj);
+            auto args = SerializerT::Serialize(obj).ToString();
             TRACE_EVENT_INSTANT(name, args);
         }
     }
@@ -65,7 +90,7 @@ namespace gpgmm {
     template <typename T, typename SerializerT, typename... Args>
     static void LogCommon(const LogSeverity& severity, const char* name, const Args&... args) {
         const T& obj{args...};
-        gpgmm::Log(severity) << name << SerializerT::AppendTo(obj);
+        gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
         if (severity >= GetRecordEventLevel()) {
             return LogEvent<T, SerializerT>(name, obj);
         }

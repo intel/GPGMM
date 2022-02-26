@@ -29,22 +29,22 @@ namespace gpgmm { namespace d3d12 {
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_INFO;
 
-    class JSONSerializer {
+    class JSONSerializer : public gpgmm::JSONSerializer {
       public:
-        static std::string AppendTo(const ALLOCATOR_DESC& desc);
-        static std::string AppendTo(const CREATE_RESOURCE_DESC& desc);
-        static std::string AppendTo(const ALLOCATION_DESC& desc);
-        static std::string AppendTo(const D3D12_RESOURCE_DESC& desc);
-        static std::string AppendTo(const HEAP_INFO& desc);
-        static std::string AppendTo(const RESOURCE_ALLOCATION_INFO& desc);
-        static std::string AppendTo(const ALLOCATOR_MESSAGE& desc);
+        static JSONDict Serialize(const ALLOCATOR_DESC& desc);
+        static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
+        static JSONDict Serialize(const ALLOCATION_DESC& desc);
+        static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
+        static JSONDict Serialize(const HEAP_INFO& desc);
+        static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& desc);
+        static JSONDict Serialize(const ALLOCATOR_MESSAGE& desc);
 
       private:
-        static std::string AppendTo(const ALLOCATOR_RECORD_OPTIONS& desc);
-        static std::string AppendTo(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue);
-        static std::string AppendTo(const FLOAT rgba[4]);
-        static std::string AppendTo(const D3D12_CLEAR_VALUE* clearValue);
-        static std::string AppendTo(const DXGI_SAMPLE_DESC& desc);
+        static JSONDict Serialize(const ALLOCATOR_RECORD_OPTIONS& desc);
+        static JSONDict Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue);
+        static JSONDict Serialize(const FLOAT rgba[4]);
+        static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);
+        static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
     };
 
     template <typename T>
