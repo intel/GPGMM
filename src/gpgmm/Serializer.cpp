@@ -65,6 +65,10 @@ namespace gpgmm {
         return AddString(name, std::to_string(value));
     }
 
+    void JSONDict::AddItem(const std::string& name, double value) {
+        return AddString(name, std::to_string(value));
+    }
+
     void JSONDict::AddItem(const std::string& name, int value) {
         return AddString(name, std::to_string(value));
     }

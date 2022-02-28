@@ -40,6 +40,7 @@ namespace gpgmm {
         void AddItem(const std::string& name, uint32_t value);
         void AddItem(const std::string& name, bool value);
         void AddItem(const std::string& name, float value);
+        void AddItem(const std::string& name, double value);
         void AddItem(const std::string& name, int value);
         void AddItem(const std::string& name, unsigned char value);
         void AddItem(const std::string& name, const JSONDict& object);
