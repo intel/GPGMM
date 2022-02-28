@@ -295,7 +295,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
-                            allocatorDesc.Flags =
+                            allocatorDesc.Flags |=
                                 static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
                             allocatorDesc.PreferredResourceHeapSize =
                                 args["PreferredResourceHeapSize"].asUInt64();
@@ -328,8 +328,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         if (envParams.IsStandaloneOnly) {
-                            allocatorDesc.Flags =
-                                allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED;
+                            allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
                         }
 
                         if (envParams.IsRegenerate) {
