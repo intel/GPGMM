@@ -54,14 +54,14 @@ namespace gpgmm {
 
     // Forward declare common types.
     struct ALLOCATOR_MESSAGE;
-    struct POOL_DESC;
+    struct POOL_INFO;
     struct MEMORY_ALLOCATOR_INFO;
 
     class Serializer {
       public:
         static JSONDict Serialize(const ALLOCATOR_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
-        static JSONDict Serialize(const POOL_DESC& desc);
+        static JSONDict Serialize(const POOL_INFO& desc);
         static JSONDict Serialize(void* objectPtr);
     };
 

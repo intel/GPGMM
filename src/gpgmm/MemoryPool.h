@@ -23,7 +23,7 @@ namespace gpgmm {
 
     class MemoryAllocation;
 
-    struct POOL_DESC {
+    struct POOL_INFO {
         uint64_t PoolSize;
     };
 
@@ -50,7 +50,7 @@ namespace gpgmm {
         /// Returns the size of the memory blocks being pooled.
         virtual uint64_t GetMemorySize() const;
 
-        POOL_DESC GetDesc() const;
+        POOL_INFO GetInfo() const;
 
       private:
         uint64_t mMemorySize;

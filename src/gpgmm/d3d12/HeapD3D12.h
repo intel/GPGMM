@@ -61,7 +61,7 @@ namespace gpgmm { namespace d3d12 {
         bool IsInResidencyLRUCache() const;
         bool IsResidencyLocked() const;
 
-        HEAP_INFO GetHeapInfo() const;
+        HEAP_INFO GetInfo() const;
 
       private:
         friend ResidencyManager;
