@@ -47,8 +47,8 @@ struct CaptureReplayMemoryStats {
 enum class AllocatorProfile {
     ALLOCATOR_PROFILE_MAX_PERFORMANCE,  // Optimize performance over memory usage.
     ALLOCATOR_PROFILE_LOW_MEMORY,       // Optimize memory usage over performance.
-    ALLOCATOR_PROFILE_BLENDED,          // Optimize both memory usage and performance.
-    ALLOCATOR_PROFILE_NONE,             // Use the defaults.
+    ALLOCATOR_PROFILE_CAPTURED,         // Playback uses captured settings.
+    ALLOCATOR_PROFILE_DEFAULT,          // Placback uses default settings.
 };
 
 struct TestEnviromentParams {
@@ -61,7 +61,8 @@ struct TestEnviromentParams {
     bool IsStandaloneOnly = false;
     bool IsNeverAllocate = false;
 
-    AllocatorProfile AllocatorProfile = AllocatorProfile::ALLOCATOR_PROFILE_NONE;
+    AllocatorProfile AllocatorProfile =
+        AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.
 };
 
 void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv);

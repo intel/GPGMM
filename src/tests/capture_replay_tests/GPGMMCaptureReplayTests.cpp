@@ -52,10 +52,10 @@ namespace {
                 return "Max Performance";
             case AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY:
                 return "Low Memory";
-            case AllocatorProfile::ALLOCATOR_PROFILE_BLENDED:
-                return "Blended mode";
-            case AllocatorProfile::ALLOCATOR_PROFILE_NONE:
-                return "None";
+            case AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED:
+                return "Captured";
+            case AllocatorProfile::ALLOCATOR_PROFILE_DEFAULT:
+                return "Default";
             default:
                 UNREACHABLE();
                 return "";
@@ -67,10 +67,10 @@ namespace {
             return AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE;
         } else if (profile == "LOWMEM" || profile == "LOW" || profile == "MEM") {
             return AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY;
-        } else if (profile == "BLENDED" || profile == "MIXED") {
-            return AllocatorProfile::ALLOCATOR_PROFILE_BLENDED;
+        } else if (profile == "DEFAULT" || profile == "NONE") {
+            return AllocatorProfile::ALLOCATOR_PROFILE_DEFAULT;
         } else {
-            return AllocatorProfile::ALLOCATOR_PROFILE_NONE;
+            return AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;
         }
     }
 
@@ -198,10 +198,11 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --caps-compatible: Captured caps must be compatible with playback device.\n";
 
-            gpgmm::InfoLog() << "Experiment options:"
-                             << " --force-standalone: Disable memory reuse by sub-allocation.\n"
-                             << " --never-allocate: Disable creating backend memory.\n"
-                             << " --profile=[MAXPERF|LOWMEM|BLENDED|NONE]: Allocator profile.\n";
+            gpgmm::InfoLog()
+                << "Experiment options:"
+                << " --force-standalone: Disable memory reuse by sub-allocation.\n"
+                << " --never-allocate: Disable creating backend memory.\n"
+                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocator profile.\n";
             continue;
         }
     }

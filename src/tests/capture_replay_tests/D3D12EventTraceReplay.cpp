@@ -122,23 +122,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         std::string allocatorInstanceID;
 
-        // Apply profile defaults (if specified).
-        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-        if (envParams.AllocatorProfile == AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
-            // Pool-allocate everything. Reuse is possible by recycling heaps and sub-allocation.
-            allocatorDesc.MaxResourceHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-            allocatorDesc.MaxResourceSizeForPooling = allocatorDesc.MaxResourceHeapSize;
-
-            // Any amount of internal fragment is acceptable.
-            allocatorDesc.ResourceFragmentationLimit = 1.0f;
-
-        } else if (envParams.AllocatorProfile == AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
-            // Do not pool allocate. Reuse is only possible through sub-allocation.
-            allocatorDesc.MaxResourceSizeForPooling = 0;
-
-            allocatorDesc.ResourceFragmentationLimit = 0.125;  // 1/8th of 4MB
-        }
-
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
 
@@ -308,14 +291,46 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
 
-                        allocatorDesc.Flags = static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                        // Apply profile (if specified).
+                        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+                        if (envParams.AllocatorProfile ==
+                            AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
+                            allocatorDesc.Flags =
+                                static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                            allocatorDesc.PreferredResourceHeapSize =
+                                args["PreferredResourceHeapSize"].asUInt64();
+                            allocatorDesc.MaxResourceHeapSize =
+                                args["MaxResourceHeapSize"].asUInt64();
+                            allocatorDesc.MaxResourceSizeForPooling =
+                                args["MaxResourceSizeForPooling"].asUInt64();
+                            allocatorDesc.MaxVideoMemoryBudget =
+                                args["MaxVideoMemoryBudget"].asFloat();
+                            allocatorDesc.TotalResourceBudgetLimit =
+                                args["TotalResourceBudgetLimit"].asUInt64();
+                            allocatorDesc.VideoMemoryEvictSize =
+                                args["VideoMemoryEvictSize"].asUInt64();
+                            allocatorDesc.ResourceFragmentationLimit =
+                                args["ResourceFragmentationLimit"].asDouble();
+                        } else if (envParams.AllocatorProfile ==
+                                   AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
+                            // Pool-allocate everything. Reuse is possible by recycling heaps
+                            // and sub-allocation.
+                            allocatorDesc.MaxResourceSizeForPooling =
+                                32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+
+                            // Any amount of internal fragment is acceptable.
+                            allocatorDesc.ResourceFragmentationLimit = 1.0f;
+                        } else if (envParams.AllocatorProfile ==
+                                   AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
+                            // Do not pool allocate. Reuse is only possible through sub-allocation.
+                            allocatorDesc.MaxResourceSizeForPooling = 0;
+                            allocatorDesc.ResourceFragmentationLimit = 0.125;  // 1/8th of 4MB
+                        }
+
                         if (envParams.IsStandaloneOnly) {
                             allocatorDesc.Flags =
                                 allocatorDesc.Flags | ALLOCATOR_FLAG_ALWAYS_COMMITED;
                         }
-
-                        const Json::Value& recordOptions = args["RecordOptions"];
-                        ASSERT_FALSE(recordOptions.empty());
 
                         if (envParams.IsRegenerate) {
                             allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_CAPTURE;
@@ -346,15 +361,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                        std::to_string(allocatorDesc.ResourceHeapTier) + ").";
                             GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
                         }
-
-                        allocatorDesc.PreferredResourceHeapSize =
-                            args["PreferredResourceHeapSize"].asUInt64();
-                        allocatorDesc.MaxResourceHeapSize = args["MaxResourceHeapSize"].asUInt64();
-                        allocatorDesc.MaxResourceSizeForPooling =
-                            args["MaxResourceSizeForPooling"].asUInt64();
-                        allocatorDesc.MaxVideoMemoryBudget = args["MaxVideoMemoryBudget"].asFloat();
-                        allocatorDesc.TotalResourceBudgetLimit =
-                            args["TotalResourceBudgetLimit"].asUInt64();
 
                         ComPtr<ResourceAllocator> resourceAllocator;
                         ASSERT_SUCCEEDED(
