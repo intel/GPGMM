@@ -34,18 +34,23 @@ namespace gpgmm {
         CountFlags a;
         a |= kZero;
         EXPECT_TRUE(a == kZero);
+        EXPECT_EQ(a, 0);
 
         a |= kOne;
         EXPECT_TRUE(a == kOne);
+        EXPECT_EQ(a, 1);
 
         a |= kTwo;
         EXPECT_TRUE(a == kThree);
+        EXPECT_EQ(a, 3);
 
         a &= kTwo;
         EXPECT_TRUE(a == kTwo);
+        EXPECT_EQ(a, 2);
 
         a ^= kTwo;
         EXPECT_TRUE(a == kZero);
+        EXPECT_EQ(a, 0);
     }
 
     struct Desc {

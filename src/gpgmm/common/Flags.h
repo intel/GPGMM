@@ -114,8 +114,8 @@ namespace gpgmm {
             return !mValue;
         }
 
-        operator bool() const {
-            return mValue != 0;
+        operator int() const {
+            return mValue;
         }
 
       private:
