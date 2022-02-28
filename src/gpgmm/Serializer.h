@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_JSONSERIALIZER_H_
-#define GPGMM_JSONSERIALIZER_H_
+#ifndef GPGMM_SERIALIZER_H_
+#define GPGMM_SERIALIZER_H_
 
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Log.h"
@@ -24,7 +24,8 @@
 namespace gpgmm {
 
     // Messages of a given severity to be recorded.
-    void SetRecordEventLevel(const LogSeverity& level);
+    // Set the new level and returns the previous level so it may be restored by the caller.
+    LogSeverity SetRecordEventLevel(const LogSeverity& level);
     const LogSeverity& GetRecordEventLevel();
 
     class JSONDict {
@@ -55,54 +56,54 @@ namespace gpgmm {
     struct POOL_DESC;
     struct MEMORY_ALLOCATOR_INFO;
 
-    class JSONSerializer {
+    class Serializer {
       public:
         static JSONDict Serialize(const ALLOCATOR_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const POOL_DESC& desc);
-        static JSONDict Serialize(void* ptr);
+        static JSONDict Serialize(void* objectPtr);
     };
 
-    template <typename T, typename DescT, typename SerializerT = JSONSerializer>
-    static void LogEvent(const char* name, T* objPtr, const DescT& desc) {
+    template <typename T, typename DescT, typename SerializerT = Serializer>
+    static void RecordEvent(const char* name, T* objPtr, const DescT& desc) {
         if (IsEventTracerEnabled()) {
-            auto args = SerializerT::Serialize(desc).ToString();
+            const auto& args = SerializerT::Serialize(desc).ToString();
             TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, args);
         }
     }
 
     template <typename T, typename SerializerT>
-    static void LogEvent(const char* name, const T& obj) {
+    static void RecordEvent(const char* name, const T& obj) {
         if (IsEventTracerEnabled()) {
-            auto args = SerializerT::Serialize(obj).ToString();
+            const auto& args = SerializerT::Serialize(obj).ToString();
             TRACE_EVENT_INSTANT(name, args);
         }
     }
 
     template <typename T, typename SerializerT, typename... Args>
-    static void LogEvent(const char* name, const Args&... args) {
+    static void RecordEvent(const char* name, const Args&... args) {
         if (IsEventTracerEnabled()) {
             const T& obj{args...};
-            return LogEvent<T, SerializerT>(name, obj);
+            return RecordEvent<T, SerializerT>(name, obj);
         }
     }
 
     template <typename T, typename SerializerT, typename... Args>
-    static void LogCommon(const LogSeverity& severity, const char* name, const Args&... args) {
+    static void RecordCommon(const LogSeverity& severity, const char* name, const Args&... args) {
         const T& obj{args...};
-        gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
+        if (severity >= GetLogMessageLevel()) {
+            gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
+        }
         if (severity >= GetRecordEventLevel()) {
-            return LogEvent<T, SerializerT>(name, obj);
+            return RecordEvent<T, SerializerT>(name, obj);
         }
     }
 
     template <typename... Args>
-    static void LogAllocatorMessage(const LogSeverity& severity,
-                                    const char* name,
-                                    const Args&... args) {
-        return gpgmm::LogCommon<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
+        return gpgmm::RecordCommon<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
     }
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_JSONSERIALIZER_H_
+#endif  // GPGMM_SERIALIZER_H_

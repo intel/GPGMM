@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_JSONSERIALIZERD3D12_H_
-#define GPGMM_D3D12_JSONSERIALIZERD3D12_H_
+#ifndef GPGMM_D3D12_SERIALIZERD3D12_H_
+#define GPGMM_D3D12_SERIALIZERD3D12_H_
 
-#include "gpgmm/JSONSerializer.h"
+#include "gpgmm/Serializer.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
 
+    // Forward declare backend types.
     struct ALLOCATION_DESC;
     struct ALLOCATOR_DESC;
     struct ALLOCATOR_MESSAGE;
@@ -29,7 +30,7 @@ namespace gpgmm { namespace d3d12 {
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_INFO;
 
-    class JSONSerializer : public gpgmm::JSONSerializer {
+    class Serializer : public gpgmm::Serializer {
       public:
         static JSONDict Serialize(const ALLOCATOR_DESC& desc);
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
@@ -48,27 +49,25 @@ namespace gpgmm { namespace d3d12 {
     };
 
     template <typename T>
-    static void LogEvent(const char* name, const T& desc) {
-        return gpgmm::LogEvent<T, JSONSerializer>(name, desc);
+    static void RecordEvent(const char* name, const T& desc) {
+        return gpgmm::RecordEvent<T, Serializer>(name, desc);
     }
 
     template <typename... Args>
-    static void LogAllocatorMessage(const LogSeverity& severity,
-                                    const char* name,
-                                    const Args&... args) {
-        return gpgmm::LogCommon<ALLOCATOR_MESSAGE, JSONSerializer>(severity, name, args...);
+    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
+        return gpgmm::RecordCommon<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
     }
 
     template <typename T, typename... Args>
-    static void LogEvent(const char* name, const Args&... args) {
-        return gpgmm::LogEvent<T, JSONSerializer>(name, args...);
+    static void RecordEvent(const char* name, const Args&... args) {
+        return gpgmm::RecordEvent<T, Serializer>(name, args...);
     }
 
     template <typename T, typename DescT>
-    static void LogEvent(const char* name, T* objPtr, const DescT& desc) {
-        return gpgmm::LogEvent<T, DescT, JSONSerializer>(name, objPtr, desc);
+    static void RecordEvent(const char* name, T* objPtr, const DescT& desc) {
+        return gpgmm::RecordEvent<T, DescT, Serializer>(name, objPtr, desc);
     }
 
 }}  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_JSONSERIALIZERD3D12_H_
+#endif  // GPGMM_D3D12_SERIALIZERD3D12_H_

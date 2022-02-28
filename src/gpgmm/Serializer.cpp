@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/JSONSerializer.h"
+#include "gpgmm/Serializer.h"
 
 #include "gpgmm/Allocator.h"
 #include "gpgmm/MemoryAllocator.h"
@@ -25,8 +25,10 @@ namespace gpgmm {
     // Messages with equal or greater to severity will be logged.
     LogSeverity gRecordEventLevel = LogSeverity::Info;
 
-    void SetRecordEventLevel(const LogSeverity& level) {
-        gRecordEventLevel = level;
+    LogSeverity SetRecordEventLevel(const LogSeverity& newLevel) {
+        LogSeverity oldLevel = gRecordEventLevel;
+        gRecordEventLevel = newLevel;
+        return oldLevel;
     }
 
     const LogSeverity& GetRecordEventLevel() {
@@ -83,17 +85,17 @@ namespace gpgmm {
         mHasItem = true;
     }
 
-    // JSONSerializer
+    // Serializer
 
     // static
-    JSONDict JSONSerializer::Serialize(const POOL_DESC& desc) {
+    JSONDict Serializer::Serialize(const POOL_DESC& desc) {
         JSONDict dict;
         dict.AddItem("PoolSize", desc.PoolSize);
         return dict;
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const ALLOCATOR_MESSAGE& desc) {
+    JSONDict Serializer::Serialize(const ALLOCATOR_MESSAGE& desc) {
         JSONDict dict;
         dict.AddItem("Description", desc.Description);
         dict.AddItem("ID", desc.ID);
@@ -101,7 +103,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+    JSONDict Serializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
         JSONDict dict;
         dict.AddItem("UsedBlockCount", info.UsedBlockCount);
         dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);
@@ -112,9 +114,9 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(void* ptr) {
+    JSONDict Serializer::Serialize(void* objectPtr) {
         std::stringstream objectRef;
-        objectRef << std::hex << TraceEventID(ptr).GetID();
+        objectRef << std::hex << TraceEventID(objectPtr).GetID();
 
         JSONDict dict;
         dict.AddItem(TraceEventID::kIdRefKey, "0x" + objectRef.str());

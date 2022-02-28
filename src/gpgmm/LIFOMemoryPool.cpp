@@ -14,9 +14,9 @@
 
 #include "gpgmm/LIFOMemoryPool.h"
 
-#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/MemoryAllocator.h"
+#include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -33,7 +33,7 @@ namespace gpgmm {
             mPool.pop_front();
         }
 
-        LogEvent("GPUMemoryPool", this, GetDesc());
+        RecordEvent("GPUMemoryPool", this, GetDesc());
 
         return allocation;
     }
@@ -45,7 +45,7 @@ namespace gpgmm {
 
         mPool.push_front(std::move(allocation));
 
-        LogEvent("GPUMemoryPool", this, GetDesc());
+        RecordEvent("GPUMemoryPool", this, GetDesc());
     }
 
     void LIFOMemoryPool::ReleasePool() {

@@ -15,8 +15,8 @@
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 
-#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/SerializerD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,
@@ -29,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(mPageable != nullptr);
 
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryBlock", this);
-        d3d12::LogEvent("GPUMemoryBlock", this, GetHeapInfo());
+        d3d12::RecordEvent("GPUMemoryBlock", this, GetHeapInfo());
 
         mPageable->SetName(L"GPGMM managed heap");
     }

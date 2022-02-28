@@ -57,7 +57,10 @@ namespace gpgmm {
         Error,
     };
 
+    // Messages of a given severity to be logged.
+    // Set the new level and returns the previous level so it may be restored by the caller.
     LogSeverity SetLogMessageLevel(const LogSeverity& level);
+    const LogSeverity& GetLogMessageLevel();
 
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {

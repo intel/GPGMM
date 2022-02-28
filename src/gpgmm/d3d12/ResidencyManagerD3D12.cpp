@@ -19,8 +19,8 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
-#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/SerializerD3D12.h"
 
 #include <algorithm>
 #include <vector>
@@ -125,7 +125,7 @@ namespace gpgmm { namespace d3d12 {
 
         heap->AddResidencyLockRef();
 
-        d3d12::LogEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
+        d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
 
         return S_OK;
     }
@@ -181,7 +181,7 @@ namespace gpgmm { namespace d3d12 {
 
         ASSERT(heap->IsInList());
 
-        d3d12::LogEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
+        d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
 
         return S_OK;
     }
@@ -321,7 +321,7 @@ namespace gpgmm { namespace d3d12 {
             sizeEvicted += heap->GetSize();
             resourcesToEvict.push_back(heap->GetPageable().Get());
 
-            d3d12::LogEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
+            d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetHeapInfo());
         }
 
         if (resourcesToEvict.size() > 0) {

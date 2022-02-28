@@ -15,8 +15,8 @@
 
 #include "gpgmm/BuddyMemoryAllocator.h"
 
-#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/Memory.h"
+#include "gpgmm/Serializer.h"
 #include "gpgmm/common/Math.h"
 
 namespace gpgmm {
@@ -53,11 +53,11 @@ namespace gpgmm {
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (allocationSize == 0 || allocationSize > mMemorySize) {
-            LogAllocatorMessage(LogSeverity::Debug, "BuddyMemoryAllocator.TryAllocateMemory",
-                                "Allocation size exceeded the memory size (" +
-                                    std::to_string(allocationSize) + " vs " +
-                                    std::to_string(mMemorySize) + " bytes).",
-                                ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            RecordMessage(LogSeverity::Debug, "BuddyMemoryAllocator.TryAllocateMemory",
+                          "Allocation size exceeded the memory size (" +
+                              std::to_string(allocationSize) + " vs " +
+                              std::to_string(mMemorySize) + " bytes).",
+                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return nullptr;
         }
 
@@ -66,11 +66,11 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (allocationSize > mMemorySize) {
-            LogAllocatorMessage(LogSeverity::Debug, "BuddyMemoryAllocator.TryAllocateMemory",
-                                "Aligned allocation size exceeded the memory size (" +
-                                    std::to_string(allocationSize) + " vs " +
-                                    std::to_string(mMemorySize) + " bytes).",
-                                ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            RecordMessage(LogSeverity::Debug, "BuddyMemoryAllocator.TryAllocateMemory",
+                          "Aligned allocation size exceeded the memory size (" +
+                              std::to_string(allocationSize) + " vs " +
+                              std::to_string(mMemorySize) + " bytes).",
+                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
 
             return nullptr;
         }

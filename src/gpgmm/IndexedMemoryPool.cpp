@@ -14,8 +14,8 @@
 
 #include "gpgmm/IndexedMemoryPool.h"
 
-#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/MemoryAllocator.h"
+#include "gpgmm/Serializer.h"
 
 namespace gpgmm {
 
@@ -27,7 +27,7 @@ namespace gpgmm {
             mPool.resize(memoryIndex + 1);
         }
 
-        LogEvent("GPUMemoryPool", this, GetDesc());
+        RecordEvent("GPUMemoryPool", this, GetDesc());
 
         return std::unique_ptr<MemoryAllocation>(mPool[memoryIndex].release());
     }
@@ -39,7 +39,7 @@ namespace gpgmm {
 
         mPool[memoryIndex] = std::move(allocation);
 
-        LogEvent("GPUMemoryPool", this, GetDesc());
+        RecordEvent("GPUMemoryPool", this, GetDesc());
     }
 
     void IndexedMemoryPool::ReleasePool() {
