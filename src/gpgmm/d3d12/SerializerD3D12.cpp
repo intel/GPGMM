@@ -131,8 +131,6 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("IsResident", desc.IsResident);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
         dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
-        dict.AddItem("MemoryPool", gpgmm::Serializer::Serialize(desc.MemoryPool));
-
         if (desc.MemoryPool != nullptr) {
             dict.AddItem("MemoryPool", gpgmm::Serializer::Serialize(desc.MemoryPool));
         }
