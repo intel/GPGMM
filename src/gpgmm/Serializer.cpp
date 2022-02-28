@@ -92,9 +92,9 @@ namespace gpgmm {
     // Serializer
 
     // static
-    JSONDict Serializer::Serialize(const POOL_INFO& desc) {
+    JSONDict Serializer::Serialize(const POOL_INFO& info) {
         JSONDict dict;
-        dict.AddItem("PoolSize", desc.PoolSize);
+        dict.AddItem("PoolSizeInBytes", info.PoolSizeInBytes);
         return dict;
     }
 

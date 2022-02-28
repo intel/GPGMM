@@ -24,7 +24,7 @@ namespace gpgmm {
     class MemoryAllocation;
 
     struct POOL_INFO {
-        uint64_t PoolSize;
+        uint64_t PoolSizeInBytes;
     };
 
     // Stores a collection of fixed-size memory blocks.
