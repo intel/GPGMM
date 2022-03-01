@@ -88,7 +88,7 @@ namespace gpgmm { namespace d3d12 {
         // If sub-allocated within the resource, the offset could be greater than zero.
         uint64_t GetOffsetFromResource() const;
 
-        RESOURCE_ALLOCATION_INFO GetAllocationInfo() const;
+        RESOURCE_ALLOCATION_INFO GetInfo() const;
 
       private:
         ~ResourceAllocation() override;

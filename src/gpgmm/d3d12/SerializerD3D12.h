@@ -54,8 +54,10 @@ namespace gpgmm { namespace d3d12 {
     }
 
     template <typename... Args>
-    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
-        return gpgmm::RecordCommon<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
+    static void RecordLogMessage(const LogSeverity& severity,
+                                 const char* name,
+                                 const Args&... args) {
+        return gpgmm::RecordLogMessage<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
     }
 
     template <typename T, typename... Args>
@@ -64,8 +66,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     template <typename T, typename DescT>
-    static void RecordEvent(const char* name, T* objPtr, const DescT& desc) {
-        return gpgmm::RecordEvent<T, DescT, Serializer>(name, objPtr, desc);
+    static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
+        return gpgmm::RecordObject<T, DescT, Serializer>(name, objPtr, desc);
     }
 
 }}  // namespace gpgmm::d3d12

@@ -66,7 +66,7 @@ namespace gpgmm {
     };
 
     template <typename T, typename DescT, typename SerializerT = Serializer>
-    static void RecordEvent(const char* name, T* objPtr, const DescT& desc) {
+    static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
         if (IsEventTracerEnabled()) {
             const auto& args = SerializerT::Serialize(desc).ToString();
             TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, args);
@@ -90,7 +90,9 @@ namespace gpgmm {
     }
 
     template <typename T, typename SerializerT, typename... Args>
-    static void RecordCommon(const LogSeverity& severity, const char* name, const Args&... args) {
+    static void RecordLogMessage(const LogSeverity& severity,
+                                 const char* name,
+                                 const Args&... args) {
         const T& obj{args...};
         if (severity >= GetLogMessageLevel()) {
             gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
@@ -101,8 +103,10 @@ namespace gpgmm {
     }
 
     template <typename... Args>
-    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
-        return gpgmm::RecordCommon<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
+    static void RecordLogMessage(const LogSeverity& severity,
+                                 const char* name,
+                                 const Args&... args) {
+        return gpgmm::RecordLogMessage<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
     }
 
 }  // namespace gpgmm

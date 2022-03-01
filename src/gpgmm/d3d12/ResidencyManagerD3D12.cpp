@@ -125,7 +125,7 @@ namespace gpgmm { namespace d3d12 {
 
         heap->AddResidencyLockRef();
 
-        d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetInfo());
+        d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
 
         return S_OK;
     }
@@ -181,7 +181,7 @@ namespace gpgmm { namespace d3d12 {
 
         ASSERT(heap->IsInList());
 
-        d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetInfo());
+        d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
 
         return S_OK;
     }
@@ -321,7 +321,7 @@ namespace gpgmm { namespace d3d12 {
             sizeEvicted += heap->GetSize();
             resourcesToEvict.push_back(heap->GetPageable().Get());
 
-            d3d12::RecordEvent("GPUMemoryBlock", heap, heap->GetInfo());
+            d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
         }
 
         if (resourcesToEvict.size() > 0) {
