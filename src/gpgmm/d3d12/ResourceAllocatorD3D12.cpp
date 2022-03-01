@@ -722,9 +722,6 @@ namespace gpgmm { namespace d3d12 {
         }
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
-        RecordEvent("ResourceAllocator.CreateResource", desc);
-        TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
-
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), desc);
 
