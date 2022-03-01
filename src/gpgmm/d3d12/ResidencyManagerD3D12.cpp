@@ -31,8 +31,8 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
                                                      ComPtr<IDXGIAdapter> adapter,
                                                      bool isUMA,
-                                                     float videoMemoryBudget,
-                                                     uint64_t availableForResourcesBudget,
+                                                     float maxVideoMemoryBudget,
+                                                     uint64_t totalResourceBudgetLimit,
                                                      uint64_t videoMemoryEvictSize,
                                                      ResidencyManager** residencyManagerOut) {
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
@@ -51,7 +51,7 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<ResidencyManager> residencyManager =
             std::unique_ptr<ResidencyManager>(new ResidencyManager(
                 std::move(device), std::move(adapter3), std::move(residencyFence), isUMA,
-                videoMemoryBudget, availableForResourcesBudget, videoMemoryEvictSize));
+                maxVideoMemoryBudget, totalResourceBudgetLimit, videoMemoryEvictSize));
 
         // Query and set the video memory limits per segment.
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
@@ -76,15 +76,15 @@ namespace gpgmm { namespace d3d12 {
                                        ComPtr<IDXGIAdapter3> adapter3,
                                        std::unique_ptr<Fence> fence,
                                        bool isUMA,
-                                       float videoMemoryBudgetLimit,
-                                       uint64_t availableForResourcesBudget,
+                                       float maxVideoMemoryBudget,
+                                       uint64_t totalResourceBudgetLimit,
                                        uint64_t videoMemoryEvictSize)
         : mDevice(device),
           mAdapter(adapter3),
           mFence(std::move(fence)),
-          mVideoMemoryBudgetLimit(videoMemoryBudgetLimit == 0 ? kDefaultMaxVideoMemoryBudget
-                                                              : videoMemoryBudgetLimit),
-          mAvailableForResourcesBudget(availableForResourcesBudget),
+          mMaxVideoMemoryBudget(maxVideoMemoryBudget == 0 ? kDefaultMaxVideoMemoryBudget
+                                                          : maxVideoMemoryBudget),
+          mTotalResourceBudgetLimit(totalResourceBudgetLimit),
           mVideoMemoryEvictSize(videoMemoryEvictSize == 0 ? kDefaultVideoMemoryEvictSize
                                                           : videoMemoryEvictSize) {
         ASSERT(mDevice != nullptr);
@@ -94,12 +94,12 @@ namespace gpgmm { namespace d3d12 {
         // There is a non-zero memory usage even before any resources have been created, and this
         // value can vary by enviroment. By adding this in addition to the artificial budget limit,
         // we can create a predictable and reproducible budget.
-        if (mAvailableForResourcesBudget > 0) {
+        if (mTotalResourceBudgetLimit > 0) {
             mLocalVideoMemorySegment.Info.Budget =
-                mLocalVideoMemorySegment.Info.CurrentUsage + mAvailableForResourcesBudget;
+                mLocalVideoMemorySegment.Info.CurrentUsage + mTotalResourceBudgetLimit;
             if (!isUMA) {
                 mNonLocalVideoMemorySegment.Info.Budget =
-                    mNonLocalVideoMemorySegment.Info.CurrentUsage + mAvailableForResourcesBudget;
+                    mNonLocalVideoMemorySegment.Info.CurrentUsage + mTotalResourceBudgetLimit;
             }
         }
     }
@@ -254,13 +254,13 @@ namespace gpgmm { namespace d3d12 {
             queryVideoMemoryInfo.CurrentUsage - videoMemoryInfo->CurrentReservation;
 
         // If we're restricting the budget, leave the budget as is.
-        if (mAvailableForResourcesBudget > 0) {
+        if (mTotalResourceBudgetLimit > 0) {
             return S_OK;
         }
 
         videoMemoryInfo->Budget = static_cast<uint64_t>(
             (queryVideoMemoryInfo.Budget - videoMemoryInfo->CurrentReservation) *
-            mVideoMemoryBudgetLimit);
+            mMaxVideoMemoryBudget);
 
         return S_OK;
     }
