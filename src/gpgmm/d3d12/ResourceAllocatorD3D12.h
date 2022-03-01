@@ -70,23 +70,23 @@ namespace gpgmm { namespace d3d12 {
 
     enum ALLOCATOR_RECORD_FLAGS {
 
-        // Disables all recording flags. Enabled by default.
+        // Record nothing. Enabled by default.
         ALLOCATOR_RECORD_FLAG_NONE = 0x0,
 
-        // Record lifetimes of GPGMM created objects.
-        ALLOCATOR_RECORD_FLAG_LIVE_OBJECTS = 0x1,
+        // Record lifetimes of API objects created by GPGMM.
+        ALLOCATOR_RECORD_FLAG_API_OBJECTS = 0x1,
 
-        // Record API calls made to GPGMM.
+        // Record calls made to GPGMM API.
         ALLOCATOR_RECORD_FLAG_API_CALLS = 0x2,
 
-        // Record API call durations.
+        // Record duration of GPGMM API calls.
         ALLOCATOR_RECORD_FLAG_API_TIMINGS = 0x4,
 
         // Aliases that combine flags per activity.
         ALLOCATOR_RECORD_FLAG_CAPTURE = 0x3,
-        ALLOCATOR_RECORD_FLAG_PROFILING = 0x4,
+        ALLOCATOR_RECORD_FLAG_PROFILE = 0x4,
 
-        // Record all event types.
+        // Record everything.
         ALLOCATOR_RECORD_FLAG_ALL_EVENTS = 0xFF,
     };
 
@@ -94,7 +94,7 @@ namespace gpgmm { namespace d3d12 {
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_FLAGS_TYPE)
 
     struct ALLOCATOR_RECORD_OPTIONS {
-        // Flags used to control how the allocator will record.
+        // Flags used to decide what to record.
         ALLOCATOR_RECORD_FLAGS_TYPE Flags = ALLOCATOR_RECORD_FLAG_NONE;
 
         // Minimum severity level to record messages. Messages with lower severity
