@@ -391,7 +391,7 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocator", this);
-        d3d12::RecordEvent("GPUMemoryAllocator", descriptor);
+        d3d12::RecordObject("GPUMemoryAllocator", this, descriptor);
 
         if (descriptor.Flags & ALLOCATOR_CHECK_DEVICE_LEAKS &&
             FAILED(EnableDeviceObjectLeakChecks())) {

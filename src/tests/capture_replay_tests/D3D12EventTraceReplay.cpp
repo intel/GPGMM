@@ -287,30 +287,35 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 }
             } else if (event["name"].asString() == "GPUMemoryAllocator") {
                 switch (*event["ph"].asCString()) {
-                    case TRACE_EVENT_PHASE_INSTANT: {
-                        const Json::Value& args = event["args"];
-                        ASSERT_FALSE(args.empty());
+                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
+                        const std::string& allocatorID = event["id"].asString();
+                        if (allocatorToIDMap.find(allocatorID) != allocatorToIDMap.end()) {
+                            continue;
+                        }
+
+                        const Json::Value& snapshot = event["args"]["snapshot"];
+                        ASSERT_FALSE(snapshot.empty());
 
                         // Apply profile (if specified).
                         ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
                             allocatorDesc.Flags |=
-                                static_cast<ALLOCATOR_FLAGS>(args["Flags"].asInt());
+                                static_cast<ALLOCATOR_FLAGS>(snapshot["Flags"].asInt());
                             allocatorDesc.PreferredResourceHeapSize =
-                                args["PreferredResourceHeapSize"].asUInt64();
+                                snapshot["PreferredResourceHeapSize"].asUInt64();
                             allocatorDesc.MaxResourceHeapSize =
-                                args["MaxResourceHeapSize"].asUInt64();
+                                snapshot["MaxResourceHeapSize"].asUInt64();
                             allocatorDesc.MaxResourceSizeForPooling =
-                                args["MaxResourceSizeForPooling"].asUInt64();
+                                snapshot["MaxResourceSizeForPooling"].asUInt64();
                             allocatorDesc.MaxVideoMemoryBudget =
-                                args["MaxVideoMemoryBudget"].asFloat();
+                                snapshot["MaxVideoMemoryBudget"].asFloat();
                             allocatorDesc.TotalResourceBudgetLimit =
-                                args["TotalResourceBudgetLimit"].asUInt64();
+                                snapshot["TotalResourceBudgetLimit"].asUInt64();
                             allocatorDesc.VideoMemoryEvictSize =
-                                args["VideoMemoryEvictSize"].asUInt64();
+                                snapshot["VideoMemoryEvictSize"].asUInt64();
                             allocatorDesc.ResourceFragmentationLimit =
-                                args["ResourceFragmentationLimit"].asDouble();
+                                snapshot["ResourceFragmentationLimit"].asDouble();
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Pool-allocate everything. Reuse is possible by recycling heaps
@@ -342,22 +347,25 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.IsUMA != args["IsUMA"].asBool() && iterationIndex == 0) {
+                            allocatorDesc.IsUMA != snapshot["IsUMA"].asBool() &&
+                            iterationIndex == 0) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match playback device (IsUMA: " +
-                                       std::to_string(args["IsUMA"].asBool()) + " vs " +
+                                       std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
                                        std::to_string(allocatorDesc.IsUMA) + ").";
                             GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
                         }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.ResourceHeapTier != args["ResourceHeapTier"].asInt() &&
+                            allocatorDesc.ResourceHeapTier !=
+                                snapshot["ResourceHeapTier"].asInt() &&
                             iterationIndex == 0) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match playback device "
                                    "(ResourceHeapTier: " +
-                                       std::to_string(args["ResourceHeapTier"].asInt()) + " vs " +
-                                       std::to_string(allocatorDesc.ResourceHeapTier) + ").";
+                                       std::to_string(snapshot["ResourceHeapTier"].asInt()) +
+                                       " vs " + std::to_string(allocatorDesc.ResourceHeapTier) +
+                                       ").";
                             GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
                         }
 
@@ -365,11 +373,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_SUCCEEDED(
                             ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
 
-                        ASSERT_FALSE(allocatorInstanceID.empty());
-
-                        ASSERT_TRUE(allocatorToIDMap
-                                        .insert({allocatorInstanceID, std::move(resourceAllocator)})
-                                        .second);
+                        ASSERT_TRUE(
+                            allocatorToIDMap.insert({allocatorID, std::move(resourceAllocator)})
+                                .second);
                     } break;
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
