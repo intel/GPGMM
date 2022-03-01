@@ -48,21 +48,14 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
     };
 
-    template <typename T>
-    static void RecordEvent(const char* name, const T& desc) {
-        return gpgmm::RecordEvent<T, Serializer>(name, desc);
-    }
-
     template <typename... Args>
-    static void RecordLogMessage(const LogSeverity& severity,
-                                 const char* name,
-                                 const Args&... args) {
-        return gpgmm::RecordLogMessage<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
+    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
+        return gpgmm::RecordMessage<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
     }
 
     template <typename T, typename... Args>
-    static void RecordEvent(const char* name, const Args&... args) {
-        return gpgmm::RecordEvent<T, Serializer>(name, args...);
+    static void RecordCall(const char* name, const Args&... args) {
+        return gpgmm::RecordCall<T, Serializer>(name, args...);
     }
 
     template <typename T, typename DescT>
