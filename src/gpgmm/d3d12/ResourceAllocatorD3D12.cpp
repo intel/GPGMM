@@ -190,8 +190,8 @@ namespace gpgmm { namespace d3d12 {
                         return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                     case D3D12_HEAP_TYPE_READBACK:
                         return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES;
+                    case D3D12_HEAP_TYPE_CUSTOM:
                     default:
-                        UNREACHABLE();
                         return RESOURCE_HEAP_TYPE_INVALID;
                 }
             }
@@ -205,10 +205,10 @@ namespace gpgmm { namespace d3d12 {
                             return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS;
                         case D3D12_HEAP_TYPE_READBACK:
                             return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS;
+                        case D3D12_HEAP_TYPE_CUSTOM:
                         default:
-                            UNREACHABLE();
+                            return RESOURCE_HEAP_TYPE_INVALID;
                     }
-                    break;
                 }
                 case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
                 case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
@@ -223,16 +223,12 @@ namespace gpgmm { namespace d3d12 {
                         }
 
                         default:
-                            UNREACHABLE();
+                            return RESOURCE_HEAP_TYPE_INVALID;
                     }
-                    break;
                 }
                 default:
-                    UNREACHABLE();
                     return RESOURCE_HEAP_TYPE_INVALID;
             }
-
-            return RESOURCE_HEAP_TYPE_INVALID;
         }
 
         D3D12_RESOURCE_STATES GetInitialResourceState(D3D12_HEAP_TYPE heapType) {
@@ -558,6 +554,9 @@ namespace gpgmm { namespace d3d12 {
         const RESOURCE_HEAP_TYPE resourceHeapType =
             GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
                                 newResourceDesc.Flags, mResourceHeapTier);
+        if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
+            return E_INVALIDARG;
+        }
 
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;

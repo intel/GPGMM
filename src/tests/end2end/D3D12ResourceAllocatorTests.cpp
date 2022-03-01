@@ -246,6 +246,47 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
 
         ASSERT_SUCCEEDED(allocation->Map());
     }
+
+    // Resource per heap type should always succeed if the heap type is allowed.
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+    }
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+    }
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+    }
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
