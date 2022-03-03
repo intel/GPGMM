@@ -152,7 +152,8 @@ namespace gpgmm { namespace d3d12 {
         // memory used to allocate resources.
         //
         // Optional parameter. When 0 is specified, the API will automatically set the max resource
-        // heap size based on the adapter's GPU virtual address range.
+        // heap size based on the adapter's GPU virtual address range. If the max resource size
+        // exceeds the adapter's GPU virtual address range, it will default to the smaller range.
         uint64_t MaxResourceHeapSize;
 
         // Maximum resource size that can be pool-allocated.
