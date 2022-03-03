@@ -35,15 +35,22 @@ namespace gpgmm {
             GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(allocationSize, alignment,
                                                                 neverAllocate, cacheSize),
                              allocation);
-        }
 
-        mInfo.FreeMemoryUsage -= allocation->GetSize();
+            mInfo.UsedMemoryCount++;
+            mInfo.UsedMemoryUsage += allocation->GetSize();
+        } else {
+            mInfo.FreeMemoryUsage -= allocation->GetSize();
+        }
 
         return allocation;
     }
 
     void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
-        mInfo.FreeMemoryUsage += allocation->GetSize();
+        const uint64_t& allocationSize = allocation->GetSize();
+        mInfo.FreeMemoryUsage += allocationSize;
+        mInfo.UsedMemoryCount--;
+        mInfo.UsedMemoryUsage -= allocationSize;
+
         mPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
     }
 }  // namespace gpgmm

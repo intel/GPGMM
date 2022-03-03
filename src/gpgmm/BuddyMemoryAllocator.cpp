@@ -143,6 +143,15 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
+    MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::QueryInfo() const {
+        MEMORY_ALLOCATOR_INFO info = mInfo;
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
+        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
+        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
+        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
+        return info;
+    }
+
     uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
         return mPool.GetPoolSize();
     }
