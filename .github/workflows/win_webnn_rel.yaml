@@ -5,13 +5,13 @@ on:
     branches: main
     paths:
       - 'src/**'
-      - 'DEPS'
+      - 'scripts/webnn.deps'
 
   pull_request:
     branches: main
     paths:
       - 'src/**'
-      - 'DEPS'
+      - 'scripts/webnn.deps'
 
 jobs:
 
@@ -49,6 +49,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
+        copy scripts\webnn.deps DEPS
         copy scripts\webnn.gclient .gclient
         gclient sync
 
@@ -91,6 +92,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
+        copy scripts\webnn.deps DEPS
         copy scripts\webnn.gclient .gclient
         gclient sync
 
