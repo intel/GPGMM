@@ -52,6 +52,7 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
+        ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
@@ -69,6 +70,7 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
+        ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
@@ -87,6 +89,7 @@ namespace gpgmm { namespace d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
+        ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
@@ -113,16 +116,14 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocation::Map(uint32_t subresource,
                                     const D3D12_RANGE* readRange,
                                     void** dataOut) {
-        Heap* resourceHeap = ToBackend(GetMemory());
-        if (resourceHeap == nullptr) {
-            return E_INVALIDARG;
-        }
-
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
             return E_INVALIDARG;
         }
+
+        Heap* resourceHeap = ToBackend(GetMemory());
+        ASSERT(resourceHeap != nullptr);
 
         if (mResidencyManager != nullptr) {
             ReturnIfFailed(mResidencyManager->LockHeap(resourceHeap));
@@ -150,14 +151,12 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
-        Heap* resourceHeap = ToBackend(GetMemory());
-        if (resourceHeap == nullptr) {
-            return;
-        }
-
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         ASSERT(subresource == 0 || GetMethod() != AllocationMethod::kSubAllocatedWithin);
+
+        Heap* resourceHeap = ToBackend(GetMemory());
+        ASSERT(resourceHeap != nullptr);
 
         if (mResidencyManager != nullptr) {
             mResidencyManager->UnlockHeap(resourceHeap);
@@ -174,17 +173,16 @@ namespace gpgmm { namespace d3d12 {
         mResource->Unmap(subresource, newWrittenRangePtr);
     }
 
-    HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) {
+    HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) const {
         Heap* resourceHeap = ToBackend(GetMemory());
-        if (resourceHeap == nullptr) {
-            return E_INVALIDARG;
-        }
-
-        if (mResidencyManager == nullptr) {
-            return E_FAIL;
-        }
-
+        ASSERT(resourceHeap != nullptr);
         return resourceHeap->UpdateResidency(residencySet);
+    }
+
+    bool ResourceAllocation::IsResident() const {
+        const Heap* resourceHeap = ToBackend(GetMemory());
+        ASSERT(resourceHeap != nullptr);
+        return resourceHeap->IsResident();
     }
 
     D3D12_GPU_VIRTUAL_ADDRESS ResourceAllocation::GetGPUVirtualAddress() const {
