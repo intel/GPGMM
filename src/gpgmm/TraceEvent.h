@@ -15,6 +15,8 @@
 #ifndef GPGMM_TRACEEVENT_H_
 #define GPGMM_TRACEEVENT_H_
 
+#include "gpgmm/common/JSONEncoder.h"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -40,7 +42,7 @@
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
 const uint64_t kNoId = 0;
-const std::string kNoArgs = "";
+const gpgmm::JSONDict kNoArgs;
 
 #define TRACE_EVENT_CALL_SCOPED(name) \
     struct ScopedTracedCall {         \
@@ -72,7 +74,8 @@ const std::string kNoArgs = "";
 
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, "snapshot", snapshot)
+                                     TRACE_EVENT_FLAG_HAS_ID,                     \
+                                     gpgmm::JSONDict("snapshot", snapshot))
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                  \
     do {                                                              \
@@ -134,7 +137,7 @@ namespace gpgmm {
                    uint64_t id,
                    double timestamp,
                    uint32_t flags,
-                   std::string args);
+                   JSONDict args);
 
       private:
         friend FileEventTracer;
@@ -146,7 +149,7 @@ namespace gpgmm {
         std::string mThreadId;
         double mTimestamp = 0;
         uint32_t mFlags = TRACE_EVENT_FLAG_NONE;
-        std::string mArgs;
+        JSONDict mArgs;
     };
 
     class EventTracer {
@@ -155,7 +158,7 @@ namespace gpgmm {
                                   const char* name,
                                   uint64_t id,
                                   uint32_t flags,
-                                  std::string args = "");
+                                  JSONDict args = {});
 
         static void AddTraceEvent(char phase,
                                   const char* name,
@@ -177,7 +180,7 @@ namespace gpgmm {
                                const char* name,
                                uint64_t id,
                                uint32_t flags,
-                               std::string args);
+                               JSONDict args);
         void FlushQueuedEventsToDisk();
 
       private:
