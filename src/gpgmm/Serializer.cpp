@@ -35,62 +35,6 @@ namespace gpgmm {
         return gRecordEventLevel;
     }
 
-    // JSONDict
-
-    JSONDict::JSONDict() {
-        mSS << "{ ";
-    }
-
-    std::string JSONDict::ToString() const {
-        return mSS.str() + " }";
-    }
-
-    void JSONDict::AddItem(const std::string& name, std::string value) {
-        return AddString(name, "\"" + value + "\"");
-    }
-
-    void JSONDict::AddItem(const std::string& name, uint64_t value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, uint32_t value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, bool value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, float value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, double value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, int value) {
-        return AddString(name, std::to_string(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, unsigned char value) {
-        return AddItem(name, static_cast<uint32_t>(value));
-    }
-
-    void JSONDict::AddItem(const std::string& name, const JSONDict& object) {
-        return AddString(name, object.ToString());
-    }
-
-    void JSONDict::AddString(const std::string& name, const std::string& value) {
-        if (mHasItem) {
-            mSS << ", ";
-        }
-        mSS << "\"" + name + "\": " << value;
-        mHasItem = true;
-    }
-
-    // Serializer
-
     // static
     JSONDict Serializer::Serialize(const POOL_INFO& info) {
         JSONDict dict;

@@ -19,6 +19,8 @@ target_sources(gpgmm_common PRIVATE
   "Assert.h"
   "Compiler.h"
   "Flags.h"
+  "JSONEncoder.cpp"
+  "JSONEncoder.h"
   "Limits.h"
   "LinkedList.h"
   "Log.cpp"

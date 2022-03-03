@@ -52,7 +52,7 @@ namespace gpgmm {
                            uint64_t id,
                            double timestamp,
                            uint32_t flags,
-                           std::string args)
+                           JSONDict args)
         : mPhase(phase),
           mCategory(category),
           mName(name),
@@ -66,7 +66,7 @@ namespace gpgmm {
                                     const char* name,
                                     uint64_t id,
                                     uint32_t flags,
-                                    std::string args) {
+                                    JSONDict args) {
         if (gEventTracer != nullptr) {
             gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args);
         }
@@ -79,11 +79,9 @@ namespace gpgmm {
                                     std::string arg1Name,
                                     std::string arg1Value) {
         if (gEventTracer != nullptr) {
-            std::stringstream args;
-            args << "{"
-                 << "\"" << arg1Name << "\": " << arg1Value << "}";
-
-            gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args.str());
+            JSONDict args;
+            args.AddItem(arg1Name, arg1Value);
+            gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args);
         }
     }
 
@@ -99,30 +97,17 @@ namespace gpgmm {
           mSkipObjectEvents(skipObjectEvents),
           mSkipInstantEvents(skipInstantEvents) {
         ASSERT(!mTraceFile.empty());
-
-        std::ofstream outFile;
-        outFile.open(mTraceFile);
-        outFile << "{ \"traceEvents\": [";
-        outFile << "{}";  // Dummy object so trace events can always prepend a comma
-        outFile.flush();
-        outFile.close();
     }
 
     FileEventTracer::~FileEventTracer() {
         FlushQueuedEventsToDisk();
-
-        std::ofstream outFile;
-        outFile.open(mTraceFile, std::ios_base::app);
-        outFile << "]}";
-        outFile << std::endl;
-        outFile.close();
     }
 
     void FileEventTracer::EnqueueTraceEvent(char phase,
                                             const char* name,
                                             uint64_t id,
                                             uint32_t flags,
-                                            std::string args) {
+                                            JSONDict args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back(
@@ -131,9 +116,7 @@ namespace gpgmm {
     }
 
     void FileEventTracer::FlushQueuedEventsToDisk() {
-        std::ofstream outFile;
-        outFile.open(mTraceFile, std::ios_base::app);
-
+        JSONArray traceEvents;
         for (const TraceEvent& traceEvent : mQueue) {
             if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||
                                         traceEvent.mPhase == TRACE_EVENT_PHASE_END)) {
@@ -150,10 +133,10 @@ namespace gpgmm {
             }
 
             // TODO: Support per thread event tracing via traceEvent.mThread.
-            outFile << ", { "
-                    << "\"name\": \"" << traceEvent.mName << "\", "
-                    << "\"cat\": \"" << traceEvent.mCategory << "\", "
-                    << "\"ph\": \"" << traceEvent.mPhase << "\", ";
+            JSONDict eventData;
+            eventData.AddItem("name", traceEvent.mName);
+            eventData.AddItem("cat", traceEvent.mCategory);
+            eventData.AddItem("ph", traceEvent.mPhase);
 
             const uint32_t idFlags =
                 traceEvent.mFlags & (TRACE_EVENT_FLAG_HAS_ID | TRACE_EVENT_FLAG_HAS_LOCAL_ID |
@@ -165,16 +148,22 @@ namespace gpgmm {
 
                 switch (idFlags) {
                     case TRACE_EVENT_FLAG_HAS_ID:
-                        outFile << "\"id\":\"0x" << traceEventID.str() << "\", ";
+                        eventData.AddItem("id", "0x" + traceEventID.str());
                         break;
 
-                    case TRACE_EVENT_FLAG_HAS_LOCAL_ID:
-                        outFile << "\"id2\":{\"local\":\"0x" << traceEventID.str() << "\"}, ";
+                    case TRACE_EVENT_FLAG_HAS_LOCAL_ID: {
+                        JSONDict localID;
+                        localID.AddItem("local", "0x" + traceEventID.str());
+                        eventData.AddItem("id2", localID);
                         break;
+                    }
 
-                    case TRACE_EVENT_FLAG_HAS_GLOBAL_ID:
-                        outFile << "\"id2\":{\"global\":\"0x" << traceEventID.str() << "\"}, ";
+                    case TRACE_EVENT_FLAG_HAS_GLOBAL_ID: {
+                        JSONDict globalID;
+                        globalID.AddItem("global", "0x" + traceEventID.str());
+                        eventData.AddItem("id2", globalID);
                         break;
+                    }
 
                     default:
                         UNREACHABLE();
@@ -182,23 +171,35 @@ namespace gpgmm {
                 }
             }
 
+            std::stringstream threadID;
+            threadID << std::this_thread::get_id();
+            eventData.AddItem("tid", std::stoi(threadID.str()));
+
             const uint64_t microseconds =
                 static_cast<uint64_t>(traceEvent.mTimestamp * 1000.0 * 1000.0);
-            outFile << "\"tid\": " << std::this_thread::get_id() << ", "
-                    << "\"ts\": " << microseconds << ", "
-                    << "\"pid\": \"GPGMM\"";
+            eventData.AddItem("ts", microseconds);
 
-            if (!traceEvent.mArgs.empty()) {
-                outFile << ", "
-                        << "\"args\": " << traceEvent.mArgs;
+            // TODO: Store the real process ID instead of fixed name.
+            const std::string kProcessID = "GPGMM";
+            eventData.AddItem("pid", kProcessID);
+
+            if (!traceEvent.mArgs.IsEmpty()) {
+                eventData.AddItem("args", traceEvent.mArgs);
             }
 
-            outFile << " }";
+            traceEvents.AddItem(eventData);
         }
 
-        gpgmm::DebugLog() << "Recorded " << mQueue.size() << " events to " << mTraceFile << ".";
+        JSONDict traceData;
+        traceData.AddItem("traceEvents", traceEvents);
 
+        std::ofstream outFile;
+        outFile.open(mTraceFile);
+        outFile << traceData.ToString();
+        outFile.flush();
         outFile.close();
+
+        gpgmm::DebugLog() << "Flushed " << mQueue.size() << " events to " << mTraceFile << ".";
         mQueue.clear();
     }
 }  // namespace gpgmm

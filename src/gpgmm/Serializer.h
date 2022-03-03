@@ -28,30 +28,6 @@ namespace gpgmm {
     LogSeverity SetRecordEventLevel(const LogSeverity& level);
     const LogSeverity& GetRecordEventLevel();
 
-    class JSONDict {
-      public:
-        JSONDict();
-
-        std::string ToString() const;
-
-        // Per JSON data type
-        void AddItem(const std::string& name, std::string value);
-        void AddItem(const std::string& name, uint64_t value);
-        void AddItem(const std::string& name, uint32_t value);
-        void AddItem(const std::string& name, bool value);
-        void AddItem(const std::string& name, float value);
-        void AddItem(const std::string& name, double value);
-        void AddItem(const std::string& name, int value);
-        void AddItem(const std::string& name, unsigned char value);
-        void AddItem(const std::string& name, const JSONDict& object);
-
-      private:
-        void AddString(const std::string& name, const std::string& value);
-
-        bool mHasItem = false;
-        std::stringstream mSS;
-    };
-
     // Forward declare common types.
     struct ALLOCATOR_MESSAGE;
     struct POOL_INFO;
@@ -68,16 +44,7 @@ namespace gpgmm {
     template <typename T, typename DescT, typename SerializerT = Serializer>
     static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
         if (IsEventTracerEnabled()) {
-            const auto& args = SerializerT::Serialize(desc).ToString();
-            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, args);
-        }
-    }
-
-    template <typename T, typename SerializerT>
-    static void RecordEvent(const char* name, const T& obj) {
-        if (IsEventTracerEnabled()) {
-            const auto& args = SerializerT::Serialize(obj).ToString();
-            TRACE_EVENT_INSTANT(name, args);
+            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, SerializerT::Serialize(desc));
         }
     }
 
@@ -85,7 +52,7 @@ namespace gpgmm {
     static void RecordCall(const char* name, const Args&... args) {
         if (IsEventTracerEnabled()) {
             const T& obj{args...};
-            return RecordEvent<T, SerializerT>(name, obj);
+            TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
         }
     }
 
@@ -96,7 +63,7 @@ namespace gpgmm {
             gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
         }
         if (severity >= GetRecordEventLevel()) {
-            return RecordEvent<T, SerializerT>(name, obj);
+            TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
         }
     }
 
