@@ -76,8 +76,11 @@ namespace gpgmm { namespace d3d12 {
         // Returns the resource owned by this allocation.
         ID3D12Resource* GetResource() const;
 
-        // Tracks the underlying resource heap for residency.
-        HRESULT UpdateResidency(ResidencySet* residencySet);
+        // Tracks the resource allocation memory for residency.
+        HRESULT UpdateResidency(ResidencySet* residencySet) const;
+
+        // Returns if the resource allocation memory will be made resident or not.
+        bool IsResident() const;
 
         // Returns the GPU virtual address of the resource allocation.
         // If sub-allocated within the resource, the GPU virtual address will
