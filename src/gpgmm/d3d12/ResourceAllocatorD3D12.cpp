@@ -348,10 +348,10 @@ namespace gpgmm { namespace d3d12 {
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_OBJECTS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS));
 
-            const LogSeverity& recordEventLogLevel =
-                static_cast<LogSeverity>(newDescriptor.RecordOptions.MinLogLevel);
+            const LogSeverity& recordMessageMinLevel =
+                static_cast<LogSeverity>(newDescriptor.RecordOptions.MinMessageLevel);
 
-            SetRecordEventLevel(recordEventLogLevel);
+            SetRecordMessageLevel(recordMessageMinLevel);
         }
 
         const LogSeverity& logLevel = static_cast<LogSeverity>(newDescriptor.MinLogLevel);
