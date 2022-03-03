@@ -45,19 +45,7 @@ namespace gpgmm {
     }
 
     MEMORY_ALLOCATOR_INFO MemoryAllocator::QueryInfo() const {
-        if (!HasChild()) {
-            return mInfo;
-        }
-
-        MEMORY_ALLOCATOR_INFO combinedStats = mInfo;
-        for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
-            const MEMORY_ALLOCATOR_INFO stats = alloc->value()->QueryInfo();
-            combinedStats.UsedBlockCount += stats.UsedBlockCount;
-            combinedStats.UsedMemoryCount += stats.UsedMemoryCount;
-            combinedStats.UsedMemoryUsage += stats.UsedMemoryUsage;
-            combinedStats.UsedBlockUsage += stats.UsedBlockUsage;
-        }
-        return combinedStats;
+        return mInfo;
     }
 
 }  // namespace gpgmm

@@ -23,6 +23,9 @@ namespace gpgmm {
       public:
         void DeallocateMemory(MemoryAllocation* allocation) override {
             ASSERT(allocation != nullptr);
+            ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
+            mInfo.UsedMemoryCount--;
+            mInfo.UsedMemoryUsage -= allocation->GetSize();
             delete allocation->GetMemory();
         }
 
@@ -34,6 +37,7 @@ namespace gpgmm {
                 return {};
             }
 
+            mInfo.UsedMemoryCount++;
             mInfo.UsedMemoryUsage += allocationSize;
             return std::make_unique<MemoryAllocation>(this, new MemoryBase(allocationSize));
         }

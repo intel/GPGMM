@@ -147,13 +147,16 @@ namespace gpgmm {
             GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(allocationSize, mMemoryAlignment,
                                                                 neverAllocate, cacheSize),
                              allocation);
+            mInfo.UsedMemoryCount++;
+            mInfo.UsedMemoryUsage += allocation->GetSize();
+        } else {
+            mInfo.FreeMemoryUsage -= allocation->GetSize();
         }
 
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
         memory->SetPool(segment);
-        mInfo.FreeMemoryUsage -= memory->GetSize();
 
         return std::make_unique<MemoryAllocation>(this, memory);
     }
@@ -163,13 +166,15 @@ namespace gpgmm {
 
         ASSERT(allocation != nullptr);
 
+        mInfo.FreeMemoryUsage += allocation->GetSize();
+        mInfo.UsedMemoryCount--;
+        mInfo.UsedMemoryUsage -= allocation->GetSize();
+
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
         MemoryPool* pool = memory->GetPool();
         ASSERT(pool != nullptr);
-
-        mInfo.FreeMemoryUsage += memory->GetSize();
 
         pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
     }

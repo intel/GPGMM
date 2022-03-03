@@ -197,9 +197,11 @@ namespace gpgmm {
     }
 
     MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::QueryInfo() const {
-        MEMORY_ALLOCATOR_INFO info = {};
-        info.UsedBlockUsage += mInfo.UsedBlockUsage;
-        info.UsedBlockCount += mInfo.UsedBlockCount;
+        MEMORY_ALLOCATOR_INFO info = mInfo;
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = mMemoryAllocator->QueryInfo();
+        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
+        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
+        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
         return info;
     }
 
@@ -315,6 +317,11 @@ namespace gpgmm {
             info.UsedBlockCount += childInfo.UsedBlockCount;
             info.UsedBlockUsage += childInfo.UsedBlockUsage;
         }
+        // Same memory allocator is shared across child allocators.
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = mMemoryAllocator->QueryInfo();
+        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
+        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
+        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
         return info;
     }
 

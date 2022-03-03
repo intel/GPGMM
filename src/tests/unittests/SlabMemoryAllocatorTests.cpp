@@ -224,7 +224,73 @@ TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
     pool.ReleasePool();
 }
 
-TEST(SlabMemoryAllocatorTests, SingleSlabMultipleSize) {
+TEST(SlabMemoryAllocatorTests, QueryInfo) {
+    // Test slab allocator.
+    {
+        std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
+            std::make_unique<DummyMemoryAllocator>();
+
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      dummyMemoryAllocator.get());
+
+        std::unique_ptr<MemoryAllocation> allocation =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false);
+        EXPECT_NE(allocation, nullptr);
+
+        // Single sub-allocation within a slab should be allocated.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+
+        allocator.DeallocateMemory(allocation.release());
+
+        // Both the sub-allocation and slab should be released.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+    }
+
+    // Test slab + pool allocator.
+    {
+        LIFOMemoryPool pool(kDefaultSlabSize);
+        std::unique_ptr<PooledMemoryAllocator> poolAllocator =
+            std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(),
+                                                    &pool);
+
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      poolAllocator.get());
+
+        std::unique_ptr<MemoryAllocation> allocation =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false);
+        EXPECT_NE(allocation, nullptr);
+
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+
+        allocator.DeallocateMemory(allocation.release());
+
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, kDefaultSlabSize);
+    }
+}
+
+TEST(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
     constexpr uint64_t kMinBlockSize = 4;
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
@@ -239,7 +305,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlabMultipleSize) {
     }
 }
 
-TEST(SlabMemoryAllocatorTests, MultipleSlabsSameSize) {
+TEST(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
     constexpr uint64_t kMinBlockSize = 4;
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
@@ -270,7 +336,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsSameSize) {
     allocator.DeallocateMemory(fourthAllocation.release());
 }
 
-TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
+TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     constexpr uint64_t kMinBlockSize = 4;
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
@@ -314,19 +380,18 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsVariableSizes) {
     EXPECT_EQ(allocator.GetSlabCacheSizeForTesting(), 0u);
 }
 
-TEST(SlabMemoryAllocatorTests, SingleSlabInBuddy) {
+TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {
     // 1. Create a buddy allocator as the back-end allocator.
-    constexpr uint64_t maxBlockSize = 256;
-    std::unique_ptr<BuddyMemoryAllocator> buddyAllocator = std::make_unique<BuddyMemoryAllocator>(
-        maxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
-        std::make_unique<DummyMemoryAllocator>());
-
     // 2. Create a slab allocator as the front-end allocator.
+    constexpr uint64_t kMaxBlockSize = 256;
     constexpr uint64_t kMinBlockSize = 4;
-    constexpr uint64_t kMaxSlabSize = maxBlockSize;
+    constexpr uint64_t kMaxSlabSize = kMaxBlockSize;
     constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
     SlabCacheAllocator allocator(kMinBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
-                                 kDefaultSlabFragmentationLimit, std::move(buddyAllocator));
+                                 kDefaultSlabFragmentationLimit,
+                                 std::make_unique<BuddyMemoryAllocator>(
+                                     kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                     std::make_unique<DummyMemoryAllocator>()));
 
     std::unique_ptr<MemoryAllocation> allocation =
         allocator.TryAllocateMemory(kMinBlockSize, 1, false, false);
@@ -338,19 +403,18 @@ TEST(SlabMemoryAllocatorTests, SingleSlabInBuddy) {
     allocator.DeallocateMemory(allocation.release());
 }
 
-TEST(SlabMemoryAllocatorTests, MultipleSlabsInBuddy) {
+TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     // 1. Create a buddy allocator as the back-end allocator.
-    constexpr uint64_t maxBlockSize = 256;
-    std::unique_ptr<BuddyMemoryAllocator> buddyAllocator = std::make_unique<BuddyMemoryAllocator>(
-        maxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
-        std::make_unique<DummyMemoryAllocator>());
-
     // 2. Create a slab allocator as the front-end allocator.
+    constexpr uint64_t kMaxBlockSize = 256;
     constexpr uint64_t kMinBlockSize = 4;
-    constexpr uint64_t kMaxSlabSize = maxBlockSize;
+    constexpr uint64_t kMaxSlabSize = kMaxBlockSize;
     constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
     SlabCacheAllocator allocator(kMinBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
-                                 kDefaultSlabFragmentationLimit, std::move(buddyAllocator));
+                                 kDefaultSlabFragmentationLimit,
+                                 std::make_unique<BuddyMemoryAllocator>(
+                                     kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                     std::make_unique<DummyMemoryAllocator>()));
 
     // Verify multiple slab-buddy sub-allocation in the same slab are allocated contigiously.
     {
@@ -414,5 +478,102 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabsInBuddy) {
         for (auto& allocation : allocations) {
             allocator.DeallocateMemory(allocation.release());
         }
+    }
+}
+
+TEST(SlabCacheAllocatorTests, QueryInfo) {
+    // Test Slab allocator.
+    {
+        constexpr uint64_t kMinBlockSize = 4;
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabCacheAllocator allocator(kMinBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                     kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                     std::make_unique<DummyMemoryAllocator>());
+
+        std::unique_ptr<MemoryAllocation> allocation =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false);
+        EXPECT_NE(allocation, nullptr);
+
+        // Single sub-allocation within a slab should be allocated.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+
+        allocator.DeallocateMemory(allocation.release());
+
+        // Both the sub-allocation and slab should be released.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+    }
+
+    // Test Slab + pooled allocator.
+    {
+        LIFOMemoryPool pool(kDefaultSlabSize);
+        constexpr uint64_t kMinBlockSize = 4;
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabCacheAllocator allocator(kMinBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                     kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                     std::make_unique<PooledMemoryAllocator>(
+                                         std::make_unique<DummyMemoryAllocator>(), &pool));
+
+        std::unique_ptr<MemoryAllocation> allocation =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false);
+        EXPECT_NE(allocation, nullptr);
+
+        // Single sub-allocation within a slab should be used.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+
+        allocator.DeallocateMemory(allocation.release());
+
+        // Only the sub-allocation should be released.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, kDefaultSlabSize);
+    }
+
+    // Test Slab-Buddy allocator.
+    {
+        constexpr uint64_t kMaxBlockSize = 256;
+        constexpr uint64_t kMinBlockSize = 4;
+        constexpr uint64_t kMaxSlabSize = kMaxBlockSize;
+        constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
+        SlabCacheAllocator allocator(kMinBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
+                                     kDefaultSlabFragmentationLimit,
+                                     std::make_unique<BuddyMemoryAllocator>(
+                                         kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                         std::make_unique<DummyMemoryAllocator>()));
+
+        std::unique_ptr<MemoryAllocation> allocation =
+            allocator.TryAllocateMemory(kMinBlockSize, 1, false, false);
+        EXPECT_NE(allocation, nullptr);
+
+        // Single slab block within buddy memory should be used.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kMinBlockSize);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+
+        allocator.DeallocateMemory(allocation.release());
+
+        // Both the slab block and buddy memory should be released.
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
     }
 }
