@@ -85,7 +85,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     {
         ComPtr<ResourceAllocator> allocator;
         ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &allocator));
-        ASSERT_EQ(allocator, nullptr);
+        EXPECT_EQ(allocator, nullptr);
     }
 
     // Creating an allocator without a device should always fail.
@@ -95,7 +95,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_EQ(allocator, nullptr);
+        EXPECT_EQ(allocator, nullptr);
     }
 
     // Creating an allocator without an adapter should always fail.
@@ -105,7 +105,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_EQ(allocator, nullptr);
+        EXPECT_EQ(allocator, nullptr);
     }
 
     // Creating a new allocator using the defaults should always succeed.
@@ -113,8 +113,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(
             ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
-        ASSERT_NE(allocator, nullptr);
-        ASSERT_NE(allocator, mDefaultAllocator);
+        EXPECT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, mDefaultAllocator);
     }
 
     // Creating a new allocator with a preferred resource heap size larger then the max resource
@@ -126,7 +126,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_EQ(allocator, nullptr);
+        EXPECT_EQ(allocator, nullptr);
     }
 
     // Creating a new allocator with a max resource heap pool size larger then the max resource heap
@@ -138,7 +138,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_EQ(allocator, nullptr);
+        EXPECT_EQ(allocator, nullptr);
+    }
+
+    // Creating a new allocator with residency management should always succeed.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ComPtr<ResourceAllocator> allocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator,
+                                                            &residencyManager));
+        EXPECT_NE(allocator, nullptr);
+        EXPECT_NE(residencyManager, nullptr);
     }
 }
 
@@ -151,7 +161,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
     {
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 
     // Creating a new allocator that specifies a trace name should always succeed.
@@ -161,7 +171,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 
     // Creating a new allocator using various recording levels should always succeed.
@@ -172,7 +182,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 
     {
@@ -182,7 +192,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 
     {
@@ -192,7 +202,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 
     {
@@ -202,7 +212,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newDesc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        EXPECT_NE(allocator, nullptr);
     }
 }
 
