@@ -25,14 +25,14 @@ namespace gpgmm { namespace d3d12 {
                                      D3D12_HEAP_TYPE heapType,
                                      D3D12_RESOURCE_FLAGS resourceFlags,
                                      D3D12_RESOURCE_STATES initialResourceState,
-                                     uint64_t resourceSize,
-                                     uint64_t resourceAlignment)
+                                     uint64_t bufferSize,
+                                     uint64_t bufferAlignment)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
           mResourceFlags(resourceFlags),
           mInitialResourceState(initialResourceState),
-          mResourceSize(resourceSize),
-          mResourceAlignment(resourceAlignment) {
+          mBufferSize(bufferSize),
+          mBufferAlignment(bufferAlignment) {
     }
 
     std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t allocationSize,
@@ -61,11 +61,12 @@ namespace gpgmm { namespace d3d12 {
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
                 mHeapType, D3D12_HEAP_FLAG_NONE, allocationSize, &resourceDescriptor,
-                /*pOptimizedClearValue*/ nullptr, mInitialResourceState, nullptr, &resourceHeap))) {
+                /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
+                &resourceHeap))) {
             return nullptr;
         }
 
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
+        return std::make_unique<MemoryAllocation>(this, resourceHeap);
     }
 
     void BufferAllocator::DeallocateMemory(MemoryAllocation* allocation) {
@@ -74,11 +75,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     uint64_t BufferAllocator::GetMemorySize() const {
-        return mResourceSize;
+        return mBufferSize;
     }
 
     uint64_t BufferAllocator::GetMemoryAlignment() const {
-        return mResourceAlignment;
+        return mBufferAlignment;
     }
 
 }}  // namespace gpgmm::d3d12

@@ -455,11 +455,25 @@ namespace gpgmm { namespace d3d12 {
             {
                 // Buffers are always 64KB aligned.
                 // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
-                std::unique_ptr<MemoryAllocator> bufferAllocator =
+                std::unique_ptr<MemoryAllocator> bufferOnlyAllocator =
                     std::make_unique<BufferAllocator>(
                         this, heapType, D3D12_RESOURCE_FLAG_NONE, GetInitialResourceState(heapType),
                         /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+
+                std::unique_ptr<MemoryAllocator> pooledBufferOnlyAllocator =
+                    std::make_unique<SegmentedMemoryAllocator>(
+                        std::make_unique<BufferAllocator>(
+                            this, heapType, D3D12_RESOURCE_FLAG_NONE,
+                            GetInitialResourceState(heapType),
+                            /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                            /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
+                        /*heapAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+
+                std::unique_ptr<MemoryAllocator> pooledOrNonPooledBufferAllocator =
+                    std::make_unique<ConditionalMemoryAllocator>(
+                        std::move(bufferOnlyAllocator), std::move(pooledBufferOnlyAllocator),
+                        mMaxResourceSizeForPooling);
 
                 // Buffers are byte-addressable when sub-allocated within and cannot internally
                 // fragment by definition.
@@ -469,7 +483,7 @@ namespace gpgmm { namespace d3d12 {
                         /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*slabFragmentationLimit*/ 0, std::move(bufferAllocator));
+                        /*slabFragmentationLimit*/ 0, std::move(pooledOrNonPooledBufferAllocator));
             }
 
             // Cache resource sizes per general-purpose allocator.
