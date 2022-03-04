@@ -248,7 +248,7 @@ namespace gpgmm { namespace d3d12 {
         // RAII wrapper to lock/unlock heap from the residency cache.
         class ScopedHeapLock : public NonCopyable {
           public:
-            ScopedHeapLock(ResidencyManager* residencyManager, Heap* heap)
+            ScopedHeapLock(ResidencyManager* const residencyManager, Heap* const heap)
                 : mResidencyManager(residencyManager), mHeap(heap) {
                 ASSERT(heap != nullptr);
                 if (mResidencyManager != nullptr) {
@@ -305,10 +305,13 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        Caps* capPtr = nullptr;
-        ReturnIfFailed(
-            Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &capPtr));
-        std::unique_ptr<Caps> caps(capPtr);
+        std::unique_ptr<Caps> caps;
+        {
+            Caps* ptr = nullptr;
+            ReturnIfFailed(
+                Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &ptr));
+            caps.reset(ptr);
+        }
 
         ALLOCATOR_DESC newDescriptor = descriptor;
         newDescriptor.PreferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
@@ -398,7 +401,7 @@ namespace gpgmm { namespace d3d12 {
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
-            const RESOURCE_HEAP_TYPE resourceHeapType =
+            const RESOURCE_HEAP_TYPE& resourceHeapType =
                 static_cast<RESOURCE_HEAP_TYPE>(resourceHeapTypeIndex);
 
             const D3D12_HEAP_FLAGS& heapFlags = GetHeapFlags(resourceHeapType);
@@ -472,12 +475,11 @@ namespace gpgmm { namespace d3d12 {
                         /*slabFragmentationLimit*/ 0, std::move(bufferAllocator));
             }
 
-            // Cache resource sizes per general-purpose allocator.
-            // Ensures next available block is made available upon first request without increasing
-            // the actual memory footprint. Since resources are always sized-aligned, the cached
-            // size must be requested per possible multiple or alignment {4KB, 64KB, or 4MB}.
-            // To avoid unbounded cache growth, a set of pre-defined sizes initializes the
-            // allocators.
+            // Cache resource sizes commonly requested.
+            // Ensures the next block is always made available upon first request without
+            // increasing the memory footprint. Since resources are always sized-aligned, the
+            // cached size must be requested per alignment {4KB, 64KB, or 4MB}. To avoid unbounded
+            // cache growth, a known set of pre-defined sizes initializes the allocators.
 
             // Temporary suppress log messages emitted from internal cache-miss requests.
             const LogSeverity& prevLevel = SetLogMessageLevel(LogSeverity::Info);
@@ -747,9 +749,7 @@ namespace gpgmm { namespace d3d12 {
                                                     const D3D12_CLEAR_VALUE* clearValue,
                                                     D3D12_RESOURCE_STATES initialResourceState,
                                                     ID3D12Resource** placedResourceOut) {
-        if (resourceHeap == nullptr) {
-            return E_FAIL;
-        }
+        ASSERT(resourceHeap != nullptr);
 
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreatePlacedResource");
 
