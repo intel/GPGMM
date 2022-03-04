@@ -125,8 +125,6 @@ namespace gpgmm { namespace d3d12 {
 
         heap->AddResidencyLockRef();
 
-        d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
-
         return S_OK;
     }
 
@@ -180,8 +178,6 @@ namespace gpgmm { namespace d3d12 {
         cache->Append(heap);
 
         ASSERT(heap->IsInList());
-
-        d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
 
         return S_OK;
     }
@@ -365,7 +361,8 @@ namespace gpgmm { namespace d3d12 {
                 continue;
             }
 
-            if (heap->IsInResidencyLRUCache()) {
+            const bool& heapIsInResidencyCache = heap->IsInResidencyLRUCache();
+            if (heapIsInResidencyCache) {
                 // If the heap is already in the LRU, we must remove it and append again below to
                 // update its position in the LRU.
                 heap->RemoveFromList();
@@ -387,6 +384,11 @@ namespace gpgmm { namespace d3d12 {
 
             // Insert the heap into the appropriate LRU.
             InsertHeap(heap);
+
+            // Do not re-record the heap if only it's position in the cache was updated.
+            if (heapIsInResidencyCache) {
+                d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
+            }
         }
 
         if (localSizeToMakeResident > 0) {
