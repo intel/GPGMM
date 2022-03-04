@@ -315,9 +315,10 @@ namespace gpgmm { namespace d3d12 {
                                                       ? descriptor.PreferredResourceHeapSize
                                                       : kDefaultPreferredResourceHeapSize;
 
-        newDescriptor.MaxResourceHeapSize = (descriptor.MaxResourceHeapSize > 0)
-                                                ? descriptor.MaxResourceHeapSize
-                                                : caps->GetMaxResourceHeapSize();
+        newDescriptor.MaxResourceHeapSize =
+            (descriptor.MaxResourceHeapSize > 0)
+                ? std::min(descriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
+                : caps->GetMaxResourceHeapSize();
 
         newDescriptor.ResourceFragmentationLimit = (descriptor.ResourceFragmentationLimit > 0)
                                                        ? descriptor.ResourceFragmentationLimit
