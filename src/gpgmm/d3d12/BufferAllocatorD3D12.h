@@ -29,8 +29,8 @@ namespace gpgmm { namespace d3d12 {
                         D3D12_HEAP_TYPE heapType,
                         D3D12_RESOURCE_FLAGS resourceFlags,
                         D3D12_RESOURCE_STATES initialResourceState,
-                        uint64_t resourceSize,
-                        uint64_t resourceAlignment);
+                        uint64_t bufferSize,
+                        uint64_t bufferAlignment);
         ~BufferAllocator() override = default;
 
         // MemoryAllocator interface
@@ -49,8 +49,8 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_HEAP_TYPE mHeapType;
         const D3D12_RESOURCE_FLAGS mResourceFlags;
         const D3D12_RESOURCE_STATES mInitialResourceState;
-        const uint64_t mResourceSize;
-        const uint64_t mResourceAlignment;
+        const uint64_t mBufferSize;
+        const uint64_t mBufferAlignment;
     };
 
 }}  // namespace gpgmm::d3d12
