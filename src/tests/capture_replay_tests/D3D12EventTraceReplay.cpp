@@ -339,7 +339,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         if (envParams.IsRegenerate) {
                             allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
-                            allocatorDesc.RecordOptions.MinLogLevel =
+                            allocatorDesc.RecordOptions.MinMessageLevel =
                                 static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.RecordLevel);
                         }
 

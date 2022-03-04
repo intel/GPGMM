@@ -177,7 +177,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
     // Creating a new allocator using various recording levels should always succeed.
     {
         ALLOCATOR_DESC newDesc = desc;
-        newDesc.RecordOptions.MinLogLevel =
+        newDesc.RecordOptions.MinMessageLevel =
             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_MESSAGE);
 
         ComPtr<ResourceAllocator> allocator;
@@ -187,7 +187,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
     {
         ALLOCATOR_DESC newDesc = desc;
-        newDesc.RecordOptions.MinLogLevel =
+        newDesc.RecordOptions.MinMessageLevel =
             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_INFO);
 
         ComPtr<ResourceAllocator> allocator;
@@ -197,7 +197,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
     {
         ALLOCATOR_DESC newDesc = desc;
-        newDesc.RecordOptions.MinLogLevel =
+        newDesc.RecordOptions.MinMessageLevel =
             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_WARNING);
 
         ComPtr<ResourceAllocator> allocator;
@@ -207,7 +207,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
 
     {
         ALLOCATOR_DESC newDesc = desc;
-        newDesc.RecordOptions.MinLogLevel =
+        newDesc.RecordOptions.MinMessageLevel =
             static_cast<ALLOCATOR_MESSAGE_SEVERITY>(ALLOCATOR_MESSAGE_SEVERITY_ERROR);
 
         ComPtr<ResourceAllocator> allocator;

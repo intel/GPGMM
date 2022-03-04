@@ -25,8 +25,8 @@ namespace gpgmm {
 
     // Messages of a given severity to be recorded.
     // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetRecordEventLevel(const LogSeverity& level);
-    const LogSeverity& GetRecordEventLevel();
+    LogSeverity SetRecordMessageLevel(const LogSeverity& level);
+    const LogSeverity& GetRecordMessageLevel();
 
     // Forward declare common types.
     struct ALLOCATOR_MESSAGE;
@@ -62,7 +62,7 @@ namespace gpgmm {
         if (severity >= GetLogMessageLevel()) {
             gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
         }
-        if (severity >= GetRecordEventLevel()) {
+        if (severity >= GetRecordMessageLevel()) {
             TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
         }
     }

@@ -99,7 +99,7 @@ namespace gpgmm { namespace d3d12 {
 
         // Minimum severity level to record messages. Messages with lower severity
         // will be ignored.
-        ALLOCATOR_MESSAGE_SEVERITY MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+        ALLOCATOR_MESSAGE_SEVERITY MinMessageLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
 
         // Path to trace file. Default is trace.json.
         std::string TraceFile;
