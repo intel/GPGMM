@@ -112,15 +112,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> allocationToIDMap;
-        std::unordered_map<std::string, HEAP_INFO> heapDescToIDMap;
+        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> allocationInfoToID;
+        std::unordered_map<std::string, HEAP_INFO> heapInfoToID;
 
-        ComPtr<ResourceAllocation> newAllocationWithoutID;
+        ComPtr<ResourceAllocation> allocationWithoutID;
 
-        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToIDMap;
-        std::unordered_map<std::string, ComPtr<ResourceAllocation>> newAllocationToIDMap;
+        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToID;
+        std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToID;
 
-        std::string allocatorInstanceID;
+        std::string currentAllocatorID;
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
@@ -162,11 +162,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const D3D12_RESOURCE_DESC resourceDescriptor =
                             ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
 
-                        auto it = allocatorToIDMap.find(allocatorInstanceID);
-                        ASSERT_TRUE(it != allocatorToIDMap.end());
+                        auto it = allocatorToID.find(currentAllocatorID);
+                        ASSERT_TRUE(it != allocatorToID.end());
 
                         ResourceAllocator* resourceAllocator =
-                            allocatorToIDMap[allocatorInstanceID].Get();
+                            allocatorToID[currentAllocatorID].Get();
                         ASSERT_NE(resourceAllocator, nullptr);
 
                         if (envParams.IsNeverAllocate) {
@@ -177,7 +177,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         HRESULT hr = resourceAllocator->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
-                            clearValuePtr, &newAllocationWithoutID);
+                            clearValuePtr, &allocationWithoutID);
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
@@ -187,12 +187,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ASSERT_SUCCEEDED(hr);
 
-                        mReplayedAllocationStats.CurrentUsage += newAllocationWithoutID->GetSize();
+                        mReplayedAllocationStats.CurrentUsage += allocationWithoutID->GetSize();
                         mReplayedAllocationStats.PeakUsage =
                             std::max(mReplayedAllocationStats.CurrentUsage,
                                      mReplayedAllocationStats.PeakUsage);
                         mReplayedAllocationStats.TotalCount++;
-                        mReplayedAllocationStats.TotalSize += newAllocationWithoutID->GetSize();
+                        mReplayedAllocationStats.TotalSize += allocationWithoutID->GetSize();
 
                         mReplayedAllocateStats.TotalCpuTime += elapsedTime;
                         mReplayedAllocateStats.PeakCpuTime =
@@ -208,7 +208,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
-                        if (allocationToIDMap.find(allocationID) != allocationToIDMap.end()) {
+                        if (allocationInfoToID.find(allocationID) != allocationInfoToID.end()) {
                             continue;
                         }
 
@@ -230,46 +230,45 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                      mCapturedAllocationStats.CurrentUsage);
 
                         ASSERT_TRUE(
-                            allocationToIDMap.insert({allocationID, allocationDesc}).second);
+                            allocationInfoToID.insert({allocationID, allocationDesc}).second);
                     } break;
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
-                        if (newAllocationWithoutID == nullptr) {
+                        if (allocationWithoutID == nullptr) {
                             continue;
                         }
 
-                        ASSERT_TRUE(newAllocationWithoutID != nullptr);
+                        ASSERT_TRUE(allocationWithoutID != nullptr);
                         const std::string& allocationID = event["id"].asString();
                         ASSERT_TRUE(
-                            newAllocationToIDMap.insert({allocationID, newAllocationWithoutID})
-                                .second);
+                            allocationToID.insert({allocationID, allocationWithoutID}).second);
 
-                        ASSERT_TRUE(newAllocationWithoutID.Reset() == 1);
+                        ASSERT_TRUE(allocationWithoutID.Reset() == 1);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
 
-                        auto it = allocationToIDMap.find(allocationID);
-                        if (it == allocationToIDMap.end()) {
+                        auto it = allocationInfoToID.find(allocationID);
+                        if (it == allocationInfoToID.end()) {
                             continue;
                         }
 
                         const RESOURCE_ALLOCATION_INFO& allocationDesc = it->second;
                         mCapturedAllocationStats.CurrentUsage -= allocationDesc.SizeInBytes;
 
-                        ASSERT_EQ(allocationToIDMap.erase(allocationID), 1u);
+                        ASSERT_EQ(allocationInfoToID.erase(allocationID), 1u);
 
-                        if (newAllocationToIDMap.find(allocationID) == newAllocationToIDMap.end()) {
+                        if (allocationToID.find(allocationID) == allocationToID.end()) {
                             continue;
                         }
 
                         mReplayedAllocationStats.CurrentUsage -=
-                            newAllocationToIDMap[allocationID]->GetSize();
+                            allocationToID[allocationID]->GetSize();
 
                         mPlatformTime->StartElapsedTime();
 
-                        const bool didDeallocate = newAllocationToIDMap.erase(allocationID);
+                        const bool didDeallocate = allocationToID.erase(allocationID);
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
@@ -289,7 +288,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
-                        if (allocatorToIDMap.find(allocatorID) != allocatorToIDMap.end()) {
+                        if (allocatorToID.find(allocatorID) != allocatorToID.end()) {
                             continue;
                         }
 
@@ -374,22 +373,22 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
 
                         ASSERT_TRUE(
-                            allocatorToIDMap.insert({allocatorID, std::move(resourceAllocator)})
+                            allocatorToID.insert({allocatorID, std::move(resourceAllocator)})
                                 .second);
                     } break;
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         // Assume subsequent events are always against this allocator instance.
                         // This is because call trace events have no ID associated with them.
-                        allocatorInstanceID = event["id"].asString();
+                        currentAllocatorID = event["id"].asString();
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
-                        const std::string& traceEventID = event["id"].asString();
+                        const std::string& allocatorID = event["id"].asString();
 
-                        auto it = allocatorToIDMap.find(traceEventID);
-                        ASSERT_TRUE(it != allocatorToIDMap.end());
-                        ASSERT_EQ(allocatorToIDMap.erase(traceEventID), 1u);
+                        auto it = allocatorToID.find(allocatorID);
+                        ASSERT_TRUE(it != allocatorToID.end());
+                        ASSERT_EQ(allocatorToID.erase(allocatorID), 1u);
                     } break;
 
                     default:
@@ -399,36 +398,36 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        if (heapDescToIDMap.find(heapID) != heapDescToIDMap.end()) {
+                        if (heapInfoToID.find(heapID) != heapInfoToID.end()) {
                             continue;
                         }
 
                         const Json::Value& snapshot = event["args"]["snapshot"];
 
-                        HEAP_INFO heapDesc = {};
-                        heapDesc.IsResident = snapshot["IsResident"].asBool();
-                        heapDesc.MemorySegmentGroup = static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
+                        HEAP_INFO heapInfo = {};
+                        heapInfo.IsResident = snapshot["IsResident"].asBool();
+                        heapInfo.MemorySegmentGroup = static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
                             snapshot["MemorySegmentGroup"].asInt());
-                        heapDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
+                        heapInfo.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
-                        mCapturedMemoryStats.TotalSize += heapDesc.SizeInBytes;
+                        mCapturedMemoryStats.TotalSize += heapInfo.SizeInBytes;
                         mCapturedMemoryStats.TotalCount++;
-                        mCapturedMemoryStats.CurrentUsage += heapDesc.SizeInBytes;
+                        mCapturedMemoryStats.CurrentUsage += heapInfo.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
 
-                        ASSERT_TRUE(heapDescToIDMap.insert({heapID, heapDesc}).second);
+                        ASSERT_TRUE(heapInfoToID.insert({heapID, heapInfo}).second);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& traceEventID = event["id"].asString();
-                        auto it = heapDescToIDMap.find(traceEventID);
-                        ASSERT_TRUE(it != heapDescToIDMap.end());
+                        auto it = heapInfoToID.find(traceEventID);
+                        ASSERT_TRUE(it != heapInfoToID.end());
 
-                        HEAP_INFO heapDesc = it->second;
-                        mCapturedMemoryStats.CurrentUsage -= heapDesc.SizeInBytes;
+                        HEAP_INFO heapInfo = it->second;
+                        mCapturedMemoryStats.CurrentUsage -= heapInfo.SizeInBytes;
 
-                        ASSERT_EQ(heapDescToIDMap.erase(traceEventID), 1u);
+                        ASSERT_EQ(heapInfoToID.erase(traceEventID), 1u);
 
                     } break;
 
@@ -438,9 +437,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             }
         }
 
-        ASSERT_TRUE(allocationToIDMap.empty());
-        ASSERT_TRUE(allocatorToIDMap.empty());
-        ASSERT_TRUE(heapDescToIDMap.empty());
+        ASSERT_TRUE(allocationInfoToID.empty());
+        ASSERT_TRUE(allocatorToID.empty());
+        ASSERT_TRUE(heapInfoToID.empty());
     }
 
     CaptureReplayCallStats mReplayedAllocateStats;
