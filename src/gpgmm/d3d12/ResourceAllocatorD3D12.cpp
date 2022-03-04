@@ -651,7 +651,7 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
-        const D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType);
+        const D3D12_HEAP_FLAGS& heapFlags = GetHeapFlags(resourceHeapType);
 
         // Attempt to create a resource allocation by placing a single resource fully contained
         // in a resource heap. This strategy is slightly better then creating a committed
@@ -704,8 +704,8 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(
-            allocationDescriptor.HeapType, GetHeapFlags(resourceHeapType), resourceInfo.SizeInBytes,
-            &newResourceDesc, clearValue, initialResourceState, &committedResource, &resourceHeap));
+            allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
+            clearValue, initialResourceState, &committedResource, &resourceHeap));
 
         *resourceAllocationOut =
             new ResourceAllocation{mResidencyManager.Get(), this, /*offsetFromHeap*/ kInvalidOffset,
