@@ -17,6 +17,7 @@
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
+#include "gpgmm/common/Utils.h"
 
 #include <fstream>
 #include <sstream>
@@ -37,8 +38,7 @@ namespace gpgmm {
 
     void ShutdownEventTracer() {
         if (gEventTracer != nullptr) {
-            delete gEventTracer;
-            gEventTracer = nullptr;
+            SafeDelete(gEventTracer);
         }
     }
 

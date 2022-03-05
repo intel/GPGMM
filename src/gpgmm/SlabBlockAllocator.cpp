@@ -17,6 +17,7 @@
 #include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
+#include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
@@ -33,7 +34,7 @@ namespace gpgmm {
         while (head != nullptr) {
             ASSERT(head != nullptr);
             SlabBlock* next = head->pNext;
-            delete head;
+            SafeDelete(head);
             head = next;
         }
     }
