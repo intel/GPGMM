@@ -16,6 +16,7 @@
 #define GPGMM_DUMMYMEMORYALLOCATOR_H_
 
 #include "gpgmm/MemoryAllocator.h"
+#include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
@@ -26,7 +27,7 @@ namespace gpgmm {
             ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
             mInfo.UsedMemoryCount--;
             mInfo.UsedMemoryUsage -= allocation->GetSize();
-            delete allocation->GetMemory();
+            SafeDelete(allocation->GetMemory());
         }
 
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,

@@ -22,6 +22,7 @@
 #include "gpgmm/SlabMemoryAllocator.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/Math.h"
+#include "gpgmm/common/Utils.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
@@ -980,7 +981,7 @@ namespace gpgmm { namespace d3d12 {
         mInfo.UsedMemoryUsage -= resourceHeap->GetSize();
         mInfo.UsedMemoryCount--;
 
-        delete resourceHeap;
+        SafeDelete(resourceHeap);
     }
 
 }}  // namespace gpgmm::d3d12

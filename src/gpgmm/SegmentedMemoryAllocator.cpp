@@ -16,6 +16,7 @@
 
 #include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
+#include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
@@ -87,7 +88,7 @@ namespace gpgmm {
         while (curr != mFreeSegments.end()) {
             auto next = curr->next();
             ASSERT(curr != nullptr);
-            delete curr->value();
+            SafeDelete(curr->value());
             curr = next;
         }
 

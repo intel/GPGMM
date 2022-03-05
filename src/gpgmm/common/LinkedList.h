@@ -8,6 +8,7 @@
 #define GPGMM_COMMON_LINKED_LIST_H
 
 #include "Assert.h"
+#include "Utils.h"
 
 #include <utility>
 
@@ -210,7 +211,7 @@ namespace gpgmm {
             auto curr = head();
             while (curr != end()) {
                 auto next = curr->next();
-                delete curr->value();
+                SafeDelete(curr->value());
                 curr = next;
             }
             ASSERT(empty());

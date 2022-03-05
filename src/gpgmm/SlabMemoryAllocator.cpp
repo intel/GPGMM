@@ -18,6 +18,7 @@
 #include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
+#include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
@@ -186,7 +187,7 @@ namespace gpgmm {
 
         Block* block = blockInSlab->pBlock;
         slab->Allocator.DeallocateBlock(block);
-        delete blockInSlab;
+        SafeDelete(blockInSlab);
 
         slabMemory->Unref();
 

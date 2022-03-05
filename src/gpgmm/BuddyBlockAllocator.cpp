@@ -18,6 +18,7 @@
 #include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
+#include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
@@ -261,7 +262,7 @@ namespace gpgmm {
             DeleteBlock(block->split.pLeft->pBuddy);
             DeleteBlock(block->split.pLeft);
         }
-        delete block;
+        SafeDelete(block);
     }
 
 }  // namespace gpgmm

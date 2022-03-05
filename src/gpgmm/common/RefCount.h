@@ -15,6 +15,8 @@
 #ifndef GPGMM_COMMON_REFCOUNT_H_
 #define GPGMM_COMMON_REFCOUNT_H_
 
+#include "Utils.h"
+
 #include <atomic>
 #include <cstdint>
 
@@ -113,7 +115,7 @@ namespace gpgmm {
       private:
         static void SafeRelease(T* ptr) {
             if (ptr != nullptr && ptr->Unref()) {
-                delete ptr;
+                SafeDelete(ptr);
             }
         }
 
