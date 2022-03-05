@@ -7,8 +7,6 @@ on:
       - 'src/**'
       - 'DEPS'
       - 'patches/gpgmm_dawn.diff'
-    paths-ignore:
-      - 'src/tests/**'
 
   pull_request:
     branches: main
@@ -16,8 +14,6 @@ on:
       - 'src/**'
       - 'DEPS'
       - 'patches/gpgmm_dawn.diff'
-    paths-ignore:
-      - 'src/tests/**'
 
 jobs:
 

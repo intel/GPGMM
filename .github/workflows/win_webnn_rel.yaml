@@ -6,16 +6,12 @@ on:
     paths:
       - 'src/**'
       - 'scripts/webnn.deps'
-    paths-ignore:
-      - 'src/tests/**'
 
   pull_request:
     branches: main
     paths:
       - 'src/**'
       - 'scripts/webnn.deps'
-    paths-ignore:
-      - 'src/tests/**'
 
 jobs:
 
