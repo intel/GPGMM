@@ -976,7 +976,7 @@ namespace gpgmm { namespace d3d12 {
 
         Heap* resourceHeap = ToBackend(allocation->GetMemory());
         ASSERT(resourceHeap != nullptr);
-        ASSERT(resourceHeap->RefCount() == 0);
+        ASSERT(resourceHeap->GetRefCount() == 0);
 
         mInfo.UsedMemoryUsage -= resourceHeap->GetSize();
         mInfo.UsedMemoryCount--;

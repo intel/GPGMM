@@ -33,15 +33,15 @@ TEST(MemoryCacheTests, SingleEntry) {
 
     auto firstEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(firstEntry.Get(), nullptr);
-    EXPECT_EQ(firstEntry.Get()->RefCount(), 1);
+    EXPECT_EQ(firstEntry.Get()->GetRefCount(), 1);
 
     auto secondEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(secondEntry.Get(), nullptr);
-    EXPECT_EQ(secondEntry.Get()->RefCount(), 2);
+    EXPECT_EQ(secondEntry.Get()->GetRefCount(), 2);
 
     EXPECT_EQ(firstEntry.Get(), secondEntry.Get());
-    EXPECT_EQ(secondEntry.Get()->RefCount(), 2);
-    EXPECT_EQ(firstEntry.Get()->RefCount(), 2);
+    EXPECT_EQ(secondEntry.Get()->GetRefCount(), 2);
+    EXPECT_EQ(firstEntry.Get()->GetRefCount(), 2);
 }
 
 // Verify multiple objects maps to seperate entries.
@@ -55,8 +55,8 @@ TEST(MemoryCacheTests, MultipleEntries) {
     ASSERT_NE(firstEntry.Get(), nullptr);
 
     EXPECT_NE(firstEntry.Get(), secondEntry.Get());
-    EXPECT_EQ(firstEntry.Get()->RefCount(), 1);
-    EXPECT_EQ(secondEntry.Get()->RefCount(), 1);
+    EXPECT_EQ(firstEntry.Get()->GetRefCount(), 1);
+    EXPECT_EQ(secondEntry.Get()->GetRefCount(), 1);
 
     auto thirdEntry = cache.GetOrCreate(FakeObject{1}, false);
     ASSERT_NE(thirdEntry.Get(), nullptr);
@@ -66,8 +66,8 @@ TEST(MemoryCacheTests, MultipleEntries) {
 
     EXPECT_EQ(firstEntry.Get(), thirdEntry.Get());
     EXPECT_EQ(secondEntry.Get(), forthEntry.Get());
-    EXPECT_EQ(thirdEntry.Get()->RefCount(), 2);
-    EXPECT_EQ(forthEntry.Get()->RefCount(), 2);
+    EXPECT_EQ(thirdEntry.Get()->GetRefCount(), 2);
+    EXPECT_EQ(forthEntry.Get()->GetRefCount(), 2);
 }
 
 // Verify entries grow and shrink cache by scope.
@@ -86,5 +86,5 @@ TEST(MemoryCacheTests, ShrinkCache) {
 
     auto entryOne = cache.GetOrCreate(FakeObject{1}, false);
     auto entryTwo = cache.GetOrCreate(FakeObject{1}, false);
-    EXPECT_EQ(entryOne.Get()->RefCount(), 2);
+    EXPECT_EQ(entryOne.Get()->GetRefCount(), 2);
 }
