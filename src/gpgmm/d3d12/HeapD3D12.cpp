@@ -80,7 +80,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     bool Heap::IsResidencyLocked() const {
-        return mResidencyLock.RefCount() > 0;
+        return mResidencyLock.GetRefCount() > 0;
     }
 
     bool Heap::IsResident() const {
@@ -92,6 +92,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), IsResident(), mMemorySegmentGroup, RefCount(), GetPool()};
+        return {GetSize(), IsResident(), mMemorySegmentGroup, GetRefCount(), GetPool()};
     }
 }}  // namespace gpgmm::d3d12

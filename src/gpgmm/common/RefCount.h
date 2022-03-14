@@ -22,6 +22,9 @@
 
 namespace gpgmm {
 
+    template <typename T>
+    class ScopedRef;
+
     class RefCounted {
       public:
         // Always require an initial refcount to construct because it is not known
@@ -38,12 +41,14 @@ namespace gpgmm {
         bool Unref();
 
         // Get the ref count.
-        int_fast32_t RefCount() const;
+        int_fast32_t GetRefCount() const;
 
         // Returns true if calling Unref() will reach a zero refcount.
         bool HasOneRef() const;
 
       private:
+        friend ScopedRef<RefCounted>;
+
         mutable std::atomic_int_fast32_t mRef;
     };
 
@@ -62,6 +67,12 @@ namespace gpgmm {
         ScopedRef(const ScopedRef& other) {
             Attach(other.mPtr);
             SafeRef(mPtr);
+        }
+
+        ScopedRef(ScopedRef&& other) {
+            if (this != &other) {
+                mPtr = other.Detach();
+            }
         }
 
         ~ScopedRef() {
@@ -113,9 +124,10 @@ namespace gpgmm {
         }
 
       private:
-        static void SafeRelease(T* ptr) {
-            if (ptr != nullptr && ptr->Unref()) {
+        static void SafeRelease(T*& ptr) {
+            if (SafeUnref(ptr)) {
                 SafeDelete(ptr);
+                ptr = nullptr;
             }
         }
 
@@ -125,10 +137,11 @@ namespace gpgmm {
             }
         }
 
-        static void SafeUnref(T* ptr) {
+        static bool SafeUnref(T* ptr) {
             if (ptr != nullptr) {
-                ptr->Unref();
+                return ptr->Unref();
             }
+            return false;
         }
 
         T* mPtr = nullptr;

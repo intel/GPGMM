@@ -74,7 +74,7 @@ namespace gpgmm {
                 mCache->RemoveCacheEntry(this);
                 mCache = nullptr;
             }
-            ASSERT(RefCount() == 0);
+            ASSERT(GetRefCount() == 0);
         }
 
         T& GetValue() {
@@ -189,7 +189,7 @@ namespace gpgmm {
 
         void RemoveCacheEntry(CacheEntryT* entry) {
             ASSERT(entry != nullptr);
-            ASSERT(entry->RefCount() == 0);
+            ASSERT(entry->GetRefCount() == 0);
             const size_t removedCount = mCache.erase(entry);
             ASSERT(removedCount == 1);
         }

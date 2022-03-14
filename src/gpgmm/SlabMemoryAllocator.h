@@ -77,7 +77,7 @@ namespace gpgmm {
                 }
             }
             bool IsFull() const {
-                return static_cast<uint32_t>(RefCount()) == BlockCount;
+                return static_cast<uint32_t>(GetRefCount()) == BlockCount;
             }
             uint64_t BlockCount = 0;
             SlabBlockAllocator Allocator;

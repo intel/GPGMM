@@ -30,12 +30,12 @@ namespace gpgmm {
         return false;
     }
 
-    int_fast32_t RefCounted::RefCount() const {
+    int_fast32_t RefCounted::GetRefCount() const {
         return mRef.load(std::memory_order_acquire);
     }
 
     bool RefCounted::HasOneRef() const {
-        return RefCount() == 1;
+        return GetRefCount() == 1;
     }
 
 }  // namespace gpgmm

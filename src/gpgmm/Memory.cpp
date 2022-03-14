@@ -24,7 +24,7 @@ namespace gpgmm {
     }
 
     MemoryBase::~MemoryBase() {
-        ASSERT(RefCount() == 0);
+        ASSERT(GetRefCount() == 0);
     }
 
     uint64_t MemoryBase::GetSize() const {
