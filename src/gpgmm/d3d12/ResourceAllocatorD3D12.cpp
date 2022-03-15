@@ -885,7 +885,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
-        QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut) const {
+        QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut) const {
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.QueryResourceAllocatorInfo");
 
         MEMORY_ALLOCATOR_INFO infoOut = {};
@@ -912,8 +912,8 @@ namespace gpgmm { namespace d3d12 {
 
         gpgmm::RecordObject("GPUMemoryAllocator", this, infoOut);
 
-        if (resorceAllocationInfoOut != nullptr) {
-            *resorceAllocationInfoOut = infoOut;
+        if (resourceAllocationInfoOut != nullptr) {
+            *resourceAllocationInfoOut = infoOut;
         }
 
         return S_OK;

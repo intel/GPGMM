@@ -319,7 +319,7 @@ namespace gpgmm { namespace d3d12 {
         // Informs the app of the current allocator usage.
         // If the allocator info is nullptr, info will only be recorded for trace.
         HRESULT QueryResourceAllocatorInfo(
-            QUERY_RESOURCE_ALLOCATOR_INFO* resorceAllocationInfoOut = nullptr) const;
+            QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut = nullptr) const;
 
       private:
         friend BufferAllocator;
