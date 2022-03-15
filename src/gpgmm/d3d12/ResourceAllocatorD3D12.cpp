@@ -337,13 +337,11 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        bool enableEventTracer = (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE);
 #ifdef GPGMM_ALWAYS_RECORD
-        enableEventTracer = true;
         newDescriptor.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
 #endif
 
-        if (enableEventTracer) {
+        if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
             const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
                                                ? std::string(kDefaultTraceFile)
                                                : descriptor.RecordOptions.TraceFile;
