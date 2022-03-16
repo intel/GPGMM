@@ -213,11 +213,13 @@ namespace gpgmm { namespace d3d12 {
         // Sub-allocate a resource allocation within the same resource. The resource alignment
         // is allowed to be byte-aligned instead of being resource-aligned, which significantly
         // reduces app memory usage (1B vs 64KB per allocation). Since the resource can only be in
-        // one state at a time, this is mostly restricted for constant buffers (index and vertex
-        // buffers) which will stay read-only after creation. This flag is automatically
-        // enabled for devices that already guarentee command queue accesses are always coherent
-        // between sub-allocations within the same resource.
-        ALLOCATION_FLAG_ALWAYS_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
+        // one state at a time, this is mostly restricted to constant buffers (index and vertex
+        // buffers which will stay read-only after creation). The app developer must use offsets
+        // from the start of the allocation (vs subresource) by using GetOffsetFromResource().
+        // Since all devices guarentee command queue accesses are coherent between sub-allocations
+        // within the same resource. The app developer must check if the adapter is supported OR
+        // ensure only a command single queue is used.
+        ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
         // Forbids allowing multiple resource allocations to be created from the same resource
         // heap. The created resource will always be allocated with it's own resource heap.

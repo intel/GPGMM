@@ -593,8 +593,7 @@ namespace gpgmm { namespace d3d12 {
         // strategy only works in a few cases (ex. small constant buffers uploads) so it should be
         // tried before sub-allocating resource heaps.
         // The time and space complexity of is defined by the sub-allocation algorithm used.
-        if ((mCaps->IsSuballocationWithinResourceCoherent() ||
-             allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_SUBALLOCATE_WITHIN_RESOURCE) &&
+        if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             GetInitialResourceState(allocationDescriptor.HeapType) == initialResourceState &&
