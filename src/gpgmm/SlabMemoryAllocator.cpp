@@ -83,20 +83,20 @@ namespace gpgmm {
         bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.TryAllocateMemory");
         if (allocationSize > mBlockSize) {
-            RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
-                          "Allocation size exceeded the block size (" +
-                              std::to_string(allocationSize) + " vs " + std::to_string(mBlockSize) +
-                              " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            RecordLogMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
+                             "Allocation size exceeded the block size (" +
+                                 std::to_string(allocationSize) + " vs " +
+                                 std::to_string(mBlockSize) + " bytes).",
+                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return {};
         }
 
         const uint64_t slabSize = ComputeSlabSize(allocationSize);
         if (slabSize > mMaxSlabSize) {
-            RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
-                          "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
-                              " vs " + std::to_string(mMaxSlabSize) + " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            RecordLogMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
+                             "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
+                                 " vs " + std::to_string(mMaxSlabSize) + " bytes).",
+                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return {};
         }
 
@@ -257,11 +257,11 @@ namespace gpgmm {
 
         // Attempting to allocate a block larger then the slab will always fail.
         if (mSlabSize != 0 && blockSize > mSlabSize) {
-            RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
-                          "Aligned allocation size exceeded the slab size (" +
-                              std::to_string(blockSize) + " vs " + std::to_string(mSlabSize) +
-                              " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            RecordLogMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
+                             "Aligned allocation size exceeded the slab size (" +
+                                 std::to_string(blockSize) + " vs " + std::to_string(mSlabSize) +
+                                 " bytes).",
+                             ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
             return {};
         }
 

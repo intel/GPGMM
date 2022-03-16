@@ -18,24 +18,26 @@
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Log.h"
 
-#include <sstream>
 #include <string>
 
 namespace gpgmm {
 
     // Messages of a given severity to be recorded.
     // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetRecordMessageLevel(const LogSeverity& level);
-    const LogSeverity& GetRecordMessageLevel();
+    LogSeverity SetRecordLogMessageLevel(const LogSeverity& level);
 
     // Forward declare common types.
-    struct ALLOCATOR_MESSAGE;
     struct POOL_INFO;
     struct MEMORY_ALLOCATOR_INFO;
 
+    struct LOG_MESSAGE {
+        std::string Description;
+        int ID;
+    };
+
     class Serializer {
       public:
-        static JSONDict Serialize(const ALLOCATOR_MESSAGE& desc);
+        static JSONDict Serialize(const LOG_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const POOL_INFO& desc);
         static JSONDict Serialize(void* objectPtr);
@@ -56,21 +58,10 @@ namespace gpgmm {
         }
     }
 
-    template <typename T, typename SerializerT, typename... Args>
-    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
-        const T& obj{args...};
-        if (severity >= GetLogMessageLevel()) {
-            gpgmm::Log(severity) << name << SerializerT::Serialize(obj).ToString();
-        }
-        if (severity >= GetRecordMessageLevel()) {
-            TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
-        }
-    }
-
-    template <typename... Args>
-    static void RecordMessage(const LogSeverity& severity, const char* name, const Args&... args) {
-        return gpgmm::RecordMessage<ALLOCATOR_MESSAGE, Serializer>(severity, name, args...);
-    }
+    void RecordLogMessage(const LogSeverity& severity,
+                          const char* name,
+                          const std::string& description,
+                          int messageId);
 
 }  // namespace gpgmm
 

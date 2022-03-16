@@ -30,9 +30,11 @@ if (!defined(checkout_webnn)) {
 
 declare_args() {
   # Enable GPGMM's ASSERTs even in release builds
+  # Sets -dGPGMM_ENABLE_ASSERTS
   gpgmm_always_assert = false
 
   # Enables GPGMM's memory tracing even if disabled by recording flags.
+  # Sets -dGPGMM_ALWAYS_RECORD
   gpgmm_always_record = false
 
   # Enables the compilation of the D3D12 backend
@@ -45,5 +47,10 @@ declare_args() {
   gpgmm_enable_webnn = checkout_webnn
 
   # Build GPGMM as a shared library.
+  # Sets -dGPGMM_SHARED_LIBRARY
   gpgmm_shared_library = false
+
+  # Enables runtime warnings when D3D12 resource alignment is suboptimal.
+  # Sets -dGPGMM_ENABLE_D3D12_RESOURCE_ALIGNMENT_WARNING
+  gpgmm_enable_d3d12_resource_alignment_warning = false
 }
