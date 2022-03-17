@@ -26,10 +26,6 @@ namespace gpgmm { namespace d3d12 {
       public:
         static HRESULT CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut);
 
-        // On some GPUs, accessing different sub-allocations from the same resource with
-        // different queues is always coherent.
-        bool IsSuballocationWithinResourceCoherent() const;
-
         // Largest resource size that this device can make available.
         uint64_t GetMaxResourceSize() const;
 
@@ -39,7 +35,6 @@ namespace gpgmm { namespace d3d12 {
       private:
         Caps() = default;
 
-        bool mIsSuballocationWithinResourceCoherent = false;
         uint64_t mMaxResourceSize = 0;
         uint64_t mMaxResourceHeapSize = 0;
     };

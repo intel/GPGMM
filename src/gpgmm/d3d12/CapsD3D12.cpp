@@ -47,20 +47,11 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(adapter->GetDesc(&adapterDesc));
 
         Caps* caps = new Caps();
-        // Intel GPUs are always coherent.
-        if (adapterDesc.VendorId == GPUVendor::kIntel_VkVendor) {
-            caps->mIsSuballocationWithinResourceCoherent = true;
-        }
-
         ReturnIfFailed(SetMaxResourceSize(device, &caps->mMaxResourceSize));
         ReturnIfFailed(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
 
         *capsOut = caps;
         return S_OK;
-    }
-
-    bool Caps::IsSuballocationWithinResourceCoherent() const {
-        return mIsSuballocationWithinResourceCoherent;
     }
 
     uint64_t Caps::GetMaxResourceSize() const {
