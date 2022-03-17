@@ -270,11 +270,6 @@ namespace gpgmm { namespace d3d12 {
         ALLOCATOR_MESSAGE_ID_ALLOCATOR_MESSAGES_END,
     };
 
-    struct ALLOCATOR_MESSAGE {
-        std::string Description;
-        ALLOCATOR_MESSAGE_ID ID;
-    };
-
     class GPGMM_EXPORT ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
         // Creates the allocator and residency manager instance used to manage video memory for the

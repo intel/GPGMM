@@ -150,12 +150,4 @@ namespace gpgmm { namespace d3d12 {
         return dict;
     }
 
-    // static
-    JSONDict Serializer::Serialize(const ALLOCATOR_MESSAGE& desc) {
-        JSONDict dict;
-        dict.AddItem("Description", desc.Description);
-        dict.AddItem("ID", desc.ID);
-        return dict;
-    }
-
 }}  // namespace gpgmm::d3d12
