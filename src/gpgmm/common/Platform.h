@@ -20,7 +20,7 @@
 #    include <winapifamily.h>
 #    define GPGMM_PLATFORM_WINDOWS 1
 #    if WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
-#        define DAWN_PLATFORM_WIN32 1
+#        define GPGMM_PLATFORM_WIN32 1
 #    elif WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
 #        define GPGMM_PLATFORM_WINUWP 1
 #    else
