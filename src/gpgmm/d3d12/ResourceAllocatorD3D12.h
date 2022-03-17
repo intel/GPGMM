@@ -247,7 +247,8 @@ namespace gpgmm { namespace d3d12 {
 
     enum ALLOCATOR_MESSAGE_ID {
 
-        ALLOCATOR_MESSAGE_ID_UNKNOWN,
+        // Allocator failed to allocate memory for the resource.
+        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED,
 
         // D3D12 heap was created with a size that is not a multiple of the alignment, which wastes
         // memory unknowingly. D3D12 only supports misaligned heap sizes for convenience.
@@ -257,17 +258,16 @@ namespace gpgmm { namespace d3d12 {
         // requested.
         ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT,
 
-        // Resource allocation size exceeds the D3D12 resource size, which wastes memory
+        // Allocation size exceeds the D3D12 resource size, which wastes memory
         // unknowingly. The allocator did not support allocation of a block equal to the resource
         // size.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT,
 
-        // Resource allocation was unable to be pool-allocated. This introduces OS VidMM overhead
+        // D3D12 resource was unable to be pool-allocated. This introduces OS VidMM overhead
         // because non-pool allocated memory cannot be reused by the allocator.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED,
 
-        // Resource allocator failed to allocate memory for the resource.
-        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATOR_FAILED,
+        ALLOCATOR_MESSAGE_ID_ALLOCATOR_MESSAGES_END,
     };
 
     struct ALLOCATOR_MESSAGE {

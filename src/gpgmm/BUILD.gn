@@ -184,6 +184,11 @@ source_set("gpgmm_sources") {
 
   if (gpgmm_enable_d3d12) {
     libs += [ "dxguid.lib" ]
+
+    if (gpgmm_enable_d3d12_resource_alignment_warning) {
+      defines += [ "GPGMM_ENABLE_D3D12_RESOURCE_ALIGNMENT_WARNING" ]
+    }
+
     sources += [
       "d3d12/BufferAllocatorD3D12.cpp",
       "d3d12/BufferAllocatorD3D12.h",
