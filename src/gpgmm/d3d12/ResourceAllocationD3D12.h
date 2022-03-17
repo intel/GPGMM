@@ -25,7 +25,6 @@
 namespace gpgmm { namespace d3d12 {
 
     class Heap;
-    class ResourceAllocator;
     class ResidencyManager;
     class ResidencySet;
 
