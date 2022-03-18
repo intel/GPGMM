@@ -115,7 +115,9 @@ namespace gpgmm { namespace d3d12 {
                 RecordLogMessage(severity, "ResourceAllocator.GetResourceAllocationInfo",
                                  "Resource alignment is much larger due to D3D12 (" +
                                      std::to_string(resourceDescriptor.Alignment) + " vs " +
-                                     std::to_string(resourceInfo.Alignment) + " bytes).",
+                                     std::to_string(resourceInfo.Alignment) +
+                                     " bytes) for resource : " +
+                                     Serializer::Serialize(resourceDescriptor).ToString() + ".",
                                  ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT);
 
                 resourceDescriptor.Alignment = 0;
