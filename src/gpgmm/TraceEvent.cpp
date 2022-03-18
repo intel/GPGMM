@@ -26,20 +26,22 @@
 
 namespace gpgmm {
 
-    FileEventTracer* gEventTracer = nullptr;
+    std::unique_ptr<FileEventTracer> gEventTracer;
 
     void StartupEventTracer(const std::string& traceFile,
                             bool skipDurationEvents,
                             bool skipObjectEvents,
                             bool skipInstantEvents) {
-        gEventTracer =
-            new FileEventTracer(traceFile, skipDurationEvents, skipObjectEvents, skipInstantEvents);
+        if (gEventTracer == nullptr) {
+            gEventTracer = std::make_unique<FileEventTracer>(traceFile, skipDurationEvents,
+                                                             skipObjectEvents, skipInstantEvents);
+        }
     }
 
     void ShutdownEventTracer() {
-        if (gEventTracer != nullptr) {
-            SafeDelete(gEventTracer);
-        }
+#if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
+        gEventTracer.release();
+#endif
     }
 
     bool IsEventTracerEnabled() {
