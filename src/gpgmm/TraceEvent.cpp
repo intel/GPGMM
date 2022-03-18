@@ -124,7 +124,8 @@ namespace gpgmm {
             }
 
             if (mSkipObjectEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_CREATE_OBJECT ||
-                                      traceEvent.mPhase == TRACE_EVENT_PHASE_DELETE_OBJECT)) {
+                                      traceEvent.mPhase == TRACE_EVENT_PHASE_DELETE_OBJECT ||
+                                      traceEvent.mPhase == TRACE_EVENT_PHASE_SNAPSHOT_OBJECT)) {
                 continue;
             }
 
