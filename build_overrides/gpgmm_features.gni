@@ -53,4 +53,8 @@ declare_args() {
   # Enables runtime warnings when D3D12 resource alignment is suboptimal.
   # Sets -dGPGMM_ENABLE_D3D12_RESOURCE_ALIGNMENT_WARNING
   gpgmm_enable_d3d12_resource_alignment_warning = false
+
+  # Enables recording until program termination.
+  # Sets -dGPGMM_ENABLE_TRACING_UNTIL_TERMINATION
+  gpgmm_enable_recording_until_termination = false
 }
