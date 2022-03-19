@@ -28,11 +28,6 @@ namespace gpgmm {
         ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED,
     };
 
-    struct ALLOCATOR_MESSAGE {
-        std::string Description;
-        ALLOCATOR_MESSAGE_ID ID;
-    };
-
     class AllocatorBase : public NonCopyable {
       public:
         AllocatorBase() = default;
