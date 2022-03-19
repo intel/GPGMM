@@ -16,6 +16,7 @@
 #define GPGMM_MEMORYCACHE_H_
 
 #include "gpgmm/common/Assert.h"
+#include "gpgmm/common/NonCopyable.h"
 #include "gpgmm/common/RefCount.h"
 
 #include <unordered_set>
@@ -56,19 +57,8 @@ namespace gpgmm {
     class MemoryCache;
 
     template <typename T, typename KeyT = size_t>
-    class CacheEntry : public RefCounted {
+    class CacheEntry : public RefCounted, public NonCopyable {
       public:
-        // Constructs entry for lookup.
-        explicit CacheEntry(const T& value) : RefCounted(0), mValue(std::move(value)) {
-            ASSERT(mCache == nullptr);
-        }
-
-        // Constructs entry to store.
-        CacheEntry(MemoryCache<T>* cache, const T& value)
-            : RefCounted(0), mCache(cache), mValue(std::move(value)) {
-            ASSERT(mCache != nullptr);
-        }
-
         ~CacheEntry() {
             if (mCache != nullptr) {  // for lookup or not
                 mCache->RemoveCacheEntry(this);
@@ -86,9 +76,20 @@ namespace gpgmm {
         }
 
       private:
+        friend MemoryCache<T>;
+
         CacheEntry() = delete;
 
-        friend MemoryCache<T>;
+        // Constructs entry for lookup.
+        explicit CacheEntry(const T&& value) : RefCounted(0), mValue(std::move(value)) {
+            ASSERT(mCache == nullptr);
+        }
+
+        // Constructs entry to store.
+        CacheEntry(MemoryCache<T>* cache, const T& value)
+            : RefCounted(0), mCache(cache), mValue(std::move(value)) {
+            ASSERT(mCache != nullptr);
+        }
 
         KeyT GetKey() const {
             return mValue.GetKey();
@@ -115,7 +116,7 @@ namespace gpgmm {
     };
 
     template <typename T>
-    class MemoryCache {
+    class MemoryCache : public NonCopyable {
       public:
         using CacheEntryT = CacheEntry<T>;
 
