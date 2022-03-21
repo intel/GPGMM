@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
         // Requires the debug layers to be enabled by installing Graphics Tools in Windows and
         // calling EnableDebugLayer before creation.
         // Will assert if a leak is detected during destruction.
-        ALLOCATOR_CHECK_DEVICE_LEAKS = 0x4,
+        ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS = 0x4,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;

@@ -66,7 +66,7 @@ namespace gpgmm { namespace d3d12 {
         desc.ResourceHeapTier = mResourceHeapTier;
 
         if (IsDeviceLeakChecksEnabled()) {
-            desc.Flags = ALLOCATOR_CHECK_DEVICE_LEAKS;
+            desc.Flags = ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS;
         }
 
         return desc;

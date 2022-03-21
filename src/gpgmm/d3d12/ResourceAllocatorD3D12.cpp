@@ -398,7 +398,7 @@ namespace gpgmm { namespace d3d12 {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocator", this);
         d3d12::RecordObject("GPUMemoryAllocator", this, descriptor);
 
-        if (descriptor.Flags & ALLOCATOR_CHECK_DEVICE_LEAKS &&
+        if (descriptor.Flags & ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS &&
             FAILED(EnableDeviceObjectLeakChecks())) {
             gpgmm::WarningLog() << "Debug layers must be enabled to use device leak checking.\n";
         }
