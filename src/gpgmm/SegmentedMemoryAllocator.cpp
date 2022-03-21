@@ -14,7 +14,7 @@
 
 #include "gpgmm/SegmentedMemoryAllocator.h"
 
-#include "gpgmm/Serializer.h"
+#include "gpgmm/Debug.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Utils.h"
 

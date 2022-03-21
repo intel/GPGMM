@@ -26,13 +26,13 @@
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
+#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
-#include "gpgmm/d3d12/SerializerD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {

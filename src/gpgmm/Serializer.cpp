@@ -15,35 +15,11 @@
 #include "gpgmm/Serializer.h"
 
 #include "gpgmm/Allocator.h"
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/MemoryPool.h"
 
-#include <algorithm>
-#include <sstream>
-
 namespace gpgmm {
-
-    // Messages with equal or greater to severity will be logged.
-    LogSeverity gRecordEventLevel = LogSeverity::Info;
-
-    LogSeverity SetRecordLogMessageLevel(const LogSeverity& newLevel) {
-        LogSeverity oldLevel = gRecordEventLevel;
-        gRecordEventLevel = newLevel;
-        return oldLevel;
-    }
-
-    void RecordLogMessage(const LogSeverity& severity,
-                          const char* name,
-                          const std::string& description,
-                          int messageId) {
-        gpgmm::Log(severity) << name << ": " << description;
-        if (severity >= gRecordEventLevel) {
-            const LOG_MESSAGE logMessage{description, messageId};
-            TRACE_EVENT_INSTANT(name, Serializer::Serialize(logMessage));
-        }
-    }
-
-    // Serializer
 
     // static
     JSONDict Serializer::Serialize(const POOL_INFO& info) {

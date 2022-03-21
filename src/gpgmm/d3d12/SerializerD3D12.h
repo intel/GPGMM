@@ -16,7 +16,6 @@
 #define GPGMM_D3D12_SERIALIZERD3D12_H_
 
 #include "gpgmm/Serializer.h"
-#include "gpgmm/common/Log.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -45,16 +44,6 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);
         static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
     };
-
-    template <typename T, typename... Args>
-    static void RecordCall(const char* name, const Args&... args) {
-        return gpgmm::RecordCall<T, Serializer>(name, args...);
-    }
-
-    template <typename T, typename DescT>
-    static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        return gpgmm::RecordObject<T, DescT, Serializer>(name, objPtr, desc);
-    }
 
 }}  // namespace gpgmm::d3d12
 

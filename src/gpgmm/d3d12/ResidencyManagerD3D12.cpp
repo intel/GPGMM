@@ -15,12 +15,12 @@
 
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
+#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
-#include "gpgmm/d3d12/SerializerD3D12.h"
 
 #include <algorithm>
 #include <vector>

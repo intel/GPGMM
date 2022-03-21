@@ -14,8 +14,8 @@
 
 #include "gpgmm/IndexedMemoryPool.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/Serializer.h"
 
 namespace gpgmm {
 
