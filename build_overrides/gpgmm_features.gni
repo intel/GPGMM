@@ -57,4 +57,8 @@ declare_args() {
   # Enables recording until program termination.
   # Sets -dGPGMM_ENABLE_TRACING_UNTIL_TERMINATION
   gpgmm_enable_recording_until_termination = false
+
+  # Enables more detailed leak reports.
+  # Sets -dGPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG
+  gpgmm_enable_precise_allocator_debug = is_debug
 }

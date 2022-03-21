@@ -12,26 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_BACKEND3D12_H_
-#define GPGMM_D3D12_BACKEND3D12_H_
+#include "Utils.h"
 
-#include "gpgmm/Backend.h"
+#include <sstream>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm {
 
-    class Heap;
-    class ResourceAllocation;
-
-    struct BackendTrait {
-        using MemoryType = Heap;
-        using AllocationType = ResourceAllocation;
-    };
-
-    template <typename T>
-    auto ToBackend(T&& common) -> decltype(gpgmm::ToBackend<BackendTrait>(common)) {
-        return gpgmm::ToBackend<BackendTrait>(common);
+    std::string ToString(const void* object) {
+        std::stringstream output;
+        output << "0x" << std::hex << static_cast<uint64_t>(reinterpret_cast<uintptr_t>(object));
+        return output.str();
     }
 
-}}  // namespace gpgmm::d3d12
-
-#endif
+}  // namespace gpgmm

@@ -27,6 +27,7 @@
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/DebugD3D12.h"
+#include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -403,6 +404,10 @@ namespace gpgmm { namespace d3d12 {
             gpgmm::WarningLog() << "Debug layers must be enabled to use device leak checking.\n";
         }
 
+#if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
+        mDebugAllocator = std::make_unique<DebugResourceAllocator>();
+#endif
+
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
             const RESOURCE_HEAP_TYPE& resourceHeapType =
@@ -534,7 +539,10 @@ namespace gpgmm { namespace d3d12 {
 
         ShutdownEventTracer();
 
-        // TODO: Report details on leaked allocations.
+#if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
+        mDebugAllocator->ReportLiveAllocations();
+#endif
+
         ASSERT(SUCCEEDED(CheckForDeviceObjectLeaks()));
     }
 
@@ -559,6 +567,24 @@ namespace gpgmm { namespace d3d12 {
 
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.CreateResource");
 
+        ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
+                                              initialResourceState, clearValue,
+                                              resourceAllocationOut));
+
+        // Insert a new (debug) allocator layer into the allocation so it can report details used
+        // during leak checks. Since we don't want to use it unless we are debugging, we hide it
+        // behind a macro.
+#if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
+        mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
+#endif
+        return S_OK;
+    }
+
+    HRESULT ResourceAllocator::CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
+                                                      const D3D12_RESOURCE_DESC& resourceDescriptor,
+                                                      D3D12_RESOURCE_STATES initialResourceState,
+                                                      const D3D12_CLEAR_VALUE* clearValue,
+                                                      ResourceAllocation** resourceAllocationOut) {
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;

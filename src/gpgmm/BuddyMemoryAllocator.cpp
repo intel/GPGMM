@@ -35,10 +35,6 @@ namespace gpgmm {
         ASSERT(IsAligned(systemSize, mMemorySize));
     }
 
-    BuddyMemoryAllocator::~BuddyMemoryAllocator() {
-        ASSERT(mPool.GetPoolSize() == 0);
-    }
-
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
         return offset / mMemorySize;

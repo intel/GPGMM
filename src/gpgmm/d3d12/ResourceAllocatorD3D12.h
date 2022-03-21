@@ -34,6 +34,7 @@ namespace gpgmm { namespace d3d12 {
     class BufferAllocator;
     class Caps;
     class Heap;
+    class DebugResourceAllocator;
     class ResidencyManager;
     class ResourceAllocation;
     class ResourceHeapAllocator;
@@ -323,6 +324,12 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
+        HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
+                                       const D3D12_RESOURCE_DESC& resourceDescriptor,
+                                       D3D12_RESOURCE_STATES initialResourceState,
+                                       const D3D12_CLEAR_VALUE* clearValue,
+                                       ResourceAllocation** resourceAllocationOut);
+
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
                           ComPtr<ResidencyManager> residencyManager,
                           std::unique_ptr<Caps> caps);
@@ -375,6 +382,8 @@ namespace gpgmm { namespace d3d12 {
             mResourceAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mBufferAllocatorOfType;
+
+        std::unique_ptr<DebugResourceAllocator> mDebugAllocator;
     };
 
 }}  // namespace gpgmm::d3d12
