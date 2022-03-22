@@ -14,9 +14,9 @@
 
 #include "gpgmm/LIFOMemoryPool.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/Serializer.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {

@@ -17,10 +17,10 @@
 
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
+#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
-#include "gpgmm/d3d12/SerializerD3D12.h"
 
 #include <utility>
 

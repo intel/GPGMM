@@ -15,8 +15,8 @@
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 
+#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
-#include "gpgmm/d3d12/SerializerD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,

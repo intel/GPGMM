@@ -15,25 +15,14 @@
 #ifndef GPGMM_SERIALIZER_H_
 #define GPGMM_SERIALIZER_H_
 
-#include "gpgmm/TraceEvent.h"
-#include "gpgmm/common/Log.h"
-
-#include <string>
+#include "gpgmm/common/JSONEncoder.h"
 
 namespace gpgmm {
-
-    // Messages of a given severity to be recorded.
-    // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetRecordLogMessageLevel(const LogSeverity& level);
 
     // Forward declare common types.
     struct POOL_INFO;
     struct MEMORY_ALLOCATOR_INFO;
-
-    struct LOG_MESSAGE {
-        std::string Description;
-        int ID;
-    };
+    struct LOG_MESSAGE;
 
     class Serializer {
       public:
@@ -42,26 +31,6 @@ namespace gpgmm {
         static JSONDict Serialize(const POOL_INFO& desc);
         static JSONDict Serialize(void* objectPtr);
     };
-
-    template <typename T, typename DescT, typename SerializerT = Serializer>
-    static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        if (IsEventTracerEnabled()) {
-            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, SerializerT::Serialize(desc));
-        }
-    }
-
-    template <typename T, typename SerializerT, typename... Args>
-    static void RecordCall(const char* name, const Args&... args) {
-        if (IsEventTracerEnabled()) {
-            const T& obj{args...};
-            TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
-        }
-    }
-
-    void RecordLogMessage(const LogSeverity& severity,
-                          const char* name,
-                          const std::string& description,
-                          int messageId);
 
 }  // namespace gpgmm
 
