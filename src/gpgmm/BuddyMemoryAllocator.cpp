@@ -45,10 +45,11 @@ namespace gpgmm {
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize) {
+        GPGMM_VERIFY_NONZERO(allocationSize);
         TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (allocationSize == 0 || allocationSize > mMemorySize) {
+        if (allocationSize > mMemorySize) {
             RecordLogMessage(LogSeverity::Debug, "BuddyMemoryAllocator.TryAllocateMemory",
                              "Allocation size exceeded the memory size (" +
                                  std::to_string(allocationSize) + " vs " +

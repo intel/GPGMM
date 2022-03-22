@@ -297,6 +297,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     }
+
+    // Creating a zero sized buffer is not allowed.
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(0), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_EQ(allocation, nullptr);
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {

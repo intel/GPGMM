@@ -132,8 +132,9 @@ namespace gpgmm {
         bool neverAllocate,
         bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.TryAllocateMemory");
+        GPGMM_VERIFY_NONZERO(allocationSize);
 
-        if (allocationSize == 0 || alignment != mMemoryAlignment) {
+        if (alignment != mMemoryAlignment) {
             RecordLogMessage(LogSeverity::Debug, "SegmentedMemoryAllocator.TryAllocateMemory",
                              "Allocation alignment does not match memory alignment.",
                              ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);

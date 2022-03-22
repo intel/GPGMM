@@ -253,11 +253,12 @@ namespace gpgmm {
                                                                             bool neverAllocate,
                                                                             bool cacheSize) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.TryAllocateMemory");
+        GPGMM_VERIFY_NONZERO(allocationSize);
 
         const uint64_t blockSize = AlignTo(allocationSize, mMinBlockSize);
 
         // Attempting to allocate a block larger then the slab will always fail.
-        if (mSlabSize != 0 && blockSize > mSlabSize) {
+        if (blockSize > mSlabSize) {
             RecordLogMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
                              "Aligned allocation size exceeded the slab size (" +
                                  std::to_string(blockSize) + " vs " + std::to_string(mSlabSize) +

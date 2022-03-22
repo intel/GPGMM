@@ -15,6 +15,7 @@
 #include "gpgmm/SlabBlockAllocator.h"
 
 #include "gpgmm/Debug.h"
+#include "gpgmm/Error.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
 #include "gpgmm/common/Utils.h"
@@ -40,7 +41,9 @@ namespace gpgmm {
     }
 
     Block* SlabBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
-        if (size == 0 || size > mBlockSize) {
+        GPGMM_VERIFY_NONZERO(size);
+
+        if (size > mBlockSize) {
             RecordLogMessage(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",
                              "Allocation size exceeded the block size. (" + std::to_string(size) +
                                  " vs " + std::to_string(mBlockSize) + " bytes).",

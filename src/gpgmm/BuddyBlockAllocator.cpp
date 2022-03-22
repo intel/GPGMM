@@ -16,6 +16,7 @@
 #include "gpgmm/BuddyBlockAllocator.h"
 
 #include "gpgmm/Debug.h"
+#include "gpgmm/Error.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
 #include "gpgmm/common/Utils.h"
@@ -144,7 +145,9 @@ namespace gpgmm {
     }
 
     Block* BuddyBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
-        if (size == 0 || size > mMaxBlockSize) {
+        GPGMM_VERIFY_NONZERO(size);
+
+        if (size > mMaxBlockSize) {
             RecordLogMessage(LogSeverity::Debug, "BuddyBlockAllocator.AllocateBlock",
                              "Block size exceeded the max block size.",
                              ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
