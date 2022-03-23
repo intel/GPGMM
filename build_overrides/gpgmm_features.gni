@@ -61,4 +61,8 @@ declare_args() {
   # Enables more detailed leak reports.
   # Sets -dGPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG
   gpgmm_enable_precise_allocator_debug = is_debug
+
+  # Enables ASSERT on severity functionality.
+  # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING
+  gpgmm_enable_assert_on_warning = false
 }

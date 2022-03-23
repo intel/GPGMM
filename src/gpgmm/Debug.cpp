@@ -14,6 +14,8 @@
 
 #include "gpgmm/Debug.h"
 
+#include "gpgmm/common/Assert.h"
+
 namespace gpgmm {
     // Messages with equal or greater to severity will be logged.
     LogSeverity gRecordEventLevel = LogSeverity::Info;
@@ -29,6 +31,10 @@ namespace gpgmm {
                           const std::string& description,
                           int messageId) {
         gpgmm::Log(severity) << name << ": " << description;
+#if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
+        ASSERT(severity < LogSeverity::Warning);
+#endif
+
         if (severity >= gRecordEventLevel) {
             const LOG_MESSAGE logMessage{description, messageId};
             TRACE_EVENT_INSTANT(name, JSONSerializer::Serialize(logMessage));
