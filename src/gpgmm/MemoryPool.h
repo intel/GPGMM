@@ -27,7 +27,7 @@ namespace gpgmm {
         uint64_t PoolSizeInBytes;
     };
 
-    // Stores a collection of fixed-size memory blocks.
+    // Stores a collection of fixed-size memory allocations.
     class MemoryPool {
       public:
         explicit MemoryPool(uint64_t memorySize);
@@ -47,7 +47,7 @@ namespace gpgmm {
         // Returns number of memory allocations in the pool.
         virtual uint64_t GetPoolSize() const = 0;
 
-        /// Returns the size of the memory blocks being pooled.
+        // Returns the size of the memory allocations being pooled.
         virtual uint64_t GetMemorySize() const;
 
         POOL_INFO GetInfo() const;
