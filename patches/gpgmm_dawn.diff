@@ -1,4 +1,4 @@
-From 01dec8f4b468dc16c50ab3927d2cba67789452a7 Mon Sep 17 00:00:00 2001
+From 572ec2b9d8f6aac1f34ce44c0e7e1b1cae008f8c Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -172,7 +172,7 @@ index 4a4574dd..97dd3bc0 100644
          VulkanUseD32S8,
          MetalDisableSamplerCompare,
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
-index 27d99917..1e981c22 100644
+index 27d99917..1f8c8f2f 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn/native/d3d12/BufferD3D12.cpp
 @@ -188,7 +188,11 @@ namespace dawn::native::d3d12 {
@@ -203,7 +203,7 @@ index 27d99917..1e981c22 100644
  
      D3D12_GPU_VIRTUAL_ADDRESS Buffer::GetVA() const {
 -        return mResourceAllocation.GetGPUPointer();
-+        return mResourceAllocation->GetResource()->GetGPUVirtualAddress();
++        return mResourceAllocation->GetGPUVirtualAddress();
      }
  
      bool Buffer::IsCPUWritableAtCreation() const {
