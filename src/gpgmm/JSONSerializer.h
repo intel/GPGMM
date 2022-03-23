@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_SERIALIZER_H_
-#define GPGMM_SERIALIZER_H_
+#ifndef GPGMM_JSONSERIALIZER_H_
+#define GPGMM_JSONSERIALIZER_H_
 
 #include "gpgmm/common/JSONEncoder.h"
 
@@ -24,7 +24,7 @@ namespace gpgmm {
     struct MEMORY_ALLOCATOR_INFO;
     struct LOG_MESSAGE;
 
-    class Serializer {
+    class JSONSerializer {
       public:
         static JSONDict Serialize(const LOG_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
@@ -34,4 +34,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_SERIALIZER_H_
+#endif  // GPGMM_JSONSERIALIZER_H_

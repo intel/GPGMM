@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_SERIALIZERD3D12_H_
-#define GPGMM_D3D12_SERIALIZERD3D12_H_
+#ifndef GPGMM_D3D12_JSONSERIALIZERD3D12_H_
+#define GPGMM_D3D12_JSONSERIALIZERD3D12_H_
 
-#include "gpgmm/Serializer.h"
+#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -28,7 +28,7 @@ namespace gpgmm { namespace d3d12 {
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_INFO;
 
-    class Serializer : public gpgmm::Serializer {
+    class JSONSerializer : public gpgmm::JSONSerializer {
       public:
         static JSONDict Serialize(const ALLOCATOR_DESC& desc);
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
@@ -47,4 +47,4 @@ namespace gpgmm { namespace d3d12 {
 
 }}  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_SERIALIZERD3D12_H_
+#endif  // GPGMM_D3D12_JSONSERIALIZERD3D12_H_

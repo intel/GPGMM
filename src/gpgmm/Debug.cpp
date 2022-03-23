@@ -31,7 +31,7 @@ namespace gpgmm {
         gpgmm::Log(severity) << name << ": " << description;
         if (severity >= gRecordEventLevel) {
             const LOG_MESSAGE logMessage{description, messageId};
-            TRACE_EVENT_INSTANT(name, Serializer::Serialize(logMessage));
+            TRACE_EVENT_INSTANT(name, JSONSerializer::Serialize(logMessage));
         }
     }
 

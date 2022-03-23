@@ -15,7 +15,7 @@
 #ifndef GPGMM_DEBUG_H_
 #define GPGMM_DEBUG_H_
 
-#include "gpgmm/Serializer.h"
+#include "gpgmm/JSONSerializer.h"
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Log.h"
 
@@ -37,7 +37,7 @@ namespace gpgmm {
                           const std::string& description,
                           int messageId);
 
-    template <typename T, typename DescT, typename SerializerT = Serializer>
+    template <typename T, typename DescT, typename SerializerT = JSONSerializer>
     static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
         if (IsEventTracerEnabled()) {
             TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, SerializerT::Serialize(desc));

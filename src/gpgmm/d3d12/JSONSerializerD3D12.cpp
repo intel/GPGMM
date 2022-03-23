@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/d3d12/SerializerD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -23,7 +23,7 @@
 namespace gpgmm { namespace d3d12 {
 
     // static
-    JSONDict Serializer::Serialize(const ALLOCATOR_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
@@ -40,7 +40,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const CREATE_RESOURCE_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const CREATE_RESOURCE_DESC& desc) {
         JSONDict dict;
         dict.AddItem("allocationDescriptor", Serialize(desc.allocationDescriptor));
         dict.AddItem("resourceDescriptor", Serialize(desc.resourceDescriptor));
@@ -50,7 +50,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const ALLOCATION_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const ALLOCATION_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("HeapType", desc.HeapType);
@@ -58,7 +58,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const D3D12_RESOURCE_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const D3D12_RESOURCE_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Dimension", desc.Dimension);
         dict.AddItem("Alignment", desc.Alignment);
@@ -74,7 +74,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const ALLOCATOR_RECORD_OPTIONS& desc) {
+    JSONDict JSONSerializer::Serialize(const ALLOCATOR_RECORD_OPTIONS& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MinMessageLevel", desc.MinMessageLevel);
@@ -82,7 +82,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue) {
+    JSONDict JSONSerializer::Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue) {
         JSONDict dict;
         dict.AddItem("Depth", depthStencilValue.Depth);
         dict.AddItem("Stencil", depthStencilValue.Stencil);
@@ -90,7 +90,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const FLOAT rgba[4]) {
+    JSONDict JSONSerializer::Serialize(const FLOAT rgba[4]) {
         JSONDict dict;
         dict.AddItem("R", rgba[0]);
         dict.AddItem("G", rgba[1]);
@@ -100,7 +100,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const D3D12_CLEAR_VALUE* clearValue) {
+    JSONDict JSONSerializer::Serialize(const D3D12_CLEAR_VALUE* clearValue) {
         JSONDict dict;
         if (clearValue == nullptr) {
             return dict;
@@ -118,7 +118,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const DXGI_SAMPLE_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const DXGI_SAMPLE_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Count", desc.Count);
         dict.AddItem("Quality", desc.Quality);
@@ -126,27 +126,27 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict Serializer::Serialize(const HEAP_INFO& desc) {
+    JSONDict JSONSerializer::Serialize(const HEAP_INFO& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("IsResident", desc.IsResident);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
         dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
         if (desc.MemoryPool != nullptr) {
-            dict.AddItem("MemoryPool", gpgmm::Serializer::Serialize(desc.MemoryPool));
+            dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
         }
 
         return dict;
     }
 
     // static
-    JSONDict Serializer::Serialize(const RESOURCE_ALLOCATION_INFO& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_INFO& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
-        dict.AddItem("ResourceHeap", gpgmm::Serializer::Serialize(desc.ResourceHeap));
+        dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
         return dict;
     }
 

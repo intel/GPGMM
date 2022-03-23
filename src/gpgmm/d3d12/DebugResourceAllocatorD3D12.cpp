@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
                                 << "Addr=" << ToString(allocation) << ", "
                                 << "ExtRef=" << allocation->GetRefCount() << ", "
                                 << "Info="
-                                << Serializer::Serialize(allocation->GetInfo()).ToString();
+                                << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
         }
     }
 

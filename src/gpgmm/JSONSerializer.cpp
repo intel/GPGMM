@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/Serializer.h"
+#include "gpgmm/JSONSerializer.h"
 
 #include "gpgmm/Allocator.h"
 #include "gpgmm/Debug.h"
@@ -23,14 +23,14 @@
 namespace gpgmm {
 
     // static
-    JSONDict Serializer::Serialize(const POOL_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const POOL_INFO& info) {
         JSONDict dict;
         dict.AddItem("PoolSizeInBytes", info.PoolSizeInBytes);
         return dict;
     }
 
     // static
-    JSONDict Serializer::Serialize(const LOG_MESSAGE& desc) {
+    JSONDict JSONSerializer::Serialize(const LOG_MESSAGE& desc) {
         JSONDict dict;
         dict.AddItem("Description", desc.Description);
         dict.AddItem("ID", desc.ID);
@@ -38,7 +38,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict Serializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
         JSONDict dict;
         dict.AddItem("UsedBlockCount", info.UsedBlockCount);
         dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);
@@ -49,7 +49,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict Serializer::Serialize(void* objectPtr) {
+    JSONDict JSONSerializer::Serialize(void* objectPtr) {
         JSONDict dict;
         dict.AddItem(TraceEventID::kIdRefKey, ToString(objectPtr));
         return dict;

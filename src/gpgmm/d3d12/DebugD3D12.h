@@ -16,18 +16,18 @@
 #define GPGMM_D3D12_DEBUGD3D12_H_
 
 #include "gpgmm/Debug.h"
-#include "gpgmm/d3d12/SerializerD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
 
     template <typename T, typename... Args>
     static void RecordCall(const char* name, const Args&... args) {
-        return gpgmm::RecordCall<T, Serializer>(name, args...);
+        return gpgmm::RecordCall<T, JSONSerializer>(name, args...);
     }
 
     template <typename T, typename DescT>
     static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        return gpgmm::RecordObject<T, DescT, Serializer>(name, objPtr, desc);
+        return gpgmm::RecordObject<T, DescT, JSONSerializer>(name, objPtr, desc);
     }
 
 }}  // namespace gpgmm::d3d12
