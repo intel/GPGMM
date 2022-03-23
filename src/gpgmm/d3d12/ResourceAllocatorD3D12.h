@@ -239,13 +239,6 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
     };
 
-    struct CREATE_RESOURCE_DESC {
-        const ALLOCATION_DESC& allocationDescriptor;
-        const D3D12_RESOURCE_DESC& resourceDescriptor;
-        D3D12_RESOURCE_STATES initialResourceState;
-        const D3D12_CLEAR_VALUE* clearValue;
-    };
-
     using QUERY_RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
 
     enum ALLOCATOR_MESSAGE_ID {
