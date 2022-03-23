@@ -100,15 +100,17 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
-    virtual void RunTest(const TraceFile& traceFile,
-                         const TestEnviromentParams& envParams,
-                         uint64_t iterationIndex) = 0;
-
     void RunTestLoop(bool forceRegenerate,
                      bool forceIsCapturedCapsCompat,
                      bool forceSingleIteration);
 
+    void RunSingleTest(bool forceRegenerate, bool forceIsCapturedCapsCompat);
+
   protected:
+    virtual void RunTest(const TraceFile& traceFile,
+                         const TestEnviromentParams& envParams,
+                         uint64_t iterationIndex) = 0;
+
     std::unique_ptr<gpgmm::PlatformTime> mPlatformTime;
 };
 
