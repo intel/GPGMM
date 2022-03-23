@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_SYSTEMUTILS_H_
-#define GPGMM_COMMON_SYSTEMUTILS_H_
+#ifndef GPGMM_COMMON_PLATFORMUTILS_H_
+#define GPGMM_COMMON_PLATFORMUTILS_H_
 
 #include "Platform.h"
 
@@ -26,7 +26,8 @@ namespace gpgmm {
     std::string GetEnvironmentVar(const char* variableName);
     bool SetEnvironmentVar(const char* variableName, const char* value);
     std::string GetExecutableDirectory();
+    uint32_t GetPID();
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_SYSTEMUTILS_H_
+#endif  // GPGMM_COMMON_PLATFORMUTILS_H_

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "SystemUtils.h"
+#include "PlatformUtils.h"
 
 #include "Assert.h"
 
@@ -68,6 +68,10 @@ namespace gpgmm {
     bool SetEnvironmentVar(const char* variableName, const char* value) {
         return setenv(variableName, value, 1) == 0;
     }
+
+    uint32_t GetPID() {
+        return static_cast<uint32_t>(getpid());
+    }
 #else
 #    error "Implement Get/SetEnvironmentVar for your platform."
 #endif
@@ -79,6 +83,11 @@ namespace gpgmm {
                                                      static_cast<DWORD>(executableFileBuf.size()));
         return executablePathLen > 0 ? std::string(executableFileBuf.data()) : "";
     }
+
+    uint32_t GetPID() {
+        return GetCurrentProcessId();
+    }
+
 #elif defined(GPGMM_PLATFORM_LINUX)
     std::string GetExecutablePath() {
         std::array<char, PATH_MAX> path;

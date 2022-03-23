@@ -30,10 +30,10 @@ target_sources(gpgmm_common PRIVATE
   "Platform.h"
   "PlatformTime.cpp"
   "PlatformTime.h"
+  "PlatformUtils.cpp"
+  "PlatformUtils.h"
   "RefCount.cpp"
   "RefCount.h"
-  "SystemUtils.cpp"
-  "SystemUtils.h"
   "Utils.cpp"
   "Utils.h"
 )

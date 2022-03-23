@@ -159,10 +159,10 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "Platform.h",
       "PlatformTime.cpp",
       "PlatformTime.h",
+      "PlatformUtils.cpp",
+      "PlatformUtils.h",
       "RefCount.cpp",
       "RefCount.h",
-      "SystemUtils.cpp",
-      "SystemUtils.h",
       "Utils.cpp",
       "Utils.h",
     ]
