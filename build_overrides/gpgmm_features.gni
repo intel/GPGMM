@@ -55,7 +55,7 @@ declare_args() {
   gpgmm_enable_d3d12_resource_alignment_warning = false
 
   # Enables recording until program termination.
-  # Sets -dGPGMM_ENABLE_TRACING_UNTIL_TERMINATION
+  # Sets -dGPGMM_ENABLE_RECORDING_UNTIL_TERMINATION
   gpgmm_enable_recording_until_termination = false
 
   # Enables more detailed leak reports.
