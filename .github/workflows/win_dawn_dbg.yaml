@@ -48,7 +48,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false"
+        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
 
     - name: Build for main branch
       shell: cmd
@@ -90,7 +90,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false"
+        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
 
     - name: Build for main branch (with patch)
       shell: cmd

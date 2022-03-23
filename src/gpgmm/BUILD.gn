@@ -108,6 +108,10 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG" ]
   }
 
+  if (gpgmm_enable_assert_on_warning) {
+    defines += [ "GPGMM_ENABLE_ASSERT_ON_WARNING" ]
+  }
+
   libs = []
   data_deps = []
 
