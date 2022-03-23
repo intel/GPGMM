@@ -283,6 +283,10 @@ const TestEnviromentParams& GPGMMCaptureReplayTestEnvironment::GetParams() const
 CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
+void CaptureReplayTestWithParams::RunSingleTest(bool forceRegenerate,
+                                                bool forceIsCapturedCapsCompat) {
+    return RunTestLoop(forceRegenerate, forceIsCapturedCapsCompat, /*forceSingleIteration*/ true);
+}
 
 void CaptureReplayTestWithParams::RunTestLoop(bool forceRegenerate,
                                               bool forceIsCapturedCapsCompat,
