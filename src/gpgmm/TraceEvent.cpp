@@ -17,6 +17,7 @@
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
+#include "gpgmm/common/PlatformUtils.h"
 #include "gpgmm/common/Utils.h"
 
 #include <fstream>
@@ -181,10 +182,7 @@ namespace gpgmm {
             const uint64_t microseconds =
                 static_cast<uint64_t>(traceEvent.mTimestamp * 1000.0 * 1000.0);
             eventData.AddItem("ts", microseconds);
-
-            // TODO: Store the real process ID instead of fixed name.
-            const std::string kProcessID = "GPGMM";
-            eventData.AddItem("pid", kProcessID);
+            eventData.AddItem("pid", GetPID());
 
             if (!traceEvent.mArgs.IsEmpty()) {
                 eventData.AddItem("args", traceEvent.mArgs);

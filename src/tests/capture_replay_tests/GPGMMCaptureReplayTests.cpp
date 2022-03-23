@@ -16,7 +16,7 @@
 
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/PlatformTime.h"
-#include "gpgmm/common/SystemUtils.h"
+#include "gpgmm/common/PlatformUtils.h"
 
 #include <json/json.h>
 #include <fstream>
