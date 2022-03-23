@@ -15,16 +15,25 @@
 #ifndef GPGMM_COMMON_UTILS_H_
 #define GPGMM_COMMON_UTILS_H_
 
-template <typename T>
-void SafeDelete(T*& object) {
-    delete object;
-    object = nullptr;
-}
+#include <string>
 
-template <typename T>
-void SafeDelete(T*&& object) {
-    T*& lvalue = object;
-    SafeDelete(lvalue);
-}
+namespace gpgmm {
+
+    template <typename T>
+    void SafeDelete(T*& object) {
+        delete object;
+        object = nullptr;
+    }
+
+    template <typename T>
+    void SafeDelete(T*&& object) {
+        T*& lvalue = object;
+        SafeDelete(lvalue);
+    }
+
+    // Converts pointer to hex address for output.
+    std::string ToString(const void* object);
+
+}  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_UTILS_H_

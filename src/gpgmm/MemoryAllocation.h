@@ -71,6 +71,7 @@ namespace gpgmm {
         MemoryBase* GetMemory() const;
         uint8_t* GetMappedPointer() const;
         MemoryAllocator* GetAllocator() const;
+        void SetAllocator(MemoryAllocator* allocator);
         uint64_t GetSize() const;
         uint64_t GetOffset() const;
         AllocationMethod GetMethod() const;

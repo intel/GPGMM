@@ -41,7 +41,6 @@ namespace gpgmm {
                              uint64_t memorySize,
                              uint64_t memoryAlignment,
                              std::unique_ptr<MemoryAllocator> memoryAllocator);
-        ~BuddyMemoryAllocator() override;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
