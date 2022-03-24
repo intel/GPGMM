@@ -34,6 +34,7 @@
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {
@@ -95,6 +96,7 @@ namespace gpgmm { namespace d3d12 {
             if ((resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
                  resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
                  resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) &&
+                IsAllowedToUseSmallAlignment(resourceDescriptor) &&
                 (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
                                              D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
                 resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
