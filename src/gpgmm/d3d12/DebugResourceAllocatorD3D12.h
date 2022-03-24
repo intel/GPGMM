@@ -32,7 +32,7 @@ namespace gpgmm { namespace d3d12 {
         void ReportLiveAllocations() const;
 
       private:
-        void DeallocateMemory(MemoryAllocation* allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         class ResourceAllocationEntry {
           public:

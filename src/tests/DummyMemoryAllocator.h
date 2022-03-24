@@ -22,7 +22,7 @@ namespace gpgmm {
 
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
-        void DeallocateMemory(MemoryAllocation* allocation) override {
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
             ASSERT(allocation != nullptr);
             ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
             mInfo.UsedMemoryCount--;

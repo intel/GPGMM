@@ -163,7 +163,7 @@ namespace gpgmm {
                                                   AllocationMethod::kSubAllocated, blockInSlab);
     }
 
-    void SlabMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.DeallocateMemory");
 
         const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(allocation->GetBlock());
@@ -193,7 +193,7 @@ namespace gpgmm {
 
         // If the slab will be empty, release the underlying memory.
         if (slab->Unref()) {
-            mMemoryAllocator->DeallocateMemory(slab->SlabMemory.release());
+            mMemoryAllocator->DeallocateMemory(std::move(slab->SlabMemory));
         }
     }
 
@@ -293,7 +293,7 @@ namespace gpgmm {
             subAllocation->GetMethod(), subAllocation->GetBlock());
     }
 
-    void SlabCacheAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.DeallocateMemory");
 
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()), false);
@@ -301,7 +301,7 @@ namespace gpgmm {
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         ASSERT(slabAllocator != nullptr);
 
-        slabAllocator->DeallocateMemory(allocation);
+        slabAllocator->DeallocateMemory(std::move(allocation));
 
         // Remove the cached allocator if this is the last allocation. Once |entry| goes out of
         // scope, it will unlink itself from the cache.

@@ -53,7 +53,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     // Verify allocation equal to the slab size always succeeds.
@@ -160,7 +160,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
 
     // Free both slabs.
     for (auto& allocation : allocations) {
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
@@ -216,7 +216,7 @@ TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     ASSERT_EQ(pool.GetPoolSize(), kNumOfSlabs);
@@ -247,7 +247,7 @@ TEST(SlabMemoryAllocatorTests, QueryInfo) {
         EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
         EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
 
         // Both the sub-allocation and slab should be released.
         EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
@@ -280,7 +280,7 @@ TEST(SlabMemoryAllocatorTests, QueryInfo) {
         EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
         EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
 
         EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
         EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
@@ -321,8 +321,8 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
         allocator.TryAllocateMemory(22, 1, false, false);
     ASSERT_NE(secondAllocation, nullptr);
 
-    allocator.DeallocateMemory(firstAllocation.release());
-    allocator.DeallocateMemory(secondAllocation.release());
+    allocator.DeallocateMemory(std::move(firstAllocation));
+    allocator.DeallocateMemory(std::move(secondAllocation));
 
     std::unique_ptr<MemoryAllocation> thirdAllocation =
         allocator.TryAllocateMemory(44, 1, false, false);
@@ -332,8 +332,8 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
         allocator.TryAllocateMemory(44, 1, false, false);
     ASSERT_NE(fourthAllocation, nullptr);
 
-    allocator.DeallocateMemory(thirdAllocation.release());
-    allocator.DeallocateMemory(fourthAllocation.release());
+    allocator.DeallocateMemory(std::move(thirdAllocation));
+    allocator.DeallocateMemory(std::move(fourthAllocation));
 }
 
 TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
@@ -352,7 +352,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinBlockSize));
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
     {
         constexpr uint64_t allocationSize = 44;
@@ -363,7 +363,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinBlockSize));
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
     {
         constexpr uint64_t allocationSize = 88;
@@ -374,7 +374,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), AlignTo(allocationSize, kMinBlockSize));
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     EXPECT_EQ(allocator.GetSlabCacheSizeForTesting(), 0u);
@@ -400,7 +400,7 @@ TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
     EXPECT_GE(allocation->GetSize(), kMinBlockSize);
 
-    allocator.DeallocateMemory(allocation.release());
+    allocator.DeallocateMemory(std::move(allocation));
 }
 
 TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
@@ -437,8 +437,8 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
 
         EXPECT_EQ(secondAllocation->GetMemory()->GetSize(), kDefaultSlabSize);
 
-        allocator.DeallocateMemory(firstAllocation.release());
-        allocator.DeallocateMemory(secondAllocation.release());
+        allocator.DeallocateMemory(std::move(firstAllocation));
+        allocator.DeallocateMemory(std::move(secondAllocation));
     }
 
     // Verify multiple slab-buddy sub-allocations across buddies are allocated non-contigiously.
@@ -471,12 +471,12 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
         EXPECT_GE(secondSlabInSecondBuddy->GetSize(), kSlabSize);
 
         // Free slab in second buddy.
-        allocator.DeallocateMemory(secondSlabInSecondBuddy.release());
-        allocator.DeallocateMemory(firstSlabInSecondBuddy.release());
+        allocator.DeallocateMemory(std::move(secondSlabInSecondBuddy));
+        allocator.DeallocateMemory(std::move(firstSlabInSecondBuddy));
 
         // Free slabs in first buddy.
         for (auto& allocation : allocations) {
-            allocator.DeallocateMemory(allocation.release());
+            allocator.DeallocateMemory(std::move(allocation));
         }
     }
 }
@@ -502,7 +502,7 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
         EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
 
         // Both the sub-allocation and slab should be released.
         EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
@@ -534,7 +534,7 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
         EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
 
         // Only the sub-allocation should be released.
         EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
@@ -567,7 +567,7 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
         EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
 
         // Both the slab block and buddy memory should be released.
         EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);

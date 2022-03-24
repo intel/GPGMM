@@ -37,7 +37,7 @@ TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 
-    allocator.DeallocateMemory(allocation.release());
+    allocator.DeallocateMemory(std::move(allocation));
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 
     allocator.ReleaseMemory();
@@ -60,8 +60,8 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 
-    allocator.DeallocateMemory(firstAllocation.release());
-    allocator.DeallocateMemory(secondAllocation.release());
+    allocator.DeallocateMemory(std::move(firstAllocation));
+    allocator.DeallocateMemory(std::move(secondAllocation));
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 
@@ -127,13 +127,13 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 5u);
 
-    allocator.DeallocateMemory(firstAllocation.release());
-    allocator.DeallocateMemory(secondAllocation.release());
-    allocator.DeallocateMemory(thirdAllocation.release());
-    allocator.DeallocateMemory(fourthAllocation.release());
-    allocator.DeallocateMemory(fifthAllocation.release());
-    allocator.DeallocateMemory(sixthAllocation.release());
-    allocator.DeallocateMemory(seventhAllocation.release());
+    allocator.DeallocateMemory(std::move(firstAllocation));
+    allocator.DeallocateMemory(std::move(secondAllocation));
+    allocator.DeallocateMemory(std::move(thirdAllocation));
+    allocator.DeallocateMemory(std::move(fourthAllocation));
+    allocator.DeallocateMemory(std::move(fifthAllocation));
+    allocator.DeallocateMemory(std::move(sixthAllocation));
+    allocator.DeallocateMemory(std::move(seventhAllocation));
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 5u);
 
@@ -151,7 +151,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
@@ -162,7 +162,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
@@ -183,7 +183,7 @@ TEST(SegmentedMemoryAllocatorTests, QueryInfo) {
     EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultMemorySize);
     EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
 
-    allocator.DeallocateMemory(allocation.release());
+    allocator.DeallocateMemory(std::move(allocation));
 
     // Single memory is made available as free after being released.
     EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);

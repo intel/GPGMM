@@ -353,7 +353,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT CheckForDeviceObjectLeaks() const;
 
         // MemoryAllocator interface
-        void DeallocateMemory(MemoryAllocation* allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<ResidencyManager> mResidencyManager;

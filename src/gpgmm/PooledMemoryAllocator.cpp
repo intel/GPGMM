@@ -45,12 +45,12 @@ namespace gpgmm {
         return allocation;
     }
 
-    void PooledMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         const uint64_t& allocationSize = allocation->GetSize();
         mInfo.FreeMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount--;
         mInfo.UsedMemoryUsage -= allocationSize;
 
-        mPool->ReturnToPool(std::unique_ptr<MemoryAllocation>(allocation));
+        mPool->ReturnToPool(std::move(allocation));
     }
 }  // namespace gpgmm

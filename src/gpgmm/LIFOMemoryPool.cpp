@@ -51,7 +51,7 @@ namespace gpgmm {
     void LIFOMemoryPool::ReleasePool() {
         for (auto& allocation : mPool) {
             ASSERT(allocation != nullptr);
-            allocation->GetAllocator()->DeallocateMemory(allocation.release());
+            allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
         }
 
         mPool.clear();

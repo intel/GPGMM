@@ -65,16 +65,16 @@ namespace gpgmm { namespace d3d12 {
         allocation->SetAllocator(this);
     }
 
-    void DebugResourceAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void DebugResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         // KeepAlive must be false so |mLiveAllocations| cache will shrink by 1 entry once |entry|
         // falls out of scope below since AddLiveAllocation() adds one (and only one) ref.
-        auto entry =
-            mLiveAllocations.GetOrCreate(ResourceAllocationEntry(ToBackend(allocation)), false);
+        auto entry = mLiveAllocations.GetOrCreate(
+            ResourceAllocationEntry(ToBackend(allocation.get())), false);
 
         entry->Unref();
         ASSERT(entry->HasOneRef());
 
-        entry->GetValue().GetAllocator()->DeallocateMemory(allocation);
+        entry->GetValue().GetAllocator()->DeallocateMemory(std::move(allocation));
     }
 
 }}  // namespace gpgmm::d3d12

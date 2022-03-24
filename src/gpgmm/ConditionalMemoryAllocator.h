@@ -34,7 +34,7 @@ namespace gpgmm {
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
-        void DeallocateMemory(MemoryAllocation* pAllocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MemoryAllocator* GetFirstAllocatorForTesting() const;
         MemoryAllocator* GetSecondAllocatorForTesting() const;

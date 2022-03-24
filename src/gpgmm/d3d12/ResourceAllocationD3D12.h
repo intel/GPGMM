@@ -63,6 +63,8 @@ namespace gpgmm { namespace d3d12 {
                            ComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);
 
+        ~ResourceAllocation() override;
+
         // Gets the CPU pointer to the specificed subresource of the resource allocation.
         // If sub-allocated within the resource, the read or write range and
         // pointer value will start from the allocation instead of the resource.
@@ -93,7 +95,6 @@ namespace gpgmm { namespace d3d12 {
         RESOURCE_ALLOCATION_INFO GetInfo() const;
 
       private:
-        ~ResourceAllocation() override;
         void DeleteThis() override;
 
         ResidencyManager* const mResidencyManager;

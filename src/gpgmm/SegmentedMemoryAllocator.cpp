@@ -162,7 +162,7 @@ namespace gpgmm {
         return std::make_unique<MemoryAllocation>(this, memory);
     }
 
-    void SegmentedMemoryAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT_CALL_SCOPED("SegmentedMemoryAllocator.DeallocateMemory");
 
         ASSERT(allocation != nullptr);

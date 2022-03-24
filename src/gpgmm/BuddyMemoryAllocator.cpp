@@ -107,7 +107,7 @@ namespace gpgmm {
                                                   block);
     }
 
-    void BuddyMemoryAllocator::DeallocateMemory(MemoryAllocation* subAllocation) {
+    void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
         TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.DeallocateMemory");
 
         ASSERT(subAllocation != nullptr);
@@ -125,7 +125,7 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
-            GetFirstChild()->DeallocateMemory(memoryAllocation.release());
+            GetFirstChild()->DeallocateMemory(std::move(memoryAllocation));
         } else {
             mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
         }

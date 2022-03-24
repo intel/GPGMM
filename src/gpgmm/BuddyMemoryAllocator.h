@@ -47,7 +47,7 @@ namespace gpgmm {
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
-        void DeallocateMemory(MemoryAllocation* subAllocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
 
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
