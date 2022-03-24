@@ -22,12 +22,16 @@
 
 #if defined(GPGMM_PLATFORM_ANDROID)
 #    include <android/log.h>
-#endif
+#elif defined(GPGMM_PLATFORM_WINDOWS)
+#    include <windows.h>
+#endif  // defined(GPGMM_PLATFORM_WINDOWS)
 
 namespace gpgmm {
 
+    static const char kLogTag[] = "gpgmm";
+
     // Messages with equal or greater to severity will be logged.
-    LogSeverity gLogMessageLevel = LogSeverity::Info;
+    static LogSeverity gLogMessageLevel = LogSeverity::Info;
 
     namespace {
 
@@ -90,11 +94,6 @@ namespace gpgmm {
             return;
         }
 
-        // If this message is below the global severity level, do not print it.
-        if (gLogMessageLevel > mSeverity) {
-            return;
-        }
-
         const char* severityName = SeverityName(mSeverity);
 
         FILE* outputStream = stdout;
@@ -102,14 +101,31 @@ namespace gpgmm {
             outputStream = stderr;
         }
 
+        // Displays a message to the debug console with the error message in it.
+        // This is for development only; we don't use this in circumstances (like release builds)
+        // where users could see it, since users don't understand these messages anyway.
+#if defined(GPGMM_PLATFORM_WINDOWS)
+        if (IsDebuggerPresent()) {
+            const std::string outputString =
+                std::string(kLogTag) + " " + std::string(severityName) + ": " + fullMessage + "\n";
+            OutputDebugStringA(outputString.c_str());
+        }
+#endif  // defined(GPGMM_PLATFORM_WINDOWS)
+
+        // If this message is below the global severity level, do not print it.
+        if (gLogMessageLevel > mSeverity) {
+            return;
+        }
+
 #if defined(GPGMM_PLATFORM_ANDROID)
         android_LogPriority androidPriority = AndroidLogPriority(mSeverity);
-        __android_log_print(androidPriority, "Dawn", "%s: %s\n", severityName, fullMessage.c_str());
-#else   // defined(GPGMM_PLATFORM_ANDROID)
-        // Note: we use fprintf because <iostream> includes static initializers.
-        fprintf(outputStream, "%s: %s\n", severityName, fullMessage.c_str());
+        __android_log_print(androidPriority, "GPGMM", "%s: %s\n", severityName,
+                            fullMessage.c_str());
+#else  // defined(GPGMM_PLATFORM_ANDROID)
+       // Note: we use fprintf because <iostream> includes static initializers.
+        fprintf(outputStream, "%s %s: %s\n", kLogTag, severityName, fullMessage.c_str());
         fflush(outputStream);
-#endif  // defined(GPGMM_PLATFORM_ANDROID)
+#endif
     }
 
     LogMessage DebugLog() {
