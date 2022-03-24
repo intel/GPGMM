@@ -633,7 +633,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, newResourceDesc.Width, alignment, neverAllocate,
-                /*cachedSize*/ false, [&](const auto& subAllocation) -> HRESULT {
+                /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -666,7 +666,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
-                /*cachedSize*/ false, [&](const auto& subAllocation) -> HRESULT {
+                /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -706,7 +706,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, GetHeapAlignment(heapFlags), neverAllocate,
-                /*cachedSize*/ false, [&](const auto& allocation) -> HRESULT {
+                /*cacheSize*/ false, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = ToBackend(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
