@@ -297,7 +297,7 @@ namespace gpgmm { namespace d3d12 {
                 RecordLogMessage(LogSeverity::Debug, "ResourceAllocator.TryAllocateResource",
                                  "Resource failed to be created: " + GetErrorMessage(hr),
                                  ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED);
-                allocator->DeallocateMemory(allocation.release());
+                allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;
         }
@@ -999,7 +999,7 @@ namespace gpgmm { namespace d3d12 {
         return (totalLiveObjects > 0u) ? E_FAIL : S_OK;
     }
 
-    void ResourceAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
 
         Heap* resourceHeap = ToBackend(allocation->GetMemory());

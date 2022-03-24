@@ -100,13 +100,7 @@ namespace gpgmm { namespace d3d12 {
 
     void ResourceAllocation::DeleteThis() {
         TRACE_EVENT_CALL_SCOPED("ResourceAllocation.Release");
-
-        GetAllocator()->DeallocateMemory(this);
-
-        mResource.Reset();
-        MemoryAllocation::Reset();
-
-        IUnknownImpl::DeleteThis();
+        GetAllocator()->DeallocateMemory(std::unique_ptr<ResourceAllocation>(this));
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {

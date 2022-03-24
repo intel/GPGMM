@@ -36,7 +36,7 @@ namespace gpgmm { namespace d3d12 {
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
-        void DeallocateMemory(MemoryAllocation* allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
       private:
         ResourceAllocator* const mResourceAllocator;

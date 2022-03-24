@@ -80,8 +80,6 @@ namespace gpgmm {
       protected:
         friend class MemoryAllocator;
 
-        virtual void Reset();
-
       private:
         MemoryAllocator* mAllocator;
         MemoryBase* mMemory;

@@ -38,7 +38,7 @@ namespace gpgmm { namespace d3d12 {
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
-        void DeallocateMemory(MemoryAllocation* allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;

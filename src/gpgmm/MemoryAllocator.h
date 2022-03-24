@@ -69,7 +69,7 @@ namespace gpgmm {
         // Free the allocation by deallocating the block used to sub-allocate it and the underlying
         // memory block used with it. The |allocation| will be considered invalid after
         // DeallocateMemory.
-        virtual void DeallocateMemory(MemoryAllocation* allocation) = 0;
+        virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
 
         // Free memory retained by this memory allocator.
         // Used to reuse memory blocks between calls to TryAllocateMemory.

@@ -32,7 +32,7 @@ namespace gpgmm {
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
-        void DeallocateMemory(MemoryAllocation* allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
       private:
         MemoryPool* const mPool;

@@ -64,7 +64,7 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
         ASSERT_EQ(invalidAllocation, nullptr);
     }
 
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);
 }
 
@@ -119,10 +119,10 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_NE(allocation1->GetMemory(), allocation2->GetMemory());
 
     // Deallocate both allocations
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);  // Released H0
 
-    allocator.DeallocateMemory(allocation2.release());
+    allocator.DeallocateMemory(std::move(allocation2));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);  // Released H1
 }
 
@@ -176,14 +176,14 @@ TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_NE(allocation1->GetMemory(), allocation3->GetMemory());
 
     // Deallocate all allocations in reverse order.
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(),
               2u);  // A2 pins H0.
 
-    allocator.DeallocateMemory(allocation2.release());
+    allocator.DeallocateMemory(std::move(allocation2));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);  // Released H0
 
-    allocator.DeallocateMemory(allocation3.release());
+    allocator.DeallocateMemory(std::move(allocation3));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);  // Released H1
 }
 
@@ -262,19 +262,19 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_NE(allocation4->GetMemory(), allocation5->GetMemory());
 
     // Deallocate allocations in staggered order.
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 4u);  // A2 pins H0
 
-    allocator.DeallocateMemory(allocation5.release());
+    allocator.DeallocateMemory(std::move(allocation5));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 3u);  // Released H3
 
-    allocator.DeallocateMemory(allocation2.release());
+    allocator.DeallocateMemory(std::move(allocation2));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 2u);  // Released H0
 
-    allocator.DeallocateMemory(allocation4.release());
+    allocator.DeallocateMemory(std::move(allocation4));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);  // Released H2
 
-    allocator.DeallocateMemory(allocation3.release());
+    allocator.DeallocateMemory(std::move(allocation3));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);  // Released H1
 }
 
@@ -339,16 +339,16 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 3u);
     ASSERT_EQ(allocation3->GetMemory(), allocation4->GetMemory());
 
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 2u);
 
-    allocator.DeallocateMemory(allocation2.release());
+    allocator.DeallocateMemory(std::move(allocation2));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
-    allocator.DeallocateMemory(allocation3.release());
+    allocator.DeallocateMemory(std::move(allocation3));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
-    allocator.DeallocateMemory(allocation4.release());
+    allocator.DeallocateMemory(std::move(allocation4));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);
 }
 
@@ -414,16 +414,16 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 3u);
     ASSERT_NE(allocation3->GetMemory(), allocation4->GetMemory());
 
-    allocator.DeallocateMemory(allocation1.release());
+    allocator.DeallocateMemory(std::move(allocation1));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 3u);
 
-    allocator.DeallocateMemory(allocation2.release());
+    allocator.DeallocateMemory(std::move(allocation2));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 2u);
 
-    allocator.DeallocateMemory(allocation3.release());
+    allocator.DeallocateMemory(std::move(allocation3));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
-    allocator.DeallocateMemory(allocation4.release());
+    allocator.DeallocateMemory(std::move(allocation4));
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);
 }
 
@@ -471,7 +471,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     ASSERT_EQ(pool.GetPoolSize(), heaps.size());
@@ -493,7 +493,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 0u);
@@ -534,7 +534,7 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
-        allocator.DeallocateMemory(allocation.release());
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     ASSERT_EQ(pool.GetPoolSize(), kNumOfHeaps);

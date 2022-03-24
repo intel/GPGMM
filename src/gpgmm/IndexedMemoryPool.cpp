@@ -46,7 +46,7 @@ namespace gpgmm {
     void IndexedMemoryPool::ReleasePool() {
         for (auto& allocation : mPool) {
             if (allocation != nullptr) {
-                allocation->GetAllocator()->DeallocateMemory(allocation.release());
+                allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
             }
         }
 

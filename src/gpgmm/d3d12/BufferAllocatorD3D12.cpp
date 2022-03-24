@@ -69,9 +69,9 @@ namespace gpgmm { namespace d3d12 {
         return std::make_unique<MemoryAllocation>(this, resourceHeap);
     }
 
-    void BufferAllocator::DeallocateMemory(MemoryAllocation* allocation) {
+    void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         ASSERT(allocation != nullptr);
-        mResourceAllocator->DeallocateMemory(allocation);
+        mResourceAllocator->DeallocateMemory(std::move(allocation));
     }
 
     uint64_t BufferAllocator::GetMemorySize() const {
