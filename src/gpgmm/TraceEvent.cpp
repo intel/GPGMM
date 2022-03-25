@@ -41,7 +41,7 @@ namespace gpgmm {
 
     void ShutdownEventTracer() {
 #if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
-        gEventTracer.release();
+        gEventTracer = nullptr;
 #endif
     }
 
