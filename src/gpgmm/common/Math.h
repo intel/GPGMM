@@ -55,6 +55,8 @@ namespace gpgmm {
         return ((number + multipleT - 1) / multipleT) * multipleT;
     }
 
+    uint64_t RoundUp(uint64_t n, uint64_t m);
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_MATH_H_

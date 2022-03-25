@@ -19,6 +19,7 @@
 namespace gpgmm { namespace d3d12 {
 
     bool IsDepthFormat(DXGI_FORMAT format);
+    bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
 
 }}  // namespace gpgmm::d3d12
 
