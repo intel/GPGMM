@@ -15,6 +15,7 @@
 #ifndef GPGMM_COMMON_UTILS_H_
 #define GPGMM_COMMON_UTILS_H_
 
+#include <sstream>
 #include <string>
 
 namespace gpgmm {
@@ -33,6 +34,13 @@ namespace gpgmm {
 
     // Converts pointer to hex address for output.
     std::string ToString(const void* object);
+
+    template <typename T>
+    std::string ToString(T object) {
+        std::stringstream output;
+        output << object;
+        return output.str();
+    }
 
 }  // namespace gpgmm
 

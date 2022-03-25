@@ -18,7 +18,6 @@
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
 #include "gpgmm/common/PlatformUtils.h"
-#include "gpgmm/common/Utils.h"
 
 #include <fstream>
 #include <sstream>
@@ -53,6 +52,7 @@ namespace gpgmm {
                            TraceEventCategory category,
                            const char* name,
                            uint64_t id,
+                           uint32_t tid,
                            double timestamp,
                            uint32_t flags,
                            JSONDict args)
@@ -60,6 +60,7 @@ namespace gpgmm {
           mCategory(category),
           mName(name),
           mID(id),
+          mTID(tid),
           mTimestamp(timestamp),
           mFlags(flags),
           mArgs(args) {
@@ -68,23 +69,25 @@ namespace gpgmm {
     void EventTracer::AddTraceEvent(char phase,
                                     const char* name,
                                     uint64_t id,
+                                    uint32_t tid,
                                     uint32_t flags,
                                     JSONDict args) {
         if (gEventTracer != nullptr) {
-            gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args);
+            gEventTracer->EnqueueTraceEvent(phase, name, id, tid, flags, args);
         }
     }
 
     void EventTracer::AddTraceEvent(char phase,
                                     const char* name,
                                     uint64_t id,
+                                    uint32_t tid,
                                     uint32_t flags,
                                     std::string arg1Name,
                                     std::string arg1Value) {
         if (gEventTracer != nullptr) {
             JSONDict args;
             args.AddItem(arg1Name, arg1Value);
-            gEventTracer->EnqueueTraceEvent(phase, name, id, flags, args);
+            gEventTracer->EnqueueTraceEvent(phase, name, id, tid, flags, args);
         }
     }
 
@@ -109,12 +112,13 @@ namespace gpgmm {
     void FileEventTracer::EnqueueTraceEvent(char phase,
                                             const char* name,
                                             uint64_t id,
+                                            uint32_t tid,
                                             uint32_t flags,
                                             JSONDict args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back(
-                {phase, TraceEventCategory::Default, name, id, timestamp, flags, args});
+                {phase, TraceEventCategory::Default, name, id, tid, timestamp, flags, args});
         }
     }
 
@@ -136,7 +140,6 @@ namespace gpgmm {
                 continue;
             }
 
-            // TODO: Support per thread event tracing via traceEvent.mThread.
             JSONDict eventData;
             eventData.AddItem("name", traceEvent.mName);
             eventData.AddItem("cat", traceEvent.mCategory);
@@ -175,9 +178,7 @@ namespace gpgmm {
                 }
             }
 
-            std::stringstream threadID;
-            threadID << std::this_thread::get_id();
-            eventData.AddItem("tid", std::stoi(threadID.str()));
+            eventData.AddItem("tid", traceEvent.mTID);
 
             const uint64_t microseconds =
                 static_cast<uint64_t>(traceEvent.mTimestamp * 1000.0 * 1000.0);

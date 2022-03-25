@@ -16,9 +16,11 @@
 #define GPGMM_TRACEEVENT_H_
 
 #include "gpgmm/common/JSONEncoder.h"
+#include "gpgmm/common/Utils.h"
 
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 // Trace Event Format
@@ -38,6 +40,8 @@
 #define TRACE_EVENT_FLAG_HAS_ID (static_cast<unsigned int>(1 << 1))
 #define TRACE_EVENT_FLAG_HAS_LOCAL_ID (static_cast<unsigned int>(1 << 11))
 #define TRACE_EVENT_FLAG_HAS_GLOBAL_ID (static_cast<unsigned int>(1 << 12))
+
+#define TRACE_EVENT_CURRENT_THREAD_ID std::stoi(ToString(std::this_thread::get_id()))
 
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
@@ -77,20 +81,23 @@ const gpgmm::JSONDict kNoArgs;
                                      TRACE_EVENT_FLAG_HAS_ID,                     \
                                      gpgmm::JSONDict("snapshot", snapshot))
 
-#define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                  \
-    do {                                                              \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, flags); \
+#define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                                         \
+    do {                                                                                     \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, TRACE_EVENT_CURRENT_THREAD_ID, \
+                                          flags);                                            \
     } while (false)
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags, ...)                             \
-    do {                                                                                          \
-        gpgmm::TraceEventID traceEventID(id);                                                     \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, traceEventID.GetID(), flags, __VA_ARGS__); \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags, ...)                         \
+    do {                                                                                      \
+        gpgmm::TraceEventID traceEventID(id);                                                 \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, traceEventID.GetID(),                  \
+                                          TRACE_EVENT_CURRENT_THREAD_ID, flags, __VA_ARGS__); \
     } while (false)
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(phase, name, flags, args)        \
-    do {                                                                    \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, flags, args); \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(phase, name, flags, args)                         \
+    do {                                                                                     \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, TRACE_EVENT_CURRENT_THREAD_ID, \
+                                          flags, args);                                      \
     } while (false)
 
 namespace gpgmm {
@@ -135,6 +142,7 @@ namespace gpgmm {
                    TraceEventCategory category,
                    const char* name,
                    uint64_t id,
+                   uint32_t tid,
                    double timestamp,
                    uint32_t flags,
                    JSONDict args);
@@ -146,7 +154,7 @@ namespace gpgmm {
         TraceEventCategory mCategory;
         const char* mName = nullptr;
         uint64_t mID = 0;
-        std::string mThreadId;
+        uint32_t mTID = 0;
         double mTimestamp = 0;
         uint32_t mFlags = TRACE_EVENT_FLAG_NONE;
         JSONDict mArgs;
@@ -157,12 +165,14 @@ namespace gpgmm {
         static void AddTraceEvent(char phase,
                                   const char* name,
                                   uint64_t id,
+                                  uint32_t tid,
                                   uint32_t flags,
                                   JSONDict args = {});
 
         static void AddTraceEvent(char phase,
                                   const char* name,
                                   uint64_t id,
+                                  uint32_t tid,
                                   uint32_t flags,
                                   std::string arg1Name,
                                   std::string arg1Value);
@@ -179,6 +189,7 @@ namespace gpgmm {
         void EnqueueTraceEvent(char phase,
                                const char* name,
                                uint64_t id,
+                               uint32_t tid,
                                uint32_t flags,
                                JSONDict args);
         void FlushQueuedEventsToDisk();
