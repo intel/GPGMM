@@ -14,8 +14,6 @@
 
 #include "Utils.h"
 
-#include <sstream>
-
 namespace gpgmm {
 
     std::string ToString(const void* object) {
