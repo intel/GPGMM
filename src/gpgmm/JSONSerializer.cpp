@@ -49,7 +49,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(void* objectPtr) {
+    JSONDict JSONSerializer::Serialize(const void* objectPtr) {
         JSONDict dict;
         dict.AddItem(TraceEventID::kIdRefKey, ToString(objectPtr));
         return dict;

@@ -29,7 +29,7 @@ namespace gpgmm {
         static JSONDict Serialize(const LOG_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const POOL_INFO& desc);
-        static JSONDict Serialize(void* objectPtr);
+        static JSONDict Serialize(const void* objectPtr);
     };
 
 }  // namespace gpgmm
