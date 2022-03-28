@@ -112,6 +112,10 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_ENABLE_ASSERT_ON_WARNING" ]
   }
 
+  if (gpgmm_enable_size_cache) {
+    defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
+  }
+
   libs = []
   data_deps = []
 
