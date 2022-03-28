@@ -58,8 +58,7 @@ namespace gpgmm {
     };
 
     // Messages of a given severity to be logged.
-    // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetLogMessageLevel(const LogSeverity& level);
+    void SetLogMessageLevel(const LogSeverity& level);
     const LogSeverity& GetLogMessageLevel();
 
     // Essentially an ostringstream that will print itself in its destructor.
@@ -98,6 +97,21 @@ namespace gpgmm {
     // information
     LogMessage DebugLog(const char* file, const char* function, int line);
 #define GPGMM_DEBUG() ::gpgmm::DebugLog(__FILE__, __func__, __LINE__)
+
+    // RAII helper to set the global log severity level.
+    class ScopedLogLevel {
+      public:
+        explicit ScopedLogLevel(const LogSeverity& newLevel) : mPrevLevel(GetLogMessageLevel()) {
+            SetLogMessageLevel(newLevel);
+        }
+
+        ~ScopedLogLevel() {
+            SetLogMessageLevel(mPrevLevel);
+        }
+
+      private:
+        const LogSeverity mPrevLevel;
+    };
 
 }  // namespace gpgmm
 
