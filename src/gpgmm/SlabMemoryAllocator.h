@@ -158,7 +158,7 @@ namespace gpgmm {
         const uint64_t mSlabAlignment;
         const double mSlabFragmentationLimit;
 
-        std::unique_ptr<MemoryAllocator> mMemoryAllocator;
+        LinkedList<MemoryAllocator> mSlabAllocators;
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;
     };
 
