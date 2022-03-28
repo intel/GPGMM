@@ -506,6 +506,7 @@ namespace gpgmm { namespace d3d12 {
             // cached size must be requested per alignment {4KB, 64KB, or 4MB}. To avoid unbounded
             // cache growth, a known set of pre-defined sizes initializes the allocators.
 
+#if defined(GPGMM_ENABLE_SIZE_CACHE)
             // Temporary suppress log messages emitted from internal cache-miss requests.
             {
                 ScopedLogLevel scopedLogLevel(LogSeverity::Info);
@@ -526,6 +527,7 @@ namespace gpgmm { namespace d3d12 {
                         /*neverAllocate*/ true, /*cacheSize*/ true);
                 }
             }
+#endif
         }
     }
 
