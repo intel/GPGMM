@@ -234,17 +234,18 @@ namespace gpgmm {
                                            uint64_t slabAlignment,
                                            double slabFragmentationLimit,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
-        : mMinBlockSize(minBlockSize),
+        : MemoryAllocator(std::move(memoryAllocator)),
+          mMinBlockSize(minBlockSize),
           mMaxSlabSize(maxSlabSize),
           mSlabSize(slabSize),
           mSlabAlignment(slabAlignment),
-          mSlabFragmentationLimit(slabFragmentationLimit),
-          mMemoryAllocator(std::move(memoryAllocator)) {
+          mSlabFragmentationLimit(slabFragmentationLimit) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
     }
 
     SlabCacheAllocator::~SlabCacheAllocator() {
         mSizeCache.RemoveAndDeleteAll();
+        mSlabAllocators.RemoveAndDeleteAll();
     }
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t allocationSize,
@@ -271,11 +272,11 @@ namespace gpgmm {
         // Create a slab allocator for the new entry.
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
-            slabAllocator = static_cast<SlabMemoryAllocator*>(
-                SlabCacheAllocator::AppendChild(std::make_unique<SlabMemoryAllocator>(
-                    blockSize, mMaxSlabSize, mSlabSize, mSlabAlignment, mSlabFragmentationLimit,
-                    mMemoryAllocator.get())));
+            slabAllocator =
+                new SlabMemoryAllocator(blockSize, mMaxSlabSize, mSlabSize, mSlabAlignment,
+                                        mSlabFragmentationLimit, GetFirstChild());
             entry->GetValue().pSlabAllocator = slabAllocator;
+            mSlabAllocators.Append(slabAllocator);
         }
 
         ASSERT(slabAllocator != nullptr);
@@ -307,7 +308,7 @@ namespace gpgmm {
         // scope, it will unlink itself from the cache.
         entry->Unref();
         if (entry->HasOneRef()) {
-            SlabCacheAllocator::RemoveChild(slabAllocator);
+            SafeDelete(slabAllocator);
         }
     }
 
@@ -318,8 +319,8 @@ namespace gpgmm {
             info.UsedBlockCount += childInfo.UsedBlockCount;
             info.UsedBlockUsage += childInfo.UsedBlockUsage;
         }
-        // Same memory allocator is shared across child allocators.
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = mMemoryAllocator->QueryInfo();
+        // Memory allocator is common across slab allocators.
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
         info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
         info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
         info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
