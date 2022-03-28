@@ -507,26 +507,25 @@ namespace gpgmm { namespace d3d12 {
             // cache growth, a known set of pre-defined sizes initializes the allocators.
 
             // Temporary suppress log messages emitted from internal cache-miss requests.
-            const LogSeverity& prevLevel = SetLogMessageLevel(LogSeverity::Info);
+            {
+                ScopedLogLevel scopedLogLevel(LogSeverity::Info);
+                for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
+                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                        D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*neverAllocate*/ true, /*cacheSize*/ true);
 
-            for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
-                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                    D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*neverAllocate*/ true, /*cacheSize*/ true);
+                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*neverAllocate*/ true, /*cacheSize*/ true);
 
-                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                    D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*neverAllocate*/ true, /*cacheSize*/ true);
-
-                mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                    MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                    D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*neverAllocate*/ true, /*cacheSize*/ true);
+                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
+                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                        D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*neverAllocate*/ true, /*cacheSize*/ true);
+                }
             }
-
-            SetLogMessageLevel(prevLevel);
         }
     }
 
