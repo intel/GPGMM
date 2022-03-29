@@ -137,7 +137,7 @@ namespace gpgmm {
         uint64_t GetSlabCacheSizeForTesting() const;
 
       private:
-        class SlabAllocatorCacheEntry {
+        class SlabAllocatorCacheEntry : public NonCopyable {
           public:
             explicit SlabAllocatorCacheEntry(uint64_t blockSize) : mBlockSize(blockSize) {
             }
