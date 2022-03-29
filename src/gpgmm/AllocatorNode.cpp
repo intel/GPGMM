@@ -19,6 +19,11 @@
 namespace gpgmm {
 
     template <typename T>
+    AllocatorNode<T>::AllocatorNode(AllocatorNode&& other)
+        : mChildren(std::move(other.mChildren)), mParent(std::move(other.mParent)) {
+    }
+
+    template <typename T>
     AllocatorNode<T>::~AllocatorNode() {
         // Deletes adjacent node recursively (post-order).
         mChildren.RemoveAndDeleteAll();

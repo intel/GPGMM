@@ -108,6 +108,12 @@ namespace gpgmm {
             }
         }
 
+        // Resets |this| by pointing its links to iself.
+        void Reset() {
+            previous_ = this;
+            next_ = this;
+        }
+
         // Insert |this| into the linked list, before |e|.
         void InsertBefore(LinkNode<T>* e) {
             this->next_ = e;
@@ -181,6 +187,7 @@ namespace gpgmm {
         // Using LinkedList in std::vector or STL container requires the move constructor to not
         // throw.
         LinkedList(LinkedList&& other) noexcept : root_(std::move(other.root_)) {
+            other.root_.Reset();
         }
 
         // Appends |e| to the end of the linked list.

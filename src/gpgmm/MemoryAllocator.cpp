@@ -20,6 +20,10 @@ namespace gpgmm {
         AppendChild(std::move(childAllocator));
     }
 
+    MemoryAllocator::MemoryAllocator(MemoryAllocator&& other)
+        : AllocatorNode(std::move(other)), mInfo(std::move(other.mInfo)) {
+    }
+
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t allocationSize,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,

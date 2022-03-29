@@ -29,6 +29,8 @@ namespace gpgmm {
     template <typename T>
     class AllocatorNode : public LinkNode<T> {
       public:
+        AllocatorNode() = default;
+        AllocatorNode(AllocatorNode&& other);
         virtual ~AllocatorNode();
 
       protected:

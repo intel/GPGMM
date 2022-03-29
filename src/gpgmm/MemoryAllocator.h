@@ -48,6 +48,7 @@ namespace gpgmm {
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
       public:
         MemoryAllocator() = default;
+        MemoryAllocator(MemoryAllocator&& other);
 
         // Constructs a parent MemoryAllocator with only a single child allocator.
         explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> childAllocator);
