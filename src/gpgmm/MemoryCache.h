@@ -81,12 +81,12 @@ namespace gpgmm {
         CacheEntry() = delete;
 
         // Constructs entry for lookup.
-        explicit CacheEntry(const T&& value) : RefCounted(0), mValue(std::move(value)) {
+        CacheEntry(T&& value) : RefCounted(0), mValue(std::move(value)) {
             ASSERT(mCache == nullptr);
         }
 
         // Constructs entry to store.
-        CacheEntry(MemoryCache<T>* cache, const T& value)
+        CacheEntry(MemoryCache<T>* cache, T&& value)
             : RefCounted(0), mCache(cache), mValue(std::move(value)) {
             ASSERT(mCache != nullptr);
         }
@@ -136,7 +136,7 @@ namespace gpgmm {
 
         // Inserts |value| into a cache. The |value| may be kept alive until the cache destructs
         // when |keepAlive| is true.
-        ScopedRef<CacheEntryT> GetOrCreate(const T& value, bool keepAlive) {
+        ScopedRef<CacheEntryT> GetOrCreate(T&& value, bool keepAlive) {
             CacheEntryT tmp(std::move(value));
             const auto& iter = mCache.find(&tmp);
             if (iter != mCache.end()) {
