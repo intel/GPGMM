@@ -248,6 +248,8 @@ namespace gpgmm { namespace d3d12 {
                 // 2D textures always have a depth demension equal to 1.
                 tile.DepthInTexels = 1;
 
+                // Block compression means the returned texel dimensions are to be a multiple of 4
+                // (since the implementation compresses 4x4 blocks of texels).
                 if (IsBlockCompressionFormat(format)) {
                     return {};  // TODO
                 }
@@ -289,7 +291,8 @@ namespace gpgmm { namespace d3d12 {
                         break;
                 }
 
-                // Tile size also depends on the sample count (or samples x bytes/texel).
+                // Multi sampling means the returned texel demensions are a multiple of the number
+                // of samples (or samples x byte per texel).
                 switch (sampleCount) {
                     // 1x = 1x1 per texel = WxH bytes per texel (no change).
                     case 1: {
