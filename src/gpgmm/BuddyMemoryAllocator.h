@@ -63,7 +63,8 @@ namespace gpgmm {
 
         BuddyBlockAllocator mBuddyBlockAllocator;
 
-        IndexedMemoryPool mPool;
+        // Set of fixed memory allocations containing at-least one sub-allocation.
+        IndexedMemoryPool mUsedPool;
     };
 
 }  // namespace gpgmm

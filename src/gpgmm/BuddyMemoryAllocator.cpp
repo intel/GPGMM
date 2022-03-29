@@ -29,7 +29,7 @@ namespace gpgmm {
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
           mBuddyBlockAllocator(systemSize),
-          mPool(mMemorySize) {
+          mUsedPool(mMemorySize) {
         ASSERT(mMemorySize <= systemSize);
         ASSERT(IsPowerOfTwo(mMemorySize));
         ASSERT(IsAligned(systemSize, mMemorySize));
@@ -73,27 +73,27 @@ namespace gpgmm {
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(
-            TrySubAllocateMemory(&mBuddyBlockAllocator, allocationSize, alignment,
-                                 [&](const auto& block) -> MemoryBase* {
-                                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                                     std::unique_ptr<MemoryAllocation> memoryAllocation =
-                                         mPool.AcquireFromPool(memoryIndex);
+        GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
+                             &mBuddyBlockAllocator, allocationSize, alignment,
+                             [&](const auto& block) -> MemoryBase* {
+                                 const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
+                                 std::unique_ptr<MemoryAllocation> memoryAllocation =
+                                     mUsedPool.AcquireFromPool(memoryIndex);
 
-                                     // No existing, allocate new memory for the block.
-                                     if (memoryAllocation == nullptr) {
-                                         GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
-                                                              mMemorySize, mMemoryAlignment,
-                                                              neverAllocate, cacheSize),
-                                                          memoryAllocation);
-                                     }
+                                 // No existing, allocate new memory for the block.
+                                 if (memoryAllocation == nullptr) {
+                                     GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
+                                                          mMemorySize, mMemoryAlignment,
+                                                          neverAllocate, cacheSize),
+                                                      memoryAllocation);
+                                 }
 
-                                     MemoryBase* memory = memoryAllocation->GetMemory();
-                                     mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+                                 MemoryBase* memory = memoryAllocation->GetMemory();
+                                 mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
-                                     return memory;
-                                 }),
-            subAllocation);
+                                 return memory;
+                             }),
+                         subAllocation);
 
         Block* block = subAllocation->GetBlock();
         mInfo.UsedBlockCount++;
@@ -119,7 +119,7 @@ namespace gpgmm {
 
         mBuddyBlockAllocator.DeallocateBlock(subAllocation->GetBlock());
 
-        std::unique_ptr<MemoryAllocation> memoryAllocation = mPool.AcquireFromPool(memoryIndex);
+        std::unique_ptr<MemoryAllocation> memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
 
         MemoryBase* memory = memoryAllocation->GetMemory();
         ASSERT(memory != nullptr);
@@ -127,7 +127,7 @@ namespace gpgmm {
         if (memory->Unref()) {
             GetFirstChild()->DeallocateMemory(std::move(memoryAllocation));
         } else {
-            mPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+            mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
         }
     }
 
@@ -149,7 +149,7 @@ namespace gpgmm {
     }
 
     uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
-        return mPool.GetPoolSize();
+        return mUsedPool.GetPoolSize();
     }
 
 }  // namespace gpgmm
