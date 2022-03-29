@@ -41,7 +41,7 @@ namespace gpgmm {
     }
 
     Block* SlabBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
-        GPGMM_VERIFY_NONZERO(size);
+        GPGMM_CHECK_NONZERO(size);
 
         if (size > mBlockSize) {
             RecordLogMessage(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",

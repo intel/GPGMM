@@ -14,13 +14,13 @@
 
 namespace gpgmm {
 
-#define GPGMM_VERIFY_NONZERO(size) \
-    {                              \
-        if (size == 0) {           \
-            return nullptr;        \
-        }                          \
-    }                              \
-    for (;;)                       \
+#define GPGMM_CHECK_NONZERO(size) \
+    {                             \
+        if (size == 0) {          \
+            return nullptr;       \
+        }                         \
+    }                             \
+    for (;;)                      \
     break
 
 #define GPGMM_TRY_ASSIGN(expr, value) \

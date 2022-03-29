@@ -29,19 +29,18 @@ namespace gpgmm { namespace d3d12 {
         : mResourceAllocator(resourceAllocator), mHeapType(heapType), mHeapFlags(heapFlags) {
     }
 
-    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
-        uint64_t allocationSize,
-        uint64_t alignment,
-        bool neverAllocate,
-        bool cacheSize) {
+    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(uint64_t size,
+                                                                               uint64_t alignment,
+                                                                               bool neverAllocate,
+                                                                               bool cacheSize) {
         if (neverAllocate) {
             return {};
         }
 
-        // D3D12 requests (but not requires) the |allocationSize| be always a multiple of
+        // D3D12 requests (but not requires) the |size| be always a multiple of
         // |alignment| to avoid wasting bytes.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
-        const uint64_t heapSize = AlignTo(allocationSize, alignment);
+        const uint64_t heapSize = AlignTo(size, alignment);
 
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateResourceHeap(heapSize, mHeapType, mHeapFlags,

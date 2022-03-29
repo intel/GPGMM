@@ -27,16 +27,14 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> ConditionalMemoryAllocator::TryAllocateMemory(
-        uint64_t allocationSize,
+        uint64_t size,
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize) {
-        if (allocationSize <= mConditionalSize) {
-            return mFirstAllocator->TryAllocateMemory(allocationSize, alignment, neverAllocate,
-                                                      cacheSize);
+        if (size <= mConditionalSize) {
+            return mFirstAllocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
         } else {
-            return mSecondAllocator->TryAllocateMemory(allocationSize, alignment, neverAllocate,
-                                                       cacheSize);
+            return mSecondAllocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
         }
     }
 

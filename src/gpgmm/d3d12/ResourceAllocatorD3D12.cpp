@@ -281,13 +281,13 @@ namespace gpgmm { namespace d3d12 {
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
         HRESULT TryAllocateResource(MemoryAllocator* allocator,
-                                    uint64_t allocationSize,
+                                    uint64_t size,
                                     uint64_t alignment,
                                     bool neverAllocate,
                                     bool cacheSize,
                                     CreateResourceFn&& createResourceFn) {
             std::unique_ptr<MemoryAllocation> allocation =
-                allocator->TryAllocateMemory(allocationSize, alignment, neverAllocate, cacheSize);
+                allocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
             if (allocation == nullptr) {
                 RecordLogMessage(LogSeverity::Debug, "ResourceAllocator.TryAllocateResource",
                                  "Resource memory could not be allocated.",
