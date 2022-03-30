@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include "gpgmm/MemoryAllocation.h"
+
 #include "gpgmm/BlockAllocator.h"
 #include "gpgmm/Memory.h"
 #include "gpgmm/common/Assert.h"
