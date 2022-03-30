@@ -20,24 +20,22 @@ namespace gpgmm {
     // Messages with equal or greater to severity will be logged.
     LogSeverity gRecordEventLevel = LogSeverity::Info;
 
-    LogSeverity SetRecordLogMessageLevel(const LogSeverity& newLevel) {
+    LogSeverity SetRecordMessageLevel(const LogSeverity& newLevel) {
         LogSeverity oldLevel = gRecordEventLevel;
         gRecordEventLevel = newLevel;
         return oldLevel;
     }
 
-    void RecordLogMessage(const LogSeverity& severity,
-                          const char* name,
-                          const std::string& description,
-                          int messageId) {
+    void RecordMessage(const LogSeverity& severity,
+                       const char* name,
+                       const std::string& description,
+                       int messageId) {
         gpgmm::Log(severity) << name << ": " << description;
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(severity < LogSeverity::Warning);
 #endif
-
         if (severity >= gRecordEventLevel) {
-            const LOG_MESSAGE logMessage{description, messageId};
-            TRACE_EVENT_INSTANT(name, JSONSerializer::Serialize(logMessage));
+            RecordCall<LOG_MESSAGE, JSONSerializer>(name, description, messageId);
         }
     }
 

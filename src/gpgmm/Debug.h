@@ -30,26 +30,26 @@ namespace gpgmm {
 
     // Messages of a given severity to be recorded.
     // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetRecordLogMessageLevel(const LogSeverity& level);
+    LogSeverity SetRecordMessageLevel(const LogSeverity& level);
 
-    void RecordLogMessage(const LogSeverity& severity,
-                          const char* name,
-                          const std::string& description,
-                          int messageId);
+    void RecordMessage(const LogSeverity& severity,
+                       const char* name,
+                       const std::string& description,
+                       int messageId);
+
+// Helper macro to avoid evaluating the arguments when the condition doesn't hold.
+#define GPGMM_LAZY_SERIALIZE(object, condition) \
+    !(condition) ? gpgmm::JSONSerializer::Serialize() : SerializerT::Serialize(object)
 
     template <typename T, typename DescT, typename SerializerT = JSONSerializer>
     static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        if (IsEventTracerEnabled()) {
-            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr, SerializerT::Serialize(desc));
-        }
+        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr,
+                                            GPGMM_LAZY_SERIALIZE(desc, IsEventTracerEnabled()));
     }
 
     template <typename T, typename SerializerT, typename... Args>
     static void RecordCall(const char* name, const Args&... args) {
-        if (IsEventTracerEnabled()) {
-            const T& obj{args...};
-            TRACE_EVENT_INSTANT(name, SerializerT::Serialize(obj));
-        }
+        TRACE_EVENT_INSTANT(name, GPGMM_LAZY_SERIALIZE(T{args...}, IsEventTracerEnabled()));
     }
 
 }  // namespace gpgmm
