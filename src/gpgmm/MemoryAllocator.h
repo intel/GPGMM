@@ -49,8 +49,8 @@ namespace gpgmm {
       public:
         MemoryAllocator() = default;
 
-        // Constructs a parent MemoryAllocator with only a single child allocator.
-        explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> childAllocator);
+        // Constructs a MemoryAllocator that owns a single child allocator.
+        explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> child);
 
         virtual ~MemoryAllocator() = default;
 

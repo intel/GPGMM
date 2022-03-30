@@ -16,8 +16,8 @@
 
 namespace gpgmm {
 
-    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> childAllocator) {
-        AppendChild(std::move(childAllocator));
+    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> child) {
+        AppendChild(std::move(child));
     }
 
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t size,
