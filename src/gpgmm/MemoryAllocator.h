@@ -55,13 +55,13 @@ namespace gpgmm {
         virtual ~MemoryAllocator() = default;
 
         // Attempts to allocate memory and return a allocation that is at-least of the requested
-        // |allocationSize| whose value is a multiple of |alignment|. If it cannot, return
+        // |size| whose value is a multiple of |alignment|. If it cannot, return
         // nullptr. The returned MemoryAllocation is only valid for the lifetime of this allocator.
         // When |neverAllocate| is true, the memory allocator will not allocate anything and
         // effectively no-op.
         // When |cacheSize| is true, the memory allocator may cache for the requested
         // allocation to speed-up subsequent requests of the same size.
-        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
+        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                                     uint64_t alignment,
                                                                     bool neverAllocate,
                                                                     bool cacheSize);

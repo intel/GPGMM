@@ -16,6 +16,7 @@
 #include "gpgmm/BuddyBlockAllocator.h"
 
 #include "gpgmm/Debug.h"
+#include "gpgmm/Error.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Math.h"
 #include "gpgmm/common/Utils.h"
@@ -144,7 +145,9 @@ namespace gpgmm {
     }
 
     Block* BuddyBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
-        if (size == 0 || size > mMaxBlockSize) {
+        GPGMM_CHECK_NONZERO(size);
+
+        if (size > mMaxBlockSize) {
             RecordLogMessage(LogSeverity::Debug, "BuddyBlockAllocator.AllocateBlock",
                              "Block size exceeded the max block size.",
                              ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -152,11 +155,11 @@ namespace gpgmm {
         }
 
         // Compute the level
-        const uint32_t allocationSizeToLevel = ComputeLevelFromBlockSize(size);
+        const uint32_t sizeToLevel = ComputeLevelFromBlockSize(size);
 
-        ASSERT(allocationSizeToLevel < mFreeLists.size());
+        ASSERT(sizeToLevel < mFreeLists.size());
 
-        uint64_t currBlockLevel = GetNextFreeAlignedBlock(allocationSizeToLevel, alignment);
+        uint64_t currBlockLevel = GetNextFreeAlignedBlock(sizeToLevel, alignment);
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
@@ -171,7 +174,7 @@ namespace gpgmm {
         // allocation.
         BuddyBlock* currBlock = mFreeLists[currBlockLevel].head;
 
-        for (; currBlockLevel < allocationSizeToLevel; currBlockLevel++) {
+        for (; currBlockLevel < sizeToLevel; currBlockLevel++) {
             ASSERT(currBlock->mState == BlockState::Free);
 
             // Remove curr block (about to be split).

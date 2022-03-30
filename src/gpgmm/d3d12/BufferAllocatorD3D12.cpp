@@ -35,19 +35,18 @@ namespace gpgmm { namespace d3d12 {
           mBufferAlignment(bufferAlignment) {
     }
 
-    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t allocationSize,
+    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t size,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,
                                                                          bool cacheSize) {
-        if (GetMemorySize() != allocationSize || GetMemoryAlignment() != alignment ||
-            neverAllocate) {
+        if (GetMemorySize() != size || GetMemoryAlignment() != alignment || neverAllocate) {
             return {};
         }
 
         D3D12_RESOURCE_DESC resourceDescriptor;
         resourceDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
         resourceDescriptor.Alignment = alignment;
-        resourceDescriptor.Width = allocationSize;
+        resourceDescriptor.Width = size;
         resourceDescriptor.Height = 1;
         resourceDescriptor.DepthOrArraySize = 1;
         resourceDescriptor.MipLevels = 1;
@@ -60,7 +59,7 @@ namespace gpgmm { namespace d3d12 {
         // Optimized clear is not supported for buffers.
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
-                mHeapType, D3D12_HEAP_FLAG_NONE, allocationSize, &resourceDescriptor,
+                mHeapType, D3D12_HEAP_FLAG_NONE, size, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
                 &resourceHeap))) {
             return nullptr;
