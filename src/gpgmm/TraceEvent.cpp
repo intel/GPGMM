@@ -15,7 +15,6 @@
 #include "gpgmm/TraceEvent.h"
 
 #include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
 #include "gpgmm/common/PlatformUtils.h"
 
@@ -200,8 +199,6 @@ namespace gpgmm {
         outFile << traceData.ToString();
         outFile.flush();
         outFile.close();
-
-        gpgmm::DebugLog() << "Flushed " << mQueue.size() << " events to " << mTraceFile << ".";
         mQueue.clear();
     }
 }  // namespace gpgmm

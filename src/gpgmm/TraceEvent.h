@@ -46,7 +46,6 @@
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
 const uint64_t kNoId = 0;
-const gpgmm::JSONDict kNoArgs;
 
 #define TRACE_EVENT_CALL_SCOPED(name) \
     struct ScopedTracedCall {         \
@@ -70,16 +69,15 @@ const gpgmm::JSONDict kNoArgs;
 
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, kNoArgs)
+                                     TRACE_EVENT_FLAG_HAS_ID, {})
 
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_DELETE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, kNoArgs)
+                                     TRACE_EVENT_FLAG_HAS_ID, {})
 
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID,                     \
-                                     gpgmm::JSONDict("snapshot", snapshot))
+                                     TRACE_EVENT_FLAG_HAS_ID, {"snapshot", snapshot})
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                                         \
     do {                                                                                     \

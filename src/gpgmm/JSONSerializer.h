@@ -26,6 +26,7 @@ namespace gpgmm {
 
     class JSONSerializer {
       public:
+        static JSONDict Serialize();
         static JSONDict Serialize(const LOG_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const POOL_INFO& desc);
