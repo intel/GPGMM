@@ -912,10 +912,6 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    ResidencyManager* ResourceAllocator::GetResidencyManager() const {
-        return mResidencyManager.Get();
-    }
-
     HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
         QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut) const {
         TRACE_EVENT_CALL_SCOPED("ResourceAllocator.QueryResourceAllocatorInfo");
