@@ -20,7 +20,6 @@
 #include "gpgmm/MemorySize.h"
 #include "gpgmm/SegmentedMemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
-#include "gpgmm/common/Log.h"
 #include "gpgmm/common/Math.h"
 #include "gpgmm/common/Utils.h"
 #include "gpgmm/d3d12/BackendD3D12.h"

@@ -14,7 +14,6 @@
 
 #include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
 
-#include "gpgmm/common/Log.h"
 #include "gpgmm/common/Utils.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/DebugD3D12.h"
