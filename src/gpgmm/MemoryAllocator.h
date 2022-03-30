@@ -90,17 +90,17 @@ namespace gpgmm {
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
-        std::unique_ptr<MemoryAllocation> TrySubAllocateMemory(
-            BlockAllocator* blockAllocator,
-            uint64_t blockSize,
-            uint64_t blockAlignment,
+        static std::unique_ptr<MemoryAllocation> TrySubAllocateMemory(
+            BlockAllocator* allocator,
+            uint64_t size,
+            uint64_t alignment,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
             Block* block = nullptr;
-            GPGMM_TRY_ASSIGN(blockAllocator->AllocateBlock(blockSize, blockAlignment), block);
+            GPGMM_TRY_ASSIGN(allocator->AllocateBlock(size, alignment), block);
 
             MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {
-                blockAllocator->DeallocateBlock(block);
+                allocator->DeallocateBlock(block);
                 return nullptr;
             }
 
