@@ -1003,16 +1003,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
-
-        Heap* resourceHeap = ToBackend(allocation->GetMemory());
-        ASSERT(resourceHeap != nullptr);
-        ASSERT(resourceHeap->GetRefCount() == 0);
-
-        mInfo.UsedMemoryUsage -= resourceHeap->GetSize();
+        mInfo.UsedMemoryUsage -= allocation->GetSize();
         mInfo.UsedMemoryCount--;
-
-        SafeDelete(resourceHeap);
+        SafeRelease(allocation);
     }
 
 }}  // namespace gpgmm::d3d12

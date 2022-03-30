@@ -23,11 +23,9 @@ namespace gpgmm {
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
-            ASSERT(allocation != nullptr);
-            ASSERT(allocation->GetMethod() == AllocationMethod::kStandalone);
             mInfo.UsedMemoryCount--;
             mInfo.UsedMemoryUsage -= allocation->GetSize();
-            SafeDelete(allocation->GetMemory());
+            SafeRelease(allocation);
         }
 
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,

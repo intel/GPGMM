@@ -32,6 +32,14 @@ namespace gpgmm {
         SafeDelete(lvalue);
     }
 
+    template <typename T>
+    void SafeRelease(T& allocation) {
+        if (allocation != nullptr) {
+            SafeDelete(allocation->GetMemory());
+            allocation = nullptr;
+        }
+    }
+
     // Converts pointer to hex address for output.
     std::string ToString(const void* object);
 
