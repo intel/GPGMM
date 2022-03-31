@@ -216,20 +216,22 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorRecord) {
     }
 }
 
+// Exceeding the max resource heap size should always fail.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
+    constexpr uint64_t kOversizedBuffer = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+    ComPtr<ResourceAllocation> allocation;
+    ASSERT_FAILED(mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
+                                                    D3D12_RESOURCE_STATE_COMMON, nullptr,
+                                                    &allocation));
+    ASSERT_EQ(allocation, nullptr);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     // Creating a resource without allocation should always fail.
-    ASSERT_FAILED(mDefaultAllocator->CreateResource(
-        {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
-        nullptr, nullptr));
-
-    // Exceeding the max resource heap size should always fail.
     {
-        constexpr uint64_t kOversizedBuffer = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-        ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(
-            mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
-                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        ASSERT_EQ(allocation, nullptr);
+        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+            D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
     }
 
     // Using the min resource heap size should always succeed.
