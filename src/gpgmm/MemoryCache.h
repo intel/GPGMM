@@ -57,7 +57,7 @@ namespace gpgmm {
     class MemoryCache;
 
     template <typename T, typename KeyT = size_t>
-    class CacheEntry : public RefCounted, public NonCopyable {
+    class CacheEntry final : public RefCounted, public NonCopyable {
       public:
         ~CacheEntry() {
             if (mCache != nullptr) {  // for lookup or not

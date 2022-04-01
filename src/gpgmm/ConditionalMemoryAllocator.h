@@ -22,7 +22,7 @@ namespace gpgmm {
     // Conditionally allocates depending on the size.
     // If the allocation size is less then or equal to the |conditionalSize|, the |firstAllocator|
     // will be used.
-    class ConditionalMemoryAllocator : public MemoryAllocator {
+    class ConditionalMemoryAllocator final : public MemoryAllocator {
       public:
         ConditionalMemoryAllocator(std::unique_ptr<MemoryAllocator> firstAllocator,
                                    std::unique_ptr<MemoryAllocator> secondAllocator,

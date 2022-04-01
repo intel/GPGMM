@@ -22,7 +22,7 @@ namespace gpgmm {
     class MemoryPool;
 
     // |PooledMemoryAllocator| allocates memory of fixed size and same alignment using a pool.
-    class PooledMemoryAllocator : public MemoryAllocator {
+    class PooledMemoryAllocator final : public MemoryAllocator {
       public:
         PooledMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator, MemoryPool* pool);
         ~PooledMemoryAllocator() override = default;

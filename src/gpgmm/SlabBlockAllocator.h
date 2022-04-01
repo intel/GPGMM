@@ -26,7 +26,7 @@ namespace gpgmm {
     // the free-list. To deallocate, the same block is marked "free" by inserting it
     // back to the free-list. This simple push/pop operation means
     // slab block allocation is always fast.
-    class SlabBlockAllocator : public BlockAllocator {
+    class SlabBlockAllocator final : public BlockAllocator {
       public:
         SlabBlockAllocator() = default;
         SlabBlockAllocator(uint64_t blockCount, uint64_t blockSize);

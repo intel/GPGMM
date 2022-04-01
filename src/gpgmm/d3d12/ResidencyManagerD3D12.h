@@ -29,7 +29,7 @@ namespace gpgmm { namespace d3d12 {
     class ResidencySet;
     class ResourceAllocator;
 
-    class GPGMM_EXPORT ResidencyManager : public IUnknownImpl {
+    class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
       public:
         ~ResidencyManager();
 

@@ -34,7 +34,7 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_CLEAR_VALUE* clearValue;
     };
 
-    class JSONSerializer : public gpgmm::JSONSerializer {
+    class JSONSerializer final : public gpgmm::JSONSerializer {
       public:
         static JSONDict Serialize(const ALLOCATOR_DESC& desc);
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);

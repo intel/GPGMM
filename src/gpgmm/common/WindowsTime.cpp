@@ -19,7 +19,7 @@
 
 namespace gpgmm {
 
-    class WindowsTime : public PlatformTime {
+    class WindowsTime final : public PlatformTime {
       public:
         WindowsTime() : PlatformTime(), mFrequency(0) {
         }

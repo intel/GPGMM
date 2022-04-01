@@ -24,7 +24,7 @@ namespace gpgmm { namespace d3d12 {
 
     // DebugResourceAllocator tracks live allocations (ie. created allocations, not yet
     // deallocated) so they can be reported if leaked.
-    class DebugResourceAllocator : public MemoryAllocator {
+    class DebugResourceAllocator final : public MemoryAllocator {
       public:
         DebugResourceAllocator() = default;
 

@@ -41,7 +41,7 @@ namespace gpgmm {
     // Slab allocator implementation is closely based on Jeff Bonwick's paper "The Slab Allocator".
     // https://people.eecs.berkeley.edu/~kubitron/courses/cs194-24-S13/hand-outs/bonwick_slab.pdf
     //
-    class SlabMemoryAllocator : public MemoryAllocator {
+    class SlabMemoryAllocator final : public MemoryAllocator {
       public:
         SlabMemoryAllocator(uint64_t blockSize,
                             uint64_t maxSlabSize,

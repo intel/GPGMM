@@ -24,7 +24,7 @@ using namespace gpgmm;
 static uint64_t DestructCount = 0;
 static uint64_t ReleaseMemoryCount = 0;
 
-class TestMemoryAllocator : public DummyMemoryAllocator {
+class TestMemoryAllocator final : public DummyMemoryAllocator {
   public:
     ~TestMemoryAllocator() override {
         DestructCount++;

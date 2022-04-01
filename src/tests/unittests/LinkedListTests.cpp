@@ -20,7 +20,7 @@ using namespace gpgmm;
 
 // Tests functional additions made to LinkedList.h.
 
-class FakeObject : public LinkNode<FakeObject> {
+class FakeObject final : public LinkNode<FakeObject> {
   public:
     virtual ~FakeObject() {
         if (IsInList()) {

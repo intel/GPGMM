@@ -35,7 +35,7 @@ namespace gpgmm {
     //
     // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class BuddyMemoryAllocator : public MemoryAllocator {
+    class BuddyMemoryAllocator final : public MemoryAllocator {
       public:
         BuddyMemoryAllocator(uint64_t systemSize,
                              uint64_t memorySize,

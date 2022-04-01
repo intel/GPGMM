@@ -21,7 +21,7 @@
 
 namespace gpgmm {
 
-    class IndexedMemoryPool : public MemoryPool {
+    class IndexedMemoryPool final : public MemoryPool {
       public:
         explicit IndexedMemoryPool(uint64_t memorySize);
         ~IndexedMemoryPool() override = default;
