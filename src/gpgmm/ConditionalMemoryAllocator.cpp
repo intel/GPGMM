@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include "gpgmm/ConditionalMemoryAllocator.h"
+
+#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -31,6 +33,8 @@ namespace gpgmm {
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize) {
+        TRACE_EVENT0(TraceEventCategory::Default, "ConditionalMemoryAllocator.TryAllocateMemory");
+
         if (size <= mConditionalSize) {
             return mFirstAllocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
         } else {
