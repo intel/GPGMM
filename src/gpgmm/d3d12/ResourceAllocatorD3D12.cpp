@@ -425,17 +425,17 @@ namespace gpgmm { namespace d3d12 {
                 std::unique_ptr<MemoryAllocator> standaloneAllocator =
                     std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags);
 
-                std::unique_ptr<MemoryAllocator> pooledHeapAllocator =
+                std::unique_ptr<MemoryAllocator> pooledAllocator =
                     std::make_unique<SegmentedMemoryAllocator>(
                         std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags),
                         heapAlignment);
 
                 std::unique_ptr<MemoryAllocator> conditionalHeapAllocator =
-                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledHeapAllocator),
+                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledAllocator),
                                                                  std::move(standaloneAllocator),
                                                                  mMaxResourceSizeForPooling);
 
-                std::unique_ptr<MemoryAllocator> buddySubAllocator =
+                std::unique_ptr<MemoryAllocator> buddyAllocator =
                     std::make_unique<BuddyMemoryAllocator>(
                         PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
                         heapAlignment, std::move(conditionalHeapAllocator));
@@ -446,20 +446,20 @@ namespace gpgmm { namespace d3d12 {
                         D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
                         heapAlignment, descriptor.ResourceFragmentationLimit,
-                        std::move(buddySubAllocator));
+                        std::move(buddyAllocator));
             }
 
             {
                 std::unique_ptr<MemoryAllocator> standaloneAllocator =
                     std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags);
 
-                std::unique_ptr<MemoryAllocator> pooledHeapAllocator =
+                std::unique_ptr<MemoryAllocator> pooledAllocator =
                     std::make_unique<SegmentedMemoryAllocator>(
                         std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags),
                         heapAlignment);
 
                 mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledHeapAllocator),
+                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledAllocator),
                                                                  std::move(standaloneAllocator),
                                                                  mMaxResourceSizeForPooling);
             }
