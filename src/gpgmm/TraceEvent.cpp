@@ -54,7 +54,7 @@ namespace gpgmm {
                            uint32_t tid,
                            double timestamp,
                            uint32_t flags,
-                           JSONDict args)
+                           const JSONDict& args)
         : mPhase(phase),
           mCategory(category),
           mName(name),
@@ -70,22 +70,8 @@ namespace gpgmm {
                                     uint64_t id,
                                     uint32_t tid,
                                     uint32_t flags,
-                                    JSONDict args) {
+                                    const JSONDict& args) {
         if (gEventTracer != nullptr) {
-            gEventTracer->EnqueueTraceEvent(phase, name, id, tid, flags, args);
-        }
-    }
-
-    void EventTracer::AddTraceEvent(char phase,
-                                    const char* name,
-                                    uint64_t id,
-                                    uint32_t tid,
-                                    uint32_t flags,
-                                    std::string arg1Name,
-                                    std::string arg1Value) {
-        if (gEventTracer != nullptr) {
-            JSONDict args;
-            args.AddItem(arg1Name, arg1Value);
             gEventTracer->EnqueueTraceEvent(phase, name, id, tid, flags, args);
         }
     }
@@ -113,7 +99,7 @@ namespace gpgmm {
                                             uint64_t id,
                                             uint32_t tid,
                                             uint32_t flags,
-                                            JSONDict args) {
+                                            const JSONDict& args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back(

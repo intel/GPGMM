@@ -58,44 +58,32 @@ const uint64_t kNoId = 0;
     } scopedTracedCall {              \
     }
 
-#define TRACE_EVENT_INSTANT(name, args) \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(TRACE_EVENT_PHASE_INSTANT, name, TRACE_EVENT_FLAG_NONE, args)
+#define TRACE_EVENT_INSTANT(name, args)                                      \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_INSTANT, name, kNoId, \
+                                     TRACE_EVENT_FLAG_NONE, args)
 
 #define TRACE_EVENT_BEGIN(name) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_BEGIN, name, TRACE_EVENT_FLAG_NONE)
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_BEGIN, name, kNoId, TRACE_EVENT_FLAG_NONE)
 
 #define TRACE_EVENT_END(name) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_END, name, TRACE_EVENT_FLAG_NONE)
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_END, name, kNoId, TRACE_EVENT_FLAG_NONE)
 
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, {})
+                                     TRACE_EVENT_FLAG_HAS_ID)
 
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_DELETE_OBJECT, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, {})
+                                     TRACE_EVENT_FLAG_HAS_ID)
 
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID, {"snapshot", snapshot})
 
-#define INTERNAL_TRACE_EVENT_ADD(phase, name, flags)                                         \
-    do {                                                                                     \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, TRACE_EVENT_CURRENT_THREAD_ID, \
-                                          flags);                                            \
-    } while (false)
-
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, flags, ...)                         \
-    do {                                                                                      \
-        gpgmm::TraceEventID traceEventID(id);                                                 \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, traceEventID.GetID(),                  \
-                                          TRACE_EVENT_CURRENT_THREAD_ID, flags, __VA_ARGS__); \
-    } while (false)
-
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ARGS(phase, name, flags, args)                         \
-    do {                                                                                     \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, kNoId, TRACE_EVENT_CURRENT_THREAD_ID, \
-                                          flags, args);                                      \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, ...)                          \
+    do {                                                                                \
+        gpgmm::EventTracer::AddTraceEvent(phase, name, gpgmm::TraceEventID(id).GetID(), \
+                                          TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__);  \
     } while (false)
 
 namespace gpgmm {
@@ -143,7 +131,7 @@ namespace gpgmm {
                    uint32_t tid,
                    double timestamp,
                    uint32_t flags,
-                   JSONDict args);
+                   const JSONDict& args);
 
       private:
         friend FileEventTracer;
@@ -165,15 +153,7 @@ namespace gpgmm {
                                   uint64_t id,
                                   uint32_t tid,
                                   uint32_t flags,
-                                  JSONDict args = {});
-
-        static void AddTraceEvent(char phase,
-                                  const char* name,
-                                  uint64_t id,
-                                  uint32_t tid,
-                                  uint32_t flags,
-                                  std::string arg1Name,
-                                  std::string arg1Value);
+                                  const JSONDict& args = {});
     };
 
     class FileEventTracer {
@@ -189,7 +169,7 @@ namespace gpgmm {
                                uint64_t id,
                                uint32_t tid,
                                uint32_t flags,
-                               JSONDict args);
+                               const JSONDict& args);
         void FlushQueuedEventsToDisk();
 
       private:
