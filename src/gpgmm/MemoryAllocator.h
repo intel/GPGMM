@@ -75,10 +75,14 @@ namespace gpgmm {
         // Used to reuse memory blocks between calls to TryAllocateMemory.
         virtual void ReleaseMemory();
 
-        // Return the fixed-size or alignment of this memory allocator. If the parent allocator
-        // always calls TryAllocateMemory with the same memory |size| and |alignment|, they do not
-        // need to be overridden by the child allocator.
+        // If this allocator only allocates memory blocks using the same size, this value
+        // must be specified. Otherwise, kInvalidSize is returned to denote any alignment is
+        // allowed.
         virtual uint64_t GetMemorySize() const;
+
+        // If this allocator only allocates memory blocks using the same alignment, this value
+        // must be specified. Otherwise, kInvalidOffset is returned to denote any alignment is
+        // allowed.
         virtual uint64_t GetMemoryAlignment() const;
 
         // Collect and return the number and size of memory blocks allocated by this allocator.

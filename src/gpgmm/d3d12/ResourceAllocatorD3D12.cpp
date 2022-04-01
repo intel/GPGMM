@@ -285,6 +285,14 @@ namespace gpgmm { namespace d3d12 {
                                     bool neverAllocate,
                                     bool cacheSize,
                                     CreateResourceFn&& createResourceFn) {
+            // Do not attempt to allocate if the requested size already exceeds the fixed
+            // memory size allowed by the allocator. Otherwise, both the memory and resource would
+            // be created, immediately released, then likely re-allocated all over again once
+            // TryAllocateResource returns.
+            if (allocator->GetMemorySize() != kInvalidSize && size > allocator->GetMemorySize()) {
+                return E_FAIL;
+            }
+
             std::unique_ptr<MemoryAllocation> allocation =
                 allocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
             if (allocation == nullptr) {
