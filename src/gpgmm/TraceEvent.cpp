@@ -128,7 +128,21 @@ namespace gpgmm {
 
             JSONDict eventData;
             eventData.AddItem("name", traceEvent.mName);
-            eventData.AddItem("cat", traceEvent.mCategory);
+
+            switch (traceEvent.mCategory) {
+                case TraceEventCategory::Default:
+                    eventData.AddItem("cat", "default");
+                    break;
+
+                case TraceEventCategory::Metadata:
+                    eventData.AddItem("cat", "__metadata");
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+
             eventData.AddItem("ph", traceEvent.mPhase);
 
             const uint32_t idFlags =

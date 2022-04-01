@@ -34,6 +34,7 @@
 #define TRACE_EVENT_PHASE_CREATE_OBJECT ('N')
 #define TRACE_EVENT_PHASE_SNAPSHOT_OBJECT ('O')
 #define TRACE_EVENT_PHASE_DELETE_OBJECT ('D')
+#define TRACE_EVENT_PHASE_METADATA ('M')
 
 // Flags for changing the behavior of TRACE_EVENT_API_ADD_TRACE_EVENT.
 #define TRACE_EVENT_FLAG_NONE (static_cast<unsigned char>(0))
@@ -57,6 +58,10 @@ const uint64_t kNoId = 0;
         }                                             \
     } scopedTracedCall {                              \
     }
+
+#define TRACE_EVENT_METADATA(name, args)                                                       \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, \
+                                     name, kNoId, TRACE_EVENT_FLAG_NONE, args)
 
 #define TRACE_EVENT_INSTANT(category_group, name, args)                                      \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_INSTANT, category_group, name, kNoId, \
@@ -93,6 +98,7 @@ namespace gpgmm {
 
     enum TraceEventCategory {
         Default = 0,
+        Metadata = 1,
     };
 
     class FileEventTracer;
