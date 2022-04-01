@@ -53,7 +53,8 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
+                                           this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
@@ -71,7 +72,8 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
+                                           this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
@@ -90,16 +92,18 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryAllocation", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
+                                           this);
         d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
     ResourceAllocation::~ResourceAllocation() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryAllocation", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
+                                           this);
     }
 
     void ResourceAllocation::DeleteThis() {
-        TRACE_EVENT_CALL_SCOPED("ResourceAllocation.Release");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "ResourceAllocation.Release");
         GetAllocator()->DeallocateMemory(std::unique_ptr<ResourceAllocation>(this));
     }
 

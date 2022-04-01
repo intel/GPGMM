@@ -28,7 +28,7 @@ namespace gpgmm { namespace d3d12 {
           mResidencyLock(0) {
         ASSERT(mPageable != nullptr);
 
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryBlock", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryBlock", this);
         d3d12::RecordObject("GPUMemoryBlock", this, GetInfo());
 
         mPageable->SetName(L"GPGMM managed heap");
@@ -42,7 +42,7 @@ namespace gpgmm { namespace d3d12 {
             RemoveFromList();
         }
 
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryBlock", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryBlock", this);
     }
 
     ComPtr<ID3D12Pageable> Heap::GetPageable() const {

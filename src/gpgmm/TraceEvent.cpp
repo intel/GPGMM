@@ -66,13 +66,14 @@ namespace gpgmm {
     }
 
     void EventTracer::AddTraceEvent(char phase,
+                                    TraceEventCategory category,
                                     const char* name,
                                     uint64_t id,
                                     uint32_t tid,
                                     uint32_t flags,
                                     const JSONDict& args) {
         if (gEventTracer != nullptr) {
-            gEventTracer->EnqueueTraceEvent(phase, name, id, tid, flags, args);
+            gEventTracer->EnqueueTraceEvent(phase, category, name, id, tid, flags, args);
         }
     }
 
@@ -95,6 +96,7 @@ namespace gpgmm {
     }
 
     void FileEventTracer::EnqueueTraceEvent(char phase,
+                                            TraceEventCategory category,
                                             const char* name,
                                             uint64_t id,
                                             uint32_t tid,
@@ -102,8 +104,7 @@ namespace gpgmm {
                                             const JSONDict& args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
-            mQueue.push_back(
-                {phase, TraceEventCategory::Default, name, id, tid, timestamp, flags, args});
+            mQueue.push_back({phase, category, name, id, tid, timestamp, flags, args});
         }
     }
 

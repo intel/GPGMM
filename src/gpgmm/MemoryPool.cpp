@@ -19,11 +19,11 @@
 namespace gpgmm {
 
     MemoryPool::MemoryPool(uint64_t memorySize) : mMemorySize(memorySize) {
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID("GPUMemoryPool", this);
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryPool", this);
     }
 
     MemoryPool::~MemoryPool() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID("GPUMemoryPool", this);
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryPool", this);
     }
 
     uint64_t MemoryPool::GetMemorySize() const {

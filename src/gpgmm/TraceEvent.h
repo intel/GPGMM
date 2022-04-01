@@ -47,43 +47,46 @@
 // is not used.
 const uint64_t kNoId = 0;
 
-#define TRACE_EVENT_CALL_SCOPED(name) \
-    struct ScopedTracedCall {         \
-        ScopedTracedCall() {          \
-            TRACE_EVENT_BEGIN(name);  \
-        }                             \
-        ~ScopedTracedCall() {         \
-            TRACE_EVENT_END(name);    \
-        }                             \
-    } scopedTracedCall {              \
+#define TRACE_EVENT_CALL_SCOPED(category_group, name) \
+    struct ScopedTracedCall {                         \
+        ScopedTracedCall() {                          \
+            TRACE_EVENT_BEGIN(category_group, name);  \
+        }                                             \
+        ~ScopedTracedCall() {                         \
+            TRACE_EVENT_END(category_group, name);    \
+        }                                             \
+    } scopedTracedCall {                              \
     }
 
-#define TRACE_EVENT_INSTANT(name, args)                                      \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_INSTANT, name, kNoId, \
+#define TRACE_EVENT_INSTANT(category_group, name, args)                                      \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_INSTANT, category_group, name, kNoId, \
                                      TRACE_EVENT_FLAG_NONE, args)
 
-#define TRACE_EVENT_BEGIN(name) \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_BEGIN, name, kNoId, TRACE_EVENT_FLAG_NONE)
+#define TRACE_EVENT_BEGIN(category_group, name)                                            \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_BEGIN, category_group, name, kNoId, \
+                                     TRACE_EVENT_FLAG_NONE)
 
-#define TRACE_EVENT_END(name) \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_END, name, kNoId, TRACE_EVENT_FLAG_NONE)
+#define TRACE_EVENT_END(category_group, name)                                            \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_END, category_group, name, kNoId, \
+                                     TRACE_EVENT_FLAG_NONE)
 
-#define TRACE_EVENT_OBJECT_CREATED_WITH_ID(name, id)                            \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, name, id, \
+#define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category_group, name, id)                            \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, category_group, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID)
 
-#define TRACE_EVENT_OBJECT_DELETED_WITH_ID(name, id)                            \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_DELETE_OBJECT, name, id, \
+#define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category_group, name, id)                            \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_DELETE_OBJECT, category_group, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID)
 
-#define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, id, snapshot)                   \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, name, id, \
+#define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category_group, name, id, snapshot)                   \
+    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, category_group, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID, {"snapshot", snapshot})
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, name, id, ...)                          \
-    do {                                                                                \
-        gpgmm::EventTracer::AddTraceEvent(phase, name, gpgmm::TraceEventID(id).GetID(), \
-                                          TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__);  \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)         \
+    do {                                                                               \
+        gpgmm::EventTracer::AddTraceEvent(phase, category_group, name,                 \
+                                          gpgmm::TraceEventID(id).GetID(),             \
+                                          TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
     } while (false)
 
 namespace gpgmm {
@@ -149,6 +152,7 @@ namespace gpgmm {
     class EventTracer {
       public:
         static void AddTraceEvent(char phase,
+                                  TraceEventCategory category,
                                   const char* name,
                                   uint64_t id,
                                   uint32_t tid,
@@ -165,6 +169,7 @@ namespace gpgmm {
         ~FileEventTracer();
 
         void EnqueueTraceEvent(char phase,
+                               TraceEventCategory category,
                                const char* name,
                                uint64_t id,
                                uint32_t tid,

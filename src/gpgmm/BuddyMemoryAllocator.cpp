@@ -45,7 +45,8 @@ namespace gpgmm {
                                                                               bool neverAllocate,
                                                                               bool cacheSize) {
         GPGMM_CHECK_NONZERO(size);
-        TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
+                                "BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (size > mMemorySize) {
@@ -107,7 +108,8 @@ namespace gpgmm {
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        TRACE_EVENT_CALL_SCOPED("BuddyMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
+                                "BuddyMemoryAllocator.DeallocateMemory");
 
         ASSERT(subAllocation != nullptr);
 

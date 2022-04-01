@@ -80,7 +80,8 @@ namespace gpgmm {
                                                                              uint64_t alignment,
                                                                              bool neverAllocate,
                                                                              bool cacheSize) {
-        TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
+                                "SlabMemoryAllocator.TryAllocateMemory");
         if (size > mBlockSize) {
             RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
                           "Allocation size exceeded the block size (" + std::to_string(size) +
@@ -162,7 +163,8 @@ namespace gpgmm {
     }
 
     void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT_CALL_SCOPED("SlabMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
+                                "SlabMemoryAllocator.DeallocateMemory");
 
         const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(allocation->GetBlock());
         ASSERT(blockInSlab != nullptr);
@@ -250,7 +252,8 @@ namespace gpgmm {
                                                                             uint64_t alignment,
                                                                             bool neverAllocate,
                                                                             bool cacheSize) {
-        TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.TryAllocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
+                                "SlabCacheAllocator.TryAllocateMemory");
         GPGMM_CHECK_NONZERO(size);
 
         const uint64_t blockSize = AlignTo(size, mMinBlockSize);
@@ -284,7 +287,7 @@ namespace gpgmm {
     }
 
     void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT_CALL_SCOPED("SlabCacheAllocator.DeallocateMemory");
+        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "SlabCacheAllocator.DeallocateMemory");
 
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()), false);
 

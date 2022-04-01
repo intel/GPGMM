@@ -43,13 +43,14 @@ namespace gpgmm {
 
     template <typename T, typename DescT, typename SerializerT = JSONSerializer>
     static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(name, objPtr,
+        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(TraceEventCategory::Default, name, objPtr,
                                             GPGMM_LAZY_SERIALIZE(desc, IsEventTracerEnabled()));
     }
 
     template <typename T, typename SerializerT, typename... Args>
     static void RecordCall(const char* name, const Args&... args) {
-        TRACE_EVENT_INSTANT(name, GPGMM_LAZY_SERIALIZE(T{args...}, IsEventTracerEnabled()));
+        TRACE_EVENT_INSTANT(TraceEventCategory::Default, name,
+                            GPGMM_LAZY_SERIALIZE(T{args...}, IsEventTracerEnabled()));
     }
 
 }  // namespace gpgmm
