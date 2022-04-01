@@ -162,17 +162,17 @@ namespace gpgmm {
                                                   AllocationMethod::kSubAllocated, blockInSlab);
     }
 
-    void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
         TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
                                 "SlabMemoryAllocator.DeallocateMemory");
 
-        const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(allocation->GetBlock());
+        const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(subAllocation->GetBlock());
         ASSERT(blockInSlab != nullptr);
 
         Slab* slab = blockInSlab->pSlab;
         ASSERT(slab != nullptr);
 
-        MemoryBase* slabMemory = allocation->GetMemory();
+        MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);
 
         // Splice the slab from the full-list to free-list.
@@ -286,19 +286,21 @@ namespace gpgmm {
             subAllocation->GetMethod(), subAllocation->GetBlock());
     }
 
-    void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
         TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "SlabCacheAllocator.DeallocateMemory");
 
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(allocation->GetSize()), false);
+        auto entry =
+            mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(subAllocation->GetSize()), false);
 
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         ASSERT(slabAllocator != nullptr);
 
-        slabAllocator->DeallocateMemory(std::move(allocation));
+        slabAllocator->DeallocateMemory(std::move(subAllocation));
 
-        // Remove the cached allocator if this is the last allocation. Once |entry| goes out of
-        // scope, it will unlink itself from the cache.
         entry->Unref();
+
+        // Remove the cached allocator if this is the last sub-allocation. Once |entry| goes out of
+        // scope, it will unlink itself from the cache.
         if (entry->HasOneRef()) {
             SafeDelete(slabAllocator);
         }
