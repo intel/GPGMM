@@ -1002,6 +1002,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.DeallocateMemory");
+
         mInfo.UsedMemoryUsage -= allocation->GetSize();
         mInfo.UsedMemoryCount--;
         SafeRelease(allocation);
