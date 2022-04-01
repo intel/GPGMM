@@ -103,7 +103,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocation::DeleteThis() {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "ResourceAllocation.Release");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocation.Release");
         GetAllocator()->DeallocateMemory(std::unique_ptr<ResourceAllocation>(this));
     }
 

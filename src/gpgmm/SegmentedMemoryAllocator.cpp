@@ -131,8 +131,7 @@ namespace gpgmm {
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "SegmentedMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
         GPGMM_CHECK_NONZERO(size);
 
         if (alignment != mMemoryAlignment) {
@@ -165,8 +164,7 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "SegmentedMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.DeallocateMemory");
 
         ASSERT(allocation != nullptr);
 

@@ -215,8 +215,7 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         uint64_t reservation,
         uint64_t* reservationOut) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResidencyManager.SetVideoMemoryReservation");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.SetVideoMemoryReservation");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -268,7 +267,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "ResidencyManager.Evict");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -344,8 +343,7 @@ namespace gpgmm { namespace d3d12 {
             return E_NOTIMPL;
         }
 
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResidencyManager.ExecuteCommandLists");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
 
         ID3D12CommandList* commandList = commandLists[0];
         ResidencySet* residencySet = residencySets[0];
@@ -420,7 +418,7 @@ namespace gpgmm { namespace d3d12 {
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "ResidencyManager.MakeResident");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.MakeResident");
 
         ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
 

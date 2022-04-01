@@ -567,7 +567,7 @@ namespace gpgmm { namespace d3d12 {
         RecordCall<CREATE_RESOURCE_DESC>("ResourceAllocator.CreateResource", allocationDescriptor,
                                          resourceDescriptor, initialResourceState, clearValue);
 
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, clearValue,
@@ -796,8 +796,7 @@ namespace gpgmm { namespace d3d12 {
                                                     ID3D12Resource** placedResourceOut) {
         ASSERT(resourceHeap != nullptr);
 
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResourceAllocator.CreatePlacedResource");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreatePlacedResource");
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident or
         // CreatePlacedResource will fail.
@@ -819,8 +818,7 @@ namespace gpgmm { namespace d3d12 {
                                                   D3D12_HEAP_FLAGS heapFlags,
                                                   uint64_t heapAlignment,
                                                   Heap** resourceHeapOut) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResourceAllocator.CreateResourceHeap");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResourceHeap");
 
         const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
@@ -868,8 +866,7 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
         Heap** resourceHeapOut) {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResourceAllocator.CreateCommittedResource");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateCommittedResource");
 
         // CreateCommittedResource will implicitly make the created resource resident. We must
         // ensure enough free memory exists before allocating to avoid an out-of-memory error when
@@ -921,8 +918,7 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
         QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut) const {
-        TRACE_EVENT_CALL_SCOPED(TraceEventCategory::Default,
-                                "ResourceAllocator.QueryResourceAllocatorInfo");
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.QueryResourceAllocatorInfo");
 
         MEMORY_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {

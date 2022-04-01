@@ -48,16 +48,9 @@
 // is not used.
 const uint64_t kNoId = 0;
 
-#define TRACE_EVENT_CALL_SCOPED(category_group, name) \
-    struct ScopedTracedCall {                         \
-        ScopedTracedCall() {                          \
-            TRACE_EVENT_BEGIN(category_group, name);  \
-        }                                             \
-        ~ScopedTracedCall() {                         \
-            TRACE_EVENT_END(category_group, name);    \
-        }                                             \
-    } scopedTracedCall {                              \
-    }
+// Records a pair of begin and end events called "name" for the current scope.
+// Name parameter must have program lifetime (statics or literals).
+#define TRACE_EVENT0(category_group, name) INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 
 #define TRACE_EVENT_METADATA(name, args)                                                       \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, \
@@ -87,6 +80,17 @@ const uint64_t kNoId = 0;
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, category_group, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID, {"snapshot", snapshot})
 
+#define INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name) \
+    struct ScopedTraceEvent {                                 \
+        ScopedTraceEvent() {                                  \
+            TRACE_EVENT_BEGIN(category_group, name);          \
+        }                                                     \
+        ~ScopedTraceEvent() {                                 \
+            TRACE_EVENT_END(category_group, name);            \
+        }                                                     \
+    } scopedTraceEvent {                                      \
+    }
+
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)         \
     do {                                                                               \
         gpgmm::EventTracer::AddTraceEvent(phase, category_group, name,                 \
@@ -111,6 +115,9 @@ namespace gpgmm {
     void ShutdownEventTracer();
 
     bool IsEventTracerEnabled();
+
+    // Inserts a single metadata event used to name the calling thread ID.
+    void InitializeThreadName(const char* name);
 
     class TraceEventID {
       public:
@@ -187,6 +194,7 @@ namespace gpgmm {
         std::vector<TraceEvent> mQueue;
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
+        std::mutex mMutex;
 
         bool mSkipDurationEvents = false;
         bool mSkipObjectEvents = false;
