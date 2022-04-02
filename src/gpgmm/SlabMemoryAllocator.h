@@ -134,6 +134,8 @@ namespace gpgmm {
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;
 
+        uint64_t GetMemorySize() const override;
+
         uint64_t GetSlabCacheSizeForTesting() const;
 
       private:

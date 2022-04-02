@@ -35,12 +35,10 @@ namespace gpgmm {
     }
 
     uint64_t MemoryAllocator::GetMemorySize() const {
-        ASSERT(false);
         return kInvalidSize;
     }
 
     uint64_t MemoryAllocator::GetMemoryAlignment() const {
-        ASSERT(false);
         return kInvalidOffset;
     }
 

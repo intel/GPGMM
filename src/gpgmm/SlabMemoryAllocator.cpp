@@ -318,6 +318,10 @@ namespace gpgmm {
         return info;
     }
 
+    uint64_t SlabCacheAllocator::GetMemorySize() const {
+        return GetFirstChild()->GetMemorySize();
+    }
+
     uint64_t SlabCacheAllocator::GetSlabCacheSizeForTesting() const {
         uint64_t count = 0;
         for (const auto& entry : mSizeCache) {
