@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_DUMMYMEMORYALLOCATOR_H_
-#define GPGMM_DUMMYMEMORYALLOCATOR_H_
+#ifndef TESTS_DUMMYMEMORYALLOCATOR_H_
+#define TESTS_DUMMYMEMORYALLOCATOR_H_
 
 #include "gpgmm/MemoryAllocator.h"
+#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Utils.h"
 
 namespace gpgmm {
 
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
-            mInfo.UsedMemoryCount--;
-            mInfo.UsedMemoryUsage -= allocation->GetSize();
-            SafeRelease(allocation);
-        }
-
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize) override {
+            TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.TryAllocateMemory");
+
             if (neverAllocate) {
                 return {};
             }
@@ -40,8 +37,16 @@ namespace gpgmm {
             mInfo.UsedMemoryUsage += allocationSize;
             return std::make_unique<MemoryAllocation>(this, new MemoryBase(allocationSize));
         }
+
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
+            TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.DeallocateMemory");
+
+            mInfo.UsedMemoryCount--;
+            mInfo.UsedMemoryUsage -= allocation->GetSize();
+            SafeRelease(allocation);
+        }
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_DUMMYMEMORYALLOCATOR_H_
+#endif  // TESTS_DUMMYMEMORYALLOCATOR_H_
