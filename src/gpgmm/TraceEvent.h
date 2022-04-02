@@ -53,21 +53,17 @@ const uint64_t kNoId = 0;
 // Name parameter must have program lifetime (statics or literals).
 #define TRACE_EVENT0(category_group, name) INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 
-#define TRACE_EVENT_METADATA(name, args)                                                       \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, \
-                                     name, kNoId, TRACE_EVENT_FLAG_NONE, args)
+#define TRACE_EVENT_METADATA(name, args) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, name, args)
 
-#define TRACE_EVENT_INSTANT(category_group, name, args)                                      \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_INSTANT, category_group, name, kNoId, \
-                                     TRACE_EVENT_FLAG_NONE, args)
+#define TRACE_EVENT_INSTANT(category_group, name, args) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, args)
 
-#define TRACE_EVENT_BEGIN(category_group, name)                                            \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_BEGIN, category_group, name, kNoId, \
-                                     TRACE_EVENT_FLAG_NONE)
+#define TRACE_EVENT_BEGIN(category_group, name) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_BEGIN, category_group, name, {})
 
-#define TRACE_EVENT_END(category_group, name)                                            \
-    INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_END, category_group, name, kNoId, \
-                                     TRACE_EVENT_FLAG_NONE)
+#define TRACE_EVENT_END(category_group, name) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_END, category_group, name, {})
 
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category_group, name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, category_group, name, id, \
@@ -97,6 +93,13 @@ const uint64_t kNoId = 0;
         gpgmm::EventTracer::AddTraceEvent(phase, category_group, name,                 \
                                           gpgmm::TraceEventID(id).GetID(),             \
                                           TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
+    } while (false)
+
+#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)                              \
+    do {                                                                                        \
+        gpgmm::EventTracer::AddTraceEvent(phase, category_group, name, kNoId,                   \
+                                          TRACE_EVENT_CURRENT_THREAD_ID, TRACE_EVENT_FLAG_NONE, \
+                                          __VA_ARGS__);                                         \
     } while (false)
 
 namespace gpgmm {
