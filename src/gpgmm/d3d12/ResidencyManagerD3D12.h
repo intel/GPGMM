@@ -27,10 +27,17 @@ namespace gpgmm { namespace d3d12 {
     class Fence;
     class Heap;
     class ResidencySet;
-    class ResourceAllocator;
 
     class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
       public:
+        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
+                                              ComPtr<IDXGIAdapter> adapter,
+                                              bool isUMA,
+                                              float videoMemoryBudget,
+                                              uint64_t availableForResourceBudget,
+                                              uint64_t videoMemoryEvictSize,
+                                              ResidencyManager** residencyManagerOut);
+
         ~ResidencyManager();
 
         HRESULT LockHeap(Heap* heap);
@@ -51,16 +58,6 @@ namespace gpgmm { namespace d3d12 {
                                           uint64_t* reservationOut = nullptr);
 
       private:
-        friend ResourceAllocator;
-
-        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                              ComPtr<IDXGIAdapter> adapter,
-                                              bool isUMA,
-                                              float videoMemoryBudget,
-                                              uint64_t availableForResourceBudget,
-                                              uint64_t videoMemoryEvictSize,
-                                              ResidencyManager** residencyManagerOut);
-
         ResidencyManager(ComPtr<ID3D12Device> device,
                          ComPtr<IDXGIAdapter3> adapter3,
                          std::unique_ptr<Fence> fence,
