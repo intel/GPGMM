@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TESTS_GPGMM_TEST_H_
-#define TESTS_GPGMM_TEST_H_
+#ifndef TESTS_GPGMMTEST_H_
+#define TESTS_GPGMMTEST_H_
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "gpgmm/common/Log.h"
 
@@ -56,4 +56,4 @@ class GPGMMTestEnvironment : public testing::Environment {
     bool mEnableDeviceLeakChecks = false;
 };
 
-#endif  // TESTS_GPGMM_TEST_H_
+#endif  // TESTS_GPGMMTEST_H_

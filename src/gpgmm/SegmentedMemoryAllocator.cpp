@@ -149,11 +149,12 @@ namespace gpgmm {
             GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(size, mMemoryAlignment,
                                                                 neverAllocate, cacheSize),
                              allocation);
-            mInfo.UsedMemoryCount++;
-            mInfo.UsedMemoryUsage += allocation->GetSize();
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }
+
+        mInfo.UsedMemoryCount++;
+        mInfo.UsedMemoryUsage += allocation->GetSize();
 
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);

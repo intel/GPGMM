@@ -15,6 +15,7 @@
 #include "gpgmm/PooledMemoryAllocator.h"
 
 #include "gpgmm/MemoryPool.h"
+#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -29,22 +30,29 @@ namespace gpgmm {
                                                                                uint64_t alignment,
                                                                                bool neverAllocate,
                                                                                bool cacheSize) {
+        TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
+
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(
                 GetFirstChild()->TryAllocateMemory(size, alignment, neverAllocate, cacheSize),
                 allocation);
-
-            mInfo.UsedMemoryCount++;
-            mInfo.UsedMemoryUsage += allocation->GetSize();
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }
 
-        return allocation;
+        mInfo.UsedMemoryCount++;
+        mInfo.UsedMemoryUsage += allocation->GetSize();
+
+        MemoryBase* memory = allocation->GetMemory();
+        ASSERT(memory != nullptr);
+
+        return std::make_unique<MemoryAllocation>(this, memory);
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.DeallocateMemory");
+
         const uint64_t& allocationSize = allocation->GetSize();
         mInfo.FreeMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount--;
