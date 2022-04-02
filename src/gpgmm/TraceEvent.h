@@ -36,6 +36,7 @@
 #define TRACE_EVENT_PHASE_SNAPSHOT_OBJECT ('O')
 #define TRACE_EVENT_PHASE_DELETE_OBJECT ('D')
 #define TRACE_EVENT_PHASE_METADATA ('M')
+#define TRACE_EVENT_PHASE_COUNTER ('C')
 
 // Flags for changing the behavior of TRACE_EVENT_API_ADD_TRACE_EVENT.
 #define TRACE_EVENT_FLAG_NONE (static_cast<unsigned char>(0))
@@ -56,6 +57,10 @@ const uint64_t kNoId = 0;
 #define TRACE_EVENT_METADATA(name, args) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, name, args)
 
+#define TRACE_COUNTER1(category_group, name, value)                                    \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, "value", \
+                             static_cast<int>(value))
+
 #define TRACE_EVENT_INSTANT(category_group, name, args) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, args)
 
@@ -75,7 +80,7 @@ const uint64_t kNoId = 0;
 
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category_group, name, id, snapshot)                   \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, category_group, name, id, \
-                                     TRACE_EVENT_FLAG_HAS_ID, {"snapshot", snapshot})
+                                     TRACE_EVENT_FLAG_HAS_ID, "snapshot", snapshot)
 
 #define INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name) \
     struct ScopedTraceEvent {                                 \
@@ -175,6 +180,20 @@ namespace gpgmm {
                                   uint32_t tid,
                                   uint32_t flags,
                                   const JSONDict& args = {});
+
+        template <class Arg1T>
+        static void AddTraceEvent(char phase,
+                                  TraceEventCategory category,
+                                  const char* name,
+                                  uint64_t id,
+                                  uint32_t tid,
+                                  uint32_t flags,
+                                  const char* arg1Name,
+                                  const Arg1T& arg1Value) {
+            JSONDict args = {};
+            args.AddItem(arg1Name, arg1Value);
+            AddTraceEvent(phase, category, name, id, tid, flags, args);
+        }
     };
 
     class FileEventTracer {
