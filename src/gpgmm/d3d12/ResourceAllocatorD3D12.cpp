@@ -587,6 +587,10 @@ namespace gpgmm { namespace d3d12 {
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
 #endif
+
+        d3d12::RecordObject("GPUMemoryAllocation", *resourceAllocationOut,
+                            (*resourceAllocationOut)->GetInfo());
+
         return S_OK;
     }
 

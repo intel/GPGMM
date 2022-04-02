@@ -55,7 +55,6 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
                                            this);
-        d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -74,7 +73,6 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
                                            this);
-        d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -94,7 +92,6 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(resourceHeap != nullptr);
         TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
                                            this);
-        d3d12::RecordObject("GPUMemoryAllocation", this, GetInfo());
     }
 
     ResourceAllocation::~ResourceAllocation() {
