@@ -45,6 +45,7 @@ namespace gpgmm {
                                                             bool cacheSize) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         void ReleaseMemory() override;
+        uint64_t GetMemoryAlignment() const override;
 
         uint64_t GetSegmentSizeForTesting() const;
 

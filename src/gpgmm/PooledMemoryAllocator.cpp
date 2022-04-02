@@ -14,8 +14,8 @@
 
 #include "gpgmm/PooledMemoryAllocator.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemoryPool.h"
-#include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Assert.h"
 
 namespace gpgmm {
@@ -60,4 +60,9 @@ namespace gpgmm {
 
         mPool->ReturnToPool(std::move(allocation));
     }
+
+    uint64_t PooledMemoryAllocator::GetMemorySize() const {
+        return mPool->GetMemorySize();
+    }
+
 }  // namespace gpgmm

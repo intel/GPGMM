@@ -33,6 +33,7 @@ namespace gpgmm {
                                                             bool neverAllocate,
                                                             bool cacheSize) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
+        uint64_t GetMemorySize() const override;
 
       private:
         MemoryPool* const mPool;

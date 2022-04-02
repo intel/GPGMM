@@ -190,6 +190,10 @@ namespace gpgmm {
         }
     }
 
+    uint64_t SegmentedMemoryAllocator::GetMemoryAlignment() const {
+        return mMemoryAlignment;
+    }
+
     uint64_t SegmentedMemoryAllocator::GetSegmentSizeForTesting() const {
         uint64_t count = 0;
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
