@@ -18,8 +18,6 @@
 #include "gpgmm/Allocator.h"
 #include "gpgmm/common/Limits.h"
 
-#include <cstdint>
-
 namespace gpgmm {
 
     struct Block {
