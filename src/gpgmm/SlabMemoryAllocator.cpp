@@ -20,6 +20,8 @@
 #include "gpgmm/common/Math.h"
 #include "gpgmm/common/Utils.h"
 
+#include <algorithm>  // std::max
+
 namespace gpgmm {
 
     // SlabMemoryAllocator
