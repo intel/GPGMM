@@ -30,8 +30,16 @@ namespace gpgmm {
 
     static const char kLogTag[] = "gpgmm";
 
+    LogSeverity GetDefaultLogMessageLevel() {
+#if defined(NDEBUG)
+        return LogSeverity::Info;
+#else
+        return LogSeverity::Debug;
+#endif  // defined(NDEBUG)
+    }
+
     // Messages with equal or greater to severity will be logged.
-    static LogSeverity gLogMessageLevel = LogSeverity::Info;
+    static LogSeverity gLogMessageLevel = GetDefaultLogMessageLevel();
 
     namespace {
 
