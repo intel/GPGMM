@@ -69,6 +69,12 @@ namespace gpgmm { namespace d3d12 {
             desc.Flags = ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS;
         }
 
+#if defined(NDEBUG)
+        desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+#else
+        desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_MESSAGE;
+#endif
+
         return desc;
     }
 
