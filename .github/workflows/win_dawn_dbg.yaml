@@ -1,7 +1,19 @@
 name: win_dawn_dbg
 
 on:
-  workflow_dispatch:
+  push:
+    branches: main
+    paths:
+      - 'src/**'
+      - 'DEPS'
+      - 'patches/gpgmm_dawn.diff'
+
+  pull_request:
+    branches: main
+    paths:
+      - 'src/**'
+      - 'DEPS'
+      - 'patches/gpgmm_dawn.diff'
 
 jobs:
 
