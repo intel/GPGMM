@@ -51,12 +51,6 @@ namespace gpgmm { namespace d3d12 {
         // Ensures resources are always within the resource budget at creation time. Mostly used
         // to debug with residency being over committed.
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
-
-        // Checks for leaked device objects created by GPGMM.
-        // Requires the debug layers to be enabled by installing Graphics Tools in Windows and
-        // calling EnableDebugLayer before creation.
-        // Will assert if a leak is detected during destruction.
-        ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS = 0x4,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
@@ -349,8 +343,7 @@ namespace gpgmm { namespace d3d12 {
                                    uint64_t heapAlignment,
                                    Heap** resourceHeapOut);
 
-        HRESULT EnableDeviceObjectLeakChecks() const;
-        HRESULT CheckForDeviceObjectLeaks() const;
+        HRESULT ReportLiveDeviceObjects() const;
 
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

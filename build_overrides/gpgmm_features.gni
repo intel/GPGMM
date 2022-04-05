@@ -69,4 +69,8 @@ declare_args() {
   # Enables warming of caches with common sizes.
   # Sets -dGPGMM_ENABLE_SIZE_CACHE
   gpgmm_enable_size_cache = true
+
+  # Enables warning when device leaks objects.
+  # Sets -dGPGMM_ENABLE_ASSERT_NO_DEVICE_LEAKS
+  gpgmm_enable_device_leak_warning = false
 }

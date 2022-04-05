@@ -116,6 +116,10 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
   }
 
+  if (gpgmm_enable_device_leak_warning) {
+    defines += [ "GPGMM_ENABLE_DEVICE_LEAK_WARNING" ]
+  }
+
   libs = []
   data_deps = []
 

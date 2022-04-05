@@ -82,8 +82,7 @@ void InitGPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
     testing::AddGlobalTestEnvironment(gTestEnv);
 }
 
-GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, char** argv)
-    : GPGMMTestEnvironment(argc, argv) {
+GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         constexpr const char kIterationArg[] = "--iterations=";
         size_t arglen = sizeof(kIterationArg) - 1;
