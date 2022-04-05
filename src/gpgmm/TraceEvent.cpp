@@ -34,7 +34,15 @@ namespace gpgmm {
         if (gEventTracer == nullptr) {
             gEventTracer = std::make_unique<FileEventTracer>(traceFile, skipDurationEvents,
                                                              skipObjectEvents, skipInstantEvents);
+
+            InitializeThreadName("GPGMM_MainThread");
         }
+    }
+
+    void InitializeThreadName(const char* name) {
+        JSONDict args;
+        args.AddItem("name", name);
+        TRACE_EVENT_METADATA("thread_name", args);
     }
 
     void ShutdownEventTracer() {
