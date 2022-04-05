@@ -20,6 +20,9 @@
 
 #include <gpgmm_d3d12.h>
 
+#include <set>
+#include <thread>
+
 using namespace gpgmm::d3d12;
 
 class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test {
@@ -883,5 +886,50 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             reusePoolOnlyDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 128, 128),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &thirdAllocation));
         ASSERT_EQ(thirdAllocation, nullptr);
+    }
+}
+
+// Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferPrefetch) {
+    ComPtr<ResourceAllocator> allocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+        CreateBasicAllocatorDesc(/*enablePrefetch*/ true), &allocator));
+    ASSERT_NE(allocator, nullptr);
+
+    constexpr uint64_t kNumOfBuffers = 1000u;
+
+    std::set<ComPtr<ResourceAllocation>> allocs = {};
+    for (uint64_t i = 0; i < kNumOfBuffers; i++) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(allocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        allocs.insert(allocation);
+    }
+
+    allocs.clear();
+}
+
+// Creates a bunch of buffers concurrently.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyThreaded) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    constexpr uint32_t kThreadCount = 64u;
+    std::vector<std::thread> threads(kThreadCount);
+    for (size_t threadIdx = 0; threadIdx < threads.size(); threadIdx++) {
+        threads[threadIdx] = std::thread([&]() {
+            ComPtr<ResourceAllocation> allocation;
+            ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+                {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+            ASSERT_NE(allocation, nullptr);
+        });
+    }
+
+    for (std::thread& thread : threads) {
+        thread.join();
     }
 }

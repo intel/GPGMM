@@ -130,7 +130,10 @@ namespace gpgmm {
         uint64_t size,
         uint64_t alignment,
         bool neverAllocate,
-        bool cacheSize) {
+        bool cacheSize,
+        bool prefetchMemory) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
         GPGMM_CHECK_NONZERO(size);
 
@@ -146,8 +149,8 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(size, mMemoryAlignment,
-                                                                neverAllocate, cacheSize),
+            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
+                                 size, mMemoryAlignment, neverAllocate, cacheSize, prefetchMemory),
                              allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
@@ -165,6 +168,8 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.DeallocateMemory");
 
         ASSERT(allocation != nullptr);
@@ -183,6 +188,8 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::ReleaseMemory() {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
@@ -195,6 +202,8 @@ namespace gpgmm {
     }
 
     uint64_t SegmentedMemoryAllocator::GetSegmentSizeForTesting() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         uint64_t count = 0;
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             count += 1;

@@ -43,7 +43,10 @@ namespace gpgmm {
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t size,
                                                                               uint64_t alignment,
                                                                               bool neverAllocate,
-                                                                              bool cacheSize) {
+                                                                              bool cacheSize,
+                                                                              bool prefetchMemory) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         GPGMM_CHECK_NONZERO(size);
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
 
@@ -81,7 +84,7 @@ namespace gpgmm {
                                  if (memoryAllocation == nullptr) {
                                      GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
                                                           mMemorySize, mMemoryAlignment,
-                                                          neverAllocate, cacheSize),
+                                                          neverAllocate, cacheSize, prefetchMemory),
                                                       memoryAllocation);
                                  }
 
@@ -105,6 +108,8 @@ namespace gpgmm {
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.DeallocateMemory");
 
         ASSERT(subAllocation != nullptr);
@@ -137,6 +142,8 @@ namespace gpgmm {
     }
 
     MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::QueryInfo() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         MEMORY_ALLOCATOR_INFO info = mInfo;
         const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
         info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
@@ -146,6 +153,8 @@ namespace gpgmm {
     }
 
     uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         return mUsedPool.GetPoolSize();
     }
 

@@ -43,13 +43,13 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
     // Cannot allocate greater than heap size.
     {
         std::unique_ptr<MemoryAllocation> invalidAllocation = allocator.TryAllocateMemory(
-            kDefaultMemorySize * 2, kDefaultMemoryAlignment, false, false);
+            kDefaultMemorySize * 2, kDefaultMemoryAlignment, false, false, false);
         ASSERT_EQ(invalidAllocation, nullptr);
     }
 
     // Allocate one 128 byte allocation (same size as heap).
     std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
@@ -60,7 +60,7 @@ TEST(BuddyMemoryAllocatorTests, SingleHeap) {
     // Cannot allocate when allocator is full.
     {
         std::unique_ptr<MemoryAllocation> invalidAllocation =
-            allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false);
+            allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false, false);
         ASSERT_EQ(invalidAllocation, nullptr);
     }
 
@@ -85,20 +85,20 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     // Cannot allocate greater than heap size.
     {
         std::unique_ptr<MemoryAllocation> invalidAllocation = allocator.TryAllocateMemory(
-            kDefaultMemorySize * 2, kDefaultMemoryAlignment, false, false);
+            kDefaultMemorySize * 2, kDefaultMemoryAlignment, false, false, false);
         ASSERT_EQ(invalidAllocation, nullptr);
     }
 
     // Cannot allocate greater than max block size.
     {
-        std::unique_ptr<MemoryAllocation> invalidAllocation =
-            allocator.TryAllocateMemory(maxBlockSize * 2, kDefaultMemoryAlignment, false, false);
+        std::unique_ptr<MemoryAllocation> invalidAllocation = allocator.TryAllocateMemory(
+            maxBlockSize * 2, kDefaultMemoryAlignment, false, false, false);
         ASSERT_EQ(invalidAllocation, nullptr);
     }
 
     // Allocate two 128 byte allocations.
-    std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
+    std::unique_ptr<MemoryAllocation> allocation1 = allocator.TryAllocateMemory(
+        kDefaultMemorySize, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), kDefaultMemorySize);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -107,8 +107,8 @@ TEST(BuddyMemoryAllocatorTests, MultipleHeaps) {
     // First allocation creates first heap.
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
-    std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(kDefaultMemorySize, kDefaultMemoryAlignment, false, false);
+    std::unique_ptr<MemoryAllocation> allocation2 = allocator.TryAllocateMemory(
+        kDefaultMemorySize, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), kDefaultMemorySize);
     ASSERT_EQ(allocation2->GetBlock()->Offset, kDefaultMemorySize);
@@ -143,8 +143,8 @@ TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
                                    std::make_unique<DummyMemoryAllocator>());
 
     // Allocate two 64 byte sub-allocations.
-    std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false);
+    std::unique_ptr<MemoryAllocation> allocation1 = allocator.TryAllocateMemory(
+        kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -153,8 +153,8 @@ TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     // First sub-allocation creates first heap.
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
-    std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false);
+    std::unique_ptr<MemoryAllocation> allocation2 = allocator.TryAllocateMemory(
+        kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation2->GetBlock()->Offset, kDefaultMemorySize / 2);
@@ -164,8 +164,8 @@ TEST(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
-    std::unique_ptr<MemoryAllocation> allocation3 =
-        allocator.TryAllocateMemory(kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false);
+    std::unique_ptr<MemoryAllocation> allocation3 = allocator.TryAllocateMemory(
+        kDefaultMemorySize / 2, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation3->GetBlock()->Offset, kDefaultMemorySize);
@@ -207,7 +207,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     // Allocate two 64-byte allocations.
     std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -215,7 +215,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetBlock()->Offset, 64u);
@@ -227,7 +227,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
-        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), 128u);
     ASSERT_EQ(allocation3->GetBlock()->Offset, 128u);
@@ -239,7 +239,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
-        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(64, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation4, nullptr);
     ASSERT_EQ(allocation4->GetSize(), 64u);
     ASSERT_EQ(allocation4->GetBlock()->Offset, 256u);
@@ -251,7 +251,7 @@ TEST(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     // R5 size forms 64 byte hole after R4.
     std::unique_ptr<MemoryAllocation> allocation5 =
-        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(128, kDefaultMemoryAlignment, false, false, false);
     ASSERT_NE(allocation5, nullptr);
     ASSERT_EQ(allocation5->GetSize(), 128u);
     ASSERT_EQ(allocation5->GetBlock()->Offset, 384u);
@@ -297,7 +297,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
                                    std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(64, 128, false, false);
+        allocator.TryAllocateMemory(64, 128, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -307,7 +307,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(64, 128, false, false);
+        allocator.TryAllocateMemory(64, 128, false, false, false);
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetBlock()->Offset, 128u);
@@ -318,7 +318,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_NE(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
-        allocator.TryAllocateMemory(64, 128, false, false);
+        allocator.TryAllocateMemory(64, 128, false, false, false);
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), 64u);
     ASSERT_EQ(allocation3->GetBlock()->Offset, 256u);
@@ -329,7 +329,7 @@ TEST(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
-        allocator.TryAllocateMemory(64, 64, false, false);
+        allocator.TryAllocateMemory(64, 64, false, false, false);
     ASSERT_NE(allocation4, nullptr);
     ASSERT_EQ(allocation4->GetSize(), 64u);
     ASSERT_EQ(allocation4->GetBlock()->Offset, 320u);
@@ -373,7 +373,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     constexpr uint64_t alignment = 64;
 
     std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(64, alignment, false, false);
+        allocator.TryAllocateMemory(64, alignment, false, false, false);
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -382,7 +382,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocator.GetBuddyMemorySizeForTesting(), 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(64, alignment, false, false);
+        allocator.TryAllocateMemory(64, alignment, false, false, false);
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetBlock()->Offset, 64u);
@@ -393,7 +393,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
-        allocator.TryAllocateMemory(128, alignment, false, false);
+        allocator.TryAllocateMemory(128, alignment, false, false, false);
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), 128u);
     ASSERT_EQ(allocation3->GetBlock()->Offset, 128u);
@@ -404,7 +404,7 @@ TEST(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
-        allocator.TryAllocateMemory(128, alignment, false, false);
+        allocator.TryAllocateMemory(128, alignment, false, false, false);
     ASSERT_NE(allocation4, nullptr);
     ASSERT_EQ(allocation4->GetSize(), 128u);
     ASSERT_EQ(allocation4->GetBlock()->Offset, 256u);
@@ -435,7 +435,7 @@ TEST(BuddyMemoryAllocatorTests, AllocationOverflow) {
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     std::unique_ptr<MemoryAllocation> invalidAllocation =
-        allocator.TryAllocateMemory(largeBlock, kDefaultMemoryAlignment, false, false);
+        allocator.TryAllocateMemory(largeBlock, kDefaultMemoryAlignment, false, false, false);
     ASSERT_EQ(invalidAllocation, nullptr);
 }
 
@@ -458,7 +458,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     // Allocate |kNumOfAllocations|.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false);
+            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false, false);
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -481,7 +481,7 @@ TEST(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     // Allocate again reusing the same heaps.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false);
+            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false, false);
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -521,7 +521,7 @@ TEST(BuddyMemoryAllocatorTests, DestroyHeaps) {
     // Allocate |kNumOfHeaps| worth.
     while (heaps.size() < kNumOfHeaps) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false);
+            allocator.TryAllocateMemory(4, kDefaultMemoryAlignment, false, false, false);
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);

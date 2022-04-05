@@ -26,17 +26,21 @@ namespace gpgmm {
         ASSERT(mPool != nullptr);
     }
 
-    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(uint64_t size,
-                                                                               uint64_t alignment,
-                                                                               bool neverAllocate,
-                                                                               bool cacheSize) {
+    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
+        uint64_t size,
+        uint64_t alignment,
+        bool neverAllocate,
+        bool cacheSize,
+        bool prefetchMemory) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
 
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(
-                GetFirstChild()->TryAllocateMemory(size, alignment, neverAllocate, cacheSize),
-                allocation);
+            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(size, alignment, neverAllocate,
+                                                                cacheSize, prefetchMemory),
+                             allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }
@@ -51,6 +55,8 @@ namespace gpgmm {
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.DeallocateMemory");
 
         const uint64_t& allocationSize = allocation->GetSize();

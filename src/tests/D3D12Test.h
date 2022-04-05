@@ -33,7 +33,7 @@ namespace gpgmm { namespace d3d12 {
         void SetUp();
         void TearDown();
 
-        ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
+        ALLOCATOR_DESC CreateBasicAllocatorDesc(bool enablePrefetch = false) const;
 
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;

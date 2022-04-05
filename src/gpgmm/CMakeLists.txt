@@ -54,6 +54,8 @@ target_sources(gpgmm PRIVATE
     "SlabMemoryAllocator.h"
     "TraceEvent.cpp"
     "TraceEvent.h"
+    "WorkerThread.cpp"
+    "WorkerThread.h"
 )
 
 target_link_libraries(gpgmm

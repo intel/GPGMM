@@ -39,7 +39,8 @@ namespace gpgmm { namespace d3d12 {
     std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t size,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,
-                                                                         bool cacheSize) {
+                                                                         bool cacheSize,
+                                                                         bool prefetchMemory) {
         TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.TryAllocateMemory");
 
         if (GetMemorySize() != size || GetMemoryAlignment() != alignment || neverAllocate) {

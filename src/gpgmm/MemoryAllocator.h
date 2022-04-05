@@ -21,10 +21,12 @@
 #include "gpgmm/Error.h"
 #include "gpgmm/Memory.h"
 #include "gpgmm/MemoryAllocation.h"
+#include "gpgmm/WorkerThread.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Limits.h"
 
 #include <memory>
+#include <mutex>
 
 namespace gpgmm {
 
@@ -45,9 +47,28 @@ namespace gpgmm {
         uint64_t FreeMemoryUsage;
     };
 
+    class AllocateMemoryTask;
+
+    class MemoryAllocationEvent final : public Event {
+      public:
+        MemoryAllocationEvent(std::shared_ptr<Event> event,
+                              std::shared_ptr<AllocateMemoryTask> task);
+
+        // Event overrides
+        void Wait() override;
+        bool IsSignaled() override;
+        void Signal() override;
+
+        std::unique_ptr<MemoryAllocation> AcquireAllocation() const;
+
+      private:
+        std::shared_ptr<AllocateMemoryTask> mTask;
+        std::shared_ptr<Event> mEvent;
+    };
+
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
       public:
-        MemoryAllocator() = default;
+        MemoryAllocator();
 
         // Constructs a MemoryAllocator that owns a single child allocator.
         explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> child);
@@ -64,7 +85,13 @@ namespace gpgmm {
         virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                                     uint64_t alignment,
                                                                     bool neverAllocate,
-                                                                    bool cacheSize);
+                                                                    bool cacheSize,
+                                                                    bool prefetchMemory);
+
+        // Non-blocking version of TryAllocateMemory.
+        // Caller must wait for the event to complete before using the resulting allocation.
+        std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(uint64_t size,
+                                                                      uint64_t alignment);
 
         // Free the allocation by deallocating the block used to sub-allocate it and the underlying
         // memory block used with it. The |allocation| will be considered invalid after
@@ -119,6 +146,9 @@ namespace gpgmm {
         }
 
         MEMORY_ALLOCATOR_INFO mInfo = {};
+
+        mutable std::mutex mMutex;
+        std::shared_ptr<ThreadPool> mThreadPool;
     };
 
 }  // namespace gpgmm

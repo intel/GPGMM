@@ -17,8 +17,10 @@
 
 #include "Assert.h"
 #include "Platform.h"
+#include "Utils.h"
 
 #include <cstdio>
+#include <thread>
 
 #if defined(GPGMM_PLATFORM_ANDROID)
 #    include <android/log.h>
@@ -28,7 +30,7 @@
 
 namespace gpgmm {
 
-    static const char kLogTag[] = "gpgmm";
+    static const char kLogTag[] = "GPGMM";
 
     LogSeverity GetDefaultLogMessageLevel() {
 #if defined(NDEBUG)
@@ -113,7 +115,8 @@ namespace gpgmm {
 #if defined(GPGMM_PLATFORM_WINDOWS)
         if (IsDebuggerPresent()) {
             const std::string outputString =
-                std::string(kLogTag) + " " + std::string(severityName) + ": " + fullMessage + "\n";
+                std::string(kLogTag) + " " + std::string(severityName) +
+                "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage + "\n";
             OutputDebugStringA(outputString.c_str());
         }
 #endif  // defined(GPGMM_PLATFORM_WINDOWS)
@@ -129,7 +132,8 @@ namespace gpgmm {
                             fullMessage.c_str());
 #else  // defined(GPGMM_PLATFORM_ANDROID)
        // Note: we use fprintf because <iostream> includes static initializers.
-        fprintf(outputStream, "%s %s: %s\n", kLogTag, severityName, fullMessage.c_str());
+        fprintf(outputStream, "%s %s (tid:%s): %s\n", kLogTag, severityName,
+                ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str());
         fflush(outputStream);
 #endif
     }

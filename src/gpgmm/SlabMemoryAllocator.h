@@ -48,6 +48,7 @@ namespace gpgmm {
                             uint64_t slabSize,
                             uint64_t slabAlignment,
                             double slabFragmentationLimit,
+                            bool prefetchSlab,
                             MemoryAllocator* memoryAllocator);
         ~SlabMemoryAllocator() override;
 
@@ -55,7 +56,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
-                                                            bool cacheSize) override;
+                                                            bool cacheSize,
+                                                            bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;
@@ -79,6 +81,11 @@ namespace gpgmm {
             bool IsFull() const {
                 return static_cast<uint32_t>(GetRefCount()) == BlockCount;
             }
+
+            double GetUsedPercent() {
+                return static_cast<uint32_t>(GetRefCount()) / static_cast<double>(BlockCount);
+            }
+
             uint64_t BlockCount = 0;
             SlabBlockAllocator Allocator;
             std::unique_ptr<MemoryAllocation> SlabMemory;
@@ -108,8 +115,10 @@ namespace gpgmm {
         const uint64_t mSlabSize;
         const uint64_t mSlabAlignment;
         const double mSlabFragmentationLimit;
+        const bool mPrefetchSlab;
 
         MemoryAllocator* mMemoryAllocator = nullptr;
+        std::shared_ptr<MemoryAllocationEvent> mNextSlabAllocationEvent;
     };
 
     // SlabCacheAllocator slab-allocates |minBlockSize|-size aligned allocations from
@@ -121,6 +130,7 @@ namespace gpgmm {
                            uint64_t slabSize,
                            uint64_t slabAlignment,
                            double slabFragmentationLimit,
+                           bool prefetchSlab,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         ~SlabCacheAllocator() override;
@@ -129,7 +139,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
-                                                            bool cacheSize) override;
+                                                            bool cacheSize,
+                                                            bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MEMORY_ALLOCATOR_INFO QueryInfo() const override;
@@ -159,6 +170,7 @@ namespace gpgmm {
         const uint64_t mSlabSize;  // Optional size when non-zero.
         const uint64_t mSlabAlignment;
         const double mSlabFragmentationLimit;
+        const bool mPrefetchSlab;
 
         LinkedList<MemoryAllocator> mSlabAllocators;
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;

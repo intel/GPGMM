@@ -283,13 +283,16 @@ CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
 void CaptureReplayTestWithParams::RunSingleTest(bool forceRegenerate,
-                                                bool forceIsCapturedCapsCompat) {
-    return RunTestLoop(forceRegenerate, forceIsCapturedCapsCompat, /*forceSingleIteration*/ true);
+                                                bool forceIsCapturedCapsCompat,
+                                                bool forcePrefetchMemory) {
+    return RunTestLoop(forceRegenerate, forceIsCapturedCapsCompat, /*forceSingleIteration*/ true,
+                       forcePrefetchMemory);
 }
 
 void CaptureReplayTestWithParams::RunTestLoop(bool forceRegenerate,
                                               bool forceIsCapturedCapsCompat,
-                                              bool forceSingleIteration) {
+                                              bool forceSingleIteration,
+                                              bool forcePrefetchMemory) {
     TestEnviromentParams envParams = gTestEnv->GetParams();
     if (forceRegenerate) {
         envParams.IsRegenerate = true;
@@ -301,6 +304,10 @@ void CaptureReplayTestWithParams::RunTestLoop(bool forceRegenerate,
 
     if (forceSingleIteration) {
         envParams.Iterations = 1;
+    }
+
+    if (forcePrefetchMemory) {
+        envParams.PrefetchMemory = true;
     }
 
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
