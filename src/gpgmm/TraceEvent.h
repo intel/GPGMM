@@ -93,18 +93,18 @@ const uint64_t kNoId = 0;
     } scopedTraceEvent {                                      \
     }
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)         \
-    do {                                                                               \
-        gpgmm::EventTracer::AddTraceEvent(phase, category_group, name,                 \
-                                          gpgmm::TraceEventID(id).GetID(),             \
-                                          TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)        \
+    do {                                                                              \
+        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name,                 \
+                                         gpgmm::TraceEventID(id).GetID(),             \
+                                         TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
     } while (false)
 
-#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)                              \
-    do {                                                                                        \
-        gpgmm::EventTracer::AddTraceEvent(phase, category_group, name, kNoId,                   \
-                                          TRACE_EVENT_CURRENT_THREAD_ID, TRACE_EVENT_FLAG_NONE, \
-                                          __VA_ARGS__);                                         \
+#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)                             \
+    do {                                                                                       \
+        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name, kNoId,                   \
+                                         TRACE_EVENT_CURRENT_THREAD_ID, TRACE_EVENT_FLAG_NONE, \
+                                         __VA_ARGS__);                                         \
     } while (false)
 
 namespace gpgmm {
@@ -114,16 +114,16 @@ namespace gpgmm {
         Metadata = 1,
     };
 
-    class FileEventTracer;
+    class FileEventTrace;
     class PlatformTime;
 
-    void StartupEventTracer(const std::string& traceFile,
-                            bool skipDurationEvents,
-                            bool skipObjectEvents,
-                            bool skipInstantEvents);
-    void ShutdownEventTracer();
+    void StartupEventTrace(const std::string& traceFile,
+                           bool skipDurationEvents,
+                           bool skipObjectEvents,
+                           bool skipInstantEvents);
+    void ShutdownEventTrace();
 
-    bool IsEventTracerEnabled();
+    bool IsEventTraceEnabled();
 
     // Inserts a single metadata event used to name the calling thread ID.
     void InitializeThreadName(const char* name);
@@ -159,7 +159,7 @@ namespace gpgmm {
                    const JSONDict& args);
 
       private:
-        friend FileEventTracer;
+        friend FileEventTrace;
 
         char mPhase = 0;
         TraceEventCategory mCategory;
@@ -171,7 +171,7 @@ namespace gpgmm {
         JSONDict mArgs;
     };
 
-    class EventTracer {
+    class EventTrace {
       public:
         static void AddTraceEvent(char phase,
                                   TraceEventCategory category,
@@ -196,13 +196,13 @@ namespace gpgmm {
         }
     };
 
-    class FileEventTracer {
+    class FileEventTrace {
       public:
-        explicit FileEventTracer(const std::string& traceFile,
-                                 bool skipDurationEvents,
-                                 bool skipObjectEvents,
-                                 bool skipInstantEvents);
-        ~FileEventTracer();
+        explicit FileEventTrace(const std::string& traceFile,
+                                bool skipDurationEvents,
+                                bool skipObjectEvents,
+                                bool skipInstantEvents);
+        ~FileEventTrace();
 
         void EnqueueTraceEvent(char phase,
                                TraceEventCategory category,

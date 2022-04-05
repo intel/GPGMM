@@ -25,15 +25,15 @@
 
 namespace gpgmm {
 
-    std::unique_ptr<FileEventTracer> gEventTracer;
+    std::unique_ptr<FileEventTrace> gEventTrace;
 
-    void StartupEventTracer(const std::string& traceFile,
-                            bool skipDurationEvents,
-                            bool skipObjectEvents,
-                            bool skipInstantEvents) {
-        if (gEventTracer == nullptr) {
-            gEventTracer = std::make_unique<FileEventTracer>(traceFile, skipDurationEvents,
-                                                             skipObjectEvents, skipInstantEvents);
+    void StartupEventTrace(const std::string& traceFile,
+                           bool skipDurationEvents,
+                           bool skipObjectEvents,
+                           bool skipInstantEvents) {
+        if (gEventTrace == nullptr) {
+            gEventTrace = std::make_unique<FileEventTrace>(traceFile, skipDurationEvents,
+                                                           skipObjectEvents, skipInstantEvents);
 
             InitializeThreadName("GPGMM_MainThread");
         }
@@ -45,14 +45,14 @@ namespace gpgmm {
         TRACE_EVENT_METADATA("thread_name", args);
     }
 
-    void ShutdownEventTracer() {
+    void ShutdownEventTrace() {
 #if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
-        gEventTracer = nullptr;
+        gEventTrace = nullptr;
 #endif
     }
 
-    bool IsEventTracerEnabled() {
-        return (gEventTracer != nullptr);
+    bool IsEventTraceEnabled() {
+        return (gEventTrace != nullptr);
     }
 
     TraceEvent::TraceEvent(char phase,
@@ -73,24 +73,24 @@ namespace gpgmm {
           mArgs(args) {
     }
 
-    void EventTracer::AddTraceEvent(char phase,
-                                    TraceEventCategory category,
-                                    const char* name,
-                                    uint64_t id,
-                                    uint32_t tid,
-                                    uint32_t flags,
-                                    const JSONDict& args) {
-        if (gEventTracer != nullptr) {
-            gEventTracer->EnqueueTraceEvent(phase, category, name, id, tid, flags, args);
+    void EventTrace::AddTraceEvent(char phase,
+                                   TraceEventCategory category,
+                                   const char* name,
+                                   uint64_t id,
+                                   uint32_t tid,
+                                   uint32_t flags,
+                                   const JSONDict& args) {
+        if (gEventTrace != nullptr) {
+            gEventTrace->EnqueueTraceEvent(phase, category, name, id, tid, flags, args);
         }
     }
 
-    // FileEventTracer
+    // FileEventTrace
 
-    FileEventTracer::FileEventTracer(const std::string& traceFile,
-                                     bool skipDurationEvents,
-                                     bool skipObjectEvents,
-                                     bool skipInstantEvents)
+    FileEventTrace::FileEventTrace(const std::string& traceFile,
+                                   bool skipDurationEvents,
+                                   bool skipObjectEvents,
+                                   bool skipInstantEvents)
         : mTraceFile(traceFile),
           mPlatformTime(CreatePlatformTime()),
           mSkipDurationEvents(skipDurationEvents),
@@ -99,24 +99,24 @@ namespace gpgmm {
         ASSERT(!mTraceFile.empty());
     }
 
-    FileEventTracer::~FileEventTracer() {
+    FileEventTrace::~FileEventTrace() {
         FlushQueuedEventsToDisk();
     }
 
-    void FileEventTracer::EnqueueTraceEvent(char phase,
-                                            TraceEventCategory category,
-                                            const char* name,
-                                            uint64_t id,
-                                            uint32_t tid,
-                                            uint32_t flags,
-                                            const JSONDict& args) {
+    void FileEventTrace::EnqueueTraceEvent(char phase,
+                                           TraceEventCategory category,
+                                           const char* name,
+                                           uint64_t id,
+                                           uint32_t tid,
+                                           uint32_t flags,
+                                           const JSONDict& args) {
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back({phase, category, name, id, tid, timestamp, flags, args});
         }
     }
 
-    void FileEventTracer::FlushQueuedEventsToDisk() {
+    void FileEventTrace::FlushQueuedEventsToDisk() {
         JSONArray traceEvents;
         for (const TraceEvent& traceEvent : mQueue) {
             if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||

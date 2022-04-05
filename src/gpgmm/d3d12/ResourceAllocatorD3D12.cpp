@@ -361,7 +361,7 @@ namespace gpgmm { namespace d3d12 {
                                                ? std::string(kDefaultTraceFile)
                                                : descriptor.RecordOptions.TraceFile;
 
-            StartupEventTracer(
+            StartupEventTrace(
                 traceFile, !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_OBJECTS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS));
@@ -547,7 +547,7 @@ namespace gpgmm { namespace d3d12 {
         mResourceAllocatorOfType = {};
         mResourceHeapAllocatorOfType = {};
 
-        ShutdownEventTracer();
+        ShutdownEventTrace();
 
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator->ReportLiveAllocations();
