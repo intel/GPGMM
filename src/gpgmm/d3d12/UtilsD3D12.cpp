@@ -228,19 +228,18 @@ namespace gpgmm { namespace d3d12 {
         //          = 1024 x 4B/texel
         //          = 32x32x1 tile
         //
-        const uint32_t bitsPerUnit = GetTextureBitsPerUnit(format);
-        if (bitsPerUnit == 0) {
+        const uint32_t bytesPerUnit = GetTextureBitsPerUnit(format) * 8;
+        if (bytesPerUnit == 0) {
             return {};
         }
 
         D3D12_TILE_SHAPE tile = {};
         switch (resourceDimension) {
             case D3D12_RESOURCE_DIMENSION_TEXTURE1D: {
-                // 1D textures (and buffers) always have a weight and depth deemsnion equal to 1.
+                // 1D textures/buffers always have a height and depth demension equal to 1.
                 tile.HeightInTexels = 1;
                 tile.DepthInTexels = 1;
-
-                tile.WidthInTexels = (D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT * 8) / bitsPerUnit;
+                tile.WidthInTexels = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT / bytesPerUnit;
 
             } break;
 
@@ -255,33 +254,33 @@ namespace gpgmm { namespace d3d12 {
                 }
 
                 // Tile size depends on number of bits per texel (or WxHx1 x bytes/texel).
-                switch (bitsPerUnit) {
+                switch (bytesPerUnit) {
                     // 64x64x1 x 1 bytes per texel.
-                    case 8: {
+                    case 1: {
                         tile.WidthInTexels = 64;
                         tile.HeightInTexels = 64;
                     } break;
 
-                    // 64x64x1 x 2 bytes per texel.
-                    case 16: {
+                    // 64x32x1 x 2 bytes per texel.
+                    case 2: {
                         tile.WidthInTexels = 64;
                         tile.HeightInTexels = 32;
                     } break;
 
                     // 32x32x1 x 4 bytes per texel.
-                    case 32: {
+                    case 4: {
                         tile.WidthInTexels = 32;
                         tile.HeightInTexels = 32;
                     } break;
 
-                    // 64x64x1 x 8 bytes per texel.
-                    case 64: {
+                    // 64x16x1 x 8 bytes per texel.
+                    case 8: {
                         tile.WidthInTexels = 32;
                         tile.HeightInTexels = 16;
                     } break;
 
-                    // 128x128x1 x 16 bytes per texel.
-                    case 128: {
+                    // 16x16x1 x 16 bytes per texel.
+                    case 16: {
                         tile.WidthInTexels = 16;
                         tile.HeightInTexels = 16;
                     } break;
@@ -331,37 +330,37 @@ namespace gpgmm { namespace d3d12 {
 
             case D3D12_RESOURCE_DIMENSION_TEXTURE3D: {
                 // WxHxD x bytes/texel.
-                switch (bitsPerUnit) {
+                switch (bytesPerUnit) {
                     // 16x16x16 x 1 bytes per texel
-                    case 8: {
+                    case 1: {
                         tile.WidthInTexels = 16;
                         tile.HeightInTexels = 16;
                         tile.DepthInTexels = 16;
                     } break;
 
                     // 16x16x8 x 2 bytes per texel
-                    case 16: {
+                    case 2: {
                         tile.WidthInTexels = 16;
                         tile.HeightInTexels = 16;
                         tile.DepthInTexels = 8;
                     } break;
 
                     // 16x8x8 x 4 bytes per texel
-                    case 32: {
+                    case 4: {
                         tile.WidthInTexels = 16;
                         tile.HeightInTexels = 8;
                         tile.DepthInTexels = 8;
                     } break;
 
                     // 8x8x8 x 8 bytes per texel
-                    case 64: {
+                    case 8: {
                         tile.WidthInTexels = 8;
                         tile.HeightInTexels = 8;
                         tile.DepthInTexels = 8;
                     } break;
 
                     // 8x8x4 x 16 bytes per texel
-                    case 128: {
+                    case 16: {
                         tile.WidthInTexels = 8;
                         tile.HeightInTexels = 8;
                         tile.DepthInTexels = 4;
