@@ -42,6 +42,25 @@ namespace gpgmm {
         }
     }
 
+    MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::QueryInfo() const {
+        MEMORY_ALLOCATOR_INFO info = {};
+        {
+            const MEMORY_ALLOCATOR_INFO& memoryInfo = mFirstAllocator->QueryInfo();
+            info.FreeMemoryUsage += memoryInfo.FreeMemoryUsage;
+            info.UsedBlockCount += memoryInfo.UsedBlockCount;
+            info.UsedMemoryUsage += memoryInfo.UsedMemoryUsage;
+            info.UsedMemoryCount += memoryInfo.UsedMemoryCount;
+        }
+        {
+            const MEMORY_ALLOCATOR_INFO& memoryInfo = mSecondAllocator->QueryInfo();
+            info.FreeMemoryUsage += memoryInfo.FreeMemoryUsage;
+            info.UsedBlockCount += memoryInfo.UsedBlockCount;
+            info.UsedMemoryUsage += memoryInfo.UsedMemoryUsage;
+            info.UsedMemoryCount += memoryInfo.UsedMemoryCount;
+        }
+        return info;
+    }
+
     void ConditionalMemoryAllocator::DeallocateMemory(
         std::unique_ptr<MemoryAllocation> allocation) {
         // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.

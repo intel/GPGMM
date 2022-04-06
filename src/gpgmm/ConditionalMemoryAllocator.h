@@ -36,6 +36,8 @@ namespace gpgmm {
                                                             bool cacheSize) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
+        MEMORY_ALLOCATOR_INFO QueryInfo() const override;
+
         MemoryAllocator* GetFirstAllocatorForTesting() const;
         MemoryAllocator* GetSecondAllocatorForTesting() const;
 

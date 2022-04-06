@@ -15,24 +15,36 @@
 
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/common/Limits.h"
 #include "gpgmm/common/Math.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
-#include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
+#include "gpgmm/d3d12/ResidencyManagerD3D12.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    ResourceHeapAllocator::ResourceHeapAllocator(ResourceAllocator* resourceAllocator,
+    ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
+                                                 ID3D12Device* device,
                                                  D3D12_HEAP_TYPE heapType,
-                                                 D3D12_HEAP_FLAGS heapFlags)
-        : mResourceAllocator(resourceAllocator), mHeapType(heapType), mHeapFlags(heapFlags) {
+                                                 D3D12_HEAP_FLAGS heapFlags,
+                                                 bool isUMA,
+                                                 bool isAlwaysInBudget)
+        : mResidencyManager(residencyManager),
+          mDevice(device),
+          mHeapType(heapType),
+          mHeapFlags(heapFlags),
+          mIsUMA(isUMA),
+          mIsAlwaysInBudget(isAlwaysInBudget) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(uint64_t size,
                                                                                uint64_t alignment,
                                                                                bool neverAllocate,
                                                                                bool cacheSize) {
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.TryAllocateMemory");
+
         if (neverAllocate) {
             return {};
         }
@@ -42,18 +54,49 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
         const uint64_t heapSize = AlignTo(size, alignment);
 
-        Heap* resourceHeap = nullptr;
-        if (FAILED(mResourceAllocator->CreateResourceHeap(heapSize, mHeapType, mHeapFlags,
-                                                          alignment, &resourceHeap))) {
-            return nullptr;
+        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
+            GetPreferredMemorySegmentGroup(mDevice, mIsUMA, mHeapType);
+
+        // CreateHeap will implicitly make the created heap resident. We must ensure enough free
+        // memory exists before allocating to avoid an out-of-memory error when overcommitted.
+        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
+            mResidencyManager->Evict(heapSize, memorySegmentGroup);
         }
 
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, resourceHeap);
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = mHeapType;
+
+        D3D12_HEAP_DESC heapDesc = {};
+        heapDesc.Properties = heapProperties;
+        heapDesc.SizeInBytes = heapSize;
+        heapDesc.Alignment = alignment;
+        heapDesc.Flags = mHeapFlags;
+
+        ComPtr<ID3D12Heap> heap;
+        if (FAILED(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)))) {
+            return {};
+        }
+
+        Heap* resourceHeap = new Heap(std::move(heap), memorySegmentGroup, heapSize);
+
+        // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
+        // avoid calling MakeResident a second time.
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->InsertHeap(resourceHeap);
+        }
+
+        mInfo.UsedMemoryUsage += heapSize;
+        mInfo.UsedMemoryCount++;
+
+        return std::make_unique<MemoryAllocation>(this, resourceHeap);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        ASSERT(allocation != nullptr);
-        mResourceAllocator->DeallocateMemory(std::move(allocation));
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.DeallocateMemory");
+
+        mInfo.UsedMemoryUsage -= allocation->GetSize();
+        mInfo.UsedMemoryCount--;
+        SafeRelease(allocation);
     }
 
 }}  // namespace gpgmm::d3d12

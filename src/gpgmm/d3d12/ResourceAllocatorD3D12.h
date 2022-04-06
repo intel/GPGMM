@@ -339,12 +339,6 @@ namespace gpgmm { namespace d3d12 {
                                         ID3D12Resource** commitedResourceOut,
                                         Heap** resourceHeapOut);
 
-        HRESULT CreateResourceHeap(uint64_t heapSize,
-                                   D3D12_HEAP_TYPE heapType,
-                                   D3D12_HEAP_FLAGS heapFlags,
-                                   uint64_t heapAlignment,
-                                   Heap** resourceHeapOut);
-
         HRESULT ReportLiveDeviceObjects() const;
 
         // MemoryAllocator interface
