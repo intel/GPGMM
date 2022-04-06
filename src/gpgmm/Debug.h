@@ -28,6 +28,31 @@ namespace gpgmm {
         int ID;
     };
 
+#define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr)                                                     \
+    do {                                                                                         \
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, (*objPtr).GetTypename(), \
+                                           objPtr);                                              \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr)                                                 \
+    do {                                                                                         \
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, (*objPtr).GetTypename(), \
+                                           objPtr);                                              \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc)                                           \
+    do {                                                                                          \
+        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(TraceEventCategory::Default, (*objPtr).GetTypename(), \
+                                            objPtr,                                               \
+                                            GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled()));   \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc)                               \
+    do {                                                                        \
+        TRACE_EVENT_INSTANT(TraceEventCategory::Default, name,                  \
+                            GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled())); \
+    } while (false)
+
     // Messages of a given severity to be recorded.
     // Set the new level and returns the previous level so it may be restored by the caller.
     LogSeverity SetRecordMessageLevel(const LogSeverity& level);
@@ -39,19 +64,7 @@ namespace gpgmm {
 
 // Helper macro to avoid evaluating the arguments when the condition doesn't hold.
 #define GPGMM_LAZY_SERIALIZE(object, condition) \
-    !(condition) ? gpgmm::JSONSerializer::Serialize() : SerializerT::Serialize(object)
-
-    template <typename T, typename DescT, typename SerializerT = JSONSerializer>
-    static void RecordObject(const char* name, T* objPtr, const DescT& desc) {
-        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(TraceEventCategory::Default, name, objPtr,
-                                            GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled()));
-    }
-
-    template <typename T, typename SerializerT, typename... Args>
-    static void RecordCall(const char* name, const Args&... args) {
-        TRACE_EVENT_INSTANT(TraceEventCategory::Default, name,
-                            GPGMM_LAZY_SERIALIZE(T{args...}, IsEventTraceEnabled()));
-    }
+    !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
 
 }  // namespace gpgmm
 

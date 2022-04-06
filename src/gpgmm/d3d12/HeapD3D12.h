@@ -67,6 +67,7 @@ namespace gpgmm { namespace d3d12 {
         friend ResidencyManager;
         friend ResourceAllocator;
 
+        const char* GetTypename() const;
         ComPtr<ID3D12Pageable> GetPageable() const;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 

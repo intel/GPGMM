@@ -306,6 +306,8 @@ namespace gpgmm { namespace d3d12 {
         HRESULT QueryResourceAllocatorInfo(
             QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut = nullptr) const;
 
+        const char* GetTypename() const;
+
       private:
         friend BufferAllocator;
         friend ResourceHeapAllocator;

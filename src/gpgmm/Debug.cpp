@@ -35,7 +35,8 @@ namespace gpgmm {
         ASSERT(severity < LogSeverity::Warning);
 #endif
         if (severity >= gRecordEventLevel) {
-            RecordCall<LOG_MESSAGE, JSONSerializer>(name, description, messageId);
+            LOG_MESSAGE message{description, messageId};
+            GPGMM_TRACE_EVENT_OBJECT_CALL(name, message);
         }
     }
 

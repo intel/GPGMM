@@ -17,6 +17,7 @@
 
 #include "gpgmm/BuddyMemoryAllocator.h"
 #include "gpgmm/ConditionalMemoryAllocator.h"
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemorySize.h"
 #include "gpgmm/SegmentedMemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
@@ -25,11 +26,11 @@
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
-#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
@@ -396,7 +397,7 @@ namespace gpgmm { namespace d3d12 {
         *resourceAllocatorOut =
             new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
 
-        d3d12::RecordObject("GPUMemoryAllocator", *resourceAllocatorOut, newDescriptor);
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
 
         if (residencyManagerOut != nullptr) {
             *residencyManagerOut = residencyManager.Detach();
@@ -417,7 +418,7 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocator", this);
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator = std::make_unique<DebugResourceAllocator>();
@@ -545,7 +546,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResourceAllocator::~ResourceAllocator() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocator", this);
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
 
         // Destroy allocators in the reverse order they were created so we can record delete events
         // before event tracer shutdown.
@@ -564,6 +565,10 @@ namespace gpgmm { namespace d3d12 {
 #endif
     }
 
+    const char* ResourceAllocator::GetTypename() const {
+        return "GPUMemoryAllocator";
+    }
+
     void ResourceAllocator::Trim() {
         for (auto& allocator : mResourceHeapAllocatorOfType) {
             ASSERT(allocator != nullptr);
@@ -580,8 +585,10 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        RecordCall<CREATE_RESOURCE_DESC>("ResourceAllocator.CreateResource", allocationDescriptor,
-                                         resourceDescriptor, initialResourceState, clearValue);
+        CREATE_RESOURCE_DESC args{allocationDescriptor, resourceDescriptor, initialResourceState,
+                                  clearValue};
+
+        GPGMM_TRACE_EVENT_OBJECT_CALL("ResourceAllocator.CreateResource", args);
 
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
@@ -596,8 +603,8 @@ namespace gpgmm { namespace d3d12 {
         mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
 #endif
 
-        d3d12::RecordObject("GPUMemoryAllocation", *resourceAllocationOut,
-                            (*resourceAllocationOut)->GetInfo());
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocationOut,
+                                          (*resourceAllocationOut)->GetInfo());
 
         return S_OK;
     }
@@ -940,7 +947,7 @@ namespace gpgmm { namespace d3d12 {
         QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut) const {
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.QueryResourceAllocatorInfo");
 
-        MEMORY_ALLOCATOR_INFO infoOut = {};
+        QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
@@ -962,7 +969,7 @@ namespace gpgmm { namespace d3d12 {
             infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
         }
 
-        gpgmm::RecordObject("GPUMemoryAllocator", this, infoOut);
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, infoOut);
 
         if (resourceAllocationInfoOut != nullptr) {
             *resourceAllocationInfoOut = infoOut;

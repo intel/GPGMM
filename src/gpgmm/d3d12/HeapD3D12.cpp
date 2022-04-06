@@ -15,7 +15,8 @@
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 
-#include "gpgmm/d3d12/DebugD3D12.h"
+#include "gpgmm/Debug.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
@@ -28,8 +29,8 @@ namespace gpgmm { namespace d3d12 {
           mResidencyLock(0) {
         ASSERT(mPageable != nullptr);
 
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryBlock", this);
-        d3d12::RecordObject("GPUMemoryBlock", this, GetInfo());
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
 
         mPageable->SetName(L"GPGMM managed heap");
     }
@@ -42,7 +43,11 @@ namespace gpgmm { namespace d3d12 {
             RemoveFromList();
         }
 
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryBlock", this);
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+    }
+
+    const char* Heap::GetTypename() const {
+        return "GPUMemoryBlock";
     }
 
     ComPtr<ID3D12Pageable> Heap::GetPageable() const {
