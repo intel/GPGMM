@@ -60,22 +60,6 @@ namespace gpgmm { namespace d3d12 {
             RESOURCE_HEAP_TYPE_INVALID,
         };
 
-        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
-                                                                 bool isUMA,
-                                                                 D3D12_HEAP_TYPE heapType) {
-            if (isUMA) {
-                return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-            }
-
-            D3D12_HEAP_PROPERTIES heapProperties = device->GetCustomHeapProperties(0, heapType);
-
-            if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
-                return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-            }
-
-            return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
-        }
-
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
             ID3D12Device* device,
             D3D12_RESOURCE_DESC& resourceDescriptor) {
@@ -438,11 +422,15 @@ namespace gpgmm { namespace d3d12 {
             // compile-time.
             {
                 std::unique_ptr<MemoryAllocator> standaloneAllocator =
-                    std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags);
+                    std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
+                                                            heapType, heapFlags, mIsUMA,
+                                                            mIsAlwaysInBudget);
 
                 std::unique_ptr<MemoryAllocator> pooledAllocator =
                     std::make_unique<SegmentedMemoryAllocator>(
-                        std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags),
+                        std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(),
+                                                                mDevice.Get(), heapType, heapFlags,
+                                                                mIsUMA, mIsAlwaysInBudget),
                         heapAlignment);
 
                 std::unique_ptr<MemoryAllocator> conditionalHeapAllocator =
@@ -466,11 +454,15 @@ namespace gpgmm { namespace d3d12 {
 
             {
                 std::unique_ptr<MemoryAllocator> standaloneAllocator =
-                    std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags);
+                    std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
+                                                            heapType, heapFlags, mIsUMA,
+                                                            mIsAlwaysInBudget);
 
                 std::unique_ptr<MemoryAllocator> pooledAllocator =
                     std::make_unique<SegmentedMemoryAllocator>(
-                        std::make_unique<ResourceHeapAllocator>(this, heapType, heapFlags),
+                        std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(),
+                                                                mDevice.Get(), heapType, heapFlags,
+                                                                mIsUMA, mIsAlwaysInBudget),
                         heapAlignment);
 
                 mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
@@ -779,6 +771,9 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
             clearValue, initialResourceState, &committedResource, &resourceHeap));
 
+        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
+        mInfo.UsedMemoryCount++;
+
         *resourceAllocationOut =
             new ResourceAllocation{mResidencyManager.Get(), this, /*offsetFromHeap*/ kInvalidOffset,
                                    std::move(committedResource), resourceHeap};
@@ -840,50 +835,6 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResourceHeap(uint64_t heapSize,
-                                                  D3D12_HEAP_TYPE heapType,
-                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                  uint64_t heapAlignment,
-                                                  Heap** resourceHeapOut) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResourceHeap");
-
-        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
-            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
-
-        // CreateHeap will implicitly make the created heap resident. We must ensure enough free
-        // memory exists before allocating to avoid an out-of-memory error when overcommitted.
-        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
-            mResidencyManager->Evict(heapSize, memorySegmentGroup);
-        }
-
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        heapProperties.Type = heapType;
-
-        D3D12_HEAP_DESC heapDesc = {};
-        heapDesc.Properties = heapProperties;
-        heapDesc.SizeInBytes = heapSize;
-        heapDesc.Alignment = heapAlignment;
-        heapDesc.Flags = heapFlags;
-
-        ComPtr<ID3D12Heap> heap;
-        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
-
-        Heap* resourceHeap = new Heap(std::move(heap), memorySegmentGroup, heapSize);
-
-        // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
-        // avoid calling MakeResident a second time.
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->InsertHeap(resourceHeap);
-        }
-
-        mInfo.UsedMemoryUsage += heapSize;
-        mInfo.UsedMemoryCount++;
-
-        *resourceHeapOut = resourceHeap;
-
-        return S_OK;
-    }
-
     HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
         D3D12_HEAP_FLAGS heapFlags,
@@ -931,9 +882,6 @@ namespace gpgmm { namespace d3d12 {
             *commitedResourceOut = committedResource.Detach();
         }
 
-        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
-        mInfo.UsedMemoryCount++;
-
         *resourceHeapOut = resourceHeap;
 
         return S_OK;
@@ -952,22 +900,28 @@ namespace gpgmm { namespace d3d12 {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
+            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
+            infoOut.UsedMemoryCount += info.UsedMemoryCount;
         }
 
         for (const auto& allocator : mBufferAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
+            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
+            infoOut.UsedMemoryCount += info.UsedMemoryCount;
         }
-
-        // Only ResourceAllocator can create/destroy resource heaps.
-        infoOut.UsedMemoryUsage = mInfo.UsedMemoryUsage;
-        infoOut.UsedMemoryCount = mInfo.UsedMemoryCount;
 
         for (const auto& allocator : mResourceHeapAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
+            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
+            infoOut.UsedMemoryCount += info.UsedMemoryCount;
         }
+
+        // ResourceAllocator itself could call CreateCommittedResource directly.
+        infoOut.UsedMemoryUsage += mInfo.UsedMemoryUsage;
+        infoOut.UsedMemoryCount += mInfo.UsedMemoryCount;
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, infoOut);
 

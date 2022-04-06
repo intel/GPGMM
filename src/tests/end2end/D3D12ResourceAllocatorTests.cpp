@@ -695,18 +695,23 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
     // Calculate info for a single standalone allocation.
     {
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(
+            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
         ALLOCATION_DESC standaloneAllocationDesc = {};
         standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
         ComPtr<ResourceAllocation> firstAllocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             standaloneAllocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
 
         QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-        ASSERT_SUCCEEDED(mDefaultAllocator->QueryResourceAllocatorInfo(&info));
+        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
 
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
