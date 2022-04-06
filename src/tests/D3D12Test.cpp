@@ -21,11 +21,9 @@ namespace gpgmm { namespace d3d12 {
     void D3D12TestBase::SetUp() {
         GPGMMTestBase::SetUp();
 
-        if (IsDeviceLeakChecksEnabled()) {
-            ComPtr<ID3D12Debug> debugController;
-            ASSERT_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
-            debugController->EnableDebugLayer();
-        }
+        ComPtr<ID3D12Debug> debugController;
+        ASSERT_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+        debugController->EnableDebugLayer();
 
         ASSERT_SUCCEEDED(
             D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice)));
@@ -64,10 +62,6 @@ namespace gpgmm { namespace d3d12 {
         desc.Device = mDevice;
         desc.IsUMA = mIsUMA;
         desc.ResourceHeapTier = mResourceHeapTier;
-
-        if (IsDeviceLeakChecksEnabled()) {
-            desc.Flags = ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS;
-        }
 
 #if defined(NDEBUG)
         desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;

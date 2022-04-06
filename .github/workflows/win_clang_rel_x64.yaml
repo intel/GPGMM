@@ -54,7 +54,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true"
+        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_leak_warning=true"
 
     - name: Build for main branch
       shell: cmd
@@ -68,7 +68,7 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Release\gpgmm_end2end_tests.exe --check-device-leaks --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
 
     - name: Run gpgmm_unittests
       shell: cmd
@@ -80,7 +80,7 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Release\gpgmm_capture_replay_tests.exe --check-device-leaks --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json
 
     - uses: actions/checkout@v2
       with:
@@ -118,7 +118,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true"
+        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_leak_warning=true"
 
     - name: Build for main branch (with patch)
       shell: cmd
@@ -132,7 +132,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_end2end_tests.exe --check-device-leaks --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Release\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
@@ -144,7 +144,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_capture_replay_tests.exe --check-device-leaks --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json
+        out\Release\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json
 
     - name: Regression check end2end tests
       run: |

@@ -375,6 +375,16 @@ namespace gpgmm { namespace d3d12 {
         const LogSeverity& logLevel = static_cast<LogSeverity>(newDescriptor.MinLogLevel);
         SetLogMessageLevel(logLevel);
 
+#if defined(GPGMM_ENABLE_DEVICE_LEAK_WARNING)
+        ComPtr<ID3D12InfoQueue> leakMessageQueue;
+        if (SUCCEEDED(newDescriptor.Device.As(&leakMessageQueue))) {
+            D3D12_INFO_QUEUE_FILTER emptyFilter{};
+            ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
+        } else {
+            gpgmm::WarningLog() << "Debug layer must be installed and enabled.\n";
+        }
+#endif
+
         ComPtr<ResidencyManager> residencyManager;
         if (residencyManagerOut != nullptr) {
             ReturnIfFailed(ResidencyManager::CreateResidencyManager(
@@ -407,11 +417,6 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocator", this);
         d3d12::RecordObject("GPUMemoryAllocator", this, descriptor);
-
-        if (descriptor.Flags & ALLOCATOR_FLAG_CHECK_DEVICE_LEAKS &&
-            FAILED(EnableDeviceObjectLeakChecks())) {
-            gpgmm::WarningLog() << "Debug layers must be enabled to use device leak checking.\n";
-        }
 
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator = std::make_unique<DebugResourceAllocator>();
@@ -553,7 +558,9 @@ namespace gpgmm { namespace d3d12 {
         mDebugAllocator->ReportLiveAllocations();
 #endif
 
-        ASSERT(SUCCEEDED(CheckForDeviceObjectLeaks()));
+#if defined(GPGMM_ENABLE_DEVICE_LEAK_WARNING)
+        ReportLiveDeviceObjects();
+#endif
     }
 
     void ResourceAllocator::Trim() {
@@ -963,18 +970,8 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    // Returns error HR if the debug layer is not available.
-    HRESULT ResourceAllocator::EnableDeviceObjectLeakChecks() const {
-        ComPtr<ID3D12InfoQueue> leakMessageQueue;
-        ReturnIfFailed(mDevice.As(&leakMessageQueue));
-
-        D3D12_INFO_QUEUE_FILTER emptyFilter{};
-        ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
-        return S_OK;
-    }
-
     // Returns E_FAIL if a device leak is detected.
-    HRESULT ResourceAllocator::CheckForDeviceObjectLeaks() const {
+    HRESULT ResourceAllocator::ReportLiveDeviceObjects() const {
         // Debug layer was never enabled.
         ComPtr<ID3D12DebugDevice> debugDevice;
         if (FAILED(mDevice.As(&debugDevice))) {
@@ -1002,6 +999,7 @@ namespace gpgmm { namespace d3d12 {
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
                 case D3D12_MESSAGE_ID_LIVE_RESOURCE: {
+                    gpgmm::WarningLog() << "Device leak detected.\n";
                     totalLiveObjects++;
                 } break;
                 default:
@@ -1010,7 +1008,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         leakMessageQueue->PopRetrievalFilter();
-        return (totalLiveObjects > 0u) ? E_FAIL : S_OK;
+        return S_OK;
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

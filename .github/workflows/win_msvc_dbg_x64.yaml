@@ -83,7 +83,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_end2end_tests.exe --check-device-leaks
+        out\Debug\gpgmm_end2end_tests.exe
 
     - name: Run gpgmm_unittests
       shell: cmd
@@ -95,4 +95,4 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_capture_replay_tests.exe --check-device-leaks --log-level=DEBUG
+        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG
