@@ -94,6 +94,8 @@ namespace gpgmm { namespace d3d12 {
 
         RESOURCE_ALLOCATION_INFO GetInfo() const;
 
+        const char* GetTypename() const;
+
       private:
         void DeleteThis() override;
 

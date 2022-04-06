@@ -23,6 +23,16 @@
 namespace gpgmm { namespace d3d12 {
 
     // static
+    JSONDict JSONSerializer::Serialize() {
+        return {};
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+        return gpgmm::JSONSerializer::Serialize(info);
+    }
+
+    // static
     JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);

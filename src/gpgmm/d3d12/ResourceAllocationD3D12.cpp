@@ -15,11 +15,12 @@
 
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
-#include "gpgmm/d3d12/DebugD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
 #include <utility>
@@ -90,13 +91,11 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
-                                           this);
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
     ResourceAllocation::~ResourceAllocation() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
-                                           this);
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
     void ResourceAllocation::DeleteThis() {
@@ -194,4 +193,9 @@ namespace gpgmm { namespace d3d12 {
 
         return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod(), resourceHeap};
     }
+
+    const char* ResourceAllocation::GetTypename() const {
+        return "GPUMemoryAllocation";
+    }
+
 }}  // namespace gpgmm::d3d12

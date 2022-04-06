@@ -15,11 +15,12 @@
 
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
-#include "gpgmm/d3d12/DebugD3D12.h"
+#include "gpgmm/Debug.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 
 #include <algorithm>
@@ -317,7 +318,7 @@ namespace gpgmm { namespace d3d12 {
             sizeEvicted += heap->GetSize();
             resourcesToEvict.push_back(heap->GetPageable().Get());
 
-            d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap, heap->GetInfo());
         }
 
         if (resourcesToEvict.size() > 0) {
@@ -387,7 +388,7 @@ namespace gpgmm { namespace d3d12 {
 
             // Do not re-record the heap if only it's position in the cache was updated.
             if (heapIsInResidencyCache) {
-                d3d12::RecordObject("GPUMemoryBlock", heap, heap->GetInfo());
+                GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap, heap->GetInfo());
             }
         }
 

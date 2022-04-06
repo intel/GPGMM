@@ -52,6 +52,8 @@ namespace gpgmm {
 
         POOL_INFO GetInfo() const;
 
+        const char* GetTypename() const;
+
       private:
         uint64_t mMemorySize;
     };

@@ -14,16 +14,16 @@
 
 #include "gpgmm/MemoryPool.h"
 
-#include "gpgmm/TraceEvent.h"
+#include "gpgmm/Debug.h"
 
 namespace gpgmm {
 
     MemoryPool::MemoryPool(uint64_t memorySize) : mMemorySize(memorySize) {
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryPool", this);
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
     MemoryPool::~MemoryPool() {
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default, "GPUMemoryPool", this);
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
     uint64_t MemoryPool::GetMemorySize() const {
@@ -32,6 +32,10 @@ namespace gpgmm {
 
     POOL_INFO MemoryPool::GetInfo() const {
         return {GetPoolSize() * mMemorySize};
+    }
+
+    const char* MemoryPool::GetTypename() const {
+        return "GPUMemoryPool";
     }
 
 }  // namespace gpgmm
