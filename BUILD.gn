@@ -21,7 +21,7 @@ group("all") {
   deps = [ "src/tests:gpgmm_tests" ]
 
   if (gpgmm_enable_dawn) {
-    deps += [ "//third_party/dawn/src/tests:dawn_end2end_tests" ]
+    deps += [ "//third_party/dawn/src/dawn/tests:dawn_end2end_tests" ]
   }
 
   if (gpgmm_enable_webnn) {

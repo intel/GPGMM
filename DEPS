@@ -4,6 +4,7 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
   'checkout_dawn',
   'checkout_webnn',
+  'build_with_chromium',
   'generate_location_tags',
 ]
 
@@ -13,6 +14,7 @@ vars = {
   'github_git': 'https://github.com',
 
   'gpgmm_standalone': True,
+  'build_with_chromium': False,
 
   # Checkout and download Dawn by default. This can be disabled with custom_vars.
   'checkout_dawn': False,
@@ -34,7 +36,7 @@ deps = {
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@2a1f4dc5b115ff172349038d7ed3c2253112c34a',
+    'url': '{dawn_git}/dawn.git@8d9d132f7cd1fe22c4ca88d580195951ca49c276',
     'condition': 'checkout_dawn or checkout_webnn',
   },
 
