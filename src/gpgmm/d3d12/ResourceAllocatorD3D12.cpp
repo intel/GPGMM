@@ -396,6 +396,8 @@ namespace gpgmm { namespace d3d12 {
         *resourceAllocatorOut =
             new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
 
+        d3d12::RecordObject("GPUMemoryAllocator", *resourceAllocatorOut, newDescriptor);
+
         if (residencyManagerOut != nullptr) {
             *residencyManagerOut = residencyManager.Detach();
         }
@@ -416,7 +418,6 @@ namespace gpgmm { namespace d3d12 {
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
         TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocator", this);
-        d3d12::RecordObject("GPUMemoryAllocator", this, descriptor);
 
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator = std::make_unique<DebugResourceAllocator>();
