@@ -148,9 +148,8 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(size);
 
         if (size > mMaxBlockSize) {
-            RecordMessage(LogSeverity::Debug, "BuddyBlockAllocator.TryAllocateBlock",
-                          "MemoryBlock size exceeded the max block size.",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            DebugEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+                << "MemoryBlock size exceeded the max block size.";
             return nullptr;
         }
 
@@ -163,8 +162,9 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
-            RecordMessage(LogSeverity::Debug, "BuddyBlockAllocator.TryAllocateBlock",
-                          "Allocator has reached capacity", ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED);
+            DebugEvent("BuddyBlockAllocator.TryAllocateBlock",
+                       ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)
+                << "Allocator has reached capacity";
             return nullptr;
         }
 

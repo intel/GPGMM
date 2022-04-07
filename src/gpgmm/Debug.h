@@ -19,6 +19,7 @@
 #include "gpgmm/TraceEvent.h"
 #include "gpgmm/common/Log.h"
 
+#include <sstream>
 #include <string>
 
 namespace gpgmm {
@@ -53,13 +54,35 @@ namespace gpgmm {
                             GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled())); \
     } while (false)
 
-    // Messages of a given severity to be recorded.
-    void SetRecordMessageLevel(const LogSeverity& level);
+    class EventMessage : public LogMessage {
+      public:
+        EventMessage(const LogSeverity& level, const char* name, int messageId = 0);
+        ~EventMessage();
 
-    void RecordMessage(const LogSeverity& severity,
-                       const char* name,
-                       const std::string& description,
-                       int messageId);
+        EventMessage(EventMessage&& other) = default;
+        EventMessage& operator=(EventMessage&& other) = default;
+
+        template <typename T>
+        EventMessage& operator<<(T&& value) {
+            mStream << value;
+            return *this;
+        }
+
+      private:
+        LogSeverity mSeverity;
+        const char* mName = nullptr;
+        int mMessageId = 0;
+
+        std::ostringstream mStream;
+    };
+
+    EventMessage DebugEvent(const char* name, int messageId = 0);
+    EventMessage InfoEvent(const char* name, int messageId = 0);
+    EventMessage WarningEvent(const char* name, int messageId = 0);
+    EventMessage ErrorEvent(const char* name, int messageId = 0);
+
+    // Messages of a given severity to be recorded.
+    void SetEventMessageLevel(const LogSeverity& level);
 
 // Helper macro to avoid evaluating the arguments when the condition doesn't hold.
 #define GPGMM_LAZY_SERIALIZE(object, condition) \

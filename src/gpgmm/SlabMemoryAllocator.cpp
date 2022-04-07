@@ -84,19 +84,17 @@ namespace gpgmm {
                                                                              bool cacheSize) {
         TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.TryAllocateMemory");
         if (size > mBlockSize) {
-            RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
-                          "Allocation size exceeded the block size (" + std::to_string(size) +
-                              " vs " + std::to_string(mBlockSize) + " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            DebugEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+                << "Allocation size exceeded the block size (" + std::to_string(size) + " vs " +
+                       std::to_string(mBlockSize) + " bytes).";
             return {};
         }
 
         const uint64_t slabSize = ComputeSlabSize(size);
         if (slabSize > mMaxSlabSize) {
-            RecordMessage(LogSeverity::Debug, "SlabMemoryAllocator.TryAllocateMemory",
-                          "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
-                              " vs " + std::to_string(mMaxSlabSize) + " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            DebugEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+                << "Slab size exceeded the max slab size (" + std::to_string(slabSize) + " vs " +
+                       std::to_string(mMaxSlabSize) + " bytes).";
             return {};
         }
 
