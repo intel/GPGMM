@@ -66,6 +66,8 @@ namespace gpgmm { namespace d3d12 {
                          uint64_t totalResourceBudgetLimit,
                          uint64_t videoMemoryEvictSize);
 
+        const char* GetTypename() const;
+
         using LRUCache = LinkedList<Heap>;
 
         struct VideoMemorySegment {
