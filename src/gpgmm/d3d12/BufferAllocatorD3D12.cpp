@@ -14,6 +14,7 @@
 
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 
+#include "gpgmm/Debug.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
@@ -39,6 +40,8 @@ namespace gpgmm { namespace d3d12 {
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,
                                                                          bool cacheSize) {
+        TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.TryAllocateMemory");
+
         if (GetMemorySize() != size || GetMemoryAlignment() != alignment || neverAllocate) {
             return {};
         }
@@ -69,7 +72,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        ASSERT(allocation != nullptr);
+        TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.DeallocateMemory");
         mResourceAllocator->DeallocateMemory(std::move(allocation));
     }
 
