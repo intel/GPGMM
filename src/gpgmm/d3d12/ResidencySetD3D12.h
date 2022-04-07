@@ -30,12 +30,15 @@ namespace gpgmm { namespace d3d12 {
     // The set must be updated to ensure each allocations is resident for execution.
     class GPGMM_EXPORT ResidencySet {
       public:
-        ResidencySet() = default;
+        ResidencySet();
+        ~ResidencySet();
 
         HRESULT Insert(Heap* heap);
         HRESULT Reset();
 
       private:
+        const char* GetTypename() const;
+
         friend ResidencyManager;
 
         std::set<Heap*> mSet;

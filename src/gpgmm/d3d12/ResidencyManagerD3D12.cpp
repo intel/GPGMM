@@ -88,6 +88,8 @@ namespace gpgmm { namespace d3d12 {
           mTotalResourceBudgetLimit(totalResourceBudgetLimit),
           mVideoMemoryEvictSize(videoMemoryEvictSize == 0 ? kDefaultVideoMemoryEvictSize
                                                           : videoMemoryEvictSize) {
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+
         ASSERT(mDevice != nullptr);
         ASSERT(mAdapter != nullptr);
         ASSERT(mFence != nullptr);
@@ -106,6 +108,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ResidencyManager::~ResidencyManager() {
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+    }
+
+    const char* ResidencyManager::GetTypename() const {
+        return "ResidencyManager";
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
