@@ -28,19 +28,19 @@ TEST(SlabBlockAllocatorTests, SingleBlock) {
     SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     // Check that we cannot allocate a oversized block.
-    EXPECT_EQ(allocator.AllocateBlock(slabSize * 2), nullptr);
+    EXPECT_EQ(allocator.TryAllocateBlock(slabSize * 2), nullptr);
 
     // Check that we cannot allocate a zero sized block.
-    EXPECT_EQ(allocator.AllocateBlock(0u), nullptr);
+    EXPECT_EQ(allocator.TryAllocateBlock(0u), nullptr);
 
     // Allocate the block.
-    Block* block = allocator.AllocateBlock(blockSize);
+    MemoryBlock* block = allocator.TryAllocateBlock(blockSize);
     ASSERT_NE(block, nullptr);
     EXPECT_EQ(block->Offset, 0u);
     EXPECT_EQ(block->Size, blockSize);
 
     // Check that we are full.
-    EXPECT_EQ(allocator.AllocateBlock(slabSize), nullptr);
+    EXPECT_EQ(allocator.TryAllocateBlock(slabSize), nullptr);
 
     allocator.DeallocateBlock(block);
 }
@@ -51,10 +51,10 @@ TEST(SlabBlockAllocatorTests, SingleBlockAligned) {
     SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     // Check that we cannot allocate a misaligned block.
-    EXPECT_EQ(allocator.AllocateBlock(blockSize, 64u), nullptr);
+    EXPECT_EQ(allocator.TryAllocateBlock(blockSize, 64u), nullptr);
 
     constexpr uint64_t alignment = 16u;
-    Block* alignedBlock = allocator.AllocateBlock(blockSize, alignment);
+    MemoryBlock* alignedBlock = allocator.TryAllocateBlock(blockSize, alignment);
     ASSERT_NE(alignedBlock, nullptr);
     EXPECT_TRUE(IsAligned(alignedBlock->Offset, alignment));
     allocator.DeallocateBlock(alignedBlock);
@@ -67,23 +67,23 @@ TEST(SlabBlockAllocatorTests, MultipleBlocks) {
     constexpr uint64_t slabSize = 128;
     SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
-    std::unordered_set<Block*> blocks = {};
+    std::unordered_set<MemoryBlock*> blocks = {};
     for (uint64_t blockIdx = 0; blockIdx < slabSize / blockSize; blockIdx++) {
-        Block* block = allocator.AllocateBlock(blockSize);
+        MemoryBlock* block = allocator.TryAllocateBlock(blockSize);
         ASSERT_NE(block, nullptr);
         EXPECT_EQ(block->Offset, blockSize * blockIdx);
         EXPECT_TRUE(blocks.insert(block).second);
     }
 
     // Check that we are full.
-    EXPECT_EQ(allocator.AllocateBlock(blockSize), nullptr);
+    EXPECT_EQ(allocator.TryAllocateBlock(blockSize), nullptr);
 
-    for (Block* block : blocks) {
+    for (MemoryBlock* block : blocks) {
         allocator.DeallocateBlock(block);
     }
 
     // Check that we are empty.
-    EXPECT_NE(allocator.AllocateBlock(blockSize), nullptr);
+    EXPECT_NE(allocator.TryAllocateBlock(blockSize), nullptr);
 }
 
 // Verify multiple non-contiguous allocations in a slab.
@@ -93,28 +93,28 @@ TEST(SlabBlockAllocatorTests, MultipleBlocksVarious) {
     constexpr uint64_t slabSize = 128;
     SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
-    std::unordered_set<Block*> blocks = {};
+    std::unordered_set<MemoryBlock*> blocks = {};
 
     // Create three contiguous blocks.
-    Block* blockA = nullptr;
+    MemoryBlock* blockA = nullptr;
     {
-        blockA = allocator.AllocateBlock(blockSize);
+        blockA = allocator.TryAllocateBlock(blockSize);
         ASSERT_NE(blockA, nullptr);
         EXPECT_TRUE(blocks.insert(blockA).second);
         EXPECT_EQ(blockA->Offset, 0u);
     }
 
-    Block* blockB = nullptr;
+    MemoryBlock* blockB = nullptr;
     {
-        blockB = allocator.AllocateBlock(blockSize);
+        blockB = allocator.TryAllocateBlock(blockSize);
         ASSERT_NE(blockB, nullptr);
         EXPECT_TRUE(blocks.insert(blockB).second);
         EXPECT_EQ(blockB->Offset, blockSize);
     }
 
-    Block* blockC = nullptr;
+    MemoryBlock* blockC = nullptr;
     {
-        blockC = allocator.AllocateBlock(blockSize);
+        blockC = allocator.TryAllocateBlock(blockSize);
         ASSERT_NE(blockC, nullptr);
         EXPECT_TRUE(blocks.insert(blockC).second);
         EXPECT_EQ(blockC->Offset, blockSize * 2);
@@ -126,15 +126,15 @@ TEST(SlabBlockAllocatorTests, MultipleBlocksVarious) {
     allocator.DeallocateBlock(blockA);
 
     // Re-allocate should reuse.
-    blockA = allocator.AllocateBlock(blockSize);
+    blockA = allocator.TryAllocateBlock(blockSize);
     ASSERT_NE(blockA, nullptr);
     EXPECT_FALSE(blocks.insert(blockA).second);
 
-    blockB = allocator.AllocateBlock(blockSize);
+    blockB = allocator.TryAllocateBlock(blockSize);
     ASSERT_NE(blockB, nullptr);
     EXPECT_FALSE(blocks.insert(blockB).second);
 
-    blockC = allocator.AllocateBlock(blockSize);
+    blockC = allocator.TryAllocateBlock(blockSize);
     ASSERT_NE(blockC, nullptr);
     EXPECT_FALSE(blocks.insert(blockC).second);
 

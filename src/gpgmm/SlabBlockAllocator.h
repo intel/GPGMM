@@ -33,11 +33,11 @@ namespace gpgmm {
         ~SlabBlockAllocator() override;
 
         // BlockAllocator interface
-        Block* AllocateBlock(uint64_t size, uint64_t alignment = 1) override;
-        void DeallocateBlock(Block* block) override;
+        MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment = 1) override;
+        void DeallocateBlock(MemoryBlock* block) override;
 
       private:
-        struct SlabBlock : public Block {
+        struct SlabBlock : public MemoryBlock {
             SlabBlock* pNext = nullptr;
         };
 

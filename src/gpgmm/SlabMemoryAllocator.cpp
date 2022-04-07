@@ -185,7 +185,7 @@ namespace gpgmm {
         mInfo.UsedBlockCount--;
         mInfo.UsedBlockUsage -= blockInSlab->Size;
 
-        Block* block = blockInSlab->pBlock;
+        MemoryBlock* block = blockInSlab->pBlock;
         slab->Allocator.DeallocateBlock(block);
         SafeDelete(blockInSlab);
 

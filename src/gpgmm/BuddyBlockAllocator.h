@@ -42,8 +42,8 @@ namespace gpgmm {
         ~BuddyBlockAllocator() override;
 
         // BlockAllocator interface
-        Block* AllocateBlock(uint64_t size, uint64_t alignment) override;
-        void DeallocateBlock(Block* block) override;
+        MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment) override;
+        void DeallocateBlock(MemoryBlock* block) override;
 
         // For testing purposes only.
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;
@@ -54,7 +54,7 @@ namespace gpgmm {
 
         enum class BlockState { Free, Split, Allocated };
 
-        struct BuddyBlock : public Block {
+        struct BuddyBlock : public MemoryBlock {
             BuddyBlock() {
                 free = {};
             }

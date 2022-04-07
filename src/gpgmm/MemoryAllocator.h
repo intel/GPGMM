@@ -90,7 +90,7 @@ namespace gpgmm {
         virtual MEMORY_ALLOCATOR_INFO QueryInfo() const;
 
       protected:
-        // Combine AllocateBlock and TryAllocateMemory into a single call so a partial
+        // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
@@ -99,8 +99,8 @@ namespace gpgmm {
             uint64_t size,
             uint64_t alignment,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
-            Block* block = nullptr;
-            GPGMM_TRY_ASSIGN(allocator->AllocateBlock(size, alignment), block);
+            MemoryBlock* block = nullptr;
+            GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(size, alignment), block);
 
             MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {

@@ -263,8 +263,8 @@ namespace gpgmm { namespace d3d12 {
                 // 2D textures always have a depth demension equal to 1.
                 tile.DepthInTexels = 1;
 
-                // Block compression means the returned texel dimensions are to be a multiple of 4
-                // (since the implementation compresses 4x4 blocks of texels).
+                // MemoryBlock compression means the returned texel dimensions are to be a multiple
+                // of 4 (since the implementation compresses 4x4 blocks of texels).
                 if (IsBlockCompressionFormat(format)) {
                     return {};  // TODO
                 }

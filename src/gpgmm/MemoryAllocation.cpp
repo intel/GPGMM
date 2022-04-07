@@ -35,7 +35,7 @@ namespace gpgmm {
                                        MemoryBase* memory,
                                        uint64_t offset,
                                        AllocationMethod method,
-                                       Block* block,
+                                       MemoryBlock* block,
                                        uint8_t* mappedPointer)
         : mAllocator(allocator),
           mMemory(memory),
@@ -106,7 +106,7 @@ namespace gpgmm {
         return mMethod;
     }
 
-    Block* MemoryAllocation::GetBlock() const {
+    MemoryBlock* MemoryAllocation::GetBlock() const {
         return mBlock;
     }
 

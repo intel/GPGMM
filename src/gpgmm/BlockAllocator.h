@@ -20,7 +20,7 @@
 
 namespace gpgmm {
 
-    struct Block {
+    struct MemoryBlock {
         uint64_t Offset = kInvalidOffset;
         uint64_t Size = kInvalidSize;
     };
@@ -30,8 +30,8 @@ namespace gpgmm {
       public:
         virtual ~BlockAllocator() = default;
 
-        virtual Block* AllocateBlock(uint64_t size, uint64_t alignment) = 0;
-        virtual void DeallocateBlock(Block* block) = 0;
+        virtual MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment) = 0;
+        virtual void DeallocateBlock(MemoryBlock* block) = 0;
     };
 
 }  // namespace gpgmm

@@ -86,8 +86,8 @@ namespace gpgmm {
 
         // Stores a reference back to the slab containing the block so DeallocateMemory
         // knows which slab (and block allocator) to use.
-        struct BlockInSlab : public Block {
-            Block* pBlock = nullptr;
+        struct BlockInSlab : public MemoryBlock {
+            MemoryBlock* pBlock = nullptr;
             Slab* pSlab = nullptr;
         };
 

@@ -40,11 +40,11 @@ namespace gpgmm {
         }
     }
 
-    Block* SlabBlockAllocator::AllocateBlock(uint64_t size, uint64_t alignment) {
+    MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t size, uint64_t alignment) {
         GPGMM_CHECK_NONZERO(size);
 
         if (size > mBlockSize) {
-            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",
+            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.TryAllocateBlock",
                           "Allocation size exceeded the block size. (" + std::to_string(size) +
                               " vs " + std::to_string(mBlockSize) + " bytes).",
                           ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
@@ -53,7 +53,7 @@ namespace gpgmm {
 
         // Offset must be equal to a multiple of |mBlockSize|.
         if (!IsAligned(mBlockSize, alignment)) {
-            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.AllocateBlock",
+            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.TryAllocateBlock",
                           "Allocation alignment is not a multiple of the block size. (" +
                               std::to_string(alignment) + " vs " + std::to_string(mBlockSize) +
                               " bytes).",
@@ -79,7 +79,7 @@ namespace gpgmm {
         return head;
     }
 
-    void SlabBlockAllocator::DeallocateBlock(Block* block) {
+    void SlabBlockAllocator::DeallocateBlock(MemoryBlock* block) {
         ASSERT(block != nullptr);
 
         SlabBlock* currBlock = static_cast<SlabBlock*>(block);

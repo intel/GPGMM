@@ -39,7 +39,7 @@ namespace gpgmm {
         kUndefined = 0x8
     };
 
-    struct Block;
+    struct MemoryBlock;
     class MemoryBase;
     class MemoryAllocator;
 
@@ -53,7 +53,7 @@ namespace gpgmm {
                          MemoryBase* memory,
                          uint64_t offset,
                          AllocationMethod method,
-                         Block* block,
+                         MemoryBlock* block,
                          uint8_t* mappedPointer = nullptr);
 
         // Constructs a standalone memory allocation.
@@ -75,7 +75,7 @@ namespace gpgmm {
         uint64_t GetSize() const;
         uint64_t GetOffset() const;
         AllocationMethod GetMethod() const;
-        Block* GetBlock() const;
+        MemoryBlock* GetBlock() const;
 
       protected:
         friend class MemoryAllocator;
@@ -86,7 +86,7 @@ namespace gpgmm {
 
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
-        Block* mBlock;
+        MemoryBlock* mBlock;
 
         uint8_t* mMappedPointer;
     };

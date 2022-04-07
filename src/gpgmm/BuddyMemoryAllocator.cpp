@@ -94,7 +94,7 @@ namespace gpgmm {
                              }),
                          subAllocation);
 
-        Block* block = subAllocation->GetBlock();
+        MemoryBlock* block = subAllocation->GetBlock();
         mInfo.UsedBlockCount++;
         mInfo.UsedBlockUsage += block->Size;
 
