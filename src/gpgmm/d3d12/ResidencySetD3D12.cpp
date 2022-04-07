@@ -14,21 +14,7 @@
 
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 
-#include "gpgmm/Debug.h"
-
 namespace gpgmm { namespace d3d12 {
-    ResidencySet::ResidencySet() {
-        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-    }
-
-    ResidencySet::~ResidencySet() {
-        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
-    }
-
-    const char* ResidencySet::GetTypename() const {
-        return "ResidencySet";
-    }
-
     HRESULT ResidencySet::Insert(Heap* heap) {
         if (heap == nullptr) {
             return E_INVALIDARG;
