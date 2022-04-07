@@ -54,8 +54,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
-                                           this);
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
@@ -72,8 +71,7 @@ namespace gpgmm { namespace d3d12 {
           mResource(std::move(resource)),
           mOffsetFromResource(0) {
         ASSERT(resourceHeap != nullptr);
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default, "GPUMemoryAllocation",
-                                           this);
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
