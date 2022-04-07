@@ -54,8 +54,7 @@ namespace gpgmm {
     } while (false)
 
     // Messages of a given severity to be recorded.
-    // Set the new level and returns the previous level so it may be restored by the caller.
-    LogSeverity SetRecordMessageLevel(const LogSeverity& level);
+    void SetRecordMessageLevel(const LogSeverity& level);
 
     void RecordMessage(const LogSeverity& severity,
                        const char* name,
