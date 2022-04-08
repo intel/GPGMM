@@ -1,6 +1,14 @@
 name: clang_format_check
 
-on: [push, pull_request]
+  push:
+    branches: main
+    paths:
+      - 'src/**'
+
+  pull_request:
+    branches: main
+    paths:
+      - 'src/**'
 
 jobs:
 
