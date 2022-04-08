@@ -265,6 +265,7 @@ namespace gpgmm { namespace d3d12 {
                                     uint64_t alignment,
                                     bool neverAllocate,
                                     bool cacheSize,
+                                    bool prefetchMemory,
                                     CreateResourceFn&& createResourceFn) {
             // Do not attempt to allocate if the requested size already exceeds the fixed
             // memory size allowed by the allocator. Otherwise, both the memory and resource would
@@ -274,8 +275,8 @@ namespace gpgmm { namespace d3d12 {
                 return E_FAIL;
             }
 
-            std::unique_ptr<MemoryAllocation> allocation =
-                allocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize);
+            std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(
+                size, alignment, neverAllocate, cacheSize, prefetchMemory);
             if (allocation == nullptr) {
                 DebugEvent("ResourceAllocator.TryAllocateResource",
                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
@@ -441,14 +442,15 @@ namespace gpgmm { namespace d3d12 {
                         heapAlignment, std::move(conditionalHeapAllocator));
 
                 // TODO: Figure out the optimal slab size to heap ratio.
-                mResourceAllocatorOfType[resourceHeapTypeIndex] =
-                    std::make_unique<SlabCacheAllocator>(
-                        /*minBlockSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
-                        /*slabSize*/ descriptor.PreferredResourceHeapSize,
-                        /*slabAlignment*/ heapAlignment,
-                        /*slabFragmentationLimit*/ descriptor.ResourceFragmentationLimit,
-                        std::move(buddyAllocator));
+                mResourceAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
+                    SlabCacheAllocator>(
+                    /*minBlockSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                    /*slabSize*/ descriptor.PreferredResourceHeapSize,
+                    /*slabAlignment*/ heapAlignment,
+                    /*slabFragmentationLimit*/ descriptor.ResourceFragmentationLimit,
+                    /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
+                    std::move(buddyAllocator));
             }
 
             {
@@ -496,13 +498,15 @@ namespace gpgmm { namespace d3d12 {
 
                 // Buffers are byte-addressable when sub-allocated within and cannot internally
                 // fragment by definition.
-                mBufferAllocatorOfType[resourceHeapTypeIndex] =
-                    std::make_unique<SlabCacheAllocator>(
-                        /*minBlockSize*/ 1,
-                        /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*slabFragmentationLimit*/ 0, std::move(pooledOrNonPooledBufferAllocator));
+                mBufferAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
+                    SlabCacheAllocator>(
+                    /*minBlockSize*/ 1,
+                    /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*slabFragmentationLimit*/ 0,
+                    /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
+                    std::move(pooledOrNonPooledBufferAllocator));
             }
 
             // Cache resource sizes commonly requested.
@@ -525,23 +529,23 @@ namespace gpgmm { namespace d3d12 {
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        allocator->TryAllocateMemory(sizeToCache,
-                                                     D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
-                                                     /*neverAllocate*/ true, /*cacheSize*/ true);
+                        allocator->TryAllocateMemory(
+                            sizeToCache, D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
+                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
                     }
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        allocator->TryAllocateMemory(sizeToCache,
-                                                     D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                                                     /*neverAllocate*/ true, /*cacheSize*/ true);
+                        allocator->TryAllocateMemory(
+                            sizeToCache, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
                     }
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)) {
                         allocator->TryAllocateMemory(
                             sizeToCache, D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
-                            /*neverAllocate*/ true, /*cacheSize*/ true);
+                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
                     }
                 }
             }
@@ -585,6 +589,8 @@ namespace gpgmm { namespace d3d12 {
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** resourceAllocationOut) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
@@ -665,6 +671,9 @@ namespace gpgmm { namespace d3d12 {
         const bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
+        const bool prefetchMemory =
+            allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY;
+
         // Attempt to allocate using the most effective allocator.;
         MemoryAllocator* allocator = nullptr;
 
@@ -686,6 +695,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, newResourceDesc.Width, alignment, neverAllocate,
+                /*prefetchMemory*/ false,
                 /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
@@ -718,6 +728,7 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
+                prefetchMemory,
                 /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
@@ -757,7 +768,8 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 allocator, resourceInfo.SizeInBytes, GetHeapAlignment(heapFlags), neverAllocate,
-                /*cacheSize*/ false, [&](const auto& allocation) -> HRESULT {
+                /*cacheSize*/ false, /*prefetchMemory*/ false,
+                [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = ToBackend(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
@@ -996,6 +1008,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.DeallocateMemory");
 
         mInfo.UsedMemoryUsage -= allocation->GetSize();

@@ -39,10 +39,14 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysInBudget(isAlwaysInBudget) {
     }
 
-    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(uint64_t size,
-                                                                               uint64_t alignment,
-                                                                               bool neverAllocate,
-                                                                               bool cacheSize) {
+    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
+        uint64_t size,
+        uint64_t alignment,
+        bool neverAllocate,
+        bool cacheSize,
+        bool prefetchMemory) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.TryAllocateMemory");
 
         if (neverAllocate) {
@@ -92,6 +96,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.DeallocateMemory");
 
         mInfo.UsedMemoryUsage -= allocation->GetSize();

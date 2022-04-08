@@ -21,6 +21,7 @@
 #include "include/gpgmm_export.h"
 
 #include <memory>
+#include <mutex>
 
 namespace gpgmm { namespace d3d12 {
 
@@ -99,6 +100,8 @@ namespace gpgmm { namespace d3d12 {
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
+
+        std::recursive_mutex mMutex;
     };
 
 }}  // namespace gpgmm::d3d12

@@ -56,12 +56,18 @@ namespace gpgmm { namespace d3d12 {
         GPGMMTestBase::TearDown();
     }
 
-    ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
+    ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc(bool enablePrefetch) const {
         ALLOCATOR_DESC desc = {};
         desc.Adapter = mAdapter;
         desc.Device = mDevice;
         desc.IsUMA = mIsUMA;
         desc.ResourceHeapTier = mResourceHeapTier;
+
+        // Pre-fetching is enabled by default. However for testing purposes, pre-fetching changes
+        // expectations that check GPU memory usage and needs to be tested in isolation.
+        if (!enablePrefetch) {
+            desc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+        }
 
 #if defined(NDEBUG)
         desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;

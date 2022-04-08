@@ -117,6 +117,8 @@ namespace gpgmm { namespace d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(Heap* heap) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -139,6 +141,8 @@ namespace gpgmm { namespace d3d12 {
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
     HRESULT ResidencyManager::UnlockHeap(Heap* heap) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -171,6 +175,8 @@ namespace gpgmm { namespace d3d12 {
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
     HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -223,6 +229,8 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         uint64_t reservation,
         uint64_t* reservationOut) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.SetVideoMemoryReservation");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
@@ -275,6 +283,8 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
@@ -346,6 +356,8 @@ namespace gpgmm { namespace d3d12 {
                                                   ID3D12CommandList* const* commandLists,
                                                   ResidencySet* const* residencySets,
                                                   uint32_t count) {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
         // TODO: support multiple command lists.
         if (count > 1) {
             return E_NOTIMPL;

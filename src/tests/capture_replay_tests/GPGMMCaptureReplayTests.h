@@ -60,6 +60,7 @@ struct TestEnviromentParams {
 
     bool IsStandaloneOnly = false;
     bool IsNeverAllocate = false;
+    bool PrefetchMemory = false;
 
     AllocatorProfile AllocatorProfile =
         AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.
@@ -102,9 +103,12 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
 
     void RunTestLoop(bool forceRegenerate,
                      bool forceIsCapturedCapsCompat,
-                     bool forceSingleIteration);
+                     bool forceSingleIteration,
+                     bool forcePrefetchMemory);
 
-    void RunSingleTest(bool forceRegenerate, bool forceIsCapturedCapsCompat);
+    void RunSingleTest(bool forceRegenerate,
+                       bool forceIsCapturedCapsCompat,
+                       bool forcePrefetchMemory);
 
   protected:
     virtual void RunTest(const TraceFile& traceFile,

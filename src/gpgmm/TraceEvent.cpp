@@ -19,13 +19,14 @@
 #include "gpgmm/common/PlatformUtils.h"
 
 #include <fstream>
+#include <mutex>
 #include <sstream>
 #include <string>
 #include <thread>
 
 namespace gpgmm {
 
-    std::unique_ptr<FileEventTrace> gEventTrace;
+    static std::unique_ptr<FileEventTrace> gEventTrace;
 
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
@@ -110,6 +111,7 @@ namespace gpgmm {
                                            uint32_t tid,
                                            uint32_t flags,
                                            const JSONDict& args) {
+        std::unique_lock<std::mutex> lock(mMutex);
         const double timestamp = mPlatformTime->GetRelativeTime();
         if (timestamp != 0) {
             mQueue.push_back({phase, category, name, id, tid, timestamp, flags, args});
@@ -117,6 +119,8 @@ namespace gpgmm {
     }
 
     void FileEventTrace::FlushQueuedEventsToDisk() {
+        std::unique_lock<std::mutex> lock(mMutex);
+
         JSONArray traceEvents;
         for (const TraceEvent& traceEvent : mQueue) {
             if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||

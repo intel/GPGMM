@@ -31,7 +31,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
-                                                            bool cacheSize) override;
+                                                            bool cacheSize,
+                                                            bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t GetMemorySize() const override;
 

@@ -51,6 +51,9 @@ namespace gpgmm { namespace d3d12 {
         // Ensures resources are always within the resource budget at creation time. Mostly used
         // to debug with residency being over committed.
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
+
+        // Disables pre-fetching of GPU memory for debugging and testing purposes.
+        ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH = 0x4,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
@@ -220,6 +223,13 @@ namespace gpgmm { namespace d3d12 {
         // heap. The created resource will always be allocated with it's own resource heap.
         ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
+        // Prefetch memory for the next resource allocation.
+        // The call to prefetch is deferred to a seperate background thread by GPGMM which runs
+        // when the current allocation requested is completed. By default, GPGMM will automatically
+        // trigger prefetching based on heurstics. Prefetching enables more performance when
+        // allocating for large contiguous allocations. Should not be used with
+        // ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+        ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY = 0x8,
     };
 
     using ALLOCATION_FLAGS_TYPE = Flags<ALLOCATION_FLAGS>;
