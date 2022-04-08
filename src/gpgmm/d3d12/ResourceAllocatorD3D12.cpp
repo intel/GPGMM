@@ -584,6 +584,21 @@ namespace gpgmm { namespace d3d12 {
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
 
+        const QUERY_RESOURCE_ALLOCATOR_INFO& info = QueryInfo();
+        TRACE_COUNTER1(
+            TraceEventCategory::Default, "GPU memory unused (%)",
+            (1.0 - (info.UsedBlockUsage / static_cast<double>(info.UsedMemoryUsage))) * 100);
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MBytes)",
+                       (info.UsedMemoryUsage - info.UsedBlockUsage) / 1e6);
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory reserved (%)",
+                       (info.FreeMemoryUsage /
+                        static_cast<double>(info.UsedMemoryUsage + info.FreeMemoryUsage) * 100));
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory reserved (MBytes)",
+                       info.FreeMemoryUsage / 1e6);
+
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
@@ -885,8 +900,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     QUERY_RESOURCE_ALLOCATOR_INFO ResourceAllocator::QueryInfo() const {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.QueryInfo");
-
         QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
