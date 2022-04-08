@@ -443,9 +443,11 @@ namespace gpgmm { namespace d3d12 {
                 // TODO: Figure out the optimal slab size to heap ratio.
                 mResourceAllocatorOfType[resourceHeapTypeIndex] =
                     std::make_unique<SlabCacheAllocator>(
-                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
-                        heapAlignment, descriptor.ResourceFragmentationLimit,
+                        /*minBlockSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                        /*slabSize*/ descriptor.PreferredResourceHeapSize,
+                        /*slabAlignment*/ heapAlignment,
+                        /*slabFragmentationLimit*/ descriptor.ResourceFragmentationLimit,
                         std::move(buddyAllocator));
             }
 
@@ -514,20 +516,33 @@ namespace gpgmm { namespace d3d12 {
             {
                 ScopedLogLevel scopedLogLevel(LogSeverity::Info);
                 for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
-                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                        D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*neverAllocate*/ true, /*cacheSize*/ true);
+                    MemoryAllocator* allocator =
+                        mResourceAllocatorOfType[resourceHeapTypeIndex].get();
+                    const uint64_t sizeToCache = MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes;
+                    if (sizeToCache > allocator->GetMemorySize()) {
+                        continue;
+                    }
 
-                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                        D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*neverAllocate*/ true, /*cacheSize*/ true);
+                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                                  D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
+                        allocator->TryAllocateMemory(sizeToCache,
+                                                     D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
+                                                     /*neverAllocate*/ true, /*cacheSize*/ true);
+                    }
 
-                    mResourceAllocatorOfType[resourceHeapTypeIndex]->TryAllocateMemory(
-                        MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
-                        D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
-                        /*neverAllocate*/ true, /*cacheSize*/ true);
+                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                                  D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)) {
+                        allocator->TryAllocateMemory(sizeToCache,
+                                                     D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                                                     /*neverAllocate*/ true, /*cacheSize*/ true);
+                    }
+
+                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                                  D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)) {
+                        allocator->TryAllocateMemory(
+                            sizeToCache, D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
+                            /*neverAllocate*/ true, /*cacheSize*/ true);
+                    }
                 }
             }
 #endif
