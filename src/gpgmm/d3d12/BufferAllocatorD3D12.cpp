@@ -65,7 +65,7 @@ namespace gpgmm { namespace d3d12 {
                 mHeapType, D3D12_HEAP_FLAG_NONE, size, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
                 &resourceHeap))) {
-            return nullptr;
+            return {};
         }
 
         return std::make_unique<MemoryAllocation>(this, resourceHeap);

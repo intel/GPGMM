@@ -53,7 +53,7 @@ namespace gpgmm {
                           "Allocation size exceeded the memory size (" + std::to_string(size) +
                               " vs " + std::to_string(mMemorySize) + " bytes).",
                           ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
-            return nullptr;
+            return {};
         }
 
         // Round allocation size to nearest power-of-two.
@@ -67,7 +67,7 @@ namespace gpgmm {
                               std::to_string(mMemorySize) + " bytes).",
                           ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
 
-            return nullptr;
+            return {};
         }
 
         // Attempt to sub-allocate a block of the requested size.
