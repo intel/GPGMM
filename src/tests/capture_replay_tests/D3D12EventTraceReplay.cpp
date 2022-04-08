@@ -471,7 +471,7 @@ TEST_P(D3D12EventTraceReplay, MemoryUsage) {
 }
 
 // Verify a re-generated trace will always playback the same result.
-TEST_P(D3D12EventTraceReplay, RegenerateSame) {
+TEST_P(D3D12EventTraceReplay, Regenerate) {
     RunSingleTest(/*forceRegenerate*/ true, /*forceIsCapturedCapsCompat*/ false);
 
     const CaptureReplayCallStats beforeReplayedAllocateStats = mReplayedAllocateStats;
