@@ -26,21 +26,14 @@ namespace gpgmm {
         if (memoryIndex >= mPool.size()) {
             mPool.resize(memoryIndex + 1);
         }
-
-        std::unique_ptr<MemoryAllocation> allocation = std::move(mPool[memoryIndex]);
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
-
-        return allocation;
+        return std::move(mPool[memoryIndex]);
     }
 
     void IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
                                          uint64_t memoryIndex) {
         ASSERT(allocation != nullptr);
         ASSERT(memoryIndex < mPool.size());
-
         mPool[memoryIndex] = std::move(allocation);
-
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
     }
 
     void IndexedMemoryPool::ReleasePool() {

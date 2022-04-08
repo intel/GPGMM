@@ -32,9 +32,6 @@ namespace gpgmm {
             allocation = std::move(mPool.front());
             mPool.pop_front();
         }
-
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
-
         return allocation;
     }
 
@@ -42,10 +39,7 @@ namespace gpgmm {
                                       uint64_t memoryIndex) {
         ASSERT(memoryIndex == kInvalidIndex);
         ASSERT(allocation != nullptr);
-
         mPool.push_front(std::move(allocation));
-
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
     }
 
     void LIFOMemoryPool::ReleasePool() {
