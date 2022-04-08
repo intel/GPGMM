@@ -22,8 +22,7 @@ import re
 import json
 from argparse import ArgumentParser
 
-parser = ArgumentParser(description='Run and analyze d3d resource alignment rejects. ' +
-'To use, build with `gpgmm_enable_d3d12_resource_alignment_warning = true` then run this script.')
+parser = ArgumentParser(description='Run and analyze d3d resource alignment rejects. ')
 
 # Common options
 parser.add_argument("testname", type=str, nargs='?', default="dawn_end2end_tests")

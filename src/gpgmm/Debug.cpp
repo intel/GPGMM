@@ -15,27 +15,47 @@
 #include "gpgmm/Debug.h"
 
 #include "gpgmm/common/Assert.h"
+#include "gpgmm/common/Log.h"
 
 namespace gpgmm {
     // Messages with equal or greater to severity will be logged.
     LogSeverity gRecordEventLevel = LogSeverity::Info;
 
-    void SetRecordMessageLevel(const LogSeverity& newLevel) {
+    void SetEventMessageLevel(const LogSeverity& newLevel) {
         gRecordEventLevel = newLevel;
     }
 
-    void RecordMessage(const LogSeverity& severity,
-                       const char* name,
-                       const std::string& description,
-                       int messageId) {
-        gpgmm::Log(severity) << name << ": " << description;
+    EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
+        : LogMessage(level), mSeverity(level), mName(name), mMessageId(messageId) {
+    }
+
+    EventMessage::~EventMessage() {
+        const std::string description = mStream.str();
+
+        gpgmm::Log(mSeverity) << mName << ": " << description;
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
-        ASSERT(severity < LogSeverity::Warning);
+        ASSERT(mSeverity < LogSeverity::Warning);
 #endif
-        if (severity >= gRecordEventLevel) {
-            LOG_MESSAGE message{description, messageId};
-            GPGMM_TRACE_EVENT_OBJECT_CALL(name, message);
+        if (mSeverity >= gRecordEventLevel) {
+            LOG_MESSAGE message{description, mMessageId};
+            GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
+    }
+
+    EventMessage DebugEvent(const char* name, int messageId) {
+        return {LogSeverity::Debug, name, messageId};
+    }
+
+    EventMessage InfoEvent(const char* name, int messageId) {
+        return {LogSeverity::Info, name, messageId};
+    }
+
+    EventMessage WarningEvent(const char* name, int messageId) {
+        return {LogSeverity::Warning, name, messageId};
+    }
+
+    EventMessage ErrorEvent(const char* name, int messageId) {
+        return {LogSeverity::Error, name, messageId};
     }
 
 }  // namespace gpgmm

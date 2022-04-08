@@ -44,20 +44,18 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(size);
 
         if (size > mBlockSize) {
-            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.TryAllocateBlock",
-                          "Allocation size exceeded the block size. (" + std::to_string(size) +
-                              " vs " + std::to_string(mBlockSize) + " bytes).",
-                          ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED);
+            DebugEvent("SlabBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+                << "Allocation size exceeded the block size. (" + std::to_string(size) + " vs " +
+                       std::to_string(mBlockSize) + " bytes).";
             return nullptr;
         }
 
         // Offset must be equal to a multiple of |mBlockSize|.
         if (!IsAligned(mBlockSize, alignment)) {
-            RecordMessage(LogSeverity::Debug, "SlabBlockAllocator.TryAllocateBlock",
-                          "Allocation alignment is not a multiple of the block size. (" +
-                              std::to_string(alignment) + " vs " + std::to_string(mBlockSize) +
-                              " bytes).",
-                          ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH);
+            DebugEvent("SlabBlockAllocator.TryAllocateBlock",
+                       ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
+                << "Allocation alignment is not a multiple of the block size. (" +
+                       std::to_string(alignment) + " vs " + std::to_string(mBlockSize) + " bytes).";
             return nullptr;
         }
 
