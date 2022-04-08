@@ -884,9 +884,8 @@ namespace gpgmm { namespace d3d12 {
         return mResidencyManager.Get();
     }
 
-    HRESULT ResourceAllocator::QueryResourceAllocatorInfo(
-        QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut) const {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.QueryResourceAllocatorInfo");
+    QUERY_RESOURCE_ALLOCATOR_INFO ResourceAllocator::QueryInfo() const {
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.QueryInfo");
 
         QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
@@ -920,11 +919,7 @@ namespace gpgmm { namespace d3d12 {
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, infoOut);
 
-        if (resourceAllocationInfoOut != nullptr) {
-            *resourceAllocationInfoOut = infoOut;
-        }
-
-        return S_OK;
+        return infoOut;
     }
 
     // Returns E_FAIL if a device leak is detected.

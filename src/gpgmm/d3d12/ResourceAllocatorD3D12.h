@@ -301,10 +301,8 @@ namespace gpgmm { namespace d3d12 {
         // brief performance hit when the internal resource heaps get reallocated by the OS.
         void Trim();
 
-        // Informs the app of the current allocator usage.
-        // If the allocator info is nullptr, info will only be recorded for trace.
-        HRESULT QueryResourceAllocatorInfo(
-            QUERY_RESOURCE_ALLOCATOR_INFO* resourceAllocationInfoOut = nullptr) const;
+        // Return the current allocator usage.
+        QUERY_RESOURCE_ALLOCATOR_INFO QueryInfo() const override;
 
         const char* GetTypename() const;
 
