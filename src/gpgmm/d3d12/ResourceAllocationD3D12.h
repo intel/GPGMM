@@ -34,6 +34,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t OffsetFromResource;
         AllocationMethod Method;
         Heap* ResourceHeap;
+        ID3D12Resource* Resource;
     };
 
     class GPGMM_EXPORT ResourceAllocation final : public MemoryAllocation,

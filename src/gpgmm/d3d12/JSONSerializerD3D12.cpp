@@ -145,7 +145,9 @@ namespace gpgmm { namespace d3d12 {
         if (desc.MemoryPool != nullptr) {
             dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
         }
-
+        if (desc.Heap != nullptr) {
+            dict.AddItem("Heap", Serialize(desc.Heap->GetDesc()));
+        }
         return dict;
     }
 
@@ -157,6 +159,28 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
         dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
+        dict.AddItem("Resource", Serialize(desc.Resource->GetDesc()));
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const D3D12_HEAP_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("Properties", Serialize(desc.Properties));
+        dict.AddItem("Alignment", desc.Alignment);
+        dict.AddItem("Flags", desc.Flags);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const D3D12_HEAP_PROPERTIES& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.Type);
+        dict.AddItem("CPUPageProperty", desc.CPUPageProperty);
+        dict.AddItem("MemoryPoolPreference", desc.MemoryPoolPreference);
+        dict.AddItem("CreationNodeMask", desc.CreationNodeMask);
+        dict.AddItem("VisibleNodeMask", desc.VisibleNodeMask);
         return dict;
     }
 

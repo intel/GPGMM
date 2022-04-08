@@ -51,6 +51,8 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const FLOAT rgba[4]);
         static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);
         static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
+        static JSONDict Serialize(const D3D12_HEAP_DESC& desc);
+        static JSONDict Serialize(const D3D12_HEAP_PROPERTIES& desc);
     };
 
 }}  // namespace gpgmm::d3d12

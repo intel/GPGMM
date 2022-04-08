@@ -189,7 +189,8 @@ namespace gpgmm { namespace d3d12 {
         Heap* resourceHeap = ToBackend(GetMemory());
         ASSERT(resourceHeap != nullptr);
 
-        return {GetSize(), GetOffset(), mOffsetFromResource, GetMethod(), resourceHeap};
+        return {GetSize(),   GetOffset(),  mOffsetFromResource,
+                GetMethod(), resourceHeap, mResource.Get()};
     }
 
     const char* ResourceAllocation::GetTypename() const {

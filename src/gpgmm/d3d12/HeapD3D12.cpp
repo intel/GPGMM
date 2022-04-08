@@ -97,6 +97,6 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), IsResident(), mMemorySegmentGroup, GetRefCount(), GetPool()};
+        return {GetSize(), IsResident(), mMemorySegmentGroup, GetRefCount(), GetPool(), GetHeap()};
     }
 }}  // namespace gpgmm::d3d12

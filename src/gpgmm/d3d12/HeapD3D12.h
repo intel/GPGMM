@@ -36,6 +36,7 @@ namespace gpgmm { namespace d3d12 {
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
         int SubAllocatedRefs;
         MemoryPool* MemoryPool;
+        ID3D12Heap* Heap;
     };
 
     // This class is used to represent ID3D12Heap allocations, as well as an implicit heap
