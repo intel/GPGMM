@@ -710,9 +710,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
 
-        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
         EXPECT_EQ(info.UsedBlockCount, 0u);
@@ -738,9 +736,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
 
-        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
         EXPECT_EQ(info.UsedBlockCount, 0u);
@@ -753,8 +749,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
 
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 2u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize * 2);
         EXPECT_EQ(info.UsedBlockCount, 0u);
@@ -780,9 +775,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         // TODO: Consider testing counts by allocator type.
         GPGMM_SKIP_TEST_IF(firstAllocation->GetMethod() != gpgmm::AllocationMethod::kSubAllocated);
 
-        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
         EXPECT_EQ(info.UsedBlockCount, 1u);
@@ -795,8 +788,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
 
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        info = resourceAllocator->QueryInfo();
         EXPECT_GE(info.UsedMemoryCount, 1u);
         EXPECT_GE(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
         EXPECT_EQ(info.UsedBlockCount, 2u);
@@ -823,9 +815,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
 
-        QUERY_RESOURCE_ALLOCATOR_INFO info = {};
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, 64u * 1024u);
         EXPECT_EQ(info.UsedBlockCount, 1u);
@@ -838,8 +828,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
 
-        ASSERT_SUCCEEDED(resourceAllocator->QueryResourceAllocatorInfo(&info));
-
+        info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, 64u * 1024u);
         EXPECT_EQ(info.UsedBlockCount, 2u);
