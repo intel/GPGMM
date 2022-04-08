@@ -900,6 +900,7 @@ namespace gpgmm { namespace d3d12 {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
+            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
             infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
             infoOut.UsedMemoryCount += info.UsedMemoryCount;
         }
@@ -908,6 +909,7 @@ namespace gpgmm { namespace d3d12 {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
             infoOut.UsedBlockCount += info.UsedBlockCount;
             infoOut.UsedBlockUsage += info.UsedBlockUsage;
+            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
             infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
             infoOut.UsedMemoryCount += info.UsedMemoryCount;
         }
