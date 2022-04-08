@@ -78,7 +78,7 @@ namespace gpgmm {
 
     EventMessage DebugEvent(const char* name, int messageId = 0);
     EventMessage InfoEvent(const char* name, int messageId = 0);
-    EventMessage WarningEvent(const char* name, int messageId = 0);
+    EventMessage WarnEvent(const char* name, int messageId = 0);
     EventMessage ErrorEvent(const char* name, int messageId = 0);
 
     // Messages of a given severity to be recorded.

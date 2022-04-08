@@ -50,7 +50,7 @@ namespace gpgmm {
         return {LogSeverity::Info, name, messageId};
     }
 
-    EventMessage WarningEvent(const char* name, int messageId) {
+    EventMessage WarnEvent(const char* name, int messageId) {
         return {LogSeverity::Warning, name, messageId};
     }
 
