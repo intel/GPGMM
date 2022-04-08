@@ -930,8 +930,6 @@ namespace gpgmm { namespace d3d12 {
         infoOut.UsedMemoryUsage += mInfo.UsedMemoryUsage;
         infoOut.UsedMemoryCount += mInfo.UsedMemoryCount;
 
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, infoOut);
-
         return infoOut;
     }
 
