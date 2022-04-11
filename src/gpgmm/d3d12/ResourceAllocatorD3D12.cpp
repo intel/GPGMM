@@ -709,7 +709,7 @@ namespace gpgmm { namespace d3d12 {
                         std::move(committedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > newResourceDesc.Width) {
-                        DebugEvent("ResourceAllocator.CreateResource",
+                        InfoEvent("ResourceAllocator.CreateResource",
                                    ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                             << "Resource allocation size is larger then the resource size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
@@ -745,8 +745,8 @@ namespace gpgmm { namespace d3d12 {
                         std::move(placedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
-                        DebugEvent("ResourceAllocator.CreateResource",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
+                        InfoEvent("ResourceAllocator.CreateResource",
+                                  ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                             << "Resource allocation size is larger then the resource size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
                                    std::to_string(resourceInfo.SizeInBytes) + " bytes).";
@@ -781,7 +781,7 @@ namespace gpgmm { namespace d3d12 {
                         /*offsetFromHeap*/ 0, std::move(placedResource), resourceHeap};
 
                     if (allocation.GetSize() > resourceInfo.SizeInBytes) {
-                        DebugEvent("ResourceAllocator.CreateResource",
+                        InfoEvent("ResourceAllocator.CreateResource",
                                    ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                             << "Resource allocation size is larger then the resource size (" +
                                    std::to_string(allocation.GetSize()) + " vs " +
@@ -801,7 +801,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            DebugEvent("ResourceAllocator.CreateResource",
+            InfoEvent("ResourceAllocator.CreateResource",
                        ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
                 << "Resource allocation could not be created from memory pool.";
         }

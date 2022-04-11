@@ -48,6 +48,17 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
+    bool IsMultiPlanarFormat(DXGI_FORMAT format) {
+        switch (format) {
+            case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+            case DXGI_FORMAT_D24_UNORM_S8_UINT:
+            case DXGI_FORMAT_NV12:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     uint64_t GetTileCount(const D3D12_RESOURCE_DESC& resourceDescriptor,
                           const D3D12_TILE_SHAPE& tileShape) {
         return (RoundUp(resourceDescriptor.Width, tileShape.WidthInTexels) /
@@ -396,6 +407,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& resourceDescriptor) {
+        // Per MSFT, no hardware supports multiplanar depth or video.
+        if (IsMultiPlanarFormat(resourceDescriptor.Format)) {
+            return false;
+        }
+
         // Small alignment is only possible if the resource, of size equal to the larger alignment
         // (ex. 64KB), can be divided into small "tiles", a number equal to or greater than the size
         // equal to the smaller alignment (ex. 4KB).
