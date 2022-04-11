@@ -144,6 +144,8 @@ source_set("gpgmm_sources") {
     "Debug.h",
     "Defaults.h",
     "Error.h",
+    "FileEventTrace.cpp",
+    "FileEventTrace.h",
     "GPUInfo.h",
     "IndexedMemoryPool.cpp",
     "IndexedMemoryPool.h",

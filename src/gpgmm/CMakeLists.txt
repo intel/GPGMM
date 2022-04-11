@@ -27,6 +27,8 @@ target_sources(gpgmm PRIVATE
     "Debug.h"
     "Defaults.h"
     "Error.h"
+    "FileEventTrace.cpp"
+    "FileEventTrace.h"
     "AllocatorNode.cpp"
     "AllocatorNode.h"
     "IndexedMemoryPool.cpp"

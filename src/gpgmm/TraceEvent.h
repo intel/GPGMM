@@ -19,10 +19,8 @@
 #include "gpgmm/common/Utils.h"
 
 #include <memory>
-#include <mutex>
 #include <string>
 #include <thread>
-#include <vector>
 
 // Trace Event Format
 // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit?pli=1
@@ -194,34 +192,6 @@ namespace gpgmm {
             args.AddItem(arg1Name, arg1Value);
             AddTraceEvent(phase, category, name, id, tid, flags, args);
         }
-    };
-
-    class FileEventTrace {
-      public:
-        explicit FileEventTrace(const std::string& traceFile,
-                                bool skipDurationEvents,
-                                bool skipObjectEvents,
-                                bool skipInstantEvents);
-        ~FileEventTrace();
-
-        void EnqueueTraceEvent(char phase,
-                               TraceEventCategory category,
-                               const char* name,
-                               uint64_t id,
-                               uint32_t tid,
-                               uint32_t flags,
-                               const JSONDict& args);
-        void FlushQueuedEventsToDisk();
-
-      private:
-        std::vector<TraceEvent> mQueue;
-        std::string mTraceFile;
-        std::unique_ptr<PlatformTime> mPlatformTime;
-        std::mutex mMutex;
-
-        bool mSkipDurationEvents = false;
-        bool mSkipObjectEvents = false;
-        bool mSkipInstantEvents = false;
     };
 
 }  // namespace gpgmm
