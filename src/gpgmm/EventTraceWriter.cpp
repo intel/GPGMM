@@ -26,16 +26,17 @@
 
 namespace gpgmm {
 
-    EventTraceWriter::EventTraceWriter(const std::string& traceFile,
-                                       bool skipDurationEvents,
-                                       bool skipObjectEvents,
-                                       bool skipInstantEvents)
-        : mTraceFile(traceFile),
-          mPlatformTime(CreatePlatformTime()),
-          mSkipDurationEvents(skipDurationEvents),
-          mSkipObjectEvents(skipObjectEvents),
-          mSkipInstantEvents(skipInstantEvents) {
-        ASSERT(!mTraceFile.empty());
+    EventTraceWriter::EventTraceWriter() : mPlatformTime(CreatePlatformTime()) {
+    }
+
+    void EventTraceWriter::SetConfiguration(const std::string& traceFile,
+                                            bool skipDurationEvents,
+                                            bool skipObjectEvents,
+                                            bool skipInstantEvents) {
+        mTraceFile = traceFile;
+        mSkipDurationEvents = skipDurationEvents;
+        mSkipObjectEvents = skipObjectEvents;
+        mSkipInstantEvents = skipInstantEvents;
     }
 
     EventTraceWriter::~EventTraceWriter() {
@@ -48,11 +49,10 @@ namespace gpgmm {
                                              uint64_t id,
                                              uint32_t flags,
                                              const JSONDict& args) {
-        std::unique_lock<std::mutex> lock(mMutex);
         const double timestampInSeconds = mPlatformTime->GetRelativeTime();
         const uint32_t threadID = std::stoi(ToString(std::this_thread::get_id()));
         if (timestampInSeconds != 0) {
-            mQueue.push_back(
+            GetOrCreateBufferFromTLS()->push_back(
                 {phase, category, name, id, threadID, timestampInSeconds, flags, args});
         }
     }
@@ -61,7 +61,8 @@ namespace gpgmm {
         std::unique_lock<std::mutex> lock(mMutex);
 
         JSONArray traceEvents;
-        for (const TraceEvent& traceEvent : mQueue) {
+        std::vector<TraceEvent> mergedBuffer = MergeAndClearBuffers();
+        for (const TraceEvent& traceEvent : mergedBuffer) {
             if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||
                                         traceEvent.mPhase == TRACE_EVENT_PHASE_END)) {
                 continue;
@@ -143,6 +144,11 @@ namespace gpgmm {
             traceEvents.AddItem(eventData);
         }
 
+        // Flush was already called and flushing again would overwrite using an empty trace file.
+        if (mergedBuffer.size() == 0) {
+            return;
+        }
+
         JSONDict traceData;
         traceData.AddItem("traceEvents", traceEvents);
 
@@ -151,7 +157,29 @@ namespace gpgmm {
         outFile << traceData.ToString();
         outFile.flush();
         outFile.close();
-        mQueue.clear();
+    }
+
+    std::vector<TraceEvent>* EventTraceWriter::GetOrCreateBufferFromTLS() {
+        thread_local std::vector<TraceEvent>* pBufferInTLS = nullptr;
+        if (pBufferInTLS == nullptr) {
+            auto buffer = std::make_unique<std::vector<TraceEvent>>();
+            pBufferInTLS = buffer.get();
+
+            std::lock_guard<std::mutex> mutex(mMutex);
+            mBufferPerThread[std::this_thread::get_id()] = std::move(buffer);
+        }
+        ASSERT(pBufferInTLS != nullptr);
+        return pBufferInTLS;
+    }
+
+    std::vector<TraceEvent> EventTraceWriter::MergeAndClearBuffers() const {
+        std::vector<TraceEvent> mergedBuffer;
+        for (auto& bufferOfThread : mBufferPerThread) {
+            mergedBuffer.insert(mergedBuffer.end(), bufferOfThread.second->begin(),
+                                bufferOfThread.second->end());
+            bufferOfThread.second->clear();
+        }
+        return mergedBuffer;
     }
 
 }  // namespace gpgmm

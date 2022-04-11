@@ -27,23 +27,22 @@ namespace gpgmm {
                            bool skipObjectEvents,
                            bool skipInstantEvents) {
         if (gEventTrace == nullptr) {
-            gEventTrace = std::make_unique<EventTraceWriter>(traceFile, skipDurationEvents,
-                                                             skipObjectEvents, skipInstantEvents);
-
-            InitializeThreadName("GPGMM_MainThread");
+            gEventTrace = std::make_unique<EventTraceWriter>();
         }
+
+        InitializeThreadName("GPGMM_MainThread");
+
+#if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
+        gEventTrace->FlushQueuedEventsToDisk();
+#endif
+        gEventTrace->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
+                                      skipInstantEvents);
     }
 
     void InitializeThreadName(const char* name) {
         JSONDict args;
         args.AddItem("name", name);
         TRACE_EVENT_METADATA("thread_name", args);
-    }
-
-    void ShutdownEventTrace() {
-#if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
-        gEventTrace = nullptr;
-#endif
     }
 
     bool IsEventTraceEnabled() {

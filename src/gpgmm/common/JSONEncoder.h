@@ -27,6 +27,7 @@ namespace gpgmm {
         JSONDict();
         JSONDict(const std::string& name, const JSONDict& object);
         JSONDict(const JSONDict& other);
+        JSONDict& operator=(const JSONDict& other);
 
         std::string ToString() const;
         bool IsEmpty() const;

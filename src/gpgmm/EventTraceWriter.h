@@ -19,6 +19,7 @@
 
 #include <mutex>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace gpgmm {
@@ -27,10 +28,13 @@ namespace gpgmm {
 
     class EventTraceWriter {
       public:
-        explicit EventTraceWriter(const std::string& traceFile,
-                                  bool skipDurationEvents,
-                                  bool skipObjectEvents,
-                                  bool skipInstantEvents);
+        EventTraceWriter();
+
+        void SetConfiguration(const std::string& traceFile,
+                              bool skipDurationEvents,
+                              bool skipObjectEvents,
+                              bool skipInstantEvents);
+
         ~EventTraceWriter();
 
         void EnqueueTraceEvent(char phase,
@@ -42,10 +46,15 @@ namespace gpgmm {
         void FlushQueuedEventsToDisk();
 
       private:
-        std::vector<TraceEvent> mQueue;
+        std::vector<TraceEvent>* GetOrCreateBufferFromTLS();
+        std::vector<TraceEvent> MergeAndClearBuffers() const;
+
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
-        std::mutex mMutex;
+        mutable std::mutex mMutex;
+
+        std::unordered_map<std::thread::id, std::unique_ptr<std::vector<TraceEvent>>>
+            mBufferPerThread;
 
         bool mSkipDurationEvents = false;
         bool mSkipObjectEvents = false;
