@@ -28,7 +28,7 @@ namespace gpgmm {
                            bool skipInstantEvents) {
         if (gEventTrace == nullptr) {
             gEventTrace = std::make_unique<EventTraceWriter>(traceFile, skipDurationEvents,
-                                                           skipObjectEvents, skipInstantEvents);
+                                                             skipObjectEvents, skipInstantEvents);
 
             InitializeThreadName("GPGMM_MainThread");
         }
@@ -72,11 +72,10 @@ namespace gpgmm {
                                     TraceEventCategory category,
                                     const char* name,
                                     uint64_t id,
-                                    uint32_t tid,
                                     uint32_t flags,
                                     const JSONDict& args) {
         if (gEventTrace != nullptr) {
-            gEventTrace->EnqueueTraceEvent(phase, category, name, id, tid, flags, args);
+            gEventTrace->EnqueueTraceEvent(phase, category, name, id, flags, args);
         }
     }
 }  // namespace gpgmm

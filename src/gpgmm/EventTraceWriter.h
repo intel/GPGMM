@@ -37,7 +37,6 @@ namespace gpgmm {
                                TraceEventCategory category,
                                const char* name,
                                uint64_t id,
-                               uint32_t tid,
                                uint32_t flags,
                                const JSONDict& args);
         void FlushQueuedEventsToDisk();

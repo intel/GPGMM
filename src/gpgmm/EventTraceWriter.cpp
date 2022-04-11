@@ -17,6 +17,7 @@
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/PlatformTime.h"
 #include "gpgmm/common/PlatformUtils.h"
+#include "gpgmm/common/Utils.h"
 
 #include <fstream>
 #include <sstream>
@@ -45,13 +46,14 @@ namespace gpgmm {
                                              TraceEventCategory category,
                                              const char* name,
                                              uint64_t id,
-                                             uint32_t tid,
                                              uint32_t flags,
                                              const JSONDict& args) {
         std::unique_lock<std::mutex> lock(mMutex);
         const double timestampInSeconds = mPlatformTime->GetRelativeTime();
+        const uint32_t threadID = std::stoi(ToString(std::this_thread::get_id()));
         if (timestampInSeconds != 0) {
-            mQueue.push_back({phase, category, name, id, tid, timestampInSeconds, flags, args});
+            mQueue.push_back(
+                {phase, category, name, id, threadID, timestampInSeconds, flags, args});
         }
     }
 
