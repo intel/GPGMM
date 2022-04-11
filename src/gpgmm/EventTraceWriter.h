@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_FILEEVENTTRACE_H_
-#define GPGMM_FILEEVENTTRACE_H_
+#ifndef GPGMM_EVENTTRACEWRITER_H_
+#define GPGMM_EVENTTRACEWRITER_H_
 
 #include "gpgmm/TraceEvent.h"
 
@@ -25,13 +25,13 @@ namespace gpgmm {
 
     class PlatformTime;
 
-    class FileEventTrace {
+    class EventTraceWriter {
       public:
-        explicit FileEventTrace(const std::string& traceFile,
-                                bool skipDurationEvents,
-                                bool skipObjectEvents,
-                                bool skipInstantEvents);
-        ~FileEventTrace();
+        explicit EventTraceWriter(const std::string& traceFile,
+                                  bool skipDurationEvents,
+                                  bool skipObjectEvents,
+                                  bool skipInstantEvents);
+        ~EventTraceWriter();
 
         void EnqueueTraceEvent(char phase,
                                TraceEventCategory category,

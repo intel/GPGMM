@@ -14,20 +14,20 @@
 
 #include "gpgmm/TraceEvent.h"
 
-#include "gpgmm/FileEventTrace.h"
+#include "gpgmm/EventTraceWriter.h"
 
 #include <string>
 
 namespace gpgmm {
 
-    static std::unique_ptr<FileEventTrace> gEventTrace;
+    static std::unique_ptr<EventTraceWriter> gEventTrace;
 
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
                            bool skipObjectEvents,
                            bool skipInstantEvents) {
         if (gEventTrace == nullptr) {
-            gEventTrace = std::make_unique<FileEventTrace>(traceFile, skipDurationEvents,
+            gEventTrace = std::make_unique<EventTraceWriter>(traceFile, skipDurationEvents,
                                                            skipObjectEvents, skipInstantEvents);
 
             InitializeThreadName("GPGMM_MainThread");
@@ -68,13 +68,13 @@ namespace gpgmm {
           mArgs(args) {
     }
 
-    void EventTrace::AddTraceEvent(char phase,
-                                   TraceEventCategory category,
-                                   const char* name,
-                                   uint64_t id,
-                                   uint32_t tid,
-                                   uint32_t flags,
-                                   const JSONDict& args) {
+    void TraceBuffer::AddTraceEvent(char phase,
+                                    TraceEventCategory category,
+                                    const char* name,
+                                    uint64_t id,
+                                    uint32_t tid,
+                                    uint32_t flags,
+                                    const JSONDict& args) {
         if (gEventTrace != nullptr) {
             gEventTrace->EnqueueTraceEvent(phase, category, name, id, tid, flags, args);
         }

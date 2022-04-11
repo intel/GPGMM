@@ -93,14 +93,14 @@ const uint64_t kNoId = 0;
 
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)        \
     do {                                                                              \
-        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name,                 \
+        gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name,                 \
                                          gpgmm::TraceEventID(id).GetID(),             \
                                          TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
     } while (false)
 
 #define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)                             \
     do {                                                                                       \
-        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name, kNoId,                   \
+        gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,                   \
                                          TRACE_EVENT_CURRENT_THREAD_ID, TRACE_EVENT_FLAG_NONE, \
                                          __VA_ARGS__);                                         \
     } while (false)
@@ -112,7 +112,7 @@ namespace gpgmm {
         Metadata = 1,
     };
 
-    class FileEventTrace;
+    class EventTraceWriter;
     class PlatformTime;
 
     void StartupEventTrace(const std::string& traceFile,
@@ -157,7 +157,7 @@ namespace gpgmm {
                    const JSONDict& args);
 
       private:
-        friend FileEventTrace;
+        friend EventTraceWriter;
 
         char mPhase = 0;
         TraceEventCategory mCategory;
@@ -169,7 +169,7 @@ namespace gpgmm {
         JSONDict mArgs;
     };
 
-    class EventTrace {
+    class TraceBuffer {
       public:
         static void AddTraceEvent(char phase,
                                   TraceEventCategory category,

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/FileEventTrace.h"
+#include "gpgmm/EventTraceWriter.h"
 
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/PlatformTime.h"
@@ -25,10 +25,10 @@
 
 namespace gpgmm {
 
-    FileEventTrace::FileEventTrace(const std::string& traceFile,
-                                   bool skipDurationEvents,
-                                   bool skipObjectEvents,
-                                   bool skipInstantEvents)
+    EventTraceWriter::EventTraceWriter(const std::string& traceFile,
+                                       bool skipDurationEvents,
+                                       bool skipObjectEvents,
+                                       bool skipInstantEvents)
         : mTraceFile(traceFile),
           mPlatformTime(CreatePlatformTime()),
           mSkipDurationEvents(skipDurationEvents),
@@ -37,25 +37,25 @@ namespace gpgmm {
         ASSERT(!mTraceFile.empty());
     }
 
-    FileEventTrace::~FileEventTrace() {
+    EventTraceWriter::~EventTraceWriter() {
         FlushQueuedEventsToDisk();
     }
 
-    void FileEventTrace::EnqueueTraceEvent(char phase,
-                                           TraceEventCategory category,
-                                           const char* name,
-                                           uint64_t id,
-                                           uint32_t tid,
-                                           uint32_t flags,
-                                           const JSONDict& args) {
+    void EventTraceWriter::EnqueueTraceEvent(char phase,
+                                             TraceEventCategory category,
+                                             const char* name,
+                                             uint64_t id,
+                                             uint32_t tid,
+                                             uint32_t flags,
+                                             const JSONDict& args) {
         std::unique_lock<std::mutex> lock(mMutex);
-        const double timestamp = mPlatformTime->GetRelativeTime();
-        if (timestamp != 0) {
-            mQueue.push_back({phase, category, name, id, tid, timestamp, flags, args});
+        const double timestampInSeconds = mPlatformTime->GetRelativeTime();
+        if (timestampInSeconds != 0) {
+            mQueue.push_back({phase, category, name, id, tid, timestampInSeconds, flags, args});
         }
     }
 
-    void FileEventTrace::FlushQueuedEventsToDisk() {
+    void EventTraceWriter::FlushQueuedEventsToDisk() {
         std::unique_lock<std::mutex> lock(mMutex);
 
         JSONArray traceEvents;
@@ -100,7 +100,7 @@ namespace gpgmm {
 
             if (idFlags) {
                 std::stringstream traceEventID;
-                traceEventID << std::hex << static_cast<uint64_t>(traceEvent.mID);
+                traceEventID << std::hex << traceEvent.mID;
 
                 switch (idFlags) {
                     case TRACE_EVENT_FLAG_HAS_ID:
