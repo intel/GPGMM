@@ -250,17 +250,15 @@ namespace gpgmm { namespace d3d12 {
         // Allocator failed to allocate memory for the resource.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED,
 
-        // D3D12 heap was created with a size that is not a multiple of the alignment, which wastes
-        // memory unknowingly. D3D12 only supports misaligned heap sizes for convenience.
+        // GPGMM created a D3D12 heap using a size that was not a multiple of the alignment.
         ALLOCATOR_MESSAGE_ID_RESOURCE_HEAP_MISALIGNMENT,
 
-        // D3D12 resource was created with a size using a multiple of much larger alignment than
-        // requested.
+        // GPGMM requested to create a D3D12 resource using a smaller alignment then what D3D12
+        // allows.
         ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT,
 
-        // Allocation size exceeds the D3D12 resource size, which wastes memory
-        // unknowingly. The allocator did not support allocation of a block equal to the resource
-        // size.
+        // GPGMM allocated size exceeded the D3D12 resource size, due to alignment required by the
+        // allocator.
         ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT,
 
         // D3D12 resource was unable to be pool-allocated. This introduces OS VidMM overhead
