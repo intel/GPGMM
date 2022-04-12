@@ -589,8 +589,6 @@ namespace gpgmm { namespace d3d12 {
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* clearValue,
                                               ResourceAllocation** resourceAllocationOut) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
@@ -601,6 +599,8 @@ namespace gpgmm { namespace d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResourceAllocator.CreateResource", args);
 
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         std::unique_ptr<gpgmm::PlatformTime> timer(CreatePlatformTime());
         timer->StartElapsedTime();
@@ -857,8 +857,6 @@ namespace gpgmm { namespace d3d12 {
                                                     const D3D12_CLEAR_VALUE* clearValue,
                                                     D3D12_RESOURCE_STATES initialResourceState,
                                                     ID3D12Resource** placedResourceOut) {
-        ASSERT(resourceHeap != nullptr);
-
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreatePlacedResource");
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident or
@@ -1008,9 +1006,9 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.DeallocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         mInfo.UsedMemoryUsage -= allocation->GetSize();
         mInfo.UsedMemoryCount--;

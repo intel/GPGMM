@@ -132,9 +132,10 @@ namespace gpgmm {
         bool neverAllocate,
         bool cacheSize,
         bool prefetchMemory) {
+        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
+
         std::lock_guard<std::mutex> lock(mMutex);
 
-        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
         GPGMM_CHECK_NONZERO(size);
 
         if (alignment != mMemoryAlignment) {
@@ -168,9 +169,9 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.DeallocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         ASSERT(allocation != nullptr);
 

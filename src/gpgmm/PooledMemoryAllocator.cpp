@@ -32,9 +32,9 @@ namespace gpgmm {
         bool neverAllocate,
         bool cacheSize,
         bool prefetchMemory) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
@@ -55,9 +55,9 @@ namespace gpgmm {
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.DeallocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         const uint64_t& allocationSize = allocation->GetSize();
         mInfo.FreeMemoryUsage += allocationSize;

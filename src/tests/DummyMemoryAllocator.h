@@ -28,9 +28,9 @@ namespace gpgmm {
                                                             bool neverAllocate,
                                                             bool cacheSize,
                                                             bool prefetchMemory) override {
-            std::lock_guard<std::mutex> lock(mMutex);
-
             TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.TryAllocateMemory");
+
+            std::lock_guard<std::mutex> lock(mMutex);
 
             if (neverAllocate) {
                 return {};
@@ -42,9 +42,9 @@ namespace gpgmm {
         }
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
-            std::lock_guard<std::mutex> lock(mMutex);
-
             TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.DeallocateMemory");
+
+            std::lock_guard<std::mutex> lock(mMutex);
 
             mInfo.UsedMemoryCount--;
             mInfo.UsedMemoryUsage -= allocation->GetSize();

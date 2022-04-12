@@ -45,9 +45,9 @@ namespace gpgmm { namespace d3d12 {
         bool neverAllocate,
         bool cacheSize,
         bool prefetchMemory) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.TryAllocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         if (neverAllocate) {
             return {};

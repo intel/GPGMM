@@ -229,9 +229,9 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         uint64_t reservation,
         uint64_t* reservationOut) {
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.SetVideoMemoryReservation");
+
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -283,9 +283,9 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
+
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -356,14 +356,14 @@ namespace gpgmm { namespace d3d12 {
                                                   ID3D12CommandList* const* commandLists,
                                                   ResidencySet* const* residencySets,
                                                   uint32_t count) {
+        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
+
         std::lock_guard<std::recursive_mutex> lock(mMutex);
 
         // TODO: support multiple command lists.
         if (count > 1) {
             return E_NOTIMPL;
         }
-
-        TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
 
         ID3D12CommandList* commandList = commandLists[0];
         ResidencySet* residencySet = residencySets[0];
