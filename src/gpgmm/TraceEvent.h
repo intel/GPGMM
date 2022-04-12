@@ -16,7 +16,6 @@
 #define GPGMM_TRACEEVENT_H_
 
 #include "gpgmm/common/JSONEncoder.h"
-#include "gpgmm/common/Utils.h"
 
 #include <memory>
 #include <string>
@@ -41,8 +40,6 @@
 #define TRACE_EVENT_FLAG_HAS_ID (static_cast<unsigned int>(1 << 1))
 #define TRACE_EVENT_FLAG_HAS_LOCAL_ID (static_cast<unsigned int>(1 << 11))
 #define TRACE_EVENT_FLAG_HAS_GLOBAL_ID (static_cast<unsigned int>(1 << 12))
-
-#define TRACE_EVENT_CURRENT_THREAD_ID std::stoi(ToString(std::this_thread::get_id()))
 
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
@@ -91,18 +88,16 @@ const uint64_t kNoId = 0;
     } scopedTraceEvent {                                      \
     }
 
-#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)        \
-    do {                                                                              \
-        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name,                 \
-                                         gpgmm::TraceEventID(id).GetID(),             \
-                                         TRACE_EVENT_CURRENT_THREAD_ID, __VA_ARGS__); \
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, ...)           \
+    do {                                                                                 \
+        gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name,                   \
+                                          gpgmm::TraceEventID(id).GetID(), __VA_ARGS__); \
     } while (false)
 
-#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)                             \
-    do {                                                                                       \
-        gpgmm::EventTrace::AddTraceEvent(phase, category_group, name, kNoId,                   \
-                                         TRACE_EVENT_CURRENT_THREAD_ID, TRACE_EVENT_FLAG_NONE, \
-                                         __VA_ARGS__);                                         \
+#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)             \
+    do {                                                                       \
+        gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,  \
+                                          TRACE_EVENT_FLAG_NONE, __VA_ARGS__); \
     } while (false)
 
 namespace gpgmm {
@@ -112,14 +107,13 @@ namespace gpgmm {
         Metadata = 1,
     };
 
-    class FileEventTrace;
+    class EventTraceWriter;
     class PlatformTime;
 
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
                            bool skipObjectEvents,
                            bool skipInstantEvents);
-    void ShutdownEventTrace();
 
     bool IsEventTraceEnabled();
 
@@ -157,7 +151,7 @@ namespace gpgmm {
                    const JSONDict& args);
 
       private:
-        friend FileEventTrace;
+        friend EventTraceWriter;
 
         char mPhase = 0;
         TraceEventCategory mCategory;
@@ -169,13 +163,12 @@ namespace gpgmm {
         JSONDict mArgs;
     };
 
-    class EventTrace {
+    class TraceBuffer {
       public:
         static void AddTraceEvent(char phase,
                                   TraceEventCategory category,
                                   const char* name,
                                   uint64_t id,
-                                  uint32_t tid,
                                   uint32_t flags,
                                   const JSONDict& args = {});
 
@@ -184,13 +177,12 @@ namespace gpgmm {
                                   TraceEventCategory category,
                                   const char* name,
                                   uint64_t id,
-                                  uint32_t tid,
                                   uint32_t flags,
                                   const char* arg1Name,
                                   const Arg1T& arg1Value) {
             JSONDict args = {};
             args.AddItem(arg1Name, arg1Value);
-            AddTraceEvent(phase, category, name, id, tid, flags, args);
+            AddTraceEvent(phase, category, name, id, flags, args);
         }
     };
 

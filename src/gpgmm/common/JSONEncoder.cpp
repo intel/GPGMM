@@ -32,6 +32,12 @@ namespace gpgmm {
         mHasItem = other.mHasItem;
     }
 
+    JSONDict& JSONDict::operator=(const JSONDict& other) {
+        mSS = std::stringstream(other.mSS.str());
+        mHasItem = other.mHasItem;
+        return *this;
+    }
+
     std::string JSONDict::ToString() const {
         return mSS.str() + " }";
     }

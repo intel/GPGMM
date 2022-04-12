@@ -562,8 +562,6 @@ namespace gpgmm { namespace d3d12 {
         mResourceAllocatorOfType = {};
         mResourceHeapAllocatorOfType = {};
 
-        ShutdownEventTrace();
-
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
         mDebugAllocator->ReportLiveAllocations();
 #endif

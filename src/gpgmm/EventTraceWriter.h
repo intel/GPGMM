@@ -12,41 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_FILEEVENTTRACE_H_
-#define GPGMM_FILEEVENTTRACE_H_
+#ifndef GPGMM_EVENTTRACEWRITER_H_
+#define GPGMM_EVENTTRACEWRITER_H_
 
 #include "gpgmm/TraceEvent.h"
 
 #include <mutex>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace gpgmm {
 
     class PlatformTime;
 
-    class FileEventTrace {
+    class EventTraceWriter {
       public:
-        explicit FileEventTrace(const std::string& traceFile,
-                                bool skipDurationEvents,
-                                bool skipObjectEvents,
-                                bool skipInstantEvents);
-        ~FileEventTrace();
+        EventTraceWriter();
+
+        void SetConfiguration(const std::string& traceFile,
+                              bool skipDurationEvents,
+                              bool skipObjectEvents,
+                              bool skipInstantEvents);
+
+        ~EventTraceWriter();
 
         void EnqueueTraceEvent(char phase,
                                TraceEventCategory category,
                                const char* name,
                                uint64_t id,
-                               uint32_t tid,
                                uint32_t flags,
                                const JSONDict& args);
         void FlushQueuedEventsToDisk();
 
       private:
-        std::vector<TraceEvent> mQueue;
+        std::vector<TraceEvent>* GetOrCreateBufferFromTLS();
+        std::vector<TraceEvent> MergeAndClearBuffers() const;
+
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
-        std::mutex mMutex;
+        mutable std::mutex mMutex;
+
+        std::unordered_map<std::thread::id, std::unique_ptr<std::vector<TraceEvent>>>
+            mBufferPerThread;
 
         bool mSkipDurationEvents = false;
         bool mSkipObjectEvents = false;
