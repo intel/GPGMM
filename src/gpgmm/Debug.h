@@ -22,12 +22,15 @@
 #include <sstream>
 #include <string>
 
-namespace gpgmm {
 
-    struct LOG_MESSAGE {
-        std::string Description;
-        int ID;
-    };
+#ifdef GPGMM_DISABLE_TRACING
+
+#define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc) TRACE_EMPTY
+
+#else // !GPGMM_DISABLE_TRACING
 
 #define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr)                                                     \
     do {                                                                                         \
@@ -50,9 +53,22 @@ namespace gpgmm {
 
 #define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc)                               \
     do {                                                                        \
-        TRACE_EVENT_INSTANT(TraceEventCategory::Default, name,                  \
+        TRACE_EVENT_INSTANT1(TraceEventCategory::Default, name,                  \
                             GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled())); \
     } while (false)
+
+// Helper macro to avoid evaluating the arguments when the condition doesn't hold.
+#define GPGMM_LAZY_SERIALIZE(object, condition) \
+    !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
+
+#endif // GPGMM_DISABLE_TRACING
+
+namespace gpgmm {
+
+    struct LOG_MESSAGE {
+        std::string Description;
+        int ID;
+    };
 
     class EventMessage : public LogMessage {
       public:
@@ -83,10 +99,6 @@ namespace gpgmm {
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);
-
-// Helper macro to avoid evaluating the arguments when the condition doesn't hold.
-#define GPGMM_LAZY_SERIALIZE(object, condition) \
-    !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
 
 }  // namespace gpgmm
 

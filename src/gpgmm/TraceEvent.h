@@ -41,6 +41,17 @@
 #define TRACE_EVENT_FLAG_HAS_LOCAL_ID (static_cast<unsigned int>(1 << 11))
 #define TRACE_EVENT_FLAG_HAS_GLOBAL_ID (static_cast<unsigned int>(1 << 12))
 
+#define TRACE_EMPTY do {} while (0)
+
+#ifdef GPGMM_DISABLE_TRACING
+
+#define TRACE_EVENT0(category_group, name) TRACE_EMPTY
+#define TRACE_EVENT_INSTANT0(category_group, name, scope, args) TRACE_EMPTY
+#define TRACE_COUNTER1(category_group, name, value) TRACE_EMPTY
+#define TRACE_EVENT_METADATA1(name, args) TRACE_EMPTY
+
+#else // !GPGMM_DISABLE_TRACING
+
 // Specify these values when the corresponding argument of AddTraceEvent
 // is not used.
 const uint64_t kNoId = 0;
@@ -49,14 +60,14 @@ const uint64_t kNoId = 0;
 // Name parameter must have program lifetime (statics or literals).
 #define TRACE_EVENT0(category_group, name) INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 
-#define TRACE_EVENT_METADATA(name, args) \
+#define TRACE_EVENT_METADATA1(name, args) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, name, args)
 
 #define TRACE_COUNTER1(category_group, name, value)                                    \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, "value", \
                              static_cast<int>(value))
 
-#define TRACE_EVENT_INSTANT(category_group, name, args) \
+#define TRACE_EVENT_INSTANT1(category_group, name, args) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, args)
 
 #define TRACE_EVENT_BEGIN(category_group, name) \
@@ -99,6 +110,8 @@ const uint64_t kNoId = 0;
         gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,  \
                                           TRACE_EVENT_FLAG_NONE, __VA_ARGS__); \
     } while (false)
+
+#endif
 
 namespace gpgmm {
 
@@ -159,7 +172,7 @@ namespace gpgmm {
         uint64_t mID = 0;
         uint32_t mTID = 0;
         double mTimestamp = 0;
-        uint32_t mFlags = TRACE_EVENT_FLAG_NONE;
+        uint32_t mFlags = 0;
         JSONDict mArgs;
     };
 

@@ -33,11 +33,11 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_ASSERTS
   gpgmm_always_assert = false
 
-  # Enables GPGMM's memory tracing even if disabled by recording flags.
-  # Sets -dGPGMM_ALWAYS_RECORD
-  gpgmm_always_record = false
+  # Enables event tracing even in release builds.
+  # Sets -dGPGMM_FORCE_TRACING
+  gpgmm_force_tracing = false
 
-  # Enables the compilation of the D3D12 backend
+  # Enables the compilation of the D3D12 backend.
   gpgmm_enable_d3d12 = is_win
 
   # Enables compilation of Dawn's end2end tests.

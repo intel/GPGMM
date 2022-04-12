@@ -335,10 +335,6 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-#ifdef GPGMM_ALWAYS_RECORD
-        newDescriptor.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
-#endif
-
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
             const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
                                                ? std::string(kDefaultTraceFile)
@@ -399,7 +395,8 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
-          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling) {
+          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling),
+          mAllocationTimer(gpgmm::CreatePlatformTime()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG)
@@ -591,25 +588,28 @@ namespace gpgmm { namespace d3d12 {
             return E_POINTER;
         }
 
-        CREATE_RESOURCE_DESC args{allocationDescriptor, resourceDescriptor, initialResourceState,
-                                  clearValue};
-
-        GPGMM_TRACE_EVENT_OBJECT_CALL("ResourceAllocator.CreateResource", args);
+        GPGMM_TRACE_EVENT_OBJECT_CALL(
+            "ResourceAllocator.CreateResource",
+            (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
+                                  clearValue}));
 
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        std::unique_ptr<gpgmm::PlatformTime> timer(CreatePlatformTime());
-        timer->StartElapsedTime();
+        mAllocationTimer->StartElapsedTime();
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
-        const double allocationLatency = timer->EndElapsedTime() * 1e6;
+        const double allocationLatency = mAllocationTimer->EndElapsedTime() * 1e6;
+        GPGMM_UNUSED(allocationLatency);
+
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
                        allocationLatency);
 
         const QUERY_RESOURCE_ALLOCATOR_INFO& info = QueryInfo();
+        GPGMM_UNUSED(info);
+
         TRACE_COUNTER1(
             TraceEventCategory::Default, "GPU memory unused (%)",
             (1.0 - (info.UsedBlockUsage / static_cast<double>(info.UsedMemoryUsage))) * 100);

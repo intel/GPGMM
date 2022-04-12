@@ -27,6 +27,7 @@
 
 namespace gpgmm {
     class MemoryAllocator;
+    class PlatformTime;
 }  // namespace gpgmm
 
 namespace gpgmm { namespace d3d12 {
@@ -372,6 +373,7 @@ namespace gpgmm { namespace d3d12 {
             mBufferAllocatorOfType;
 
         std::unique_ptr<DebugResourceAllocator> mDebugAllocator;
+        std::unique_ptr<PlatformTime> mAllocationTimer;
     };
 
 }}  // namespace gpgmm::d3d12
