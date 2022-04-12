@@ -418,10 +418,8 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_TILE_SHAPE& tile =
             GetSmallTextureTile(resourceDescriptor.Format, resourceDescriptor.Dimension,
                                 resourceDescriptor.SampleDesc.Count);
-        // Assume it can use small alignment since the caller is responsible to get the correct
-        // (or larger) alignment anyway if cannot be granted by GetResourceAllocationInfo().
         if (IsTileZeroSized(tile)) {
-            return true;
+            return false;
         }
 
         return GetTileCount(resourceDescriptor, tile) <= 16;
