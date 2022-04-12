@@ -93,9 +93,9 @@ namespace gpgmm {
                                                                              bool neverAllocate,
                                                                              bool cacheSize,
                                                                              bool prefetchMemory) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.TryAllocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         if (size > mBlockSize) {
             DebugEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
@@ -203,9 +203,9 @@ namespace gpgmm {
     }
 
     void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.DeallocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(subAllocation->GetBlock());
         ASSERT(blockInSlab != nullptr);
@@ -299,9 +299,10 @@ namespace gpgmm {
                                                                             bool neverAllocate,
                                                                             bool cacheSize,
                                                                             bool prefetchMemory) {
+        TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.TryAllocateMemory");
+
         std::lock_guard<std::mutex> lock(mMutex);
 
-        TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.TryAllocateMemory");
         GPGMM_CHECK_NONZERO(size);
 
         const uint64_t blockSize = AlignTo(size, mMinBlockSize);
@@ -335,9 +336,9 @@ namespace gpgmm {
     }
 
     void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        std::lock_guard<std::mutex> lock(mMutex);
-
         TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.DeallocateMemory");
+
+        std::lock_guard<std::mutex> lock(mMutex);
 
         auto entry =
             mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(subAllocation->GetSize()), false);
