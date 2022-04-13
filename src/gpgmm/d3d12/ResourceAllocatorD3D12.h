@@ -44,8 +44,7 @@ namespace gpgmm { namespace d3d12 {
         // Disables all allocator flags. Enabled by default.
         ALLOCATOR_FLAG_NONE = 0x0,
 
-        // Forces standalone committed resource creation. Useful to debug problems with
-        // suballocation or needing to create very big resources.
+        // Disable reuse of resource memory for debugging and testing purposes.
         ALLOCATOR_FLAG_ALWAYS_COMMITED = 0x1,
 
         // Ensures resources are always within the resource budget at creation time. Mostly used
