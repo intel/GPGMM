@@ -912,35 +912,20 @@ namespace gpgmm { namespace d3d12 {
     }
 
     QUERY_RESOURCE_ALLOCATOR_INFO ResourceAllocator::QueryInfo() const {
-        QUERY_RESOURCE_ALLOCATOR_INFO result = {};
+        // ResourceAllocator itself could call CreateCommittedResource directly.
+        QUERY_RESOURCE_ALLOCATOR_INFO result = mInfo;
+
         for (const auto& allocator : mResourceAllocatorOfType) {
-            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            result.UsedBlockCount += info.UsedBlockCount;
-            result.UsedBlockUsage += info.UsedBlockUsage;
-            result.FreeMemoryUsage += info.FreeMemoryUsage;
-            result.UsedMemoryUsage += info.UsedMemoryUsage;
-            result.UsedMemoryCount += info.UsedMemoryCount;
+            result += allocator->QueryInfo();
         }
 
         for (const auto& allocator : mBufferAllocatorOfType) {
-            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            result.UsedBlockCount += info.UsedBlockCount;
-            result.UsedBlockUsage += info.UsedBlockUsage;
-            result.FreeMemoryUsage += info.FreeMemoryUsage;
-            result.UsedMemoryUsage += info.UsedMemoryUsage;
-            result.UsedMemoryCount += info.UsedMemoryCount;
+            result += allocator->QueryInfo();
         }
 
         for (const auto& allocator : mResourceHeapAllocatorOfType) {
-            const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            result.FreeMemoryUsage += info.FreeMemoryUsage;
-            result.UsedMemoryUsage += info.UsedMemoryUsage;
-            result.UsedMemoryCount += info.UsedMemoryCount;
+            result += allocator->QueryInfo();
         }
-
-        // ResourceAllocator itself could call CreateCommittedResource directly.
-        result.UsedMemoryUsage += mInfo.UsedMemoryUsage;
-        result.UsedMemoryCount += mInfo.UsedMemoryCount;
 
         return result;
     }

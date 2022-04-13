@@ -45,6 +45,15 @@ namespace gpgmm {
 
         // Total size (in bytes) of free memory.
         uint64_t FreeMemoryUsage;
+
+        MEMORY_ALLOCATOR_INFO& operator+=(const MEMORY_ALLOCATOR_INFO& rhs) {
+            UsedBlockCount += rhs.UsedBlockCount;
+            UsedBlockUsage += rhs.UsedBlockUsage;
+            FreeMemoryUsage += rhs.FreeMemoryUsage;
+            UsedMemoryUsage += rhs.UsedMemoryUsage;
+            UsedMemoryCount += rhs.UsedMemoryCount;
+            return *this;
+        }
     };
 
     class AllocateMemoryTask;
