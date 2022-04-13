@@ -309,8 +309,6 @@ namespace gpgmm {
 
         // Create a slab allocator for the new entry.
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), cacheSize);
-
-        // Create a slab allocator for the new entry.
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator =
@@ -342,16 +340,14 @@ namespace gpgmm {
 
         auto entry =
             mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(subAllocation->GetSize()), false);
-
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         ASSERT(slabAllocator != nullptr);
 
         slabAllocator->DeallocateMemory(std::move(subAllocation));
 
+        // If this is the last sub-allocation, remove the cached allocator.
+        // Once |entry| goes out of scope, it will unlink itself from the cache.
         entry->Unref();
-
-        // Remove the cached allocator if this is the last sub-allocation. Once |entry| goes out of
-        // scope, it will unlink itself from the cache.
         if (entry->HasOneRef()) {
             SafeDelete(slabAllocator);
         }
