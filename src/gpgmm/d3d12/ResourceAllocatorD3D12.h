@@ -38,7 +38,6 @@ namespace gpgmm { namespace d3d12 {
     class DebugResourceAllocator;
     class ResidencyManager;
     class ResourceAllocation;
-    class ResourceHeapAllocator;
 
     enum ALLOCATOR_FLAGS {
 
@@ -322,7 +321,6 @@ namespace gpgmm { namespace d3d12 {
 
       private:
         friend BufferAllocator;
-        friend ResourceHeapAllocator;
         friend ResourceAllocation;
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
