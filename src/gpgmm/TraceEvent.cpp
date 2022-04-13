@@ -42,7 +42,7 @@ namespace gpgmm {
     void InitializeThreadName(const char* name) {
         JSONDict args;
         args.AddItem("name", name);
-        TRACE_EVENT_METADATA("thread_name", args);
+        TRACE_EVENT_METADATA1("thread_name", args);
     }
 
     bool IsEventTraceEnabled() {

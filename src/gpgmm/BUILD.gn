@@ -96,8 +96,8 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_SHARED_LIBRARY" ]
   }
 
-  if (gpgmm_always_record) {
-    defines += [ "GPGMM_ALWAYS_RECORD" ]
+  if (!is_debug && !gpgmm_force_tracing) {
+    defines += [ "GPGMM_DISABLE_TRACING" ]
   }
 
   if (gpgmm_enable_recording_until_termination) {
