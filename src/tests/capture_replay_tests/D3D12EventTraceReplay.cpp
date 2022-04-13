@@ -318,17 +318,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 snapshot["ResourceFragmentationLimit"].asDouble();
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
-                            // Pool-allocate everything. Reuse is possible by recycling heaps
-                            // and sub-allocation.
-                            allocatorDesc.MaxResourceSizeForPooling =
-                                32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-
-                            // Any amount of internal fragment is acceptable.
+                            // Any amount of (internal) fragmentation is acceptable.
                             allocatorDesc.ResourceFragmentationLimit = 1.0f;
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
-                            // Do not pool allocate. Reuse is only possible through sub-allocation.
-                            allocatorDesc.MaxResourceSizeForPooling = 0;
+                            allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
                             allocatorDesc.ResourceFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 

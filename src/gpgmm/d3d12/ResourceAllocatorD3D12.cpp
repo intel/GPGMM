@@ -330,11 +330,6 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        if (newDescriptor.MaxResourceSizeForPooling > 0 &&
-            newDescriptor.MaxResourceSizeForPooling > newDescriptor.MaxResourceHeapSize) {
-            return E_INVALIDARG;
-        }
-
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
             const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
                                                ? std::string(kDefaultTraceFile)
@@ -395,7 +390,6 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
-          mMaxResourceSizeForPooling(descriptor.MaxResourceSizeForPooling),
           mAllocationTimer(gpgmm::CreatePlatformTime()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -416,27 +410,23 @@ namespace gpgmm { namespace d3d12 {
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
             {
-                std::unique_ptr<MemoryAllocator> standaloneAllocator =
+                std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
                     std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                             heapType, heapFlags, mIsUMA,
                                                             mIsAlwaysInBudget);
 
-                std::unique_ptr<MemoryAllocator> pooledAllocator =
-                    std::make_unique<SegmentedMemoryAllocator>(
-                        std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(),
-                                                                mDevice.Get(), heapType, heapFlags,
-                                                                mIsUMA, mIsAlwaysInBudget),
-                        heapAlignment);
-
-                std::unique_ptr<MemoryAllocator> conditionalHeapAllocator =
-                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledAllocator),
-                                                                 std::move(standaloneAllocator),
-                                                                 mMaxResourceSizeForPooling);
+                std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
+                if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
+                    pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
+                        std::move(resourceHeapAllocator), heapAlignment);
+                } else {
+                    pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
+                }
 
                 std::unique_ptr<MemoryAllocator> buddyAllocator =
                     std::make_unique<BuddyMemoryAllocator>(
                         PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
-                        heapAlignment, std::move(conditionalHeapAllocator));
+                        heapAlignment, std::move(pooledOrNonPooledAllocator));
 
                 // TODO: Figure out the optimal slab size to heap ratio.
                 mResourceAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
@@ -451,22 +441,21 @@ namespace gpgmm { namespace d3d12 {
             }
 
             {
-                std::unique_ptr<MemoryAllocator> standaloneAllocator =
+                std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
                     std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                             heapType, heapFlags, mIsUMA,
                                                             mIsAlwaysInBudget);
 
-                std::unique_ptr<MemoryAllocator> pooledAllocator =
-                    std::make_unique<SegmentedMemoryAllocator>(
-                        std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(),
-                                                                mDevice.Get(), heapType, heapFlags,
-                                                                mIsUMA, mIsAlwaysInBudget),
-                        heapAlignment);
+                std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
+                if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
+                    pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
+                        std::move(resourceHeapAllocator), heapAlignment);
+                } else {
+                    pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
+                }
 
                 mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                    std::make_unique<ConditionalMemoryAllocator>(std::move(pooledAllocator),
-                                                                 std::move(standaloneAllocator),
-                                                                 mMaxResourceSizeForPooling);
+                    std::move(pooledOrNonPooledAllocator);
             }
 
             // Dedicated allocators.
@@ -479,19 +468,14 @@ namespace gpgmm { namespace d3d12 {
                         /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
 
-                std::unique_ptr<MemoryAllocator> pooledBufferOnlyAllocator =
-                    std::make_unique<SegmentedMemoryAllocator>(
-                        std::make_unique<BufferAllocator>(
-                            this, heapType, D3D12_RESOURCE_FLAG_NONE,
-                            GetInitialResourceState(heapType),
-                            /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                            /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
+                std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
+                if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
+                    pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
+                        std::move(bufferOnlyAllocator),
                         /*heapAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
-
-                std::unique_ptr<MemoryAllocator> pooledOrNonPooledBufferAllocator =
-                    std::make_unique<ConditionalMemoryAllocator>(
-                        std::move(bufferOnlyAllocator), std::move(pooledBufferOnlyAllocator),
-                        mMaxResourceSizeForPooling);
+                } else {
+                    pooledOrNonPooledAllocator = std::move(bufferOnlyAllocator);
+                }
 
                 // Buffers are byte-addressable when sub-allocated within and cannot internally
                 // fragment by definition.
@@ -502,7 +486,7 @@ namespace gpgmm { namespace d3d12 {
                         /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabFragmentationLimit*/ 0,
-                        /*enablePrefetch*/ false, std::move(pooledOrNonPooledBufferAllocator));
+                        /*enablePrefetch*/ false, std::move(pooledOrNonPooledAllocator));
             }
 
             // Cache resource sizes commonly requested.
@@ -760,7 +744,7 @@ namespace gpgmm { namespace d3d12 {
         // resource because a placed resource's heap will not be reallocated by the OS until Trim()
         // is called.
         // The time and space complexity is determined by the allocator type.
-        if (!mIsAlwaysCommitted && mMaxResourceSizeForPooling != 0) {
+        if (!mIsAlwaysCommitted) {
             allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             ReturnIfSucceeded(TryAllocateResource(
