@@ -498,15 +498,14 @@ namespace gpgmm { namespace d3d12 {
 
                 // Buffers are byte-addressable when sub-allocated within and cannot internally
                 // fragment by definition.
-                mBufferAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
-                    SlabCacheAllocator>(
-                    /*minBlockSize*/ 1,
-                    /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*slabFragmentationLimit*/ 0,
-                    /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
-                    std::move(pooledOrNonPooledBufferAllocator));
+                mBufferAllocatorOfType[resourceHeapTypeIndex] =
+                    std::make_unique<SlabCacheAllocator>(
+                        /*minBlockSize*/ 1,
+                        /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                        /*slabFragmentationLimit*/ 0,
+                        /*enablePrefetch*/ false, std::move(pooledOrNonPooledBufferAllocator));
             }
 
             // Cache resource sizes commonly requested.
