@@ -26,8 +26,8 @@ namespace gpgmm { namespace d3d12 {
     class Heap;
     class ResidencyManager;
 
-    // Represents a set of resource allocations which are referenced by a command list.
-    // The set must be updated to ensure each allocations is resident for execution.
+    // Represents a set of heaps which are referenced by a command list.
+    // The set must be updated to ensure each heap is made resident for execution.
     class GPGMM_EXPORT ResidencySet {
       public:
         ResidencySet() = default;
