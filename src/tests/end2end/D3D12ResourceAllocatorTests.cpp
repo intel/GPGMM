@@ -132,18 +132,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         EXPECT_EQ(allocator, nullptr);
     }
 
-    // Creating a new allocator with a max resource heap pool size larger then the max resource heap
-    // size should always fail.
-    {
-        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
-        desc.MaxResourceSizeForPooling = kDefaultPreferredResourceHeapSize * 2;
-        desc.MaxResourceHeapSize = kDefaultPreferredResourceHeapSize;
-
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        EXPECT_EQ(allocator, nullptr);
-    }
-
     // Creating a new allocator with residency management should always succeed.
     {
         ComPtr<ResidencyManager> residencyManager;
@@ -520,45 +508,34 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
     allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
-    {
-        ComPtr<ResourceAllocation> subAllocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
-            allocationDesc, CreateBasicBufferDesc(bufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
-            nullptr, &subAllocation));
-        ASSERT_NE(subAllocation, nullptr);
-        EXPECT_NE(subAllocation->GetResource(), nullptr);
-        EXPECT_NE(subAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
-    }
-
-    allocationDesc.Flags =
-        ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY | ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
-    {
-        ComPtr<ResourceAllocation> subAllocation;
-        ASSERT_FAILED(mDefaultAllocator->CreateResource(
-            allocationDesc, CreateBasicBufferDesc(bufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
-            nullptr, &subAllocation));
-    }
+    ComPtr<ResourceAllocation> subAllocation;
+    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(bufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr, &subAllocation));
+    ASSERT_NE(subAllocation, nullptr);
+    EXPECT_NE(subAllocation->GetResource(), nullptr);
+    EXPECT_NE(subAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocated);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
-    constexpr uint64_t bufferSize = kDefaultPreferredResourceHeapSize;
-
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.MaxResourceSizeForPooling = bufferSize;
+    allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
 
-    ComPtr<ResourceAllocator> poolAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &poolAllocator));
-    ASSERT_NE(poolAllocator, nullptr);
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
 
     ALLOCATION_DESC baseAllocationDesc = {};
     baseAllocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
-    // Create a buffer of size A that's too large to be pool-allocated.
+    constexpr uint64_t bufferSize = kDefaultPreferredResourceHeapSize;
+
+    // Create the first buffer.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(
-            poolAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(bufferSize * 2),
-                                          D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            baseAllocationDesc, CreateBasicBufferDesc(bufferSize * 2),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
@@ -570,20 +547,31 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
         allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(
-            poolAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize * 2),
-                                          D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(bufferSize * 2),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
     }
 
-    // Create another buffer of size B that's too large to be pool-allocated.
+    // Create another buffer.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(
-            poolAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(bufferSize * 3),
-                                          D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            baseAllocationDesc, CreateBasicBufferDesc(bufferSize * 3),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+    }
+
+    // Check the second buffer was not pool-allocated by creating it again.
+    {
+        ALLOCATION_DESC allocationDesc = baseAllocationDesc;
+        allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(bufferSize * 3),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
     }
 }
 

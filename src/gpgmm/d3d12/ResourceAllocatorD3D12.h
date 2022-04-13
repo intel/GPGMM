@@ -54,6 +54,12 @@ namespace gpgmm { namespace d3d12 {
 
         // Disables pre-fetching of GPU memory for debugging and testing purposes.
         ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH = 0x4,
+
+        // Makes GPGMM allocate exactly what is needed on-demand, and to de-allocate
+        // memory that is no longer needed (instead of re-using it). This is very slow
+        // and not recommended for general use but may be useful for running with the minimal
+        // possible GPU memory footprint or debugging OOM failures.
+        ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
@@ -360,7 +366,6 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;
-        const uint64_t mMaxResourceSizeForPooling;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 
