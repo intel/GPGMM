@@ -41,22 +41,16 @@ namespace gpgmm { namespace d3d12 {
                                                   public NonCopyable,
                                                   public IUnknownImpl {
       public:
-        // Constructs a sub-allocated heap containing one or more resources.
+        // Constructs a resource allocation from memory containing one or more resources.
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
                            uint64_t offsetFromHeap,
                            MemoryBlock* block,
+                           AllocationMethod method,
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
-        // Constructs a heap with only one resource.
-        ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* allocator,
-                           uint64_t offsetFromHeap,
-                           ComPtr<ID3D12Resource> resource,
-                           Heap* resourceHeap);
-
-        // Constructs a sub-allocated resource within itself.
+        // Constructs a resource allocation within a resource.
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
                            MemoryBlock* block,

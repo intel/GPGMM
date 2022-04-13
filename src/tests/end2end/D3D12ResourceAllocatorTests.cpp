@@ -704,8 +704,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
-        EXPECT_EQ(info.UsedBlockCount, 0u);
-        EXPECT_EQ(info.UsedBlockUsage, 0u);
     }
 
     // Calculate info for two pooled standalone allocations.
@@ -730,8 +728,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         QUERY_RESOURCE_ALLOCATOR_INFO info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
-        EXPECT_EQ(info.UsedBlockCount, 0u);
-        EXPECT_EQ(info.UsedBlockUsage, 0u);
 
         ComPtr<ResourceAllocation> secondAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
@@ -743,8 +739,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferQueryInfo) {
         info = resourceAllocator->QueryInfo();
         EXPECT_EQ(info.UsedMemoryCount, 2u);
         EXPECT_EQ(info.UsedMemoryUsage, kDefaultPreferredResourceHeapSize * 2);
-        EXPECT_EQ(info.UsedBlockCount, 0u);
-        EXPECT_EQ(info.UsedBlockUsage, 0u);
     }
 
     // Calculate info for two sub-allocations.
