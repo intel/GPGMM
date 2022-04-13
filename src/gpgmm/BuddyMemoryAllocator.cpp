@@ -144,12 +144,12 @@ namespace gpgmm {
     MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::QueryInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MEMORY_ALLOCATOR_INFO info = mInfo;
+        MEMORY_ALLOCATOR_INFO result = mInfo;
         const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
-        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
-        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
-        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
-        return info;
+        result.UsedMemoryCount = memoryInfo.UsedMemoryCount;
+        result.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
+        result.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
+        return result;
     }
 
     uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {

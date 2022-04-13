@@ -48,22 +48,23 @@ namespace gpgmm {
     MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::QueryInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MEMORY_ALLOCATOR_INFO info = {};
+        MEMORY_ALLOCATOR_INFO result = {};
         {
-            const MEMORY_ALLOCATOR_INFO& memoryInfo = mFirstAllocator->QueryInfo();
-            info.FreeMemoryUsage += memoryInfo.FreeMemoryUsage;
-            info.UsedBlockCount += memoryInfo.UsedBlockCount;
-            info.UsedMemoryUsage += memoryInfo.UsedMemoryUsage;
-            info.UsedMemoryCount += memoryInfo.UsedMemoryCount;
+            const MEMORY_ALLOCATOR_INFO& info = mFirstAllocator->QueryInfo();
+            result.FreeMemoryUsage += info.FreeMemoryUsage;
+            result.UsedBlockCount += info.UsedBlockCount;
+            result.UsedMemoryUsage += info.UsedMemoryUsage;
+            result.UsedMemoryCount += info.UsedMemoryCount;
         }
         {
-            const MEMORY_ALLOCATOR_INFO& memoryInfo = mSecondAllocator->QueryInfo();
-            info.FreeMemoryUsage += memoryInfo.FreeMemoryUsage;
-            info.UsedBlockCount += memoryInfo.UsedBlockCount;
-            info.UsedMemoryUsage += memoryInfo.UsedMemoryUsage;
-            info.UsedMemoryCount += memoryInfo.UsedMemoryCount;
+            const MEMORY_ALLOCATOR_INFO& info = mSecondAllocator->QueryInfo();
+            result.FreeMemoryUsage += info.FreeMemoryUsage;
+            result.UsedBlockCount += info.UsedBlockCount;
+            result.UsedMemoryUsage += info.UsedMemoryUsage;
+            result.UsedMemoryCount += info.UsedMemoryCount;
         }
-        return info;
+
+        return result;
     }
 
     void ConditionalMemoryAllocator::DeallocateMemory(

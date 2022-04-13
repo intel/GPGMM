@@ -240,12 +240,12 @@ namespace gpgmm {
 
     MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::QueryInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        MEMORY_ALLOCATOR_INFO info = mInfo;
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = mMemoryAllocator->QueryInfo();
-        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
-        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
-        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
-        return info;
+        MEMORY_ALLOCATOR_INFO result = mInfo;
+        const MEMORY_ALLOCATOR_INFO& info = mMemoryAllocator->QueryInfo();
+        result.UsedMemoryCount = info.UsedMemoryCount;
+        result.UsedMemoryUsage = info.UsedMemoryUsage;
+        result.FreeMemoryUsage = info.FreeMemoryUsage;
+        return result;
     }
 
     uint64_t SlabMemoryAllocator::GetSlabSizeForTesting() const {
@@ -356,18 +356,22 @@ namespace gpgmm {
     MEMORY_ALLOCATOR_INFO SlabCacheAllocator::QueryInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MEMORY_ALLOCATOR_INFO info = {};
+        MEMORY_ALLOCATOR_INFO result = {};
         for (const auto& entry : mSizeCache) {
-            const MEMORY_ALLOCATOR_INFO& childInfo = entry->GetValue().pSlabAllocator->QueryInfo();
-            info.UsedBlockCount += childInfo.UsedBlockCount;
-            info.UsedBlockUsage += childInfo.UsedBlockUsage;
+            const MEMORY_ALLOCATOR_INFO& info = entry->GetValue().pSlabAllocator->QueryInfo();
+            result.UsedBlockCount += info.UsedBlockCount;
+            result.UsedBlockUsage += info.UsedBlockUsage;
         }
+
         // Memory allocator is common across slab allocators.
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
-        info.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
-        info.UsedMemoryCount = memoryInfo.UsedMemoryCount;
-        info.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
-        return info;
+        {
+            const MEMORY_ALLOCATOR_INFO& info = GetFirstChild()->QueryInfo();
+            result.FreeMemoryUsage = info.FreeMemoryUsage;
+            result.UsedMemoryCount = info.UsedMemoryCount;
+            result.UsedMemoryUsage = info.UsedMemoryUsage;
+        }
+
+        return result;
     }
 
     uint64_t SlabCacheAllocator::GetMemorySize() const {

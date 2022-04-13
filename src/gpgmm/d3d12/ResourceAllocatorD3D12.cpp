@@ -708,7 +708,7 @@ namespace gpgmm { namespace d3d12 {
 
                     if (subAllocation.GetSize() > newResourceDesc.Width) {
                         InfoEvent("ResourceAllocator.CreateResource",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
+                                  ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                             << "Resource allocation size is larger then the resource size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
                                    std::to_string(newResourceDesc.Width) + " bytes).";
@@ -780,7 +780,7 @@ namespace gpgmm { namespace d3d12 {
 
                     if (allocation.GetSize() > resourceInfo.SizeInBytes) {
                         InfoEvent("ResourceAllocator.CreateResource",
-                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
+                                  ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                             << "Resource allocation size is larger then the resource size (" +
                                    std::to_string(allocation.GetSize()) + " vs " +
                                    std::to_string(resourceInfo.SizeInBytes) + " bytes).";
@@ -800,7 +800,7 @@ namespace gpgmm { namespace d3d12 {
 
         if (!mIsAlwaysCommitted) {
             InfoEvent("ResourceAllocator.CreateResource",
-                       ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
+                      ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
                 << "Resource allocation could not be created from memory pool.";
         }
 
@@ -929,37 +929,37 @@ namespace gpgmm { namespace d3d12 {
     }
 
     QUERY_RESOURCE_ALLOCATOR_INFO ResourceAllocator::QueryInfo() const {
-        QUERY_RESOURCE_ALLOCATOR_INFO infoOut = {};
+        QUERY_RESOURCE_ALLOCATOR_INFO result = {};
         for (const auto& allocator : mResourceAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            infoOut.UsedBlockCount += info.UsedBlockCount;
-            infoOut.UsedBlockUsage += info.UsedBlockUsage;
-            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
-            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
-            infoOut.UsedMemoryCount += info.UsedMemoryCount;
+            result.UsedBlockCount += info.UsedBlockCount;
+            result.UsedBlockUsage += info.UsedBlockUsage;
+            result.FreeMemoryUsage += info.FreeMemoryUsage;
+            result.UsedMemoryUsage += info.UsedMemoryUsage;
+            result.UsedMemoryCount += info.UsedMemoryCount;
         }
 
         for (const auto& allocator : mBufferAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            infoOut.UsedBlockCount += info.UsedBlockCount;
-            infoOut.UsedBlockUsage += info.UsedBlockUsage;
-            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
-            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
-            infoOut.UsedMemoryCount += info.UsedMemoryCount;
+            result.UsedBlockCount += info.UsedBlockCount;
+            result.UsedBlockUsage += info.UsedBlockUsage;
+            result.FreeMemoryUsage += info.FreeMemoryUsage;
+            result.UsedMemoryUsage += info.UsedMemoryUsage;
+            result.UsedMemoryCount += info.UsedMemoryCount;
         }
 
         for (const auto& allocator : mResourceHeapAllocatorOfType) {
             const MEMORY_ALLOCATOR_INFO& info = allocator->QueryInfo();
-            infoOut.FreeMemoryUsage += info.FreeMemoryUsage;
-            infoOut.UsedMemoryUsage += info.UsedMemoryUsage;
-            infoOut.UsedMemoryCount += info.UsedMemoryCount;
+            result.FreeMemoryUsage += info.FreeMemoryUsage;
+            result.UsedMemoryUsage += info.UsedMemoryUsage;
+            result.UsedMemoryCount += info.UsedMemoryCount;
         }
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
-        infoOut.UsedMemoryUsage += mInfo.UsedMemoryUsage;
-        infoOut.UsedMemoryCount += mInfo.UsedMemoryCount;
+        result.UsedMemoryUsage += mInfo.UsedMemoryUsage;
+        result.UsedMemoryCount += mInfo.UsedMemoryCount;
 
-        return infoOut;
+        return result;
     }
 
     // Returns E_FAIL if a device leak is detected.
