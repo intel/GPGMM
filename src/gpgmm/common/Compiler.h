@@ -52,15 +52,6 @@
 #        define __has_cpp_attribute(name) 0
 #    endif
 
-// Use warn_unused_result on clang otherwise we can a c++1z extension warning in C++14 mode
-// Also avoid warn_unused_result with GCC because it is only a function attribute and not a type
-// attribute.
-#    if __has_cpp_attribute(warn_unused_result) && defined(__clang__)
-#        define GPGMM_NO_DISCARD __attribute__((warn_unused_result))
-#    elif DAWN_CPP_VERSION >= 17 && __has_cpp_attribute(nodiscard)
-#        define GPGMM_NO_DISCARD [[nodiscard]]
-#    endif
-
 #    define GPGMM_DECLARE_UNUSED __attribute__((unused))
 #    if defined(NDEBUG)
 #        define GPGMM_FORCE_INLINE inline __attribute__((always_inline))
