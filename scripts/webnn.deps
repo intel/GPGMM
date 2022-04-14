@@ -18,6 +18,8 @@ vars = {
 
   # Checkout and download WebNN by default. This can be disabled with custom_vars.
   'checkout_webnn': False,
+
+  'gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
 }
 
 deps = {
@@ -27,26 +29,50 @@ deps = {
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@22da31cf43e13b6aa57d66d89983ea6c5f5b094e',
+    'url': '{dawn_git}/dawn.git@bf1c0cf52377b4db2bf3a433dc5056620aad7cdd',
     'condition': 'checkout_dawn or checkout_webnn',
   },
 
   'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@462c43fffe89d40a4e5db171895b5e608500ee6c',
+    'url': '{github_git}/webmachinelearning/webnn-native.git@8b4e8a641af2a7b485c01766c2b1ee8c1a78ec6e',
     'condition': 'checkout_webnn',
   },
 
   # Dependencies required to use GN/Clang in standalone
   'build': {
-    'url': '{chromium_git}/chromium/src/build@3769c3b43c3804f9f7f14c6e37f545639fda2852',
+    'url': '{chromium_git}/chromium/src/build@555c8b467c21e2c4b22d00e87e3faa0431df9ac2',
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools@235cfe435ca5a9826569ee4ef603e226216bd768',
+    'url': '{chromium_git}/chromium/src/buildtools@f78b4b9f33bd8ef9944d5ce643daff1c31880189',
+    'condition': 'gpgmm_standalone',
+  },
+  'buildtools/linux64': {
+    'packages': [{
+      'package': 'gn/gn/linux-amd64',
+      'version': Var('gn_version'),
+    }],
+    'dep_type': 'cipd',
+    'condition': 'gpgmm_standalone and host_os == "linux"',
+  },
+  'buildtools/win': {
+    'packages': [{
+      'package': 'gn/gn/windows-amd64',
+      'version': Var('gn_version'),
+    }],
+    'dep_type': 'cipd',
+    'condition': 'gpgmm_standalone and host_os == "win"',
+  },
+  'buildtools/third_party/libc++/trunk': {
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@79a2e924d96e2fc1e4b937c42efd08898fa472d7',
+    'condition': 'gpgmm_standalone',
+  },
+  'buildtools/third_party/libc++abi/trunk': {
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@2715a6c0de8dac4c7674934a6b3d30ba0c685271',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang@b12d1c836e2bb21b966bf86f7245bab9d257bb6b',
+    'url': '{chromium_git}/chromium/src/tools/clang@8b7330592cb85ba09505a6be7bacabd0ad6160a3',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang/dsymutil': {
