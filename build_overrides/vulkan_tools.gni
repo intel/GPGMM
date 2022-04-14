@@ -1,4 +1,4 @@
-# Copyright 2020 The Dawn Authors.
+# Copyright 2021 The GPGMM Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-tint_root_dir = "//third_party/dawn"
-tint_spirv_tools_dir = "//third_party/vulkan-deps/spirv-tools/src"
-tint_spirv_headers_dir = "//third_party/vulkan-deps/spirv-headers/src"
-
-tint_build_spv_reader = true
-tint_build_spv_writer = true
-tint_build_wgsl_reader = true
-tint_build_wgsl_writer = true
+import("//build_overrides/vulkan_common.gni")

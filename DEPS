@@ -36,7 +36,7 @@ deps = {
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@8d9d132f7cd1fe22c4ca88d580195951ca49c276',
+    'url': '{dawn_git}/dawn.git@a8b651a7ccbb5faa999066c9d1f757da0a665a28',
     'condition': 'checkout_dawn or checkout_webnn',
   },
 
@@ -117,7 +117,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@b2b44c000ee6dd3beaf2a381bbc9a24a270c84a1',
+    'url': '{chromium_git}/vulkan-deps@7e9ab0686bf4d4fa9c52eeb8def33b2057624987',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
