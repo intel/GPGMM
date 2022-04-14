@@ -25,6 +25,8 @@
 // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit?pli=1
 // Defines follow base/trace_event/common/trace_event_common.h
 
+// clang-format off
+
 // Phase indicates the nature of an event entry. E.g. part of a begin/end pair.
 #define TRACE_EVENT_PHASE_BEGIN ('B')
 #define TRACE_EVENT_PHASE_END ('E')
@@ -61,20 +63,21 @@ const uint64_t kNoId = 0;
 #define TRACE_EVENT0(category_group, name) INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 
 #define TRACE_EVENT_METADATA1(name, args) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, name, args)
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, \
+                             name, TRACE_EVENT_FLAG_NONE, args)
 
 #define TRACE_COUNTER1(category_group, name, value)                                    \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, "value", \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, TRACE_EVENT_FLAG_NONE, "value", \
                              static_cast<int>(value))
 
 #define TRACE_EVENT_INSTANT1(category_group, name, args) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, args)
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, TRACE_EVENT_FLAG_NONE, args)
 
-#define TRACE_EVENT_BEGIN(category_group, name) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_BEGIN, category_group, name, {})
+#define TRACE_EVENT_BEGIN0(category_group, name) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_BEGIN, category_group, name, TRACE_EVENT_FLAG_NONE)
 
-#define TRACE_EVENT_END(category_group, name) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_END, category_group, name, {})
+#define TRACE_EVENT_END0(category_group, name) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_END, category_group, name, TRACE_EVENT_FLAG_NONE)
 
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category_group, name, id)                            \
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_CREATE_OBJECT, category_group, name, id, \
@@ -91,10 +94,10 @@ const uint64_t kNoId = 0;
 #define INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name) \
     struct ScopedTraceEvent {                                 \
         ScopedTraceEvent() {                                  \
-            TRACE_EVENT_BEGIN(category_group, name);          \
+            TRACE_EVENT_BEGIN0(category_group, name);          \
         }                                                     \
         ~ScopedTraceEvent() {                                 \
-            TRACE_EVENT_END(category_group, name);            \
+            TRACE_EVENT_END0(category_group, name);            \
         }                                                     \
     } scopedTraceEvent {                                      \
     }
@@ -108,7 +111,7 @@ const uint64_t kNoId = 0;
 #define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)             \
     do {                                                                       \
         gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,  \
-                                          TRACE_EVENT_FLAG_NONE, __VA_ARGS__); \
+                                          __VA_ARGS__); \
     } while (false)
 
 #endif
