@@ -389,7 +389,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     // Enabling pooling to recycle memory since sub-allocation could fail.
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.MaxResourceSizeForPooling = kDefaultPreferredResourceHeapSize;
 
     ComPtr<ResourceAllocator> allocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &allocator));
@@ -579,7 +578,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     constexpr uint64_t bufferSize = kDefaultPreferredResourceHeapSize;
 
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.MaxResourceSizeForPooling = bufferSize;
 
     ComPtr<ResourceAllocator> poolAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &poolAllocator));
@@ -668,7 +666,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     // Creating a new allocator using a misaligned max resource size for pooling should succeed.
     {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
-        desc.MaxResourceSizeForPooling = 1023;
 
         ComPtr<ResourceAllocator> allocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
@@ -709,7 +706,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferGetInfo) {
     // Calculate info for two pooled standalone allocations.
     {
         ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-        allocatorDesc.MaxResourceSizeForPooling = kDefaultPreferredResourceHeapSize;
 
         ComPtr<ResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
@@ -825,8 +821,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
     ComPtr<ResourceAllocator> poolAllocator;
     {
         ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-        allocatorDesc.MaxResourceSizeForPooling = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &poolAllocator));
         ASSERT_NE(poolAllocator, nullptr);
     }

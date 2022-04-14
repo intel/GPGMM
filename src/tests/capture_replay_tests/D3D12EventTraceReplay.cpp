@@ -306,8 +306,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 snapshot["PreferredResourceHeapSize"].asUInt64();
                             allocatorDesc.MaxResourceHeapSize =
                                 snapshot["MaxResourceHeapSize"].asUInt64();
-                            allocatorDesc.MaxResourceSizeForPooling =
-                                snapshot["MaxResourceSizeForPooling"].asUInt64();
                             allocatorDesc.MaxVideoMemoryBudget =
                                 snapshot["MaxVideoMemoryBudget"].asFloat();
                             allocatorDesc.TotalResourceBudgetLimit =
