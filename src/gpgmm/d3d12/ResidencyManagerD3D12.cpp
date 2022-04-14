@@ -266,13 +266,17 @@ namespace gpgmm { namespace d3d12 {
             queryVideoMemoryInfo.CurrentUsage - videoMemoryInfo->CurrentReservation;
 
         // If we're restricting the budget, leave the budget as is.
-        if (mTotalResourceBudgetLimit > 0) {
-            return S_OK;
+        if (mTotalResourceBudgetLimit == 0) {
+            videoMemoryInfo->Budget = static_cast<uint64_t>(
+                (queryVideoMemoryInfo.Budget - videoMemoryInfo->CurrentReservation) *
+                mMaxVideoMemoryBudget);
         }
 
-        videoMemoryInfo->Budget = static_cast<uint64_t>(
-            (queryVideoMemoryInfo.Budget - videoMemoryInfo->CurrentReservation) *
-            mMaxVideoMemoryBudget);
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory budget (MB)",
+                       videoMemoryInfo->Budget / 1e6);
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory usage (MB)",
+                       videoMemoryInfo->CurrentUsage / 1e6);
 
         return S_OK;
     }

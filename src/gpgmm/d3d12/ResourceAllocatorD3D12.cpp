@@ -619,18 +619,14 @@ namespace gpgmm { namespace d3d12 {
         const RESOURCE_ALLOCATOR_INFO& info = GetInfo();
         GPGMM_UNUSED(info);
 
-        TRACE_COUNTER1(
-            TraceEventCategory::Default, "GPU memory unused (%)",
-            (1.0 - (info.UsedBlockUsage / static_cast<double>(info.UsedMemoryUsage))) * 100);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MBytes)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory fragmentation (MB)",
                        (info.UsedMemoryUsage - info.UsedBlockUsage) / 1e6);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory reserved (%)",
-                       (info.FreeMemoryUsage /
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory utilization (%)",
+                       (info.UsedMemoryUsage /
                         static_cast<double>(info.UsedMemoryUsage + info.FreeMemoryUsage) * 100));
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory reserved (MBytes)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory free (MB)",
                        info.FreeMemoryUsage / 1e6);
 
         // Insert a new (debug) allocator layer into the allocation so it can report details used
