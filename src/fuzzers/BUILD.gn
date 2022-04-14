@@ -1,0 +1,41 @@
+# Copyright 2021 The GPGMM Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build_overrides/build.gni")
+import("../../build_overrides/gpgmm_overrides_with_defaults.gni")
+
+import("//testing/libfuzzer/fuzzer_test.gni")
+
+# if (build_with_chromium) {
+#   import("//testing/libfuzzer/fuzzer_test.gni")
+# } else {
+#   import("//testing/test.gni")
+# }
+
+if (is_win) {
+  fuzzer_test("gpgmm_d3d12_resource_allocator_fuzzer") {
+    sources = [ "D3D12ResourceAllocatorFuzzer.cpp" ]
+
+    deps = [ "${gpgmm_root_dir}:gpgmm" ]
+  }
+}
+
+group("fuzzers") {
+  testonly = true
+  deps = []
+
+  if (is_win) {
+    deps += [ ":gpgmm_d3d12_resource_allocator_fuzzer" ]
+  }
+}

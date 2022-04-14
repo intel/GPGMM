@@ -129,6 +129,11 @@ deps = {
     'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@9059f5cad030ba11d37818847443a53918c327b1',
     'condition': 'gpgmm_standalone',
   },
+  # Fuzzing
+  'third_party/libFuzzer/src': {
+    'url': '{chromium_git}/chromium/llvm-project/compiler-rt/lib/fuzzer.git@debe7d2d1982e540fbd6bd78604bf001753f9e74',
+    'condition': 'gpgmm_standalone',
+  },
 }
 
 hooks = [

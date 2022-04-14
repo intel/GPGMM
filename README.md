@@ -53,20 +53,33 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 
 ### Run tests
 
-Run unit tests:
+#### Run unit tests:
 ```sh
 > out/Debug/gpgmm_unittests
 ```
 
-Run end2end tests:
+Unit tests check the front-end code in isolation or without using backend GPU.
+
+#### Run end2end tests:
 ```sh
 > out/Debug/gpgmm_end2end_tests
 ```
 
-Run capture replay tests:
+End2End tests check both the front AND backend code using a backend GPU.
+
+#### Run capture replay tests:
 ```sh
 > out/Debug/gpgmm_capture_replay_tests
 ```
+
+Capture replay tests checks using pre-recorded memory patterns using a backend GPU.
+
+#### Run fuzzing tests:
+```sh
+> out/Debug/gpgmm_*_fuzzer
+```
+
+Fuzzer checks using random memory patterns using a backend GPU.
 
 ## How do I use it?
 
