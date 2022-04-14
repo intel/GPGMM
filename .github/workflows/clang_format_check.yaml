@@ -1,5 +1,6 @@
 name: clang_format_check
 
+on:
   push:
     branches: main
     paths:
