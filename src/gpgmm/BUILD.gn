@@ -104,8 +104,8 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION" ]
   }
 
-  if (gpgmm_enable_precise_allocator_debug) {
-    defines += [ "GPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG" ]
+  if (gpgmm_enable_allocator_checks) {
+    defines += [ "GPGMM_ENABLE_ALLOCATOR_CHECKS" ]
   }
 
   if (gpgmm_enable_assert_on_warning) {
@@ -116,8 +116,8 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
   }
 
-  if (gpgmm_enable_device_leak_warning) {
-    defines += [ "GPGMM_ENABLE_DEVICE_LEAK_WARNING" ]
+  if (gpgmm_enable_device_checks) {
+    defines += [ "GPGMM_ENABLE_DEVICE_CHECKS" ]
   }
 
   libs = []

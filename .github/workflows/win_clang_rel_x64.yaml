@@ -54,7 +54,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_leak_warning=true gpgmm_force_tracing=true"
+        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_checks=true gpgmm_force_tracing=true"
 
     - name: Build for main branch
       shell: cmd
@@ -118,7 +118,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_leak_warning=true gpgmm_force_tracing=true"
+        gn gen out\Release --args="is_debug=false gpgmm_enable_assert_on_warning=true gpgmm_enable_device_checks=true gpgmm_force_tracing=true"
 
     - name: Build for main branch (with patch)
       shell: cmd

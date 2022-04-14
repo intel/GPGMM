@@ -54,9 +54,9 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_RECORDING_UNTIL_TERMINATION
   gpgmm_enable_recording_until_termination = false
 
-  # Enables more detailed leak reports.
+  # Enables checking of allocator leaks.
   # Sets -dGPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG
-  gpgmm_enable_precise_allocator_debug = is_debug
+  gpgmm_enable_allocator_checks = is_debug
 
   # Enables ASSERT on severity functionality.
   # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING
@@ -66,7 +66,7 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_SIZE_CACHE
   gpgmm_enable_size_cache = true
 
-  # Enables warning when device leaks objects.
+  # Enables checking of device leaks.
   # Sets -dGPGMM_ENABLE_ASSERT_NO_DEVICE_LEAKS
-  gpgmm_enable_device_leak_warning = false
+  gpgmm_enable_device_checks = false
 }
