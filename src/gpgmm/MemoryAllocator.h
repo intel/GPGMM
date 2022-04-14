@@ -123,7 +123,7 @@ namespace gpgmm {
 
         // Collect and return the number and size of memory blocks allocated by this allocator.
         // Should be overridden when a child allocator or block allocator is used.
-        virtual MEMORY_ALLOCATOR_INFO QueryInfo() const;
+        virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
 
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial

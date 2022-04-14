@@ -238,10 +238,10 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         MEMORY_ALLOCATOR_INFO result = mInfo;
-        const MEMORY_ALLOCATOR_INFO& info = mMemoryAllocator->QueryInfo();
+        const MEMORY_ALLOCATOR_INFO& info = mMemoryAllocator->GetInfo();
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
         result.FreeMemoryUsage = info.FreeMemoryUsage;
@@ -353,19 +353,19 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO SlabCacheAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO SlabCacheAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
         MEMORY_ALLOCATOR_INFO result = {};
         for (const auto& entry : mSizeCache) {
-            const MEMORY_ALLOCATOR_INFO& info = entry->GetValue().pSlabAllocator->QueryInfo();
+            const MEMORY_ALLOCATOR_INFO& info = entry->GetValue().pSlabAllocator->GetInfo();
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedBlockUsage += info.UsedBlockUsage;
         }
 
         // Memory allocator is common across slab allocators.
         {
-            const MEMORY_ALLOCATOR_INFO& info = GetFirstChild()->QueryInfo();
+            const MEMORY_ALLOCATOR_INFO& info = GetFirstChild()->GetInfo();
             result.FreeMemoryUsage = info.FreeMemoryUsage;
             result.UsedMemoryCount = info.UsedMemoryCount;
             result.UsedMemoryUsage = info.UsedMemoryUsage;

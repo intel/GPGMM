@@ -616,7 +616,7 @@ namespace gpgmm { namespace d3d12 {
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
                        allocationLatency);
 
-        const QUERY_RESOURCE_ALLOCATOR_INFO& info = QueryInfo();
+        const RESOURCE_ALLOCATOR_INFO& info = GetInfo();
         GPGMM_UNUSED(info);
 
         TRACE_COUNTER1(
@@ -951,20 +951,20 @@ namespace gpgmm { namespace d3d12 {
         return mResidencyManager.Get();
     }
 
-    QUERY_RESOURCE_ALLOCATOR_INFO ResourceAllocator::QueryInfo() const {
+    RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
         // ResourceAllocator itself could call CreateCommittedResource directly.
-        QUERY_RESOURCE_ALLOCATOR_INFO result = mInfo;
+        RESOURCE_ALLOCATOR_INFO result = mInfo;
 
         for (const auto& allocator : mResourceAllocatorOfType) {
-            result += allocator->QueryInfo();
+            result += allocator->GetInfo();
         }
 
         for (const auto& allocator : mBufferAllocatorOfType) {
-            result += allocator->QueryInfo();
+            result += allocator->GetInfo();
         }
 
         for (const auto& allocator : mResourceHeapAllocatorOfType) {
-            result += allocator->QueryInfo();
+            result += allocator->GetInfo();
         }
 
         return result;

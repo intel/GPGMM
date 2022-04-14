@@ -45,19 +45,19 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
         MEMORY_ALLOCATOR_INFO result = {};
         {
-            const MEMORY_ALLOCATOR_INFO& info = mFirstAllocator->QueryInfo();
+            const MEMORY_ALLOCATOR_INFO& info = mFirstAllocator->GetInfo();
             result.FreeMemoryUsage += info.FreeMemoryUsage;
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedMemoryUsage += info.UsedMemoryUsage;
             result.UsedMemoryCount += info.UsedMemoryCount;
         }
         {
-            const MEMORY_ALLOCATOR_INFO& info = mSecondAllocator->QueryInfo();
+            const MEMORY_ALLOCATOR_INFO& info = mSecondAllocator->GetInfo();
             result.FreeMemoryUsage += info.FreeMemoryUsage;
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedMemoryUsage += info.UsedMemoryUsage;

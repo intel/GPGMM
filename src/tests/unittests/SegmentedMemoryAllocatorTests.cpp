@@ -168,7 +168,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 }
 
-TEST(SegmentedMemoryAllocatorTests, QueryInfo) {
+TEST(SegmentedMemoryAllocatorTests, GetInfo) {
     SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
                                        kDefaultMemoryAlignment);
 
@@ -177,18 +177,18 @@ TEST(SegmentedMemoryAllocatorTests, QueryInfo) {
     EXPECT_NE(allocation, nullptr);
 
     // Single memory block should be allocated.
-    EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-    EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-    EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-    EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultMemorySize);
-    EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
     allocator.DeallocateMemory(std::move(allocation));
 
     // Single memory is made available as free after being released.
-    EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-    EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-    EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-    EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-    EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultMemorySize);
 }

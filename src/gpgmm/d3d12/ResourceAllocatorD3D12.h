@@ -248,7 +248,7 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
     };
 
-    using QUERY_RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
+    using RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
 
     class GPGMM_EXPORT ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
@@ -292,7 +292,7 @@ namespace gpgmm { namespace d3d12 {
         void Trim();
 
         // Return the current allocator usage.
-        QUERY_RESOURCE_ALLOCATOR_INFO QueryInfo() const override;
+        RESOURCE_ALLOCATOR_INFO GetInfo() const override;
 
         const char* GetTypename() const;
 

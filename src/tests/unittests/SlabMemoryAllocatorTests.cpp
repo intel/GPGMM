@@ -232,7 +232,7 @@ TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
     pool.ReleasePool();
 }
 
-TEST(SlabMemoryAllocatorTests, QueryInfo) {
+TEST(SlabMemoryAllocatorTests, GetInfo) {
     // Test slab allocator.
     {
         std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
@@ -249,20 +249,20 @@ TEST(SlabMemoryAllocatorTests, QueryInfo) {
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be allocated.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
         allocator.DeallocateMemory(std::move(allocation));
 
         // Both the sub-allocation and slab should be released.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
     }
 
     // Test slab + pool allocator.
@@ -282,19 +282,19 @@ TEST(SlabMemoryAllocatorTests, QueryInfo) {
             allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
         EXPECT_NE(allocation, nullptr);
 
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
         allocator.DeallocateMemory(std::move(allocation));
 
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultSlabSize);
     }
 }
 
@@ -489,7 +489,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     }
 }
 
-TEST(SlabCacheAllocatorTests, QueryInfo) {
+TEST(SlabCacheAllocatorTests, GetInfo) {
     // Test Slab allocator.
     {
         constexpr uint64_t kMinBlockSize = 4;
@@ -505,20 +505,20 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be allocated.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
         allocator.DeallocateMemory(std::move(allocation));
 
         // Both the sub-allocation and slab should be released.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
     }
 
     // Test Slab + pooled allocator.
@@ -538,20 +538,20 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be used.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kBlockSize);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, kBlockSize);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
         allocator.DeallocateMemory(std::move(allocation));
 
         // Only the sub-allocation should be released.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultSlabSize);
     }
 
     // Test Slab-Buddy allocator.
@@ -571,20 +571,20 @@ TEST(SlabCacheAllocatorTests, QueryInfo) {
         EXPECT_NE(allocation, nullptr);
 
         // Single slab block within buddy memory should be used.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, kMinBlockSize);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 1u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, kDefaultSlabSize);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, kMinBlockSize);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultSlabSize);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 
         allocator.DeallocateMemory(std::move(allocation));
 
         // Both the slab block and buddy memory should be released.
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedBlockUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryCount, 0u);
-        EXPECT_EQ(allocator.QueryInfo().UsedMemoryUsage, 0u);
-        EXPECT_EQ(allocator.QueryInfo().FreeMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
+        EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
     }
 }
 

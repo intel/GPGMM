@@ -141,11 +141,11 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
-    MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
         MEMORY_ALLOCATOR_INFO result = mInfo;
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->QueryInfo();
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->GetInfo();
         result.UsedMemoryCount = memoryInfo.UsedMemoryCount;
         result.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
         result.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;

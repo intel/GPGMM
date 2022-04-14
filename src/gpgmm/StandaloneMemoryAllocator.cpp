@@ -56,10 +56,10 @@ namespace gpgmm {
         GetFirstChild()->DeallocateMemory(std::move(subAllocation));
     }
 
-    MEMORY_ALLOCATOR_INFO StandaloneMemoryAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO StandaloneMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         MEMORY_ALLOCATOR_INFO result = mInfo;
-        result += GetFirstChild()->QueryInfo();
+        result += GetFirstChild()->GetInfo();
         return result;
     }
 }  // namespace gpgmm

@@ -34,7 +34,7 @@ namespace gpgmm {
                                                             bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
 
-        MEMORY_ALLOCATOR_INFO QueryInfo() const override;
+        MEMORY_ALLOCATOR_INFO GetInfo() const override;
     };
 
 }  // namespace gpgmm

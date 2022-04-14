@@ -105,7 +105,7 @@ namespace gpgmm {
         return kInvalidOffset;
     }
 
-    MEMORY_ALLOCATOR_INFO MemoryAllocator::QueryInfo() const {
+    MEMORY_ALLOCATOR_INFO MemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         return mInfo;
     }
