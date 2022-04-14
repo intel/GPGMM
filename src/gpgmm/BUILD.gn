@@ -170,6 +170,8 @@ source_set("gpgmm_sources") {
     "SlabBlockAllocator.h",
     "SlabMemoryAllocator.cpp",
     "SlabMemoryAllocator.h",
+    "StandaloneMemoryAllocator.cpp",
+    "StandaloneMemoryAllocator.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
     "WorkerThread.cpp",

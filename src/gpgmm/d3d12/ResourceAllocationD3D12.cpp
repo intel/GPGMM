@@ -43,32 +43,12 @@ namespace gpgmm { namespace d3d12 {
                                            MemoryAllocator* allocator,
                                            uint64_t offsetFromHeap,
                                            MemoryBlock* block,
+                                           AllocationMethod method,
                                            ComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(allocator,
-                           resourceHeap,
-                           offsetFromHeap,
-                           AllocationMethod::kSubAllocated,
-                           block),
+        : MemoryAllocation(allocator, resourceHeap, offsetFromHeap, method, block),
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
-          mOffsetFromResource(0) {
-        ASSERT(resourceHeap != nullptr);
-        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-    }
-
-    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* allocator,
-                                           uint64_t offsetFromHeap,
-                                           ComPtr<ID3D12Resource> resource,
-                                           Heap* resourceHeap)
-        : MemoryAllocation(allocator,
-                           resourceHeap,
-                           offsetFromHeap,
-                           AllocationMethod::kStandalone,
-                           /*block*/ nullptr),
-          mResidencyManager(residencyManager),
-          mResource(std::move(resource)),
           mOffsetFromResource(0) {
         ASSERT(resourceHeap != nullptr);
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
