@@ -60,7 +60,7 @@ declare_args() {
 
   # Enables ASSERT on severity functionality.
   # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING
-  gpgmm_enable_assert_on_warning = false
+  gpgmm_enable_assert_on_warning = is_debug
 
   # Enables warming of caches with common sizes.
   # Sets -dGPGMM_ENABLE_SIZE_CACHE
