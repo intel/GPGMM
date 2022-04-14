@@ -18,7 +18,10 @@ import("build_overrides/gpgmm_overrides_with_defaults.gni")
 group("all") {
   testonly = true
 
-  deps = [ "src/tests:gpgmm_tests" ]
+  deps = [
+    "src/fuzzers",
+    "src/tests:gpgmm_tests",
+  ]
 
   if (gpgmm_enable_dawn) {
     deps += [ "//third_party/dawn/src/dawn/tests:dawn_end2end_tests" ]
