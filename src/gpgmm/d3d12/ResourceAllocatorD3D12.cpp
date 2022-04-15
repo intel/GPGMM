@@ -414,8 +414,7 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
-          mAllocationTimer(gpgmm::CreatePlatformTime()) {
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
@@ -606,19 +605,20 @@ namespace gpgmm { namespace d3d12 {
 
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
-        std::lock_guard<std::mutex> lock(mMutex);
+        // Timer isn't thread safe so it cannot be shared between invocations of CreateResource.
+        std::unique_ptr<PlatformTime> timer(CreatePlatformTime());
 
-        mAllocationTimer->StartElapsedTime();
+        timer->StartElapsedTime();
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
-        const double allocationLatency = mAllocationTimer->EndElapsedTime() * 1e6;
+        const double allocationLatency = timer->EndElapsedTime() * 1e6;
         GPGMM_UNUSED(allocationLatency);
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
                        allocationLatency);
 
-        const RESOURCE_ALLOCATOR_INFO& info = GetInfo();
+        const RESOURCE_ALLOCATOR_INFO info = GetInfo();
         GPGMM_UNUSED(info);
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory fragmentation (MB)",
@@ -649,6 +649,8 @@ namespace gpgmm { namespace d3d12 {
                                                       D3D12_RESOURCE_STATES initialResourceState,
                                                       const D3D12_CLEAR_VALUE* clearValue,
                                                       ResourceAllocation** resourceAllocationOut) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -950,6 +952,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
 

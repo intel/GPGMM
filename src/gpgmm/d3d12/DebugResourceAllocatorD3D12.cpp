@@ -47,6 +47,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void DebugResourceAllocator::ReportLiveAllocations() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         for (auto allocationEntry : mLiveAllocations) {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
             gpgmm::WarningLog() << "Live ResourceAllocation: "
@@ -58,6 +60,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void DebugResourceAllocator::AddLiveAllocation(ResourceAllocation* allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         mLiveAllocations.GetOrCreate(
             ResourceAllocationEntry(allocation, allocation->GetAllocator()), true);
 
@@ -66,6 +70,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void DebugResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         // KeepAlive must be false so |mLiveAllocations| cache will shrink by 1 entry once |entry|
         // falls out of scope below since AddLiveAllocation() adds one (and only one) ref.
         auto entry = mLiveAllocations.GetOrCreate(
