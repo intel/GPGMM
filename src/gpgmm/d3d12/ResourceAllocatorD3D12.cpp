@@ -573,7 +573,7 @@ namespace gpgmm { namespace d3d12 {
 #endif
 
 #if defined(GPGMM_ENABLE_DEVICE_CHECKS)
-        ReportLiveDeviceObjects();
+        ReportLiveDeviceObjects(mDevice);
 #endif
     }
 
