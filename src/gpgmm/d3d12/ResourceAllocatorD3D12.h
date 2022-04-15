@@ -282,11 +282,6 @@ namespace gpgmm { namespace d3d12 {
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** resourceAllocationOut);
 
-        // Return the residency manager. The lifetime of the residency manager is fully owned by the
-        // allocator. CreateResource enables the returned resource allocation to be residency
-        // managed when non-null.
-        ResidencyManager* GetResidencyManager() const;
-
         // When pooling is enabled, the allocator will retain resource heaps in order to speed-up
         // subsequent resource allocation requests. These resource allocations count against the
         // app's memory usage and in general, will lead to increased memory usage by the overall
