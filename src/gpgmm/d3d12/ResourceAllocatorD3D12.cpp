@@ -260,9 +260,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // RAII wrapper to lock/unlock heap from the residency cache.
-        class ScopedHeapLock final : public NonCopyable {
+        class ScopedResidencyLock final : public NonCopyable {
           public:
-            ScopedHeapLock(ResidencyManager* const residencyManager, Heap* const heap)
+            ScopedResidencyLock(ResidencyManager* const residencyManager, Heap* const heap)
                 : mResidencyManager(residencyManager), mHeap(heap) {
                 ASSERT(heap != nullptr);
                 if (mResidencyManager != nullptr) {
@@ -270,7 +270,7 @@ namespace gpgmm { namespace d3d12 {
                 }
             }
 
-            ~ScopedHeapLock() {
+            ~ScopedResidencyLock() {
                 if (mResidencyManager != nullptr) {
                     mResidencyManager->UnlockHeap(mHeap);
                 }
@@ -882,7 +882,7 @@ namespace gpgmm { namespace d3d12 {
         // CreatePlacedResource will fail.
         ComPtr<ID3D12Resource> placedResource;
         {
-            ScopedHeapLock scopedHeapLock(mResidencyManager.Get(), resourceHeap);
+            ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
                 resourceHeap->GetHeap(), resourceOffset, resourceDescriptor, initialResourceState,
                 clearValue, IID_PPV_ARGS(&placedResource)));
