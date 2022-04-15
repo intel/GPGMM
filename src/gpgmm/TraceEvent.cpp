@@ -16,32 +16,38 @@
 
 #include "gpgmm/EventTraceWriter.h"
 
+#include <mutex>
 #include <string>
 
 namespace gpgmm {
 
-    static std::unique_ptr<EventTraceWriter> gEventTrace;
+    static EventTraceWriter* gEventTrace;
+    static std::mutex mMutex;
+
+    static EventTraceWriter* GetInstance() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        if (gEventTrace == nullptr) {
+            gEventTrace = new EventTraceWriter();
+        }
+        return gEventTrace;
+    }
 
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
                            bool skipObjectEvents,
                            bool skipInstantEvents) {
-        if (gEventTrace == nullptr) {
-            gEventTrace = std::make_unique<EventTraceWriter>();
-        }
-
         TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
                               "GPGMM_MainThread");
 
 #if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
-        gEventTrace->FlushQueuedEventsToDisk();
+        GetInstance()->FlushQueuedEventsToDisk();
 #endif
-        gEventTrace->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
-                                      skipInstantEvents);
+        GetInstance()->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
+                                        skipInstantEvents);
     }
 
     bool IsEventTraceEnabled() {
-        return (gEventTrace != nullptr);
+        return (GetInstance() != nullptr);
     }
 
     TraceEvent::TraceEvent(char phase,
@@ -68,8 +74,6 @@ namespace gpgmm {
                                     uint64_t id,
                                     uint32_t flags,
                                     const JSONDict& args) {
-        if (gEventTrace != nullptr) {
-            gEventTrace->EnqueueTraceEvent(phase, category, name, id, flags, args);
-        }
+        GetInstance()->EnqueueTraceEvent(phase, category, name, id, flags, args);
     }
 }  // namespace gpgmm
