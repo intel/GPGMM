@@ -30,19 +30,14 @@ namespace gpgmm {
             gEventTrace = std::make_unique<EventTraceWriter>();
         }
 
-        InitializeThreadName("GPGMM_MainThread");
+        TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
+                              "GPGMM_MainThread");
 
 #if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
         gEventTrace->FlushQueuedEventsToDisk();
 #endif
         gEventTrace->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
                                       skipInstantEvents);
-    }
-
-    void InitializeThreadName(const char* name) {
-        JSONDict args;
-        args.AddItem("name", name);
-        TRACE_EVENT_METADATA1("thread_name", args);
     }
 
     bool IsEventTraceEnabled() {

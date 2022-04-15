@@ -50,7 +50,7 @@
 #define TRACE_EVENT0(category_group, name) TRACE_EMPTY
 #define TRACE_EVENT_INSTANT0(category_group, name, scope, args) TRACE_EMPTY
 #define TRACE_COUNTER1(category_group, name, value) TRACE_EMPTY
-#define TRACE_EVENT_METADATA1(name, args) TRACE_EMPTY
+#define TRACE_EVENT_METADATA1(category_group, name, arg1_name, arg1_value) TRACE_EMPTY
 
 #else // !GPGMM_DISABLE_TRACING
 
@@ -62,11 +62,11 @@ const uint64_t kNoId = 0;
 // Name parameter must have program lifetime (statics or literals).
 #define TRACE_EVENT0(category_group, name) INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 
-#define TRACE_EVENT_METADATA1(name, args) \
-    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, TraceEventCategory::Metadata, \
-                             name, TRACE_EVENT_FLAG_NONE, args)
+// Records information related to other events.
+#define TRACE_EVENT_METADATA1(category_group, name, arg1_name, arg1_value) \
+    INTERNAL_TRACE_EVENT_METADATA_ADD(category_group, name, arg1_name, arg1_value)
 
-#define TRACE_COUNTER1(category_group, name, value)                                    \
+#define TRACE_COUNTER1(category_group, name, value)                                                           \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, TRACE_EVENT_FLAG_NONE, "value", \
                              static_cast<int>(value))
 
@@ -91,13 +91,17 @@ const uint64_t kNoId = 0;
     INTERNAL_TRACE_EVENT_ADD_WITH_ID(TRACE_EVENT_PHASE_SNAPSHOT_OBJECT, category_group, name, id, \
                                      TRACE_EVENT_FLAG_HAS_ID, "snapshot", snapshot)
 
+#define INTERNAL_TRACE_EVENT_METADATA_ADD(category_group, name, ...)      \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_METADATA, category_group,  \
+                             name, TRACE_EVENT_FLAG_NONE, __VA_ARGS__)
+
 #define INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name) \
     struct ScopedTraceEvent {                                 \
         ScopedTraceEvent() {                                  \
-            TRACE_EVENT_BEGIN0(category_group, name);          \
+            TRACE_EVENT_BEGIN0(category_group, name);         \
         }                                                     \
         ~ScopedTraceEvent() {                                 \
-            TRACE_EVENT_END0(category_group, name);            \
+            TRACE_EVENT_END0(category_group, name);           \
         }                                                     \
     } scopedTraceEvent {                                      \
     }
@@ -111,7 +115,7 @@ const uint64_t kNoId = 0;
 #define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, ...)             \
     do {                                                                       \
         gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,  \
-                                          __VA_ARGS__); \
+                                          __VA_ARGS__);                        \
     } while (false)
 
 #endif
@@ -132,9 +136,6 @@ namespace gpgmm {
                            bool skipInstantEvents);
 
     bool IsEventTraceEnabled();
-
-    // Inserts a single metadata event used to name the calling thread ID.
-    void InitializeThreadName(const char* name);
 
     class TraceEventID {
       public:

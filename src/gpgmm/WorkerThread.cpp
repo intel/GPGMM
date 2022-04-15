@@ -62,7 +62,8 @@ namespace gpgmm {
         std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback) override {
             std::shared_ptr<Event> event = std::make_shared<AsyncEventImpl>();
             std::thread thread([callback, event]() {
-                InitializeThreadName(kWorkerThreadName);
+                TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
+                                      kWorkerThreadName);
                 (*callback)();
                 event->Signal();
             });
