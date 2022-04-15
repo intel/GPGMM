@@ -15,6 +15,7 @@
 #ifndef GPGMM_TRACEEVENT_H_
 #define GPGMM_TRACEEVENT_H_
 
+#include "gpgmm/TraceEventPhase.h"
 #include "gpgmm/common/JSONEncoder.h"
 
 #include <memory>
@@ -26,16 +27,6 @@
 // Defines follow base/trace_event/common/trace_event_common.h
 
 // clang-format off
-
-// Phase indicates the nature of an event entry. E.g. part of a begin/end pair.
-#define TRACE_EVENT_PHASE_BEGIN ('B')
-#define TRACE_EVENT_PHASE_END ('E')
-#define TRACE_EVENT_PHASE_INSTANT ('i')
-#define TRACE_EVENT_PHASE_CREATE_OBJECT ('N')
-#define TRACE_EVENT_PHASE_SNAPSHOT_OBJECT ('O')
-#define TRACE_EVENT_PHASE_DELETE_OBJECT ('D')
-#define TRACE_EVENT_PHASE_METADATA ('M')
-#define TRACE_EVENT_PHASE_COUNTER ('C')
 
 // Flags for changing the behavior of TRACE_EVENT_API_ADD_TRACE_EVENT.
 #define TRACE_EVENT_FLAG_NONE (static_cast<unsigned char>(0))
