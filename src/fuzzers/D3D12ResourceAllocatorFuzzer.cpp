@@ -25,8 +25,56 @@ namespace {
 }  // namespace
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
-    gpgmm::d3d12::ALLOCATOR_DESC desc = {};
-    gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &gResourceAllocator);
+    gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
+
+    // Populate the device
+    ComPtr<ID3D12Device> d3dDevice;
+    if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3dDevice)))) {
+        return 0;
+    }
+
+    allocatorDesc.Device = d3dDevice;
+
+    // Populate the adapter
+    LUID adapterLUID = d3dDevice->GetAdapterLuid();
+    ComPtr<IDXGIFactory1> dxgiFactory;
+    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)))) {
+        return 0;
+    }
+
+    ComPtr<IDXGIFactory4> dxgiFactory4;
+    if (FAILED(dxgiFactory.As(&dxgiFactory4))) {
+        return 0;
+    }
+
+    ComPtr<IDXGIAdapter3> dxgiAdapter;
+    if (FAILED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&dxgiAdapter)))) {
+        return 0;
+    }
+
+    allocatorDesc.Adapter = dxgiAdapter;
+
+    // Populate the options.
+    D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
+    if (FAILED(d3dDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)))) {
+        return 0;
+    }
+
+    allocatorDesc.IsUMA = arch.UMA;
+
+    D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
+    if (FAILED(d3dDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options,
+                                              sizeof(options)))) {
+        return 0;
+    }
+
+    allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
+
+    if (FAILED(
+            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &gResourceAllocator))) {
+        return 0;
+    }
+
     return 0;
 }
 
