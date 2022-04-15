@@ -91,7 +91,11 @@
     "xstring": "cpp",
     "xtr1common": "cpp",
     "xtree": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "condition_variable": "cpp",
+    "mutex": "cpp",
+    "numeric": "cpp",
+    "queue": "cpp"
   },
   "files.exclude": {
     // Ignore build output folders.
