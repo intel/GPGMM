@@ -582,6 +582,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     void ResourceAllocator::Trim() {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         for (auto& allocator : mResourceHeapAllocatorOfType) {
             ASSERT(allocator != nullptr);
             allocator->ReleaseMemory();
