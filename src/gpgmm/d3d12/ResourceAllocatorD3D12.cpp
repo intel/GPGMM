@@ -968,11 +968,11 @@ namespace gpgmm { namespace d3d12 {
         return result;
     }
 
-    // Returns E_FAIL if a device leak is detected.
-    HRESULT ResourceAllocator::ReportLiveDeviceObjects() const {
+    // static
+    HRESULT ResourceAllocator::ReportLiveDeviceObjects(ComPtr<ID3D12Device> device) {
         // Debug layer was never enabled.
         ComPtr<ID3D12DebugDevice> debugDevice;
-        if (FAILED(mDevice.As(&debugDevice))) {
+        if (FAILED(device.As(&debugDevice))) {
             return S_OK;
         }
 
@@ -980,7 +980,7 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(debugDevice->ReportLiveDeviceObjects(rldoFlags));
 
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
-        ReturnIfFailed(mDevice.As(&leakMessageQueue));
+        ReturnIfFailed(device.As(&leakMessageQueue));
 
         // Report live device objects that could be created by GPGMM by checking the global filter.
         // This is because the allowList filter cannot easily be made exclusive to these IDs.

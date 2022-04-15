@@ -329,7 +329,7 @@ namespace gpgmm { namespace d3d12 {
                                         ID3D12Resource** commitedResourceOut,
                                         Heap** resourceHeapOut);
 
-        HRESULT ReportLiveDeviceObjects() const;
+        static HRESULT ReportLiveDeviceObjects(ComPtr<ID3D12Device> device);
 
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
