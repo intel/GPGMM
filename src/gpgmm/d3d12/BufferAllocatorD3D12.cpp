@@ -43,6 +43,8 @@ namespace gpgmm { namespace d3d12 {
                                                                          bool prefetchMemory) {
         TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.TryAllocateMemory");
 
+        std::lock_guard<std::mutex> lock(mMutex);
+
         if (GetMemorySize() != size || GetMemoryAlignment() != alignment || neverAllocate) {
             return {};
         }
@@ -69,12 +71,20 @@ namespace gpgmm { namespace d3d12 {
             return {};
         }
 
+        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
+        mInfo.UsedMemoryCount++;
+
         return std::make_unique<MemoryAllocation>(this, resourceHeap);
     }
 
     void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.DeallocateMemory");
-        mResourceAllocator->DeallocateMemory(std::move(allocation));
+        std::lock_guard<std::mutex> lock(mMutex);
+
+        mInfo.UsedMemoryUsage -= allocation->GetSize();
+        mInfo.UsedMemoryCount--;
+
+        SafeRelease(allocation);
     }
 
     uint64_t BufferAllocator::GetMemorySize() const {
