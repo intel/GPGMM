@@ -1,4 +1,4 @@
-From a8ffa2c38e5b45cf6a6be5f2640de395d4794d72 Mon Sep 17 00:00:00 2001
+From 03ce98e08677b10af190c5ca293ff90dfa1d3e7b Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -33,22 +33,22 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
-index a028df0cb..bcc2851ca 100644
+index 91b835033..6f17c2ec3 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -13,6 +13,7 @@
- /third_party/clang-format
+@@ -16,6 +16,7 @@
+ /third_party/cpplint
  /third_party/glfw
  /third_party/googletest
 +/third_party/gpgmm/
  /third_party/gpuweb
- /third_party/webgpu-cts
+ /third_party/gpuweb-cts
  /third_party/jinja2
 diff --git a/DEPS b/DEPS
-index 3457ba0ca..28630e967 100644
+index e5a8b0da6..6c0853222 100644
 --- a/DEPS
 +++ b/DEPS
-@@ -152,6 +152,10 @@ deps = {
+@@ -146,6 +146,10 @@ deps = {
      'condition': 'dawn_standalone',
    },
  
@@ -60,10 +60,10 @@ index 3457ba0ca..28630e967 100644
      'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@789af048b388657987c59d4da406859034fe310f',
      'condition': 'dawn_standalone',
 diff --git a/build_overrides/dawn.gni b/build_overrides/dawn.gni
-index bbded0680..3d40c5526 100644
+index 87e1ded26..1d9ef095c 100644
 --- a/build_overrides/dawn.gni
 +++ b/build_overrides/dawn.gni
-@@ -38,3 +38,4 @@ dawn_tint_dir = "//third_party/tint"
+@@ -37,3 +37,4 @@ dawn_swiftshader_dir = "//third_party/swiftshader"
  dawn_vulkan_loader_dir = "//third_party/vulkan-deps/vulkan-loader/src"
  dawn_vulkan_validation_layers_dir =
      "//third_party/vulkan-deps/vulkan-validation-layers/src"
@@ -94,10 +94,10 @@ index 000000000..354882aea
 +# GPGMM and non-standalone GPGMM has no dependencies to override but GN
 +# must import a gpgmm.gni file to build without overrides.
 diff --git a/scripts/dawn_overrides_with_defaults.gni b/scripts/dawn_overrides_with_defaults.gni
-index c6676931b..496ab852f 100644
+index b4142ac6e..2dcfc127b 100644
 --- a/scripts/dawn_overrides_with_defaults.gni
 +++ b/scripts/dawn_overrides_with_defaults.gni
-@@ -83,3 +83,8 @@ if (!defined(dawn_tint_dir)) {
+@@ -85,3 +85,8 @@ if (!defined(dawn_vulkan_validation_layers_dir)) {
  if (!defined(dawn_abseil_dir)) {
    dawn_abseil_dir = "//third_party/abseil-cpp"
  }
@@ -107,18 +107,18 @@ index c6676931b..496ab852f 100644
 +  dawn_gpgmm_dir = "${dawn_root}/third_party/gpgmm"
 +}
 diff --git a/src/dawn/native/BUILD.gn b/src/dawn/native/BUILD.gn
-index ce7d97f05..bd7c3cb99 100644
+index 7fa3fb417..3d57203c9 100644
 --- a/src/dawn/native/BUILD.gn
 +++ b/src/dawn/native/BUILD.gn
-@@ -160,6 +160,7 @@ source_set("sources") {
+@@ -166,6 +166,7 @@ source_set("sources") {
    deps = [
      ":headers",
      ":utils_gen",
 +    "${dawn_gpgmm_dir}/src:gpgmm",
      "${dawn_root}/src/dawn/common",
+     "${dawn_root}/src/tint:libtint",
      "${dawn_spirv_tools_dir}:spvtools_opt",
-     "${dawn_spirv_tools_dir}:spvtools_val",
-@@ -400,10 +401,10 @@ source_set("sources") {
+@@ -406,10 +407,10 @@ source_set("sources") {
        "d3d12/Forward.h",
        "d3d12/GPUDescriptorHeapAllocationD3D12.cpp",
        "d3d12/GPUDescriptorHeapAllocationD3D12.h",
@@ -133,7 +133,7 @@ index ce7d97f05..bd7c3cb99 100644
        "d3d12/IntegerTypes.h",
        "d3d12/NativeSwapChainImplD3D12.cpp",
        "d3d12/NativeSwapChainImplD3D12.h",
-@@ -423,8 +424,8 @@ source_set("sources") {
+@@ -429,8 +430,8 @@ source_set("sources") {
        "d3d12/RenderPipelineD3D12.h",
        "d3d12/ResidencyManagerD3D12.cpp",
        "d3d12/ResidencyManagerD3D12.h",
@@ -145,13 +145,13 @@ index ce7d97f05..bd7c3cb99 100644
        "d3d12/ResourceHeapAllocationD3D12.h",
        "d3d12/SamplerD3D12.cpp",
 diff --git a/src/dawn/native/Toggles.cpp b/src/dawn/native/Toggles.cpp
-index b3bdd10b8..2df11282a 100644
+index 9b3a65517..5166c0178 100644
 --- a/src/dawn/native/Toggles.cpp
 +++ b/src/dawn/native/Toggles.cpp
-@@ -90,6 +90,10 @@ namespace dawn::native {
-               "recently used resources local to the GPU. Turning this component off can cause "
-               "allocation failures when application memory exceeds physical device memory.",
-               "https://crbug.com/dawn/193"}},
+@@ -97,6 +97,10 @@ namespace dawn::native {
+               "patterns which would otherwise only occur with large or specific types of "
+               "resources.",
+               "https://crbug.com/1313172"}},
 +            {Toggle::UseD3D12SmallResidencyBudgetForTesting,
 +             {"use_d3d12_small_residency_budget",
 +              "Enable residency management with a small budget for testing purposes.",
@@ -160,19 +160,19 @@ index b3bdd10b8..2df11282a 100644
               {"skip_validation", "Skip expensive validation of Dawn commands.",
                "https://crbug.com/dawn/271"}},
 diff --git a/src/dawn/native/Toggles.h b/src/dawn/native/Toggles.h
-index 87c32bf2b..86f7992d4 100644
+index 883d0239d..71447765d 100644
 --- a/src/dawn/native/Toggles.h
 +++ b/src/dawn/native/Toggles.h
-@@ -33,6 +33,7 @@ namespace dawn::native {
-         UseD3D12ResourceHeapTier2,
+@@ -34,6 +34,7 @@ namespace dawn::native {
          UseD3D12RenderPass,
          UseD3D12ResidencyManagement,
+         DisableResourceSuballocation,
 +        UseD3D12SmallResidencyBudgetForTesting,
          SkipValidation,
          VulkanUseD32S8,
          VulkanUseS8,
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
-index 27d999170..1f8c8f2fb 100644
+index 84fbbb67c..71f681815 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn/native/d3d12/BufferD3D12.cpp
 @@ -188,7 +188,11 @@ namespace dawn::native::d3d12 {
@@ -228,7 +228,7 @@ index 27d999170..1f8c8f2fb 100644
  
          if (isWrite) {
              mWrittenMappedRange = range;
-@@ -362,14 +360,9 @@ namespace dawn::native::d3d12 {
+@@ -367,14 +365,9 @@ namespace dawn::native::d3d12 {
      }
  
      void Buffer::UnmapImpl() {
@@ -244,7 +244,7 @@ index 27d999170..1f8c8f2fb 100644
      }
  
      void* Buffer::GetMappedPointerImpl() {
-@@ -387,16 +380,15 @@ namespace dawn::native::d3d12 {
+@@ -392,16 +385,15 @@ namespace dawn::native::d3d12 {
          }
          BufferBase::DestroyImpl();
  
@@ -265,7 +265,7 @@ index 27d999170..1f8c8f2fb 100644
      }
  
      MaybeError Buffer::EnsureDataInitialized(CommandRecordingContext* commandContext) {
-@@ -441,8 +433,7 @@ namespace dawn::native::d3d12 {
+@@ -446,8 +438,7 @@ namespace dawn::native::d3d12 {
      }
  
      void Buffer::SetLabelImpl() {
@@ -276,7 +276,7 @@ index 27d999170..1f8c8f2fb 100644
  
      MaybeError Buffer::InitializeToZero(CommandRecordingContext* commandContext) {
 diff --git a/src/dawn/native/d3d12/BufferD3D12.h b/src/dawn/native/d3d12/BufferD3D12.h
-index 253565a38..fc6cbbd0b 100644
+index cdca5600e..ab0069848 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.h
 +++ b/src/dawn/native/d3d12/BufferD3D12.h
 @@ -20,6 +20,8 @@
@@ -363,7 +363,7 @@ index bb8ef8130..b2f8b1ee8 100644
  
      ID3D12GraphicsCommandList* CommandRecordingContext::GetCommandList() const {
 diff --git a/src/dawn/native/d3d12/CommandRecordingContext.h b/src/dawn/native/d3d12/CommandRecordingContext.h
-index 21a60f23e..5582d7976 100644
+index 59c2ffaaf..d48c07579 100644
 --- a/src/dawn/native/d3d12/CommandRecordingContext.h
 +++ b/src/dawn/native/d3d12/CommandRecordingContext.h
 @@ -19,6 +19,7 @@
@@ -420,7 +420,7 @@ index 18d7145c8..098254e5c 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 415b48653..ea000d016 100644
+index 6b77b3a07..5a7394bb9 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -127,8 +127,32 @@ namespace dawn::native::d3d12 {
@@ -437,11 +437,7 @@ index 415b48653..ea000d016 100644
 +        allocatorDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +        allocatorDesc.ResourceHeapTier =
 +            static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
-+        
-+        // Dawn's allocator settings.
-+        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;      // 4MB
-+        allocatorDesc.MaxResourceHeapSize = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
-+        allocatorDesc.MaxResourceSizeForPooling = allocatorDesc.PreferredResourceHeapSize;
++        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll; // 4MB
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
 +            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
@@ -452,13 +448,17 @@ index 415b48653..ea000d016 100644
 +            allocatorDesc.TotalResourceBudgetLimit = 100000000;  // 100MB
 +        }
 +
++        if (IsToggleEnabled(Toggle::DisableResourceSuballocation)) {
++            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_COMMITED;
++        }
++
 +        DAWN_TRY(CheckHRESULT(
 +            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &mResourceAllocator, &mResidencyManager),
 +            "D3D12 create resource allocator"));
  
          // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
          DAWN_TRY_ASSIGN(
-@@ -246,8 +270,8 @@ namespace dawn::native::d3d12 {
+@@ -248,8 +272,8 @@ namespace dawn::native::d3d12 {
          return mCommandAllocatorManager.get();
      }
  
@@ -469,7 +469,7 @@ index 415b48653..ea000d016 100644
      }
  
      ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -316,7 +340,6 @@ namespace dawn::native::d3d12 {
+@@ -318,7 +342,6 @@ namespace dawn::native::d3d12 {
          // Perform cleanup operations to free unused objects
          ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -477,7 +477,7 @@ index 415b48653..ea000d016 100644
          DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
          mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
          mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -519,16 +542,51 @@ namespace dawn::native::d3d12 {
+@@ -521,16 +544,51 @@ namespace dawn::native::d3d12 {
          return {};
      }
  
@@ -534,7 +534,7 @@ index 415b48653..ea000d016 100644
      }
  
      Ref<TextureBase> Device::CreateD3D12ExternalTexture(
-@@ -576,6 +634,7 @@ namespace dawn::native::d3d12 {
+@@ -578,6 +636,7 @@ namespace dawn::native::d3d12 {
          SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
          SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
          SetToggle(Toggle::UseD3D12ResidencyManagement, true);
@@ -542,7 +542,7 @@ index 415b48653..ea000d016 100644
          SetToggle(Toggle::UseDXC, false);
  
          // Disable optimizations when using FXC
-@@ -672,10 +731,6 @@ namespace dawn::native::d3d12 {
+@@ -674,10 +733,6 @@ namespace dawn::native::d3d12 {
              ::CloseHandle(mFenceEvent);
          }
  
@@ -554,7 +554,7 @@ index 415b48653..ea000d016 100644
          // We need to handle clearing up com object refs that were enqeued after TickImpl
          mUsedComObjectRefs.ClearUpTo(std::numeric_limits<ExecutionSerial>::max());
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.h b/src/dawn/native/d3d12/DeviceD3D12.h
-index 1a837929a..2c4cfaeb0 100644
+index f8290f57a..e64172065 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.h
 +++ b/src/dawn/native/d3d12/DeviceD3D12.h
 @@ -22,12 +22,12 @@
@@ -599,7 +599,7 @@ index 1a837929a..2c4cfaeb0 100644
  
          ShaderVisibleDescriptorAllocator* GetViewShaderVisibleDescriptorAllocator() const;
          ShaderVisibleDescriptorAllocator* GetSamplerShaderVisibleDescriptorAllocator() const;
-@@ -217,8 +220,8 @@ namespace dawn::native::d3d12 {
+@@ -220,8 +223,8 @@ namespace dawn::native::d3d12 {
          SerialQueue<ExecutionSerial, ComPtr<IUnknown>> mUsedComObjectRefs;
  
          std::unique_ptr<CommandAllocatorManager> mCommandAllocatorManager;
@@ -683,7 +683,7 @@ index 32d6cd6cb..29e8ab632 100644
      }
  
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
-index dca8b2995..24ea74be6 100644
+index 38a182abd..21c1a2d7a 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
 @@ -23,6 +23,8 @@
@@ -759,7 +759,7 @@ index e608a14e4..23e41e1bb 100644
      }
  }  // namespace dawn::native::d3d12
 diff --git a/src/dawn/native/d3d12/StagingBufferD3D12.h b/src/dawn/native/d3d12/StagingBufferD3D12.h
-index b81054164..52dcfe5aa 100644
+index 6e67a1aef..41f7935f6 100644
 --- a/src/dawn/native/d3d12/StagingBufferD3D12.h
 +++ b/src/dawn/native/d3d12/StagingBufferD3D12.h
 @@ -19,6 +19,8 @@
@@ -781,7 +781,7 @@ index b81054164..52dcfe5aa 100644
  }  // namespace dawn::native::d3d12
  
 diff --git a/src/dawn/native/d3d12/TextureD3D12.cpp b/src/dawn/native/d3d12/TextureD3D12.cpp
-index 5e7941767..85ea7d72e 100644
+index b86abbde8..73fb2f221 100644
 --- a/src/dawn/native/d3d12/TextureD3D12.cpp
 +++ b/src/dawn/native/d3d12/TextureD3D12.cpp
 @@ -557,12 +557,8 @@ namespace dawn::native::d3d12 {
@@ -871,7 +871,7 @@ index 5e7941767..85ea7d72e 100644
          }
  
          HandleTransitionSpecialCases(commandContext);
-@@ -1133,8 +1125,7 @@ namespace dawn::native::d3d12 {
+@@ -1134,8 +1126,7 @@ namespace dawn::native::d3d12 {
      }
  
      void Texture::SetLabelHelper(const char* prefix) {
@@ -882,7 +882,7 @@ index 5e7941767..85ea7d72e 100644
  
      void Texture::SetLabelImpl() {
 diff --git a/src/dawn/native/d3d12/TextureD3D12.h b/src/dawn/native/d3d12/TextureD3D12.h
-index 76572bab5..339665e45 100644
+index 2a05e97e6..3b807f6e0 100644
 --- a/src/dawn/native/d3d12/TextureD3D12.h
 +++ b/src/dawn/native/d3d12/TextureD3D12.h
 @@ -24,6 +24,8 @@
@@ -894,7 +894,7 @@ index 76572bab5..339665e45 100644
  namespace dawn::native::d3d12 {
  
      class CommandRecordingContext;
-@@ -132,7 +134,7 @@ namespace dawn::native::d3d12 {
+@@ -133,7 +135,7 @@ namespace dawn::native::d3d12 {
  
          SubresourceStorage<StateAndDecay> mSubresourceStateAndDecay;
  
@@ -926,7 +926,7 @@ index 8d4749fd9..d8760c4b9 100644
          if (!object) {
              return;
 diff --git a/src/dawn/native/d3d12/UtilsD3D12.h b/src/dawn/native/d3d12/UtilsD3D12.h
-index 00c850f38..5798d415d 100644
+index 912d1b7f3..2a026c323 100644
 --- a/src/dawn/native/d3d12/UtilsD3D12.h
 +++ b/src/dawn/native/d3d12/UtilsD3D12.h
 @@ -64,6 +64,8 @@ namespace dawn::native::d3d12 {
