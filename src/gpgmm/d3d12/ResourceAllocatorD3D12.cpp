@@ -943,6 +943,10 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
+    ResidencyManager* ResourceAllocator::GetResidencyManager() const {
+        return mResidencyManager.Get();
+    }
+
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
