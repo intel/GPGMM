@@ -908,4 +908,39 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyThreaded) {
     for (std::thread& thread : threads) {
         thread.join();
     }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, 0u);
+}
+
+// Creates a bunch of buffers concurrently.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+    allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+    constexpr uint32_t kSubAllocationSize = 4u;
+
+    constexpr uint32_t kThreadCount = 64u;
+    std::vector<std::thread> threads(kThreadCount);
+    for (size_t threadIdx = 0; threadIdx < threads.size(); threadIdx++) {
+        threads[threadIdx] = std::thread([&]() {
+            ComPtr<ResourceAllocation> allocation;
+            ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+                allocationDesc, CreateBasicBufferDesc(kSubAllocationSize),
+                D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+            ASSERT_NE(allocation, nullptr);
+            EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        });
+    }
+
+    for (std::thread& thread : threads) {
+        thread.join();
+    }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, 0u);
 }
