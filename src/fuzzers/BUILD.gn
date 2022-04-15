@@ -28,6 +28,11 @@ if (is_win) {
     sources = [ "D3D12ResourceAllocatorFuzzer.cpp" ]
 
     deps = [ "${gpgmm_root_dir}:gpgmm" ]
+
+    libs = [
+      "d3d12.lib",
+      "dxgi.lib",
+    ]
   }
 }
 
