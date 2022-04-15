@@ -22,8 +22,6 @@
 
 namespace gpgmm {
 
-    static const char* kWorkerThreadName = "GPGMM_ThreadPoolBackgroundWorker";
-
     class AsyncEventImpl final : public Event {
       public:
         AsyncEventImpl() = default;
@@ -63,7 +61,7 @@ namespace gpgmm {
             std::shared_ptr<Event> event = std::make_shared<AsyncEventImpl>();
             std::thread thread([callback, event]() {
                 TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
-                                      kWorkerThreadName);
+                                      "GPGMM_ThreadPoolBackgroundWorker");
                 (*callback)();
                 event->Signal();
             });
