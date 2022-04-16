@@ -384,6 +384,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     Heap* resourceHeap = ToBackend(allocation->GetMemory());
     ASSERT_NE(resourceHeap, nullptr);
     ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
+
+    // Commited resources must use all the memory allocated.
+    EXPECT_EQ(allocator->GetInfo().UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
+    EXPECT_EQ(allocator->GetInfo().UsedBlockUsage, allocator->GetInfo().UsedMemoryUsage);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {

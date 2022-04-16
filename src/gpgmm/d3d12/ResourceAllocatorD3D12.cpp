@@ -826,8 +826,12 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
             clearValue, initialResourceState, &committedResource, &resourceHeap));
 
-        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
+        // Using committed resources will create a tightly allocated resource allocations.
+        // This means the block and heap size should be equal (modulo driver padding).
+        const uint64_t allocationSize = resourceHeap->GetSize();
+        mInfo.UsedMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount++;
+        mInfo.UsedBlockUsage += allocationSize;
 
         *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
                                                         /*allocator*/ this,
@@ -1017,8 +1021,11 @@ namespace gpgmm { namespace d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        mInfo.UsedMemoryUsage -= allocation->GetSize();
+        const uint64_t allocationSize = allocation->GetSize();
+        mInfo.UsedMemoryUsage -= allocationSize;
         mInfo.UsedMemoryCount--;
+        mInfo.UsedBlockUsage -= allocationSize;
+
         SafeRelease(allocation);
     }
 
