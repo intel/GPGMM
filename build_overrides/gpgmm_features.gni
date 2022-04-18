@@ -50,10 +50,6 @@ declare_args() {
   # Sets -dGPGMM_SHARED_LIBRARY
   gpgmm_shared_library = false
 
-  # Enables recording until program termination.
-  # Sets -dGPGMM_ENABLE_RECORDING_UNTIL_TERMINATION
-  gpgmm_enable_recording_until_termination = false
-
   # Enables checking of allocator leaks.
   # Sets -dGPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG
   gpgmm_enable_allocator_checks = is_debug
