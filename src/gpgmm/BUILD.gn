@@ -100,10 +100,6 @@ source_set("gpgmm_sources") {
     defines += [ "GPGMM_DISABLE_TRACING" ]
   }
 
-  if (gpgmm_enable_recording_until_termination) {
-    defines += [ "GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION" ]
-  }
-
   if (gpgmm_enable_allocator_checks) {
     defines += [ "GPGMM_ENABLE_ALLOCATOR_CHECKS" ]
   }

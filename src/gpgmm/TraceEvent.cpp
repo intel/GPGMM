@@ -21,15 +21,15 @@
 
 namespace gpgmm {
 
-    static EventTraceWriter* gEventTrace;
+    static std::unique_ptr<EventTraceWriter> gEventTrace;
     static std::mutex mMutex;
 
     static EventTraceWriter* GetInstance() {
         std::lock_guard<std::mutex> lock(mMutex);
         if (gEventTrace == nullptr) {
-            gEventTrace = new EventTraceWriter();
+            gEventTrace = std::make_unique<EventTraceWriter>();
         }
-        return gEventTrace;
+        return gEventTrace.get();
     }
 
     void StartupEventTrace(const std::string& traceFile,
@@ -39,9 +39,6 @@ namespace gpgmm {
         TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
                               "GPGMM_MainThread");
 
-#if !defined(GPGMM_ENABLE_RECORDING_UNTIL_TERMINATION)
-        GetInstance()->FlushQueuedEventsToDisk();
-#endif
         GetInstance()->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
                                         skipInstantEvents);
     }
