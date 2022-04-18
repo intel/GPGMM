@@ -115,6 +115,13 @@ namespace gpgmm {
         T mValue;
     };
 
+    struct CacheStats {
+        uint64_t AliveCount = 0;
+        uint64_t NewCount = 0;
+        uint64_t NumOfHits = 0;
+        uint64_t NumOfMisses = 0;
+    };
+
     template <typename T>
     class MemoryCache : public NonCopyable {
       public:
@@ -140,14 +147,18 @@ namespace gpgmm {
             CacheEntryT tmp(std::move(value));
             const auto& iter = mCache.find(&tmp);
             if (iter != mCache.end()) {
+                mStats.NumOfHits++;
                 return (*iter);
             }
+            mStats.NumOfMisses++;
             CacheEntryT* entry = new CacheEntryT(this, tmp.AcquireValue());
             if (keepAlive) {
                 entry->Ref();
+                mStats.AliveCount++;
             }
             const bool success = mCache.insert(entry).second;
             ASSERT(success);
+            mStats.NewCount++;
             return ScopedRef<CacheEntryT>(entry);
         }
 
@@ -185,6 +196,10 @@ namespace gpgmm {
             }
         }
 
+        CacheStats GetStats() const {
+            return mStats;
+        }
+
       private:
         friend CacheEntryT;
 
@@ -196,6 +211,7 @@ namespace gpgmm {
         }
 
         Cache mCache;
+        CacheStats mStats;
     };
 }  // namespace gpgmm
 
