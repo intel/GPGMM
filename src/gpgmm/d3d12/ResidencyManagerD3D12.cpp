@@ -28,6 +28,9 @@
 
 namespace gpgmm { namespace d3d12 {
 
+    static constexpr uint32_t kDefaultVideoMemoryEvictSize = 50ll * 1024ll * 1024ll;  // 50MB
+    static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;
+
     // static
     HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
                                                      ComPtr<IDXGIAdapter> adapter,
