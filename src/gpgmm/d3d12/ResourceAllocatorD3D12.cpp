@@ -347,9 +347,9 @@ namespace gpgmm { namespace d3d12 {
                 ? std::min(descriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
                 : caps->GetMaxResourceHeapSize();
 
-        newDescriptor.ResourceFragmentationLimit = (descriptor.ResourceFragmentationLimit > 0)
-                                                       ? descriptor.ResourceFragmentationLimit
-                                                       : kDefaultFragmentationLimit;
+        newDescriptor.MemoryFragmentationLimit = (descriptor.MemoryFragmentationLimit > 0)
+                                                     ? descriptor.MemoryFragmentationLimit
+                                                     : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             return E_INVALIDARG;
@@ -459,7 +459,7 @@ namespace gpgmm { namespace d3d12 {
                     /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
                     /*slabSize*/ descriptor.PreferredResourceHeapSize,
                     /*slabAlignment*/ heapAlignment,
-                    /*slabFragmentationLimit*/ descriptor.ResourceFragmentationLimit,
+                    /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
                     /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
                     std::move(buddyAllocator));
             }
