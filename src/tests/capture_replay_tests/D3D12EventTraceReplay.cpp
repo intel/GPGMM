@@ -312,16 +312,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 snapshot["TotalResourceBudgetLimit"].asUInt64();
                             allocatorDesc.VideoMemoryEvictSize =
                                 snapshot["VideoMemoryEvictSize"].asUInt64();
-                            allocatorDesc.ResourceFragmentationLimit =
-                                snapshot["ResourceFragmentationLimit"].asDouble();
+                            allocatorDesc.MemoryFragmentationLimit =
+                                snapshot["MemoryFragmentationLimit"].asDouble();
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Any amount of (internal) fragmentation is acceptable.
-                            allocatorDesc.ResourceFragmentationLimit = 1.0f;
+                            allocatorDesc.MemoryFragmentationLimit = 1.0f;
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
                             allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
-                            allocatorDesc.ResourceFragmentationLimit = 0.125;  // 1/8th of 4MB
+                            allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 
                         if (envParams.IsStandaloneOnly) {
