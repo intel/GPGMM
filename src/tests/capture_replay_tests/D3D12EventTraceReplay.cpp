@@ -430,9 +430,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             }
         }
 
-        ASSERT_TRUE(allocationInfoToID.empty());
-        ASSERT_TRUE(allocatorToID.empty());
-        ASSERT_TRUE(heapInfoToID.empty());
+        EXPECT_TRUE(allocationInfoToID.empty());
+        EXPECT_TRUE(allocatorToID.empty());
+        EXPECT_TRUE(heapInfoToID.empty());
     }
 
     CaptureReplayCallStats mReplayedAllocateStats;
@@ -464,31 +464,10 @@ TEST_P(D3D12EventTraceReplay, MemoryUsage) {
     EXPECT_EQ(mReplayedAllocationStats.TotalCount, mCapturedAllocationStats.TotalCount);
 }
 
-// Verify a re-generated trace will always playback the same result.
+// Re-generates traces.
 TEST_P(D3D12EventTraceReplay, Regenerate) {
     RunSingleTest(/*forceRegenerate*/ true, /*forceIsCapturedCapsCompat*/ false,
                   /*forcePrefetchMemory*/ false);
-
-    const CaptureReplayCallStats beforeReplayedAllocateStats = mReplayedAllocateStats;
-    const CaptureReplayCallStats beforeReplayedDeallocateStats = mReplayedDeallocateStats;
-    const CaptureReplayMemoryStats beforeCapturedAllocationStats = mCapturedAllocationStats;
-    const CaptureReplayMemoryStats beforeCapturedMemoryStats = mCapturedMemoryStats;
-
-    // Reset stats
-    mReplayedAllocateStats = {};
-    mReplayedDeallocateStats = {};
-    mCapturedAllocationStats = {};
-    mCapturedMemoryStats = {};
-
-    RunSingleTest(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ false,
-                  /*forcePrefetchMemory*/ false);
-
-    EXPECT_EQ(beforeReplayedAllocateStats.TotalNumOfCalls, mReplayedAllocateStats.TotalNumOfCalls);
-    EXPECT_EQ(beforeReplayedDeallocateStats.TotalNumOfCalls,
-              mReplayedDeallocateStats.TotalNumOfCalls);
-
-    EXPECT_EQ(beforeCapturedAllocationStats.TotalCount, mCapturedAllocationStats.TotalCount);
-    EXPECT_EQ(beforeCapturedMemoryStats.TotalCount, mCapturedMemoryStats.TotalCount);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
