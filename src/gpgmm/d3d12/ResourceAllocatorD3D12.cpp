@@ -951,10 +951,6 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    ResidencyManager* ResourceAllocator::GetResidencyManager() const {
-        return mResidencyManager.Get();
-    }
-
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
