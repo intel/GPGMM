@@ -8,9 +8,7 @@
       "name": "Debug unittests",
       "request": "launch",
       "type": "cppvsdbg",
-      "windows": {
-        "program": "gpgmm_unittests.exe",
-      },
+      "program": "gpgmm_unittests",
       "args": [
         "--gtest_catch_exceptions=0",
         "--gtest_filter=*"
@@ -24,9 +22,7 @@
       "name": "Debug end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
-      "windows": {
-        "program": "gpgmm_end2end_tests.exe",
-      },
+      "program": "gpgmm_end2end_tests",
       "args": [
         "--gtest_catch_exceptions=0",
         "--gtest_filter=*"
@@ -40,9 +36,7 @@
       "name": "Debug capture replay tests",
       "type": "cppvsdbg",
       "request": "launch",
-      "windows": {
-        "program": "gpgmm_capture_replay_tests.exe",
-      },
+      "program": "gpgmm_capture_replay_tests",
       "args": [
         "--gtest_catch_exceptions=0",
         "--gtest_filter=*"
@@ -56,9 +50,7 @@
       "name": "Debug WebNN end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
-      "windows": {
-        "program": "webnn_end2end_tests.exe",
-      },
+      "program": "webnn_end2end_tests",
       "args": [
         "-d gpu",
         "--gtest_catch_exceptions=0",
@@ -73,9 +65,7 @@
       "name": "Debug Dawn end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
-      "windows": {
-        "program": "dawn_end2end_tests.exe",
-      },
+      "program": "dawn_end2end_tests",
       "args": [
         "--gtest_catch_exceptions=0",
         "--backend=d3d12",
