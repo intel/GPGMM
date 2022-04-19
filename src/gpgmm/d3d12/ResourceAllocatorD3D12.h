@@ -162,15 +162,6 @@ namespace gpgmm { namespace d3d12 {
         // exceeds the adapter's GPU virtual address range, it will default to the smaller range.
         uint64_t MaxResourceHeapSize;
 
-        // Maximum resource size that can be pool-allocated.
-        //
-        // Pool-allocating larger resources consumes more memory then smaller ones but is faster to
-        // create subsequent resources by using a pool of resource heaps. Apps must periodically
-        // call Trim() to free unused pool-allocated resource heaps.
-        //
-        // Optional parameter. When 0 is specified, the API will automatically disabling pooling.
-        uint64_t MaxResourceSizeForPooling;
-
         // Maximum video memory available to budget by the allocator, expressed as a
         // percentage.
         //
@@ -281,11 +272,6 @@ namespace gpgmm { namespace d3d12 {
         // as ResourceAllocations. Residency is not supported for imported resources.
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** resourceAllocationOut);
-
-        // Return the residency manager. The lifetime of the residency manager is fully owned by the
-        // allocator. CreateResource enables the returned resource allocation to be residency
-        // managed when non-null.
-        ResidencyManager* GetResidencyManager() const;
 
         // When pooling is enabled, the allocator will retain resource heaps in order to speed-up
         // subsequent resource allocation requests. These resource allocations count against the
