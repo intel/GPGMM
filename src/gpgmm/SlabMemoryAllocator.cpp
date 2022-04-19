@@ -116,55 +116,57 @@ namespace gpgmm {
         SlabCache* cache = GetOrCreateCache(slabSize);
         ASSERT(cache != nullptr);
 
-        auto* node = cache->FreeList.head();
+        auto* pHead = cache->FreeList.head();
 
-        Slab* slab = nullptr;
+        Slab* pFreeSlab = nullptr;
+
+        // Check free-list since HEAD must always exist (linked-list is self-referential).
         if (!cache->FreeList.empty()) {
-            slab = node->value();
+            pFreeSlab = pHead->value();
         }
 
-        // Splice the full slab from the free-list to full-list.
-        if (slab != nullptr && slab->IsFull()) {
-            node->RemoveFromList();
-            node->InsertBefore(cache->FullList.head());
+        // Splice the full slab from the free-list to the full-list.
+        if (pFreeSlab != nullptr && pFreeSlab->IsFull()) {
+            pHead->RemoveFromList();
+            pHead->InsertBefore(cache->FullList.head());
         }
 
-        // Push new slab at HEAD if free-list is empty.
-        if (cache->FreeList.empty()) {
-            Slab* newSlab = new Slab(slabSize / mBlockSize, mBlockSize);
-            newSlab->InsertBefore(cache->FreeList.head());
-            slab = newSlab;
+        // Push new free slab at free-list HEAD
+        if (cache->FreeList.empty() || pFreeSlab->IsFull()) {
+            Slab* pNewFreeSlab = new Slab(slabSize / mBlockSize, mBlockSize);
+            pNewFreeSlab->InsertBefore(cache->FreeList.head());
+            pFreeSlab = pNewFreeSlab;
         }
 
-        ASSERT(!cache->FreeList.empty());
-        ASSERT(slab != nullptr);
+        ASSERT(pFreeSlab != nullptr);
+        ASSERT(!pFreeSlab->IsFull());
 
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
-                &slab->Allocator, mBlockSize, alignment,
+                &pFreeSlab->Allocator, mBlockSize, alignment,
                 [&](const auto& block) -> MemoryBase* {
-                    if (slab->SlabMemory == nullptr) {
+                    if (pFreeSlab->SlabMemory == nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         if (mNextSlabAllocationEvent != nullptr) {
                             mNextSlabAllocationEvent->Wait();
-                            slab->SlabMemory = mNextSlabAllocationEvent->AcquireAllocation();
+                            pFreeSlab->SlabMemory = mNextSlabAllocationEvent->AcquireAllocation();
                             mNextSlabAllocationEvent.reset();
                         } else {
                             GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(
                                                  slabSize, mSlabAlignment, neverAllocate, cacheSize,
                                                  /*prefetchMemory*/ false),
-                                             slab->SlabMemory);
+                                             pFreeSlab->SlabMemory);
                         }
                     }
-                    return slab->SlabMemory->GetMemory();
+                    return pFreeSlab->SlabMemory->GetMemory();
                 }),
             subAllocation);
 
-        // Slab must be referenced seperately from its memory because slab memory could be already
-        // allocated from another allocator. Only once the final allocation on the slab is
-        // deallocated, can slab memory be safely released.
-        slab->Ref();
+        // Slab must be referenced seperately from the underlying memory because slab memory could
+        // be already allocated by another allocator. Only once the final allocation on the slab is
+        // deallocated, does the slab memory be released.
+        pFreeSlab->Ref();
 
         // Prefetch memory for future slab.
         //
@@ -178,9 +180,9 @@ namespace gpgmm {
         // time before deciding to prefetch.
         //
         if ((prefetchMemory || mPrefetchSlab) && !neverAllocate &&
-            mNextSlabAllocationEvent == nullptr && cache->FullList.head() != nullptr &&
-            slab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
-            slab->BlockCount >= kSlabPrefetchTotalBlockCount) {
+            mNextSlabAllocationEvent == nullptr && !cache->FullList.empty() &&
+            pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
+            pFreeSlab->BlockCount >= kSlabPrefetchTotalBlockCount) {
             mNextSlabAllocationEvent =
                 mMemoryAllocator->TryAllocateMemoryAsync(slabSize, mSlabAlignment);
         }
@@ -190,9 +192,10 @@ namespace gpgmm {
         // memory and not the slab.
         BlockInSlab* blockInSlab = new BlockInSlab();
         blockInSlab->pBlock = subAllocation->GetBlock();
-        blockInSlab->pSlab = slab;
+        blockInSlab->pSlab = pFreeSlab;
         blockInSlab->Size = subAllocation->GetBlock()->Size;
-        blockInSlab->Offset = slab->SlabMemory->GetOffset() + subAllocation->GetBlock()->Offset;
+        blockInSlab->Offset =
+            pFreeSlab->SlabMemory->GetOffset() + subAllocation->GetBlock()->Offset;
 
         mInfo.UsedBlockCount++;
         mInfo.UsedBlockUsage += blockInSlab->Size;
