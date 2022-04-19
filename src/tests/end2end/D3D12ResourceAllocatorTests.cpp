@@ -806,7 +806,27 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
 }
 
 // Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferPrefetch) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
+    ComPtr<ResourceAllocator> allocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
+    ASSERT_NE(allocator, nullptr);
+
+    constexpr uint64_t kNumOfBuffers = 1000u;
+
+    std::set<ComPtr<ResourceAllocation>> allocs = {};
+    for (uint64_t i = 0; i < kNumOfBuffers; i++) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(allocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        allocs.insert(allocation);
+    }
+
+    allocs.clear();
+}
+
+// Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     ComPtr<ResourceAllocator> allocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
         CreateBasicAllocatorDesc(/*enablePrefetch*/ true), &allocator));

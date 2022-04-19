@@ -147,29 +147,55 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
 TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
-
     constexpr uint64_t kBlockSize = 32;
     constexpr uint64_t kMaxSlabSize = 512;
-    SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
-                                  kDefaultSlabFragmentationLimit, kDefaultPrefetchSlab,
-                                  dummyMemoryAllocator.get());
-    // Fill up exactly two 128B slabs.
-    std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
-    for (uint32_t blocki = 0; blocki < (kDefaultSlabSize * 2 / kBlockSize); blocki++) {
-        std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(22, 1, false, false, false);
-        ASSERT_NE(allocation, nullptr);
-        allocations.push_back(std::move(allocation));
+
+    // Fill up exactly N slabs (allocation = block = slab size).
+    {
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, /*slabSize*/ kBlockSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      kDefaultPrefetchSlab, dummyMemoryAllocator.get());
+        const uint64_t kNumOfSlabs = 12;
+        std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
+        for (uint32_t slabi = 0; slabi < kNumOfSlabs; slabi++) {
+            std::unique_ptr<MemoryAllocation> allocation =
+                allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            ASSERT_NE(allocation, nullptr);
+            allocations.push_back(std::move(allocation));
+        }
+
+        EXPECT_EQ(allocator.GetSlabSizeForTesting(), kNumOfSlabs);
+
+        for (auto& allocation : allocations) {
+            allocator.DeallocateMemory(std::move(allocation));
+        }
+
+        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
     }
 
-    EXPECT_EQ(allocator.GetSlabSizeForTesting(), 2u);
+    // Fill up slabs through pre-allocation (allocation < block < slab size).
+    {
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      kDefaultPrefetchSlab, dummyMemoryAllocator.get());
+        // Fill up exactly two 128B slabs.
+        std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
+        for (uint32_t blocki = 0; blocki < (kDefaultSlabSize * 2 / kBlockSize); blocki++) {
+            std::unique_ptr<MemoryAllocation> allocation =
+                allocator.TryAllocateMemory(22, 1, false, false, false);
+            ASSERT_NE(allocation, nullptr);
+            allocations.push_back(std::move(allocation));
+        }
 
-    // Free both slabs.
-    for (auto& allocation : allocations) {
-        allocator.DeallocateMemory(std::move(allocation));
+        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 2u);
+
+        // Free both slabs.
+        for (auto& allocation : allocations) {
+            allocator.DeallocateMemory(std::move(allocation));
+        }
+
+        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
     }
-
-    EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
 }
 
 // Verify a very large allocation does not overflow.

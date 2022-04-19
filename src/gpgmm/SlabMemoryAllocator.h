@@ -68,21 +68,23 @@ namespace gpgmm {
         uint64_t ComputeSlabSize(uint64_t size) const;
 
         // Slab is a node in a doubly-linked list that contains a free-list of blocks
-        // and a reference to the underlying memory.
+        // and a reference to underlying memory.
         struct Slab : public LinkNode<Slab>, public RefCounted {
             Slab(uint64_t blockCount, uint64_t blockSize)
                 : RefCounted(0), BlockCount(blockCount), Allocator(blockCount, blockSize) {
             }
+
             ~Slab() {
                 if (IsInList()) {
                     RemoveFromList();
                 }
             }
+
             bool IsFull() const {
                 return static_cast<uint32_t>(GetRefCount()) == BlockCount;
             }
 
-            double GetUsedPercent() {
+            double GetUsedPercent() const {
                 return static_cast<uint32_t>(GetRefCount()) / static_cast<double>(BlockCount);
             }
 
