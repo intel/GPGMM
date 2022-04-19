@@ -165,12 +165,10 @@
     {
       "label": "Run debug end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_end2end_tests.exe"
-      },
+      "type": "process",
+      "command": "gpgmm_end2end_tests",
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Debug"
+        "cwd": "${workspaceFolder}/out/Debug"
       },
       "dependsOn": [
         "Build debug"
@@ -183,12 +181,10 @@
     {
       "label": "Run debug unittests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_unittests.exe"
-      },
+      "type": "process",
+      "command": "gpgmm_unittests",
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Debug"
+        "cwd": "${workspaceFolder}/out/Debug"
       },
       "dependsOn": [
         "Build debug"
@@ -201,12 +197,14 @@
     {
       "label": "Run debug capture replay tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_capture_replay_tests.exe --check-device-leaks --log-level=DEBUG"
-      },
+      "type": "process",
+      "command": "gpgmm_capture_replay_tests",
+      "args": [
+        "--check-device-leaks",
+        "--log-level=DEBUG"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Debug"
+        "cwd": "${workspaceFolder}/out/Debug"
       },
       "dependsOn": [
         "Build debug"
@@ -219,12 +217,10 @@
     {
       "label": "Run release end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_end2end_tests.exe"
-      },
+      "type": "process",
+      "command": "gpgmm_end2end_tests",
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Release"
+        "cwd": "${workspaceFolder}/out/Release"
       },
       "dependsOn": [
         "Build release"
@@ -237,12 +233,10 @@
     {
       "label": "Run release unittests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_unittests.exe"
-      },
+      "type": "process",
+      "command": "gpgmm_unittests",
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Release"
+        "cwd": "${workspaceFolder}/out/Release"
       },
       "dependsOn": [
         "Build release"
@@ -255,12 +249,13 @@
     {
       "label": "Run release capture replay tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "gpgmm_capture_replay_tests.exe --check-device-leaks"
-      },
+      "type": "process",
+      "command": "gpgmm_capture_replay_tests",
+      "args": [
+        "--check-device-leaks"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Release"
+        "cwd": "${workspaceFolder}/out/Release"
       },
       "dependsOn": [
         "Build release"
@@ -273,18 +268,16 @@
     {
       "label": "Run debug Dawn end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "dawn_end2end_tests.exe",
-        "args": [
-          "--backend=d3d12",
-          "--enable-backend-validation",
-          "--exclusive-device-type-preference=discrete,integrated,cpu",
-          "--gtest_filter=*"
-        ]
-      },
+      "type": "process",
+      "command": "dawn_end2end_tests",
+      "args": [
+        "--backend=d3d12",
+        "--enable-backend-validation",
+        "--exclusive-device-type-preference=discrete,integrated,cpu",
+        "--gtest_filter=*"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Debug"
+        "cwd": "${workspaceFolder}/out/Debug"
       },
       "dependsOn": [
         "Build debug"
@@ -297,18 +290,16 @@
     {
       "label": "Run release Dawn end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "dawn_end2end_tests.exe",
-        "args": [
-          "--backend=d3d12",
-          "--enable-backend-validation",
-          "--exclusive-device-type-preference=discrete,integrated,cpu",
-          "--gtest_filter=*"
-        ]
-      },
+      "type": "process",
+      "command": "dawn_end2end_tests",
+      "args": [
+        "--backend=d3d12",
+        "--enable-backend-validation",
+        "--exclusive-device-type-preference=discrete,integrated,cpu",
+        "--gtest_filter=*"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Release"
+        "cwd": "${workspaceFolder}/out/Release"
       },
       "dependsOn": [
         "Build release"
@@ -321,16 +312,14 @@
     {
       "label": "Run debug WebNN end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "webnn_end2end_tests.exe",
-        "args": [
-          "-d gpu",
-          "--gtest_filter=*"
-        ]
-      },
+      "type": "process",
+      "command": "webnn_end2end_tests",
+      "args": [
+        "-d gpu",
+        "--gtest_filter=*"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Debug"
+        "cwd": "${workspaceFolder}/out/Debug"
       },
       "dependsOn": [
         "Build debug"
@@ -343,16 +332,14 @@
     {
       "label": "Run release WebNN end2end tests",
       "group": "test",
-      "type": "shell",
-      "windows": {
-        "command": "webnn_end2end_tests.exe",
-        "args": [
-          "-d gpu",
-          "--gtest_filter=*"
-        ]
-      },
+      "type": "process",
+      "command": "webnn_end2end_tests",
+      "args": [
+        "-d gpu",
+        "--gtest_filter=*"
+      ],
       "options": {
-        "cwd": "${workspaceRoot}\\out\\Release"
+        "cwd": "${workspaceFolder}/out/Release"
       },
       "dependsOn": [
         "Build release"
