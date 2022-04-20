@@ -15,6 +15,8 @@
 #ifndef GPGMM_COMMON_FLAGS_H_
 #define GPGMM_COMMON_FLAGS_H_
 
+#include <ostream>
+
 namespace gpgmm {
 
     // Flags is a type-safe means of storing enum values that can be OR'd
