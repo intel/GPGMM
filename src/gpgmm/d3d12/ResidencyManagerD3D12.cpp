@@ -28,16 +28,16 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    static constexpr uint32_t kDefaultVideoMemoryEvictSize = 50ll * 1024ll * 1024ll;  // 50MB
-    static constexpr float kDefaultMaxVideoMemoryBudget = 0.95f;
+    static constexpr uint32_t kDefaultEvictLimit = 50ll * 1024ll * 1024ll;  // 50MB
+    static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
 
     // static
     HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
                                                      ComPtr<IDXGIAdapter> adapter,
                                                      bool isUMA,
-                                                     float maxVideoMemoryBudget,
-                                                     uint64_t totalResourceBudgetLimit,
-                                                     uint64_t videoMemoryEvictSize,
+                                                     float videoMemoryBudget,
+                                                     uint64_t budget,
+                                                     uint64_t evictLimit,
                                                      ResidencyManager** residencyManagerOut) {
         // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
         Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
@@ -52,10 +52,9 @@ namespace gpgmm { namespace d3d12 {
             residencyFence.reset(ptr);
         }
 
-        std::unique_ptr<ResidencyManager> residencyManager =
-            std::unique_ptr<ResidencyManager>(new ResidencyManager(
-                std::move(device), std::move(adapter3), std::move(residencyFence), isUMA,
-                maxVideoMemoryBudget, totalResourceBudgetLimit, videoMemoryEvictSize));
+        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
+            new ResidencyManager(std::move(device), std::move(adapter3), std::move(residencyFence),
+                                 isUMA, videoMemoryBudget, budget, evictLimit));
 
         // Query and set the video memory limits per segment.
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
@@ -80,17 +79,16 @@ namespace gpgmm { namespace d3d12 {
                                        ComPtr<IDXGIAdapter3> adapter3,
                                        std::unique_ptr<Fence> fence,
                                        bool isUMA,
-                                       float maxVideoMemoryBudget,
-                                       uint64_t totalResourceBudgetLimit,
-                                       uint64_t videoMemoryEvictSize)
+                                       float videoMemoryBudget,
+                                       uint64_t budget,
+                                       uint64_t evictLimit)
         : mDevice(device),
           mAdapter(adapter3),
           mFence(std::move(fence)),
-          mMaxVideoMemoryBudget(maxVideoMemoryBudget == 0 ? kDefaultMaxVideoMemoryBudget
-                                                          : maxVideoMemoryBudget),
-          mTotalResourceBudgetLimit(totalResourceBudgetLimit),
-          mVideoMemoryEvictSize(videoMemoryEvictSize == 0 ? kDefaultVideoMemoryEvictSize
-                                                          : videoMemoryEvictSize) {
+          mVideoMemoryBudget(videoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
+                                                    : videoMemoryBudget),
+          mBudget(budget),
+          mEvictLimit(evictLimit == 0 ? kDefaultEvictLimit : evictLimit) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -100,12 +98,12 @@ namespace gpgmm { namespace d3d12 {
         // There is a non-zero memory usage even before any resources have been created, and this
         // value can vary by enviroment. By adding this in addition to the artificial budget limit,
         // we can create a predictable and reproducible budget.
-        if (mTotalResourceBudgetLimit > 0) {
+        if (mBudget > 0) {
             mLocalVideoMemorySegment.Info.Budget =
-                mLocalVideoMemorySegment.Info.CurrentUsage + mTotalResourceBudgetLimit;
+                mLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
             if (!isUMA) {
                 mNonLocalVideoMemorySegment.Info.Budget =
-                    mNonLocalVideoMemorySegment.Info.CurrentUsage + mTotalResourceBudgetLimit;
+                    mNonLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
             }
         }
     }
@@ -269,10 +267,10 @@ namespace gpgmm { namespace d3d12 {
             queryVideoMemoryInfo.CurrentUsage - videoMemoryInfo->CurrentReservation;
 
         // If we're restricting the budget, leave the budget as is.
-        if (mTotalResourceBudgetLimit == 0) {
+        if (mBudget == 0) {
             videoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfo.Budget - videoMemoryInfo->CurrentReservation) *
-                mMaxVideoMemoryBudget);
+                mVideoMemoryBudget);
         }
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory budget (MB)",
@@ -284,10 +282,9 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    // Any time we need to make something resident, we must check that we have enough free memory to
-    // make the new object resident while also staying within budget. If there isn't enough
-    // memory, we should evict until there is. Returns the number of bytes evicted.
-    HRESULT ResidencyManager::Evict(uint64_t sizeToMakeResident,
+    // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
+    // bytes evicted.
+    HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                     uint64_t* sizeEvictedOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
@@ -298,17 +295,20 @@ namespace gpgmm { namespace d3d12 {
             GetVideoMemorySegmentInfo(memorySegmentGroup);
         ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
 
-        const uint64_t currentUsageAfterMakeResident =
-            sizeToMakeResident + videoMemorySegmentInfo->CurrentUsage;
+        const uint64_t currentUsageAfterEvict =
+            evictSizeInBytes + videoMemorySegmentInfo->CurrentUsage;
 
-        // Return when we can call MakeResident and remain under budget.
-        if (currentUsageAfterMakeResident < videoMemorySegmentInfo->Budget) {
+        // Return if we will remain under budget after evict.
+        if (currentUsageAfterEvict < videoMemorySegmentInfo->Budget) {
             return S_OK;
         }
 
-        std::vector<ID3D12Pageable*> resourcesToEvict;
-        uint64_t sizeNeededToBeUnderBudget =
-            currentUsageAfterMakeResident - videoMemorySegmentInfo->Budget;
+        // Any time we need to make something resident, we must check that we have enough free
+        // memory to make the new object resident while also staying within budget. If there isn't
+        // enough memory, we should evict until there is.
+        std::vector<ID3D12Pageable*> objectsToEvict;
+        const uint64_t sizeNeededToBeUnderBudget =
+            currentUsageAfterEvict - videoMemorySegmentInfo->Budget;
         uint64_t sizeEvicted = 0;
         while (sizeEvicted < sizeNeededToBeUnderBudget) {
             // If the cache is empty, allow execution to continue. Note that fully
@@ -340,14 +340,16 @@ namespace gpgmm { namespace d3d12 {
             heap->RemoveFromList();
 
             sizeEvicted += heap->GetSize();
-            resourcesToEvict.push_back(heap->GetPageable().Get());
+            objectsToEvict.push_back(heap->GetPageable().Get());
 
             GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap, heap->GetInfo());
         }
 
-        if (resourcesToEvict.size() > 0) {
-            const uint32_t numOfResources = static_cast<uint32_t>(resourcesToEvict.size());
-            ReturnIfFailed(mDevice->Evict(numOfResources, resourcesToEvict.data()));
+        if (objectsToEvict.size() > 0) {
+            TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-out (MB)", sizeEvicted);
+
+            const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
+            ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
         }
 
         if (sizeEvictedOut != nullptr) {
@@ -388,8 +390,7 @@ namespace gpgmm { namespace d3d12 {
                 continue;
             }
 
-            const bool& heapIsInResidencyCache = heap->IsInResidencyLRUCache();
-            if (heapIsInResidencyCache) {
+            if (heap->IsInResidencyLRUCache()) {
                 // If the heap is already in the LRU, we must remove it and append again below to
                 // update its position in the LRU.
                 heap->RemoveFromList();
@@ -411,23 +412,25 @@ namespace gpgmm { namespace d3d12 {
 
             // Insert the heap into the appropriate LRU.
             InsertHeap(heap);
-
-            // Do not re-record the heap if only it's position in the cache was updated.
-            if (heapIsInResidencyCache) {
-                GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap, heap->GetInfo());
-            }
         }
 
         if (localSizeToMakeResident > 0) {
-            const uint32_t numOfresources = static_cast<uint32_t>(localHeapsToMakeResident.size());
+            const uint32_t numberOfObjectsToMakeResident =
+                static_cast<uint32_t>(localHeapsToMakeResident.size());
             ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
-                                        numOfresources, localHeapsToMakeResident.data()));
+                                        numberOfObjectsToMakeResident,
+                                        localHeapsToMakeResident.data()));
         } else if (nonLocalSizeToMakeResident > 0) {
-            const uint32_t numOfResources =
+            const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
-                                        nonLocalSizeToMakeResident, numOfResources,
+                                        nonLocalSizeToMakeResident, numberOfObjectsToMakeResident,
                                         nonLocalHeapsToMakeResident.data()));
+        }
+
+        if (localSizeToMakeResident > 0 || nonLocalSizeToMakeResident > 0) {
+            TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-in (MB)",
+                           localSizeToMakeResident + nonLocalSizeToMakeResident);
         }
 
         queue->ExecuteCommandLists(count, &commandList);
@@ -457,7 +460,7 @@ namespace gpgmm { namespace d3d12 {
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
             uint64_t sizeEvicted = 0;
-            ReturnIfFailed(Evict(mVideoMemoryEvictSize, memorySegmentGroup, &sizeEvicted));
+            ReturnIfFailed(Evict(mEvictLimit, memorySegmentGroup, &sizeEvicted));
             if (sizeEvicted == 0) {
                 return E_OUTOFMEMORY;
             }

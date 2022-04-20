@@ -35,8 +35,8 @@ namespace gpgmm { namespace d3d12 {
                                               ComPtr<IDXGIAdapter> adapter,
                                               bool isUMA,
                                               float videoMemoryBudget,
-                                              uint64_t availableForResourceBudget,
-                                              uint64_t videoMemoryEvictSize,
+                                              uint64_t budget,
+                                              uint64_t evictLimit,
                                               ResidencyManager** residencyManagerOut);
 
         ~ResidencyManager();
@@ -45,7 +45,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT UnlockHeap(Heap* heap);
         HRESULT InsertHeap(Heap* heap);
 
-        HRESULT Evict(uint64_t sizeToMakeResident,
+        HRESULT Evict(uint64_t evictSizeInBytes,
                       const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                       uint64_t* sizeEvictedOut = nullptr);
 
@@ -65,7 +65,7 @@ namespace gpgmm { namespace d3d12 {
                          bool isUMA,
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit,
-                         uint64_t videoMemoryEvictSize);
+                         uint64_t evictLimit);
 
         const char* GetTypename() const;
 
@@ -94,9 +94,9 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<Fence> mFence;
 
-        const float mMaxVideoMemoryBudget;
-        const uint64_t mTotalResourceBudgetLimit;
-        const uint64_t mVideoMemoryEvictSize;
+        const float mVideoMemoryBudget;
+        const uint64_t mBudget;
+        const uint64_t mEvictLimit;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
