@@ -91,6 +91,9 @@ namespace gpgmm { namespace d3d12 {
 
         const char* GetTypename() const;
 
+        // Returns the heap assigned to this resource allocation.
+        Heap* GetMemory() const;
+
       private:
         void DeleteThis() override;
 

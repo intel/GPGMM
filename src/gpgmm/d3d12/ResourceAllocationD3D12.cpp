@@ -93,11 +93,8 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        Heap* resourceHeap = ToBackend(GetMemory());
-        ASSERT(resourceHeap != nullptr);
-
         if (mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->LockHeap(resourceHeap));
+            ReturnIfFailed(mResidencyManager->LockHeap(GetMemory()));
         }
 
         // Range coordinates are always subresource-relative so the range should only be
@@ -126,11 +123,8 @@ namespace gpgmm { namespace d3d12 {
         // subresource-relative coordinates.
         ASSERT(subresource == 0 || GetMethod() != AllocationMethod::kSubAllocatedWithin);
 
-        Heap* resourceHeap = ToBackend(GetMemory());
-        ASSERT(resourceHeap != nullptr);
-
         if (mResidencyManager != nullptr) {
-            mResidencyManager->UnlockHeap(resourceHeap);
+            mResidencyManager->UnlockHeap(GetMemory());
         }
 
         D3D12_RANGE newWrittenRange{};
@@ -145,13 +139,13 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) const {
-        Heap* resourceHeap = ToBackend(GetMemory());
+        Heap* resourceHeap = GetMemory();
         ASSERT(resourceHeap != nullptr);
         return resourceHeap->UpdateResidency(residencySet);
     }
 
     bool ResourceAllocation::IsResident() const {
-        const Heap* resourceHeap = ToBackend(GetMemory());
+        const Heap* resourceHeap = GetMemory();
         ASSERT(resourceHeap != nullptr);
         return resourceHeap->IsResident();
     }
@@ -166,15 +160,16 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        Heap* resourceHeap = ToBackend(GetMemory());
-        ASSERT(resourceHeap != nullptr);
-
-        return {GetSize(),   GetOffset(),  mOffsetFromResource,
-                GetMethod(), resourceHeap, mResource.Get()};
+        return {GetSize(),   GetOffset(), mOffsetFromResource,
+                GetMethod(), GetMemory(), mResource.Get()};
     }
 
     const char* ResourceAllocation::GetTypename() const {
         return "GPUMemoryAllocation";
+    }
+
+    Heap* ResourceAllocation::GetMemory() const {
+        return ToBackend(MemoryAllocation::GetMemory());
     }
 
 }}  // namespace gpgmm::d3d12
