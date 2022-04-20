@@ -174,12 +174,11 @@ namespace gpgmm { namespace d3d12 {
         // Optional parameter. When 0 is specified, the API will not restrict the resource budget.
         uint64_t TotalResourceBudgetLimit;
 
-        // Video memory to evict from residency in order to make more resource resident, should
-        // there not be enough budget available.
+        // Total memory to evict from residency at once, should there not be enough budget left.
         //
         // Optional parameter. When 0 is specified, the API will automatically set the video memory
         // evict size to 50MB.
-        uint64_t VideoMemoryEvictSize;
+        uint64_t EvictLimit;
 
         // Memory fragmentation limit, expressed as a percentage of the resource heap size, that
         // is acceptable to be wasted due to internal fragmentation.

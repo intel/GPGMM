@@ -389,7 +389,7 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfFailed(ResidencyManager::CreateResidencyManager(
                 newDescriptor.Device, newDescriptor.Adapter, newDescriptor.IsUMA,
                 newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
-                newDescriptor.VideoMemoryEvictSize, &residencyManager));
+                newDescriptor.EvictLimit, &residencyManager));
         }
 
         *resourceAllocatorOut =
