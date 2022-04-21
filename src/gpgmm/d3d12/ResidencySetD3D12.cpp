@@ -19,9 +19,7 @@ namespace gpgmm { namespace d3d12 {
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
-        const bool inserted = mSet.insert(heap).second;
-        if (inserted) {
-            mToMakeResident.push_back(heap);
+        if (mSet.insert(heap).second) {
             return S_OK;
         }
         return E_FAIL;
@@ -29,7 +27,15 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResidencySet::Reset() {
         mSet.clear();
-        mToMakeResident.clear();
         return S_OK;
     }
+
+    std::set<Heap*>::iterator ResidencySet::begin() const {
+        return mSet.begin();
+    }
+
+    std::set<Heap*>::iterator ResidencySet::end() const {
+        return mSet.end();
+    }
+
 }}  // namespace gpgmm::d3d12

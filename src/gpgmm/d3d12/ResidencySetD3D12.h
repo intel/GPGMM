@@ -19,12 +19,10 @@
 #include "include/gpgmm_export.h"
 
 #include <set>
-#include <vector>
 
 namespace gpgmm { namespace d3d12 {
 
     class Heap;
-    class ResidencyManager;
 
     // Represents a set of heaps which are referenced by a command list.
     // The set must be updated to ensure each heap is made resident for execution.
@@ -35,11 +33,11 @@ namespace gpgmm { namespace d3d12 {
         HRESULT Insert(Heap* heap);
         HRESULT Reset();
 
-      private:
-        friend ResidencyManager;
+        std::set<Heap*>::iterator begin() const;
+        std::set<Heap*>::iterator end() const;
 
+      private:
         std::set<Heap*> mSet;
-        std::vector<Heap*> mToMakeResident;
     };
 
 }}  // namespace gpgmm::d3d12
