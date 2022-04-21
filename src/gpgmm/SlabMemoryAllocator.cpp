@@ -116,19 +116,16 @@ namespace gpgmm {
         SlabCache* cache = GetOrCreateCache(slabSize);
         ASSERT(cache != nullptr);
 
-        auto* pHead = cache->FreeList.head();
-
-        Slab* pFreeSlab = nullptr;
-
         // Check free-list since HEAD must always exist (linked-list is self-referential).
-        if (!cache->FreeList.empty()) {
-            pFreeSlab = pHead->value();
-        }
+        auto* pFreeHead = cache->FreeList.head();
+        Slab* pFreeSlab = pFreeHead->value();
 
         // Splice the full slab from the free-list to the full-list.
-        if (pFreeSlab != nullptr && pFreeSlab->IsFull()) {
-            pHead->RemoveFromList();
-            pHead->InsertBefore(cache->FullList.head());
+        if (!cache->FreeList.empty() && pFreeSlab->IsFull()) {
+            pFreeHead->RemoveFromList();
+            pFreeHead->InsertBefore(cache->FullList.head());
+            pFreeSlab = cache->FreeList.head()->value();
+            pFreeHead = nullptr;
         }
 
         // Push new free slab at free-list HEAD
@@ -140,6 +137,7 @@ namespace gpgmm {
 
         ASSERT(pFreeSlab != nullptr);
         ASSERT(!pFreeSlab->IsFull());
+        ASSERT(!cache->FreeList.empty());
 
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(
