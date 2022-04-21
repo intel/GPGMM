@@ -341,8 +341,6 @@ namespace gpgmm { namespace d3d12 {
 
             sizeEvicted += heap->GetSize();
             objectsToEvict.push_back(heap->GetPageable().Get());
-
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap, heap->GetInfo());
         }
 
         if (objectsToEvict.size() > 0) {
