@@ -382,9 +382,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t localSizeToMakeResident = 0;
         uint64_t nonLocalSizeToMakeResident = 0;
 
-        for (size_t i = 0; i < residencySet->mToMakeResident.size(); i++) {
-            Heap* heap = residencySet->mToMakeResident[i];
-
+        for (Heap* heap : *residencySet) {
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
                 continue;
