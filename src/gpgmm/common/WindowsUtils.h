@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/d3d12/ErrorD3D12.h"
+#ifndef GPGMM_COMMON_WINDOWSUTILS_H
+#define GPGMM_COMMON_WINDOWSUTILS_H
 
-#include "gpgmm/common/WindowsUtils.h"
+#include <string>
+namespace gpgmm {
 
-#include <comdef.h>
-#include <iomanip>
-#include <sstream>
+    std::wstring TCharToWString(const wchar_t* const str);
+    std::wstring TCharToWString(const char* const str);
 
-namespace gpgmm { namespace d3d12 {
+    std::string WCharToUTF8(const wchar_t* str);
 
-    std::string GetErrorMessage(HRESULT error) {
-        std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
-        std::stringstream ss;
-        ss << WCharToUTF8(wstring.c_str()) << " (0x" << std::hex << std::uppercase
-           << std::setfill('0') << std::setw(8) << error << ")";
-        return ss.str();
-    }
+}  // namespace gpgmm
 
-}}  // namespace gpgmm::d3d12
+#endif  // GPGMM_COMMON_WINDOWSUTILS_H

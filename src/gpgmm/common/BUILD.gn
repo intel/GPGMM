@@ -168,7 +168,11 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
     ]
 
     if (is_win) {
-      sources += [ "WindowsTime.cpp" ]
+      sources += [
+        "WindowsTime.cpp",
+        "WindowsUtils.cpp",
+        "WindowsUtils.h",
+      ]
     }
 
     configs += [ ":gpgmm_common_config" ]
