@@ -40,55 +40,15 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
         D3D12TestBase::TearDown();
     }
 
-    static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width) {
-        D3D12_RESOURCE_DESC resourceDesc;
-        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDesc.Alignment = 0;
-        resourceDesc.Width = width;
-        resourceDesc.Height = 1;
-        resourceDesc.DepthOrArraySize = 1;
-        resourceDesc.MipLevels = 1;
-        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
-        resourceDesc.SampleDesc.Count = 1;
-        resourceDesc.SampleDesc.Quality = 0;
-        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-        resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-        return resourceDesc;
-    }
-
-    static D3D12_RESOURCE_DESC CreateBasicTextureDesc(DXGI_FORMAT format,
-                                                      uint64_t width,
-                                                      uint64_t height,
-                                                      uint32_t sampleCount = 1) {
-        D3D12_RESOURCE_DESC resourceDesc;
-        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        resourceDesc.Alignment = 0;
-        resourceDesc.Width = width;
-        resourceDesc.Height = height;
-        resourceDesc.DepthOrArraySize = 1;
-        resourceDesc.MipLevels = 1;
-        resourceDesc.Format = format;
-        resourceDesc.SampleDesc.Count = sampleCount;
-        resourceDesc.SampleDesc.Quality = 0;
-        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-
-        // A multisampled resource must have either D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET or
-        // D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL set.
-        resourceDesc.Flags =
-            (sampleCount > 1) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
-
-        return resourceDesc;
-    }
-
     ComPtr<ResourceAllocator> mDefaultAllocator;
 };
 
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     // Creating an invalid allocator should always fail.
     {
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &allocator));
-        EXPECT_EQ(allocator, nullptr);
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &resourceAllocator));
+        EXPECT_EQ(resourceAllocator, nullptr);
     }
 
     // Creating an allocator without a device should always fail.
@@ -96,9 +56,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
         desc.Device = nullptr;
 
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        EXPECT_EQ(allocator, nullptr);
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_EQ(resourceAllocator, nullptr);
     }
 
     // Creating an allocator without an adapter should always fail.
@@ -106,18 +66,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
         desc.Adapter = nullptr;
 
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        EXPECT_EQ(allocator, nullptr);
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_EQ(resourceAllocator, nullptr);
     }
 
     // Creating a new allocator using the defaults should always succeed.
     {
-        ComPtr<ResourceAllocator> allocator;
+        ComPtr<ResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(
-            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
-        EXPECT_NE(allocator, nullptr);
-        EXPECT_NE(allocator, mDefaultAllocator);
+            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+        EXPECT_NE(resourceAllocator, nullptr);
     }
 
     // Creating a new allocator with a preferred resource heap size larger then the max resource
@@ -127,36 +86,36 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         desc.PreferredResourceHeapSize = kDefaultPreferredResourceHeapSize;
         desc.MaxResourceHeapSize = kDefaultPreferredResourceHeapSize / 2;
 
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        EXPECT_EQ(allocator, nullptr);
-    }
-
-    // Creating a new allocator with residency management should always succeed.
-    {
-        ComPtr<ResidencyManager> residencyManager;
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator,
-                                                            &residencyManager));
-        EXPECT_NE(allocator, nullptr);
-        EXPECT_NE(residencyManager, nullptr);
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_EQ(resourceAllocator, nullptr);
     }
 }
 
 // Exceeding the max resource heap size should always fail.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     constexpr uint64_t kOversizedBuffer = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_FAILED(mDefaultAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
+    ASSERT_FAILED(resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
                                                     D3D12_RESOURCE_STATE_COMMON, nullptr,
                                                     &allocation));
     ASSERT_EQ(allocation, nullptr);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     // Creating a resource without allocation should always fail.
     {
-        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        ASSERT_FAILED(resourceAllocator->CreateResource(
             {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
     }
@@ -164,7 +123,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     // Using the min resource heap size should always succeed.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -177,7 +136,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -192,7 +151,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -202,7 +161,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         allocationDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -212,7 +171,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -222,7 +181,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        ASSERT_FAILED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     }
@@ -230,17 +189,22 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     // Creating a zero sized buffer is not allowed.
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(mDefaultAllocator->CreateResource(
+        ASSERT_FAILED(resourceAllocator->CreateResource(
             {}, CreateBasicBufferDesc(0), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_EQ(allocation, nullptr);
     }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     // DXGI_FORMAT_R8G8B8A8_UNORM
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -251,10 +215,15 @@ TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateMultisampledTexture) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     // DXGI_FORMAT_R8G8B8A8_UNORM
     {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 4),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
@@ -265,25 +234,30 @@ TEST_F(D3D12ResourceAllocatorTests, CreateMultisampledTexture) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     // Importing a non-existent buffer should always fail.
     ComPtr<ResourceAllocation> externalAllocation;
-    ASSERT_FAILED(mDefaultAllocator->CreateResource(nullptr, &externalAllocation));
+    ASSERT_FAILED(resourceAllocator->CreateResource(nullptr, &externalAllocation));
     ASSERT_EQ(externalAllocation, nullptr);
 
     // Importing a buffer without returning the allocation should always fail.
-    ASSERT_FAILED(mDefaultAllocator->CreateResource(
+    ASSERT_FAILED(resourceAllocator->CreateResource(
         {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
         nullptr, nullptr));
 
     // Importing a buffer should always succeed.
-    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
         nullptr, &externalAllocation));
     ASSERT_NE(externalAllocation, nullptr);
 
     ComPtr<ResourceAllocation> internalAllocation;
     ASSERT_SUCCEEDED(
-        mDefaultAllocator->CreateResource(externalAllocation->GetResource(), &internalAllocation));
+        resourceAllocator->CreateResource(externalAllocation->GetResource(), &internalAllocation));
     ASSERT_NE(internalAllocation, nullptr);
 
     // Underlying resource must stay the same.
@@ -291,12 +265,17 @@ TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalid) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     // Garbage buffer descriptor should always fail.
     D3D12_RESOURCE_DESC badBufferDesc = CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize);
     badBufferDesc.Flags = static_cast<D3D12_RESOURCE_FLAGS>(0xFF);
 
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_FAILED(mDefaultAllocator->CreateResource({}, badBufferDesc, D3D12_RESOURCE_STATE_COMMON,
+    ASSERT_FAILED(resourceAllocator->CreateResource({}, badBufferDesc, D3D12_RESOURCE_STATE_COMMON,
                                                     nullptr, &allocation));
     ASSERT_EQ(allocation, nullptr);
 }
@@ -305,14 +284,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
     desc.Flags = ALLOCATOR_FLAG_ALWAYS_COMMITED;
 
-    ComPtr<ResourceAllocator> allocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
-    ASSERT_NE(allocator, nullptr);
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
 
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_SUCCEEDED(
-        allocator->CreateResource({}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize),
-                                  D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        {}, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize), D3D12_RESOURCE_STATE_COMMON,
+        nullptr, &allocation));
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetSize(), kDefaultPreferredResourceHeapSize);
 
@@ -322,23 +301,22 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
 
     // Commited resources must use all the memory allocated.
-    EXPECT_EQ(allocator->GetInfo().UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
-    EXPECT_EQ(allocator->GetInfo().UsedBlockUsage, allocator->GetInfo().UsedMemoryUsage);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, kDefaultPreferredResourceHeapSize);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage,
+              resourceAllocator->GetInfo().UsedMemoryUsage);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
-    // Enabling pooling to recycle memory since sub-allocation could fail.
-    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-
-    ComPtr<ResourceAllocator> allocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &allocator));
-    ASSERT_NE(allocator, nullptr);
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
 
     // Check we can't reuse memory if CreateResource was never called previously.
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_FAILED(allocator->CreateResource(
+    ASSERT_FAILED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kDefaultPreferredResourceHeapSize + 1),
         D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     ASSERT_EQ(allocation, nullptr);
@@ -347,8 +325,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
 
     allocationDesc.Flags = ALLOCATION_FLAG_NONE;
     ComPtr<ResourceAllocation> allocationA;
-    ASSERT_SUCCEEDED(allocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
-                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationA));
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationA));
     ASSERT_NE(allocationA, nullptr);
 
     // Allow the memory from |allocationA| to be recycled.
@@ -357,12 +336,18 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     // Re-check that the same resource heap is used once CreateResource gets called.
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
     ComPtr<ResourceAllocation> allocationB;
-    ASSERT_SUCCEEDED(allocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
-                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationB));
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationB));
     ASSERT_NE(allocationB, nullptr);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     ALLOCATION_DESC desc = {};
     desc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
     desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
@@ -371,7 +356,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
 
     // Create two tiny buffers that will be byte-aligned.
     ComPtr<ResourceAllocation> tinyBufferAllocA;
-    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
         &tinyBufferAllocA));
     ASSERT_NE(tinyBufferAllocA, nullptr);
@@ -379,7 +364,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     EXPECT_EQ(tinyBufferAllocA->GetSize(), kSubAllocationSize);
 
     ComPtr<ResourceAllocation> tinyBufferAllocB;
-    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
         &tinyBufferAllocB));
     ASSERT_NE(tinyBufferAllocB, nullptr);
@@ -403,7 +388,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     desc.HeapType = D3D12_HEAP_TYPE_READBACK;
 
     ComPtr<ResourceAllocation> tinyBufferAllocC;
-    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
         &tinyBufferAllocC));
     ASSERT_NE(tinyBufferAllocC, nullptr);
@@ -441,6 +426,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
     constexpr uint64_t bufferSize = kDefaultPreferredResourceHeapSize / 2;
 
     ALLOCATION_DESC allocationDesc = {};
@@ -448,7 +438,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
     ComPtr<ResourceAllocation> subAllocation;
-    ASSERT_SUCCEEDED(mDefaultAllocator->CreateResource(
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(bufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr, &subAllocation));
     ASSERT_NE(subAllocation, nullptr);
@@ -607,14 +597,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
 
-        ComPtr<ResourceAllocator> allocator;
-        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &allocator));
-        ASSERT_NE(allocator, nullptr);
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
 
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(
-            allocator->CreateResource(standaloneAllocationDesc, CreateBasicBufferDesc(1024),
-                                      D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            standaloneAllocationDesc, CreateBasicBufferDesc(1024),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
@@ -807,16 +797,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
 
 // Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
-    ComPtr<ResourceAllocator> allocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &allocator));
-    ASSERT_NE(allocator, nullptr);
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
 
     constexpr uint64_t kNumOfBuffers = 1000u;
 
     std::set<ComPtr<ResourceAllocation>> allocs = {};
     for (uint64_t i = 0; i < kNumOfBuffers; i++) {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(allocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         allocs.insert(allocation);
@@ -827,17 +818,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
 
 // Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
-    ComPtr<ResourceAllocator> allocator;
+    ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
-        CreateBasicAllocatorDesc(/*enablePrefetch*/ true), &allocator));
-    ASSERT_NE(allocator, nullptr);
+        CreateBasicAllocatorDesc(/*enablePrefetch*/ true), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
 
     constexpr uint64_t kNumOfBuffers = 1000u;
 
     std::set<ComPtr<ResourceAllocation>> allocs = {};
     for (uint64_t i = 0; i < kNumOfBuffers; i++) {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(allocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         allocs.insert(allocation);
