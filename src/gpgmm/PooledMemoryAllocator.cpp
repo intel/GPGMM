@@ -71,4 +71,8 @@ namespace gpgmm {
         return mPool->GetMemorySize();
     }
 
+    const char* PooledMemoryAllocator::GetTypename() const {
+        return "PooledMemoryAllocator";
+    }
+
 }  // namespace gpgmm

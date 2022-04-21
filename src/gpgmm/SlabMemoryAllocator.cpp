@@ -388,6 +388,10 @@ namespace gpgmm {
         return GetFirstChild()->GetMemorySize();
     }
 
+    const char* SlabCacheAllocator::GetTypename() const {
+        return "SlabCacheAllocator";
+    }
+
     uint64_t SlabCacheAllocator::GetSlabCacheSizeForTesting() const {
         std::lock_guard<std::mutex> lock(mMutex);
 

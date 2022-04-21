@@ -125,6 +125,8 @@ namespace gpgmm {
         // Should be overridden when a child allocator or block allocator is used.
         virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
 
+        virtual const char* GetTypename() const;
+
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for

@@ -152,6 +152,10 @@ namespace gpgmm {
         return result;
     }
 
+    const char* BuddyMemoryAllocator::GetTypename() const {
+        return "BuddyMemoryAllocator";
+    }
+
     uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
         std::lock_guard<std::mutex> lock(mMutex);
 

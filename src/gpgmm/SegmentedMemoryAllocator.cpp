@@ -212,4 +212,8 @@ namespace gpgmm {
         return count;
     }
 
+    const char* SegmentedMemoryAllocator::GetTypename() const {
+        return "SegmentedMemoryAllocator";
+    }
+
 }  // namespace gpgmm

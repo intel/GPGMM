@@ -47,6 +47,7 @@ namespace gpgmm {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         void ReleaseMemory() override;
         uint64_t GetMemoryAlignment() const override;
+        const char* GetTypename() const override;
 
         uint64_t GetSegmentSizeForTesting() const;
 

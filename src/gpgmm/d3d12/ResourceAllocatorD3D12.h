@@ -282,7 +282,7 @@ namespace gpgmm { namespace d3d12 {
         // Return the current allocator usage.
         RESOURCE_ALLOCATOR_INFO GetInfo() const override;
 
-        const char* GetTypename() const;
+        const char* GetTypename() const override;
 
       private:
         friend BufferAllocator;

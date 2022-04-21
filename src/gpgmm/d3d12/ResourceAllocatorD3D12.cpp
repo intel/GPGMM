@@ -305,7 +305,7 @@ namespace gpgmm { namespace d3d12 {
             if (allocation == nullptr) {
                 DebugEvent("ResourceAllocator.TryAllocateResource",
                            ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << "Resource memory could not be allocated.";
+                    << std::string(allocator->GetTypename()) + " failed to allocate memory.";
 
                 return E_FAIL;
             }

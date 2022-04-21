@@ -149,6 +149,8 @@ namespace gpgmm {
 
         uint64_t GetMemorySize() const override;
 
+        const char* GetTypename() const override;
+
         uint64_t GetSlabCacheSizeForTesting() const;
 
       private:
