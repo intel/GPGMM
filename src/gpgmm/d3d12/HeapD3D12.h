@@ -54,8 +54,6 @@ namespace gpgmm { namespace d3d12 {
 
         ID3D12Heap* GetHeap() const;
 
-        HRESULT UpdateResidency(ResidencySet* residencySet);
-
         bool IsResident() const;
 
         // Testing only.

@@ -17,7 +17,6 @@
 
 #include "gpgmm/Debug.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
-#include "gpgmm/d3d12/ResidencySetD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,
@@ -90,10 +89,6 @@ namespace gpgmm { namespace d3d12 {
 
     bool Heap::IsResident() const {
         return IsInList() || IsResidencyLocked();
-    }
-
-    HRESULT Heap::UpdateResidency(ResidencySet* residencySet) {
-        return residencySet->Insert(this);
     }
 
     HEAP_INFO Heap::GetInfo() const {

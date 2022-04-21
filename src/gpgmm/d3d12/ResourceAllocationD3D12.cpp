@@ -22,6 +22,7 @@
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
+#include "gpgmm/d3d12/ResidencySetD3D12.h"
 
 #include <utility>
 
@@ -139,9 +140,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) const {
-        Heap* resourceHeap = GetMemory();
-        ASSERT(resourceHeap != nullptr);
-        return resourceHeap->UpdateResidency(residencySet);
+        return residencySet->Insert(GetMemory());
     }
 
     bool ResourceAllocation::IsResident() const {
