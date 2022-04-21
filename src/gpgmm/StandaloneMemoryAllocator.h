@@ -35,6 +35,7 @@ namespace gpgmm {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
 
         MEMORY_ALLOCATOR_INFO GetInfo() const override;
+        const char* GetTypename() const override;
     };
 
 }  // namespace gpgmm

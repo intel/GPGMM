@@ -45,32 +45,21 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::GetInfo() const {
-        std::lock_guard<std::mutex> lock(mMutex);
-
-        MEMORY_ALLOCATOR_INFO result = {};
-        {
-            const MEMORY_ALLOCATOR_INFO& info = mFirstAllocator->GetInfo();
-            result.FreeMemoryUsage += info.FreeMemoryUsage;
-            result.UsedBlockCount += info.UsedBlockCount;
-            result.UsedMemoryUsage += info.UsedMemoryUsage;
-            result.UsedMemoryCount += info.UsedMemoryCount;
-        }
-        {
-            const MEMORY_ALLOCATOR_INFO& info = mSecondAllocator->GetInfo();
-            result.FreeMemoryUsage += info.FreeMemoryUsage;
-            result.UsedBlockCount += info.UsedBlockCount;
-            result.UsedMemoryUsage += info.UsedMemoryUsage;
-            result.UsedMemoryCount += info.UsedMemoryCount;
-        }
-
-        return result;
-    }
-
     void ConditionalMemoryAllocator::DeallocateMemory(
         std::unique_ptr<MemoryAllocation> allocation) {
         // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
         allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
+    }
+
+    MEMORY_ALLOCATOR_INFO ConditionalMemoryAllocator::GetInfo() const {
+        MEMORY_ALLOCATOR_INFO result = {};
+        result += mFirstAllocator->GetInfo();
+        result += mSecondAllocator->GetInfo();
+        return result;
+    }
+
+    const char* ConditionalMemoryAllocator::GetTypename() const {
+        return "ConditionalMemoryAllocator";
     }
 
     MemoryAllocator* ConditionalMemoryAllocator::GetFirstAllocatorForTesting() const {

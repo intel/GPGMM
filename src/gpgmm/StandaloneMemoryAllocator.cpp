@@ -62,4 +62,8 @@ namespace gpgmm {
         result += GetFirstChild()->GetInfo();
         return result;
     }
+
+    const char* StandaloneMemoryAllocator::GetTypename() const {
+        return "StandaloneMemoryAllocator";
+    }
 }  // namespace gpgmm

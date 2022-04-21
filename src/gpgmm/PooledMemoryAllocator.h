@@ -35,6 +35,7 @@ namespace gpgmm {
                                                             bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t GetMemorySize() const override;
+        const char* GetTypename() const override;
 
       private:
         MemoryPool* const mPool;

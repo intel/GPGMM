@@ -110,4 +110,8 @@ namespace gpgmm {
         return mInfo;
     }
 
+    const char* MemoryAllocator::GetTypename() const {
+        return "MemoryAllocator";
+    }
+
 }  // namespace gpgmm
