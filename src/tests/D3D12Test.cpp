@@ -78,4 +78,46 @@ namespace gpgmm { namespace d3d12 {
         return desc;
     }
 
+    // static
+    D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicBufferDesc(uint64_t width) {
+        D3D12_RESOURCE_DESC resourceDesc;
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Alignment = 0;
+        resourceDesc.Width = width;
+        resourceDesc.Height = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+        resourceDesc.SampleDesc.Count = 1;
+        resourceDesc.SampleDesc.Quality = 0;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+        return resourceDesc;
+    }
+
+    // static
+    D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicTextureDesc(DXGI_FORMAT format,
+                                                              uint64_t width,
+                                                              uint64_t height,
+                                                              uint32_t sampleCount) {
+        D3D12_RESOURCE_DESC resourceDesc;
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        resourceDesc.Alignment = 0;
+        resourceDesc.Width = width;
+        resourceDesc.Height = height;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = format;
+        resourceDesc.SampleDesc.Count = sampleCount;
+        resourceDesc.SampleDesc.Quality = 0;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
+        // A multisampled resource must have either D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET or
+        // D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL set.
+        resourceDesc.Flags =
+            (sampleCount > 1) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
+
+        return resourceDesc;
+    }
+
 }}  // namespace gpgmm::d3d12

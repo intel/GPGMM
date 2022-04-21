@@ -35,6 +35,13 @@ namespace gpgmm { namespace d3d12 {
 
         ALLOCATOR_DESC CreateBasicAllocatorDesc(bool enablePrefetch = false) const;
 
+        static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width);
+
+        static D3D12_RESOURCE_DESC CreateBasicTextureDesc(DXGI_FORMAT format,
+                                                          uint64_t width,
+                                                          uint64_t height,
+                                                          uint32_t sampleCount = 1);
+
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;
