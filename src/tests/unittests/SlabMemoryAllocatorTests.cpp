@@ -31,7 +31,7 @@ static constexpr uint64_t kDefaultSlabAlignment = 1u;
 static constexpr double kDefaultSlabFragmentationLimit = 0.125;
 static constexpr bool kDefaultPrefetchSlab = false;
 
-// Verify a single resource allocation in a single slab.
+// Verify allocation in a single slab.
 TEST(SlabMemoryAllocatorTests, SingleSlab) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
@@ -143,15 +143,16 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
     }
 }
 
-// Verify a single resource allocation in multiple slabs.
+// Verify allocation in multiple slabs.
 TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
-    constexpr uint64_t kBlockSize = 32;
-    constexpr uint64_t kMaxSlabSize = 512;
 
     // Fill up exactly N slabs (allocation = block = slab size).
     {
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, /*slabSize*/ kBlockSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
                                       kDefaultPrefetchSlab, dummyMemoryAllocator.get());
@@ -175,6 +176,9 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
 
     // Fill up slabs through pre-allocation (allocation < block < slab size).
     {
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
                                       kDefaultPrefetchSlab, dummyMemoryAllocator.get());
@@ -195,6 +199,89 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         }
 
         EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
+    }
+
+    // Verify slabs are reused in LIFO.
+    {
+        constexpr uint64_t kBlockSize = 64;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      kDefaultPrefetchSlab, dummyMemoryAllocator.get());
+
+        // Both allocation A and B go in Slab A, which will become full.
+        std::unique_ptr<MemoryAllocation> allocationAinSlabA =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationAinSlabA, nullptr);
+
+        std::unique_ptr<MemoryAllocation> allocationBInSlabA =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationAinSlabA, nullptr);
+
+        EXPECT_EQ(allocationAinSlabA->GetMemory(), allocationBInSlabA->GetMemory());
+
+        // Allocation C and D go in Slab B, which will become full.
+        std::unique_ptr<MemoryAllocation> allocationCInSlabB =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationCInSlabB, nullptr);
+
+        EXPECT_NE(allocationBInSlabA->GetMemory(), allocationCInSlabB->GetMemory());
+
+        std::unique_ptr<MemoryAllocation> allocationDInSlabB =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationDInSlabB, nullptr);
+
+        EXPECT_EQ(allocationCInSlabB->GetMemory(), allocationDInSlabB->GetMemory());
+
+        // Allocation E and F goes in Slab C, which will become full.
+        std::unique_ptr<MemoryAllocation> allocationEInSlabC =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationEInSlabC, nullptr);
+
+        EXPECT_NE(allocationDInSlabB->GetMemory(), allocationEInSlabC->GetMemory());
+
+        std::unique_ptr<MemoryAllocation> allocationFInSlabC =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationFInSlabC, nullptr);
+
+        EXPECT_EQ(allocationEInSlabC->GetMemory(), allocationFInSlabC->GetMemory());
+
+        // Free list: []
+        // Full list: C -> B -> A.
+
+        allocator.DeallocateMemory(std::move(allocationAinSlabA));
+        allocator.DeallocateMemory(std::move(allocationCInSlabB));
+
+        // Free list: B -> A.
+        // Full list: C.
+
+        std::unique_ptr<MemoryAllocation> allocationGInSlabB =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationGInSlabB, nullptr);
+        EXPECT_EQ(allocationDInSlabB->GetMemory(), allocationGInSlabB->GetMemory());
+
+        // Free list: A.
+        // Full list: B -> C.
+
+        std::unique_ptr<MemoryAllocation> allocationHInSlabA =
+            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        ASSERT_NE(allocationGInSlabB, nullptr);
+
+        EXPECT_EQ(allocationBInSlabA->GetMemory(), allocationHInSlabA->GetMemory());
+
+        // Free list: [].
+        // Full list: A -> B -> C.
+
+        allocator.DeallocateMemory(std::move(allocationHInSlabA));
+        allocator.DeallocateMemory(std::move(allocationBInSlabA));
+
+        allocator.DeallocateMemory(std::move(allocationGInSlabB));
+        allocator.DeallocateMemory(std::move(allocationDInSlabB));
+
+        allocator.DeallocateMemory(std::move(allocationEInSlabC));
+        allocator.DeallocateMemory(std::move(allocationFInSlabC));
+
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
     }
 }
 
