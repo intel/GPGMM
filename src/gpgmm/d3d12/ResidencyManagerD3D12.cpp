@@ -380,7 +380,10 @@ namespace gpgmm { namespace d3d12 {
         uint64_t localSizeToMakeResident = 0;
         uint64_t nonLocalSizeToMakeResident = 0;
 
+        uint64_t residentSize = 0;
         for (Heap* heap : *residencySet) {
+            residentSize += heap->GetSize();
+
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
                 continue;
@@ -424,10 +427,7 @@ namespace gpgmm { namespace d3d12 {
                                         nonLocalHeapsToMakeResident.data()));
         }
 
-        if (localSizeToMakeResident > 0 || nonLocalSizeToMakeResident > 0) {
-            TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-in (MB)",
-                           localSizeToMakeResident + nonLocalSizeToMakeResident);
-        }
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-in (MB)", residentSize);
 
         queue->ExecuteCommandLists(count, &commandList);
         ReturnIfFailed(mFence->Signal(queue));
