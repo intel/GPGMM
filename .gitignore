@@ -27,6 +27,9 @@ CMakeCache.txt
 *.pdb
 *.filters
 
+# Files and directories added by Doxygen build
+html
+
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 
 ### Emacs ###
