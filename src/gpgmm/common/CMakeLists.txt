@@ -41,6 +41,8 @@ target_sources(gpgmm_common PRIVATE
 if (WIN32)
     target_sources(gpgmm_common PRIVATE
         "WindowsTime.cpp"
+        "WindowsUtils.cpp"
+        "WindowsUtils.h"
     )
 endif()
 
