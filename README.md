@@ -9,6 +9,10 @@
 
 GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU application runtimes or middleware libraries that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded Video Memory Manager (VidMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
 
+* [Documentation](https://intel.github.io/GPGMM/html/)
+* [Changelog](https://github.com/intel/GPGMM/releases)
+* [License](https://github.com/intel/GPGMM/blob/main/LICENSE)
+
 ## Build and Run
 
 ### Install `depot_tools`
