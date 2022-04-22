@@ -1,0 +1,29 @@
+name: doxygen_builder
+
+on:
+  push:
+    branches: main
+
+  pull_request:
+    branches: main
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build documentation
+      uses: mattnotmitt/doxygen-action@v1.1.0
+      with:
+        doxyfile-path: "./Doxyfile"
+        working-directory: "."
+
+    - name: Publish documentation
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
