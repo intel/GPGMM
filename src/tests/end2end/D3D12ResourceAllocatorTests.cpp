@@ -29,18 +29,11 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
   protected:
     void SetUp() override {
         D3D12TestBase::SetUp();
-
-        ASSERT_SUCCEEDED(
-            ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &mDefaultAllocator));
-        ASSERT_NE(mDefaultAllocator, nullptr);
     }
 
     void TearDown() override {
-        mDefaultAllocator = nullptr;
         D3D12TestBase::TearDown();
     }
-
-    ComPtr<ResourceAllocator> mDefaultAllocator;
 };
 
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
