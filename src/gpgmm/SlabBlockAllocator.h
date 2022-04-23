@@ -36,6 +36,8 @@ namespace gpgmm {
         MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment = 1) override;
         void DeallocateBlock(MemoryBlock* block) override;
 
+        const char* GetTypename() const override;
+
       private:
         struct SlabBlock : public MemoryBlock {
             SlabBlock* pNext = nullptr;

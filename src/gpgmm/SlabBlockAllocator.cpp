@@ -88,4 +88,8 @@ namespace gpgmm {
         currBlock->pNext = head;
     }
 
+    const char* SlabBlockAllocator::GetTypename() const {
+        return "SlabBlockAllocator";
+    }
+
 }  // namespace gpgmm

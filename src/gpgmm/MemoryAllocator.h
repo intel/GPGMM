@@ -24,6 +24,7 @@
 #include "gpgmm/WorkerThread.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Limits.h"
+#include "gpgmm/common/Log.h"
 
 #include <memory>
 #include <mutex>
@@ -82,7 +83,7 @@ namespace gpgmm {
         // Constructs a MemoryAllocator that owns a single child allocator.
         explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> child);
 
-        virtual ~MemoryAllocator() = default;
+        virtual ~MemoryAllocator() override = default;
 
         // Attempts to allocate memory and return a allocation that is at-least of the requested
         // |size| whose value is a multiple of |alignment|. If it cannot, return
@@ -125,7 +126,7 @@ namespace gpgmm {
         // Should be overridden when a child allocator or block allocator is used.
         virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
 
-        virtual const char* GetTypename() const;
+        const char* GetTypename() const override;
 
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
@@ -142,6 +143,10 @@ namespace gpgmm {
 
             MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {
+                DebugLog() << std::string(allocator->GetTypename()) +
+                                  " failed to sub-allocate memory range = ["
+                           << std::to_string(block->Offset) << ", "
+                           << std::to_string(block->Offset + block->Size) << "].";
                 allocator->DeallocateBlock(block);
                 return nullptr;
             }

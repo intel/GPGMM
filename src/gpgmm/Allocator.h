@@ -32,6 +32,9 @@ namespace gpgmm {
       public:
         AllocatorBase() = default;
         virtual ~AllocatorBase() = default;
+        virtual const char* GetTypename() const {
+            return "Allocator";
+        }
     };
 
 }  // namespace gpgmm
