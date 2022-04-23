@@ -268,4 +268,8 @@ namespace gpgmm {
         SafeDelete(block);
     }
 
+    const char* BuddyBlockAllocator::GetTypename() const {
+        return "BuddyBlockAllocator";
+    }
+
 }  // namespace gpgmm

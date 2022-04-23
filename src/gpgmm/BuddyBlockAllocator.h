@@ -48,6 +48,8 @@ namespace gpgmm {
         // For testing purposes only.
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;
 
+        const char* GetTypename() const override;
+
       private:
         uint32_t ComputeLevelFromBlockSize(uint64_t blockSize) const;
         uint64_t GetNextFreeAlignedBlock(size_t allocationBlockLevel, uint64_t alignment) const;
