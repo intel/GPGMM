@@ -85,14 +85,21 @@ namespace gpgmm {
 
         virtual ~MemoryAllocator() override = default;
 
-        // Attempts to allocate memory and return a allocation that is at-least of the requested
-        // |size| whose value is a multiple of |alignment|. If it cannot, return
-        // nullptr. The returned MemoryAllocation is only valid for the lifetime of this allocator.
-        // When |neverAllocate| is true, the memory allocator will not allocate anything and
-        // effectively no-op.
-        // When |cacheSize| is true, the memory allocator may cache for the requested
-        // allocation to speed-up subsequent requests of the same size.
-        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        // Attempts to allocate memory and return an allocation that has at-least
+        // |requestedSize| allocated space whose value is a multiple of |alignment|. If it cannot,
+        // return nullptr. The returned allocation is only valid for the lifetime of |this|
+        // allocator.
+        //
+        // When |neverAllocate| is true, the memory allocator will not allocate anything
+        // and effectively no-op.
+        //
+        // When |cacheSize| is true, the memory allocator may cache for the
+        // requested allocation to speed-up subsequent requests of the same size.
+        //
+        // When |prefetchMemory| is true, the memory allocator may pre-fetch memory for the next
+        // allocation, on a background thread, to speed-up subsequent requests of contigious
+        // allocations.
+        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                                     uint64_t alignment,
                                                                     bool neverAllocate,
                                                                     bool cacheSize,
@@ -100,30 +107,33 @@ namespace gpgmm {
 
         // Non-blocking version of TryAllocateMemory.
         // Caller must wait for the event to complete before using the resulting allocation.
-        std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(uint64_t size,
+        std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(uint64_t requestSize,
                                                                       uint64_t alignment);
 
         // Free the allocation by deallocating the block used to sub-allocate it and the underlying
-        // memory block used with it. The |allocation| will be considered invalid after
-        // DeallocateMemory.
+        // memory block used with it. Caller must assume |allocation| is invalid after
+        // DeallocateMemory gets called.
         virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
 
-        // Free memory retained by this memory allocator.
-        // Used to reuse memory blocks between calls to TryAllocateMemory.
+        // Free memory retained by |this| memory allocator.
+        // Used to reuse memory between calls to TryAllocateMemory.
         virtual void ReleaseMemory();
 
+        // Get the fixed-memory sized of |this| memory allocator.
         // If this allocator only allocates memory blocks using the same size, this value
-        // must be specified. Otherwise, kInvalidSize is returned to denote any alignment is
-        // allowed.
+        // is guarenteed to valid. Otherwise, kInvalidSize is returned to denote any memory size
+        // could be created by |this| allocator.
         virtual uint64_t GetMemorySize() const;
 
-        // If this allocator only allocates memory blocks using the same alignment, this value
-        // must be specified. Otherwise, kInvalidOffset is returned to denote any alignment is
+        // Get the fixed-memory alignment of |this| memory allocator.
+        // If this allocator only allocates memory using the same alignment, this value
+        // is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is
         // allowed.
         virtual uint64_t GetMemoryAlignment() const;
 
-        // Collect and return the number and size of memory blocks allocated by this allocator.
-        // Should be overridden when a child allocator or block allocator is used.
+        // Get memory allocator usage.
+        // Should be overridden when a child or block allocator is used to avoid
+        // over-counting.
         virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
 
         const char* GetTypename() const override;

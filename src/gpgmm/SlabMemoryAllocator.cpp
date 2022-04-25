@@ -60,17 +60,17 @@ namespace gpgmm {
         }
     }
 
-    uint64_t SlabMemoryAllocator::ComputeSlabSize(uint64_t size) const {
+    uint64_t SlabMemoryAllocator::ComputeSlabSize(uint64_t requestSize) const {
         // If the left over empty space is less than |mSlabFragmentationLimit| x slab size,
         // then the fragmentation is acceptable and we are done. For example, a 4MB slab and and a
         // 512KB block fits exactly 8 blocks with no wasted space. But a 3MB block has 1MB worth of
         // empty space leftover which exceeds |mSlabFragmentationLimit| x slab size or 500KB.
-        ASSERT(size <= mBlockSize);
+        ASSERT(requestSize <= mBlockSize);
 
         // Slabs are grown in multiple of powers of two of the block size or |mSlabSize|
         // if specified.
         uint64_t slabSize = std::max(mSlabSize, mBlockSize);
-        const uint64_t wastedBytes = mBlockSize - size;
+        const uint64_t wastedBytes = mBlockSize - requestSize;
         while (wastedBytes > (mSlabFragmentationLimit * slabSize)) {
             slabSize *= 2;
         }
@@ -88,7 +88,7 @@ namespace gpgmm {
         return cache;
     }
 
-    std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                              uint64_t alignment,
                                                                              bool neverAllocate,
                                                                              bool cacheSize,
@@ -97,14 +97,14 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (size > mBlockSize) {
+        if (requestSize > mBlockSize) {
             DebugEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the block size (" + std::to_string(size) + " vs " +
-                       std::to_string(mBlockSize) + " bytes).";
+                << "Allocation size exceeded the block size (" + std::to_string(requestSize) +
+                       " vs " + std::to_string(mBlockSize) + " bytes).";
             return {};
         }
 
-        const uint64_t slabSize = ComputeSlabSize(size);
+        const uint64_t slabSize = ComputeSlabSize(requestSize);
         if (slabSize > mMaxSlabSize) {
             DebugEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Slab size exceeded the max slab size (" + std::to_string(slabSize) + " vs " +
@@ -295,7 +295,7 @@ namespace gpgmm {
         mSlabAllocators.RemoveAndDeleteAll();
     }
 
-    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                             uint64_t alignment,
                                                                             bool neverAllocate,
                                                                             bool cacheSize,
@@ -304,9 +304,9 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(size);
+        GPGMM_CHECK_NONZERO(requestSize);
 
-        const uint64_t blockSize = AlignTo(size, mMinBlockSize);
+        const uint64_t blockSize = AlignTo(requestSize, mMinBlockSize);
 
         // Create a slab allocator for the new entry.
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), cacheSize);

@@ -24,8 +24,8 @@ class DummyBuddyBlockAllocator {
     DummyBuddyBlockAllocator(uint64_t maxBlockSize) : mAllocator(maxBlockSize) {
     }
 
-    MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment = 1) {
-        return mAllocator.TryAllocateBlock(size, alignment);
+    MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) {
+        return mAllocator.TryAllocateBlock(requestSize, alignment);
     }
 
     void DeallocateBlock(MemoryBlock* block) {

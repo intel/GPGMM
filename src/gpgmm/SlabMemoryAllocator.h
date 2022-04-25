@@ -53,7 +53,7 @@ namespace gpgmm {
         ~SlabMemoryAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize,
@@ -65,7 +65,7 @@ namespace gpgmm {
         uint64_t GetSlabSizeForTesting() const;
 
       private:
-        uint64_t ComputeSlabSize(uint64_t size) const;
+        uint64_t ComputeSlabSize(uint64_t requestSize) const;
 
         // Slab is a node in a doubly-linked list that contains a free-list of blocks
         // and a reference to underlying memory.
@@ -138,7 +138,7 @@ namespace gpgmm {
         ~SlabCacheAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize,

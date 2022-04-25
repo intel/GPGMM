@@ -144,17 +144,17 @@ namespace gpgmm {
         }
     }
 
-    MemoryBlock* BuddyBlockAllocator::TryAllocateBlock(uint64_t size, uint64_t alignment) {
-        GPGMM_CHECK_NONZERO(size);
+    MemoryBlock* BuddyBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
+        GPGMM_CHECK_NONZERO(requestSize);
 
-        if (size > mMaxBlockSize) {
+        if (requestSize > mMaxBlockSize) {
             DebugEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "MemoryBlock size exceeded the max block size.";
             return nullptr;
         }
 
         // Compute the level
-        const uint32_t sizeToLevel = ComputeLevelFromBlockSize(size);
+        const uint32_t sizeToLevel = ComputeLevelFromBlockSize(requestSize);
 
         ASSERT(sizeToLevel < mFreeLists.size());
 

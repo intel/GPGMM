@@ -72,7 +72,7 @@ namespace gpgmm {
         AppendChild(std::move(child));
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,
                                                                          bool cacheSize,

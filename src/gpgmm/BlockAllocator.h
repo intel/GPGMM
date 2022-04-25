@@ -30,7 +30,7 @@ namespace gpgmm {
       public:
         virtual ~BlockAllocator() = default;
 
-        virtual MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment) = 0;
+        virtual MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment) = 0;
         virtual void DeallocateBlock(MemoryBlock* block) = 0;
     };
 

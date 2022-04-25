@@ -40,13 +40,13 @@ namespace gpgmm {
         }
     }
 
-    MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t size, uint64_t alignment) {
-        GPGMM_CHECK_NONZERO(size);
+    MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
+        GPGMM_CHECK_NONZERO(requestSize);
 
-        if (size > mBlockSize) {
+        if (requestSize > mBlockSize) {
             DebugEvent("SlabBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the block size. (" + std::to_string(size) + " vs " +
-                       std::to_string(mBlockSize) + " bytes).";
+                << "Allocation size exceeded the block size. (" + std::to_string(requestSize) +
+                       " vs " + std::to_string(mBlockSize) + " bytes).";
             return nullptr;
         }
 

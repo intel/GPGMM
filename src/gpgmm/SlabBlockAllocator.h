@@ -33,7 +33,7 @@ namespace gpgmm {
         ~SlabBlockAllocator() override;
 
         // BlockAllocator interface
-        MemoryBlock* TryAllocateBlock(uint64_t size, uint64_t alignment = 1) override;
+        MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) override;
         void DeallocateBlock(MemoryBlock* block) override;
 
         const char* GetTypename() const override;

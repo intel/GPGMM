@@ -40,26 +40,26 @@ namespace gpgmm {
         return offset / mMemorySize;
     }
 
-    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                               uint64_t alignment,
                                                                               bool neverAllocate,
                                                                               bool cacheSize,
                                                                               bool prefetchMemory) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(size);
+        GPGMM_CHECK_NONZERO(requestSize);
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (size > mMemorySize) {
+        if (requestSize > mMemorySize) {
             DebugEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the memory size (" + std::to_string(size) + " vs " +
-                       std::to_string(mMemorySize) + " bytes).";
+                << "Allocation size exceeded the memory size (" + std::to_string(requestSize) +
+                       " vs " + std::to_string(mMemorySize) + " bytes).";
             return {};
         }
 
         // Round allocation size to nearest power-of-two.
-        const uint64_t allocationSize = NextPowerOfTwo(size);
+        const uint64_t allocationSize = NextPowerOfTwo(requestSize);
 
         // Allocation cannot exceed the memory size.
         if (allocationSize > mMemorySize) {
