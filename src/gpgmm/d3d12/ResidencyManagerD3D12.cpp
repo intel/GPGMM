@@ -31,22 +31,6 @@ namespace gpgmm { namespace d3d12 {
     static constexpr uint32_t kDefaultEvictLimit = 50ll * 1024ll * 1024ll;  // 50MB
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
 
-    namespace {
-        const char* GetMemorySegmentGroupName(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
-            switch (memorySegmentGroup) {
-                case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
-                    return "NonLocal";
-                case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
-                    return "Local";
-                default:
-                    UNREACHABLE();
-                    return "";
-            }
-        }
-    }  // namespace
-
-    GPGMM_UNUSED_FUNC(GetMemorySegmentGroupName);
-
     // static
     HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
                                                      ComPtr<IDXGIAdapter> adapter,
@@ -289,17 +273,11 @@ namespace gpgmm { namespace d3d12 {
                 mVideoMemoryBudget);
         }
 
-        TRACE_COUNTER1(
-            TraceEventCategory::Default,
-            ToString("GPU memory (", GetMemorySegmentGroupName(memorySegmentGroup), ") budget (MB)")
-                .c_str(),
-            videoMemoryInfo->Budget / 1e6);
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory budget (MB)",
+                       videoMemoryInfo->Budget / 1e6);
 
-        TRACE_COUNTER1(
-            TraceEventCategory::Default,
-            ToString("GPU memory (", GetMemorySegmentGroupName(memorySegmentGroup), ") usage (MB)")
-                .c_str(),
-            videoMemoryInfo->CurrentUsage / 1e6);
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory usage (MB)",
+                       videoMemoryInfo->CurrentUsage / 1e6);
 
         return S_OK;
     }
