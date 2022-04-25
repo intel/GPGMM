@@ -93,8 +93,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7546c244311f2f227599279125ba3da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98c4b4d410883358acbac812e719b1af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a98c4b4d410883358acbac812e719b1af">~BuddyBlockAllocator</a> () override</td></tr>
 <tr class="separator:a98c4b4d410883358acbac812e719b1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5f6ab4a442f6be2b890be8e122c7f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a0f5f6ab4a442f6be2b890be8e122c7f6">TryAllocateBlock</a> (uint64_t size, uint64_t alignment) override</td></tr>
-<tr class="separator:a0f5f6ab4a442f6be2b890be8e122c7f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e4de35b31a506b3131c3eaf442185f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a1e4de35b31a506b3131c3eaf442185f3">TryAllocateBlock</a> (uint64_t requestSize, uint64_t alignment) override</td></tr>
+<tr class="separator:a1e4de35b31a506b3131c3eaf442185f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab22595deb1098651ee0ce98f298e852d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#ab22595deb1098651ee0ce98f298e852d">DeallocateBlock</a> (<a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *block) override</td></tr>
 <tr class="separator:ab22595deb1098651ee0ce98f298e852d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18f51a35eb230a4a749ca50ee3d9205b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a18f51a35eb230a4a749ca50ee3d9205b">ComputeTotalNumOfFreeBlocksForTesting</a> () const</td></tr>
@@ -104,8 +104,8 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_block_allocator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_block_allocator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_block_allocator.html">gpgmm::BlockAllocator</a></td></tr>
 <tr class="memitem:a0975f8b838e00b9aa5b42a20bc143891 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_block_allocator.html#a0975f8b838e00b9aa5b42a20bc143891">~BlockAllocator</a> ()=default</td></tr>
 <tr class="separator:a0975f8b838e00b9aa5b42a20bc143891 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad238442cba723a5e419cead979728e83 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_block_allocator.html#ad238442cba723a5e419cead979728e83">TryAllocateBlock</a> (uint64_t size, uint64_t alignment)=0</td></tr>
-<tr class="separator:ad238442cba723a5e419cead979728e83 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7d4d36915579334ceb1b003bf527e7c inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_block_allocator.html#ab7d4d36915579334ceb1b003bf527e7c">TryAllocateBlock</a> (uint64_t requestSize, uint64_t alignment)=0</td></tr>
+<tr class="separator:ab7d4d36915579334ceb1b003bf527e7c inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d908ca261e87da7300838ebb1698e17 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_block_allocator.html#a5d908ca261e87da7300838ebb1698e17">DeallocateBlock</a> (<a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *block)=0</td></tr>
 <tr class="separator:a5d908ca261e87da7300838ebb1698e17 inherit pub_methods_classgpgmm_1_1_block_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_allocator_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_allocator_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_allocator_base.html">gpgmm::AllocatorBase</a></td></tr>
@@ -253,8 +253,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0f5f6ab4a442f6be2b890be8e122c7f6" name="a0f5f6ab4a442f6be2b890be8e122c7f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f5f6ab4a442f6be2b890be8e122c7f6">&#9670;&nbsp;</a></span>TryAllocateBlock()</h2>
+<a id="a1e4de35b31a506b3131c3eaf442185f3" name="a1e4de35b31a506b3131c3eaf442185f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e4de35b31a506b3131c3eaf442185f3">&#9670;&nbsp;</a></span>TryAllocateBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +266,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> * gpgmm::BuddyBlockAllocator::TryAllocateBlock </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>size</em>, </td>
+          <td class="paramname"><em>requestSize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -287,7 +287,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgpgmm_1_1_block_allocator.html#ad238442cba723a5e419cead979728e83">gpgmm::BlockAllocator</a>.</p>
+<p>Implements <a class="el" href="classgpgmm_1_1_block_allocator.html#ab7d4d36915579334ceb1b003bf527e7c">gpgmm::BlockAllocator</a>.</p>
 
 </div>
 </div>
