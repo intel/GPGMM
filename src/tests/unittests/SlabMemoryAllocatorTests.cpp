@@ -36,7 +36,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
 
-    // Verify allocation cannot be greater then the block size.
+    // Verify allocation greater then the block size fails.
     {
         constexpr uint64_t kBlockSize = 32;
         constexpr uint64_t kMaxSlabSize = 512;
@@ -44,17 +44,19 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
                                       kDefaultPrefetchSlab, dummyMemoryAllocator.get());
 
-        std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize * 2, 1, false, false, false);
-        ASSERT_EQ(allocation, nullptr);
+        ASSERT_EQ(allocator.TryAllocateMemory(kBlockSize * 2, 1, false, false, false), nullptr);
+    }
 
-        allocation = allocator.TryAllocateMemory(22, 1, false, false, false);
-        ASSERT_NE(allocation, nullptr);
-        EXPECT_EQ(allocation->GetOffset(), 0u);
-        EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
-        EXPECT_GE(allocation->GetSize(), kBlockSize);
+    // Verify allocation greater then slab size fails.
+    {
+        constexpr uint64_t kBlockSize = 32;
+        constexpr uint64_t kMaxSlabSize = 512;
+        SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
+                                      kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+                                      kDefaultPrefetchSlab, dummyMemoryAllocator.get());
 
-        allocator.DeallocateMemory(std::move(allocation));
+        ASSERT_EQ(allocator.TryAllocateMemory(kMaxSlabSize, 1, false, false, false), nullptr);
+        ASSERT_EQ(allocator.TryAllocateMemory(kMaxSlabSize - 1, 1, false, false, false), nullptr);
     }
 
     // Verify allocation equal to the slab size always succeeds.
