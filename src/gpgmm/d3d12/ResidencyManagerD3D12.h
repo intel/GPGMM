@@ -46,8 +46,7 @@ namespace gpgmm { namespace d3d12 {
         HRESULT InsertHeap(Heap* heap);
 
         HRESULT Evict(uint64_t evictSizeInBytes,
-                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                      uint64_t* sizeEvictedOut = nullptr);
+                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* queue,
                                     ID3D12CommandList* const* commandLists,
@@ -66,6 +65,12 @@ namespace gpgmm { namespace d3d12 {
                          float memorySegmentBudgetLimit,
                          uint64_t totalResourceBudgetLimit,
                          uint64_t evictLimit);
+
+        HRESULT EvictInternal(uint64_t evictSizeInBytes,
+                              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                              uint64_t* sizeEvictedOut = nullptr);
+
+        HRESULT InsertHeapInternal(Heap* heap);
 
         const char* GetTypename() const;
 
@@ -101,7 +106,7 @@ namespace gpgmm { namespace d3d12 {
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
 
-        std::recursive_mutex mMutex;
+        std::mutex mMutex;
     };
 
 }}  // namespace gpgmm::d3d12
