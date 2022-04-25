@@ -18,12 +18,12 @@ namespace gpgmm {
 
     class AllocateMemoryTask : public VoidCallback {
       public:
-        AllocateMemoryTask(MemoryAllocator* allocator, uint64_t size, uint64_t alignment)
-            : mAllocator(allocator), mSize(size), mAlignment(alignment) {
+        AllocateMemoryTask(MemoryAllocator* allocator, uint64_t requestSize, uint64_t alignment)
+            : mAllocator(allocator), mRequestSize(requestSize), mAlignment(alignment) {
         }
 
         void operator()() override {
-            mAllocation = mAllocator->TryAllocateMemory(mSize, mAlignment, /*neverAllocate*/
+            mAllocation = mAllocator->TryAllocateMemory(mRequestSize, mAlignment, /*neverAllocate*/
                                                         false, true, false);
         }
 
@@ -33,7 +33,7 @@ namespace gpgmm {
 
       private:
         MemoryAllocator* const mAllocator;
-        const uint64_t mSize;
+        const uint64_t mRequestSize;
         const uint64_t mAlignment;
 
         std::unique_ptr<MemoryAllocation> mAllocation;
@@ -72,7 +72,7 @@ namespace gpgmm {
         AppendChild(std::move(child));
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t size,
+    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,
                                                                          bool cacheSize,

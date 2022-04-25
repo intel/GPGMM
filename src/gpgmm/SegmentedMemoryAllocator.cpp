@@ -127,7 +127,7 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
-        uint64_t size,
+        uint64_t requestSize,
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize,
@@ -136,7 +136,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(size);
+        GPGMM_CHECK_NONZERO(requestSize);
 
         if (alignment != mMemoryAlignment) {
             DebugEvent("SegmentedMemoryAllocator.TryAllocateMemory",
@@ -145,14 +145,15 @@ namespace gpgmm {
             return {};
         }
 
-        MemorySegment* segment = GetOrCreateFreeSegment(size);
+        MemorySegment* segment = GetOrCreateFreeSegment(requestSize);
         ASSERT(segment != nullptr);
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
-                                 size, mMemoryAlignment, neverAllocate, cacheSize, prefetchMemory),
-                             allocation);
+            GPGMM_TRY_ASSIGN(
+                GetFirstChild()->TryAllocateMemory(requestSize, mMemoryAlignment, neverAllocate,
+                                                   cacheSize, prefetchMemory),
+                allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }

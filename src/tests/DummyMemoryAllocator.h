@@ -23,7 +23,7 @@ namespace gpgmm {
 
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t allocationSize,
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize,
@@ -37,8 +37,8 @@ namespace gpgmm {
             }
 
             mInfo.UsedMemoryCount++;
-            mInfo.UsedMemoryUsage += allocationSize;
-            return std::make_unique<MemoryAllocation>(this, new MemoryBase(allocationSize));
+            mInfo.UsedMemoryUsage += requestSize;
+            return std::make_unique<MemoryAllocation>(this, new MemoryBase(requestSize));
         }
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {

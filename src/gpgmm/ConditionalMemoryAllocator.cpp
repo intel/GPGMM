@@ -29,19 +29,19 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> ConditionalMemoryAllocator::TryAllocateMemory(
-        uint64_t size,
+        uint64_t requestSize,
         uint64_t alignment,
         bool neverAllocate,
         bool cacheSize,
         bool prefetchMemory) {
         TRACE_EVENT0(TraceEventCategory::Default, "ConditionalMemoryAllocator.TryAllocateMemory");
 
-        if (size <= mConditionalSize) {
-            return mFirstAllocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize,
-                                                      prefetchMemory);
+        if (requestSize <= mConditionalSize) {
+            return mFirstAllocator->TryAllocateMemory(requestSize, alignment, neverAllocate,
+                                                      cacheSize, prefetchMemory);
         } else {
-            return mSecondAllocator->TryAllocateMemory(size, alignment, neverAllocate, cacheSize,
-                                                       prefetchMemory);
+            return mSecondAllocator->TryAllocateMemory(requestSize, alignment, neverAllocate,
+                                                       cacheSize, prefetchMemory);
         }
     }
 

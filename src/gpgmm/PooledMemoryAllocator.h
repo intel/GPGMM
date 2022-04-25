@@ -28,7 +28,7 @@ namespace gpgmm {
         ~PooledMemoryAllocator() override = default;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t size,
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,
                                                             bool cacheSize,
