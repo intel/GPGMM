@@ -615,7 +615,7 @@ namespace gpgmm { namespace d3d12 {
         const double allocationLatency = timer->EndElapsedTime() * 1e6;
         GPGMM_UNUSED(allocationLatency);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation hit time (us)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
                        allocationLatency);
 
         const RESOURCE_ALLOCATOR_INFO info = GetInfo();
