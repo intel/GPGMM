@@ -13,6 +13,5 @@ var searchData=
   ['utils_2ecpp_10',['Utils.cpp',['../_utils_8cpp.html',1,'']]],
   ['utils_2eh_11',['Utils.h',['../_utils_8h.html',1,'']]],
   ['utilsd3d12_2ecpp_12',['UtilsD3D12.cpp',['../_utils_d3_d12_8cpp.html',1,'']]],
-  ['utilsd3d12_2eh_13',['UtilsD3D12.h',['../_utils_d3_d12_8h.html',1,'']]],
-  ['utilstest_2ecpp_14',['UtilsTest.cpp',['../_utils_test_8cpp.html',1,'']]]
+  ['utilsd3d12_2eh_13',['UtilsD3D12.h',['../_utils_d3_d12_8h.html',1,'']]]
 ];
