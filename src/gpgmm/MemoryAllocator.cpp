@@ -72,6 +72,16 @@ namespace gpgmm {
         AppendChild(std::move(child));
     }
 
+    MemoryAllocator::~MemoryAllocator() {
+        // If memory cannot be reused by a (parent) allocator, ensure no used memory leaked.
+        if (GetParent() == nullptr) {
+            ASSERT(mInfo.UsedBlockUsage == 0u);
+            ASSERT(mInfo.UsedBlockCount == 0u);
+            ASSERT(mInfo.UsedMemoryCount == 0u);
+            ASSERT(mInfo.UsedMemoryUsage == 0u);
+        }
+    }
+
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t requestSize,
                                                                          uint64_t alignment,
                                                                          bool neverAllocate,

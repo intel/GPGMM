@@ -45,15 +45,17 @@ namespace gpgmm {
                                                   new MemoryBlock{0, requestSize});
     }
 
-    void StandaloneMemoryAllocator::DeallocateMemory(
-        std::unique_ptr<MemoryAllocation> subAllocation) {
+    void StandaloneMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
+
+        MemoryBlock* block = allocation->GetBlock();
         mInfo.UsedBlockCount--;
-        mInfo.UsedBlockUsage -= subAllocation->GetSize();
-        SafeDelete(subAllocation->GetBlock());
-        GetFirstChild()->DeallocateMemory(std::move(subAllocation));
+        mInfo.UsedBlockUsage -= block->Size;
+
+        SafeDelete(block);
+        GetFirstChild()->DeallocateMemory(std::move(allocation));
     }
 
     MEMORY_ALLOCATOR_INFO StandaloneMemoryAllocator::GetInfo() const {
