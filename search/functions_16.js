@@ -22,7 +22,7 @@ var searchData=
   ['_7elinkedlist_19',['~LinkedList',['../classgpgmm_1_1_linked_list.html#a6e7823e868a05e1c5480422352b6ad04',1,'gpgmm::LinkedList']]],
   ['_7elogmessage_20',['~LogMessage',['../classgpgmm_1_1_log_message.html#aba744d777514145189fde7d423457af0',1,'gpgmm::LogMessage']]],
   ['_7ememoryallocation_21',['~MemoryAllocation',['../classgpgmm_1_1_memory_allocation.html#aad63c86ff2564a49a924ac46550a472a',1,'gpgmm::MemoryAllocation']]],
-  ['_7ememoryallocator_22',['~MemoryAllocator',['../classgpgmm_1_1_memory_allocator.html#a9dfbe6e546cf97914c00c3441d53751b',1,'gpgmm::MemoryAllocator']]],
+  ['_7ememoryallocator_22',['~MemoryAllocator',['../classgpgmm_1_1_memory_allocator.html#a95ea7f43956ed806cedff09357f1e579',1,'gpgmm::MemoryAllocator']]],
   ['_7ememorybase_23',['~MemoryBase',['../classgpgmm_1_1_memory_base.html#afa1057319c223e505d296f4ede900506',1,'gpgmm::MemoryBase']]],
   ['_7ememorycache_24',['~MemoryCache',['../classgpgmm_1_1_memory_cache.html#a37090c724c967a72415c4b901680fedc',1,'gpgmm::MemoryCache']]],
   ['_7ememorypool_25',['~MemoryPool',['../classgpgmm_1_1_memory_pool.html#a084b843e7a93b6bb10f432dc7780c881',1,'gpgmm::MemoryPool']]],

@@ -11,7 +11,7 @@ var searchData=
   ['alignto_8',['AlignTo',['../namespacegpgmm.html#abc939d5d95c7eab4af8d12f2234bda92',1,'gpgmm']]],
   ['aligntopoweroftwo_9',['AlignToPowerOfTwo',['../namespacegpgmm.html#ad28f0b0d120a544248f3e7b544d2d932',1,'gpgmm']]],
   ['alivecount_10',['AliveCount',['../structgpgmm_1_1_cache_stats.html#a80c03d4d51b7b9b626846d3c77c27627',1,'gpgmm::CacheStats']]],
-  ['allocatememorytask_11',['AllocateMemoryTask',['../classgpgmm_1_1_allocate_memory_task.html#ae33a11f9c73cd0181f48beeab612d2f5',1,'gpgmm::AllocateMemoryTask::AllocateMemoryTask()'],['../classgpgmm_1_1_allocate_memory_task.html',1,'gpgmm::AllocateMemoryTask']]],
+  ['allocatememorytask_11',['AllocateMemoryTask',['../classgpgmm_1_1_allocate_memory_task.html#a2b59ccdab2a915d9206e7c67044ae15f',1,'gpgmm::AllocateMemoryTask::AllocateMemoryTask()'],['../classgpgmm_1_1_allocate_memory_task.html',1,'gpgmm::AllocateMemoryTask']]],
   ['allocation_5fdesc_12',['ALLOCATION_DESC',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fallow_5fsuballocate_5fwithin_5fresource_13',['ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fprefetch_5fmemory_14',['ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150',1,'gpgmm::d3d12']]],
