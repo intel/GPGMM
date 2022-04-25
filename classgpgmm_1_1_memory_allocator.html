@@ -107,8 +107,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a546a30ca32c0f4a542ee22539d0076ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dce3e1a8c4382518ea4d4ae18778a41"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a2dce3e1a8c4382518ea4d4ae18778a41">MemoryAllocator</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> &gt; child)</td></tr>
 <tr class="separator:a2dce3e1a8c4382518ea4d4ae18778a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dfbe6e546cf97914c00c3441d53751b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a9dfbe6e546cf97914c00c3441d53751b">~MemoryAllocator</a> () override</td></tr>
-<tr class="separator:a9dfbe6e546cf97914c00c3441d53751b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95ea7f43956ed806cedff09357f1e579"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a95ea7f43956ed806cedff09357f1e579">~MemoryAllocator</a> () override=default</td></tr>
+<tr class="separator:a95ea7f43956ed806cedff09357f1e579"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a256124103098471c00f4fd4ca998c596"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a256124103098471c00f4fd4ca998c596">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory)</td></tr>
 <tr class="separator:a256124103098471c00f4fd4ca998c596"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d914e181d8668301ecf496e63b097d6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation_event.html">MemoryAllocationEvent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a8d914e181d8668301ecf496e63b097d6">TryAllocateMemoryAsync</a> (uint64_t requestSize, uint64_t alignment)</td></tr>
@@ -244,8 +244,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9dfbe6e546cf97914c00c3441d53751b" name="a9dfbe6e546cf97914c00c3441d53751b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dfbe6e546cf97914c00c3441d53751b">&#9670;&nbsp;</a></span>~MemoryAllocator()</h2>
+<a id="a95ea7f43956ed806cedff09357f1e579" name="a95ea7f43956ed806cedff09357f1e579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95ea7f43956ed806cedff09357f1e579">&#9670;&nbsp;</a></span>~MemoryAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,7 +254,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">gpgmm::MemoryAllocator::~MemoryAllocator </td>
+          <td class="memname">virtual gpgmm::MemoryAllocator::~MemoryAllocator </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -262,7 +262,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
