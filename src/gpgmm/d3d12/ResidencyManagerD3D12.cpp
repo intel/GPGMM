@@ -118,7 +118,7 @@ namespace gpgmm { namespace d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(Heap* heap) {
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
+        std::lock_guard<std::mutex> lock(mMutex);
 
         if (heap == nullptr) {
             return E_INVALIDARG;
@@ -142,7 +142,7 @@ namespace gpgmm { namespace d3d12 {
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
     HRESULT ResidencyManager::UnlockHeap(Heap* heap) {
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
+        std::lock_guard<std::mutex> lock(mMutex);
 
         if (heap == nullptr) {
             return E_INVALIDARG;
@@ -165,9 +165,14 @@ namespace gpgmm { namespace d3d12 {
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        ReturnIfFailed(InsertHeap(heap));
+        ReturnIfFailed(InsertHeapInternal(heap));
 
         return S_OK;
+    }
+
+    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return InsertHeapInternal(heap);
     }
 
     // Inserts a heap at the bottom of the LRU. The passed heap must be resident or scheduled to
@@ -175,9 +180,7 @@ namespace gpgmm { namespace d3d12 {
     // is implicitly made resident will cause the residency manager to view the allocation as
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
-    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
-
+    HRESULT ResidencyManager::InsertHeapInternal(Heap* heap) {
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -232,7 +235,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t* reservationOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.SetVideoMemoryReservation");
 
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
+        std::lock_guard<std::mutex> lock(mMutex);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -282,14 +285,18 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
+    HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
+                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return EvictInternal(evictSizeInBytes, memorySegmentGroup, /*sizeEvictedOut*/ nullptr);
+    }
+
     // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
     // bytes evicted.
-    HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
-                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                    uint64_t* sizeEvictedOut) {
+    HRESULT ResidencyManager::EvictInternal(uint64_t evictSizeInBytes,
+                                            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                                            uint64_t* sizeEvictedOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
-
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemorySegmentInfo(memorySegmentGroup);
@@ -365,7 +372,7 @@ namespace gpgmm { namespace d3d12 {
                                                   uint32_t count) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
 
-        std::lock_guard<std::recursive_mutex> lock(mMutex);
+        std::lock_guard<std::mutex> lock(mMutex);
 
         // TODO: support multiple command lists.
         if (count > 1) {
@@ -407,7 +414,7 @@ namespace gpgmm { namespace d3d12 {
             heap->SetLastUsedFenceValue(mFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
-            InsertHeap(heap);
+            InsertHeapInternal(heap);
         }
 
         if (localSizeToMakeResident > 0) {
@@ -446,7 +453,7 @@ namespace gpgmm { namespace d3d12 {
                                            ID3D12Pageable** allocations) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.MakeResident");
 
-        ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
+        ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
 
         // A MakeResident call can fail if there's not enough available memory. This
         // could occur when there's significant fragmentation or if the allocation size
@@ -456,7 +463,7 @@ namespace gpgmm { namespace d3d12 {
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
             uint64_t sizeEvicted = 0;
-            ReturnIfFailed(Evict(mEvictLimit, memorySegmentGroup, &sizeEvicted));
+            ReturnIfFailed(EvictInternal(mEvictLimit, memorySegmentGroup, &sizeEvicted));
             if (sizeEvicted == 0) {
                 return E_OUTOFMEMORY;
             }
