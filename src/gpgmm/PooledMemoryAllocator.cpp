@@ -64,7 +64,10 @@ namespace gpgmm {
         mInfo.UsedMemoryCount--;
         mInfo.UsedMemoryUsage -= allocationSize;
 
-        mPool->ReturnToPool(std::move(allocation));
+        MemoryBase* memory = allocation->GetMemory();
+        ASSERT(memory != nullptr);
+
+        mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
     }
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {

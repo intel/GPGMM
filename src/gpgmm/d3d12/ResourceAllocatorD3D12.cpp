@@ -846,6 +846,8 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
                                               ResourceAllocation** resourceAllocationOut) {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         if (!resourceAllocationOut) {
             return E_POINTER;
         }
@@ -864,6 +866,10 @@ namespace gpgmm { namespace d3d12 {
         Heap* resourceHeap = new Heap(
             resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type),
             resourceInfo.SizeInBytes);
+
+        mInfo.UsedMemoryUsage += resourceInfo.SizeInBytes;
+        mInfo.UsedMemoryCount++;
+        mInfo.UsedBlockUsage += resourceInfo.SizeInBytes;
 
         *resourceAllocationOut = new ResourceAllocation{/*residencyManager*/ nullptr,
                                                         /*allocator*/ this,

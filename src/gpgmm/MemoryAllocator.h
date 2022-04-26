@@ -83,7 +83,7 @@ namespace gpgmm {
         // Constructs a MemoryAllocator that owns a single child allocator.
         explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> child);
 
-        virtual ~MemoryAllocator() override = default;
+        virtual ~MemoryAllocator() override;
 
         // Attempts to allocate memory and return an allocation that has at-least
         // |requestedSize| allocated space whose value is a multiple of |alignment|. If it cannot,

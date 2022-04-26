@@ -74,6 +74,8 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
+
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     // Verify allocation cannot exceed the fragmentation threshold.
@@ -97,6 +99,8 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
+
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     // Verify allocation succeeds when specifying a slab size.
@@ -113,6 +117,8 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
         EXPECT_GE(allocation->GetMemory()->GetSize(), kSlabSize);
+
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     // Verify allocation succeeds when specifying a NPOT slab size.
@@ -129,6 +135,8 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
         EXPECT_GE(allocation->GetMemory()->GetSize(), kSlabSize);
+
+        allocator.DeallocateMemory(std::move(allocation));
     }
 
     // Verify requesting an allocation without memory will not return a valid allocation.
