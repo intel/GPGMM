@@ -13,6 +13,18 @@ GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applica
 * [Changelog](https://github.com/intel/GPGMM/releases)
 * [License](https://github.com/intel/GPGMM/blob/main/LICENSE)
 
+```mermaid
+graph TD;
+    MyGfxAPI-->gpgmm::vk
+    MyGfxAPI-->gpgmm::d3d12
+    MyMLApp-->DirectML
+    DirectML-->gpgmm::d3d12
+    gpgmm::d3d12-->GPGMM
+    gpgmm::vk-->GPGMM
+    GPGMM-->D3D12.h
+    GPGMM-->Vulkan.h
+```
+
 ## Build and Run
 
 ### Install `depot_tools`
