@@ -96,6 +96,7 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
+        ComPtr<ID3D12Device3> mDevice3;
 
         std::unique_ptr<Fence> mFence;
 

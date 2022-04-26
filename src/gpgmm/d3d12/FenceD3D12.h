@@ -35,6 +35,8 @@ namespace gpgmm { namespace d3d12 {
         uint64_t GetLastSignaledFence() const;
         uint64_t GetCurrentFence() const;
 
+        ID3D12Fence* GetFence() const;
+
       private:
         Fence(ComPtr<ID3D12Fence> fence, uint64_t initialValue);
 
