@@ -448,6 +448,16 @@ namespace gpgmm { namespace d3d12 {
 
         ReturnIfFailed(Evict(sizeToMakeResident, memorySegmentGroup, nullptr));
 
+        // Decrease the overhead from using MakeResident, a synchronous call, by calling the
+        // asynchronous MakeResident, called EnqueueMakeResident, instead first. Should
+        // EnqueueMakeResident fail, fall-back to using synchronous MakeResident since we may be
+        // able to continue after calling Evict again.
+        if (mDevice3 != nullptr) {
+            ReturnIfSucceeded(mDevice3->EnqueueMakeResident(
+                D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
+                mFence->GetFence(), mFence->GetLastSignaledFence() + 1));
+        }
+
         // A MakeResident call can fail if there's not enough available memory. This
         // could occur when there's significant fragmentation or if the allocation size
         // estimates are incorrect. We may be able to continue execution by evicting some

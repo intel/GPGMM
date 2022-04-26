@@ -95,4 +95,9 @@ namespace gpgmm { namespace d3d12 {
     uint64_t Fence::GetCurrentFence() const {
         return mCurrentFence;
     }
+
+    ID3D12Fence* Fence::GetFence() const {
+        return mFence.Get();
+    }
+
 }}  // namespace gpgmm::d3d12
