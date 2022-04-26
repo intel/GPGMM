@@ -139,8 +139,8 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(requestSize);
 
         if (alignment != mMemoryAlignment) {
-            DebugEvent("SegmentedMemoryAllocator.TryAllocateMemory",
-                       ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
+            InfoEvent("SegmentedMemoryAllocator.TryAllocateMemory",
+                      ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
                 << "Allocation alignment does not match memory alignment.";
             return {};
         }
