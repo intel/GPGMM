@@ -97,8 +97,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad39f477d3dd55f7d15c24eecadb07e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ec4639b59f22df4eef133e93dd73fe9"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a7ec4639b59f22df4eef133e93dd73fe9">InsertHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *heap)</td></tr>
 <tr class="separator:a7ec4639b59f22df4eef133e93dd73fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5dc4f4b070eb246d079e6701b7ab6cc4"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4">Evict</a> (uint64_t evictSizeInBytes, const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup)</td></tr>
-<tr class="separator:a5dc4f4b070eb246d079e6701b7ab6cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad09a0ab0fec734e9f7b93ec52a0cf89c"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ad09a0ab0fec734e9f7b93ec52a0cf89c">Evict</a> (uint64_t evictSizeInBytes, const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t *sizeEvictedOut=nullptr)</td></tr>
+<tr class="separator:ad09a0ab0fec734e9f7b93ec52a0cf89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab889d80e34d4ebca85727887ac42f982"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982">ExecuteCommandLists</a> (ID3D12CommandQueue *queue, ID3D12CommandList *const *commandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> *const *residencySets, uint32_t count)</td></tr>
 <tr class="separator:ab889d80e34d4ebca85727887ac42f982"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cd640bcdcf754a458e56f60a84ac91f"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3cd640bcdcf754a458e56f60a84ac91f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t reservation, uint64_t *reservationOut=nullptr)</td></tr>
@@ -220,8 +220,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5dc4f4b070eb246d079e6701b7ab6cc4" name="a5dc4f4b070eb246d079e6701b7ab6cc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5dc4f4b070eb246d079e6701b7ab6cc4">&#9670;&nbsp;</a></span>Evict()</h2>
+<a id="ad09a0ab0fec734e9f7b93ec52a0cf89c" name="ad09a0ab0fec734e9f7b93ec52a0cf89c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad09a0ab0fec734e9f7b93ec52a0cf89c">&#9670;&nbsp;</a></span>Evict()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,7 +236,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>memorySegmentGroup</em>&#160;</td>
+          <td class="paramname"><em>memorySegmentGroup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>sizeEvictedOut</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

@@ -9,6 +9,6 @@ var searchData=
   ['event_6',['Event',['../classgpgmm_1_1_event.html#afbb9549815e21e5ad23d97b2d20ce668',1,'gpgmm::Event']]],
   ['eventmessage_7',['EventMessage',['../classgpgmm_1_1_event_message.html#a0eac75cefa628cde14026b8f8368ded5',1,'gpgmm::EventMessage::EventMessage(const LogSeverity &amp;level, const char *name, int messageId=0)'],['../classgpgmm_1_1_event_message.html#aee3e8d8f190d8ea04a72cb42c0c27d0b',1,'gpgmm::EventMessage::EventMessage(EventMessage &amp;&amp;other)=default']]],
   ['eventtracewriter_8',['EventTraceWriter',['../classgpgmm_1_1_event_trace_writer.html#a5b34f87f224ac1ae0c21cdb00504499c',1,'gpgmm::EventTraceWriter']]],
-  ['evict_9',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['evict_9',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ad09a0ab0fec734e9f7b93ec52a0cf89c',1,'gpgmm::d3d12::ResidencyManager']]],
   ['executecommandlists_10',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]]
 ];
