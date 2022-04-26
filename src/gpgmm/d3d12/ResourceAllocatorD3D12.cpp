@@ -121,8 +121,8 @@ namespace gpgmm { namespace d3d12 {
             // required alignment is for this resource.
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
-                DebugEvent("ResourceAllocator.GetResourceAllocationInfo",
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT)
+                WarnEvent("ResourceAllocator.GetResourceAllocationInfo",
+                          ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT)
                     << "Resource alignment is much larger due to D3D12 (" +
                            std::to_string(resourceDescriptor.Alignment) + " vs " +
                            std::to_string(resourceInfo.Alignment) + " bytes) for resource : " +
@@ -303,17 +303,20 @@ namespace gpgmm { namespace d3d12 {
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(
                 size, alignment, neverAllocate, cacheSize, prefetchMemory);
             if (allocation == nullptr) {
-                DebugEvent("ResourceAllocator.TryAllocateResource",
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << std::string(allocator->GetTypename()) + " failed to allocate memory.";
+                InfoEvent("ResourceAllocator.TryAllocateResource",
+                          ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                    << std::string(allocator->GetTypename()) +
+                           " failed to allocate memory for resource.";
 
                 return E_FAIL;
             }
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                DebugEvent("ResourceAllocator.TryAllocateResource",
-                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << "Resource failed to be created: " + GetErrorMessage(hr);
+                InfoEvent("ResourceAllocator.TryAllocateResource",
+                          ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                    << std::string(allocator->GetTypename()) +
+                           " failed to create resource using allocated memory: " +
+                           GetErrorMessage(hr);
                 allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;

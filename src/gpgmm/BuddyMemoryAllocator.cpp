@@ -52,7 +52,7 @@ namespace gpgmm {
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         if (requestSize > mMemorySize) {
-            DebugEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            InfoEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Allocation size exceeded the memory size (" + std::to_string(requestSize) +
                        " vs " + std::to_string(mMemorySize) + " bytes).";
             return {};
@@ -63,7 +63,7 @@ namespace gpgmm {
 
         // Allocation cannot exceed the memory size.
         if (allocationSize > mMemorySize) {
-            DebugEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            InfoEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Aligned allocation size exceeded the memory size (" +
                        std::to_string(allocationSize) + " vs " + std::to_string(mMemorySize) +
                        " bytes).";

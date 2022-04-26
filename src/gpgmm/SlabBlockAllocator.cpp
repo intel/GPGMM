@@ -44,7 +44,7 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(requestSize);
 
         if (requestSize > mBlockSize) {
-            DebugEvent("SlabBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            InfoEvent("SlabBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Allocation size exceeded the block size. (" + std::to_string(requestSize) +
                        " vs " + std::to_string(mBlockSize) + " bytes).";
             return nullptr;
@@ -52,8 +52,8 @@ namespace gpgmm {
 
         // Offset must be equal to a multiple of |mBlockSize|.
         if (!IsAligned(mBlockSize, alignment)) {
-            DebugEvent("SlabBlockAllocator.TryAllocateBlock",
-                       ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
+            InfoEvent("SlabBlockAllocator.TryAllocateBlock",
+                      ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
                 << "Allocation alignment is not a multiple of the block size. (" +
                        std::to_string(alignment) + " vs " + std::to_string(mBlockSize) + " bytes).";
             return nullptr;
