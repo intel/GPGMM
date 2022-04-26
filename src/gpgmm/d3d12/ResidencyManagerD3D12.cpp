@@ -251,11 +251,10 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResidencyManager::QueryVideoMemoryInfo(
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-        DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemoryInfo) const {
-        DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfo;
-
+        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const {
+        DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfoOut;
         ReturnIfFailed(
-            mAdapter->QueryVideoMemoryInfo(0, memorySegmentGroup, &queryVideoMemoryInfo));
+            mAdapter->QueryVideoMemoryInfo(0, memorySegmentGroup, &queryVideoMemoryInfoOut));
 
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -263,24 +262,45 @@ namespace gpgmm { namespace d3d12 {
         // component from consuming a disproportionate share of memory and ensures that Dawn can
         // continue to make forward progress. Note the choice to halve memory is arbitrarily chosen
         // and subject to future experimentation.
-        videoMemoryInfo->CurrentReservation =
-            std::min(queryVideoMemoryInfo.Budget / 2, videoMemoryInfo->AvailableForReservation);
+        pVideoMemoryInfo->CurrentReservation =
+            std::min(queryVideoMemoryInfoOut.Budget / 2, pVideoMemoryInfo->AvailableForReservation);
 
-        videoMemoryInfo->CurrentUsage =
-            queryVideoMemoryInfo.CurrentUsage - videoMemoryInfo->CurrentReservation;
+        pVideoMemoryInfo->CurrentUsage =
+            queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
 
         // If we're restricting the budget, leave the budget as is.
         if (mBudget == 0) {
-            videoMemoryInfo->Budget = static_cast<uint64_t>(
-                (queryVideoMemoryInfo.Budget - videoMemoryInfo->CurrentReservation) *
+            pVideoMemoryInfo->Budget = static_cast<uint64_t>(
+                (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
                 mVideoMemoryBudget);
         }
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory budget (MB)",
-                       videoMemoryInfo->Budget / 1e6);
+        TRACE_COUNTER1(
+            TraceEventCategory::Default,
+            ToString(
+                "GPU memory (",
+                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
+                ") budget (MB)")
+                .c_str(),
+            pVideoMemoryInfo->Budget / 1e6);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory usage (MB)",
-                       videoMemoryInfo->CurrentUsage / 1e6);
+        TRACE_COUNTER1(
+            TraceEventCategory::Default,
+            ToString(
+                "GPU memory (",
+                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
+                ") usage (MB)")
+                .c_str(),
+            pVideoMemoryInfo->CurrentUsage / 1e6);
+
+        TRACE_COUNTER1(
+            TraceEventCategory::Default,
+            ToString(
+                "GPU memory (",
+                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
+                ") reserved (MB)")
+                .c_str(),
+            pVideoMemoryInfo->CurrentReservation / 1e6);
 
         return S_OK;
     }

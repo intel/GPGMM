@@ -92,7 +92,7 @@ namespace gpgmm { namespace d3d12 {
         LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                     DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemoryInfo) const;
+                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;

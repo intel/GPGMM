@@ -50,6 +50,13 @@ namespace gpgmm {
         return output.str();
     }
 
+    // Used to combine multiple ToString calls for concatenation.
+    // Eg. ToString("a", "b", "c") == "abc".
+    template <typename T, typename... Args>
+    std::string ToString(T object, Args... args) {
+        return ToString(object) + ToString(args...);
+    }
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_UTILS_H_
