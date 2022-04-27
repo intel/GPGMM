@@ -417,7 +417,9 @@ namespace gpgmm { namespace d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
+          mShutdownEventTrace(descriptor.RecordOptions.EventScope &
+                              ALLOCATOR_RECORD_SCOPE_PER_INSTANCE) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
@@ -577,6 +579,9 @@ namespace gpgmm { namespace d3d12 {
 #if defined(GPGMM_ENABLE_DEVICE_CHECKS)
         ReportLiveDeviceObjects(mDevice);
 #endif
+        if (mShutdownEventTrace) {
+            ShutdownEventTrace();
+        }
     }
 
     const char* ResourceAllocator::GetTypename() const {

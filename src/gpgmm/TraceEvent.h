@@ -126,6 +126,8 @@ namespace gpgmm {
                            bool skipObjectEvents,
                            bool skipInstantEvents);
 
+    void ShutdownEventTrace();
+
     bool IsEventTraceEnabled();
 
     class TraceEventID {

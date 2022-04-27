@@ -43,6 +43,10 @@ namespace gpgmm {
                                         skipInstantEvents);
     }
 
+    void ShutdownEventTrace() {
+        GetInstance()->FlushQueuedEventsToDisk();
+    }
+
     bool IsEventTraceEnabled() {
         return (GetInstance() != nullptr);
     }
