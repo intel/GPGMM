@@ -18,6 +18,7 @@
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/NonCopyable.h"
 #include "gpgmm/common/RefCount.h"
+#include "gpgmm/common/Utils.h"
 
 #include <unordered_set>
 
@@ -187,9 +188,9 @@ namespace gpgmm {
         void RemoveAndDeleteAll() {
             for (auto it = mCache.begin(); it != mCache.end();) {
                 if ((*it)->Unref()) {
-                    auto curr = it;
+                    CacheEntryT* item = (*it);
                     it++;
-                    RemoveCacheEntry(*curr);
+                    SafeDelete(item);
                 } else {
                     it++;
                 }
