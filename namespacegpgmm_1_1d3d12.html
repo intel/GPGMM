@@ -124,6 +124,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:addd8571a3cf9c1c8893f16f664612090"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ab05c28f34f8023a5de8a2037daa4e5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8ab05c28f34f8023a5de8a2037daa4e5">ALLOCATOR_RECORD_FLAGS_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682c">ALLOCATOR_RECORD_FLAGS</a> &gt;</td></tr>
 <tr class="separator:a8ab05c28f34f8023a5de8a2037daa4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab52ecb8f9358cd8afc4a5a30cfb9d93f">ALLOCATOR_RECORD_SCOPE_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a> &gt;</td></tr>
+<tr class="separator:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a978095e9c5b00f02cf77e0a74e89d0fc">ALLOCATION_FLAGS_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> &gt;</td></tr>
 <tr class="separator:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d7ae6593e6b94d510cc0c30b9b3510e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d7ae6593e6b94d510cc0c30b9b3510e">RESOURCE_ALLOCATOR_INFO</a> = <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html">MEMORY_ALLOCATOR_INFO</a></td></tr>
@@ -160,6 +162,10 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a2e37df42bebf066b8cec7189b305682c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af588c6de3c0eb44ef046610a1caee5a8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931">ALLOCATOR_RECORD_SCOPE_PER_PROCESS</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6">ALLOCATOR_RECORD_SCOPE_PER_INSTANCE</a> = 0x1
+ }</td></tr>
+<tr class="separator:af588c6de3c0eb44ef046610a1caee5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073">ALLOCATION_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
@@ -238,6 +244,20 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#a8ab05c28f34f8023a5de8a2037daa4e5">gpgmm::d3d12::ALLOCATOR_RECORD_FLAGS_TYPE</a> = typedef <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682c">ALLOCATOR_RECORD_FLAGS</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab52ecb8f9358cd8afc4a5a30cfb9d93f" name="ab52ecb8f9358cd8afc4a5a30cfb9d93f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab52ecb8f9358cd8afc4a5a30cfb9d93f">&#9670;&nbsp;</a></span>ALLOCATOR_RECORD_SCOPE_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#ab52ecb8f9358cd8afc4a5a30cfb9d93f">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_TYPE</a> = typedef <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt;<a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -341,6 +361,24 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f" name="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f"></a>ALLOCATOR_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047" name="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047"></a>ALLOCATOR_RECORD_FLAG_PROFILE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4" name="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4"></a>ALLOCATOR_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="af588c6de3c0eb44ef046610a1caee5a8" name="af588c6de3c0eb44ef046610a1caee5a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af588c6de3c0eb44ef046610a1caee5a8">&#9670;&nbsp;</a></span>ALLOCATOR_RECORD_SCOPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931" name="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931"></a>ALLOCATOR_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6" name="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6"></a>ALLOCATOR_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>

@@ -29,5 +29,7 @@ var searchData=
   ['allocator_5frecord_5fflag_5fapi_5ftimings_26',['ALLOCATOR_RECORD_FLAG_API_TIMINGS',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95',1,'gpgmm::d3d12']]],
   ['allocator_5frecord_5fflag_5fcapture_27',['ALLOCATOR_RECORD_FLAG_CAPTURE',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f',1,'gpgmm::d3d12']]],
   ['allocator_5frecord_5fflag_5fnone_28',['ALLOCATOR_RECORD_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99',1,'gpgmm::d3d12']]],
-  ['allocator_5frecord_5fflag_5fprofile_29',['ALLOCATOR_RECORD_FLAG_PROFILE',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047',1,'gpgmm::d3d12']]]
+  ['allocator_5frecord_5fflag_5fprofile_29',['ALLOCATOR_RECORD_FLAG_PROFILE',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047',1,'gpgmm::d3d12']]],
+  ['allocator_5frecord_5fscope_5fper_5finstance_30',['ALLOCATOR_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6',1,'gpgmm::d3d12']]],
+  ['allocator_5frecord_5fscope_5fper_5fprocess_31',['ALLOCATOR_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931',1,'gpgmm::d3d12']]]
 ];
