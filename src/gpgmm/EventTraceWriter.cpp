@@ -14,6 +14,7 @@
 
 #include "gpgmm/EventTraceWriter.h"
 
+#include "gpgmm/Defaults.h"
 #include "gpgmm/common/Assert.h"
 #include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
@@ -27,14 +28,15 @@
 
 namespace gpgmm {
 
-    EventTraceWriter::EventTraceWriter() : mPlatformTime(CreatePlatformTime()) {
+    EventTraceWriter::EventTraceWriter()
+        : mTraceFile(kDefaultTraceFile), mPlatformTime(CreatePlatformTime()) {
     }
 
     void EventTraceWriter::SetConfiguration(const std::string& traceFile,
                                             bool skipDurationEvents,
                                             bool skipObjectEvents,
                                             bool skipInstantEvents) {
-        mTraceFile = traceFile;
+        mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
         mSkipDurationEvents = skipDurationEvents;
         mSkipObjectEvents = skipObjectEvents;
         mSkipInstantEvents = skipInstantEvents;

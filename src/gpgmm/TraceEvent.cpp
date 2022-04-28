@@ -48,7 +48,8 @@ namespace gpgmm {
     }
 
     bool IsEventTraceEnabled() {
-        return (GetInstance() != nullptr);
+        std::lock_guard<std::mutex> lock(mMutex);
+        return gEventTrace != nullptr;
     }
 
     TraceEvent::TraceEvent(char phase,
@@ -75,6 +76,8 @@ namespace gpgmm {
                                     uint64_t id,
                                     uint32_t flags,
                                     const JSONDict& args) {
-        GetInstance()->EnqueueTraceEvent(phase, category, name, id, flags, args);
+        if (IsEventTraceEnabled()) {
+            GetInstance()->EnqueueTraceEvent(phase, category, name, id, flags, args);
+        }
     }
 }  // namespace gpgmm
