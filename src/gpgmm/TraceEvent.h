@@ -153,7 +153,7 @@ namespace gpgmm {
       public:
         TraceEvent(char phase,
                    TraceEventCategory category,
-                   const char* name,
+                   const std::string& name,
                    uint64_t id,
                    uint32_t tid,
                    double timestamp,
@@ -165,7 +165,7 @@ namespace gpgmm {
 
         char mPhase = 0;
         TraceEventCategory mCategory;
-        const char* mName = nullptr;
+        std::string mName;
         uint64_t mID = 0;
         uint32_t mTID = 0;
         double mTimestamp = 0;
