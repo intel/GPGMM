@@ -157,6 +157,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "Math.cpp",
       "Math.h",
       "Platform.h",
+      "PlatformDebug.h",
       "PlatformTime.cpp",
       "PlatformTime.h",
       "PlatformUtils.cpp",
@@ -169,6 +170,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
 
     if (is_win) {
       sources += [
+        "WindowsPlatformDebug.cpp",
         "WindowsTime.cpp",
         "WindowsUtils.cpp",
         "WindowsUtils.h",

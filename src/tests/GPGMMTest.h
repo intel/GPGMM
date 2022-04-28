@@ -18,6 +18,7 @@
 #include <gtest/gtest.h>
 
 #include "gpgmm/common/Log.h"
+#include "gpgmm/common/PlatformDebug.h"
 
 #define GPGMM_SKIP_TEST_IF(expr)                            \
     do {                                                    \
@@ -28,12 +29,28 @@
         }                                                   \
     } while (0)
 
+#define GPGMM_TEST_MEMORY_LEAK_START()          \
+    do {                                        \
+        GetDebugPlatform()->StartMemoryCheck(); \
+    } while (0)
+
+#define GPGMM_TEST_MEMORY_LEAK_END()                        \
+    do {                                                    \
+        EXPECT_FALSE(GetDebugPlatform()->EndMemoryCheck()); \
+    } while (0)
+
+namespace gpgmm {
+    class DebugPlatform;
+}  // namespace gpgmm
+
 class GPGMMTestBase {
   protected:
     virtual ~GPGMMTestBase();
 
     void SetUp();
     void TearDown();
+
+    gpgmm::DebugPlatform* GetDebugPlatform();
 };
 
 void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv);

@@ -28,6 +28,7 @@ target_sources(gpgmm_common PRIVATE
   "Math.cpp"
   "Math.h"
   "Platform.h"
+  "PlatformDebug.h"
   "PlatformTime.cpp"
   "PlatformTime.h"
   "PlatformUtils.cpp"
@@ -40,6 +41,7 @@ target_sources(gpgmm_common PRIVATE
 
 if (WIN32)
     target_sources(gpgmm_common PRIVATE
+        "WindowsPlatformDebug.cpp"
         "WindowsTime.cpp"
         "WindowsUtils.cpp"
         "WindowsUtils.h"
