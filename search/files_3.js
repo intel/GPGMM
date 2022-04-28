@@ -13,5 +13,6 @@ var searchData=
   ['debugresourceallocatord3d12_2ecpp_10',['DebugResourceAllocatorD3D12.cpp',['../_debug_resource_allocator_d3_d12_8cpp.html',1,'']]],
   ['debugresourceallocatord3d12_2eh_11',['DebugResourceAllocatorD3D12.h',['../_debug_resource_allocator_d3_d12_8h.html',1,'']]],
   ['defaults_2eh_12',['Defaults.h',['../_defaults_8h.html',1,'']]],
-  ['dummymemoryallocator_2eh_13',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
+  ['defaultsd3d12_2eh_13',['DefaultsD3D12.h',['../_defaults_d3_d12_8h.html',1,'']]],
+  ['dummymemoryallocator_2eh_14',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
 ];

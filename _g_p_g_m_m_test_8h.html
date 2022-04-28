@@ -68,6 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">GPGMMTest.h File Reference</div></div>
@@ -75,6 +76,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;gtest/gtest.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="_log_8h.html">gpgmm/common/Log.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_platform_debug_8h.html">gpgmm/common/PlatformDebug.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -83,10 +85,19 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_p_g_m_m_test_environment.html">GPGMMTestEnvironment</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacegpgmm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html">gpgmm</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a93bcb4b4217a5801d71511bcfef93dfb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_g_p_g_m_m_test_8h.html#a93bcb4b4217a5801d71511bcfef93dfb">GPGMM_SKIP_TEST_IF</a>(expr)</td></tr>
 <tr class="separator:a93bcb4b4217a5801d71511bcfef93dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99a7ab7c55ab63e9c66c7180a5562054"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_g_p_g_m_m_test_8h.html#a99a7ab7c55ab63e9c66c7180a5562054">GPGMM_TEST_MEMORY_LEAK_START</a>()</td></tr>
+<tr class="separator:a99a7ab7c55ab63e9c66c7180a5562054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95e06e2a0d202e7c005d717603d0240e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_g_p_g_m_m_test_8h.html#a95e06e2a0d202e7c005d717603d0240e">GPGMM_TEST_MEMORY_LEAK_END</a>()</td></tr>
+<tr class="separator:a95e06e2a0d202e7c005d717603d0240e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -117,6 +128,46 @@ Functions</h2></td></tr>
 <div class="line">        }                                                   \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="anamespacegpgmm_html_a7f25eabd0f8ed59604dd40a11cc1db80"><div class="ttname"><a href="namespacegpgmm.html#a7f25eabd0f8ed59604dd40a11cc1db80">gpgmm::InfoLog</a></div><div class="ttdeci">LogMessage InfoLog()</div><div class="ttdef"><b>Definition:</b> Log.cpp:145</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a95e06e2a0d202e7c005d717603d0240e" name="a95e06e2a0d202e7c005d717603d0240e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95e06e2a0d202e7c005d717603d0240e">&#9670;&nbsp;</a></span>GPGMM_TEST_MEMORY_LEAK_END</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GPGMM_TEST_MEMORY_LEAK_END</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                    \</div>
+<div class="line">        EXPECT_FALSE(GetDebugPlatform()-&gt;EndMemoryCheck()); \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a99a7ab7c55ab63e9c66c7180a5562054" name="a99a7ab7c55ab63e9c66c7180a5562054"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99a7ab7c55ab63e9c66c7180a5562054">&#9670;&nbsp;</a></span>GPGMM_TEST_MEMORY_LEAK_START</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GPGMM_TEST_MEMORY_LEAK_START</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                        \</div>
+<div class="line">        GetDebugPlatform()-&gt;StartMemoryCheck(); \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
