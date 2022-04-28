@@ -99,6 +99,18 @@ namespace gpgmm { namespace d3d12 {
     using ALLOCATOR_RECORD_FLAGS_TYPE = Flags<ALLOCATOR_RECORD_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_FLAGS_TYPE)
 
+    enum ALLOCATOR_RECORD_SCOPE {
+
+        // Record events per process (or multiple allocators).
+        ALLOCATOR_RECORD_SCOPE_PER_PROCESS = 0x0,
+
+        // Record events per allocator object.
+        ALLOCATOR_RECORD_SCOPE_PER_INSTANCE = 0x1,
+    };
+
+    using ALLOCATOR_RECORD_SCOPE_TYPE = Flags<ALLOCATOR_RECORD_SCOPE>;
+    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_SCOPE_TYPE)
+
     struct ALLOCATOR_RECORD_OPTIONS {
         // Flags used to decide what to record.
         ALLOCATOR_RECORD_FLAGS_TYPE Flags = ALLOCATOR_RECORD_FLAG_NONE;
@@ -106,6 +118,9 @@ namespace gpgmm { namespace d3d12 {
         // Minimum severity level to record messages. Messages with lower severity
         // will be ignored.
         ALLOCATOR_MESSAGE_SEVERITY MinMessageLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+
+        // Specifies the scope of the events. By default, recording is per process.
+        ALLOCATOR_RECORD_SCOPE EventScope = ALLOCATOR_RECORD_SCOPE_PER_PROCESS;
 
         // Path to trace file. Default is trace.json.
         std::string TraceFile;
@@ -329,6 +344,7 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;
+        const bool mShutdownEventTrace;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 

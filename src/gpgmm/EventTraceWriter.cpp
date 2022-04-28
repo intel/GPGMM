@@ -15,6 +15,7 @@
 #include "gpgmm/EventTraceWriter.h"
 
 #include "gpgmm/common/Assert.h"
+#include "gpgmm/common/Log.h"
 #include "gpgmm/common/PlatformTime.h"
 #include "gpgmm/common/PlatformUtils.h"
 #include "gpgmm/common/Utils.h"
@@ -154,6 +155,10 @@ namespace gpgmm {
 
         std::ofstream outFile;
         outFile.open(mTraceFile);
+        if (!outFile.fail()) {
+            WarningLog() << mTraceFile + " exists and will be overwritten.";
+        }
+
         outFile << traceData.ToString();
         outFile.flush();
         outFile.close();
