@@ -359,12 +359,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
-            const std::string& traceFile = descriptor.RecordOptions.TraceFile.empty()
-                                               ? std::string(kDefaultTraceFile)
-                                               : descriptor.RecordOptions.TraceFile;
-
             StartupEventTrace(
-                traceFile, !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
+                descriptor.RecordOptions.TraceFile,
+                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_OBJECTS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS));
 
