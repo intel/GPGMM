@@ -40,7 +40,7 @@ var searchData=
   ['trace_5fevent_5fphase_5fmetadata_37',['TRACE_EVENT_PHASE_METADATA',['../_trace_event_phase_8h.html#aef9d9f452f5608cefbf2472088b62954',1,'TraceEventPhase.h']]],
   ['trace_5fevent_5fphase_5fsnapshot_5fobject_38',['TRACE_EVENT_PHASE_SNAPSHOT_OBJECT',['../_trace_event_phase_8h.html#a5feee463ea7d0619498b3e4526397a44',1,'TraceEventPhase.h']]],
   ['tracebuffer_39',['TraceBuffer',['../classgpgmm_1_1_trace_buffer.html',1,'gpgmm']]],
-  ['traceevent_40',['TraceEvent',['../classgpgmm_1_1_trace_event.html',1,'gpgmm::TraceEvent'],['../classgpgmm_1_1_trace_event.html#a8afc16883ea1b2eadab56a76260a2d26',1,'gpgmm::TraceEvent::TraceEvent()']]],
+  ['traceevent_40',['TraceEvent',['../classgpgmm_1_1_trace_event.html',1,'gpgmm::TraceEvent'],['../classgpgmm_1_1_trace_event.html#a5dd88aa00b7cd356226cc74d6fddd901',1,'gpgmm::TraceEvent::TraceEvent()']]],
   ['traceevent_2ecpp_41',['TraceEvent.cpp',['../_trace_event_8cpp.html',1,'']]],
   ['traceevent_2eh_42',['TraceEvent.h',['../_trace_event_8h.html',1,'']]],
   ['traceeventcategory_43',['TraceEventCategory',['../namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f',1,'gpgmm']]],
