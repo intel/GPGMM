@@ -53,7 +53,7 @@ namespace gpgmm {
 
     TraceEvent::TraceEvent(char phase,
                            TraceEventCategory category,
-                           const char* name,
+                           const std::string& name,
                            uint64_t id,
                            uint32_t tid,
                            double timestamp,
