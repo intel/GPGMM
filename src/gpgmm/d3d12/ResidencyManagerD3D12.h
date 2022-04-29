@@ -29,42 +29,137 @@ namespace gpgmm { namespace d3d12 {
     class Heap;
     class ResidencySet;
 
+    /** \struct RESIDENCY_DESC
+     Specify parameters when creating a residency manager.
+     */
+    struct RESIDENCY_DESC {
+        /** \brief Specifies the device used by this residency manager.
+        Required parameter. Use CreateDevice get the device.
+        */
+        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+
+        /** \brief Specifies the adapter used by this residency manager.
+
+        Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
+
+        Required parameter. Use EnumAdapters to get the adapter.
+        */
+        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+
+        /** \brief Specifies if unified memory architecture (UMA) support is enabled.
+
+        Used to determine if residency manager must manage local and non-local segments seperately
+        or not.
+
+        Required parameter. Use CheckFeatureSupport to determine if supported.
+        */
+        bool IsUMA;
+
+        /** \brief Total budget of video memory, expressed as a percentage.
+
+        Optional parameter. When 0 is specified, the API will automatically set the video
+        memory budget to 95%, leaving 5% for the OS and other applications.
+        */
+        float VideoMemoryBudget;
+
+        /** \brief Specify budget for residency manager.
+
+        Mostly used for debugging and testing purposes because it allows a fixed budget to be
+        artifically set.
+
+        Optional parameter. When 0 is specified, the API will not restrict the residency manager
+        budget.
+        */
+        uint64_t Budget;
+
+        /** \brief Amount of memory to evict, in bytes, should there not be enough budget left.
+
+        Optional parameter. When 0 is specified, the API will automatically set the video memory
+        evict size to 50MB.
+        */
+        uint64_t EvictLimit;
+    };
+
     class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
       public:
-        static HRESULT CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                              ComPtr<IDXGIAdapter> adapter,
-                                              bool isUMA,
-                                              float videoMemoryBudget,
-                                              uint64_t budget,
-                                              uint64_t evictLimit,
+        /** \brief  Create residency residency manager to manage video memory.
+
+        @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
+        manager.
+        @param[out] residencyManagerOut Pointer to a memory block that recieves a pointer to the
+        residency Manager. Pass NULL to test if residency Manager creation would succeed, but not
+        actually create the residency Manager. If NULL is passed and residency Manager creating
+        would succeed, S_FALSE is returned.
+        */
+        static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               ResidencyManager** residencyManagerOut);
 
         ~ResidencyManager();
 
+        /** \brief  Locks the specified heap.
+
+        Locking a heap means the residency manager will never evict it when over budget.
+
+        @param heap A pointer to the heap being locked.
+        */
         HRESULT LockHeap(Heap* heap);
+
+        /** \brief  Unlocks the specified heap.
+
+        Unlocking a heap allows the residency manager will evict it when over budget.
+
+        @param heap A pointer to the heap being unlocked.
+        */
         HRESULT UnlockHeap(Heap* heap);
+
+        /** \brief  Add or insert the specify heap.
+
+        Inserting a heap means to have it managed by this residency manager.
+
+        @param heap A pointer to the heap being managed.
+        */
         HRESULT InsertHeap(Heap* heap);
 
+        /** \brief  Evict memory per segment.
+
+        Evicts until the budget is under the specified size.
+
+        @param evictSizeInBytes Target size, in bytes, to be under budget.
+        @param memorySegmentGroup Memory segment to evict from.
+        */
         HRESULT Evict(uint64_t evictSizeInBytes,
                       const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
+        /** \brief  Execute command lists using residency managed heaps.
+
+        Submits an array of command lists and residency sets for the specified command queue.
+
+        @param queue The command queue to submit to.
+        @param commandLists The array of ID3D12CommandList command lists to be executed.
+        @param residencySets The array of ResidencySet residency sets to make resident.
+        @param count The size of commandLists and residencySets arrays.
+        */
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* queue,
                                     ID3D12CommandList* const* commandLists,
                                     ResidencySet* const* residencySets,
                                     uint32_t count);
 
+        /** \brief  Sets video memory reservation.
+
+        A reservation is the lowest amount of physical memory the application need to continue
+        operation safely.
+
+        @param memorySegmentGroup Memory segment to reserve.
+        @param reservation Amount of memory to reserve, in bytes.
+        @param[out] reservationOut the amount of memory reserved, which may be less then the
+        |reservation| when under video memory pressure.
+        */
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                           uint64_t reservation,
                                           uint64_t* reservationOut = nullptr);
 
       private:
-        ResidencyManager(ComPtr<ID3D12Device> device,
-                         ComPtr<IDXGIAdapter3> adapter3,
-                         std::unique_ptr<Fence> fence,
-                         bool isUMA,
-                         float memorySegmentBudgetLimit,
-                         uint64_t totalResourceBudgetLimit,
-                         uint64_t evictLimit);
+        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 
         HRESULT EvictInternal(uint64_t evictSizeInBytes,
                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,

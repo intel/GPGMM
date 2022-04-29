@@ -32,29 +32,19 @@ namespace gpgmm { namespace d3d12 {
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
 
     // static
-    HRESULT ResidencyManager::CreateResidencyManager(ComPtr<ID3D12Device> device,
-                                                     ComPtr<IDXGIAdapter> adapter,
-                                                     bool isUMA,
-                                                     float videoMemoryBudget,
-                                                     uint64_t budget,
-                                                     uint64_t evictLimit,
+    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                                      ResidencyManager** residencyManagerOut) {
-        // Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
-        ReturnIfFailed(adapter.As(&adapter3));
-
         // Residency manager needs it's own fence to know when heaps are no longer being used by the
         // GPU.
         std::unique_ptr<Fence> residencyFence;
         {
             Fence* ptr = nullptr;
-            ReturnIfFailed(Fence::CreateFence(device, 0, &ptr));
+            ReturnIfFailed(Fence::CreateFence(descriptor.Device, 0, &ptr));
             residencyFence.reset(ptr);
         }
 
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(std::move(device), std::move(adapter3), std::move(residencyFence),
-                                 isUMA, videoMemoryBudget, budget, evictLimit));
+            new ResidencyManager(descriptor, std::move(residencyFence)));
 
         // Query and set the video memory limits per segment.
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
@@ -62,7 +52,7 @@ namespace gpgmm { namespace d3d12 {
 
         ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL,
                                                               queryVideoMemoryInfo));
-        if (!isUMA) {
+        if (!descriptor.IsUMA) {
             queryVideoMemoryInfo =
                 residencyManager->GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
 
@@ -75,20 +65,15 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(ComPtr<ID3D12Device> device,
-                                       ComPtr<IDXGIAdapter3> adapter3,
-                                       std::unique_ptr<Fence> fence,
-                                       bool isUMA,
-                                       float videoMemoryBudget,
-                                       uint64_t budget,
-                                       uint64_t evictLimit)
-        : mDevice(device),
-          mAdapter(adapter3),
+    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
+                                       std::unique_ptr<Fence> fence)
+        : mDevice(descriptor.Device),
+          mAdapter(descriptor.Adapter),
           mFence(std::move(fence)),
-          mVideoMemoryBudget(videoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
-                                                    : videoMemoryBudget),
-          mBudget(budget),
-          mEvictLimit(evictLimit == 0 ? kDefaultEvictLimit : evictLimit) {
+          mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
+                                                               : descriptor.VideoMemoryBudget),
+          mBudget(descriptor.Budget),
+          mEvictLimit(descriptor.EvictLimit == 0 ? kDefaultEvictLimit : descriptor.EvictLimit) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -101,7 +86,7 @@ namespace gpgmm { namespace d3d12 {
         if (mBudget > 0) {
             mLocalVideoMemorySegment.Info.Budget =
                 mLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
-            if (!isUMA) {
+            if (!descriptor.IsUMA) {
                 mNonLocalVideoMemorySegment.Info.Budget =
                     mNonLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
             }
