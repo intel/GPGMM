@@ -1,14 +1,9 @@
 var searchData=
 [
-  ['path_0',['path',['../struct_trace_file.html#af31c4705878768456d2519d7aa4470f5',1,'TraceFile']]],
-  ['peakcputime_1',['PeakCpuTime',['../struct_capture_replay_call_stats.html#a59805d9995955eb8849bbf650197f27f',1,'CaptureReplayCallStats']]],
-  ['peakusage_2',['PeakUsage',['../struct_capture_replay_memory_stats.html#a8b3e9ff58d4db82928050ea8b0b9d37c',1,'CaptureReplayMemoryStats']]],
-  ['physicaldevice_3',['physicalDevice',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a1df1001b59a3a4d322d2f3fc8cf6ccac',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
-  ['pleft_4',['pLeft',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html#ad876112812f84b6d8aba69006c060e0c',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::SplitLink']]],
-  ['pnext_5',['pNext',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
-  ['poolsizeinbytes_6',['PoolSizeInBytes',['../structgpgmm_1_1_p_o_o_l___i_n_f_o.html#a22e324d056903cda05e5ed7d29d7413e',1,'gpgmm::POOL_INFO']]],
-  ['pprev_7',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
-  ['preferredresourceheapsize_8',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['prefetchmemory_9',['PrefetchMemory',['../struct_test_enviroment_params.html#ac031219600a04875af28811da5c40fb0',1,'TestEnviromentParams']]],
-  ['pvulkanfunctions_10',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['recordlevel_0',['RecordLevel',['../struct_test_enviroment_params.html#a753be388872c63309b7c2655a7a9d297',1,'TestEnviromentParams']]],
+  ['recordoptions_1',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a8989e06119f2b7e8a52f7bf062356012',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['resource_2',['Resource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#abf8c15883367ad0b3a61df789f49dd94',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
+  ['resourcedescriptor_3',['resourceDescriptor',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#a5be4f11fc109370ade0000671302ef08',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
+  ['resourceheap_4',['ResourceHeap',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a0a27d9f41a710fcb33db6c084583d4ca',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
+  ['resourceheaptier_5',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
 ];

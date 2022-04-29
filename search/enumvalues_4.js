@@ -1,4 +1,21 @@
 var searchData=
 [
-  ['info_0',['Info',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa4059b0251f66a18cb56f544728796875',1,'gpgmm']]]
+  ['kamd_5fvkvendor_0',['kAMD_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba92a514c2e9c70ce4514b1c3bc7a535c9',1,'gpgmm']]],
+  ['karm_5fvkvendor_1',['kARM_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16bafe1e1974e6cd4e95d932f6b77f3178f7',1,'gpgmm']]],
+  ['kfirst_2',['kFirst',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaa30dc98684fefbeb1ee0194694d5585ae',1,'gpgmm::Desc']]],
+  ['kimagination_5fvkvendor_3',['kImagination_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba65b5cc6acaece3a168932612a715dc0d',1,'gpgmm']]],
+  ['kintel_5fvkvendor_4',['kIntel_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16bac2099bff48464638c54a0977e707b5cd',1,'gpgmm']]],
+  ['knone_5',['kNone',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaab2c38b0fa4886a1d8fe0cd2bfbe0e07d',1,'gpgmm::Desc']]],
+  ['knvidia_5fvkvendor_6',['kNvidia_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba4ec7c1db24b7d68e5e13b776554286a0',1,'gpgmm']]],
+  ['kone_7',['kOne',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a823b43fdd917ccf755d892b43e66add8',1,'gpgmm']]],
+  ['kqualcomm_5fvkvendor_8',['kQualcomm_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba7f7e8040f9b0ca03f7d108e2ec6a89d6',1,'gpgmm']]],
+  ['ksecond_9',['kSecond',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaaa186e75aa5599a9c08064cdd56fd235a',1,'gpgmm::Desc']]],
+  ['kstandalone_10',['kStandalone',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16',1,'gpgmm']]],
+  ['ksuballocated_11',['kSubAllocated',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37',1,'gpgmm']]],
+  ['ksuballocatedwithin_12',['kSubAllocatedWithin',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d',1,'gpgmm']]],
+  ['kthird_13',['kThird',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaa117dd93ce5e9b4b929361a3e3584670c',1,'gpgmm::Desc']]],
+  ['kthree_14',['kThree',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a48b75453b3e2474add0c86c7a34015f8',1,'gpgmm']]],
+  ['ktwo_15',['kTwo',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a66fe5ad73ec107dfd2fe171755db6917',1,'gpgmm']]],
+  ['kundefined_16',['kUndefined',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3',1,'gpgmm']]],
+  ['kzero_17',['kZero',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000ada94b72158eec57c5d883e4d8e3fc081',1,'gpgmm']]]
 ];
