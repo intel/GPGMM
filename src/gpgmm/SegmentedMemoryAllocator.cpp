@@ -141,7 +141,9 @@ namespace gpgmm {
         if (alignment != mMemoryAlignment) {
             InfoEvent("SegmentedMemoryAllocator.TryAllocateMemory",
                       ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
-                << "Allocation alignment does not match memory alignment.";
+                << "Allocation alignment must match memory alignment (" +
+                       std::to_string(alignment) + " vs " + std::to_string(mMemoryAlignment) +
+                       " bytes).";
             return {};
         }
 
