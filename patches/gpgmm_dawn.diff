@@ -1,4 +1,4 @@
-From 03ce98e08677b10af190c5ca293ff90dfa1d3e7b Mon Sep 17 00:00:00 2001
+From 01db6440a8a36d7f72f6b1dda65e873d1bb4700e Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -10,15 +10,15 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  build_overrides/dawn.gni                      |  1 +
  build_overrides/gpgmm.gni                     | 19 +++++
  scripts/dawn_overrides_with_defaults.gni      |  5 ++
- src/dawn/native/BUILD.gn                      | 13 +--
+ src/dawn/native/BUILD.gn                      | 15 ++--
  src/dawn/native/Toggles.cpp                   |  4 +
  src/dawn/native/Toggles.h                     |  1 +
- src/dawn/native/d3d12/BufferD3D12.cpp         | 37 ++++-----
+ src/dawn/native/d3d12/BufferD3D12.cpp         | 37 ++++----
  src/dawn/native/d3d12/BufferD3D12.h           |  6 +-
  .../native/d3d12/CommandRecordingContext.cpp  | 20 ++---
  .../native/d3d12/CommandRecordingContext.h    |  4 +-
  src/dawn/native/d3d12/D3D12Backend.cpp        | 17 +++-
- src/dawn/native/d3d12/DeviceD3D12.cpp         | 83 +++++++++++++++----
+ src/dawn/native/d3d12/DeviceD3D12.cpp         | 84 +++++++++++++++----
  src/dawn/native/d3d12/DeviceD3D12.h           | 17 ++--
  .../ShaderVisibleDescriptorAllocatorD3D12.cpp | 26 ++++--
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  6 +-
@@ -29,7 +29,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          | 11 +++
  src/dawn/native/d3d12/UtilsD3D12.h            |  2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   | 17 ++--
- 24 files changed, 240 insertions(+), 130 deletions(-)
+ 24 files changed, 241 insertions(+), 132 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -107,7 +107,7 @@ index b4142ac6e..2dcfc127b 100644
 +  dawn_gpgmm_dir = "${dawn_root}/third_party/gpgmm"
 +}
 diff --git a/src/dawn/native/BUILD.gn b/src/dawn/native/BUILD.gn
-index 7fa3fb417..3d57203c9 100644
+index 7fa3fb417..950314800 100644
 --- a/src/dawn/native/BUILD.gn
 +++ b/src/dawn/native/BUILD.gn
 @@ -166,6 +166,7 @@ source_set("sources") {
@@ -118,7 +118,7 @@ index 7fa3fb417..3d57203c9 100644
      "${dawn_root}/src/dawn/common",
      "${dawn_root}/src/tint:libtint",
      "${dawn_spirv_tools_dir}:spvtools_opt",
-@@ -406,10 +407,10 @@ source_set("sources") {
+@@ -406,10 +407,11 @@ source_set("sources") {
        "d3d12/Forward.h",
        "d3d12/GPUDescriptorHeapAllocationD3D12.cpp",
        "d3d12/GPUDescriptorHeapAllocationD3D12.h",
@@ -126,6 +126,7 @@ index 7fa3fb417..3d57203c9 100644
 -      "d3d12/HeapAllocatorD3D12.h",
 -      "d3d12/HeapD3D12.cpp",
 -      "d3d12/HeapD3D12.h",
++
 +      # "d3d12/HeapAllocatorD3D12.cpp",
 +      # "d3d12/HeapAllocatorD3D12.h",
 +      # "d3d12/HeapD3D12.cpp",
@@ -133,12 +134,13 @@ index 7fa3fb417..3d57203c9 100644
        "d3d12/IntegerTypes.h",
        "d3d12/NativeSwapChainImplD3D12.cpp",
        "d3d12/NativeSwapChainImplD3D12.h",
-@@ -429,8 +430,8 @@ source_set("sources") {
+@@ -429,8 +431,9 @@ source_set("sources") {
        "d3d12/RenderPipelineD3D12.h",
        "d3d12/ResidencyManagerD3D12.cpp",
        "d3d12/ResidencyManagerD3D12.h",
 -      "d3d12/ResourceAllocatorManagerD3D12.cpp",
 -      "d3d12/ResourceAllocatorManagerD3D12.h",
++
 +      # "d3d12/ResourceAllocatorManagerD3D12.cpp",
 +      # "d3d12/ResourceAllocatorManagerD3D12.h",
        "d3d12/ResourceHeapAllocationD3D12.cpp",
@@ -420,10 +422,10 @@ index 18d7145c8..098254e5c 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 6b77b3a07..5a7394bb9 100644
+index 6b77b3a07..498fc9b2b 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
-@@ -127,8 +127,32 @@ namespace dawn::native::d3d12 {
+@@ -127,8 +127,28 @@ namespace dawn::native::d3d12 {
  
          mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
  
@@ -437,7 +439,7 @@ index 6b77b3a07..5a7394bb9 100644
 +        allocatorDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +        allocatorDesc.ResourceHeapTier =
 +            static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
-+        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll; // 4MB
++        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
 +            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
@@ -448,17 +450,13 @@ index 6b77b3a07..5a7394bb9 100644
 +            allocatorDesc.TotalResourceBudgetLimit = 100000000;  // 100MB
 +        }
 +
-+        if (IsToggleEnabled(Toggle::DisableResourceSuballocation)) {
-+            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_COMMITED;
-+        }
-+
-+        DAWN_TRY(CheckHRESULT(
-+            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &mResourceAllocator, &mResidencyManager),
-+            "D3D12 create resource allocator"));
++        DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResourceAllocator::CreateAllocator(
++                                  allocatorDesc, &mResourceAllocator, &mResidencyManager),
++                              "D3D12 create resource allocator"));
  
          // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
          DAWN_TRY_ASSIGN(
-@@ -248,8 +272,8 @@ namespace dawn::native::d3d12 {
+@@ -248,8 +268,8 @@ namespace dawn::native::d3d12 {
          return mCommandAllocatorManager.get();
      }
  
@@ -469,7 +467,7 @@ index 6b77b3a07..5a7394bb9 100644
      }
  
      ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -318,7 +342,6 @@ namespace dawn::native::d3d12 {
+@@ -318,7 +338,6 @@ namespace dawn::native::d3d12 {
          // Perform cleanup operations to free unused objects
          ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -477,7 +475,7 @@ index 6b77b3a07..5a7394bb9 100644
          DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
          mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
          mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -521,16 +544,51 @@ namespace dawn::native::d3d12 {
+@@ -521,16 +540,55 @@ namespace dawn::native::d3d12 {
          return {};
      }
  
@@ -524,6 +522,10 @@ index 6b77b3a07..5a7394bb9 100644
 +        gpgmm::d3d12::ALLOCATION_DESC desc = {};
 +        desc.HeapType = heapType;
 +
++        if (IsToggleEnabled(Toggle::DisableResourceSuballocation)) {
++            desc.Flags |= gpgmm::d3d12::ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
++        }
++
 +        ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
 +        DAWN_TRY(CheckOutOfMemoryHRESULT(
 +            mResourceAllocator->CreateResource(desc, resourceDescriptor, initialUsage,
@@ -542,7 +544,7 @@ index 6b77b3a07..5a7394bb9 100644
          SetToggle(Toggle::UseDXC, false);
  
          // Disable optimizations when using FXC
-@@ -674,10 +733,6 @@ namespace dawn::native::d3d12 {
+@@ -674,11 +733,6 @@ namespace dawn::native::d3d12 {
              ::CloseHandle(mFenceEvent);
          }
  
@@ -550,11 +552,12 @@ index 6b77b3a07..5a7394bb9 100644
 -        if (mResourceAllocatorManager != nullptr) {
 -            mResourceAllocatorManager->DestroyPool();
 -        }
- 
+-
          // We need to handle clearing up com object refs that were enqeued after TickImpl
          mUsedComObjectRefs.ClearUpTo(std::numeric_limits<ExecutionSerial>::max());
+ 
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.h b/src/dawn/native/d3d12/DeviceD3D12.h
-index f8290f57a..e64172065 100644
+index f8290f57a..4c34da885 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.h
 +++ b/src/dawn/native/d3d12/DeviceD3D12.h
 @@ -22,12 +22,12 @@
@@ -606,7 +609,7 @@ index f8290f57a..e64172065 100644
 -        std::unique_ptr<ResourceAllocatorManager> mResourceAllocatorManager;
 -        std::unique_ptr<ResidencyManager> mResidencyManager;
 +        ComPtr<gpgmm::d3d12::ResourceAllocator> mResourceAllocator;
-+        ComPtr<gpgmm::d3d12::ResidencyManager> mResidencyManager; // Residency manager is owned by resource allocator and will not be outlived.
++        ComPtr<gpgmm::d3d12::ResidencyManager> mResidencyManager;
  
          static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup =
              3 * kMaxSamplersPerShaderStage;
@@ -939,7 +942,7 @@ index 912d1b7f3..2a026c323 100644
                        ID3D12Object* object,
                        const char* prefix,
 diff --git a/src/dawn/tests/white_box/D3D12ResidencyTests.cpp b/src/dawn/tests/white_box/D3D12ResidencyTests.cpp
-index d6008bde8..e17b42129 100644
+index d6008bde8..7c40cc5c0 100644
 --- a/src/dawn/tests/white_box/D3D12ResidencyTests.cpp
 +++ b/src/dawn/tests/white_box/D3D12ResidencyTests.cpp
 @@ -40,11 +40,6 @@ class D3D12ResidencyTestBase : public DawnTest {
@@ -963,25 +966,25 @@ index d6008bde8..e17b42129 100644
          dawn::native::d3d12::Buffer* d3dBuffer =
              dawn::native::d3d12::ToBackend(dawn::native::FromAPI((buffer.Get())));
          return d3dBuffer->CheckAllocationMethodForTesting(allocationMethod);
-@@ -128,7 +123,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitSmallResources) {
+@@ -127,8 +122,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitSmallResources) {
+     // internally.
      for (uint32_t i = 0; i < bufferSet1.size(); i++) {
          EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
-         EXPECT_TRUE(
+-        EXPECT_TRUE(
 -            CheckAllocationMethod(bufferSet1[i], dawn::native::AllocationMethod::kSubAllocated));
-+            CheckAllocationMethod(bufferSet1[i], gpgmm::AllocationMethod::kSubAllocated));
++        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], gpgmm::AllocationMethod::kSubAllocated));
      }
  
      // Create enough directly-allocated buffers to use the entire budget.
-@@ -166,7 +161,7 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitLargeResources) {
+@@ -166,7 +160,6 @@ TEST_P(D3D12ResourceResidencyTests, OvercommitLargeResources) {
      // allocated internally.
      for (uint32_t i = 0; i < bufferSet1.size(); i++) {
          EXPECT_TRUE(CheckIfBufferIsResident(bufferSet1[i]));
 -        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], dawn::native::AllocationMethod::kDirect));
-+        EXPECT_TRUE(CheckAllocationMethod(bufferSet1[i], gpgmm::AllocationMethod::kStandalone));
      }
  
      // Create enough directly-allocated buffers to use the entire budget.
-@@ -420,6 +415,8 @@ TEST_P(D3D12DescriptorResidencyTests, SwitchedViewHeapResidency) {
+@@ -420,6 +413,8 @@ TEST_P(D3D12DescriptorResidencyTests, SwitchedViewHeapResidency) {
      EXPECT_FALSE(allocator->IsLastShaderVisibleHeapInLRUForTesting());
  }
  
