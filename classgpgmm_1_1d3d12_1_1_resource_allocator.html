@@ -346,8 +346,8 @@ Additional Inherited Members</h2></td></tr>
 <p >Allows externally created D3D12 resources to be used as ResourceAllocations. Residency is not supported for imported resources.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">committedResource</td><td>A COM managed pointer to a D3D12 committed resource. </td></tr>
-    <tr><td class="paramname">resourceAllocationOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">committedResource</td><td>A COM managed pointer to a D3D12 committed resource. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">resourceAllocationOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
 </dl>
