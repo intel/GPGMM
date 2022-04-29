@@ -13,14 +13,13 @@ var searchData=
   ['errord3d12_2eh_10',['ErrorD3D12.h',['../_error_d3_d12_8h.html',1,'']]],
   ['errorevent_11',['ErrorEvent',['../namespacegpgmm.html#a9ce85bdbbdfb1efebb93a6eea5f3db43',1,'gpgmm']]],
   ['errorlog_12',['ErrorLog',['../namespacegpgmm.html#aebed7617bb2d08b0a2eac27f84cac24e',1,'gpgmm']]],
-  ['errorvk_2eh_13',['ErrorVk.h',['../_error_vk_8h.html',1,'']]],
-  ['event_14',['Event',['../classgpgmm_1_1_event.html#afbb9549815e21e5ad23d97b2d20ce668',1,'gpgmm::Event::Event()'],['../classgpgmm_1_1_event.html',1,'gpgmm::Event']]],
-  ['eventmessage_15',['EventMessage',['../classgpgmm_1_1_event_message.html#a0eac75cefa628cde14026b8f8368ded5',1,'gpgmm::EventMessage::EventMessage(const LogSeverity &amp;level, const char *name, int messageId=0)'],['../classgpgmm_1_1_event_message.html#aee3e8d8f190d8ea04a72cb42c0c27d0b',1,'gpgmm::EventMessage::EventMessage(EventMessage &amp;&amp;other)=default'],['../classgpgmm_1_1_event_message.html',1,'gpgmm::EventMessage']]],
-  ['eventscope_16',['EventScope',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#ae169d62c949f95574f3e2209a90400fe',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]],
-  ['eventtracewriter_17',['EventTraceWriter',['../classgpgmm_1_1_event_trace_writer.html#a5b34f87f224ac1ae0c21cdb00504499c',1,'gpgmm::EventTraceWriter::EventTraceWriter()'],['../classgpgmm_1_1_event_trace_writer.html',1,'gpgmm::EventTraceWriter']]],
-  ['eventtracewriter_2ecpp_18',['EventTraceWriter.cpp',['../_event_trace_writer_8cpp.html',1,'']]],
-  ['eventtracewriter_2eh_19',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
-  ['evict_20',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4',1,'gpgmm::d3d12::ResidencyManager']]],
-  ['evictlimit_21',['EvictLimit',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a7544785dd40bf2aa1c2c2c0ca1c3ffda',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['executecommandlists_22',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]]
+  ['event_13',['Event',['../classgpgmm_1_1_event.html#afbb9549815e21e5ad23d97b2d20ce668',1,'gpgmm::Event::Event()'],['../classgpgmm_1_1_event.html',1,'gpgmm::Event']]],
+  ['eventmessage_14',['EventMessage',['../classgpgmm_1_1_event_message.html#a0eac75cefa628cde14026b8f8368ded5',1,'gpgmm::EventMessage::EventMessage(const LogSeverity &amp;level, const char *name, int messageId=0)'],['../classgpgmm_1_1_event_message.html#aee3e8d8f190d8ea04a72cb42c0c27d0b',1,'gpgmm::EventMessage::EventMessage(EventMessage &amp;&amp;other)=default'],['../classgpgmm_1_1_event_message.html',1,'gpgmm::EventMessage']]],
+  ['eventscope_15',['EventScope',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#ae169d62c949f95574f3e2209a90400fe',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]],
+  ['eventtracewriter_16',['EventTraceWriter',['../classgpgmm_1_1_event_trace_writer.html#a5b34f87f224ac1ae0c21cdb00504499c',1,'gpgmm::EventTraceWriter::EventTraceWriter()'],['../classgpgmm_1_1_event_trace_writer.html',1,'gpgmm::EventTraceWriter']]],
+  ['eventtracewriter_2ecpp_17',['EventTraceWriter.cpp',['../_event_trace_writer_8cpp.html',1,'']]],
+  ['eventtracewriter_2eh_18',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
+  ['evict_19',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['evictlimit_20',['EvictLimit',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab5b2e06398ba6c604d4e93fda3be6413',1,'gpgmm::d3d12::RESIDENCY_DESC::EvictLimit()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a7544785dd40bf2aa1c2c2c0ca1c3ffda',1,'gpgmm::d3d12::ALLOCATOR_DESC::EvictLimit()']]],
+  ['executecommandlists_21',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]]
 ];

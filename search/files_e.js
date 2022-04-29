@@ -11,8 +11,6 @@ var searchData=
   ['resourceallocationd3d12_2eh_8',['ResourceAllocationD3D12.h',['../_resource_allocation_d3_d12_8h.html',1,'']]],
   ['resourceallocatord3d12_2ecpp_9',['ResourceAllocatorD3D12.cpp',['../_resource_allocator_d3_d12_8cpp.html',1,'']]],
   ['resourceallocatord3d12_2eh_10',['ResourceAllocatorD3D12.h',['../_resource_allocator_d3_d12_8h.html',1,'']]],
-  ['resourceallocatorvk_2ecpp_11',['ResourceAllocatorVk.cpp',['../_resource_allocator_vk_8cpp.html',1,'']]],
-  ['resourceallocatorvk_2eh_12',['ResourceAllocatorVk.h',['../_resource_allocator_vk_8h.html',1,'']]],
-  ['resourceheapallocatord3d12_2ecpp_13',['ResourceHeapAllocatorD3D12.cpp',['../_resource_heap_allocator_d3_d12_8cpp.html',1,'']]],
-  ['resourceheapallocatord3d12_2eh_14',['ResourceHeapAllocatorD3D12.h',['../_resource_heap_allocator_d3_d12_8h.html',1,'']]]
+  ['resourceheapallocatord3d12_2ecpp_11',['ResourceHeapAllocatorD3D12.cpp',['../_resource_heap_allocator_d3_d12_8cpp.html',1,'']]],
+  ['resourceheapallocatord3d12_2eh_12',['ResourceHeapAllocatorD3D12.h',['../_resource_heap_allocator_d3_d12_8h.html',1,'']]]
 ];

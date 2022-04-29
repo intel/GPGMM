@@ -2,7 +2,7 @@ var searchData=
 [
   ['cacheentry_0',['CacheEntry',['../classgpgmm_1_1_cache_entry.html',1,'gpgmm']]],
   ['cachestats_1',['CacheStats',['../structgpgmm_1_1_cache_stats.html',1,'gpgmm']]],
-  ['caps_2',['Caps',['../classgpgmm_1_1d3d12_1_1_caps.html',1,'gpgmm::d3d12::Caps'],['../classgpgmm_1_1vk_1_1_caps.html',1,'gpgmm::vk::Caps']]],
+  ['caps_2',['Caps',['../classgpgmm_1_1d3d12_1_1_caps.html',1,'gpgmm::d3d12']]],
   ['capturereplaycallstats_3',['CaptureReplayCallStats',['../struct_capture_replay_call_stats.html',1,'']]],
   ['capturereplaymemorystats_4',['CaptureReplayMemoryStats',['../struct_capture_replay_memory_stats.html',1,'']]],
   ['capturereplaytestwithparams_5',['CaptureReplayTestWithParams',['../class_capture_replay_test_with_params.html',1,'']]],
