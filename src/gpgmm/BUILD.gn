@@ -30,18 +30,18 @@ if (is_mac) {
 }
 
 # The VVLs are an optional dependency, only use it if the path has been set.
-# enable_vulkan_validation_layers = gpgmm_enable_vulkan_validation_layers &&
-#                                   gpgmm_vulkan_validation_layers_dir != ""
-# if (enable_vulkan_validation_layers) {
-#   import("//build_overrides/vulkan_validation_layers.gni")
-# }
+enable_vk_validation_layers =
+    gpgmm_enable_vk_validation_layers && gpgmm_vk_validation_layers_dir != ""
+if (enable_vk_validation_layers) {
+  import("//build_overrides/vulkan_validation_layers.gni")
+}
 
 # The Vulkan loader is an optional dependency, only use it if the path has been
 # set.
-# if (gpgmm_enable_vulkan) {
-#   enable_vulkan_loader =
-#       gpgmm_enable_vulkan_loader && gpgmm_vulkan_loader_dir != ""
-# }
+if (gpgmm_enable_vk) {
+  enable_vk_loader = gpgmm_vk_static_functions ||
+                     (gpgmm_enable_vk_loader && gpgmm_vk_loader_dir != "")
+}
 
 config("gpgmm_common_config") {
   configs = [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
@@ -61,15 +61,18 @@ config("gpgmm_common_config") {
   }
 }
 
-# Config that adds the @executable_path rpath if needed so that Swiftshader or the Vulkan loader are found.
-config("gpgmm_vulkan_rpath") {
-  if (is_mac && gpgmm_enable_vulkan &&
-      (use_swiftshader || enable_vulkan_loader)) {
+# Config that adds the @executable_path rpath if needed so the Vulkan loader are found.
+config("vulkan_rpath") {
+  if (is_mac && gpgmm_enable_vk && enable_vk_loader) {
     ldflags = [
       "-rpath",
       "@executable_path/",
     ]
   }
+}
+
+config("vulkan_tools_include") {
+  include_dirs = [ "${gpgmm_vk_tools_dir}" ]
 }
 
 # Public gpgmm headers so they can be publicly visible for
@@ -114,6 +117,10 @@ source_set("gpgmm_sources") {
 
   if (gpgmm_enable_device_checks) {
     defines += [ "GPGMM_ENABLE_DEVICE_CHECKS" ]
+  }
+
+  if (gpgmm_vk_static_functions) {
+    defines += [ "GPGMM_STATIC_VULKAN_FUNCTIONS" ]
   }
 
   libs = []
@@ -242,6 +249,42 @@ source_set("gpgmm_sources") {
       "d3d12/d3d12_platform.h",
     ]
   }
+
+  if (gpgmm_enable_vk) {
+    configs += [ ":vulkan_tools_include" ]
+    deps += [ "${gpgmm_vk_tools_dir}:vulkan_tools_headers" ]
+    public_deps = [ "${gpgmm_vk_headers_dir}:vulkan_headers" ]
+
+    sources += [
+      "vk/CapsVk.cpp",
+      "vk/CapsVk.h",
+      "vk/DeviceMemoryAllocatorVk.cpp",
+      "vk/DeviceMemoryAllocatorVk.h",
+      "vk/DeviceMemoryVk.cpp",
+      "vk/DeviceMemoryVk.h",
+      "vk/ErrorVk.h",
+      "vk/FunctionsVk.cpp",
+      "vk/FunctionsVk.h",
+      "vk/ResourceAllocatorVk.cpp",
+      "vk/ResourceAllocatorVk.h",
+    ]
+
+    if (enable_vk_validation_layers) {
+      defines += [
+        "GPGMM_ENABLE_VK_VALIDATION_LAYERS",
+        "GPGMM_VK_DATA_DIR=\"$vulkan_data_subdir\"",
+      ]
+    }
+
+    if (enable_vk_loader) {
+      # Loader must be a linked dependency when using importing functions statically.
+      if (gpgmm_vk_static_functions) {
+        deps += [ "${gpgmm_vk_loader_dir}:libvulkan" ]
+      } else {
+        data_deps += [ "${gpgmm_vk_loader_dir}:libvulkan" ]
+      }
+    }
+  }
 }
 
 # Defines the type of target for GN to build.
@@ -258,4 +301,16 @@ if (gpgmm_shared_library) {
 target(target_type, "gpgmm") {
   public_deps = [ ":gpgmm_headers" ]
   deps = [ ":gpgmm_sources" ]
+  public_configs = [ ":vulkan_rpath" ]
+
+  if (gpgmm_enable_vk) {
+    if (enable_vk_validation_layers) {
+      data_deps =
+          [ "${gpgmm_vk_validation_layers_dir}:vulkan_validation_layers" ]
+      if (!is_android) {
+        data_deps +=
+            [ "${gpgmm_vk_validation_layers_dir}:vulkan_gen_json_files" ]
+      }
+    }
+  }
 }

@@ -159,6 +159,16 @@ source_set("gpgmm_end2end_tests_sources") {
       "dxgi.lib",
     ]
   }
+
+  if (gpgmm_enable_vk) {
+    sources += [
+      "VKTest.cpp",
+      "VKTest.h",
+      "end2end/VKResourceAllocatorTests.cpp",
+    ]
+
+    deps += [ "//third_party/vulkan-deps/vulkan-loader/src:libvulkan" ]
+  }
 }
 
 test("gpgmm_end2end_tests") {

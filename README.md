@@ -61,7 +61,7 @@ To build with a backend, please set the corresponding argument from following ta
 | Backend | Build argument |
 |---------|--------------|
 | DirectX 12 | `gpgmm_enable_d3d12=true` (default on winos) |
-| Vulkan | `gpgmm_enable_vulkan=true` |
+| Vulkan | `gpgmm_enable_vk=true` |
 
 ### Build
 
