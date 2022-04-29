@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['warning_0',['Warning',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa0eaadb4fcb48a0a0ed7bc9868be9fbaa',1,'gpgmm']]]
+  ['metadata_0',['Metadata',['../namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871',1,'gpgmm']]]
 ];
