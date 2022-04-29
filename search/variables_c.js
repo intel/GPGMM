@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['offset_0',['Offset',['../structgpgmm_1_1_memory_block.html#a7912870ebc9457c28358322b9d481c7d',1,'gpgmm::MemoryBlock']]],
-  ['offsetfromresource_1',['OffsetFromResource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#abd6b8ab32ee8e7c16c292c469f4b7293',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]]
+  ['name_0',['name',['../struct_trace_file.html#a86e9dc6e842f180b7a7b6e3ad5f4bd2c',1,'TraceFile']]],
+  ['newcount_1',['NewCount',['../structgpgmm_1_1_cache_stats.html#ae13ad299a5f48fc1396a522b4e0c0293',1,'gpgmm::CacheStats']]],
+  ['numofhits_2',['NumOfHits',['../structgpgmm_1_1_cache_stats.html#a81aa18f541e3b8cc43806234a969b689',1,'gpgmm::CacheStats']]],
+  ['numofmisses_3',['NumOfMisses',['../structgpgmm_1_1_cache_stats.html#a9331f38d59d151a56f6a70542d2c4a93',1,'gpgmm::CacheStats']]]
 ];

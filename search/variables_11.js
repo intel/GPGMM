@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['usedblockcount_0',['UsedBlockCount',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html#a2b1d4c70eaed581ddc5b2baea6be8bd8',1,'gpgmm::MEMORY_ALLOCATOR_INFO']]],
-  ['usedblockusage_1',['UsedBlockUsage',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html#a3e933937a80dbfb2f0463c8344bbf881',1,'gpgmm::MEMORY_ALLOCATOR_INFO']]],
-  ['usedmemorycount_2',['UsedMemoryCount',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html#a9281555c6bf6473fbb649a74c21f7364',1,'gpgmm::MEMORY_ALLOCATOR_INFO']]],
-  ['usedmemoryusage_3',['UsedMemoryUsage',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html#af396fc166fc5002fab9a5e5dd7e7a1c9',1,'gpgmm::MEMORY_ALLOCATOR_INFO']]]
+  ['totalcount_0',['TotalCount',['../struct_capture_replay_memory_stats.html#aaa7b964cb4a9c4d9e3ce3cab17d98a5c',1,'CaptureReplayMemoryStats']]],
+  ['totalcputime_1',['TotalCpuTime',['../struct_capture_replay_call_stats.html#a12310e2008b898f059e5ac0ae361d1ff',1,'CaptureReplayCallStats']]],
+  ['totalnumofcalls_2',['TotalNumOfCalls',['../struct_capture_replay_call_stats.html#a6869a0567d600de09c369766bea120f5',1,'CaptureReplayCallStats']]],
+  ['totalresourcebudgetlimit_3',['TotalResourceBudgetLimit',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a0b6797449f97333f4f634bb290dbe2bf',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['totalsize_4',['TotalSize',['../struct_capture_replay_memory_stats.html#af2d15c80aead93a4c1f8c290a62f583e',1,'CaptureReplayMemoryStats']]],
+  ['tracefile_5',['TraceFile',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a91d788c3e7ae7d218d7b4ada97149403',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]]
 ];
