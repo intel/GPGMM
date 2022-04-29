@@ -290,12 +290,36 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Additional controls that modify allocations. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073" name="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e" name="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515" name="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de" name="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150" name="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073" name="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
+<pre class="fragment">Enabled by default.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e" name="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
+<pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
+disables creating standalone allocations whose memory cannot be reused.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515" name="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
+<pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
+which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
+can only be in one state at a time, this is mostly restricted to constant buffers (index and
+vertex buffers which will stay read-only after creation). The app developer must use offsets
+from the start of the allocation (vs subresource) by using GetOffsetFromResource().
+Since all devices guarentee command queue accesses are coherent between sub-allocations
+within the same resource. The app developer must check if the adapter is supported OR
+ensure only a command single queue is used.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de" name="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
+<pre class="fragment">The created resource will always be allocated with it's own resource heap.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150" name="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
+<pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
+when the current allocation requested is completed. By default, GPGMM will automatically
+trigger prefetching based on heurstics. Prefetching enables more performance when
+allocating for large contiguous allocations.
+
+Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+</pre> </td></tr>
 </table>
 
 </div>
@@ -312,12 +336,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663" name="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7"></a>ALLOCATOR_CHECK_DEVICE_LEAKS&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocator flags. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable reuse of resource memory. </p>
+<pre class="fragment">Should only be used for debugging and testing purposes.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resources are always within the resource budget at creation time. </p>
+<pre class="fragment">Mostly used to debug with residency being over committed.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
+<pre class="fragment">Should be only used for debugging and testing purposes.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663" name="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Tell GPGMM to allocate exactly what is needed, and to de-allocate memory immediately once no longer needed (instead of re-using it). </p>
+<p >This is very slow and not recommended for general use but may be useful for running with the minimal possible GPU memory footprint or debugging OOM failures. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7"></a>ALLOCATOR_CHECK_DEVICE_LEAKS&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1_flags.html">Flags</a> no longer used and will soon be depreciated. </p>
+</td></tr>
 </table>
 
 </div>
@@ -333,11 +367,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Represents different severity levels used for logging. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2"></a>ALLOCATOR_MESSAGE_SEVERITY_MESSAGE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66"></a>ALLOCATOR_MESSAGE_SEVERITY_INFO&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8"></a>ALLOCATOR_MESSAGE_SEVERITY_WARNING&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95"></a>ALLOCATOR_MESSAGE_SEVERITY_ERROR&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2"></a>ALLOCATOR_MESSAGE_SEVERITY_MESSAGE&#160;</td><td class="fielddoc"><p >Message (or debug) severity. </p>
+<pre class="fragment">Message is for debugging purposes only.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66"></a>ALLOCATOR_MESSAGE_SEVERITY_INFO&#160;</td><td class="fielddoc"><p >Info severity. </p>
+<pre class="fragment">Message is for informational purposes only.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8"></a>ALLOCATOR_MESSAGE_SEVERITY_WARNING&#160;</td><td class="fielddoc"><p >Warning severity. </p>
+<pre class="fragment">A non-fatal message that does not abort execution.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95"></a>ALLOCATOR_MESSAGE_SEVERITY_ERROR&#160;</td><td class="fielddoc"><p >Error severity. </p>
+<pre class="fragment">A fatal message will abort execution.
+</pre> </td></tr>
 </table>
 
 </div>
@@ -353,14 +396,25 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Represents different event categories to record. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99" name="a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99"></a>ALLOCATOR_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466" name="a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466"></a>ALLOCATOR_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2" name="a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2"></a>ALLOCATOR_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95" name="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95"></a>ALLOCATOR_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f" name="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f"></a>ALLOCATOR_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047" name="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047"></a>ALLOCATOR_RECORD_FLAG_PROFILE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4" name="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4"></a>ALLOCATOR_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99" name="a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99"></a>ALLOCATOR_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466" name="a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466"></a>ALLOCATOR_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2" name="a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2"></a>ALLOCATOR_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95" name="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95"></a>ALLOCATOR_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f" name="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f"></a>ALLOCATOR_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
+<pre class="fragment"> Bitwise OR'd combination of ALLOCATOR_RECORD_FLAG_API_OBJECTS and
+ ALLOCATOR_RECORD_FLAG_API_CALLS.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047" name="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047"></a>ALLOCATOR_RECORD_FLAG_PROFILE&#160;</td><td class="fielddoc"><p >Record events required for profiling. </p>
+<pre class="fragment"> Aliases or equal to ALLOCATOR_RECORD_FLAG_API_TIMINGS.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4" name="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4"></a>ALLOCATOR_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
+</td></tr>
 </table>
 
 </div>
@@ -376,9 +430,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Represents recording scopes to limit event recording. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931" name="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931"></a>ALLOCATOR_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6" name="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6"></a>ALLOCATOR_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931" name="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931"></a>ALLOCATOR_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple allocators). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6" name="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6"></a>ALLOCATOR_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per allocator object. </p>
+</td></tr>
 </table>
 
 </div>
