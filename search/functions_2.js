@@ -14,7 +14,7 @@ var searchData=
   ['createdebugplatform_11',['CreateDebugPlatform',['../namespacegpgmm.html#adf7b61be10aea8494c9bd770204533f2',1,'gpgmm']]],
   ['createfence_12',['CreateFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a7498b68435b1394e1f13e6ef9270d00f',1,'gpgmm::d3d12::Fence']]],
   ['createplatformtime_13',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
-  ['createresidencymanager_14',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a81388d2ec697cabc7bae3f129c1b1eba',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['createresidencymanager_14',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a10e1adf77fd517fdf0019158ef88f8c6',1,'gpgmm::d3d12::ResidencyManager']]],
   ['createresource_15',['CreateResource',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a06adef01d890b9e44dfac5e74bf83b0f',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *clearValue, ResourceAllocation **resourceAllocationOut)'],['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a0cd91fd5837e8c97dd65640618fad822',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(ComPtr&lt; ID3D12Resource &gt; committedResource, ResourceAllocation **resourceAllocationOut)']]],
   ['customprinttostringparamname_16',['CustomPrintToStringParamName',['../class_capture_replay_test_with_params.html#afd1e165cf078b426625ea0a89333e011',1,'CaptureReplayTestWithParams']]]
 ];
