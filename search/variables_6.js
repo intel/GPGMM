@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['heap_0',['Heap',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a38bd84c06fec78de5d0a7d2b572f1820',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['heapoffset_1',['HeapOffset',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a0160d7cd2425e8e144e4924c19abd517',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
-  ['heaptype_2',['HeapType',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691',1,'gpgmm::d3d12::ALLOCATION_DESC']]]
+  ['getbuffermemoryrequirements_0',['GetBufferMemoryRequirements',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#ab938fd5d143bacd563237a39a6e2318d',1,'gpgmm::vk::VulkanFunctions']]],
+  ['getdeviceprocaddr_1',['GetDeviceProcAddr',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#aaf14bf81b45ab1b747fb1926b11a6e53',1,'gpgmm::vk::VulkanFunctions']]],
+  ['getimagememoryrequirements_2',['GetImageMemoryRequirements',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a621558a8a15a112342a81879b16b8e5a',1,'gpgmm::vk::VulkanFunctions']]],
+  ['getinstanceprocaddr_3',['GetInstanceProcAddr',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a9ab040bd824baefc7fefab720e055f67',1,'gpgmm::vk::VulkanFunctions']]],
+  ['getphysicaldevicememoryproperties_4',['GetPhysicalDeviceMemoryProperties',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a67db8758da993f097bdf25dc9ad40eec',1,'gpgmm::vk::VulkanFunctions']]],
+  ['getphysicaldeviceproperties_5',['GetPhysicalDeviceProperties',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a584ff21e71294c8f5020dbbfaa513ca4',1,'gpgmm::vk::VulkanFunctions']]],
+  ['grecordeventlevel_6',['gRecordEventLevel',['../namespacegpgmm.html#af530c486f89c78ee4ca13c86f5c00201',1,'gpgmm']]]
 ];

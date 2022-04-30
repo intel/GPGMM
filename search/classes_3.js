@@ -7,7 +7,9 @@ var searchData=
   ['debugplatform_4',['DebugPlatform',['../classgpgmm_1_1_debug_platform.html',1,'gpgmm']]],
   ['debugresourceallocator_5',['DebugResourceAllocator',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html',1,'gpgmm::d3d12']]],
   ['desc_6',['Desc',['../structgpgmm_1_1_desc.html',1,'gpgmm']]],
-  ['dummybuddyblockallocator_7',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html',1,'']]],
-  ['dummymemoryallocator_8',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
-  ['dummyobject_9',['DummyObject',['../class_dummy_object.html',1,'']]]
+  ['devicememory_7',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk']]],
+  ['devicememoryallocator_8',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html',1,'gpgmm::vk']]],
+  ['dummybuddyblockallocator_9',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html',1,'']]],
+  ['dummymemoryallocator_10',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
+  ['dummyobject_11',['DummyObject',['../class_dummy_object.html',1,'']]]
 ];

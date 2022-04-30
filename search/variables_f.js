@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['size_0',['Size',['../structgpgmm_1_1_memory_block.html#afe3e963ff434f118b506939c95e45ce0',1,'gpgmm::MemoryBlock']]],
-  ['sizeinbytes_1',['SizeInBytes',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a097b9ed7d8b4612d359036f3b18a1cc4',1,'gpgmm::d3d12::HEAP_INFO::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a69a8397e54b68d7e4d816b4a3743f480',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::SizeInBytes()'],['../structgpgmm_1_1_m_e_m_o_r_y___s_i_z_e___i_n_f_o.html#ad95374ffcc8d74b2bc7f48d58dcb98eb',1,'gpgmm::MEMORY_SIZE_INFO::SizeInBytes()']]],
-  ['suballocatedrefs_2',['SubAllocatedRefs',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a0cfb0c43e9b95e846417cdcbb9e211d1',1,'gpgmm::d3d12::HEAP_INFO']]]
+  ['recordlevel_0',['RecordLevel',['../struct_test_enviroment_params.html#a753be388872c63309b7c2655a7a9d297',1,'TestEnviromentParams']]],
+  ['recordoptions_1',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a8989e06119f2b7e8a52f7bf062356012',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['requiredpropertyflags_2',['requiredPropertyFlags',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html#ab9451843785b4203a40d23cea9fbeee9',1,'gpgmm::vk::GpResourceAllocationCreateInfo']]],
+  ['resource_3',['Resource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#abf8c15883367ad0b3a61df789f49dd94',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
+  ['resourcedescriptor_4',['resourceDescriptor',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#a5be4f11fc109370ade0000671302ef08',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
+  ['resourceheap_5',['ResourceHeap',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a0a27d9f41a710fcb33db6c084583d4ca',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
+  ['resourceheaptier_6',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
 ];
