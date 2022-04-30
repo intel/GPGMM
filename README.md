@@ -100,52 +100,81 @@ Fuzzer checks using random memory patterns using a backend GPU.
 ## How do I use it?
 
 To allocate, you create an allocator then create allocations from it:
+
+### D3D12
 ```cpp
-D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)
-
-D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
-
-gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-allocatorDesc.Adapter = adapter;
-allocatorDesc.Device = device;
-allocatorDesc.IsUMA =  arch.UMA;
-allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
+gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {/*fill this out*/};
 
 ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
 gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator);
 ```
 
 ```cpp
-/* Fill this out */
-D3D12_RESOURCE_DESC& resourceDesc = {...};
-D3D12_RESOURCE_STATES initialState = {...}
+D3D12_RESOURCE_DESC& resourceDesc = {/* Fill this out */};
+D3D12_RESOURCE_STATES initialState = {/* Fill this out */}
 
-gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
-allocationDesc.HeapType = heapType;
+gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {/*Fill this out*/};
 
 ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
 allocator->CreateResource(allocationDesc, resourceDesc, initialState, /*pOptimizedClear*/nullptr, &allocation);
 ```
 
-Then de-allocate:
+Then to clean-up:
 ```cpp
-/* Must make sure GPU is finished using it */
+// Make sure GPU is finished using it
 allocation.Release();
+
+allocator.Release();
 ```
 
-To use basic residency:
+### Vulkan
+
+```cpp
+gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {/*Fill this out*/};
+
+gpgmm::vk::GpResourceAllocator resourceAllocator;
+gpgmm::vk::gpCreateResourceAllocator(allocatorInfo, &resourceAllocator)
+```
+
+```cpp
+VkBufferCreateInfo bufferInfo = {};
+bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+bufferInfo.size = kDefaultBufferSize;
+
+VkBuffer buffer;
+gpgmm::vk::GpResourceAllocation allocation;
+gpgmm::vk::GpResourceAllocationCreateInfo allocationInfo = {/*Fill this out*/};
+gpgmm::vk::gpCreateBuffer(resourceAllocator, &bufferInfo, &buffer, &allocationInfo, &allocation)
+```
+
+Then to clean-up:
+```cpp
+// Make sure GPU is finished using it
+gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation);
+
+gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
+```
+
+## Residency Management
+GPUs do not support page-faulting, so it's up the GPU application to avoid using too much
+physical GPU memory. GPGMM integrates residency directly into allocation to simplify management.
+
+### D3D12
+
 1. Create a `d3d12::ResourceAllocator` with `ALLOCATOR_FLAG_ALWAYS_IN_BUDGET` flag.
 2. Use `d3d12::ResourceAllocator::CreateResource` for every resource you want residency managed.
 3. Create a `d3d12::ResidencySet` to track a collection of allocations that should be resident for a given command-list (1:1 relationship).
-4. `d3d12::ResourceAllocation::UpdateResidency` tracks the underlying heap for the resident set.
-5. Use `d3d12::ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
+4. Add allocations into the resident set by passing `ResourceAllocation::GetMemory` to `ResidencySet::Insert`.
+5. Then use `d3d12::ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
 
-What about residency for other heaps (SV descriptor or query heaps)?
+Residency also works for other heaps too (eg. SV descriptor or query heaps):
 1. Sub-class `d3d12::Heap`.
 2. Call `d3d12::ResidencyManager::InsertHeap` on it after creation.
-3. Use `d3d12::ResidencyManager::Lock` or `d3d12::ResidencyManager::UnlockHeap` to keep heap resident or not, respectively.
+3. Then use  `d3d12::ResidencyManager::LockHeap` or `d3d12::ResidencyManager::UnlockHeap` to keep heap resident or not, respectively.
+
+### Vulkan
+
+Coming soon!
 
 ## Project/build integration
 GPGMM has built-in GN or CMake build targets.
