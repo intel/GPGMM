@@ -9,6 +9,6 @@ var searchData=
   ['isregenerate_6',['IsRegenerate',['../struct_test_enviroment_params.html#afaffbc41e7fceabac1e1f96ac21940ed',1,'TestEnviromentParams']]],
   ['isresident_7',['IsResident',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a55c283d1377387927a69877f8dea317e',1,'gpgmm::d3d12::HEAP_INFO']]],
   ['isstandaloneonly_8',['IsStandaloneOnly',['../struct_test_enviroment_params.html#a9c6512666b646101a9cf3a280eb01e6d',1,'TestEnviromentParams']]],
-  ['isuma_9',['IsUMA',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a4e7b3117499d159df1b341134e0fc40d',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['isuma_9',['IsUMA',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2f8e943fbe0d0ac61cb28acb1f58ccd7',1,'gpgmm::d3d12::RESIDENCY_DESC::IsUMA()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a4e7b3117499d159df1b341134e0fc40d',1,'gpgmm::d3d12::ALLOCATOR_DESC::IsUMA()']]],
   ['iterations_10',['Iterations',['../struct_test_enviroment_params.html#ae4c7578c761300b96a59c74429ac3d8c',1,'TestEnviromentParams']]]
 ];
