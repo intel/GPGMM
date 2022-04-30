@@ -386,10 +386,16 @@ namespace gpgmm { namespace d3d12 {
 
         ComPtr<ResidencyManager> residencyManager;
         if (residencyManagerOut != nullptr) {
-            ReturnIfFailed(ResidencyManager::CreateResidencyManager(
-                newDescriptor.Device, newDescriptor.Adapter, newDescriptor.IsUMA,
-                newDescriptor.MaxVideoMemoryBudget, newDescriptor.TotalResourceBudgetLimit,
-                newDescriptor.EvictLimit, &residencyManager));
+            RESIDENCY_DESC residencyDesc = {};
+            residencyDesc.Device = newDescriptor.Device;
+            residencyDesc.IsUMA = newDescriptor.IsUMA;
+            residencyDesc.VideoMemoryBudget = newDescriptor.MaxVideoMemoryBudget;
+            residencyDesc.Budget = newDescriptor.TotalResourceBudgetLimit;
+            residencyDesc.EvictLimit = newDescriptor.EvictLimit;
+            ReturnIfFailed(newDescriptor.Adapter.As(&residencyDesc.Adapter));
+
+            ReturnIfFailed(
+                ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
         }
 
         *resourceAllocatorOut =
