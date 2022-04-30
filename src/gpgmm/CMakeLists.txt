@@ -121,7 +121,26 @@ if (GPGMM_ENABLE_D3D12)
     target_link_libraries(gpgmm PRIVATE dxguid.lib)
 endif()
 
-# TODO: GPGMM_ENABLE_VULKAN
+if (GPGMM_ENABLE_VK)
+  target_sources(gpgmm PRIVATE
+        "vk/CapsVk.cpp"
+        "vk/CapsVk.h"
+        "vk/DeviceMemoryAllocatorVk.cpp"
+        "vk/DeviceMemoryAllocatorVk.h"
+        "vk/DeviceMemoryVk.cpp"
+        "vk/DeviceMemoryVk.h"
+        "vk/ErrorVk.h"
+        "vk/ResourceAllocatorVk.cpp"
+        "vk/ResourceAllocatorVk.h"
+        "vk/FunctionsVk.cpp"
+        "vk/FunctionsVk.h"
+        "vk/vk_platform.h"
+    )
+
+    target_link_libraries(gpgmm PUBLIC Vulkan-Headers)
+    target_include_directories(gpgmm PRIVATE ${GPGMM_VK_TOOLS_DIR})
+
+endif()
 
 ################################################################################
 # Build subdirectories

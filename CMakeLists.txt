@@ -44,29 +44,44 @@ set(GPGMM_INCLUDE_DIR "${GPGMM_ROOT_DIR}/src/include")
 #   option(name description default)
 # If a variable is not already defined with the given name, otherwise the
 # function does nothing.
-# Simplifies customization by projects that use Dawn as a dependency.
 function (option_if_not_defined name description default)
     if(NOT DEFINED ${name})
         option(${name} ${description} ${default})
     endif()
 endfunction()
 
+# set_if_not_defined(name value description)
+# Behaves like:
+#   set(${name} ${value} CACHE STRING ${description})
+# If a variable is not already defined with the given name, otherwise the
+# function does nothing.
+function (set_if_not_defined name value description)
+    if(NOT DEFINED ${name})
+        set(${name} ${value} CACHE STRING ${description})
+    endif()
+endfunction()
+
 # Default values for the backend-enabling options
 set(ENABLE_D3D12 OFF)
-set(ENABLE_VULKAN OFF)
+set(ENABLE_VK OFF)
 if (WIN32)
     set(ENABLE_D3D12 ON)
     if (NOT WINDOWS_STORE)
         # Enable Vulkan in win32 compilation only
         # since UWP only supports d3d
-        set(ENABLE_VULKAN ON)
+        set(ENABLE_VK ON)
     endif()
 elseif(UNIX)
-    set(ENABLE_VULKAN ON)
+    set(ENABLE_VK ON)
 endif()
 
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
-option_if_not_defined(GPGMM_ENABLE_VULKAN "Enable compilation of the Vulkan backend" ${ENABLE_VULKAN})
+option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
+
+set_if_not_defined(GPGMM_THIRD_PARTY_DIR "${GPGMM_SOURCE_DIR}/third_party" "Directory in which to find third-party dependencies.")
+set_if_not_defined(GPGMM_VK_DEPS_DIR "${GPGMM_THIRD_PARTY_DIR}/vulkan-deps" "Directory in which to find vulkan-deps")
+set_if_not_defined(GPGMM_VK_HEADERS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-headers/src" "Directory in which to find Vulkan-Headers")
+set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "Directory in which to find Vulkan-Tools")
 
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
 
@@ -91,8 +106,8 @@ endif()
 if (GPGMM_ENABLE_D3D12)
     target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_D3D12")
 endif()
-if (GPGMM_ENABLE_VULKAN)
-    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_VULKAN")
+if (GPGMM_ENABLE_VK)
+    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_VK")
 endif()
 if (WIN32)
     target_compile_definitions(gpgmm_common_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
@@ -103,4 +118,5 @@ set(CMAKE_CXX_STANDARD "14")
 ################################################################################
 # Build subdirectories
 ################################################################################
+add_subdirectory(third_party)
 add_subdirectory(src/gpgmm)
