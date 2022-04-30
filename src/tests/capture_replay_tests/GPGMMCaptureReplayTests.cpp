@@ -206,11 +206,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         }
     }
 
-    if (mParams.Iterations > 1 && mParams.IsRegenerate) {
-        gpgmm::WarningLog() << "--iterations ignored when using --regenerate.\n";
-        mParams.Iterations = 1;
-    }
-
     PrintCaptureReplaySettings();
 }
 

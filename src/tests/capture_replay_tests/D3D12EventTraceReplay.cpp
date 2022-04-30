@@ -332,8 +332,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.RecordLevel);
-                            allocatorDesc.RecordOptions.EventScope =
-                                ALLOCATOR_RECORD_SCOPE_PER_INSTANCE;
+
+                            // Keep recording across multiple playback iterations to ensure all
+                            // events will be captured instead of overwritten per iteration.
+                            if (envParams.Iterations == 1) {
+                                allocatorDesc.RecordOptions.EventScope =
+                                    ALLOCATOR_RECORD_SCOPE_PER_INSTANCE;
+                            }
                         }
 
                         allocatorDesc.MinLogLevel =
