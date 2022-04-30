@@ -36,11 +36,10 @@ namespace gpgmm {
                            bool skipDurationEvents,
                            bool skipObjectEvents,
                            bool skipInstantEvents) {
-        TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
-                              "GPGMM_MainThread");
-
         GetInstance()->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
                                         skipInstantEvents);
+        TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
+                              "GPGMM_MainThread");
     }
 
     void ShutdownEventTrace() {
