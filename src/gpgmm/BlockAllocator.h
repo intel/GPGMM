@@ -16,7 +16,7 @@
 #define GPGMM_BLOCKALLOCATOR_H_
 
 #include "gpgmm/Allocator.h"
-#include "gpgmm/common/Limits.h"
+#include "gpgmm/utils/Limits.h"
 
 namespace gpgmm {
 

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_ASSERT_H_
-#define GPGMM_COMMON_ASSERT_H_
+#ifndef GPGMM_UTILS_ASSERT_H_
+#define GPGMM_UTILS_ASSERT_H_
 
 #include "Compiler.h"
 
@@ -83,4 +83,4 @@ void HandleAssertionFailure(const char* file,
                             int line,
                             const char* condition);
 
-#endif  // GPGMM_COMMON_ASSERT_H_
+#endif  // GPGMM_UTILS_ASSERT_H_

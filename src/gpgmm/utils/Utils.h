@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_UTILS_H_
-#define GPGMM_COMMON_UTILS_H_
+#ifndef GPGMM_UTILS_UTILS_H_
+#define GPGMM_UTILS_UTILS_H_
 
 #include <sstream>
 #include <string>
@@ -59,4 +59,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_UTILS_H_
+#endif  // GPGMM_UTILS_UTILS_H_

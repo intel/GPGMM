@@ -22,9 +22,9 @@
 #include "gpgmm/Memory.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/WorkerThread.h"
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Limits.h"
-#include "gpgmm/common/Log.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Limits.h"
+#include "gpgmm/utils/Log.h"
 
 #include <memory>
 #include <mutex>

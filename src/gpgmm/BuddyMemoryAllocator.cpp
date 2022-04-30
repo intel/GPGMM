@@ -17,7 +17,7 @@
 
 #include "gpgmm/Debug.h"
 #include "gpgmm/Memory.h"
-#include "gpgmm/common/Math.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm {
 

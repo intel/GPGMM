@@ -17,10 +17,11 @@
 #define GPGMM_D3D12_HEAPD3D12_H_
 
 #include "gpgmm/Memory.h"
-#include "gpgmm/common/LinkedList.h"
-#include "gpgmm/common/RefCount.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/LinkedList.h"
+#include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
+
 
 #include <memory>
 

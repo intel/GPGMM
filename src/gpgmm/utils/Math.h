@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_MATH_H_
-#define GPGMM_COMMON_MATH_H_
+#ifndef GPGMM_UTILS_MATH_H_
+#define GPGMM_UTILS_MATH_H_
 
 #include "Assert.h"
 
@@ -59,4 +59,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_MATH_H_
+#endif  // GPGMM_UTILS_MATH_H_

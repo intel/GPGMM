@@ -17,7 +17,7 @@
 
 #include "tests/GPGMMTest.h"
 
-#include "gpgmm/common/Log.h"
+#include "gpgmm/utils/Log.h"
 
 #include <regex>
 #include <string>

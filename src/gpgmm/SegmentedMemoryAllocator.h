@@ -17,7 +17,7 @@
 
 #include "gpgmm/LIFOMemoryPool.h"
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/common/LinkedList.h"
+#include "gpgmm/utils/LinkedList.h"
 
 namespace gpgmm {
 

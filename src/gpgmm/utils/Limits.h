@@ -12,26 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_NONCOPYABLE_H_
-#define GPGMM_COMMON_NONCOPYABLE_H_
+#ifndef GPGMM_UTILS_LIMITS_H_
+#define GPGMM_UTILS_LIMITS_H_
+
+#include <cstdint>
+#include <limits>
 
 namespace gpgmm {
 
-    class NonCopyable {
-      protected:
-        NonCopyable() = default;
-        ~NonCopyable() = default;
-
-        // Movable constructor and assignment.
-        NonCopyable(NonCopyable&&) = default;
-        NonCopyable& operator=(NonCopyable&&) = default;
-
-      private:
-        // Not copyable constructor and assignment.
-        NonCopyable(const NonCopyable&) = delete;
-        NonCopyable& operator=(const NonCopyable&) = delete;
-    };
+    static constexpr uint64_t kInvalidOffset = std::numeric_limits<uint64_t>::max();
+    static constexpr uint64_t kInvalidSize = std::numeric_limits<uint64_t>::max();
+    static constexpr uint64_t kInvalidIndex = std::numeric_limits<uint64_t>::max();
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_NONCOPYABLE_H_
+#endif  // GPGMM_UTILS_LIMITS_H_

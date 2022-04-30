@@ -17,7 +17,7 @@
 
 #include "gpgmm/JSONSerializer.h"
 #include "gpgmm/TraceEvent.h"
-#include "gpgmm/common/Log.h"
+#include "gpgmm/utils/Log.h"
 
 #include <sstream>
 #include <string>

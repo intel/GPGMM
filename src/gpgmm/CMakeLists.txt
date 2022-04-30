@@ -63,8 +63,8 @@ target_sources(gpgmm PRIVATE
 )
 
 target_link_libraries(gpgmm
-    PRIVATE gpgmm_common
-            gpgmm_common_config
+    PRIVATE gpgmm_utils
+            gpgmm_utils_config
 )
 
 # Only win32 app needs to link with user32.lib

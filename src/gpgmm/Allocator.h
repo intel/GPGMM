@@ -15,7 +15,7 @@
 #ifndef GPGMM_ALLOCATOR_H_
 #define GPGMM_ALLOCATOR_H_
 
-#include "gpgmm/common/NonCopyable.h"
+#include "gpgmm/utils/NonCopyable.h"
 
 #include <string>
 

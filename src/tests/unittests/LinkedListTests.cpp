@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/common/LinkedList.h"
+#include "gpgmm/utils/LinkedList.h"
 
 using namespace gpgmm;
 

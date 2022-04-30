@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Utils.h"
 
 using namespace gpgmm;
 

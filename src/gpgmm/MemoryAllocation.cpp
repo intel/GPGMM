@@ -17,8 +17,8 @@
 
 #include "gpgmm/BlockAllocator.h"
 #include "gpgmm/Memory.h"
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Limits.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Limits.h"
 
 namespace gpgmm {
 

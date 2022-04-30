@@ -15,8 +15,8 @@
 #include "gpgmm/SegmentedMemoryAllocator.h"
 
 #include "gpgmm/Debug.h"
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {
 

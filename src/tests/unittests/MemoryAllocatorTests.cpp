@@ -16,7 +16,7 @@
 
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
-#include "gpgmm/common/Math.h"
+#include "gpgmm/utils/Math.h"
 #include "tests/DummyMemoryAllocator.h"
 
 using namespace gpgmm;

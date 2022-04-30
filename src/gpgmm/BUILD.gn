@@ -43,8 +43,8 @@ if (gpgmm_enable_vk) {
                      (gpgmm_enable_vk_loader && gpgmm_vk_loader_dir != "")
 }
 
-config("gpgmm_common_config") {
-  configs = [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
+config("gpgmm_utils_config") {
+  configs = [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
 
   # Suppress warnings that Metal isn't in the deployment target of Chrome:
   # initialization of the Metal backend is behind a IsMetalSupported check so
@@ -80,7 +80,7 @@ config("vulkan_tools_include") {
 source_set("gpgmm_headers") {
   # public_deps = [ "${gpgmm_root_dir}/src/gpgmm:gpgmmcpp_headers" ]
   all_dependent_configs =
-      [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_public_config" ]
+      [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_public_config" ]
   sources = [ "${gpgmm_root_dir}/src/include/gpgmm_export.h" ]
 }
 
@@ -90,7 +90,7 @@ source_set("gpgmm_headers") {
 source_set("gpgmm_sources") {
   deps = [
     ":gpgmm_headers",
-    "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_sources",
+    "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_sources",
   ]
 
   defines = [ "GPGMM_IMPLEMENTATION" ]
@@ -126,7 +126,7 @@ source_set("gpgmm_sources") {
   libs = []
   data_deps = []
 
-  configs += [ ":gpgmm_common_config" ]
+  configs += [ ":gpgmm_utils_config" ]
 
   # Dependencies that are needed to compile gpgmm entry points in
   # FooBackend.cpp need to be public deps so they are propagated to the

@@ -22,9 +22,6 @@
 #include "gpgmm/SegmentedMemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
 #include "gpgmm/StandaloneMemoryAllocator.h"
-#include "gpgmm/common/Math.h"
-#include "gpgmm/common/PlatformTime.h"
-#include "gpgmm/common/Utils.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
@@ -37,6 +34,10 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
+#include "gpgmm/utils/Math.h"
+#include "gpgmm/utils/PlatformTime.h"
+#include "gpgmm/utils/Utils.h"
+
 
 namespace gpgmm { namespace d3d12 {
     namespace {

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_LOG_H_
-#define GPGMM_COMMON_LOG_H_
+#ifndef GPGMM_UTILS_LOG_H_
+#define GPGMM_UTILS_LOG_H_
 
 // Dawn targets shouldn't use iostream or printf directly for several reasons:
 //  - iostream adds static initializers which we want to avoid.
@@ -115,4 +115,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_LOG_H_
+#endif  // GPGMM_UTILS_LOG_H_

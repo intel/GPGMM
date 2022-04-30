@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_PLATFORMUTILS_H_
-#define GPGMM_COMMON_PLATFORMUTILS_H_
+#ifndef GPGMM_UTILS_PLATFORMUTILS_H_
+#define GPGMM_UTILS_PLATFORMUTILS_H_
 
 #include "Platform.h"
 
@@ -30,4 +30,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_PLATFORMUTILS_H_
+#endif  // GPGMM_UTILS_PLATFORMUTILS_H_

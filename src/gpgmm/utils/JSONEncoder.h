@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_JSON_ENCODER_H_
-#define GPGMM_COMMON_JSON_ENCODER_H_
+#ifndef GPGMM_UTILS_JSON_ENCODER_H_
+#define GPGMM_UTILS_JSON_ENCODER_H_
 
 #include <sstream>
 #include <string>
@@ -80,4 +80,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_JSON_ENCODER_H_
+#endif  // GPGMM_UTILS_JSON_ENCODER_H_

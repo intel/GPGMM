@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_library(gpgmm_common STATIC)
-target_sources(gpgmm_common PRIVATE
+add_library(gpgmm_utils STATIC)
+target_sources(gpgmm_utils PRIVATE
   "Assert.cpp"
   "Assert.h"
   "Compiler.h"
@@ -40,7 +40,7 @@ target_sources(gpgmm_common PRIVATE
 )
 
 if (WIN32)
-    target_sources(gpgmm_common PRIVATE
+    target_sources(gpgmm_utils PRIVATE
         "WindowsPlatformDebug.cpp"
         "WindowsTime.cpp"
         "WindowsUtils.cpp"
@@ -48,4 +48,4 @@ if (WIN32)
     )
 endif()
 
-target_link_libraries(gpgmm_common PRIVATE gpgmm_common_config)
+target_link_libraries(gpgmm_utils PRIVATE gpgmm_utils_config)

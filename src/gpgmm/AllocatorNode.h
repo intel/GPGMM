@@ -15,7 +15,7 @@
 #ifndef GPGMM_ALLOCATORNODE_H_
 #define GPGMM_ALLOCATORNODE_H_
 
-#include "gpgmm/common/LinkedList.h"
+#include "gpgmm/utils/LinkedList.h"
 
 #include <memory>
 

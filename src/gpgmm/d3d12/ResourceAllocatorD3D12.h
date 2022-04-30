@@ -17,9 +17,10 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/common/Flags.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/utils/Flags.h"
 #include "include/gpgmm_export.h"
+
 
 #include <array>
 #include <memory>

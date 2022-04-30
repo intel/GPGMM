@@ -18,7 +18,7 @@
 #include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/MemoryPool.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {
 

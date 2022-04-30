@@ -16,7 +16,7 @@
 #define GPGMM_TRACEEVENT_H_
 
 #include "gpgmm/TraceEventPhase.h"
-#include "gpgmm/common/JSONEncoder.h"
+#include "gpgmm/utils/JSONEncoder.h"
 
 #include <memory>
 #include <string>

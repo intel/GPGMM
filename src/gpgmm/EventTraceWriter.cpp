@@ -15,11 +15,11 @@
 #include "gpgmm/EventTraceWriter.h"
 
 #include "gpgmm/Defaults.h"
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Log.h"
-#include "gpgmm/common/PlatformTime.h"
-#include "gpgmm/common/PlatformUtils.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/PlatformTime.h"
+#include "gpgmm/utils/PlatformUtils.h"
+#include "gpgmm/utils/Utils.h"
 
 #include <fstream>
 #include <sstream>

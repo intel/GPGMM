@@ -17,7 +17,7 @@
 #include "gpgmm/Debug.h"
 #include "gpgmm/MemoryAllocation.h"
 #include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/common/Assert.h"
+#include "gpgmm/utils/Assert.h"
 
 namespace gpgmm {
 

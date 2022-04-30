@@ -18,7 +18,7 @@
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/MemoryCache.h"
 #include "gpgmm/SlabBlockAllocator.h"
-#include "gpgmm/common/LinkedList.h"
+#include "gpgmm/utils/LinkedList.h"
 
 #include <vector>
 

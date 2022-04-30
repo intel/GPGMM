@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_COMPILER_H_
-#define GPGMM_COMMON_COMPILER_H_
+#ifndef GPGMM_UTILS_COMPILER_H_
+#define GPGMM_UTILS_COMPILER_H_
 
 // Defines macros for compiler-specific functionality
 //  - GPGMM_COMPILER_[CLANG|GCC|MSVC]: Compiler detection
@@ -105,4 +105,4 @@ extern void __cdecl __debugbreak(void);
 #    define GPGMM_FALLTHROUGH
 #endif
 
-#endif  // GPGMM_COMMON_COMPILER_H_
+#endif  // GPGMM_UTILS_COMPILER_H_

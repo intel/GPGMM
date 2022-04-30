@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_LIMITS_H_
-#define GPGMM_COMMON_LIMITS_H_
+#ifndef GPGMM_UTILS_WINDOWSUTILS_H
+#define GPGMM_UTILS_WINDOWSUTILS_H
 
-#include <cstdint>
-#include <limits>
-
+#include <string>
 namespace gpgmm {
 
-    static constexpr uint64_t kInvalidOffset = std::numeric_limits<uint64_t>::max();
-    static constexpr uint64_t kInvalidSize = std::numeric_limits<uint64_t>::max();
-    static constexpr uint64_t kInvalidIndex = std::numeric_limits<uint64_t>::max();
+    std::wstring TCharToWString(const wchar_t* const str);
+    std::wstring TCharToWString(const char* const str);
+
+    std::string WCharToUTF8(const wchar_t* str);
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_LIMITS_H_
+#endif  // GPGMM_UTILS_WINDOWSUTILS_H

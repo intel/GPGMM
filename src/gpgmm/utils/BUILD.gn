@@ -43,7 +43,7 @@ config("gpgmm_public_config") {
   ]
 }
 
-config("gpgmm_common_config") {
+config("gpgmm_utils_config") {
   defines = []
   if (gpgmm_always_assert || dcheck_always_on || is_debug ||
       use_fuzzing_engine) {
@@ -142,7 +142,7 @@ config("gpgmm_common_config") {
 # all of Chromium's OSes so we explicitly make the target visible only on
 # systems we know Dawn is able to compile on.
 if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
-  source_set("gpgmm_common_sources") {
+  source_set("gpgmm_utils_sources") {
     sources = [
       "Assert.cpp",
       "Assert.h",
@@ -177,6 +177,6 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       ]
     }
 
-    configs += [ ":gpgmm_common_config" ]
+    configs += [ ":gpgmm_utils_config" ]
   }
 }

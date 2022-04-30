@@ -17,9 +17,9 @@
 
 #include "gpgmm/Debug.h"
 #include "gpgmm/Error.h"
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Math.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Math.h"
+#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {
 

@@ -15,7 +15,7 @@
 #include "gpgmm/ConditionalMemoryAllocator.h"
 
 #include "gpgmm/TraceEvent.h"
-#include "gpgmm/common/Assert.h"
+#include "gpgmm/utils/Assert.h"
 
 namespace gpgmm {
 

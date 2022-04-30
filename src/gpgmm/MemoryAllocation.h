@@ -16,7 +16,7 @@
 #ifndef GPGMM_MEMORYALLOCATION_H_
 #define GPGMM_MEMORYALLOCATION_H_
 
-#include "gpgmm/common/Limits.h"
+#include "gpgmm/utils/Limits.h"
 #include "include/gpgmm_export.h"
 
 #include <cstdint>

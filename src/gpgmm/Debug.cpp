@@ -14,8 +14,8 @@
 
 #include "gpgmm/Debug.h"
 
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/Log.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Log.h"
 
 namespace gpgmm {
     // Messages with equal or greater to severity will be logged.

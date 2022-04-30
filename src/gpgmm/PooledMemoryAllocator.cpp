@@ -16,7 +16,7 @@
 
 #include "gpgmm/Debug.h"
 #include "gpgmm/MemoryPool.h"
-#include "gpgmm/common/Assert.h"
+#include "gpgmm/utils/Assert.h"
 
 namespace gpgmm {
 

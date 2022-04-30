@@ -17,7 +17,7 @@
 #define GPGMM_BUDDYBLOCKALLOCATOR_H_
 
 #include "gpgmm/BlockAllocator.h"
-#include "gpgmm/common/Limits.h"
+#include "gpgmm/utils/Limits.h"
 
 #include <cstddef>
 #include <cstdint>

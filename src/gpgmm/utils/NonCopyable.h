@@ -12,17 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_WINDOWSUTILS_H
-#define GPGMM_COMMON_WINDOWSUTILS_H
+#ifndef GPGMM_UTILS_NONCOPYABLE_H_
+#define GPGMM_UTILS_NONCOPYABLE_H_
 
-#include <string>
 namespace gpgmm {
 
-    std::wstring TCharToWString(const wchar_t* const str);
-    std::wstring TCharToWString(const char* const str);
+    class NonCopyable {
+      protected:
+        NonCopyable() = default;
+        ~NonCopyable() = default;
 
-    std::string WCharToUTF8(const wchar_t* str);
+        // Movable constructor and assignment.
+        NonCopyable(NonCopyable&&) = default;
+        NonCopyable& operator=(NonCopyable&&) = default;
+
+      private:
+        // Not copyable constructor and assignment.
+        NonCopyable(const NonCopyable&) = delete;
+        NonCopyable& operator=(const NonCopyable&) = delete;
+    };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_WINDOWSUTILS_H
+#endif  // GPGMM_UTILS_NONCOPYABLE_H_

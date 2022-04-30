@@ -15,8 +15,8 @@
 #ifndef GPGMM_MEMORY_H_
 #define GPGMM_MEMORY_H_
 
-#include "gpgmm/common/NonCopyable.h"
-#include "gpgmm/common/RefCount.h"
+#include "gpgmm/utils/NonCopyable.h"
+#include "gpgmm/utils/RefCount.h"
 
 namespace gpgmm {
 

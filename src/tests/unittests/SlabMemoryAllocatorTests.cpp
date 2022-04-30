@@ -18,7 +18,7 @@
 #include "gpgmm/LIFOMemoryPool.h"
 #include "gpgmm/PooledMemoryAllocator.h"
 #include "gpgmm/SlabMemoryAllocator.h"
-#include "gpgmm/common/Math.h"
+#include "gpgmm/utils/Math.h"
 #include "tests/DummyMemoryAllocator.h"
 
 #include <set>

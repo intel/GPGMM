@@ -14,7 +14,7 @@
 
 #include "gpgmm/d3d12/ErrorD3D12.h"
 
-#include "gpgmm/common/WindowsUtils.h"
+#include "gpgmm/utils/WindowsUtils.h"
 
 #include <comdef.h>
 #include <iomanip>

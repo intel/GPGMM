@@ -17,7 +17,7 @@
 
 #include "gpgmm/MemoryAllocator.h"
 #include "gpgmm/TraceEvent.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {
 

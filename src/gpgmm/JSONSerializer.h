@@ -15,7 +15,7 @@
 #ifndef GPGMM_JSONSERIALIZER_H_
 #define GPGMM_JSONSERIALIZER_H_
 
-#include "gpgmm/common/JSONEncoder.h"
+#include "gpgmm/utils/JSONEncoder.h"
 
 namespace gpgmm {
 

@@ -4,8 +4,8 @@
 
 // This file is a copy of Chromium's /src/base/containers/linked_list.h
 
-#ifndef GPGMM_COMMON_LINKED_LIST_H
-#define GPGMM_COMMON_LINKED_LIST_H
+#ifndef GPGMM_UTILS_LINKED_LIST_H
+#define GPGMM_UTILS_LINKED_LIST_H
 
 #include "Assert.h"
 #include "Utils.h"
@@ -223,4 +223,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_LINKED_LIST_H
+#endif  // GPGMM_UTILS_LINKED_LIST_H

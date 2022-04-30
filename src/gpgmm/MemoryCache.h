@@ -15,10 +15,10 @@
 #ifndef GPGMM_MEMORYCACHE_H_
 #define GPGMM_MEMORYCACHE_H_
 
-#include "gpgmm/common/Assert.h"
-#include "gpgmm/common/NonCopyable.h"
-#include "gpgmm/common/RefCount.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/NonCopyable.h"
+#include "gpgmm/utils/RefCount.h"
+#include "gpgmm/utils/Utils.h"
 
 #include <unordered_set>
 
