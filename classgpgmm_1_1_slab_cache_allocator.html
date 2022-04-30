@@ -91,8 +91,8 @@ Inheritance diagram for gpgmm::SlabCacheAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad61742aa937bcf32b7281f03f6cc1a5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_cache_allocator.html#aad61742aa937bcf32b7281f03f6cc1a5">SlabCacheAllocator</a> (uint64_t minBlockSize, uint64_t maxSlabSize, uint64_t slabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool prefetchSlab, std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> &gt; memoryAllocator)</td></tr>
-<tr class="separator:aad61742aa937bcf32b7281f03f6cc1a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f58763eae7c1e1b5060bc84e4d4fd6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_cache_allocator.html#a2f58763eae7c1e1b5060bc84e4d4fd6e">SlabCacheAllocator</a> (uint64_t minBlockSize, uint64_t maxSlabSize, uint64_t minSlabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool prefetchSlab, double slabGrowthFactor, std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> &gt; memoryAllocator)</td></tr>
+<tr class="separator:a2f58763eae7c1e1b5060bc84e4d4fd6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c5e83febbd039a887490449b9c9dff5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_cache_allocator.html#a2c5e83febbd039a887490449b9c9dff5">~SlabCacheAllocator</a> () override</td></tr>
 <tr class="separator:a2c5e83febbd039a887490449b9c9dff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a362b911ae0d7c7ab27506fc3d8692eb1"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_cache_allocator.html#a362b911ae0d7c7ab27506fc3d8692eb1">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory) override</td></tr>
@@ -202,8 +202,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a26ca5b1d959169a8c625c8d686660101 inherit pro_attribs_classgpgmm_1_1_allocator_node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aad61742aa937bcf32b7281f03f6cc1a5" name="aad61742aa937bcf32b7281f03f6cc1a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad61742aa937bcf32b7281f03f6cc1a5">&#9670;&nbsp;</a></span>SlabCacheAllocator()</h2>
+<a id="a2f58763eae7c1e1b5060bc84e4d4fd6e" name="a2f58763eae7c1e1b5060bc84e4d4fd6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f58763eae7c1e1b5060bc84e4d4fd6e">&#9670;&nbsp;</a></span>SlabCacheAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,7 +224,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>slabSize</em>, </td>
+          <td class="paramname"><em>minSlabSize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -243,6 +243,12 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>prefetchSlab</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>slabGrowthFactor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
