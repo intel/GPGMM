@@ -164,7 +164,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     const char* ResourceAllocation::GetTypename() const {
-        return "GPUMemoryAllocation";
+        return "ResourceAllocation";
     }
 
     Heap* ResourceAllocation::GetMemory() const {

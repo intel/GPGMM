@@ -46,7 +46,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     const char* Heap::GetTypename() const {
-        return "GPUMemoryBlock";
+        return "Heap";
     }
 
     ComPtr<ID3D12Pageable> Heap::GetPageable() const {
