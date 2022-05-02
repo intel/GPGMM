@@ -39,7 +39,7 @@ var searchData=
   ['getmiddlesegment_36',['GetMiddleSegment',['../namespacegpgmm.html#a6ea3d78ed065b398f2e34f4dd8b2ae65',1,'gpgmm']]],
   ['getoffset_37',['GetOffset',['../classgpgmm_1_1_memory_allocation.html#ae654ca9c7ab68a54bccd9ad89c04d884',1,'gpgmm::MemoryAllocation']]],
   ['getoffsetfromresource_38',['GetOffsetFromResource',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a19512a090309ff8ec431b01b871eedcf',1,'gpgmm::d3d12::ResourceAllocation']]],
-  ['getorcreate_39',['GetOrCreate',['../classgpgmm_1_1_memory_cache.html#acb7627bfbb3f0b7180e3744bc4df4918',1,'gpgmm::MemoryCache']]],
+  ['getorcreate_39',['GetOrCreate',['../classgpgmm_1_1_memory_cache.html#a90b4206f7552a22babadf693857fb7a1',1,'gpgmm::MemoryCache']]],
   ['getparams_40',['GetParams',['../class_g_p_g_m_m_capture_replay_test_environment.html#a5fcd59914cd9c802b360e916e349c552',1,'GPGMMCaptureReplayTestEnvironment']]],
   ['getparent_41',['GetParent',['../classgpgmm_1_1_allocator_node.html#a60304e8d20fea37e9ef251aa1044dd5b',1,'gpgmm::AllocatorNode']]],
   ['getpathseparator_42',['GetPathSeparator',['../namespacegpgmm.html#a98ea23f4fc74cb21d60f50226e1a1594',1,'gpgmm']]],
