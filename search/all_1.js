@@ -4,7 +4,7 @@ var searchData=
   ['backendd3d12_2eh_1',['BackendD3D12.h',['../_backend_d3_d12_8h.html',1,'']]],
   ['backendtrait_2',['BackendTrait',['../structgpgmm_1_1d3d12_1_1_backend_trait.html',1,'gpgmm::d3d12::BackendTrait'],['../structgpgmm_1_1vk_1_1_backend_trait.html',1,'gpgmm::vk::BackendTrait']]],
   ['backendvk_2eh_3',['BackendVk.h',['../_backend_vk_8h.html',1,'']]],
-  ['begin_4',['begin',['../classgpgmm_1_1_memory_cache.html#a83b2bb64c4228a1f91b8fa1542af0a8e',1,'gpgmm::MemoryCache::begin()'],['../classgpgmm_1_1d3d12_1_1_residency_set.html#afcddba2f1c3f4432e5ac63ae8b6f1c8a',1,'gpgmm::d3d12::ResidencySet::begin()']]],
+  ['begin_4',['begin',['../classgpgmm_1_1d3d12_1_1_residency_set.html#afcddba2f1c3f4432e5ac63ae8b6f1c8a',1,'gpgmm::d3d12::ResidencySet::begin()'],['../classgpgmm_1_1_memory_cache.html#a83b2bb64c4228a1f91b8fa1542af0a8e',1,'gpgmm::MemoryCache::begin()']]],
   ['bindbuffermemory_5',['BindBufferMemory',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a24ad152a285a2ba1bd28eed880f745de',1,'gpgmm::vk::VulkanFunctions']]],
   ['blockallocator_6',['BlockAllocator',['../classgpgmm_1_1_block_allocator.html',1,'gpgmm']]],
   ['blockallocator_2eh_7',['BlockAllocator.h',['../_block_allocator_8h.html',1,'']]],

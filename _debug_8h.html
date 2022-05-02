@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/gpgmm/Debug.h File Reference</title>
+<title>GPGMM: src/gpgmm/common/Debug.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_49ad6bb14657c2c853ecddefe4ca34c9.html">gpgmm</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_49ad6bb14657c2c853ecddefe4ca34c9.html">gpgmm</a></li><li class="navelem"><a class="el" href="dir_fffbd81c85c02ea954c23a51c09684a4.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,9 +74,9 @@ $(function() {
   <div class="headertitle"><div class="title">Debug.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_j_s_o_n_serializer_8h.html">gpgmm/JSONSerializer.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_trace_event_8h.html">gpgmm/TraceEvent.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_log_8h.html">gpgmm/common/Log.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_j_s_o_n_serializer_8h.html">gpgmm/common/JSONSerializer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_trace_event_8h.html">gpgmm/common/TraceEvent.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_log_8h.html">gpgmm/utils/Log.h</a>&quot;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 </div><table class="memberdecls">
@@ -102,7 +102,7 @@ Macros</h2></td></tr>
 <tr class="separator:af10c0e9298d4daf16a693cf77573e824"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b409d863ba401fda37265f837d2f924"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_debug_8h.html#a7b409d863ba401fda37265f837d2f924">GPGMM_TRACE_EVENT_OBJECT_CALL</a>(name,  desc)</td></tr>
 <tr class="separator:a7b409d863ba401fda37265f837d2f924"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7c752aa65ef2bc022a0735a6a669124"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(object,  condition)&#160;&#160;&#160;    !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)</td></tr>
+<tr class="memitem:af7c752aa65ef2bc022a0735a6a669124"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(object,  condition)&#160;&#160;&#160;        !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)</td></tr>
 <tr class="separator:af7c752aa65ef2bc022a0735a6a669124"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -140,7 +140,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)</td>
+          <td></td><td>&#160;&#160;&#160;        !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -172,11 +172,11 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                        \</div>
-<div class="line">        TRACE_EVENT_INSTANT1(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, name,                  \</div>
-<div class="line">                            <a class="code hl_define" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, <a class="code hl_function" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a>())); \</div>
-<div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
-<div class="ttc" id="a_debug_8h_html_af7c752aa65ef2bc022a0735a6a669124"><div class="ttname"><a href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a></div><div class="ttdeci">#define GPGMM_LAZY_SERIALIZE(object, condition)</div><div class="ttdef"><b>Definition:</b> Debug.h:61</div></div>
+<b>Value:</b><div class="fragment"><div class="line">        <span class="keywordflow">do</span> {                                                                         \</div>
+<div class="line">            TRACE_EVENT_INSTANT1(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, name,                  \</div>
+<div class="line">                                 <a class="code hl_define" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, <a class="code hl_function" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a>())); \</div>
+<div class="line">        } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
+<div class="ttc" id="a_debug_8h_html_af7c752aa65ef2bc022a0735a6a669124"><div class="ttname"><a href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a></div><div class="ttdeci">#define GPGMM_LAZY_SERIALIZE(object, condition)</div><div class="ttdef"><b>Definition:</b> Debug.h:60</div></div>
 <div class="ttc" id="anamespacegpgmm_html_a7a4e7758d833df0093cf8c892c9632aa"><div class="ttname"><a href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">gpgmm::IsEventTraceEnabled</a></div><div class="ttdeci">bool IsEventTraceEnabled()</div><div class="ttdef"><b>Definition:</b> TraceEvent.cpp:49</div></div>
 <div class="ttc" id="anamespacegpgmm_html_ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1"><div class="ttname"><a href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">gpgmm::Default</a></div><div class="ttdeci">@ Default</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:117</div></div>
 </div><!-- fragment -->
@@ -197,10 +197,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                         \</div>
-<div class="line">        TRACE_EVENT_OBJECT_DELETED_WITH_ID(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, (*objPtr).GetTypename(), \</div>
-<div class="line">                                           objPtr);                                              \</div>
-<div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
+<b>Value:</b><div class="fragment"><div class="line">        <span class="keywordflow">do</span> {                                                                     \</div>
+<div class="line">            TRACE_EVENT_OBJECT_DELETED_WITH_ID(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>,      \</div>
+<div class="line">                                               (*objPtr).GetTypename(), objPtr); \</div>
+<div class="line">        } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -219,10 +219,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                         \</div>
-<div class="line">        TRACE_EVENT_OBJECT_CREATED_WITH_ID(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, (*objPtr).GetTypename(), \</div>
-<div class="line">                                           objPtr);                                              \</div>
-<div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
+<b>Value:</b><div class="fragment"><div class="line">        <span class="keywordflow">do</span> {                                                                     \</div>
+<div class="line">            TRACE_EVENT_OBJECT_CREATED_WITH_ID(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>,      \</div>
+<div class="line">                                               (*objPtr).GetTypename(), objPtr); \</div>
+<div class="line">        } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -251,11 +251,11 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                          \</div>
-<div class="line">        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, (*objPtr).GetTypename(), \</div>
-<div class="line">                                            objPtr,                                               \</div>
-<div class="line">                                            <a class="code hl_define" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, <a class="code hl_function" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a>()));   \</div>
-<div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
+<b>Value:</b><div class="fragment"><div class="line">        <span class="keywordflow">do</span> {                                                                  \</div>
+<div class="line">            TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(                              \</div>
+<div class="line">                <a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, (*objPtr).GetTypename(), objPtr, \</div>
+<div class="line">                <a class="code hl_define" href="_debug_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, <a class="code hl_function" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a>()));           \</div>
+<div class="line">        } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->
 </div>
 </div>
