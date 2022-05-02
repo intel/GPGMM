@@ -14,7 +14,7 @@
 
 #include "gpgmm/vk/FunctionsVk.h"
 
-#include "gpgmm/common/Assert.h"
+#include "gpgmm/utils/Assert.h"
 
 #define GPGMM_DYNAMIC_GET_INSTANCE_FUNC(functionName)            \
     do {                                                         \

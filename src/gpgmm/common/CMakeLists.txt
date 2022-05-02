@@ -1,4 +1,3 @@
-# Copyright 2020 The Dawn Authors
 # Copyright 2021 The GPGMM Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,37 +14,50 @@
 
 add_library(gpgmm_common STATIC)
 target_sources(gpgmm_common PRIVATE
-  "Assert.cpp"
-  "Assert.h"
-  "Compiler.h"
-  "Flags.h"
-  "JSONEncoder.cpp"
-  "JSONEncoder.h"
-  "Limits.h"
-  "LinkedList.h"
-  "Log.cpp"
-  "Log.h"
-  "Math.cpp"
-  "Math.h"
-  "Platform.h"
-  "PlatformDebug.h"
-  "PlatformTime.cpp"
-  "PlatformTime.h"
-  "PlatformUtils.cpp"
-  "PlatformUtils.h"
-  "RefCount.cpp"
-  "RefCount.h"
-  "Utils.cpp"
-  "Utils.h"
+    "BlockAllocator.h"
+    "BuddyBlockAllocator.cpp"
+    "BuddyBlockAllocator.h"
+    "BuddyMemoryAllocator.cpp"
+    "BuddyMemoryAllocator.h"
+    "ConditionalMemoryAllocator.cpp"
+    "ConditionalMemoryAllocator.h"
+    "Debug.cpp"
+    "Debug.h"
+    "Defaults.h"
+    "Error.h"
+    "EventTraceWriter.cpp"
+    "EventTraceWriter.h"
+    "AllocatorNode.cpp"
+    "AllocatorNode.h"
+    "IndexedMemoryPool.cpp"
+    "IndexedMemoryPool.h"
+    "JSONSerializer.cpp"
+    "JSONSerializer.h"
+    "LIFOMemoryPool.cpp"
+    "LIFOMemoryPool.h"
+    "Memory.cpp"
+    "Memory.h"
+    "MemoryAllocation.cpp"
+    "MemoryAllocation.h"
+    "MemoryAllocator.cpp"
+    "MemoryAllocator.h"
+    "MemoryCache.h"
+    "MemoryPool.cpp"
+    "MemoryPool.h"
+    "PooledMemoryAllocator.cpp"
+    "PooledMemoryAllocator.h"
+    "SegmentedMemoryAllocator.cpp"
+    "SegmentedMemoryAllocator.h"
+    "SlabBlockAllocator.cpp"
+    "SlabBlockAllocator.h"
+    "SlabMemoryAllocator.cpp"
+    "SlabMemoryAllocator.h"
+    "StandaloneMemoryAllocator.cpp"
+    "StandaloneMemoryAllocator.h"
+    "TraceEvent.cpp"
+    "TraceEvent.h"
+    "WorkerThread.cpp"
+    "WorkerThread.h"
 )
-
-if (WIN32)
-    target_sources(gpgmm_common PRIVATE
-        "WindowsPlatformDebug.cpp"
-        "WindowsTime.cpp"
-        "WindowsUtils.cpp"
-        "WindowsUtils.h"
-    )
-endif()
 
 target_link_libraries(gpgmm_common PRIVATE gpgmm_common_config)

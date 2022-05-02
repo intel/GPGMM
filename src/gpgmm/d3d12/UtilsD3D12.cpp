@@ -14,7 +14,7 @@
 
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
-#include "gpgmm/common/Math.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm { namespace d3d12 {
 

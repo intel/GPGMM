@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/MemoryCache.h"
+#include "gpgmm/common/MemoryCache.h"
 
 using namespace gpgmm;
 

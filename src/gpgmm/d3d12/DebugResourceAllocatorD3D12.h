@@ -15,8 +15,8 @@
 #ifndef GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_
 #define GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_
 
-#include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/MemoryCache.h"
+#include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/MemoryCache.h"
 
 namespace gpgmm { namespace d3d12 {
 

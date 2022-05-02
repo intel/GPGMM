@@ -16,10 +16,10 @@
 #ifndef GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 #define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
-#include "gpgmm/MemoryAllocation.h"
-#include "gpgmm/common/NonCopyable.h"
+#include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/NonCopyable.h"
 #include "include/gpgmm_export.h"
 
 namespace gpgmm { namespace d3d12 {

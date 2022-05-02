@@ -14,8 +14,8 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/SlabBlockAllocator.h"
-#include "gpgmm/common/Math.h"
+#include "gpgmm/common/SlabBlockAllocator.h"
+#include "gpgmm/utils/Math.h"
 
 #include <unordered_set>
 

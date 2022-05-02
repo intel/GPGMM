@@ -15,7 +15,7 @@
 #ifndef GPGMM_D3D12_DEFAULTSD3D12_H_
 #define GPGMM_D3D12_DEFAULTSD3D12_H_
 
-#include "gpgmm/Defaults.h"
+#include "gpgmm/common/Defaults.h"
 
 namespace gpgmm { namespace d3d12 {
 

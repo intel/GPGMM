@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/common/RefCount.h"
+#include "gpgmm/utils/RefCount.h"
 
 using namespace gpgmm;
 

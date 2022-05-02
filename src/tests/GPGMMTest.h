@@ -17,8 +17,8 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/common/Log.h"
-#include "gpgmm/common/PlatformDebug.h"
+#include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/PlatformDebug.h"
 
 #define GPGMM_SKIP_TEST_IF(expr)                            \
     do {                                                    \

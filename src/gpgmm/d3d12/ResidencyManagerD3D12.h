@@ -16,8 +16,8 @@
 #ifndef GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
-#include "gpgmm/common/LinkedList.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/utils/LinkedList.h"
 #include "include/gpgmm_export.h"
 
 #include <memory>

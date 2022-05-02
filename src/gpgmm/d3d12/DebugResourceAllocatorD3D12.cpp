@@ -14,12 +14,12 @@
 
 #include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
 
-#include "gpgmm/Debug.h"
-#include "gpgmm/common/Utils.h"
+#include "gpgmm/common/Debug.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
+#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm { namespace d3d12 {
 

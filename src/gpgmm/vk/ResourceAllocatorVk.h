@@ -15,8 +15,8 @@
 #ifndef GPGMM_VK_RESOURCEALLOCATORVK_H_
 #define GPGMM_VK_RESOURCEALLOCATORVK_H_
 
-#include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/common/Flags.h"
+#include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/utils/Flags.h"
 #include "gpgmm/vk/FunctionsVk.h"
 #include "include/gpgmm_export.h"
 

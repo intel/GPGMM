@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/common/Math.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/utils/Math.h"
 #include "tests/D3D12Test.h"
 
 #include <gpgmm_d3d12.h>

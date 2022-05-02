@@ -15,7 +15,7 @@
 #ifndef GPGMM_VK_BACKENDVK_H_
 #define GPGMM_VK_BACKENDVK_H_
 
-#include "gpgmm/Backend.h"
+#include "gpgmm/common/Backend.h"
 
 namespace gpgmm { namespace vk {
 

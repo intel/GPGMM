@@ -15,7 +15,7 @@
 #ifndef GPGMM_D3D12_BACKEND3D12_H_
 #define GPGMM_D3D12_BACKEND3D12_H_
 
-#include "gpgmm/Backend.h"
+#include "gpgmm/common/Backend.h"
 
 namespace gpgmm { namespace d3d12 {
 

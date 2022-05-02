@@ -55,6 +55,32 @@ config("gpgmm_common_config") {
     defines += [ "GPGMM_ABORT_ON_ASSERT" ]
   }
 
+  defines += [ "GPGMM_IMPLEMENTATION" ]
+
+  if (gpgmm_shared_library) {
+    defines += [ "GPGMM_SHARED_LIBRARY" ]
+  }
+
+  if (!is_debug && !gpgmm_force_tracing) {
+    defines += [ "GPGMM_DISABLE_TRACING" ]
+  }
+
+  if (gpgmm_enable_allocator_checks) {
+    defines += [ "GPGMM_ENABLE_ALLOCATOR_CHECKS" ]
+  }
+
+  if (gpgmm_enable_assert_on_warning) {
+    defines += [ "GPGMM_ENABLE_ASSERT_ON_WARNING" ]
+  }
+
+  if (gpgmm_enable_size_cache) {
+    defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
+  }
+
+  if (gpgmm_enable_device_checks) {
+    defines += [ "GPGMM_ENABLE_DEVICE_CHECKS" ]
+  }
+
   # Only internal build targets can use this config, this means only targets in
   # this BUILD.gn file and related subdirs.
   visibility = [ "../../*" ]
@@ -134,49 +160,62 @@ config("gpgmm_common_config") {
   }
 }
 
-###############################################################################
-# Common GPGMM sources
-###############################################################################
+source_set("gpgmm_common_sources") {
+  deps = [
+    "${gpgmm_root_dir}/src/gpgmm:gpgmm_headers",
+    "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_sources",
+  ]
 
-# This GN file is discovered by all Chromium builds, but common doesn't support
-# all of Chromium's OSes so we explicitly make the target visible only on
-# systems we know Dawn is able to compile on.
-if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
-  source_set("gpgmm_common_sources") {
-    sources = [
-      "Assert.cpp",
-      "Assert.h",
-      "Compiler.h",
-      "Flags.h",
-      "JSONEncoder.cpp",
-      "JSONEncoder.h",
-      "Limits.h",
-      "LinkedList.h",
-      "Log.cpp",
-      "Log.h",
-      "Math.cpp",
-      "Math.h",
-      "Platform.h",
-      "PlatformDebug.h",
-      "PlatformTime.cpp",
-      "PlatformTime.h",
-      "PlatformUtils.cpp",
-      "PlatformUtils.h",
-      "RefCount.cpp",
-      "RefCount.h",
-      "Utils.cpp",
-      "Utils.h",
-    ]
+  libs = []
+  data_deps = []
 
-    if (is_win) {
-      sources += [
-        "WindowsPlatformDebug.cpp",
-        "WindowsTime.cpp",
-        "WindowsUtils.cpp",
-        "WindowsUtils.h",
-      ]
-    }
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
-    configs += [ ":gpgmm_common_config" ]
-  }
+  sources = [
+    "AllocatorNode.cpp",
+    "AllocatorNode.h",
+    "BlockAllocator.h",
+    "BuddyBlockAllocator.cpp",
+    "BuddyBlockAllocator.h",
+    "BuddyMemoryAllocator.cpp",
+    "BuddyMemoryAllocator.h",
+    "ConditionalMemoryAllocator.cpp",
+    "ConditionalMemoryAllocator.h",
+    "Debug.cpp",
+    "Debug.h",
+    "Defaults.h",
+    "Error.h",
+    "EventTraceWriter.cpp",
+    "EventTraceWriter.h",
+    "GPUInfo.h",
+    "IndexedMemoryPool.cpp",
+    "IndexedMemoryPool.h",
+    "JSONSerializer.cpp",
+    "JSONSerializer.h",
+    "LIFOMemoryPool.cpp",
+    "LIFOMemoryPool.h",
+    "Memory.cpp",
+    "Memory.h",
+    "MemoryAllocation.cpp",
+    "MemoryAllocation.h",
+    "MemoryAllocator.cpp",
+    "MemoryAllocator.h",
+    "MemoryCache.h",
+    "MemoryPool.cpp",
+    "MemoryPool.h",
+    "PooledMemoryAllocator.cpp",
+    "PooledMemoryAllocator.h",
+    "SegmentedMemoryAllocator.cpp",
+    "SegmentedMemoryAllocator.h",
+    "SlabBlockAllocator.cpp",
+    "SlabBlockAllocator.h",
+    "SlabMemoryAllocator.cpp",
+    "SlabMemoryAllocator.h",
+    "StandaloneMemoryAllocator.cpp",
+    "StandaloneMemoryAllocator.h",
+    "TraceEvent.cpp",
+    "TraceEvent.h",
+    "WorkerThread.cpp",
+    "WorkerThread.h",
+  ]
 }
