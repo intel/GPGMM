@@ -256,7 +256,7 @@ namespace gpgmm { namespace d3d12 {
         A larger resource heap consumes more memory but could be faster for sub-allocation.
 
         Optional parameter. When 0 is specified, the API will automatically set the preferred
-        resource heap size to the default value of 4MB.
+        resource heap size to be a multiple of minimum resource heap size allowed by D3D12.
         */
         uint64_t PreferredResourceHeapSize;
 
@@ -309,6 +309,23 @@ namespace gpgmm { namespace d3d12 {
         fragmentation limit to 1/8th the resource heap size.
         */
         double MemoryFragmentationLimit;
+
+        /** \brief Memory growth factor, expressed as a multipler of the resource heap size
+        that will monotonically increase.
+
+        A factor value of 1.0 specifies no growth, where the resource heap size is always determined
+        by other limits or constraints. If no factor gets specified (or a value less than 1 is
+        specified), GPGMM will allocate a resource heap size with enough space to fit exactly one
+        resource.
+
+        Memory growth avoids the need to specify |PreferredResourceHeapSize|, which
+        especially helps in situations where the resource size cannot be predicated (eg.
+        user-defined), by allowing the resource heap size to gradually increase in size
+        per demand to achieve a balance of memory usage and performance.
+
+        Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
+        */
+        double MemoryGrowthFactor;
     };
 
     /** \enum ALLOCATION_FLAGS

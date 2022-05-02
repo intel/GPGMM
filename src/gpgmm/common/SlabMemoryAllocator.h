@@ -45,10 +45,11 @@ namespace gpgmm {
       public:
         SlabMemoryAllocator(uint64_t blockSize,
                             uint64_t maxSlabSize,
-                            uint64_t slabSize,
+                            uint64_t minSlabSize,
                             uint64_t slabAlignment,
                             double slabFragmentationLimit,
                             bool prefetchSlab,
+                            double slabGrowthFactor,
                             MemoryAllocator* memoryAllocator);
         ~SlabMemoryAllocator() override;
 
@@ -65,7 +66,7 @@ namespace gpgmm {
         uint64_t GetSlabSizeForTesting() const;
 
       private:
-        uint64_t ComputeSlabSize(uint64_t requestSize) const;
+        uint64_t ComputeSlabSize(uint64_t requestSize, uint64_t slabSize) const;
 
         // Slab is a node in a doubly-linked list that contains a free-list of blocks
         // and a reference to underlying memory.
@@ -112,12 +113,16 @@ namespace gpgmm {
 
         std::vector<SlabCache> mCaches;
 
+        uint64_t mLastUsedSlabSize = 0;
+
         const uint64_t mBlockSize;
-        const uint64_t mMaxSlabSize;
-        const uint64_t mSlabSize;
         const uint64_t mSlabAlignment;
+        const uint64_t mMaxSlabSize;
+        const uint64_t mMinSlabSize;  // Optional size when non-zero.
+
         const double mSlabFragmentationLimit;
         const bool mPrefetchSlab;
+        const double mSlabGrowthFactor;
 
         MemoryAllocator* mMemoryAllocator = nullptr;
         std::shared_ptr<MemoryAllocationEvent> mNextSlabAllocationEvent;
@@ -129,10 +134,11 @@ namespace gpgmm {
       public:
         SlabCacheAllocator(uint64_t minBlockSize,
                            uint64_t maxSlabSize,
-                           uint64_t slabSize,
+                           uint64_t minSlabSize,
                            uint64_t slabAlignment,
                            double slabFragmentationLimit,
                            bool prefetchSlab,
+                           double slabGrowthFactor,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         ~SlabCacheAllocator() override;
@@ -171,10 +177,12 @@ namespace gpgmm {
 
         const uint64_t mMinBlockSize;
         const uint64_t mMaxSlabSize;
-        const uint64_t mSlabSize;  // Optional size when non-zero.
+        const uint64_t mMinSlabSize;
         const uint64_t mSlabAlignment;
+
         const double mSlabFragmentationLimit;
         const bool mPrefetchSlab;
+        const double mSlabGrowthFactor;
 
         LinkedList<MemoryAllocator> mSlabAllocators;
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;

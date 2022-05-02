@@ -18,6 +18,7 @@
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 #include "gpgmm/common/ConditionalMemoryAllocator.h"
 #include "gpgmm/common/Debug.h"
+#include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/MemorySize.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
@@ -26,7 +27,6 @@
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
-#include "gpgmm/d3d12/DefaultsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
@@ -341,9 +341,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
         ALLOCATOR_DESC newDescriptor = descriptor;
-        newDescriptor.PreferredResourceHeapSize = (descriptor.PreferredResourceHeapSize > 0)
-                                                      ? descriptor.PreferredResourceHeapSize
-                                                      : kDefaultPreferredResourceHeapSize;
+        newDescriptor.MemoryGrowthFactor = (descriptor.MemoryGrowthFactor >= 1.0)
+                                               ? descriptor.MemoryGrowthFactor
+                                               : kDefaultMemoryGrowthFactor;
 
         newDescriptor.MaxResourceHeapSize =
             (descriptor.MaxResourceHeapSize > 0)
@@ -455,21 +455,17 @@ namespace gpgmm { namespace d3d12 {
                     pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
                 }
 
-                std::unique_ptr<MemoryAllocator> buddyAllocator =
-                    std::make_unique<BuddyMemoryAllocator>(
-                        PrevPowerOfTwo(mMaxResourceHeapSize), descriptor.PreferredResourceHeapSize,
-                        heapAlignment, std::move(pooledOrNonPooledAllocator));
-
-                // TODO: Figure out the optimal slab size to heap ratio.
+                // TODO: Re-enable the buddy allocator?
                 mResourceAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
                     SlabCacheAllocator>(
                     /*minBlockSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                     /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
-                    /*slabSize*/ descriptor.PreferredResourceHeapSize,
+                    /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
                     /*slabAlignment*/ heapAlignment,
                     /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
                     /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
-                    std::move(buddyAllocator));
+                    /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
+                    std::move(pooledOrNonPooledAllocator));
             }
 
             {
@@ -519,7 +515,8 @@ namespace gpgmm { namespace d3d12 {
                         /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabFragmentationLimit*/ 0,
-                        /*enablePrefetch*/ false, std::move(pooledOrNonPooledAllocator));
+                        /*enablePrefetch*/ false,
+                        /*slabMemoryGrowth*/ 1, std::move(pooledOrNonPooledAllocator));
             }
 
             // Cache resource sizes commonly requested.
