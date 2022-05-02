@@ -19,7 +19,6 @@
 #include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
 
-
 namespace gpgmm { namespace d3d12 {
 
     class GPGMM_EXPORT IUnknownImpl : public IUnknown, public RefCounted {

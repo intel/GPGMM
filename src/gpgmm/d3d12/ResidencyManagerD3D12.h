@@ -20,7 +20,6 @@
 #include "gpgmm/utils/LinkedList.h"
 #include "include/gpgmm_export.h"
 
-
 #include <memory>
 #include <mutex>
 

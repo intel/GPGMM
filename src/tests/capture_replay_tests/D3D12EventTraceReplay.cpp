@@ -15,7 +15,7 @@
 
 #include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
-#include "gpgmm/TraceEventPhase.h"
+#include "gpgmm/common/TraceEventPhase.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformTime.h"

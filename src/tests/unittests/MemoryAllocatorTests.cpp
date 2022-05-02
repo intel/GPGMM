@@ -14,8 +14,8 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/SlabMemoryAllocator.h"
+#include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/utils/Math.h"
 #include "tests/DummyMemoryAllocator.h"
 

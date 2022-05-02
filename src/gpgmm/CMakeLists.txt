@@ -15,56 +15,10 @@
 
 add_library(gpgmm)
 
-target_sources(gpgmm PRIVATE
-    "BlockAllocator.h"
-    "BuddyBlockAllocator.cpp"
-    "BuddyBlockAllocator.h"
-    "BuddyMemoryAllocator.cpp"
-    "BuddyMemoryAllocator.h"
-    "ConditionalMemoryAllocator.cpp"
-    "ConditionalMemoryAllocator.h"
-    "Debug.cpp"
-    "Debug.h"
-    "Defaults.h"
-    "Error.h"
-    "EventTraceWriter.cpp"
-    "EventTraceWriter.h"
-    "AllocatorNode.cpp"
-    "AllocatorNode.h"
-    "IndexedMemoryPool.cpp"
-    "IndexedMemoryPool.h"
-    "JSONSerializer.cpp"
-    "JSONSerializer.h"
-    "LIFOMemoryPool.cpp"
-    "LIFOMemoryPool.h"
-    "Memory.cpp"
-    "Memory.h"
-    "MemoryAllocation.cpp"
-    "MemoryAllocation.h"
-    "MemoryAllocator.cpp"
-    "MemoryAllocator.h"
-    "MemoryCache.h"
-    "MemoryPool.cpp"
-    "MemoryPool.h"
-    "PooledMemoryAllocator.cpp"
-    "PooledMemoryAllocator.h"
-    "SegmentedMemoryAllocator.cpp"
-    "SegmentedMemoryAllocator.h"
-    "SlabBlockAllocator.cpp"
-    "SlabBlockAllocator.h"
-    "SlabMemoryAllocator.cpp"
-    "SlabMemoryAllocator.h"
-    "StandaloneMemoryAllocator.cpp"
-    "StandaloneMemoryAllocator.h"
-    "TraceEvent.cpp"
-    "TraceEvent.h"
-    "WorkerThread.cpp"
-    "WorkerThread.h"
-)
-
 target_link_libraries(gpgmm
     PRIVATE gpgmm_utils
-            gpgmm_utils_config
+            gpgmm_common
+            gpgmm_common_config
 )
 
 # Only win32 app needs to link with user32.lib
@@ -145,4 +99,5 @@ endif()
 ################################################################################
 # Build subdirectories
 ################################################################################
+add_subdirectory(utils)
 add_subdirectory(common)

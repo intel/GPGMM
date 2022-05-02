@@ -15,7 +15,7 @@
 #ifndef GPGMM_VK_DEVICEMEMORYVK_H_
 #define GPGMM_VK_DEVICEMEMORYVK_H_
 
-#include "gpgmm/Memory.h"
+#include "gpgmm/common/Memory.h"
 
 #include "gpgmm/vk/vk_platform.h"
 

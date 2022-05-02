@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/SegmentedMemoryAllocator.h"
+#include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "tests/DummyMemoryAllocator.h"
 
 using namespace gpgmm;

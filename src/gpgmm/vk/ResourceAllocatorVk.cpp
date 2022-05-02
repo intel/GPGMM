@@ -14,8 +14,8 @@
 
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
-#include "gpgmm/Debug.h"
-#include "gpgmm/TraceEvent.h"
+#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/vk/BackendVk.h"
 #include "gpgmm/vk/CapsVk.h"
 #include "gpgmm/vk/DeviceMemoryAllocatorVk.h"

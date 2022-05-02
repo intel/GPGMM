@@ -1,4 +1,3 @@
-# Copyright 2020 The Dawn Authors
 # Copyright 2021 The GPGMM Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,4 +47,4 @@ if (WIN32)
     )
 endif()
 
-target_link_libraries(gpgmm_utils PRIVATE gpgmm_utils_config)
+target_link_libraries(gpgmm_utils PRIVATE gpgmm_common_config)

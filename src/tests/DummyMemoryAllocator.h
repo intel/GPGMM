@@ -15,8 +15,8 @@
 #ifndef TESTS_DUMMYMEMORYALLOCATOR_H_
 #define TESTS_DUMMYMEMORYALLOCATOR_H_
 
-#include "gpgmm/MemoryAllocator.h"
-#include "gpgmm/TraceEvent.h"
+#include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {

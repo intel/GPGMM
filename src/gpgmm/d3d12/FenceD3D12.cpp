@@ -17,7 +17,6 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Assert.h"
 
-
 namespace gpgmm { namespace d3d12 {
 
     // static

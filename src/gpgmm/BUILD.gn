@@ -43,8 +43,8 @@ if (gpgmm_enable_vk) {
                      (gpgmm_enable_vk_loader && gpgmm_vk_loader_dir != "")
 }
 
-config("gpgmm_utils_config") {
-  configs = [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+config("gpgmm_common_config") {
+  configs = [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   # Suppress warnings that Metal isn't in the deployment target of Chrome:
   # initialization of the Metal backend is behind a IsMetalSupported check so
@@ -80,7 +80,7 @@ config("vulkan_tools_include") {
 source_set("gpgmm_headers") {
   # public_deps = [ "${gpgmm_root_dir}/src/gpgmm:gpgmmcpp_headers" ]
   all_dependent_configs =
-      [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_public_config" ]
+      [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_public_config" ]
   sources = [ "${gpgmm_root_dir}/src/include/gpgmm_export.h" ]
 }
 
@@ -90,106 +90,16 @@ source_set("gpgmm_headers") {
 source_set("gpgmm_sources") {
   deps = [
     ":gpgmm_headers",
+    "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_sources",
     "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_sources",
   ]
-
-  defines = [ "GPGMM_IMPLEMENTATION" ]
-
-  if (gpgmm_shared_library) {
-    defines += [ "GPGMM_SHARED_LIBRARY" ]
-  }
-
-  if (!is_debug && !gpgmm_force_tracing) {
-    defines += [ "GPGMM_DISABLE_TRACING" ]
-  }
-
-  if (gpgmm_enable_allocator_checks) {
-    defines += [ "GPGMM_ENABLE_ALLOCATOR_CHECKS" ]
-  }
-
-  if (gpgmm_enable_assert_on_warning) {
-    defines += [ "GPGMM_ENABLE_ASSERT_ON_WARNING" ]
-  }
-
-  if (gpgmm_enable_size_cache) {
-    defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
-  }
-
-  if (gpgmm_enable_device_checks) {
-    defines += [ "GPGMM_ENABLE_DEVICE_CHECKS" ]
-  }
-
-  if (gpgmm_vk_static_functions) {
-    defines += [ "GPGMM_STATIC_VULKAN_FUNCTIONS" ]
-  }
 
   libs = []
   data_deps = []
 
-  configs += [ ":gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
-  # Dependencies that are needed to compile gpgmm entry points in
-  # FooBackend.cpp need to be public deps so they are propagated to the
-  # gpgmm target
-  #   public_deps = [ "${gpgmm_root_dir}/src/gpgmm_platform" ]
-
-  sources = [
-    "AllocatorNode.cpp",
-    "AllocatorNode.h",
-    "BlockAllocator.h",
-    "BuddyBlockAllocator.cpp",
-    "BuddyBlockAllocator.h",
-    "BuddyMemoryAllocator.cpp",
-    "BuddyMemoryAllocator.h",
-    "ConditionalMemoryAllocator.cpp",
-    "ConditionalMemoryAllocator.h",
-    "Debug.cpp",
-    "Debug.h",
-    "Defaults.h",
-    "Error.h",
-    "EventTraceWriter.cpp",
-    "EventTraceWriter.h",
-    "GPUInfo.h",
-    "IndexedMemoryPool.cpp",
-    "IndexedMemoryPool.h",
-    "JSONSerializer.cpp",
-    "JSONSerializer.h",
-    "LIFOMemoryPool.cpp",
-    "LIFOMemoryPool.h",
-    "Memory.cpp",
-    "Memory.h",
-    "MemoryAllocation.cpp",
-    "MemoryAllocation.h",
-    "MemoryAllocator.cpp",
-    "MemoryAllocator.h",
-    "MemoryCache.h",
-    "MemoryPool.cpp",
-    "MemoryPool.h",
-    "PooledMemoryAllocator.cpp",
-    "PooledMemoryAllocator.h",
-    "SegmentedMemoryAllocator.cpp",
-    "SegmentedMemoryAllocator.h",
-    "SlabBlockAllocator.cpp",
-    "SlabBlockAllocator.h",
-    "SlabMemoryAllocator.cpp",
-    "SlabMemoryAllocator.h",
-    "StandaloneMemoryAllocator.cpp",
-    "StandaloneMemoryAllocator.h",
-    "TraceEvent.cpp",
-    "TraceEvent.h",
-    "WorkerThread.cpp",
-    "WorkerThread.h",
-
-    # "gpgmm_platform.h",
-  ]
-
-  #   if (gpgmm_use_x11) {
-  #     libs += [ "X11" ]
-  #     sources += [
-  #       "XlibXcbFunctions.cpp",
-  #       "XlibXcbFunctions.h",
-  #     ]
-  #   }
+  sources = []
 
   # Only win32 app needs to link with user32.lib
   # In UWP, all availiable APIs are defined in WindowsApp.lib
@@ -268,6 +178,10 @@ source_set("gpgmm_sources") {
       "vk/ResourceAllocatorVk.cpp",
       "vk/ResourceAllocatorVk.h",
     ]
+
+    if (gpgmm_vk_static_functions) {
+      defines = [ "GPGMM_STATIC_VULKAN_FUNCTIONS" ]
+    }
 
     if (enable_vk_validation_layers) {
       defines += [

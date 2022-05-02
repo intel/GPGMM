@@ -15,7 +15,7 @@
 #ifndef GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
 #define GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
 
-#include "gpgmm/MemoryAllocator.h"
+#include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/vk/vk_platform.h"
 
 namespace gpgmm { namespace vk {

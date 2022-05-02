@@ -96,7 +96,7 @@ if (!build_with_chromium) {
 ###############################################################################
 
 test("gpgmm_unittests") {
-  configs += [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",
@@ -134,7 +134,7 @@ test("gpgmm_unittests") {
 ###############################################################################
 
 source_set("gpgmm_end2end_tests_sources") {
-  configs += [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
   testonly = true
 
   deps = [
@@ -172,7 +172,7 @@ source_set("gpgmm_end2end_tests_sources") {
 }
 
 test("gpgmm_end2end_tests") {
-  configs += [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",
@@ -223,7 +223,7 @@ action("generate_capture_replay_trace_index_file") {
 }
 
 source_set("gpgmm_capture_replay_tests_sources") {
-  configs += [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
   testonly = true
 
   deps = [
@@ -259,7 +259,7 @@ source_set("gpgmm_capture_replay_tests_sources") {
 }
 
 test("gpgmm_capture_replay_tests") {
-  configs += [ "${gpgmm_root_dir}/src/gpgmm/utils:gpgmm_utils_config" ]
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   deps = [
     ":gmock_and_gtest",

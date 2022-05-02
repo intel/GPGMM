@@ -14,10 +14,10 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/BuddyMemoryAllocator.h"
-#include "gpgmm/LIFOMemoryPool.h"
-#include "gpgmm/PooledMemoryAllocator.h"
-#include "gpgmm/SlabMemoryAllocator.h"
+#include "gpgmm/common/BuddyMemoryAllocator.h"
+#include "gpgmm/common/LIFOMemoryPool.h"
+#include "gpgmm/common/PooledMemoryAllocator.h"
+#include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/utils/Math.h"
 #include "tests/DummyMemoryAllocator.h"
 
