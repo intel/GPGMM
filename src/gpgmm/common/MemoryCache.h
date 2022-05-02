@@ -142,25 +142,25 @@ namespace gpgmm {
             ASSERT(GetSize() == 0);
         }
 
-        // Inserts |value| into a cache. The |value| may be kept alive until the cache destructs
+        // Inserts |entry| into a cache. The |entry| may be kept alive until the cache destructs
         // when |keepAlive| is true.
-        ScopedRef<CacheEntryT> GetOrCreate(T&& value, bool keepAlive) {
-            CacheEntryT tmp(std::move(value));
+        ScopedRef<CacheEntryT> GetOrCreate(T&& entry, bool keepAlive) {
+            CacheEntryT tmp(std::move(entry));
             const auto& iter = mCache.find(&tmp);
             if (iter != mCache.end()) {
                 mStats.NumOfHits++;
                 return (*iter);
             }
             mStats.NumOfMisses++;
-            CacheEntryT* entry = new CacheEntryT(this, tmp.AcquireValue());
+            CacheEntryT* entryObj = new CacheEntryT(this, tmp.AcquireValue());
             if (keepAlive) {
-                entry->Ref();
+                entryObj->Ref();
                 mStats.AliveCount++;
             }
-            const bool success = mCache.insert(entry).second;
+            const bool success = mCache.insert(entryObj).second;
             ASSERT(success);
             mStats.NewCount++;
-            return ScopedRef<CacheEntryT>(entry);
+            return ScopedRef<CacheEntryT>(entryObj);
         }
 
         // Return number of entries.
