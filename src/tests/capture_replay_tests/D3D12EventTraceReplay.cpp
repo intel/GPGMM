@@ -204,7 +204,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "GPUMemoryAllocation") {
+            } else if (event["name"].asString() == "ResourceAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
@@ -284,7 +284,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "GPUMemoryAllocator") {
+            } else if (event["name"].asString() == "ResourceAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
@@ -393,7 +393,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "GPUMemoryBlock") {
+            } else if (event["name"].asString() == "Heap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& heapID = event["id"].asString();

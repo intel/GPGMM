@@ -588,7 +588,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     const char* ResourceAllocator::GetTypename() const {
-        return "GPUMemoryAllocator";
+        return "ResourceAllocator";
     }
 
     void ResourceAllocator::Trim() {
