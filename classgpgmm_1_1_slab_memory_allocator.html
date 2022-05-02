@@ -91,8 +91,8 @@ Inheritance diagram for gpgmm::SlabMemoryAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2a2e8e64436ed4091bcdfff7e7fd184d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#a2a2e8e64436ed4091bcdfff7e7fd184d">SlabMemoryAllocator</a> (uint64_t blockSize, uint64_t maxSlabSize, uint64_t minSlabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool prefetchSlab, double slabGrowthFactor, <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *memoryAllocator)</td></tr>
-<tr class="separator:a2a2e8e64436ed4091bcdfff7e7fd184d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a455e90da4eca5733fa97e74c71b303c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#a455e90da4eca5733fa97e74c71b303c1">SlabMemoryAllocator</a> (uint64_t blockSize, uint64_t maxSlabSize, uint64_t slabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool prefetchSlab, <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *memoryAllocator)</td></tr>
+<tr class="separator:a455e90da4eca5733fa97e74c71b303c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad2484cbfa701c9958697eb2b385f686"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#aad2484cbfa701c9958697eb2b385f686">~SlabMemoryAllocator</a> () override</td></tr>
 <tr class="separator:aad2484cbfa701c9958697eb2b385f686"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87bff086c0312489d0cdf8d495355525"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#a87bff086c0312489d0cdf8d495355525">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory) override</td></tr>
@@ -198,8 +198,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a26ca5b1d959169a8c625c8d686660101 inherit pro_attribs_classgpgmm_1_1_allocator_node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2a2e8e64436ed4091bcdfff7e7fd184d" name="a2a2e8e64436ed4091bcdfff7e7fd184d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a2e8e64436ed4091bcdfff7e7fd184d">&#9670;&nbsp;</a></span>SlabMemoryAllocator()</h2>
+<a id="a455e90da4eca5733fa97e74c71b303c1" name="a455e90da4eca5733fa97e74c71b303c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a455e90da4eca5733fa97e74c71b303c1">&#9670;&nbsp;</a></span>SlabMemoryAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -220,7 +220,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>minSlabSize</em>, </td>
+          <td class="paramname"><em>slabSize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -239,12 +239,6 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>prefetchSlab</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>slabGrowthFactor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

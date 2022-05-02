@@ -116,9 +116,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:add08ae68e081a9159ffac3b2dde676d7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#add08ae68e081a9159ffac3b2dde676d7">MemoryFragmentationLimit</a></td></tr>
 <tr class="memdesc:add08ae68e081a9159ffac3b2dde676d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to internal fragmentation.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#add08ae68e081a9159ffac3b2dde676d7">More...</a><br /></td></tr>
 <tr class="separator:add08ae68e081a9159ffac3b2dde676d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#aacc7ad0f5e83b2fc409ecdb32a9de228">MemoryGrowthFactor</a></td></tr>
-<tr class="memdesc:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory growth factor, expressed as a multipler of the resource heap size that will monotonically increase.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#aacc7ad0f5e83b2fc409ecdb32a9de228">More...</a><br /></td></tr>
-<tr class="separator:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Specify parameters for creating allocators. </p>
@@ -263,25 +260,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aacc7ad0f5e83b2fc409ecdb32a9de228" name="aacc7ad0f5e83b2fc409ecdb32a9de228"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacc7ad0f5e83b2fc409ecdb32a9de228">&#9670;&nbsp;</a></span>MemoryGrowthFactor</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double gpgmm::d3d12::ALLOCATOR_DESC::MemoryGrowthFactor</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Memory growth factor, expressed as a multipler of the resource heap size that will monotonically increase. </p>
-<p >A factor value of 1.0 specifies no growth, where the resource heap size is always determined by other limits or constraints. If no factor gets specified (or a value less than 1 is specified), GPGMM will allocate a resource heap size with enough space to fit exactly one resource.</p>
-<p >Memory growth avoids the need to specify |PreferredResourceHeapSize|, which especially helps in situations where the resource size cannot be predicated (eg. user-defined), by allowing the resource heap size to gradually increase in size per demand to achieve a balance of memory usage and performance.</p>
-<p >Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth). </p>
-
-</div>
-</div>
 <a id="a872019b19e521418465f40a3889792b4" name="a872019b19e521418465f40a3889792b4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a872019b19e521418465f40a3889792b4">&#9670;&nbsp;</a></span>MinLogLevel</h2>
 
@@ -313,7 +291,7 @@ Public Attributes</h2></td></tr>
 
 <p>Specifies the preferred size of the resource heap. </p>
 <p >The preferred size of the resource heap is the minimum heap size to sub-allocate from. A larger resource heap consumes more memory but could be faster for sub-allocation.</p>
-<p >Optional parameter. When 0 is specified, the API will automatically set the preferred resource heap size to be a multiple of minimum resource heap size allowed by D3D12. </p>
+<p >Optional parameter. When 0 is specified, the API will automatically set the preferred resource heap size to the default value of 4MB. </p>
 
 </div>
 </div>
