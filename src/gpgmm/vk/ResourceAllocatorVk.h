@@ -28,64 +28,115 @@ namespace gpgmm {
 
 namespace gpgmm { namespace vk {
 
-    // Opaque handle to a allocator object.
+    /** \struct GpResourceAllocator
+    \brief Opaque handle to a allocator object.
+    */
     VK_DEFINE_HANDLE(GpResourceAllocator)
 
-    // Opaque handle to a resource allocation object.
+    /** \struct GpResourceAllocation
+    \breif Opaque handle to a resource allocation object.
+    */
     VK_DEFINE_HANDLE(GpResourceAllocation)
 
+    /** \struct GpCreateAllocatorInfo
+    Specifies how allocators should be created.
+    */
     struct GpCreateAllocatorInfo {
-        // Function pointer to Vulkan functions.
+        /** \brief Function pointer to Vulkan functions.
+         */
         const VulkanFunctions* pVulkanFunctions = nullptr;
 
-        // Handle to Vulkan physical device object.
+        /** \brief Handle to Vulkan physical device object.
+         */
         VkPhysicalDevice physicalDevice;
 
-        // Handle to Vulkan device object.
+        /** \brief Handle to Vulkan device object.
+         */
         VkDevice device;
 
-        // Handle to Vulkan instance object.
+        /** \brief Handle to Vulkan instance object.
+         */
         VkInstance instance;
 
-        // Vulkan version return by VK_MAKE_VERSION.
+        /** \brief Vulkan version return by VK_MAKE_VERSION.
+         */
         uint32_t vulkanApiVersion;
     };
 
     enum GpResourceAllocationCreateFlags {
 
-        // Disables all allocation flags. Enabled by default.
+        /** \brief Disables all allocation flags.
+
+        Enabled by default.
+        */
         GP_ALLOCATION_FLAG_NONE = 0x0,
 
-        // Forbids creating new device memory when creating a resource. The created resource
-        // must use existing device memory or error. Effectively disables creating
-        // standalone allocations whose memory cannot be reused.
+        /** \brief  Disallow creating new device memory when creating a resource.
+
+        Forbids creating new device memory when creating a resource. The created resource
+        must use existing device memory or error. Effectively disables creating
+        standalone allocations whose memory cannot be reused.
+        */
         GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
 
-        // Forbids allowing multiple resource allocations to be created from the same device
-        // memory. The created resource will always be allocated with it's own device memory.
+        /** \brief Disallow creating multiple resource allocations from the same device memory.
+
+        The created resource will always be allocated with it's own device memory.
+        */
         GP_ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
-        // Prefetch memory for the next resource allocation.
-        // The call to prefetch is deferred to a seperate background thread by GPGMM which runs
-        // when the current allocation requested is completed. By default, GPGMM will automatically
-        // trigger prefetching based on heurstics. Prefetching enables more performance when
-        // allocating for large contiguous allocations. Should not be used with
-        // ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+        /** \brief Prefetch memory for the next resource allocation.
+
+        The call to prefetch is deferred to a seperate background thread by GPGMM which runs
+        when the current allocation requested is completed. By default, GPGMM will automatically
+        trigger prefetching based on heurstics. Prefetching enables more performance when
+        allocating for large contiguous allocations. Should not be used with
+        ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+        */
         GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY = 0x8,
     };
 
+    /** \struct GpResourceAllocationCreateInfo
+    Specifies how allocations should be created.
+    */
     struct GpResourceAllocationCreateInfo {
-        // Flags used to control how the resource will be allocated.
+        /** \brief Flags used to control how the resource will be allocated.
+         */
         GpResourceAllocationCreateFlags flags;
 
-        // Bitmask to specify required memory properties for the allocation.
+        /** \brief Bitmask to specify required memory properties for the allocation.
+         */
         VkMemoryPropertyFlags requiredPropertyFlags;
     };
 
+    /** \brief  Create allocator used to create and manage video memory for the App specified device
+    and instance.
+
+    @param info A reference to GpCreateAllocatorInfo structure that describes the allocator.
+    @param[out] allocatorOut Pointer to a memory block that recieves a pointer to the
+    resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
+    create the allocator. If NULL is passed and allocator creating would succeed, VK_INCOMPLETE is
+    returned.
+    */
     GPGMM_EXPORT VkResult gpCreateResourceAllocator(const GpCreateAllocatorInfo& info,
                                                     GpResourceAllocator* allocatorOut);
+
+    /** \brief  Destroy allocator.
+
+    @param allocator A GpResourceAllocator to destroy.
+    */
     GPGMM_EXPORT void gpDestroyResourceAllocator(GpResourceAllocator allocator);
 
+    /** \brief  Create a buffer allocation.
+
+    @param allocator A GpResourceAllocator used to create the buffer and allocation.
+    @param pBufferCreateInfo A pointer to a VkBufferCreateInfo that describes the buffer to create.
+    @param buffer[out] A pointer to a VkBuffer that will be created using the allocation.
+    @param pAllocationCreateInfo A pointer to a GpResourceAllocationCreateInfo that describes the
+    allocation.
+    @param allocationOut[out] A pointer to GpResourceAllocation that represents the buffer
+    allocation.
+    */
     GPGMM_EXPORT VkResult
     gpCreateBuffer(GpResourceAllocator allocator,
                    const VkBufferCreateInfo* pBufferCreateInfo,
@@ -93,6 +144,12 @@ namespace gpgmm { namespace vk {
                    const GpResourceAllocationCreateInfo* pAllocationCreateInfo,
                    GpResourceAllocation* allocationOut);
 
+    /** \brief  Destroy buffer allocation.
+
+    @param allocator A GpResourceAllocator used to create the buffer and allocation.
+    @param buffer A VkBuffer that was also created by the allocator.
+    @param allocation A GpResourceAllocation that was created by the allocator.
+    */
     GPGMM_EXPORT void gpDestroyBuffer(GpResourceAllocator allocator,
                                       VkBuffer buffer,
                                       GpResourceAllocation allocation);
