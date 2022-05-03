@@ -46,8 +46,11 @@ namespace gpgmm { namespace vk {
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(FreeMemory);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(BindBufferMemory);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(GetBufferMemoryRequirements);
+        GPGMM_DYNAMIC_GET_DEVICE_FUNC(GetImageMemoryRequirements);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(CreateBuffer);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(DestroyBuffer);
+        GPGMM_DYNAMIC_GET_DEVICE_FUNC(CreateImage);
+        GPGMM_DYNAMIC_GET_DEVICE_FUNC(DestroyImage);
         // TODO
     }
 
@@ -58,13 +61,26 @@ namespace gpgmm { namespace vk {
         GPGMM_STATIC_GET_FUNC(FreeMemory);
         GPGMM_STATIC_GET_FUNC(BindBufferMemory);
         GPGMM_STATIC_GET_FUNC(GetBufferMemoryRequirements);
+        GPGMM_STATIC_GET_FUNC(GetImageMemoryRequirements);
         GPGMM_STATIC_GET_FUNC(CreateBuffer);
         GPGMM_STATIC_GET_FUNC(DestroyBuffer);
+        GPGMM_STATIC_GET_FUNC(CreateImage);
+        GPGMM_STATIC_GET_FUNC(DestroyImage);
         // TODO
     }
 
-    void VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions* vulkanFunctions) {
-        // TODO
+    void VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions* vkFunctions) {
+        GetPhysicalDeviceMemoryProperties = vkFunctions->GetPhysicalDeviceMemoryProperties;
+        GetPhysicalDeviceProperties = vkFunctions->GetPhysicalDeviceProperties;
+        AllocateMemory = vkFunctions->AllocateMemory;
+        FreeMemory = vkFunctions->FreeMemory;
+        BindBufferMemory = vkFunctions->BindBufferMemory;
+        GetBufferMemoryRequirements = vkFunctions->GetBufferMemoryRequirements;
+        GetImageMemoryRequirements = vkFunctions->GetImageMemoryRequirements;
+        CreateBuffer = vkFunctions->CreateBuffer;
+        DestroyBuffer = vkFunctions->DestroyBuffer;
+        CreateImage = vkFunctions->CreateImage;
+        DestroyImage = vkFunctions->DestroyImage;
     }
 
     void VulkanFunctions::AssertVulkanFunctionsAreValid() {
@@ -74,8 +90,11 @@ namespace gpgmm { namespace vk {
         ASSERT(FreeMemory != nullptr);
         ASSERT(BindBufferMemory != nullptr);
         ASSERT(GetBufferMemoryRequirements != nullptr);
+        ASSERT(GetImageMemoryRequirements != nullptr);
         ASSERT(CreateBuffer != nullptr);
         ASSERT(DestroyBuffer != nullptr);
+        ASSERT(CreateImage != nullptr);
+        ASSERT(DestroyImage != nullptr);
     }
 
 }}  // namespace gpgmm::vk

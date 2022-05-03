@@ -18,15 +18,15 @@ namespace gpgmm { namespace vk {
 
     // Vulkan entrypoints used by GPGMM.
     struct VulkanFunctions {
-        // Used to dynamically set functions.
+        // Used to dynamically set functions from a shared library (DLL or so).
         void LoadInstanceFunctions(VkInstance instance);
         void LoadDeviceFunctions(VkDevice device);
 
-        // Used to statically set functions.
+        // Used to statically set functions from a static library (Vulkan loader).
         void ImportDeviceFunctions();
 
-        // Used to import functions already specified elsewhere.
-        void ImportDeviceFunctions(const VulkanFunctions* vulkanFunctions);
+        // Used to import functions pre-specified by user.
+        void ImportDeviceFunctions(const VulkanFunctions* vkFunctions);
 
         // ASSERTs if any Vulkan function is left unset.
         void AssertVulkanFunctionsAreValid();
@@ -42,9 +42,6 @@ namespace gpgmm { namespace vk {
         PFN_vkBindBufferMemory BindBufferMemory = nullptr;
         PFN_vkFreeMemory FreeMemory = nullptr;
         PFN_vkMapMemory MapMemory = nullptr;
-        PFN_vkUnmapMemory UnmapMemory = nullptr;
-        PFN_vkFlushMappedMemoryRanges FlushMappedMemoryRanges = nullptr;
-        PFN_vkInvalidateMappedMemoryRanges InvalidateMappedMemoryRanges = nullptr;
         PFN_vkGetBufferMemoryRequirements GetBufferMemoryRequirements = nullptr;
         PFN_vkGetImageMemoryRequirements GetImageMemoryRequirements = nullptr;
         PFN_vkCreateBuffer CreateBuffer = nullptr;
