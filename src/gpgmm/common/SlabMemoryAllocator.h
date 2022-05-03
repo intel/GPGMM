@@ -19,6 +19,7 @@
 #include "gpgmm/common/MemoryCache.h"
 #include "gpgmm/common/SlabBlockAllocator.h"
 #include "gpgmm/utils/LinkedList.h"
+#include "gpgmm/utils/Math.h"
 
 #include <vector>
 
@@ -86,7 +87,8 @@ namespace gpgmm {
             }
 
             double GetUsedPercent() const {
-                return static_cast<uint32_t>(GetRefCount()) / static_cast<double>(BlockCount);
+                return SafeDivison(static_cast<uint32_t>(GetRefCount()),
+                                   static_cast<double>(BlockCount));
             }
 
             uint64_t BlockCount = 0;

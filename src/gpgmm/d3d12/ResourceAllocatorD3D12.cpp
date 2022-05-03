@@ -632,9 +632,11 @@ namespace gpgmm { namespace d3d12 {
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory fragmentation (MB)",
                        (info.UsedMemoryUsage - info.UsedBlockUsage) / 1e6);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory utilization (%)",
-                       (info.UsedMemoryUsage /
-                        static_cast<double>(info.UsedMemoryUsage + info.FreeMemoryUsage) * 100));
+        TRACE_COUNTER1(
+            TraceEventCategory::Default, "GPU memory utilization (%)",
+            SafeDivison(info.UsedMemoryUsage,
+                        static_cast<double>(info.UsedMemoryUsage + info.FreeMemoryUsage)) *
+                100);
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory free (MB)",
                        info.FreeMemoryUsage / 1e6);

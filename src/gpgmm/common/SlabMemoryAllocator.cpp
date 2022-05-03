@@ -17,7 +17,6 @@
 #include "gpgmm/common/Debug.h"
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/utils/Assert.h"
-#include "gpgmm/utils/Math.h"
 #include "gpgmm/utils/Utils.h"
 
 #include <algorithm>  // std::max
@@ -142,7 +141,7 @@ namespace gpgmm {
                 }
             }
 
-            Slab* pNewFreeSlab = new Slab(slabSize / mBlockSize, mBlockSize);
+            Slab* pNewFreeSlab = new Slab(SafeDivison(slabSize, mBlockSize), mBlockSize);
             pNewFreeSlab->InsertBefore(cache->FreeList.head());
             pFreeSlab = pNewFreeSlab;
         }
@@ -351,9 +350,9 @@ namespace gpgmm {
                        (GetFirstChild()->GetInfo().UsedMemoryUsage) / 1e6);
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab cache miss-rate (%)",
-                       (mSizeCache.GetStats().NumOfMisses /
-                        static_cast<double>((mSizeCache.GetStats().NumOfHits +
-                                             mSizeCache.GetStats().NumOfMisses))) *
+                       SafeDivison(mSizeCache.GetStats().NumOfMisses,
+                                   static_cast<double>((mSizeCache.GetStats().NumOfHits +
+                                                        mSizeCache.GetStats().NumOfMisses))) *
                            100);
 
         return std::make_unique<MemoryAllocation>(
