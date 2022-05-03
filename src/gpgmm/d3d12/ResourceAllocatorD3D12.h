@@ -70,10 +70,6 @@ namespace gpgmm { namespace d3d12 {
         minimal possible GPU memory footprint or debugging OOM failures.
         */
         ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
-
-        /** \brief Flags no longer used and will soon be depreciated.
-         */
-        ALLOCATOR_CHECK_DEVICE_LEAKS = 0x16,
     };
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
