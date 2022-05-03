@@ -43,6 +43,14 @@ namespace gpgmm { namespace vk {
     */
     struct GpCreateAllocatorInfo {
         /** \brief Function pointer to Vulkan functions.
+
+         There are 3 ways to specify Vulkan functions.
+         1. Specify `gpgmm_vk_static_functions = true` and statically link agaisn't the Vulkan
+         loader provided by GPGMM.
+         2. Load Vulkan functions dynamically by specifying `gpgmm_vk_static_functions = false` and
+         ONLY provide the instance and device functions, `vkGetInstanceProcAddr` and
+         `vkGetDeviceProcAddr`. GPGMM will use those to load the remaining.
+         3. Specify ALL the Vulkan functions. GPGMM will not import or load Vulkan function itself.
          */
         const VulkanFunctions* pVulkanFunctions = nullptr;
 
