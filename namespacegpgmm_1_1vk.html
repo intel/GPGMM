@@ -111,13 +111,17 @@ Functions</h2></td></tr>
 <tr class="memitem:a974740d8609bf82f673e90d9a6522050"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a974740d8609bf82f673e90d9a6522050"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a974740d8609bf82f673e90d9a6522050">ToBackend</a> (T &amp;&amp;common) -&gt; decltype(gpgmm::ToBackend&lt; <a class="el" href="structgpgmm_1_1vk_1_1_backend_trait.html">BackendTrait</a> &gt;(common))</td></tr>
 <tr class="separator:a974740d8609bf82f673e90d9a6522050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32223c7610abfb8cd874c60c8c0758f7"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a32223c7610abfb8cd874c60c8c0758f7">gpCreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html">GpCreateAllocatorInfo</a> &amp;info, GpResourceAllocator *allocatorOut)</td></tr>
+<tr class="memitem:a32223c7610abfb8cd874c60c8c0758f7"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a32223c7610abfb8cd874c60c8c0758f7">gpCreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html">GpCreateAllocatorInfo</a> &amp;info, <a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *allocatorOut)</td></tr>
+<tr class="memdesc:a32223c7610abfb8cd874c60c8c0758f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create allocator used to create and manage video memory for the App specified device and instance.  <a href="namespacegpgmm_1_1vk.html#a32223c7610abfb8cd874c60c8c0758f7">More...</a><br /></td></tr>
 <tr class="separator:a32223c7610abfb8cd874c60c8c0758f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc98f4568b4de02bbd65f32c6adc7006"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">gpDestroyResourceAllocator</a> (GpResourceAllocator allocator)</td></tr>
+<tr class="memitem:acc98f4568b4de02bbd65f32c6adc7006"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">gpDestroyResourceAllocator</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator)</td></tr>
+<tr class="memdesc:acc98f4568b4de02bbd65f32c6adc7006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy allocator.  <a href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">More...</a><br /></td></tr>
 <tr class="separator:acc98f4568b4de02bbd65f32c6adc7006"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e572feab4341bf95a172fa6e1a3bdeb"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a0e572feab4341bf95a172fa6e1a3bdeb">gpCreateBuffer</a> (GpResourceAllocator allocator, const VkBufferCreateInfo *pBufferCreateInfo, VkBuffer *bufferOut, const <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> *pAllocationCreateInfo, GpResourceAllocation *allocationOut)</td></tr>
-<tr class="separator:a0e572feab4341bf95a172fa6e1a3bdeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87035ca264fc0e367910c896fb73045c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">gpDestroyBuffer</a> (GpResourceAllocator allocator, VkBuffer buffer, GpResourceAllocation allocation)</td></tr>
+<tr class="memitem:aae143de825aff02b5d4c9b316fec88b4"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4">gpCreateBuffer</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, const VkBufferCreateInfo *pBufferCreateInfo, VkBuffer *pBuffer, const <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> *pAllocationCreateInfo, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *allocationOut)</td></tr>
+<tr class="memdesc:aae143de825aff02b5d4c9b316fec88b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a buffer allocation.  <a href="namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4">More...</a><br /></td></tr>
+<tr class="separator:aae143de825aff02b5d4c9b316fec88b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87035ca264fc0e367910c896fb73045c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">gpDestroyBuffer</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, VkBuffer buffer, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> allocation)</td></tr>
+<tr class="memdesc:a87035ca264fc0e367910c896fb73045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy buffer allocation.  <a href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">More...</a><br /></td></tr>
 <tr class="separator:a87035ca264fc0e367910c896fb73045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -133,17 +137,31 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a953f36fab842ad5d6ef923744728617c" name="a3b98f42e0a18412e618eb4e0cc709879a953f36fab842ad5d6ef923744728617c"></a>GP_ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a4e4b667e86b7d9d2b5e3fb4018a149f2" name="a3b98f42e0a18412e618eb4e0cc709879a4e4b667e86b7d9d2b5e3fb4018a149f2"></a>GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a27b7b2287c5719bcc11b76e2924561ca" name="a3b98f42e0a18412e618eb4e0cc709879a27b7b2287c5719bcc11b76e2924561ca"></a>GP_ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879afc5db42897e75b098e62b7b536c8c440" name="a3b98f42e0a18412e618eb4e0cc709879afc5db42897e75b098e62b7b536c8c440"></a>GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a953f36fab842ad5d6ef923744728617c" name="a3b98f42e0a18412e618eb4e0cc709879a953f36fab842ad5d6ef923744728617c"></a>GP_ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
+<pre class="fragment">Enabled by default.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a4e4b667e86b7d9d2b5e3fb4018a149f2" name="a3b98f42e0a18412e618eb4e0cc709879a4e4b667e86b7d9d2b5e3fb4018a149f2"></a>GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating new device memory when creating a resource. </p>
+<pre class="fragment">Forbids creating new device memory when creating a resource. The created resource
+must use existing device memory or error. Effectively disables creating
+standalone allocations whose memory cannot be reused.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879a27b7b2287c5719bcc11b76e2924561ca" name="a3b98f42e0a18412e618eb4e0cc709879a27b7b2287c5719bcc11b76e2924561ca"></a>GP_ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same device memory. </p>
+<pre class="fragment">The created resource will always be allocated with it's own device memory.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a3b98f42e0a18412e618eb4e0cc709879afc5db42897e75b098e62b7b536c8c440" name="a3b98f42e0a18412e618eb4e0cc709879afc5db42897e75b098e62b7b536c8c440"></a>GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
+<pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
+when the current allocation requested is completed. By default, GPGMM will automatically
+trigger prefetching based on heurstics. Prefetching enables more performance when
+allocating for large contiguous allocations. Should not be used with
+ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+</pre> </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a0e572feab4341bf95a172fa6e1a3bdeb" name="a0e572feab4341bf95a172fa6e1a3bdeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e572feab4341bf95a172fa6e1a3bdeb">&#9670;&nbsp;</a></span>gpCreateBuffer()</h2>
+<a id="aae143de825aff02b5d4c9b316fec88b4" name="aae143de825aff02b5d4c9b316fec88b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae143de825aff02b5d4c9b316fec88b4">&#9670;&nbsp;</a></span>gpCreateBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +169,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> VkResult gpgmm::vk::gpCreateBuffer </td>
           <td>(</td>
-          <td class="paramtype">GpResourceAllocator&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a>&#160;</td>
           <td class="paramname"><em>allocator</em>, </td>
         </tr>
         <tr>
@@ -164,7 +182,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">VkBuffer *&#160;</td>
-          <td class="paramname"><em>bufferOut</em>, </td>
+          <td class="paramname"><em>pBuffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -175,7 +193,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GpResourceAllocation *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *&#160;</td>
           <td class="paramname"><em>allocationOut</em>&#160;</td>
         </tr>
         <tr>
@@ -185,6 +203,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Create a buffer allocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the buffer and allocation. </td></tr>
+    <tr><td class="paramname">pBufferCreateInfo</td><td>A pointer to a VkBufferCreateInfo that describes the buffer to create. </td></tr>
+    <tr><td class="paramname">buffer[out]</td><td>A pointer to a VkBuffer that will be created using the allocation. </td></tr>
+    <tr><td class="paramname">pAllocationCreateInfo</td><td>A pointer to a <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> that describes the allocation. </td></tr>
+    <tr><td class="paramname">allocationOut[out]</td><td>A pointer to <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> that represents the buffer allocation. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -203,7 +233,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GpResourceAllocator *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *&#160;</td>
           <td class="paramname"><em>allocatorOut</em>&#160;</td>
         </tr>
         <tr>
@@ -213,6 +243,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Create allocator used to create and manage video memory for the App specified device and instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">info</td><td>A reference to <a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html">GpCreateAllocatorInfo</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">allocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. If NULL is passed and allocator creating would succeed, VK_INCOMPLETE is returned. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -225,7 +264,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> void gpgmm::vk::gpDestroyBuffer </td>
           <td>(</td>
-          <td class="paramtype">GpResourceAllocator&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a>&#160;</td>
           <td class="paramname"><em>allocator</em>, </td>
         </tr>
         <tr>
@@ -237,7 +276,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GpResourceAllocation&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a>&#160;</td>
           <td class="paramname"><em>allocation</em>&#160;</td>
         </tr>
         <tr>
@@ -247,6 +286,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destroy buffer allocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the buffer and allocation. </td></tr>
+    <tr><td class="paramname">buffer</td><td>A VkBuffer that was also created by the allocator. </td></tr>
+    <tr><td class="paramname">allocation</td><td>A <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> that was created by the allocator. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -259,12 +308,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> void gpgmm::vk::gpDestroyResourceAllocator </td>
           <td>(</td>
-          <td class="paramtype">GpResourceAllocator&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a>&#160;</td>
           <td class="paramname"><em>allocator</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destroy allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> to destroy. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
