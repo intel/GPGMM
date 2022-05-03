@@ -272,8 +272,8 @@ Functions</h2></td></tr>
 <tr class="separator:a6ea3d78ed065b398f2e34f4dd8b2ae65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32892309d78ee85a15a988b5138ee547"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a32892309d78ee85a15a988b5138ee547">FindSegment</a> (<a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *start, <a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *end, uint64_t size)</td></tr>
 <tr class="separator:a32892309d78ee85a15a988b5138ee547"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a991be76e0086e0dd1faf5a440e7ad1ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a991be76e0086e0dd1faf5a440e7ad1ca">StartupEventTrace</a> (const std::string &amp;traceFile, bool skipDurationEvents, bool skipObjectEvents, bool skipInstantEvents)</td></tr>
-<tr class="separator:a991be76e0086e0dd1faf5a440e7ad1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56e3f84202bff81ada088f1d496c6aca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a56e3f84202bff81ada088f1d496c6aca">StartupEventTrace</a> (const std::string &amp;traceFile, bool skipDurationEvents, bool skipObjectEvents, bool skipInstantEvents, bool skipCounterEvents)</td></tr>
+<tr class="separator:a56e3f84202bff81ada088f1d496c6aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e06cd628d6c539216da169d2fd2d98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98">ShutdownEventTrace</a> ()</td></tr>
 <tr class="separator:a57e06cd628d6c539216da169d2fd2d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4e7758d833df0093cf8c892c9632aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a> ()</td></tr>
@@ -1308,8 +1308,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a991be76e0086e0dd1faf5a440e7ad1ca" name="a991be76e0086e0dd1faf5a440e7ad1ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a991be76e0086e0dd1faf5a440e7ad1ca">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
+<a id="a56e3f84202bff81ada088f1d496c6aca" name="a56e3f84202bff81ada088f1d496c6aca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56e3f84202bff81ada088f1d496c6aca">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1336,7 +1336,13 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>skipInstantEvents</em>&#160;</td>
+          <td class="paramname"><em>skipInstantEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skipCounterEvents</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
