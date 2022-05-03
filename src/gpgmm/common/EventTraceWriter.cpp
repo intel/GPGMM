@@ -158,7 +158,7 @@ namespace gpgmm {
         std::ofstream outFile;
         outFile.open(mTraceFile);
         if (!outFile.fail()) {
-            WarningLog() << mTraceFile + " exists and will be overwritten.";
+            InfoLog() << mTraceFile + " exists and will be overwritten.";
         }
 
         outFile << traceData.ToString();
