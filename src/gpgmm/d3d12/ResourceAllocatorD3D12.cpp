@@ -718,10 +718,13 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.Get(),      subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(),     subAllocation.GetOffset(),
-                        std::move(committedResource), resourceHeap};
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(),
+                                               subAllocation.GetAllocator(),
+                                               subAllocation.GetBlock(),
+                                               subAllocation.GetOffset(),
+                                               UniqueComPtr(committedResource.Detach()),
+                                               resourceHeap};
 
                     if (subAllocation.GetSize() > newResourceDesc.Width) {
                         InfoEvent("ResourceAllocator.CreateResource",
@@ -754,13 +757,14 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    subAllocation.GetAllocator(),
-                                                                    subAllocation.GetOffset(),
-                                                                    subAllocation.GetBlock(),
-                                                                    subAllocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(),
+                                               subAllocation.GetAllocator(),
+                                               subAllocation.GetOffset(),
+                                               subAllocation.GetBlock(),
+                                               subAllocation.GetMethod(),
+                                               UniqueComPtr(placedResource.Detach()),
+                                               resourceHeap};
 
                     if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
                         InfoEvent("ResourceAllocator.CreateResource",
@@ -794,13 +798,14 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    allocation.GetAllocator(),
-                                                                    allocation.GetOffset(),
-                                                                    allocation.GetBlock(),
-                                                                    allocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(),
+                                               allocation.GetAllocator(),
+                                               allocation.GetOffset(),
+                                               allocation.GetBlock(),
+                                               allocation.GetMethod(),
+                                               UniqueComPtr(placedResource.Detach()),
+                                               resourceHeap};
 
                     if (allocation.GetSize() > resourceInfo.SizeInBytes) {
                         InfoEvent("ResourceAllocator.CreateResource",
@@ -846,7 +851,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
                                                         AllocationMethod::kStandalone,
-                                                        std::move(committedResource),
+                                                        UniqueComPtr(committedResource.Detach()),
                                                         resourceHeap};
 
         return S_OK;
@@ -884,7 +889,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
                                                         AllocationMethod::kStandalone,
-                                                        std::move(resource),
+                                                        UniqueComPtr(resource.Detach()),
                                                         resourceHeap};
 
         return S_OK;

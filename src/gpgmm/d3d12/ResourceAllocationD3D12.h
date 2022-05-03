@@ -18,7 +18,7 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/NonCopyable.h"
 #include "include/gpgmm_export.h"
 
@@ -47,7 +47,7 @@ namespace gpgmm { namespace d3d12 {
                            uint64_t offsetFromHeap,
                            MemoryBlock* block,
                            AllocationMethod method,
-                           ComPtr<ID3D12Resource> placedResource,
+                           UniqueComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
         // Constructs a resource allocation within a resource.
@@ -55,7 +55,7 @@ namespace gpgmm { namespace d3d12 {
                            MemoryAllocator* allocator,
                            MemoryBlock* block,
                            uint64_t offsetFromResource,
-                           ComPtr<ID3D12Resource> resource,
+                           UniqueComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);
 
         ~ResourceAllocation() override;
@@ -98,7 +98,7 @@ namespace gpgmm { namespace d3d12 {
         void DeleteThis() override;
 
         ResidencyManager* const mResidencyManager;
-        ComPtr<ID3D12Resource> mResource;
+        UniqueComPtr<ID3D12Resource> mResource;
 
         const uint64_t mOffsetFromResource;
     };

@@ -45,7 +45,7 @@ namespace gpgmm { namespace d3d12 {
                                            uint64_t offsetFromHeap,
                                            MemoryBlock* block,
                                            AllocationMethod method,
-                                           ComPtr<ID3D12Resource> placedResource,
+                                           UniqueComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
         : MemoryAllocation(allocator, resourceHeap, offsetFromHeap, method, block),
           mResidencyManager(residencyManager),
@@ -59,7 +59,7 @@ namespace gpgmm { namespace d3d12 {
                                            MemoryAllocator* allocator,
                                            MemoryBlock* block,
                                            uint64_t offsetFromResource,
-                                           ComPtr<ID3D12Resource> resource,
+                                           UniqueComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
         : MemoryAllocation(allocator,
                            resourceHeap,
@@ -82,7 +82,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
-        return mResource.Get();
+        return mResource.get();
     }
 
     HRESULT ResourceAllocation::Map(uint32_t subresource,
@@ -160,7 +160,7 @@ namespace gpgmm { namespace d3d12 {
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
         return {GetSize(),   GetOffset(), mOffsetFromResource,
-                GetMethod(), GetMemory(), mResource.Get()};
+                GetMethod(), GetMemory(), mResource.get()};
     }
 
     const char* ResourceAllocation::GetTypename() const {
