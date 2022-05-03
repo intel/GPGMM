@@ -16,6 +16,7 @@
 #include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
 #include "gpgmm/common/TraceEventPhase.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformTime.h"
@@ -182,7 +183,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
                         if (!envParams.IsNeverAllocate && FAILED(hr)) {
-                            gpgmm::ErrorLog() << "CreateResource failed with :" << args << ".\n";
+                            gpgmm::ErrorLog()
+                                << "CreateResource failed. Reason: " << GetErrorMessage(hr)
+                                << ", CreationArgs:" << args << ".\n";
                         }
 
                         ASSERT_SUCCEEDED(hr);

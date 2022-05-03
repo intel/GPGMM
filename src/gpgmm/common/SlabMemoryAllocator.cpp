@@ -100,7 +100,7 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
 
         if (requestSize > mBlockSize) {
-            InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            WarnEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Allocation size exceeded the block size (" + std::to_string(requestSize) +
                        " vs " + std::to_string(mBlockSize) + " bytes).";
             return {};
@@ -108,7 +108,7 @@ namespace gpgmm {
 
         uint64_t slabSize = ComputeSlabSize(requestSize, std::max(mMinSlabSize, mLastUsedSlabSize));
         if (slabSize > mMaxSlabSize) {
-            InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            WarnEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Slab size exceeded the max slab size (" + std::to_string(slabSize) + " vs " +
                        std::to_string(mMaxSlabSize) + " bytes).";
             return {};

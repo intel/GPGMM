@@ -303,7 +303,7 @@ namespace gpgmm { namespace d3d12 {
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(
                 size, alignment, neverAllocate, cacheSize, prefetchMemory);
             if (allocation == nullptr) {
-                InfoEvent("ResourceAllocator.TryAllocateResource",
+                WarnEvent("ResourceAllocator.TryAllocateResource",
                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
                     << std::string(allocator->GetTypename()) +
                            " failed to allocate memory for resource.";
@@ -312,8 +312,8 @@ namespace gpgmm { namespace d3d12 {
             }
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent("ResourceAllocator.TryAllocateResource",
-                          ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                ErrorEvent("ResourceAllocator.TryAllocateResource",
+                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
                     << std::string(allocator->GetTypename()) +
                            " failed to create resource using allocated memory: " +
                            GetErrorMessage(hr);
@@ -820,12 +820,6 @@ namespace gpgmm { namespace d3d12 {
         // The time and space complexity of committed resource is driver-defined.
         if (neverAllocate) {
             return E_OUTOFMEMORY;
-        }
-
-        if (!mIsAlwaysCommitted) {
-            InfoEvent("ResourceAllocator.CreateResource",
-                      ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
-                << "Resource allocation could not be created from memory pool.";
         }
 
         ComPtr<ID3D12Resource> committedResource;

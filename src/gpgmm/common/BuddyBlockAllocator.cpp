@@ -148,7 +148,7 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(requestSize);
 
         if (requestSize > mMaxBlockSize) {
-            InfoEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
+            WarnEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "MemoryBlock size exceeded the max block size.";
             return nullptr;
         }
@@ -162,7 +162,7 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
-            InfoEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)
+            WarnEvent("BuddyBlockAllocator.TryAllocateBlock", ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)
                 << "Allocator has reached capacity";
             return nullptr;
         }
