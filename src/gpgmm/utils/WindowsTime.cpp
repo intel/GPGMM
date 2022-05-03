@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "Assert.h"
+#include "Math.h"
 #include "PlatformTime.h"
 
 #include <windows.h>
@@ -28,7 +29,7 @@ namespace gpgmm {
             LARGE_INTEGER curTime;
             const bool success = QueryPerformanceCounter(&curTime);
             ASSERT(success);
-            return static_cast<double>(curTime.QuadPart) / GetFrequency();
+            return SafeDivison(static_cast<double>(curTime.QuadPart), GetFrequency());
         }
 
         void StartElapsedTime() override {
@@ -42,7 +43,8 @@ namespace gpgmm {
             LARGE_INTEGER endCount;
             const bool success = QueryPerformanceCounter(&endCount);
             ASSERT(success);
-            return static_cast<double>(endCount.QuadPart - mCounterStart) / GetFrequency();
+            return SafeDivison(static_cast<double>(endCount.QuadPart - mCounterStart),
+                               GetFrequency());
         }
 
       private:

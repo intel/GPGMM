@@ -57,6 +57,9 @@ namespace gpgmm {
 
     uint64_t RoundUp(uint64_t n, uint64_t m);
 
+    // Evaluates a/b, avoiding division by zero.
+    double SafeDivison(double a, double b);
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_UTILS_MATH_H_
