@@ -157,6 +157,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function pointer to Vulkan functions. </p>
+<p >There are 3 ways to specify Vulkan functions.</p><ol type="1">
+<li>Specify <code>gpgmm_vk_static_functions = true</code> and statically link agaisn't the Vulkan loader provided by GPGMM.</li>
+<li>Load Vulkan functions dynamically by specifying <code>gpgmm_vk_static_functions = false</code> and ONLY provide the instance and device functions, <code>vkGetInstanceProcAddr</code> and <code>vkGetDeviceProcAddr</code>. GPGMM will use those to load the remaining.</li>
+<li>Specify ALL the Vulkan functions. GPGMM will not import or load Vulkan function itself. </li>
+</ol>
 
 </div>
 </div>

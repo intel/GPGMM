@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['importdevicefunctions_0',['ImportDeviceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a7936545640a1bfc80fd9c6940e2fee71',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions *vulkanFunctions)'],['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a82cfd79b7e97bb7726803018a52c5eaa',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions()']]],
+  ['importdevicefunctions_0',['ImportDeviceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a690aae65c9bfaef6895102b55919b353',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions *vkFunctions)'],['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a82cfd79b7e97bb7726803018a52c5eaa',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions()']]],
   ['indexedmemorypool_1',['IndexedMemoryPool',['../classgpgmm_1_1_indexed_memory_pool.html#a7577a2f813c6bde712e44538dcd3ebb7',1,'gpgmm::IndexedMemoryPool']]],
   ['infoevent_2',['InfoEvent',['../namespacegpgmm.html#a5422417ab2bf7c989cb1fe4d7e6195e1',1,'gpgmm']]],
   ['infolog_3',['InfoLog',['../namespacegpgmm.html#a7f25eabd0f8ed59604dd40a11cc1db80',1,'gpgmm']]],
