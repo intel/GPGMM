@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/gpgmm/d3d12/ResourceHeapAllocatorD3D12.cpp File Reference</title>
+<title>GPGMM: gpgmm::d3d12::UniqueComPtrDeleter Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,31 +62,57 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_49ad6bb14657c2c853ecddefe4ca34c9.html">gpgmm</a></li><li class="navelem"><a class="el" href="dir_9ddf51c53703df3f242fe07784aa6a7e.html">d3d12</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacegpgmm.html">gpgmm</a></li><li class="navelem"><a class="el" href="namespacegpgmm_1_1d3d12.html">d3d12</a></li><li class="navelem"><a class="el" href="structgpgmm_1_1d3d12_1_1_unique_com_ptr_deleter.html">UniqueComPtrDeleter</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">ResourceHeapAllocatorD3D12.cpp File Reference</div></div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structgpgmm_1_1d3d12_1_1_unique_com_ptr_deleter-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">gpgmm::d3d12::UniqueComPtrDeleter Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_resource_heap_allocator_d3_d12_8h.html">gpgmm/d3d12/ResourceHeapAllocatorD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_debug_8h.html">gpgmm/common/Debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_backend_d3_d12_8h.html">gpgmm/d3d12/BackendD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_heap_d3_d12_8h.html">gpgmm/d3d12/HeapD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_residency_manager_d3_d12_8h.html">gpgmm/d3d12/ResidencyManagerD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_utils_d3_d12_8h.html">gpgmm/d3d12/UtilsD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_limits_8h.html">gpgmm/utils/Limits.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_math_8h.html">gpgmm/utils/Math.h</a>&quot;</code><br />
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacegpgmm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html">gpgmm</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+
+<p><code>#include &lt;UtilsD3D12.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a146aa8ae2ce961fc065f016504f8635c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a146aa8ae2ce961fc065f016504f8635c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_unique_com_ptr_deleter.html#a146aa8ae2ce961fc065f016504f8635c">operator()</a> (T *<a class="el" href="structgpgmm_1_1d3d12_1_1_unique_com_ptr.html">UniqueComPtr</a>) const</td></tr>
+<tr class="separator:a146aa8ae2ce961fc065f016504f8635c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a146aa8ae2ce961fc065f016504f8635c" name="a146aa8ae2ce961fc065f016504f8635c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a146aa8ae2ce961fc065f016504f8635c">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gpgmm::d3d12::UniqueComPtrDeleter::operator() </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>UniqueComPtr</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/gpgmm/d3d12/<a class="el" href="_utils_d3_d12_8h.html">UtilsD3D12.h</a></li>
+</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
