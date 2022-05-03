@@ -119,10 +119,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html">ResourceHeapAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_unique_com_ptr.html">UniqueComPtr</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_unique_com_ptr_deleter.html">UniqueComPtrDeleter</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -146,7 +142,6 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
 , <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7">ALLOCATOR_CHECK_DEVICE_LEAKS</a> = 0x16
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -355,8 +350,6 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663" name="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Tell GPGMM to allocate exactly what is needed, and to de-allocate memory immediately once no longer needed (instead of re-using it). </p>
 <p >This is very slow and not recommended for general use but may be useful for running with the minimal possible GPU memory footprint or debugging OOM failures. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a54fe186a5a8e0510e6541286848bcee7"></a>ALLOCATOR_CHECK_DEVICE_LEAKS&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1_flags.html">Flags</a> no longer used and will soon be depreciated. </p>
 </td></tr>
 </table>
 
