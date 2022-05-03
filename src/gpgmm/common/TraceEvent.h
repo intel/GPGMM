@@ -124,7 +124,8 @@ namespace gpgmm {
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
                            bool skipObjectEvents,
-                           bool skipInstantEvents);
+                           bool skipInstantEvents,
+                           bool skipCounterEvents);
 
     void ShutdownEventTrace();
 

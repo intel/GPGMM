@@ -33,7 +33,8 @@ namespace gpgmm {
         void SetConfiguration(const std::string& traceFile,
                               bool skipDurationEvents,
                               bool skipObjectEvents,
-                              bool skipInstantEvents);
+                              bool skipInstantEvents,
+                              bool skipCounterEvents);
 
         ~EventTraceWriter();
 
@@ -59,6 +60,7 @@ namespace gpgmm {
         bool mSkipDurationEvents = false;
         bool mSkipObjectEvents = false;
         bool mSkipInstantEvents = false;
+        bool mSkipCounterEvents = false;
     };
 
 }  // namespace gpgmm

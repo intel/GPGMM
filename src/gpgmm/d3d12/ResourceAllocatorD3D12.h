@@ -125,18 +125,16 @@ namespace gpgmm { namespace d3d12 {
          */
         ALLOCATOR_RECORD_FLAG_API_TIMINGS = 0x4,
 
+        /** \brief Record metrics made to GPGMM API calls.
+         */
+        ALLOCATOR_RECORD_FLAG_COUNTERS = 0x8,
+
         /** \brief Record events required for playback.
 
          Bitwise OR'd combination of ALLOCATOR_RECORD_FLAG_API_OBJECTS and
          ALLOCATOR_RECORD_FLAG_API_CALLS.
          */
         ALLOCATOR_RECORD_FLAG_CAPTURE = 0x3,
-
-        /** \brief Record events required for profiling.
-
-         Aliases or equal to ALLOCATOR_RECORD_FLAG_API_TIMINGS.
-         */
-        ALLOCATOR_RECORD_FLAG_PROFILE = 0x4,
 
         /** \brief Record everything.
          */
