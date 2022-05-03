@@ -37,3 +37,14 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     ASSERT_NE(resourceAllocator, nullptr);
     EXPECT_NE(residencyManager, nullptr);
 }
+
+TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
+    GPGMM_TEST_MEMORY_LEAK_START();
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator,
+                                           &residencyManager);
+    }
+    GPGMM_TEST_MEMORY_LEAK_END();
+}
