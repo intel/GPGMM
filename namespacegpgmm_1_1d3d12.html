@@ -342,8 +342,8 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable reuse of resource memory. </p>
 <pre class="fragment">Should only be used for debugging and testing purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resources are always within the resource budget at creation time. </p>
-<pre class="fragment">Mostly used to debug with residency being over committed.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resource memory is always created within budget. </p>
+<pre class="fragment">By default or when the flag is not used, create resource may fail when over-budget.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
 <pre class="fragment">Should be only used for debugging and testing purposes.
