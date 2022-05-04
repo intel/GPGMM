@@ -73,31 +73,22 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a set of heaps which are referenced by a command list.  
- <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#details">More...</a></p>
-
 <p><code>#include &lt;ResidencySetD3D12.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5823a2c0714a57e609a6a6ee70cb26b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#aa5823a2c0714a57e609a6a6ee70cb26b">ResidencySet</a> ()=default</td></tr>
-<tr class="memdesc:aa5823a2c0714a57e609a6a6ee70cb26b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency set or collection of heaps to manage together for residency.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#aa5823a2c0714a57e609a6a6ee70cb26b">More...</a><br /></td></tr>
 <tr class="separator:aa5823a2c0714a57e609a6a6ee70cb26b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93367e45e0a98bcc750702d7d309fcf9"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#a93367e45e0a98bcc750702d7d309fcf9">Insert</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *heap)</td></tr>
-<tr class="memdesc:a93367e45e0a98bcc750702d7d309fcf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert heap into this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#a93367e45e0a98bcc750702d7d309fcf9">More...</a><br /></td></tr>
 <tr class="separator:a93367e45e0a98bcc750702d7d309fcf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9665c21bb3548db1593a64c6ec33f60e"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#a9665c21bb3548db1593a64c6ec33f60e">Reset</a> ()</td></tr>
-<tr class="memdesc:a9665c21bb3548db1593a64c6ec33f60e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#a9665c21bb3548db1593a64c6ec33f60e">More...</a><br /></td></tr>
 <tr class="separator:a9665c21bb3548db1593a64c6ec33f60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcddba2f1c3f4432e5ac63ae8b6f1c8a"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> * &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#afcddba2f1c3f4432e5ac63ae8b6f1c8a">begin</a> () const</td></tr>
 <tr class="separator:afcddba2f1c3f4432e5ac63ae8b6f1c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab468071c2752d9f82d9e08c73910f7ba"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> * &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#ab468071c2752d9f82d9e08c73910f7ba">end</a> () const</td></tr>
 <tr class="separator:ab468071c2752d9f82d9e08c73910f7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Represents a set of heaps which are referenced by a command list. </p>
-<p >The set must be updated to ensure each heap is made resident for execution. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa5823a2c0714a57e609a6a6ee70cb26b" name="aa5823a2c0714a57e609a6a6ee70cb26b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5823a2c0714a57e609a6a6ee70cb26b">&#9670;&nbsp;</a></span>ResidencySet()</h2>
 
@@ -120,8 +111,6 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Create a residency set or collection of heaps to manage together for residency. </p>
 
 </div>
 </div>
@@ -176,15 +165,6 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Insert heap into this residency set. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">heap</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> about to be inserted. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>S_OK if heap was inserted or S_FALSE if heap already exists, else error. </dd></dl>
-
 </div>
 </div>
 <a id="a9665c21bb3548db1593a64c6ec33f60e" name="a9665c21bb3548db1593a64c6ec33f60e"></a>
@@ -201,9 +181,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Reset this residency set. </p>
-<p >Removes all heaps in the set so the set can be re-used. </p>
 
 </div>
 </div>
