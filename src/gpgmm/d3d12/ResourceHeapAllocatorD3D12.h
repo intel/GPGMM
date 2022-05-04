@@ -42,6 +42,8 @@ namespace gpgmm { namespace d3d12 {
                                                             bool prefetchMemory) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
+        const char* GetTypename() const override;
+
       private:
         ResidencyManager* const mResidencyManager;
         ID3D12Device* const mDevice;
