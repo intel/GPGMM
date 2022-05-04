@@ -40,7 +40,7 @@ var searchData=
   ['memorypool_2ecpp_37',['MemoryPool.cpp',['../_memory_pool_8cpp.html',1,'']]],
   ['memorypool_2eh_38',['MemoryPool.h',['../_memory_pool_8h.html',1,'']]],
   ['memorysegment_39',['MemorySegment',['../classgpgmm_1_1_memory_segment.html',1,'gpgmm::MemorySegment'],['../classgpgmm_1_1_memory_segment.html#a05d007f566bf07bee0e195552fdb5d84',1,'gpgmm::MemorySegment::MemorySegment()']]],
-  ['memorysegmentgroup_40',['MemorySegmentGroup',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a5c1090e9c6054f765fe04e5f0ab27635',1,'gpgmm::d3d12::HEAP_INFO']]],
+  ['memorysegmentgroup_40',['MemorySegmentGroup',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a5c1090e9c6054f765fe04e5f0ab27635',1,'gpgmm::d3d12::HEAP_INFO::MemorySegmentGroup()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc',1,'gpgmm::d3d12::HEAP_DESC::MemorySegmentGroup()']]],
   ['memorysize_41',['MemorySize',['../classgpgmm_1_1_memory_size.html',1,'gpgmm']]],
   ['memorysize_2eh_42',['MemorySize.h',['../_memory_size_8h.html',1,'']]],
   ['memorytype_43',['MemoryType',['../structgpgmm_1_1d3d12_1_1_backend_trait.html#a4a5d68651af61034ea822a19e5af629a',1,'gpgmm::d3d12::BackendTrait::MemoryType()'],['../structgpgmm_1_1vk_1_1_backend_trait.html#ae3216c16e93d879b94b4909b00f51fb2',1,'gpgmm::vk::BackendTrait::MemoryType()']]],
