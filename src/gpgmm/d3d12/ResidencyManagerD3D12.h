@@ -163,7 +163,7 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT EvictInternal(uint64_t evictSizeInBytes,
                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                              uint64_t* sizeEvictedOut = nullptr);
+                              uint64_t* evictedSizeInBytesOut = nullptr);
 
         HRESULT InsertHeapInternal(Heap* heap);
 
