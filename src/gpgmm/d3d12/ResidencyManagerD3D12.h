@@ -189,6 +189,9 @@ namespace gpgmm { namespace d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const;
 
+        // Query and set the video memory limits for all segments.
+        HRESULT UpdateVideoMemorySegments();
+
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device3> mDevice3;
@@ -198,6 +201,7 @@ namespace gpgmm { namespace d3d12 {
         const float mVideoMemoryBudget;
         const uint64_t mBudget;
         const uint64_t mEvictLimit;
+        const bool mIsUMA;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
