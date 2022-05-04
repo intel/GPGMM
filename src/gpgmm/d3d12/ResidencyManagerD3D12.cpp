@@ -46,19 +46,8 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, std::move(residencyFence)));
 
-        // Query and set the video memory limits per segment.
-        DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
-            residencyManager->GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
-
-        ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL,
-                                                              queryVideoMemoryInfo));
-        if (!descriptor.IsUMA) {
-            queryVideoMemoryInfo =
-                residencyManager->GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
-
-            ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(
-                DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, queryVideoMemoryInfo));
-        }
+        // Set the initial video memory limits per segment.
+        ReturnIfFailed(residencyManager->UpdateVideoMemorySegments());
 
         *residencyManagerOut = residencyManager.release();
 
@@ -73,7 +62,8 @@ namespace gpgmm { namespace d3d12 {
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
           mBudget(descriptor.Budget),
-          mEvictLimit(descriptor.EvictLimit == 0 ? kDefaultEvictLimit : descriptor.EvictLimit) {
+          mEvictLimit(descriptor.EvictLimit == 0 ? kDefaultEvictLimit : descriptor.EvictLimit),
+          mIsUMA(descriptor.IsUMA) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -290,6 +280,19 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
+    HRESULT ResidencyManager::UpdateVideoMemorySegments() {
+        DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
+            GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+
+        ReturnIfFailed(QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, queryVideoMemoryInfo));
+        if (!mIsUMA) {
+            queryVideoMemoryInfo = GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+            ReturnIfFailed(
+                QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, queryVideoMemoryInfo));
+        }
+        return S_OK;
+    }
+
     HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
                                     const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         std::lock_guard<std::mutex> lock(mMutex);
@@ -382,6 +385,11 @@ namespace gpgmm { namespace d3d12 {
         // TODO: support multiple command lists.
         if (count > 1) {
             return E_NOTIMPL;
+        }
+
+        // Ensure changes to video memory budget is recorded during tracing.
+        if (IsEventTraceEnabled()) {
+            ReturnIfFailed(UpdateVideoMemorySegments());
         }
 
         ID3D12CommandList* commandList = commandLists[0];
