@@ -92,8 +92,8 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--force-standalone", argv[i]) == 0) {
-            mParams.IsStandaloneOnly = true;
+        if (strcmp("--disable-suballocation", argv[i]) == 0) {
+            mParams.DisableSuballocation = true;
             continue;
         }
 
@@ -102,35 +102,35 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--regenerate", argv[i]) == 0) {
-            mParams.IsRegenerate = true;
+        if (strcmp("--capture", argv[i]) == 0) {
+            mParams.IsCaptureEnabled = true;
             continue;
         }
 
-        if (strcmp("--check-caps", argv[i]) == 0) {
-            mParams.IsCapturedCapsCompat = true;
+        if (strcmp("--same-caps", argv[i]) == 0) {
+            mParams.IsSameCapsRequired = true;
             continue;
         }
 
-        constexpr const char kRecordLevel[] = "--record-level";
-        arglen = sizeof(kRecordLevel) - 1;
-        if (strncmp(argv[i], kRecordLevel, arglen) == 0) {
+        constexpr const char kEventMessageLevel[] = "--event-message-level";
+        arglen = sizeof(kEventMessageLevel) - 1;
+        if (strncmp(argv[i], kEventMessageLevel, arglen) == 0) {
             const char* level = argv[i] + arglen;
             if (level[0] != '\0') {
                 if (strcmp(level, "=DEBUG") == 0) {
-                    mParams.RecordLevel = gpgmm::LogSeverity::Debug;
+                    mParams.EventMessageLevel = gpgmm::LogSeverity::Debug;
                 } else if (strcmp(level, "=INFO") == 0) {
-                    mParams.RecordLevel = gpgmm::LogSeverity::Info;
+                    mParams.EventMessageLevel = gpgmm::LogSeverity::Info;
                 } else if (strcmp(level, "=WARN") == 0) {
-                    mParams.RecordLevel = gpgmm::LogSeverity::Warning;
+                    mParams.EventMessageLevel = gpgmm::LogSeverity::Warning;
                 } else if (strcmp(level, "=ERROR") == 0) {
-                    mParams.RecordLevel = gpgmm::LogSeverity::Error;
+                    mParams.EventMessageLevel = gpgmm::LogSeverity::Error;
                 } else {
-                    gpgmm::ErrorLog() << "Invalid record log level " << level;
+                    gpgmm::ErrorLog() << "Invalid event message level " << level;
                     UNREACHABLE();
                 }
             } else {
-                mParams.RecordLevel = gpgmm::LogSeverity::Info;
+                mParams.EventMessageLevel = gpgmm::LogSeverity::Info;
             }
             continue;
         }
@@ -189,17 +189,17 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << "Playback options:"
                 << " [--iterations=X]\n"
                 << " --iterations: Number of times to run playback.\n"
-                << " --record-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                   "level to record events.\n"
+                << " --event-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                   "level for event messages.\n"
                 << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                    "level for log messages.\n"
-                << " --regenerate: Capture again upon playback.\n"
+                << " --capture: Capture upon playback.\n"
                 << " --playback-file: Path to captured file to playback.\n"
-                << " --caps-compatible: Captured caps must be compatible with playback device.\n";
+                << " --same-caps: Captured device must be compatible with playback device.\n";
 
             gpgmm::InfoLog()
                 << "Experiment options:"
-                << " --force-standalone: Disable memory reuse by sub-allocation.\n"
+                << " --disable-suballocation: Disable memory reuse by sub-allocation.\n"
                 << " --never-allocate: Disable creating backend memory.\n"
                 << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocator profile.\n";
             continue;
@@ -225,16 +225,17 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Regenerate on playback: " << (mParams.IsRegenerate ? "true" : "false")
+                     << "Capture on playback: " << (mParams.IsCaptureEnabled ? "true" : "false")
                      << "\n"
-                     << "Record level: " << LogSeverityToString(mParams.RecordLevel) << "\n"
+                     << "Event level: " << LogSeverityToString(mParams.EventMessageLevel) << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
-                     << "Check caps: " << (mParams.IsCapturedCapsCompat ? "true" : "false") << "\n";
+                     << "Require same device caps: "
+                     << (mParams.IsSameCapsRequired ? "true" : "false") << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"
-                     << "Force standalone: " << (mParams.IsStandaloneOnly ? "true" : "false")
-                     << "\n"
+                     << "Disable sub-allocation: "
+                     << (mParams.DisableSuballocation ? "true" : "false") << "\n"
                      << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n"
                      << "Profile: " << AllocatorProfileToString(mParams.AllocatorProfile) << "\n";
 }
@@ -277,32 +278,26 @@ const TestEnviromentParams& GPGMMCaptureReplayTestEnvironment::GetParams() const
 CaptureReplayTestWithParams::CaptureReplayTestWithParams()
     : mPlatformTime(gpgmm::CreatePlatformTime()) {
 }
-void CaptureReplayTestWithParams::RunSingleTest(bool forceRegenerate,
-                                                bool forceIsCapturedCapsCompat,
-                                                bool forcePrefetchMemory) {
-    return RunTestLoop(forceRegenerate, forceIsCapturedCapsCompat, /*forceSingleIteration*/ true,
-                       forcePrefetchMemory);
+void CaptureReplayTestWithParams::RunSingleTest(const TestEnviromentParams& forceParams) {
+    return RunTestLoop(forceParams);
 }
 
-void CaptureReplayTestWithParams::RunTestLoop(bool forceRegenerate,
-                                              bool forceIsCapturedCapsCompat,
-                                              bool forceSingleIteration,
-                                              bool forcePrefetchMemory) {
+void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceParams) {
     TestEnviromentParams envParams = gTestEnv->GetParams();
-    if (forceRegenerate) {
-        envParams.IsRegenerate = true;
+    if (forceParams.IsCaptureEnabled != envParams.IsCaptureEnabled) {
+        envParams.IsCaptureEnabled = forceParams.IsCaptureEnabled;
     }
 
-    if (forceIsCapturedCapsCompat) {
-        envParams.IsCapturedCapsCompat = true;
+    if (forceParams.IsSameCapsRequired != envParams.IsSameCapsRequired) {
+        envParams.IsSameCapsRequired = forceParams.IsSameCapsRequired;
     }
 
-    if (forceSingleIteration) {
-        envParams.Iterations = 1;
+    if (forceParams.Iterations != envParams.Iterations) {
+        envParams.Iterations = forceParams.Iterations;
     }
 
-    if (forcePrefetchMemory) {
-        envParams.PrefetchMemory = true;
+    if (forceParams.PrefetchMemory != envParams.PrefetchMemory) {
+        envParams.PrefetchMemory = forceParams.PrefetchMemory;
     }
 
     for (uint32_t i = 0; i < envParams.Iterations; i++) {

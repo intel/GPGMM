@@ -45,20 +45,20 @@ struct CaptureReplayMemoryStats {
 };
 
 enum class AllocatorProfile {
-    ALLOCATOR_PROFILE_MAX_PERFORMANCE,  // Optimize performance over memory usage.
-    ALLOCATOR_PROFILE_LOW_MEMORY,       // Optimize memory usage over performance.
-    ALLOCATOR_PROFILE_CAPTURED,         // Playback uses captured settings.
-    ALLOCATOR_PROFILE_DEFAULT,          // Placback uses default settings.
+    ALLOCATOR_PROFILE_MAX_PERFORMANCE,  // Higher performance over low memory usage.
+    ALLOCATOR_PROFILE_LOW_MEMORY,       // Low memory usage over higher performance.
+    ALLOCATOR_PROFILE_CAPTURED,         // Use captured settings.
+    ALLOCATOR_PROFILE_DEFAULT,          // Use default settings.
 };
 
 struct TestEnviromentParams {
     uint64_t Iterations = 1;                                 // Number of test iterations to run.
-    bool IsRegenerate = false;                               // Should the allocator record.
+    bool IsCaptureEnabled = false;                           // Should the allocator record.
     gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
-    gpgmm::LogSeverity RecordLevel = gpgmm::LogSeverity::Debug;  // Level of recording.
-    bool IsCapturedCapsCompat = false;  // Caps of test device must match capture caps.
+    gpgmm::LogSeverity EventMessageLevel = gpgmm::LogSeverity::Debug;  // Level of recording.
+    bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
 
-    bool IsStandaloneOnly = false;
+    bool DisableSuballocation = false;
     bool IsNeverAllocate = false;
     bool PrefetchMemory = false;
 
@@ -101,14 +101,8 @@ class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
         return sanitizedTraceFileName;
     }
 
-    void RunTestLoop(bool forceRegenerate,
-                     bool forceIsCapturedCapsCompat,
-                     bool forceSingleIteration,
-                     bool forcePrefetchMemory);
-
-    void RunSingleTest(bool forceRegenerate,
-                       bool forceIsCapturedCapsCompat,
-                       bool forcePrefetchMemory);
+    void RunTestLoop(const TestEnviromentParams& forceParams);
+    void RunSingleTest(const TestEnviromentParams& forceParams);
 
   protected:
     virtual void RunTest(const TraceFile& traceFile,
