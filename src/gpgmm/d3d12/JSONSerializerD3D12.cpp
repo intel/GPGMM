@@ -175,7 +175,7 @@ namespace gpgmm { namespace d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const D3D12_HEAP_PROPERTIES& desc) {
         JSONDict dict;
-        dict.AddItem("SizeInBytes", desc.Type);
+        dict.AddItem("Type", desc.Type);
         dict.AddItem("CPUPageProperty", desc.CPUPageProperty);
         dict.AddItem("MemoryPoolPreference", desc.MemoryPoolPreference);
         dict.AddItem("CreationNodeMask", desc.CreationNodeMask);
