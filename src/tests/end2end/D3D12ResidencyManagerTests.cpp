@@ -29,6 +29,30 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 };
 
+TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
+                                                        &resourceAllocator, nullptr));
+
+    ComPtr<ResourceAllocation> allocation;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+    // Inserting a non-existant heap should always fail
+    {
+        ResidencySet set;
+        Heap* invalid = nullptr;
+        ASSERT_FAILED(set.Insert(invalid));
+    }
+
+    // Inserting from a valid allocation should always succeed.
+    {
+        ResidencySet set;
+        ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
+        ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
+    }
+}
+
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     ComPtr<ResidencyManager> residencyManager;
     ComPtr<ResourceAllocator> resourceAllocator;
