@@ -114,4 +114,8 @@ namespace gpgmm { namespace d3d12 {
         SafeRelease(allocation);
     }
 
+    const char* ResourceHeapAllocator::GetTypename() const {
+        return "ResourceHeapAllocator";
+    }
+
 }}  // namespace gpgmm::d3d12

@@ -35,7 +35,7 @@ namespace gpgmm {
     }
 
     const char* MemoryPool::GetTypename() const {
-        return "GPUMemoryPool";
+        return "MemoryPool";
     }
 
 }  // namespace gpgmm
