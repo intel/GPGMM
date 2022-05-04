@@ -216,11 +216,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         RESOURCE_ALLOCATION_INFO allocationDesc = {};
                         allocationDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
-                        allocationDesc.HeapOffset = snapshot["HeapOffset"].asUInt64();
-                        allocationDesc.OffsetFromResource =
-                            snapshot["OffsetFromResource"].asUInt64();
-                        allocationDesc.Method =
-                            static_cast<gpgmm::AllocationMethod>(snapshot["Method"].asInt());
 
                         mCapturedAllocationStats.TotalSize += allocationDesc.SizeInBytes;
                         mCapturedAllocationStats.TotalCount++;
@@ -323,15 +318,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 
-                        if (envParams.IsStandaloneOnly) {
+                        if (envParams.DisableSuballocation) {
                             allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
                         }
 
-                        if (envParams.IsRegenerate) {
-                            allocatorDesc.RecordOptions.Flags = ALLOCATOR_RECORD_FLAG_CAPTURE;
+                        if (envParams.IsCaptureEnabled) {
+                            allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
-                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.RecordLevel);
+                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(
+                                    envParams.EventMessageLevel);
 
                             // Keep recording across multiple playback iterations to ensure all
                             // events will be captured instead of overwritten per iteration.
@@ -351,7 +347,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
                                        std::to_string(allocatorDesc.IsUMA) + ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
+                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
                         }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
@@ -364,7 +360,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                        std::to_string(snapshot["ResourceHeapTier"].asInt()) +
                                        " vs " + std::to_string(allocatorDesc.ResourceHeapTier) +
                                        ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsCapturedCapsCompat);
+                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
                         }
 
                         ComPtr<ResourceAllocator> resourceAllocator;
@@ -404,9 +400,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
 
                         HEAP_INFO heapInfo = {};
-                        heapInfo.IsResident = snapshot["IsResident"].asBool();
-                        heapInfo.MemorySegmentGroup = static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
-                            snapshot["MemorySegmentGroup"].asInt());
                         heapInfo.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
                         mCapturedMemoryStats.TotalSize += heapInfo.SizeInBytes;
@@ -450,8 +443,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 };
 
 TEST_P(D3D12EventTraceReplay, AllocationPerf) {
-    RunTestLoop(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ false,
-                /*forceSingleIteration*/ false, /*forcePrefetchMemory*/ true);
+    TestEnviromentParams forceParams = {};
+    forceParams.Iterations = 100;
+    forceParams.PrefetchMemory = true;
+    RunTestLoop(forceParams);
 
     LogCallStats("Allocation(s)", mReplayedAllocateStats);
     LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
@@ -459,21 +454,22 @@ TEST_P(D3D12EventTraceReplay, AllocationPerf) {
 
 // Verify captured does not regress (ie. consume more memory) upon playback.
 TEST_P(D3D12EventTraceReplay, MemoryUsage) {
-    RunSingleTest(/*forceRegenerate*/ false, /*forceIsCapturedCapsCompat*/ true,
-                  /*forcePrefetchMemory*/ false);
+    TestEnviromentParams forceParams = {};
+    forceParams.IsSameCapsRequired = true;
+    RunSingleTest(forceParams);
 
     LogMemoryStats("Allocation", mCapturedAllocationStats);
     LogMemoryStats("Memory", mCapturedMemoryStats);
 
     EXPECT_LE(mReplayedAllocationStats.TotalSize, mCapturedAllocationStats.TotalSize);
     EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
-    EXPECT_EQ(mReplayedAllocationStats.TotalCount, mCapturedAllocationStats.TotalCount);
 }
 
 // Re-generates traces.
 TEST_P(D3D12EventTraceReplay, Regenerate) {
-    RunSingleTest(/*forceRegenerate*/ true, /*forceIsCapturedCapsCompat*/ false,
-                  /*forcePrefetchMemory*/ false);
+    TestEnviromentParams forceParams = {};
+    forceParams.IsCaptureEnabled = true;
+    RunSingleTest(forceParams);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
