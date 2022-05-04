@@ -630,7 +630,7 @@ namespace gpgmm { namespace d3d12 {
         const RESOURCE_ALLOCATOR_INFO info = GetInfo();
         GPGMM_UNUSED(info);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory fragmentation (MB)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MB)",
                        (info.UsedMemoryUsage - info.UsedBlockUsage) / 1e6);
 
         TRACE_COUNTER1(
