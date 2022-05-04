@@ -136,10 +136,6 @@ namespace gpgmm {
                 ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str());
         fflush(outputStream);
 #endif
-
-#if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
-        ASSERT(mSeverity < LogSeverity::Warning);
-#endif
     }
 
     LogMessage DebugLog() {

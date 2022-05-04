@@ -51,11 +51,11 @@ namespace gpgmm { namespace d3d12 {
 
         for (auto allocationEntry : mLiveAllocations) {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
-            gpgmm::WarningLog() << "Live ResourceAllocation: "
-                                << "Addr=" << ToString(allocation) << ", "
-                                << "ExtRef=" << allocation->GetRefCount() << ", "
-                                << "Info="
-                                << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
+            gpgmm::WarnEvent(allocation->GetAllocator()->GetTypename())
+                << "Live ResourceAllocation: "
+                << "Addr=" << ToString(allocation) << ", "
+                << "ExtRef=" << allocation->GetRefCount() << ", "
+                << "Info=" << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
         }
     }
 

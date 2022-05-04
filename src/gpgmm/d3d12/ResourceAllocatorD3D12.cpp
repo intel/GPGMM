@@ -1017,8 +1017,8 @@ namespace gpgmm { namespace d3d12 {
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
                 case D3D12_MESSAGE_ID_LIVE_RESOURCE: {
-                    gpgmm::WarningLog()
-                        << "Device leak detected: " + std::string(message->pDescription);
+                    gpgmm::WarnEvent("Device")
+                        << "Leak detected: " + std::string(message->pDescription);
                 } break;
                 default:
                     break;
