@@ -12,7 +12,7 @@ var searchData=
   ['memoryfragmentationlimit_9',['MemoryFragmentationLimit',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#add08ae68e081a9159ffac3b2dde676d7',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['memorygrowthfactor_10',['MemoryGrowthFactor',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#aacc7ad0f5e83b2fc409ecdb32a9de228',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['memorypool_11',['MemoryPool',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#aec398574984adb9eeb1acb240ee92847',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['memorysegmentgroup_12',['MemorySegmentGroup',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a5c1090e9c6054f765fe04e5f0ab27635',1,'gpgmm::d3d12::HEAP_INFO::MemorySegmentGroup()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc',1,'gpgmm::d3d12::HEAP_DESC::MemorySegmentGroup()']]],
+  ['memorysegmentgroup_12',['MemorySegmentGroup',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a5c1090e9c6054f765fe04e5f0ab27635',1,'gpgmm::d3d12::HEAP_INFO']]],
   ['method_13',['Method',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a6879648986755e30f38d42f68eb6b672',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
   ['minfo_14',['mInfo',['../classgpgmm_1_1_memory_allocator.html#abb48e6e173b0bf1f9114eabd061c999b',1,'gpgmm::MemoryAllocator']]],
   ['minloglevel_15',['MinLogLevel',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a872019b19e521418465f40a3889792b4',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
