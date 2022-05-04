@@ -34,10 +34,14 @@ TEST(MemoryCacheTests, SingleEntry) {
     auto firstEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(firstEntry.Get(), nullptr);
     EXPECT_EQ(firstEntry.Get()->GetRefCount(), 1);
+    EXPECT_EQ(cache.GetStats().NumOfMisses, 1u);
+    EXPECT_EQ(cache.GetStats().NumOfHits, 0u);
 
     auto secondEntry = cache.GetOrCreate(FakeObject{0}, false);
     ASSERT_NE(secondEntry.Get(), nullptr);
     EXPECT_EQ(secondEntry.Get()->GetRefCount(), 2);
+    EXPECT_EQ(cache.GetStats().NumOfMisses, 1u);
+    EXPECT_EQ(cache.GetStats().NumOfHits, 1u);
 
     EXPECT_EQ(firstEntry.Get(), secondEntry.Get());
     EXPECT_EQ(secondEntry.Get()->GetRefCount(), 2);

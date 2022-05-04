@@ -117,8 +117,6 @@ namespace gpgmm {
     };
 
     struct CacheStats {
-        uint64_t AliveCount = 0;
-        uint64_t NewCount = 0;
         uint64_t NumOfHits = 0;
         uint64_t NumOfMisses = 0;
     };
@@ -155,11 +153,9 @@ namespace gpgmm {
             CacheEntryT* entryObj = new CacheEntryT(this, tmp.AcquireValue());
             if (keepAlive) {
                 entryObj->Ref();
-                mStats.AliveCount++;
             }
             const bool success = mCache.insert(entryObj).second;
             ASSERT(success);
-            mStats.NewCount++;
             return ScopedRef<CacheEntryT>(entryObj);
         }
 
