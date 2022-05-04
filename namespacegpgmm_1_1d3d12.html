@@ -157,8 +157,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2">ALLOCATOR_RECORD_FLAG_API_CALLS</a> = 0x2
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95">ALLOCATOR_RECORD_FLAG_API_TIMINGS</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca3738202ef7d628a1a5876f7819d8b310">ALLOCATOR_RECORD_FLAG_COUNTERS</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f">ALLOCATOR_RECORD_FLAG_CAPTURE</a> = 0x3
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f">ALLOCATOR_RECORD_FLAG_CAPTURE</a> = 0x3
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047">ALLOCATOR_RECORD_FLAG_PROFILE</a> = 0x4
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4">ALLOCATOR_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
 <br />
  }</td></tr>
@@ -405,11 +405,12 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95" name="a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95"></a>ALLOCATOR_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca3738202ef7d628a1a5876f7819d8b310" name="a2e37df42bebf066b8cec7189b305682ca3738202ef7d628a1a5876f7819d8b310"></a>ALLOCATOR_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
-</td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f" name="a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f"></a>ALLOCATOR_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
 <pre class="fragment"> Bitwise OR'd combination of ALLOCATOR_RECORD_FLAG_API_OBJECTS and
  ALLOCATOR_RECORD_FLAG_API_CALLS.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047" name="a2e37df42bebf066b8cec7189b305682ca976bada9a285e31c4699fb3ba1a86047"></a>ALLOCATOR_RECORD_FLAG_PROFILE&#160;</td><td class="fielddoc"><p >Record events required for profiling. </p>
+<pre class="fragment"> Aliases or equal to ALLOCATOR_RECORD_FLAG_API_TIMINGS.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4" name="a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4"></a>ALLOCATOR_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
 </td></tr>
