@@ -363,7 +363,8 @@ namespace gpgmm { namespace d3d12 {
                 descriptor.RecordOptions.TraceFile,
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_OBJECTS),
-                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS));
+                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS),
+                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_COUNTERS));
 
             const LogSeverity& recordMessageMinLevel =
                 static_cast<LogSeverity>(newDescriptor.RecordOptions.MinMessageLevel);

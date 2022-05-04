@@ -35,9 +35,10 @@ namespace gpgmm {
     void StartupEventTrace(const std::string& traceFile,
                            bool skipDurationEvents,
                            bool skipObjectEvents,
-                           bool skipInstantEvents) {
+                           bool skipInstantEvents,
+                           bool skipCounterEvents) {
         GetInstance()->SetConfiguration(traceFile, skipDurationEvents, skipObjectEvents,
-                                        skipInstantEvents);
+                                        skipInstantEvents, skipCounterEvents);
         TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
                               "GPGMM_MainThread");
     }

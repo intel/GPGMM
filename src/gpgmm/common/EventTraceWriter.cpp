@@ -35,11 +35,13 @@ namespace gpgmm {
     void EventTraceWriter::SetConfiguration(const std::string& traceFile,
                                             bool skipDurationEvents,
                                             bool skipObjectEvents,
-                                            bool skipInstantEvents) {
+                                            bool skipInstantEvents,
+                                            bool skipCounterEvents) {
         mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
         mSkipDurationEvents = skipDurationEvents;
         mSkipObjectEvents = skipObjectEvents;
         mSkipInstantEvents = skipInstantEvents;
+        mSkipCounterEvents = skipCounterEvents;
     }
 
     EventTraceWriter::~EventTraceWriter() {
@@ -78,6 +80,10 @@ namespace gpgmm {
             }
 
             if (mSkipInstantEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_INSTANT)) {
+                continue;
+            }
+
+            if (mSkipCounterEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_COUNTER)) {
                 continue;
             }
 
