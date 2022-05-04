@@ -30,37 +30,116 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
+    /** \struct HEAP_INFO
+    Additional information about the heap.
+    */
     struct HEAP_INFO {
+        /** \brief The created size of the managed heap, in bytes.
+         */
         uint64_t SizeInBytes;
+
+        /** \brief Check if the heap is resident or not.
+         */
         bool IsResident;
+
+        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
+        non-local).
+        */
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+
+        /** \brief The number of sub-allocations made using this heap.
+
+        A count of 0 means the entire heap is being used.
+        */
         int SubAllocatedRefs;
+
+        /** \brief The pool this heap is assigned to.
+
+        A NULL pool means this heap cannot be recycled by GPGMM.
+        */
         MemoryPool* MemoryPool;
+
+        /** \brief Pointer to ID3D12Heap or NULL, if this heap has none.
+         */
         ID3D12Heap* Heap;
     };
 
-    // This class is used to represent ID3D12Heap allocations, as well as an implicit heap
-    // representing a directly allocated resource, and also serves as a node within
-    // the ResidencyManager's LRU cache. This node is inserted into the LRU-cache when it is first
-    // allocated, and any time it is scheduled to be used by the GPU. This node is removed from the
-    // LRU cache when it is evicted from resident memory due to budget constraints, or when the
-    // pageable allocation is released.
+    /** \struct HEAP_DESC
+    Specifies properties of a managed heap.
+    */
+    struct HEAP_DESC {
+        /** \brief Pageable is ComPtr to the parent interface of ID3D12Resource or ID3D12Heap.
+         */
+        ComPtr<ID3D12Pageable> Pageable;
+
+        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
+        non-local).
+        */
+        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+
+        /** \brief The size of the managed heap, in bytes.
+         */
+        uint64_t SizeInBytes;
+
+        /** \brief Specifies to leave the heap unmanaged by GPGMM.
+
+        External heaps are not supported for residency.
+        */
+        bool IsExternal;
+    };
+
+    /** \brief Heap is used to represent ID3D12Heap allocations, as well as an implicit heap
+    representing a committed resource, and also serves as a node within
+    the ResidencyManager's residency cache. This node is inserted into the cache when it is first
+    created, and any time it is scheduled to be used by the GPU. This node is removed from the
+    cache when it is evicted from video memory due to budget constraints, or when the
+    memory is released.
+    */
     class GPGMM_EXPORT Heap : public MemoryBase, public LinkNode<Heap> {
       public:
+        /** \brief  Create a heap managed by GPGMM.
+
+        Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be tracked for residency
+        purposes. A heap managed by GPGMM represents either a 1) committed resource backed by
+        implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
+
+        @param descriptor A reference to HEAP_DESC structure that describes the heap.
+        @param[out] heapOut Pointer to a memory block that recieves a pointer to the
+        heap.
+        */
+        static HRESULT CreateHeap(const HEAP_DESC& descriptor,
+                                  ResidencyManager* const residencyManager,
+                                  Heap** heapOut);
+
+        // TODO: Make private.
         Heap(ComPtr<ID3D12Pageable> pageable,
              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-             uint64_t size);
+             uint64_t size,
+             bool isExternal = false);
+
         ~Heap();
 
+        /** \brief Get the ID3D12Heap.
+
+        \return Return a pointer to ID3D12Heap or NULL, if this heap has none.
+        */
         ID3D12Heap* GetHeap() const;
 
+        /** \brief Determine if the heap is resident or not.
+
+        \return True if the heap is resident, false if not.
+        */
         bool IsResident() const;
+
+        /** \brief Get information about the heap.
+
+        \return HEAP_INFO with the latest information.
+        */
+        HEAP_INFO GetInfo() const;
 
         // Testing only.
         bool IsInResidencyLRUCache() const;
         bool IsResidencyLocked() const;
-
-        HEAP_INFO GetInfo() const;
 
       private:
         friend ResidencyManager;
@@ -87,6 +166,7 @@ namespace gpgmm { namespace d3d12 {
         uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
         RefCounted mResidencyLock;
+        bool mIsExternal;
     };
 }}  // namespace gpgmm::d3d12
 

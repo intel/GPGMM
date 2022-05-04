@@ -874,9 +874,16 @@ namespace gpgmm { namespace d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties;
         ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
-        Heap* resourceHeap = new Heap(
-            resource, GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type),
-            resourceInfo.SizeInBytes);
+        HEAP_DESC resourceHeapDesc = {};
+        resourceHeapDesc.Pageable = resource;
+        resourceHeapDesc.MemorySegmentGroup =
+            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type);
+        resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
+        resourceHeapDesc.IsExternal = true;
+
+        Heap* resourceHeap = nullptr;
+        ReturnIfFailed(
+            Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr, &resourceHeap));
 
         mInfo.UsedMemoryUsage += resourceInfo.SizeInBytes;
         mInfo.UsedMemoryCount++;
@@ -950,14 +957,15 @@ namespace gpgmm { namespace d3d12 {
             &heapProperties, heapFlags, resourceDescriptor, initialResourceState, clearValue,
             IID_PPV_ARGS(&committedResource)));
 
-        // Since residency is per heap, every committed resource is wrapped in a heap object.
-        Heap* resourceHeap = new Heap(committedResource, memorySegmentGroup, resourceSize);
+        HEAP_DESC resourceHeapDesc = {};
+        resourceHeapDesc.Pageable = committedResource;
+        resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
+        resourceHeapDesc.SizeInBytes = resourceSize;
+        resourceHeapDesc.IsExternal = false;
 
-        // Calling CreateCommittedResource implicitly calls MakeResident on the resource. We must
-        // track this to avoid calling MakeResident a second time.
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->InsertHeap(resourceHeap);
-        }
+        // Since residency is per heap, every committed resource is wrapped in a heap object.
+        Heap* resourceHeap = nullptr;
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(), &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
             *commitedResourceOut = committedResource.Detach();

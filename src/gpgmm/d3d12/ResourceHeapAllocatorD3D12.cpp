@@ -90,12 +90,15 @@ namespace gpgmm { namespace d3d12 {
             return {};
         }
 
-        Heap* resourceHeap = new Heap(std::move(heap), memorySegmentGroup, heapSize);
+        HEAP_DESC resourceHeapDesc = {};
+        resourceHeapDesc.Pageable = std::move(heap);
+        resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
+        resourceHeapDesc.SizeInBytes = heapSize;
+        resourceHeapDesc.IsExternal = false;
 
-        // Calling CreateHeap implicitly calls MakeResident on the new heap. We must track this to
-        // avoid calling MakeResident a second time.
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->InsertHeap(resourceHeap);
+        Heap* resourceHeap = nullptr;
+        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, &resourceHeap))) {
+            return {};
         }
 
         mInfo.UsedMemoryUsage += heapSize;
