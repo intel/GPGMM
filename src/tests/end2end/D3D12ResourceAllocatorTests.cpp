@@ -688,7 +688,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferGetInfo) {
 
         RESOURCE_ALLOCATOR_INFO info = resourceAllocator->GetInfo();
         EXPECT_EQ(info.UsedMemoryCount, 1u);
-        EXPECT_EQ(info.UsedMemoryUsage, kDefaultBufferSize);
+        EXPECT_GE(info.UsedMemoryUsage, info.UsedBlockUsage);
         EXPECT_EQ(info.UsedBlockCount, 1u);
         EXPECT_GE(info.UsedBlockUsage, kBufferSize);
 
@@ -701,7 +701,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferGetInfo) {
 
         info = resourceAllocator->GetInfo();
         EXPECT_GE(info.UsedMemoryCount, 1u);
-        EXPECT_GE(info.UsedMemoryUsage, kDefaultBufferSize);
+        EXPECT_GE(info.UsedMemoryUsage, info.UsedBlockUsage);
         EXPECT_EQ(info.UsedBlockCount, 2u);
         EXPECT_GE(info.UsedBlockUsage, kBufferSize * 2);
     }
