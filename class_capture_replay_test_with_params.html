@@ -91,10 +91,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a611de1caefc57ea91e989aef53950d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a346eed20ce1f203073bcf0732ff4ab2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_capture_replay_test_with_params.html#a346eed20ce1f203073bcf0732ff4ab2a">LogMemoryStats</a> (const std::string &amp;name, const <a class="el" href="struct_capture_replay_memory_stats.html">CaptureReplayMemoryStats</a> &amp;stats) const</td></tr>
 <tr class="separator:a346eed20ce1f203073bcf0732ff4ab2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a8a9d2eadeb5e0849c2e2ec662784df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_capture_replay_test_with_params.html#a9a8a9d2eadeb5e0849c2e2ec662784df">RunTestLoop</a> (const <a class="el" href="struct_test_enviroment_params.html">TestEnviromentParams</a> &amp;forceParams)</td></tr>
-<tr class="separator:a9a8a9d2eadeb5e0849c2e2ec662784df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47923c53c7df83231c5adb2fab79b104"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_capture_replay_test_with_params.html#a47923c53c7df83231c5adb2fab79b104">RunSingleTest</a> (const <a class="el" href="struct_test_enviroment_params.html">TestEnviromentParams</a> &amp;forceParams)</td></tr>
-<tr class="separator:a47923c53c7df83231c5adb2fab79b104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2ff3192d7fd3fd9fbbb55c594c1680"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_capture_replay_test_with_params.html#aed2ff3192d7fd3fd9fbbb55c594c1680">RunTestLoop</a> (bool forceRegenerate, bool forceIsCapturedCapsCompat, bool forceSingleIteration, bool forcePrefetchMemory)</td></tr>
+<tr class="separator:aed2ff3192d7fd3fd9fbbb55c594c1680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a056cff7da2872f59a2e2aca96adbae6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_capture_replay_test_with_params.html#a056cff7da2872f59a2e2aca96adbae6a">RunSingleTest</a> (bool forceRegenerate, bool forceIsCapturedCapsCompat, bool forcePrefetchMemory)</td></tr>
+<tr class="separator:a056cff7da2872f59a2e2aca96adbae6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -215,8 +215,8 @@ template&lt;class ParamType &gt; </div>
 
 </div>
 </div>
-<a id="a47923c53c7df83231c5adb2fab79b104" name="a47923c53c7df83231c5adb2fab79b104"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47923c53c7df83231c5adb2fab79b104">&#9670;&nbsp;</a></span>RunSingleTest()</h2>
+<a id="a056cff7da2872f59a2e2aca96adbae6a" name="a056cff7da2872f59a2e2aca96adbae6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a056cff7da2872f59a2e2aca96adbae6a">&#9670;&nbsp;</a></span>RunSingleTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,9 +224,25 @@ template&lt;class ParamType &gt; </div>
         <tr>
           <td class="memname">void CaptureReplayTestWithParams::RunSingleTest </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct_test_enviroment_params.html">TestEnviromentParams</a> &amp;&#160;</td>
-          <td class="paramname"><em>forceParams</em></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forceRegenerate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forceIsCapturedCapsCompat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forcePrefetchMemory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -277,8 +293,8 @@ template&lt;class ParamType &gt; </div>
 
 </div>
 </div>
-<a id="a9a8a9d2eadeb5e0849c2e2ec662784df" name="a9a8a9d2eadeb5e0849c2e2ec662784df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a8a9d2eadeb5e0849c2e2ec662784df">&#9670;&nbsp;</a></span>RunTestLoop()</h2>
+<a id="aed2ff3192d7fd3fd9fbbb55c594c1680" name="aed2ff3192d7fd3fd9fbbb55c594c1680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed2ff3192d7fd3fd9fbbb55c594c1680">&#9670;&nbsp;</a></span>RunTestLoop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,9 +302,31 @@ template&lt;class ParamType &gt; </div>
         <tr>
           <td class="memname">void CaptureReplayTestWithParams::RunTestLoop </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct_test_enviroment_params.html">TestEnviromentParams</a> &amp;&#160;</td>
-          <td class="paramname"><em>forceParams</em></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forceRegenerate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forceIsCapturedCapsCompat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forceSingleIteration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>forcePrefetchMemory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
