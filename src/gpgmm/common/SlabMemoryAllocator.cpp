@@ -154,19 +154,38 @@ namespace gpgmm {
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, alignment,
                 [&](const auto& block) -> MemoryBase* {
-                    if (pFreeSlab->SlabMemory == nullptr) {
-                        // Resolve the pending pre-fetched allocation.
-                        if (mNextSlabAllocationEvent != nullptr) {
-                            mNextSlabAllocationEvent->Wait();
-                            pFreeSlab->SlabMemory = mNextSlabAllocationEvent->AcquireAllocation();
-                            mNextSlabAllocationEvent.reset();
-                        } else {
-                            GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(
-                                                 slabSize, mSlabAlignment, neverAllocate, cacheSize,
-                                                 /*prefetchMemory*/ false),
-                                             pFreeSlab->SlabMemory);
-                        }
+                    // Re-se existing memory.
+                    if (pFreeSlab->SlabMemory != nullptr) {
+                        return pFreeSlab->SlabMemory->GetMemory();
                     }
+
+                    // Use pre-fetched memory if the size was correct.
+                    // Else, throw it away and create memory instead.
+                    if (mNextSlabAllocationEvent != nullptr) {
+                        // Resolve the pending pre-fetched allocation.
+                        mNextSlabAllocationEvent->Wait();
+                        auto prefetchedMemory = mNextSlabAllocationEvent->AcquireAllocation();
+                        mNextSlabAllocationEvent.reset();
+
+                        // Assign pre-fetched memory to the slab.
+                        if (prefetchedMemory->GetSize() == slabSize) {
+                            pFreeSlab->SlabMemory = std::move(prefetchedMemory);
+                            return pFreeSlab->SlabMemory->GetMemory();
+                        }
+
+                        DebugEvent(GetTypename())
+                            << "Pre-fetch slab memory is incompatible (" << slabSize << " vs  "
+                            << prefetchedMemory->GetSize() << " bytes.";
+
+                        mMemoryAllocator->DeallocateMemory(std::move(prefetchedMemory));
+                    }
+
+                    // Create memory of specified slab size.
+                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(slabSize, mSlabAlignment,
+                                                                         neverAllocate, cacheSize,
+                                                                         /*prefetchMemory*/ false),
+                                     pFreeSlab->SlabMemory);
+
                     return pFreeSlab->SlabMemory->GetMemory();
                 }),
             subAllocation);
@@ -176,28 +195,33 @@ namespace gpgmm {
         // deallocated, does the slab memory be released.
         pFreeSlab->Ref();
 
+        // Remember the last allocated slab size so if a subsequent allocation requests a new slab,
+        // the next slab size will be larger than the previous slab size.
+        mLastUsedSlabSize = slabSize;
+
         // Prefetch memory for future slab.
         //
-        // Algorithm is overly conservative since waiting for the device to return prefetched memory
-        // could block a current allocation from being created until the device is free.
-        //
-        // Prefetch occurs when at-least one slab becomes full and the next slab is half used and
-        // there are at-least two allocations of capacity left to hide the pre-fetch latency.
+        // This check is overly conservative since waiting for the device to retrieve pre-fetched
+        // memory could block the next allocation from being created until the device becomes free.
         //
         // TODO: Measure if the slab allocation time remaining exceeds the prefetch memory task
         // time before deciding to prefetch.
-        //
         if ((prefetchMemory || mPrefetchSlab) && !neverAllocate &&
-            mNextSlabAllocationEvent == nullptr && !cache->FullList.empty() &&
+            mNextSlabAllocationEvent == nullptr &&
             pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
             pFreeSlab->BlockCount >= kSlabPrefetchTotalBlockCount) {
-            mNextSlabAllocationEvent =
-                mMemoryAllocator->TryAllocateMemoryAsync(slabSize, mSlabAlignment);
-        }
+            // If a subsequent TryAllocateMemory() uses a request size different than the current
+            // request size, memory required for the next slab could be the wrong size. If so,
+            // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
+            const uint32_t nextSlabSize = std::min(
+                ComputeSlabSize(requestSize, mLastUsedSlabSize * mSlabGrowthFactor), mMaxSlabSize);
 
-        // Remember the last allocated slab size so if a subsequent allocation requests a new slab,
-        // the new slab size will be slightly larger than the old slab size.
-        mLastUsedSlabSize = slabSize;
+            DebugEvent(GetTypename())
+                << "Requesting prefetched slab: " << nextSlabSize << " bytes.";
+
+            mNextSlabAllocationEvent =
+                mMemoryAllocator->TryAllocateMemoryAsync(nextSlabSize, mSlabAlignment);
+        }
 
         // Wrap the block in the containing slab. Since the slab's block could reside in another
         // allocated block, the slab's allocation offset must be made relative to slab's underlying
