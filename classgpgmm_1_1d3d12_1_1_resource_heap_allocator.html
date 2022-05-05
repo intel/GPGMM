@@ -90,8 +90,8 @@ Inheritance diagram for gpgmm::d3d12::ResourceHeapAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a34c0bb4d3b031af57c973517a6ac5aa1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a34c0bb4d3b031af57c973517a6ac5aa1">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, bool isUMA)</td></tr>
-<tr class="separator:a34c0bb4d3b031af57c973517a6ac5aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a4240cf0134287f2aa0a83021f4368"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a48a4240cf0134287f2aa0a83021f4368">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, bool isUMA, bool isAlwaysInBudget)</td></tr>
+<tr class="separator:a48a4240cf0134287f2aa0a83021f4368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae42895cb0fe11663b8870abf1157f91c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#ae42895cb0fe11663b8870abf1157f91c">~ResourceHeapAllocator</a> () override=default</td></tr>
 <tr class="separator:ae42895cb0fe11663b8870abf1157f91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa31c8d82d1ca8dabed84348e6f2433aa"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#aa31c8d82d1ca8dabed84348e6f2433aa">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory) override</td></tr>
@@ -195,8 +195,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a26ca5b1d959169a8c625c8d686660101 inherit pro_attribs_classgpgmm_1_1_allocator_node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a34c0bb4d3b031af57c973517a6ac5aa1" name="a34c0bb4d3b031af57c973517a6ac5aa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34c0bb4d3b031af57c973517a6ac5aa1">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
+<a id="a48a4240cf0134287f2aa0a83021f4368" name="a48a4240cf0134287f2aa0a83021f4368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48a4240cf0134287f2aa0a83021f4368">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +229,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isUMA</em>&#160;</td>
+          <td class="paramname"><em>isUMA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isAlwaysInBudget</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
