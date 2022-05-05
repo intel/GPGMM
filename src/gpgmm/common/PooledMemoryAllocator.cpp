@@ -38,7 +38,7 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(
                                  requestSize, alignment, neverAllocate, cacheSize, prefetchMemory),
                              allocation);
         } else {
@@ -67,7 +67,7 @@ namespace gpgmm {
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
+        mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory));
     }
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {

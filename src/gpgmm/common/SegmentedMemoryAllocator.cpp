@@ -153,8 +153,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(
-                GetFirstChild()->TryAllocateMemory(requestSize, mMemoryAlignment, neverAllocate,
-                                                   cacheSize, prefetchMemory),
+                GetNextInChain()->TryAllocateMemory(requestSize, mMemoryAlignment, neverAllocate,
+                                                    cacheSize, prefetchMemory),
                 allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
@@ -188,7 +188,7 @@ namespace gpgmm {
         MemoryPool* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
-        pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetFirstChild(), memory));
+        pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory));
     }
 
     void SegmentedMemoryAllocator::ReleaseMemory() {

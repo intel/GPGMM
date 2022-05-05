@@ -81,7 +81,7 @@ namespace gpgmm {
         MemoryAllocator();
 
         // Constructs a MemoryAllocator that owns a single child allocator.
-        explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> child);
+        explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> next);
 
         virtual ~MemoryAllocator() override;
 

@@ -44,8 +44,8 @@ namespace gpgmm {
         MemoryAllocator* GetSecondAllocatorForTesting() const;
 
       private:
-        MemoryAllocator* mFirstAllocator = nullptr;
-        MemoryAllocator* mSecondAllocator = nullptr;
+        std::unique_ptr<MemoryAllocator> mFirstAllocator;
+        std::unique_ptr<MemoryAllocator> mSecondAllocator;
 
         uint64_t mConditionalSize;
     };

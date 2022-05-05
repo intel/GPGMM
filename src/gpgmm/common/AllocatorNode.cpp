@@ -19,27 +19,27 @@
 namespace gpgmm {
 
     template <typename T>
+    AllocatorNode<T>::AllocatorNode(std::unique_ptr<T> next) : LinkNode<T>() {
+        InsertIntoChain(std::move(next));
+    }
+
+    template <typename T>
     AllocatorNode<T>::~AllocatorNode() {
         // Deletes adjacent node recursively (post-order).
-        mChildren.RemoveAndDeleteAll();
+        mNext.RemoveAndDeleteAll();
         if (LinkNode<T>::IsInList()) {
             LinkNode<T>::RemoveFromList();
         }
 
-        ASSERT(!HasChild());
+        ASSERT(mNext.empty());
     }
 
     template <typename T>
-    bool AllocatorNode<T>::HasChild() const {
-        return !mChildren.empty();
-    }
-
-    template <typename T>
-    T* AllocatorNode<T>::GetFirstChild() const {
-        if (mChildren.head() == nullptr) {
+    T* AllocatorNode<T>::GetNextInChain() const {
+        if (mNext.head() == mNext.end()) {
             return nullptr;
         }
-        return mChildren.head()->value();
+        return mNext.head()->value();
     }
 
     template <typename T>
@@ -48,19 +48,12 @@ namespace gpgmm {
     }
 
     template <typename T>
-    T* AllocatorNode<T>::AppendChild(std::unique_ptr<T> obj) {
-        ASSERT(obj != nullptr);
-        obj->mParent = this->value();
-        mChildren.Append(obj.release());
-        return mChildren.tail()->value();
-    }
-
-    template <typename T>
-    std::unique_ptr<T> AllocatorNode<T>::RemoveChild(T* ptr) {
-        ASSERT(ptr != nullptr);
-        ASSERT(ptr->IsInList());
-        ptr->RemoveFromList();
-        return std::unique_ptr<T>(ptr);
+    T* AllocatorNode<T>::InsertIntoChain(std::unique_ptr<T> next) {
+        ASSERT(mNext.empty());
+        ASSERT(next != nullptr);
+        next->mParent = this->value();
+        mNext.Append(next.release());
+        return mNext.tail()->value();
     }
 
     // Explictly instantiate the template to ensure the compiler has the
