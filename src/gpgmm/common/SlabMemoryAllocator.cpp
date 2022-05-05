@@ -346,15 +346,6 @@ namespace gpgmm {
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab memory used (MB)",
-                       (GetFirstChild()->GetInfo().UsedMemoryUsage) / 1e6);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab cache miss-rate (%)",
-                       SafeDivison(mSizeCache.GetStats().NumOfMisses,
-                                   static_cast<double>((mSizeCache.GetStats().NumOfHits +
-                                                        mSizeCache.GetStats().NumOfMisses))) *
-                           100);
-
         return std::make_unique<MemoryAllocation>(
             this, subAllocation->GetMemory(), subAllocation->GetOffset(),
             subAllocation->GetMethod(), subAllocation->GetBlock());
@@ -395,6 +386,15 @@ namespace gpgmm {
         result.FreeMemoryUsage = info.FreeMemoryUsage;
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab memory used (MB)",
+                       (info.UsedMemoryUsage) / 1e6);
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab cache miss-rate (%)",
+                       SafeDivison(mSizeCache.GetStats().NumOfMisses,
+                                   static_cast<double>((mSizeCache.GetStats().NumOfHits +
+                                                        mSizeCache.GetStats().NumOfMisses))) *
+                           100);
 
         return result;
     }

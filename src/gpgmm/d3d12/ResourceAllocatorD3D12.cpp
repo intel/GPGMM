@@ -627,20 +627,9 @@ namespace gpgmm { namespace d3d12 {
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
                        allocationLatency);
 
-        const RESOURCE_ALLOCATOR_INFO info = GetInfo();
-        GPGMM_UNUSED(info);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MB)",
-                       (info.UsedMemoryUsage - info.UsedBlockUsage) / 1e6);
-
-        TRACE_COUNTER1(
-            TraceEventCategory::Default, "GPU memory utilization (%)",
-            SafeDivison(info.UsedMemoryUsage,
-                        static_cast<double>(info.UsedMemoryUsage + info.FreeMemoryUsage)) *
-                100);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory free (MB)",
-                       info.FreeMemoryUsage / 1e6);
+        if (IsEventTraceEnabled()) {
+            GetInfo();
+        }
 
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
@@ -993,6 +982,18 @@ namespace gpgmm { namespace d3d12 {
         for (const auto& allocator : mResourceHeapAllocatorOfType) {
             result += allocator->GetInfo();
         }
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MB)",
+                       (result.UsedMemoryUsage - result.UsedBlockUsage) / 1e6);
+
+        TRACE_COUNTER1(
+            TraceEventCategory::Default, "GPU memory utilization (%)",
+            SafeDivison(result.UsedMemoryUsage,
+                        static_cast<double>(result.UsedMemoryUsage + result.FreeMemoryUsage)) *
+                100);
+
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory free (MB)",
+                       result.FreeMemoryUsage / 1e6);
 
         return result;
     }
