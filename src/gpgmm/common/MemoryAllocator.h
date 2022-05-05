@@ -152,13 +152,13 @@ namespace gpgmm {
             GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(requestSize, alignment), block);
 
             MemoryBase* memory = GetOrCreateMemory(block);
-            if (memory == nullptr) {
+            if (memory == nullptr || (memory->GetSize() - block->Offset < block->Size)) {
                 DebugLog() << std::string(allocator->GetTypename()) +
                                   " failed to sub-allocate memory range = ["
                            << std::to_string(block->Offset) << ", "
                            << std::to_string(block->Offset + block->Size) << "].";
                 allocator->DeallocateBlock(block);
-                return nullptr;
+                return {};
             }
 
             ASSERT(memory != nullptr);
