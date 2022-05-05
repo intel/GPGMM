@@ -134,8 +134,7 @@ namespace gpgmm {
     // fixed-sized slabs.
     class SlabCacheAllocator : public MemoryAllocator {
       public:
-        SlabCacheAllocator(uint64_t minBlockSize,
-                           uint64_t maxSlabSize,
+        SlabCacheAllocator(uint64_t maxSlabSize,
                            uint64_t minSlabSize,
                            uint64_t slabAlignment,
                            double slabFragmentationLimit,
@@ -177,7 +176,6 @@ namespace gpgmm {
             const uint64_t mBlockSize;
         };
 
-        const uint64_t mMinBlockSize;
         const uint64_t mMaxSlabSize;
         const uint64_t mMinSlabSize;
         const uint64_t mSlabAlignment;
