@@ -7,7 +7,7 @@
 
 # GPGMM
 
-GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU application runtimes or middleware libraries that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded Video Memory Manager (VidMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
+GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applications or middleware libraries that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded Video Memory Manager (VidMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
 
 * [Documentation](https://intel.github.io/GPGMM/)
 * [Changelog](https://github.com/intel/GPGMM/releases)
@@ -74,28 +74,28 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 > out/Debug/gpgmm_unittests
 ```
 
-Unit tests check the front-end code in isolation or without using backend GPU.
+Unit tests check the front-end code in isolation or without a backend GPU.
 
 #### Run end2end tests:
 ```sh
 > out/Debug/gpgmm_end2end_tests
 ```
 
-End2End tests check both the front AND backend code using a backend GPU.
+End2End tests check both the front AND backend code with a backend GPU.
 
 #### Run capture replay tests:
 ```sh
 > out/Debug/gpgmm_capture_replay_tests
 ```
 
-Capture replay tests checks using pre-recorded memory patterns using a backend GPU.
+Capture replay tests checks using pre-recorded memory patterns with a backend GPU.
 
 #### Run fuzzing tests:
 ```sh
 > out/Debug/gpgmm_*_fuzzer
 ```
 
-Fuzzer checks using random memory patterns using a backend GPU.
+Fuzzer checks using random memory patterns with a backend GPU.
 
 ## How do I use it?
 
@@ -103,47 +103,48 @@ To allocate, you create an allocator then create allocations from it:
 
 ### D3D12
 ```cpp
-gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {/*fill this out*/};
+gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {/* fill this out */};
 
 ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
 gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator);
 ```
 
 ```cpp
-D3D12_RESOURCE_DESC& resourceDesc = {/* Fill this out */};
-D3D12_RESOURCE_STATES initialState = {/* Fill this out */}
+D3D12_RESOURCE_DESC& resourceDesc = {/* fill this out */};
+D3D12_RESOURCE_STATES initialState = {/* fill this out */}
 
-gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {/*Fill this out*/};
+gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {/* fill this out */};
 
 ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
 allocator->CreateResource(allocationDesc, resourceDesc, initialState, /*pOptimizedClear*/nullptr, &allocation);
 ```
 
 Then to clean-up:
+
 ```cpp
 // Make sure GPU is finished using it
 allocation.Release();
+```
 
+```cpp
 allocator.Release();
 ```
 
 ### Vulkan
 
 ```cpp
-gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {/*Fill this out*/};
+gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {/* fill this out */};
 
 gpgmm::vk::GpResourceAllocator resourceAllocator;
 gpgmm::vk::gpCreateResourceAllocator(allocatorInfo, &resourceAllocator)
 ```
 
 ```cpp
-VkBufferCreateInfo bufferInfo = {};
-bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-bufferInfo.size = kDefaultBufferSize;
-
+VkBufferCreateInfo bufferInfo = {/* fill this out */};
 VkBuffer buffer;
 gpgmm::vk::GpResourceAllocation allocation;
-gpgmm::vk::GpResourceAllocationCreateInfo allocationInfo = {/*Fill this out*/};
+gpgmm::vk::GpResourceAllocationCreateInfo allocationInfo = {/* fill this out */};
+
 gpgmm::vk::gpCreateBuffer(resourceAllocator, &bufferInfo, &buffer, &allocationInfo, &allocation)
 ```
 
@@ -151,13 +152,15 @@ Then to clean-up:
 ```cpp
 // Make sure GPU is finished using it
 gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation);
+```
 
+```cpp
 gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
 
 ## Residency Management
 GPUs do not support page-faulting, so it's up the GPU application to avoid using too much
-physical GPU memory. GPGMM integrates residency directly into allocation to simplify management.
+physical GPU memory. GPGMM integrates residency directly into resource allocation to simplify management.
 
 ### D3D12
 
