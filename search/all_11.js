@@ -36,7 +36,7 @@ var searchData=
   ['resourceallocatorvk_2eh_33',['ResourceAllocatorVk.h',['../_resource_allocator_vk_8h.html',1,'']]],
   ['resourcedescriptor_34',['resourceDescriptor',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#a5be4f11fc109370ade0000671302ef08',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
   ['resourceheap_35',['ResourceHeap',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a0a27d9f41a710fcb33db6c084583d4ca',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
-  ['resourceheapallocator_36',['ResourceHeapAllocator',['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html',1,'gpgmm::d3d12::ResourceHeapAllocator'],['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a48a4240cf0134287f2aa0a83021f4368',1,'gpgmm::d3d12::ResourceHeapAllocator::ResourceHeapAllocator()']]],
+  ['resourceheapallocator_36',['ResourceHeapAllocator',['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html',1,'gpgmm::d3d12::ResourceHeapAllocator'],['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a34c0bb4d3b031af57c973517a6ac5aa1',1,'gpgmm::d3d12::ResourceHeapAllocator::ResourceHeapAllocator()']]],
   ['resourceheapallocatord3d12_2ecpp_37',['ResourceHeapAllocatorD3D12.cpp',['../_resource_heap_allocator_d3_d12_8cpp.html',1,'']]],
   ['resourceheapallocatord3d12_2eh_38',['ResourceHeapAllocatorD3D12.h',['../_resource_heap_allocator_d3_d12_8h.html',1,'']]],
   ['resourceheaptier_39',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
