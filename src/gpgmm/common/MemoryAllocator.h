@@ -156,7 +156,7 @@ namespace gpgmm {
                 DebugLog() << std::string(allocator->GetTypename()) +
                                   " failed to sub-allocate memory range = ["
                            << std::to_string(block->Offset) << ", "
-                           << std::to_string(block->Offset + block->Size) << "].";
+                           << std::to_string(block->Offset + block->Size) << ").";
                 allocator->DeallocateBlock(block);
                 return nullptr;
             }
