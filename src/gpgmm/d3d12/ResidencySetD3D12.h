@@ -24,13 +24,27 @@ namespace gpgmm { namespace d3d12 {
 
     class Heap;
 
-    // Represents a set of heaps which are referenced by a command list.
-    // The set must be updated to ensure each heap is made resident for execution.
+    /** \brief Represents a set of heaps which are referenced by a command list.
+
+    The set must be updated to ensure each heap is made resident for execution.
+    */
     class GPGMM_EXPORT ResidencySet {
       public:
+        /** \brief  Create a residency set or collection of heaps to manage together for residency.
+         */
         ResidencySet() = default;
 
+        /** \brief  Insert heap into this residency set.
+
+        @param heap A pointer to Heap about to be inserted.
+        \return S_OK if heap was inserted or S_FALSE if heap already exists, else error.
+         */
         HRESULT Insert(Heap* heap);
+
+        /** \brief  Reset this residency set.
+
+        Removes all heaps in the set so the set can be re-used.
+        */
         HRESULT Reset();
 
         std::set<Heap*>::iterator begin() const;

@@ -22,7 +22,7 @@ namespace gpgmm { namespace d3d12 {
         if (mSet.insert(heap).second) {
             return S_OK;
         }
-        return E_FAIL;
+        return S_FALSE;
     }
 
     HRESULT ResidencySet::Reset() {
