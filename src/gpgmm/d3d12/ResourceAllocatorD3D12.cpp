@@ -459,7 +459,6 @@ namespace gpgmm { namespace d3d12 {
                 // TODO: Re-enable the buddy allocator?
                 mResourceAllocatorOfType[resourceHeapTypeIndex] = std::make_unique<
                     SlabCacheAllocator>(
-                    /*minBlockSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                     /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
                     /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
                     /*slabAlignment*/ heapAlignment,
@@ -511,7 +510,6 @@ namespace gpgmm { namespace d3d12 {
                 // fragment by definition.
                 mBufferAllocatorOfType[resourceHeapTypeIndex] =
                     std::make_unique<SlabCacheAllocator>(
-                        /*minBlockSize*/ 1,
                         /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,

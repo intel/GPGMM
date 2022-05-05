@@ -311,8 +311,7 @@ namespace gpgmm {
 
     // SlabCacheAllocator
 
-    SlabCacheAllocator::SlabCacheAllocator(uint64_t minBlockSize,
-                                           uint64_t maxSlabSize,
+    SlabCacheAllocator::SlabCacheAllocator(uint64_t maxSlabSize,
                                            uint64_t minSlabSize,
                                            uint64_t slabAlignment,
                                            double slabFragmentationLimit,
@@ -320,7 +319,6 @@ namespace gpgmm {
                                            double slabGrowthFactor,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
         : MemoryAllocator(std::move(memoryAllocator)),
-          mMinBlockSize(minBlockSize),
           mMaxSlabSize(maxSlabSize),
           mMinSlabSize(minSlabSize),
           mSlabAlignment(slabAlignment),
@@ -347,7 +345,7 @@ namespace gpgmm {
 
         GPGMM_CHECK_NONZERO(requestSize);
 
-        const uint64_t blockSize = AlignTo(requestSize, mMinBlockSize);
+        const uint64_t blockSize = AlignTo(requestSize, alignment);
 
         // Create a slab allocator for the new entry.
         auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), cacheSize);
