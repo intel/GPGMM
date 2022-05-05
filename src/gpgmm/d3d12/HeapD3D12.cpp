@@ -16,28 +16,54 @@
 #include "gpgmm/d3d12/HeapD3D12.h"
 
 #include "gpgmm/common/Debug.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
+#include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
+
+    // static
+    HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
+                             ResidencyManager* const residencyManager,
+                             Heap** heapOut) {
+        std::unique_ptr<Heap> heap(new Heap(std::move(descriptor.Pageable),
+                                            descriptor.MemorySegmentGroup, descriptor.SizeInBytes,
+                                            descriptor.IsExternal));
+
+        if (residencyManager != nullptr) {
+            ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
+        }
+
+        *heapOut = heap.release();
+        return S_OK;
+    }
+
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,
                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-               uint64_t size)
+               uint64_t size,
+               bool isExternal)
         : MemoryBase(size),
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(memorySegmentGroup),
-          mResidencyLock(0) {
+          mResidencyLock(0),
+          mIsExternal(isExternal) {
         ASSERT(mPageable != nullptr);
-
-        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
-
-        mPageable->SetName(L"GPGMM managed heap");
+        if (!mIsExternal) {
+            GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
+            mPageable->SetName(L"GPGMM managed heap");
+        }
     }
 
     // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
     // it from the LRU cache. If this heap is not manually removed from the LRU-cache, the
     // ResidencyManager will attempt to use it after it has been deallocated.
     Heap::~Heap() {
+        // Externally created heaps do not support residency.
+        if (mIsExternal) {
+            return;
+        }
+
         if (IsInResidencyLRUCache()) {
             RemoveFromList();
         }
