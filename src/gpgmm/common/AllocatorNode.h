@@ -21,27 +21,24 @@
 
 namespace gpgmm {
 
-    // Stores allocators in a directed-acyclic-graph using an adjacency list representation.
-    // A allocator becomes a linked node where allocations made between the parent and child
-    // allocators form a one-way edge (ie. child sub-allocates parent's allocation). This results in
-    // trivial lifetime management and traversals: child allocators cannot outlive parents and
-    // queries are done through post-order and post-order searches, respectively.
+    // Stores allocators as a doubly-linked list.
+    // A allocator becomes a linked node where allocations made between the parent and the next
+    // allocator form a one-way edge (ie. child sub-allocates parent's allocation). This results in
+    // trivial lifetime management and traversals.
     template <typename T>
     class AllocatorNode : public LinkNode<T> {
       public:
+        AllocatorNode() = default;
+        explicit AllocatorNode(std::unique_ptr<T> next);
         virtual ~AllocatorNode();
 
-      protected:
-        bool HasChild() const;
-        T* GetFirstChild() const;
+        T* GetNextInChain() const;
         T* GetParent() const;
-        T* AppendChild(std::unique_ptr<T> obj);
-        std::unique_ptr<T> RemoveChild(T* ptr);
-
-        // TODO: Make LinkedList iterable to protect.
-        LinkedList<T> mChildren;
 
       private:
+        T* InsertIntoChain(std::unique_ptr<T> next);
+
+        LinkedList<T> mNext;
         T* mParent = nullptr;
     };
 

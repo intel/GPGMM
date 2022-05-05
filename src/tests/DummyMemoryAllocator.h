@@ -23,6 +23,12 @@ namespace gpgmm {
 
     class DummyMemoryAllocator : public MemoryAllocator {
       public:
+        DummyMemoryAllocator() = default;
+
+        explicit DummyMemoryAllocator(std::unique_ptr<MemoryAllocator> next)
+            : MemoryAllocator(std::move(next)) {
+        }
+
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
                                                             uint64_t alignment,
                                                             bool neverAllocate,

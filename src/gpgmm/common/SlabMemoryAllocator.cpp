@@ -331,7 +331,7 @@ namespace gpgmm {
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
                 blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment, mSlabFragmentationLimit,
-                mPrefetchSlab, mSlabGrowthFactor, GetFirstChild());
+                mPrefetchSlab, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
             mSlabAllocators.Append(slabAllocator);
         }
@@ -382,7 +382,7 @@ namespace gpgmm {
         }
 
         // Memory allocator is common across slab allocators.
-        const MEMORY_ALLOCATOR_INFO& info = GetFirstChild()->GetInfo();
+        const MEMORY_ALLOCATOR_INFO& info = GetNextInChain()->GetInfo();
         result.FreeMemoryUsage = info.FreeMemoryUsage;
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
@@ -400,7 +400,7 @@ namespace gpgmm {
     }
 
     uint64_t SlabCacheAllocator::GetMemorySize() const {
-        return GetFirstChild()->GetMemorySize();
+        return GetNextInChain()->GetMemorySize();
     }
 
     const char* SlabCacheAllocator::GetTypename() const {

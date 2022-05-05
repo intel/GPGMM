@@ -23,8 +23,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocator> firstAllocator,
         std::unique_ptr<MemoryAllocator> secondAllocator,
         uint64_t conditionalSize)
-        : mFirstAllocator(AppendChild(std::move(firstAllocator))),
-          mSecondAllocator(AppendChild(std::move(secondAllocator))),
+        : mFirstAllocator(std::move(firstAllocator)),
+          mSecondAllocator(std::move(secondAllocator)),
           mConditionalSize(conditionalSize) {
     }
 
@@ -63,11 +63,11 @@ namespace gpgmm {
     }
 
     MemoryAllocator* ConditionalMemoryAllocator::GetFirstAllocatorForTesting() const {
-        return mFirstAllocator;
+        return mFirstAllocator.get();
     }
 
     MemoryAllocator* ConditionalMemoryAllocator::GetSecondAllocatorForTesting() const {
-        return mSecondAllocator;
+        return mSecondAllocator.get();
     }
 
 }  // namespace gpgmm

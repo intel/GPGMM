@@ -26,6 +26,12 @@ static uint64_t ReleaseMemoryCount = 0;
 
 class TestMemoryAllocator final : public DummyMemoryAllocator {
   public:
+    TestMemoryAllocator() = default;
+
+    explicit TestMemoryAllocator(std::unique_ptr<MemoryAllocator> next)
+        : DummyMemoryAllocator(std::move(next)) {
+    }
+
     ~TestMemoryAllocator() override {
         DestructCount++;
     }
@@ -33,14 +39,6 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
     void ReleaseMemory() override {
         MemoryAllocator::ReleaseMemory();
         ReleaseMemoryCount++;
-    }
-
-    TestMemoryAllocator* AppendChild(std::unique_ptr<TestMemoryAllocator> obj) {
-        return static_cast<TestMemoryAllocator*>(MemoryAllocator::AppendChild(std::move(obj)));
-    }
-
-    bool HasChild() const {
-        return MemoryAllocator::HasChild();
     }
 };
 
@@ -52,13 +50,11 @@ class MemoryAllocatorTests : public testing::Test {
     }
 };
 
-TEST_F(MemoryAllocatorTests, SingleAllocatorNode) {
+TEST_F(MemoryAllocatorTests, SingleAllocator) {
     auto child = std::make_unique<TestMemoryAllocator>();
-    auto parent = std::make_unique<TestMemoryAllocator>();
+    auto parent = std::make_unique<TestMemoryAllocator>(std::move(child));
 
-    parent->AppendChild(std::move(child));
-
-    EXPECT_TRUE(parent->HasChild());
+    EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
     parent->ReleaseMemory();
     EXPECT_EQ(ReleaseMemoryCount, 2u);
@@ -67,35 +63,12 @@ TEST_F(MemoryAllocatorTests, SingleAllocatorNode) {
     EXPECT_EQ(DestructCount, 2u);
 }
 
-TEST_F(MemoryAllocatorTests, MultipleAllocatorNodes) {
-    auto firstChild = std::make_unique<TestMemoryAllocator>();
-    auto secondChild = std::make_unique<TestMemoryAllocator>();
-    auto thirdChild = std::make_unique<TestMemoryAllocator>();
-
-    auto parent = std::make_unique<TestMemoryAllocator>();
-
-    parent->AppendChild(std::move(firstChild));
-    parent->AppendChild(std::move(secondChild));
-    parent->AppendChild(std::move(thirdChild));
-
-    EXPECT_TRUE(parent->HasChild());
-
-    parent->ReleaseMemory();
-    EXPECT_EQ(ReleaseMemoryCount, 4u);
-
-    parent.reset();
-    EXPECT_EQ(DestructCount, 4u);
-}
-
-TEST_F(MemoryAllocatorTests, HieraticalAllocatorNodes) {
+TEST_F(MemoryAllocatorTests, MultipleAllocators) {
     auto grandChild = std::make_unique<TestMemoryAllocator>();
-    auto child = std::make_unique<TestMemoryAllocator>();
-    auto parent = std::make_unique<TestMemoryAllocator>();
+    auto child = std::make_unique<TestMemoryAllocator>(std::move(grandChild));
+    auto parent = std::make_unique<TestMemoryAllocator>(std::move(child));
 
-    child->AppendChild(std::move(grandChild));
-    parent->AppendChild(std::move(child));
-
-    EXPECT_TRUE(parent->HasChild());
+    EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
     parent->ReleaseMemory();
     EXPECT_EQ(ReleaseMemoryCount, 3u);

@@ -29,13 +29,17 @@ TEST(ConditionalMemoryAllocatorTests, Basic) {
         std::unique_ptr<MemoryAllocation> allocation =
             alloc.TryAllocateMemory(4, 1, false, false, false);
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetInfo().UsedMemoryUsage, 4u);
+        ASSERT_NE(allocation, nullptr);
+        alloc.DeallocateMemory(std::move(allocation));
     }
 
     // Equal size allocation uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
             alloc.TryAllocateMemory(16, 1, false, false, false);
-        ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetInfo().UsedMemoryUsage, 20u);
+        ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetInfo().UsedMemoryUsage, 16u);
+        ASSERT_NE(allocation, nullptr);
+        alloc.DeallocateMemory(std::move(allocation));
     }
 
     // Larger allocation uses secondAllocator.
@@ -43,19 +47,25 @@ TEST(ConditionalMemoryAllocatorTests, Basic) {
         std::unique_ptr<MemoryAllocation> allocation =
             alloc.TryAllocateMemory(24, 1, false, false, false);
         ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->GetInfo().UsedMemoryUsage, 24u);
+        ASSERT_NE(allocation, nullptr);
+        alloc.DeallocateMemory(std::move(allocation));
     }
 
     // Smaller allocation again uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
             alloc.TryAllocateMemory(4, 1, false, false, false);
-        ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetInfo().UsedMemoryUsage, 24u);
+        ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetInfo().UsedMemoryUsage, 4u);
+        ASSERT_NE(allocation, nullptr);
+        alloc.DeallocateMemory(std::move(allocation));
     }
 
     // Larger allocation again uses secondAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
             alloc.TryAllocateMemory(24, 1, false, false, false);
-        ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->GetInfo().UsedMemoryUsage, 48u);
+        ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->GetInfo().UsedMemoryUsage, 24u);
+        ASSERT_NE(allocation, nullptr);
+        alloc.DeallocateMemory(std::move(allocation));
     }
 }

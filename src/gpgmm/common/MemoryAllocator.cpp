@@ -67,9 +67,8 @@ namespace gpgmm {
     MemoryAllocator::MemoryAllocator() : mThreadPool(ThreadPool::Create()) {
     }
 
-    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> child)
-        : mThreadPool(ThreadPool::Create()) {
-        AppendChild(std::move(child));
+    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> next)
+        : AllocatorNode(std::move(next)), mThreadPool(ThreadPool::Create()) {
     }
 
     MemoryAllocator::~MemoryAllocator() {
@@ -102,8 +101,8 @@ namespace gpgmm {
 
     void MemoryAllocator::ReleaseMemory() {
         std::lock_guard<std::mutex> lock(mMutex);
-        for (auto alloc = mChildren.head(); alloc != mChildren.end(); alloc = alloc->next()) {
-            alloc->value()->ReleaseMemory();
+        if (GetNextInChain() != nullptr) {
+            GetNextInChain()->ReleaseMemory();
         }
     }
 

@@ -33,8 +33,8 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
         std::unique_ptr<MemoryAllocation> allocation;
-        GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(requestSize, alignment, neverAllocate,
-                                                            cacheSize, prefetchMemory),
+        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(requestSize, alignment, neverAllocate,
+                                                             cacheSize, prefetchMemory),
                          allocation);
 
         mInfo.UsedBlockCount++;
@@ -55,13 +55,13 @@ namespace gpgmm {
         mInfo.UsedBlockUsage -= block->Size;
 
         SafeDelete(block);
-        GetFirstChild()->DeallocateMemory(std::move(allocation));
+        GetNextInChain()->DeallocateMemory(std::move(allocation));
     }
 
     MEMORY_ALLOCATOR_INFO StandaloneMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         MEMORY_ALLOCATOR_INFO result = mInfo;
-        result += GetFirstChild()->GetInfo();
+        result += GetNextInChain()->GetInfo();
         return result;
     }
 

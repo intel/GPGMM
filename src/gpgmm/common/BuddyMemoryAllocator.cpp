@@ -82,7 +82,7 @@ namespace gpgmm {
 
                                  // No existing, allocate new memory for the block.
                                  if (memoryAllocation == nullptr) {
-                                     GPGMM_TRY_ASSIGN(GetFirstChild()->TryAllocateMemory(
+                                     GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(
                                                           mMemorySize, mMemoryAlignment,
                                                           neverAllocate, cacheSize, prefetchMemory),
                                                       memoryAllocation);
@@ -127,7 +127,7 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
-            GetFirstChild()->DeallocateMemory(std::move(memoryAllocation));
+            GetNextInChain()->DeallocateMemory(std::move(memoryAllocation));
         } else {
             mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
         }
@@ -145,7 +145,7 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
 
         MEMORY_ALLOCATOR_INFO result = mInfo;
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetFirstChild()->GetInfo();
+        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetNextInChain()->GetInfo();
         result.UsedMemoryCount = memoryInfo.UsedMemoryCount;
         result.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
         result.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;
