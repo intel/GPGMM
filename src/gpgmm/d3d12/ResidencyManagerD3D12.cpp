@@ -252,28 +252,25 @@ namespace gpgmm { namespace d3d12 {
 
         TRACE_COUNTER1(
             TraceEventCategory::Default,
-            ToString(
-                "GPU memory (",
-                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
-                ") budget (MB)")
+            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                 : "Shared",
+                     " GPU memory budget (MB)")
                 .c_str(),
             pVideoMemoryInfo->Budget / 1e6);
 
         TRACE_COUNTER1(
             TraceEventCategory::Default,
-            ToString(
-                "GPU memory (",
-                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
-                ") usage (MB)")
+            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                 : "Shared",
+                     " GPU memory used (MB)")
                 .c_str(),
             pVideoMemoryInfo->CurrentUsage / 1e6);
 
         TRACE_COUNTER1(
             TraceEventCategory::Default,
-            ToString(
-                "GPU memory (",
-                (memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "NonLocal" : "Local",
-                ") reserved (MB)")
+            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                 : "Shared",
+                     " GPU memory reserved (MB)")
                 .c_str(),
             pVideoMemoryInfo->CurrentReservation / 1e6);
 
