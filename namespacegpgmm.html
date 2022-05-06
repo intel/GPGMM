@@ -147,7 +147,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___s_i_z_e___i_n_f_o.html">MEMORY_SIZE_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a location and range in memory.  <a href="classgpgmm_1_1_memory_allocation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation_event.html">MemoryAllocationEvent</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -395,20 +394,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Represents how memory was allocated. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16" name="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16"></a>kStandalone&#160;</td><td class="fielddoc"><p >Not sub-divided. </p>
-<pre class="fragment">One and only one allocation exists for the memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37" name="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37"></a>kSubAllocated&#160;</td><td class="fielddoc"><p >Sub-divided using one or more allocations. </p>
-<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d" name="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"><p >Sub-divided within a single memory allocation. </p>
-<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3" name="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3"></a>kUndefined&#160;</td><td class="fielddoc"><p >Not yet allocated or invalid. </p>
-<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
-</pre> </td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16" name="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16"></a>kStandalone&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37" name="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37"></a>kSubAllocated&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d" name="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3" name="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3"></a>kUndefined&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
