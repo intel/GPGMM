@@ -15,10 +15,9 @@ var searchData=
   ['buddymemoryallocator_12',['BuddyMemoryAllocator',['../classgpgmm_1_1_buddy_memory_allocator.html#ad422be1ee9807d4e8a9831b832445516',1,'gpgmm::BuddyMemoryAllocator::BuddyMemoryAllocator()'],['../classgpgmm_1_1_buddy_memory_allocator.html',1,'gpgmm::BuddyMemoryAllocator']]],
   ['buddymemoryallocator_2ecpp_13',['BuddyMemoryAllocator.cpp',['../_buddy_memory_allocator_8cpp.html',1,'']]],
   ['buddymemoryallocator_2eh_14',['BuddyMemoryAllocator.h',['../_buddy_memory_allocator_8h.html',1,'']]],
-  ['buddymemoryallocatortests_15',['BuddyMemoryAllocatorTests',['../class_buddy_memory_allocator_tests.html',1,'']]],
-  ['buddymemoryallocatortests_2ecpp_16',['BuddyMemoryAllocatorTests.cpp',['../_buddy_memory_allocator_tests_8cpp.html',1,'']]],
-  ['budget_17',['Budget',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['bufferallocator_18',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8c34f9fa9f3eec264564a3ccf77d2dd9',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
-  ['bufferallocatord3d12_2ecpp_19',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
-  ['bufferallocatord3d12_2eh_20',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
+  ['buddymemoryallocatortests_2ecpp_15',['BuddyMemoryAllocatorTests.cpp',['../_buddy_memory_allocator_tests_8cpp.html',1,'']]],
+  ['budget_16',['Budget',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
+  ['bufferallocator_17',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8408d710774e6aa669afd36eb01e38b7',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
+  ['bufferallocatord3d12_2ecpp_18',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
+  ['bufferallocatord3d12_2eh_19',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
 ];
