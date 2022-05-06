@@ -286,28 +286,6 @@ namespace gpgmm {
         return result;
     }
 
-    uint64_t SlabMemoryAllocator::GetSlabSizeForTesting() const {
-        std::lock_guard<std::mutex> lock(mMutex);
-
-        uint64_t slabMemoryCount = 0;
-        for (const SlabCache& cache : mCaches) {
-            for (auto* node = cache.FreeList.head(); node != cache.FreeList.end();
-                 node = node->next()) {
-                if (node->value()->SlabMemory != nullptr) {
-                    slabMemoryCount++;
-                }
-            }
-
-            for (auto* node = cache.FullList.head(); node != cache.FullList.end();
-                 node = node->next()) {
-                if (node->value()->SlabMemory != nullptr) {
-                    slabMemoryCount++;
-                }
-            }
-        }
-        return slabMemoryCount;
-    }
-
     // SlabCacheAllocator
 
     SlabCacheAllocator::SlabCacheAllocator(uint64_t maxSlabSize,
@@ -426,18 +404,6 @@ namespace gpgmm {
 
     const char* SlabCacheAllocator::GetTypename() const {
         return "SlabCacheAllocator";
-    }
-
-    uint64_t SlabCacheAllocator::GetSlabCacheSizeForTesting() const {
-        std::lock_guard<std::mutex> lock(mMutex);
-
-        uint64_t count = 0;
-        for (const auto& entry : mSizeCache) {
-            const SlabMemoryAllocator* allocator = entry->GetValue().pSlabAllocator;
-            ASSERT(allocator != nullptr);
-            count += allocator->GetSlabSizeForTesting();
-        }
-        return count;
     }
 
 }  // namespace gpgmm

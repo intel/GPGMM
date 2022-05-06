@@ -156,10 +156,4 @@ namespace gpgmm {
         return "BuddyMemoryAllocator";
     }
 
-    uint64_t BuddyMemoryAllocator::GetBuddyMemorySizeForTesting() const {
-        std::lock_guard<std::mutex> lock(mMutex);
-
-        return mUsedPool.GetPoolSize();
-    }
-
 }  // namespace gpgmm
