@@ -31,7 +31,7 @@ var searchData=
   ['slabblockallocator_2ecpp_28',['SlabBlockAllocator.cpp',['../_slab_block_allocator_8cpp.html',1,'']]],
   ['slabblockallocator_2eh_29',['SlabBlockAllocator.h',['../_slab_block_allocator_8h.html',1,'']]],
   ['slabblockallocatortests_2ecpp_30',['SlabBlockAllocatorTests.cpp',['../_slab_block_allocator_tests_8cpp.html',1,'']]],
-  ['slabcacheallocator_31',['SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html',1,'gpgmm::SlabCacheAllocator'],['../classgpgmm_1_1_slab_cache_allocator.html#a00df5c52f524a0eeb12f0dfba5dbf6b9',1,'gpgmm::SlabCacheAllocator::SlabCacheAllocator()']]],
+  ['slabcacheallocator_31',['SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html',1,'gpgmm::SlabCacheAllocator'],['../classgpgmm_1_1_slab_cache_allocator.html#aaa3b2c5b497c53e74e98dc07774ca3d5',1,'gpgmm::SlabCacheAllocator::SlabCacheAllocator()']]],
   ['slabcacheallocatortests_32',['SlabCacheAllocatorTests',['../class_slab_cache_allocator_tests.html',1,'']]],
   ['slabmemoryallocator_33',['SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html',1,'gpgmm::SlabMemoryAllocator'],['../classgpgmm_1_1_slab_memory_allocator.html#a2a2e8e64436ed4091bcdfff7e7fd184d',1,'gpgmm::SlabMemoryAllocator::SlabMemoryAllocator()']]],
   ['slabmemoryallocator_2ecpp_34',['SlabMemoryAllocator.cpp',['../_slab_memory_allocator_8cpp.html',1,'']]],
