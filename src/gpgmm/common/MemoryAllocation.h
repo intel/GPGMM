@@ -23,19 +23,33 @@
 
 namespace gpgmm {
 
-    // Represents how memory was allocated.
+    /** \enum AllocationMethod
+    Represents how memory was allocated.
+    */
     enum AllocationMethod {
 
-        // Not sub-divided.
+        /** \brief Not sub-divided.
+
+        One and only one allocation exists for the memory.
+        */
         kStandalone = 0x0,
 
-        // Sub-divided using one or more memory allocations.
+        /** \brief Sub-divided using one or more allocations.
+
+        Underlying memory will be broken up into one or more memory allocations.
+        */
         kSubAllocated = 0x2,
 
-        // Sub-divided within a single memory allocation.
+        /** \brief Sub-divided within a single memory allocation.
+
+        A single memory allocation will be broken into one or more sub-allocations.
+        */
         kSubAllocatedWithin = 0x4,
 
-        // Not yet allocated or invalid.
+        /** \brief Not yet allocated or invalid.
+
+        This is an invalid state that assigned temporary before the actual method is known.
+        */
         kUndefined = 0x8
     };
 
@@ -43,12 +57,33 @@ namespace gpgmm {
     class MemoryBase;
     class MemoryAllocator;
 
-    // Represents a location in memory.
+    /** \brief Represents a location and range in memory.
+
+    It can represent a allocation in memory one of two ways: 1) a range within a memory block or 2)
+    a memory block of the entire memory range.
+
+    MemoryAllocation is meant to be handle like interface and should not be used directly.
+    */
     class GPGMM_EXPORT MemoryAllocation {
       public:
+        /** \brief Contructs an invalid memory allocation.
+         */
         MemoryAllocation();
 
-        // Constructs a sub-allocated memory allocation.
+        /** \brief Constructs a "sub-allocated" memory allocation.
+
+        A sub-allocated memory allocation (or sub-allocation) is a non-zero offset, non-overlapping
+        range, in memory.
+
+        @param allocator A pointer to the allocator responsible for creating the memory block.
+        @param memory A pointer to the underlying MemoryBase that will contain the memory
+        allocation.
+        @param offset The offset, in bytes, where the memory allocation was allocated in memory.
+        @param method The method to describe how the allocation was created.
+        @param block A pointer to a memory block within the resourceHeap, the placedResource was
+        allocated from.
+        @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
+        */
         MemoryAllocation(MemoryAllocator* allocator,
                          MemoryBase* memory,
                          uint64_t offset,
@@ -56,7 +91,15 @@ namespace gpgmm {
                          MemoryBlock* block,
                          uint8_t* mappedPointer = nullptr);
 
-        // Constructs a standalone memory allocation.
+        /** \brief Constructs a "standalone" memory allocation.
+
+        A standalone memory allocation is a zero offset, entire range, of memory.
+
+        @param allocator A pointer to the allocator responsible for creating the memory block.
+        @param memory A pointer to the underlying MemoryBase that will contain the memory
+        allocation.
+        @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
+        */
         MemoryAllocation(MemoryAllocator* allocator,
                          MemoryBase* memory,
                          uint8_t* mappedPointer = nullptr);
@@ -68,13 +111,49 @@ namespace gpgmm {
         bool operator==(const MemoryAllocation&) const;
         bool operator!=(const MemoryAllocation& other) const;
 
+        /** \brief Returns the memory assigned to this allocation.
+
+        \return A pointer to the MemoryBase used by this allocation.
+        */
         MemoryBase* GetMemory() const;
+
+        /** \brief Returns a byte addressable pointer mapped by this allocation.
+
+        \return A pointer to uint8_t which is mapped by the allocation.
+        */
         uint8_t* GetMappedPointer() const;
+
+        /** \brief Returns the allocator responsible for allocating the memory for this allocation.
+
+        \return A pointer to MemoryAllocator which is the allocator used.
+        */
         MemoryAllocator* GetAllocator() const;
         void SetAllocator(MemoryAllocator* allocator);
+
+        /** \brief The size, in bytes, of the memory allocation.
+
+        \return The size, in bytes, of the allocation.
+        */
         uint64_t GetSize() const;
+
+        /** \brief The offset, in bytes, where the memory allocation was allocated in memory.
+
+        \return The offset, in bytes, of the allocation.
+        */
         uint64_t GetOffset() const;
+
+        /** \brief The method to describe how the allocation was created.
+
+        The Method determines how to figure out the size of the allocation.
+
+        \return The method used to create memory for this allocation.
+        */
         AllocationMethod GetMethod() const;
+
+        /** \brief The block used to assign a range of memory for this allocation.
+
+        \Return A pointer to the MemoryBlock.
+        */
         MemoryBlock* GetBlock() const;
 
       protected:
