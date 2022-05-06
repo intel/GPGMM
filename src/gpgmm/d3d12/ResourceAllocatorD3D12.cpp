@@ -178,6 +178,23 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
+        LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity) {
+            switch (messageSeverity) {
+                case D3D12_MESSAGE_SEVERITY_CORRUPTION:
+                case D3D12_MESSAGE_SEVERITY_ERROR:
+                    return LogSeverity::Error;
+                case D3D12_MESSAGE_SEVERITY_WARNING:
+                    return LogSeverity::Warning;
+                case D3D12_MESSAGE_SEVERITY_INFO:
+                    return LogSeverity::Info;
+                case D3D12_MESSAGE_SEVERITY_MESSAGE:
+                    return LogSeverity::Debug;
+                default:
+                    UNREACHABLE();
+                    return LogSeverity::Debug;
+            }
+        }
+
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags) {
             const D3D12_HEAP_FLAGS denyAllTexturesFlags =
@@ -366,14 +383,10 @@ namespace gpgmm { namespace d3d12 {
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS),
                 !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_COUNTERS));
 
-            const LogSeverity& recordMessageMinLevel =
-                static_cast<LogSeverity>(newDescriptor.RecordOptions.MinMessageLevel);
-
-            SetEventMessageLevel(recordMessageMinLevel);
+            SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         }
 
-        const LogSeverity& logLevel = static_cast<LogSeverity>(newDescriptor.MinLogLevel);
-        SetLogMessageLevel(logLevel);
+        SetLogMessageLevel(GetLogSeverity(newDescriptor.MinLogLevel));
 
 #if defined(GPGMM_ENABLE_DEVICE_CHECKS)
         ComPtr<ID3D12InfoQueue> leakMessageQueue;

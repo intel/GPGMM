@@ -326,8 +326,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
-                                static_cast<ALLOCATOR_MESSAGE_SEVERITY>(
-                                    envParams.EventMessageLevel);
+                                static_cast<D3D12_MESSAGE_SEVERITY>(envParams.EventMessageLevel);
 
                             // Keep recording across multiple playback iterations to ensure all
                             // events will be captured instead of overwritten per iteration.
@@ -338,7 +337,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         allocatorDesc.MinLogLevel =
-                            static_cast<ALLOCATOR_MESSAGE_SEVERITY>(envParams.LogLevel);
+                            static_cast<D3D12_MESSAGE_SEVERITY>(envParams.LogLevel);
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.IsUMA != snapshot["IsUMA"].asBool() &&
