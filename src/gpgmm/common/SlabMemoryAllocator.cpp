@@ -154,13 +154,12 @@ namespace gpgmm {
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, alignment,
                 [&](const auto& block) -> MemoryBase* {
-                    // Re-se existing memory.
+                    // Re-use existing memory, if the slab isn't new.
                     if (pFreeSlab->SlabMemory != nullptr) {
                         return pFreeSlab->SlabMemory->GetMemory();
                     }
 
-                    // Use pre-fetched memory if the size was correct.
-                    // Else, throw it away and create memory instead.
+                    // Use pre-fetched memory if possible, else, throw it away.
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
