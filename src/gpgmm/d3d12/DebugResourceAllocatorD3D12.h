@@ -22,13 +22,27 @@ namespace gpgmm { namespace d3d12 {
 
     class ResourceAllocation;
 
-    // DebugResourceAllocator tracks live allocations (ie. created allocations, not yet
-    // deallocated) so they can be reported if leaked.
+    /** \brief DebugResourceAllocator tracks "live" allocations so they can be reported if leaked.
+
+    A "live" allocation means the allocation was created (allocated) but not released
+    (de-allocated).
+
+    Use `gpgmm_enable_allocator_checks = true` to always report for leaks.
+    */
     class DebugResourceAllocator final : public MemoryAllocator {
       public:
         DebugResourceAllocator() = default;
 
+        /** \brief Add a "live" allocation.
+
+        @param allocation A pointer to a ResourceAllocation to track.
+        */
         void AddLiveAllocation(ResourceAllocation* allocation);
+
+        /** \brief Report "live" allocations.
+
+        Dumps outstanding or "live" allocations.
+        */
         void ReportLiveAllocations() const;
 
       private:
