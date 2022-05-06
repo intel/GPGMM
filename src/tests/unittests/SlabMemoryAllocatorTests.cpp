@@ -180,13 +180,13 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
             allocations.push_back(std::move(allocation));
         }
 
-        EXPECT_EQ(allocator.GetSlabSizeForTesting(), kNumOfSlabs);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, kNumOfSlabs);
 
         for (auto& allocation : allocations) {
             allocator.DeallocateMemory(std::move(allocation));
         }
 
-        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
     }
 
     // Fill up slabs through pre-allocation (allocation < block < slab size).
@@ -207,14 +207,14 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
             allocations.push_back(std::move(allocation));
         }
 
-        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 2u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
 
         // Free both slabs.
         for (auto& allocation : allocations) {
             allocator.DeallocateMemory(std::move(allocation));
         }
 
-        EXPECT_EQ(allocator.GetSlabSizeForTesting(), 0u);
+        EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
     }
 
     // Verify slabs are reused in LIFO.
@@ -740,7 +740,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetSlabCacheSizeForTesting(), 0u);
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
 }
 
 TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {

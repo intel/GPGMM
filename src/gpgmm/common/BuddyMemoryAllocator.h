@@ -55,8 +55,6 @@ namespace gpgmm {
         MEMORY_ALLOCATOR_INFO GetInfo() const override;
         const char* GetTypename() const override;
 
-        uint64_t GetBuddyMemorySizeForTesting() const;
-
       private:
         uint64_t GetMemoryIndex(uint64_t offset) const;
 
