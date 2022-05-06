@@ -17,8 +17,9 @@ GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applica
 graph TD;
     MyGfxAPI-->gpgmm::vk
     MyGfxAPI-->gpgmm::d3d12
-    MyMLApp-->DirectML
-    DirectML-->gpgmm::d3d12
+    MyMLApp-->DirectML.h
+    MyD3D12VideoApp-->gpgmm::d3d12
+    DirectML.h-->gpgmm::d3d12
     gpgmm::d3d12-->GPGMM
     gpgmm::vk-->GPGMM
     GPGMM-->D3D12.h
@@ -160,20 +161,20 @@ gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 
 ## Residency Management
 GPUs do not support page-faulting, so it's up the GPU application to avoid using too much
-physical GPU memory. GPGMM integrates residency directly into resource allocation to simplify management.
+physical GPU memory. GPGMM integrates residency into the resource allocators to simplify and optimize memory management.
 
 ### D3D12
 
-1. Create a `d3d12::ResourceAllocator` with `ALLOCATOR_FLAG_ALWAYS_IN_BUDGET` flag.
-2. Use `d3d12::ResourceAllocator::CreateResource` for every resource you want residency managed.
-3. Create a `d3d12::ResidencySet` to track a collection of allocations that should be resident for a given command-list (1:1 relationship).
-4. Add allocations into the resident set by passing `ResourceAllocation::GetMemory` to `ResidencySet::Insert`.
+1. Create a `d3d12::ResourceAllocator` like before but specify a `d3d12::ResidencyManager` too.
+2. Now `d3d12::ResourceAllocator::CreateResource` will manage every resource created for residency.
+3. A `d3d12::ResidencySet` tracks a collection of resource allocations that should be resident for a given command-list (1:1 relationship).
+4. Add resource allocations into the resident set by passing `ResourceAllocation::GetMemory` to `ResidencySet::Insert`.
 5. Then use `d3d12::ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
 
-Residency also works for other heaps too (eg. SV descriptor or query heaps):
+Residency also works for non-resource heaps too (descriptor or query heaps):
 1. Sub-class `d3d12::Heap`.
 2. Call `d3d12::ResidencyManager::InsertHeap` on it after creation.
-3. Then use  `d3d12::ResidencyManager::LockHeap` or `d3d12::ResidencyManager::UnlockHeap` to keep heap resident or not, respectively.
+3. Then use  `d3d12::ResidencyManager::LockHeap` or `d3d12::ResidencyManager::UnlockHeap` to keep it resident or not, respectively.
 
 ### Vulkan
 
