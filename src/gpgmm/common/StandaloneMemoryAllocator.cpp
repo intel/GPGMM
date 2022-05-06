@@ -24,25 +24,19 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> StandaloneMemoryAllocator::TryAllocateMemory(
-        uint64_t requestSize,
-        uint64_t alignment,
-        bool neverAllocate,
-        bool cacheSize,
-        bool prefetchMemory) {
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
         std::unique_ptr<MemoryAllocation> allocation;
-        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(requestSize, alignment, neverAllocate,
-                                                             cacheSize, prefetchMemory),
-                         allocation);
+        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
 
         mInfo.UsedBlockCount++;
-        mInfo.UsedBlockUsage += requestSize;
+        mInfo.UsedBlockUsage += request.SizeInBytes;
 
         return std::make_unique<MemoryAllocation>(this, allocation->GetMemory(), /*offset*/ 0,
                                                   allocation->GetMethod(),
-                                                  new MemoryBlock{0, requestSize});
+                                                  new MemoryBlock{0, request.SizeInBytes});
     }
 
     void StandaloneMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

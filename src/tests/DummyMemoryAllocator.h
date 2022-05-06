@@ -29,22 +29,19 @@ namespace gpgmm {
             : MemoryAllocator(std::move(next)) {
         }
 
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate,
-                                                            bool cacheSize,
-                                                            bool prefetchMemory) override {
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+            const MEMORY_ALLOCATION_REQUEST& request) override {
             TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.TryAllocateMemory");
 
             std::lock_guard<std::mutex> lock(mMutex);
 
-            if (neverAllocate) {
+            if (request.NeverAllocate) {
                 return {};
             }
 
             mInfo.UsedMemoryCount++;
-            mInfo.UsedMemoryUsage += requestSize;
-            return std::make_unique<MemoryAllocation>(this, new MemoryBase(requestSize));
+            mInfo.UsedMemoryUsage += request.SizeInBytes;
+            return std::make_unique<MemoryAllocation>(this, new MemoryBase(request.SizeInBytes));
         }
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {

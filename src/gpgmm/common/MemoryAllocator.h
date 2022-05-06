@@ -76,6 +76,41 @@ namespace gpgmm {
         std::shared_ptr<Event> mEvent;
     };
 
+    /** \struct MEMORY_ALLOCATION_REQUEST
+    Describes a request to allocate memory.
+    */
+    struct MEMORY_ALLOCATION_REQUEST {
+        /** \brief Request the size, in bytes, of the allocation.
+
+        Actual allocated size might be larger due to allocator constraints.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Request the alignment, in bytes, of the allocation.
+
+        The allocated size must be a multiple of this alignment value.
+        */
+        uint64_t Alignment;
+
+        /** \brief Request to never create underlying memory.
+
+        Used to check whether or not the memory allocation could succeed, without requiring actual
+        memory to be created. Or used to ensure the requested allocation memory ONLY comes from the
+        existing "working set" of memory (eg. pool), created by previous allocations.
+        */
+        bool NeverAllocate;
+
+        /** \brief Request to additionally cache for the allocated size, to speed-up subsequent
+        requests of the same request size.
+        */
+        bool CacheSize;
+
+        /** \brief Request to pre-fetch the next memory block needed for a subsquent request based
+        on the requested size.
+        */
+        bool AlwaysPrefetch;
+    };
+
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
       public:
         MemoryAllocator();
@@ -89,26 +124,13 @@ namespace gpgmm {
         // |requestedSize| allocated space whose value is a multiple of |alignment|. If it cannot,
         // return nullptr. The returned allocation is only valid for the lifetime of |this|
         // allocator.
-        //
-        // When |neverAllocate| is true, the memory allocator will not allocate anything
-        // and effectively no-op.
-        //
-        // When |cacheSize| is true, the memory allocator may cache for the
-        // requested allocation to speed-up subsequent requests of the same size.
-        //
-        // When |prefetchMemory| is true, the memory allocator may pre-fetch memory for the next
-        // allocation, on a background thread, to speed-up subsequent requests of contigious
-        // allocations.
-        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
-                                                                    uint64_t alignment,
-                                                                    bool neverAllocate,
-                                                                    bool cacheSize,
-                                                                    bool prefetchMemory);
+        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+            const MEMORY_ALLOCATION_REQUEST& request);
 
         // Non-blocking version of TryAllocateMemory.
         // Caller must wait for the event to complete before using the resulting allocation.
-        std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(uint64_t requestSize,
-                                                                      uint64_t alignment);
+        std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(
+            const MEMORY_ALLOCATION_REQUEST& request);
 
         // Free the allocation by deallocating the block used to sub-allocate it and the underlying
         // memory block used with it. Caller must assume |allocation| is invalid after

@@ -55,11 +55,8 @@ namespace gpgmm {
         ~SlabMemoryAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate,
-                                                            bool cacheSize,
-                                                            bool prefetchMemory) override;
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+            const MEMORY_ALLOCATION_REQUEST& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MEMORY_ALLOCATOR_INFO GetInfo() const override;
@@ -121,7 +118,7 @@ namespace gpgmm {
         const uint64_t mMinSlabSize;  // Optional size when non-zero.
 
         const double mSlabFragmentationLimit;
-        const bool mPrefetchSlab;
+        const bool mAlwaysPrefetchSlab;
         const double mSlabGrowthFactor;
 
         MemoryAllocator* mMemoryAllocator = nullptr;
@@ -136,18 +133,15 @@ namespace gpgmm {
                            uint64_t minSlabSize,
                            uint64_t slabAlignment,
                            double slabFragmentationLimit,
-                           bool prefetchSlab,
+                           bool alwaysPrefetchSlab,
                            double slabGrowthFactor,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         ~SlabCacheAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate,
-                                                            bool cacheSize,
-                                                            bool prefetchMemory) override;
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+            const MEMORY_ALLOCATION_REQUEST& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MEMORY_ALLOCATOR_INFO GetInfo() const override;
@@ -177,7 +171,7 @@ namespace gpgmm {
         const uint64_t mSlabAlignment;
 
         const double mSlabFragmentationLimit;
-        const bool mPrefetchSlab;
+        const bool mAlwaysPrefetchSlab;
         const double mSlabGrowthFactor;
 
         LinkedList<MemoryAllocator> mSlabAllocators;

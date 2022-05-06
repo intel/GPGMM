@@ -27,20 +27,14 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
-        uint64_t requestSize,
-        uint64_t alignment,
-        bool neverAllocate,
-        bool cacheSize,
-        bool prefetchMemory) {
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(
-                                 requestSize, alignment, neverAllocate, cacheSize, prefetchMemory),
-                             allocation);
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }

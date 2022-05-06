@@ -33,7 +33,7 @@ namespace gpgmm {
                                              uint64_t minSlabSize,
                                              uint64_t slabAlignment,
                                              double slabFragmentationLimit,
-                                             bool prefetchSlab,
+                                             bool alwaysPrefetchSlab,
                                              double slabGrowthFactor,
                                              MemoryAllocator* memoryAllocator)
         : mLastUsedSlabSize(0),
@@ -42,7 +42,7 @@ namespace gpgmm {
           mMaxSlabSize(maxSlabSize),
           mMinSlabSize(std::max(minSlabSize, mSlabAlignment)),
           mSlabFragmentationLimit(slabFragmentationLimit),
-          mPrefetchSlab(prefetchSlab),
+          mAlwaysPrefetchSlab(alwaysPrefetchSlab),
           mSlabGrowthFactor(slabGrowthFactor),
           mMemoryAllocator(memoryAllocator) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
@@ -89,23 +89,22 @@ namespace gpgmm {
         return cache;
     }
 
-    std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(uint64_t requestSize,
-                                                                             uint64_t alignment,
-                                                                             bool neverAllocate,
-                                                                             bool cacheSize,
-                                                                             bool prefetchMemory) {
+    std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (requestSize > mBlockSize) {
+        if (request.SizeInBytes > mBlockSize) {
             InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the block size (" + std::to_string(requestSize) +
-                       " vs " + std::to_string(mBlockSize) + " bytes).";
+                << "Allocation size exceeded the block size (" +
+                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mBlockSize) +
+                       " bytes).";
             return {};
         }
 
-        uint64_t slabSize = ComputeSlabSize(requestSize, std::max(mMinSlabSize, mLastUsedSlabSize));
+        uint64_t slabSize =
+            ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize));
         if (slabSize > mMaxSlabSize) {
             InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
                 << "Slab size exceeded the max slab size (" + std::to_string(slabSize) + " vs " +
@@ -133,8 +132,9 @@ namespace gpgmm {
         if (cache->FreeList.empty() || pFreeSlab->IsFull()) {
             // Get the next free slab.
             if (mLastUsedSlabSize > 0) {
-                uint64_t newSlabSize = std::min(
-                    ComputeSlabSize(requestSize, slabSize * mSlabGrowthFactor), mMaxSlabSize);
+                uint64_t newSlabSize =
+                    std::min(ComputeSlabSize(request.SizeInBytes, slabSize * mSlabGrowthFactor),
+                             mMaxSlabSize);
                 if (newSlabSize > slabSize) {
                     cache = GetOrCreateCache(newSlabSize);
                     slabSize = newSlabSize;
@@ -152,7 +152,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
-                &pFreeSlab->Allocator, mBlockSize, alignment,
+                &pFreeSlab->Allocator, mBlockSize, request.Alignment,
                 [&](const auto& block) -> MemoryBase* {
                     // Re-use existing memory, if the slab isn't new.
                     if (pFreeSlab->SlabMemory != nullptr) {
@@ -180,9 +180,12 @@ namespace gpgmm {
                     }
 
                     // Create memory of specified slab size.
-                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(slabSize, mSlabAlignment,
-                                                                         neverAllocate, cacheSize,
-                                                                         /*prefetchMemory*/ false),
+                    MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
+                    newSlabRequest.SizeInBytes = slabSize;
+                    newSlabRequest.Alignment = mSlabAlignment;
+                    newSlabRequest.AlwaysPrefetch = false;
+
+                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(newSlabRequest),
                                      pFreeSlab->SlabMemory);
 
                     return pFreeSlab->SlabMemory->GetMemory();
@@ -205,7 +208,7 @@ namespace gpgmm {
         //
         // TODO: Measure if the slab allocation time remaining exceeds the prefetch memory task
         // time before deciding to prefetch.
-        if ((prefetchMemory || mPrefetchSlab) && !neverAllocate &&
+        if ((request.AlwaysPrefetch || mAlwaysPrefetchSlab) && !request.NeverAllocate &&
             mNextSlabAllocationEvent == nullptr &&
             pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
             pFreeSlab->BlockCount >= kSlabPrefetchTotalBlockCount) {
@@ -213,13 +216,21 @@ namespace gpgmm {
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
             const uint32_t nextSlabSize = std::min(
-                ComputeSlabSize(requestSize, mLastUsedSlabSize * mSlabGrowthFactor), mMaxSlabSize);
+                ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor),
+                mMaxSlabSize);
 
             DebugEvent(GetTypename())
                 << "Requesting prefetched slab: " << nextSlabSize << " bytes.";
 
+            MEMORY_ALLOCATION_REQUEST prefetchSlabRequest = {};
+            prefetchSlabRequest.SizeInBytes = nextSlabSize;
+            prefetchSlabRequest.Alignment = mSlabAlignment;
+            prefetchSlabRequest.NeverAllocate = false;
+            prefetchSlabRequest.CacheSize = true;
+            prefetchSlabRequest.AlwaysPrefetch = false;
+
             mNextSlabAllocationEvent =
-                mMemoryAllocator->TryAllocateMemoryAsync(nextSlabSize, mSlabAlignment);
+                mMemoryAllocator->TryAllocateMemoryAsync(prefetchSlabRequest);
         }
 
         // Wrap the block in the containing slab. Since the slab's block could reside in another
@@ -292,7 +303,7 @@ namespace gpgmm {
                                            uint64_t minSlabSize,
                                            uint64_t slabAlignment,
                                            double slabFragmentationLimit,
-                                           bool prefetchSlab,
+                                           bool alwaysPrefetchSlab,
                                            double slabGrowthFactor,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
         : MemoryAllocator(std::move(memoryAllocator)),
@@ -300,7 +311,7 @@ namespace gpgmm {
           mMinSlabSize(minSlabSize),
           mSlabAlignment(slabAlignment),
           mSlabFragmentationLimit(slabFragmentationLimit),
-          mPrefetchSlab(prefetchSlab),
+          mAlwaysPrefetchSlab(alwaysPrefetchSlab),
           mSlabGrowthFactor(slabGrowthFactor) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
         ASSERT(mSlabGrowthFactor >= 1);
@@ -311,26 +322,25 @@ namespace gpgmm {
         mSlabAllocators.RemoveAndDeleteAll();
     }
 
-    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(uint64_t requestSize,
-                                                                            uint64_t alignment,
-                                                                            bool neverAllocate,
-                                                                            bool cacheSize,
-                                                                            bool prefetchMemory) {
+    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(requestSize);
+        GPGMM_CHECK_NONZERO(request.SizeInBytes);
 
-        const uint64_t blockSize = AlignTo(requestSize, alignment);
+        MEMORY_ALLOCATION_REQUEST newRequest = request;
+        newRequest.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
 
         // Create a slab allocator for the new entry.
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), cacheSize);
+        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(newRequest.SizeInBytes),
+                                            newRequest.CacheSize);
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
-                blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment, mSlabFragmentationLimit,
-                mPrefetchSlab, mSlabGrowthFactor, GetNextInChain());
+                newRequest.SizeInBytes, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
+                mSlabFragmentationLimit, mAlwaysPrefetchSlab, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
             mSlabAllocators.Append(slabAllocator);
         }
@@ -338,9 +348,7 @@ namespace gpgmm {
         ASSERT(slabAllocator != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(blockSize, alignment, neverAllocate,
-                                                          cacheSize, prefetchMemory),
-                         subAllocation);
+        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(newRequest), subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();

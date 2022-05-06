@@ -43,11 +43,8 @@ namespace gpgmm {
                              std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(uint64_t requestSize,
-                                                            uint64_t alignment,
-                                                            bool neverAllocate,
-                                                            bool cacheSize,
-                                                            bool prefetchMemory) override;
+        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+            const MEMORY_ALLOCATION_REQUEST& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
 
         uint64_t GetMemorySize() const override;
