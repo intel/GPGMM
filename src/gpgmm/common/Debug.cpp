@@ -32,10 +32,12 @@ namespace gpgmm {
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
+        gpgmm::Log(mSeverity) << mName << ": " << description;
+
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(mSeverity < LogSeverity::Warning);
 #endif
-        gpgmm::Log(mSeverity) << mName << ": " << description;
+
         if (mSeverity >= gRecordEventLevel) {
             LOG_MESSAGE message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
