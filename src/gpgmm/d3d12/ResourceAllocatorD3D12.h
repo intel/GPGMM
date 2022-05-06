@@ -75,35 +75,6 @@ namespace gpgmm { namespace d3d12 {
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_FLAGS_TYPE)
 
-    /** \enum ALLOCATOR_MESSAGE_SEVERITY
-    Represents different severity levels used for logging.
-    */
-    enum ALLOCATOR_MESSAGE_SEVERITY {
-        /** \brief Message (or debug) severity.
-
-        Message is for debugging purposes only.
-        */
-        ALLOCATOR_MESSAGE_SEVERITY_MESSAGE = 0x0,
-
-        /** \brief Info severity.
-
-        Message is for informational purposes only.
-        */
-        ALLOCATOR_MESSAGE_SEVERITY_INFO = 0x1,
-
-        /** \brief Warning severity.
-
-        A non-fatal message that does not abort execution.
-        */
-        ALLOCATOR_MESSAGE_SEVERITY_WARNING = 0x2,
-
-        /** \brief Error severity.
-
-        A fatal message will abort execution.
-        */
-        ALLOCATOR_MESSAGE_SEVERITY_ERROR = 0x3,
-    };
-
     /** \enum ALLOCATOR_RECORD_FLAGS
     Represents different event categories to record.
     */
@@ -177,7 +148,7 @@ namespace gpgmm { namespace d3d12 {
 
         Optional parameter. By default, the minimum severity level is WARN.
         */
-        ALLOCATOR_MESSAGE_SEVERITY MinMessageLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+        D3D12_MESSAGE_SEVERITY MinMessageLevel = D3D12_MESSAGE_SEVERITY_WARNING;
 
         /** \brief Specifies the scope of the events.
 
@@ -219,7 +190,7 @@ namespace gpgmm { namespace d3d12 {
 
         Messages with lower severity will be ignored.
         */
-        ALLOCATOR_MESSAGE_SEVERITY MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+        D3D12_MESSAGE_SEVERITY MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
 
         /** \brief Specifies recording options.
 

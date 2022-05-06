@@ -70,9 +70,9 @@ namespace gpgmm { namespace d3d12 {
         }
 
 #if defined(NDEBUG)
-        desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_WARNING;
+        desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
 #else
-        desc.MinLogLevel = ALLOCATOR_MESSAGE_SEVERITY_MESSAGE;
+        desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 #endif
 
         return desc;
