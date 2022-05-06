@@ -28,20 +28,73 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
+    /** \struct RESOURCE_ALLOCATION_INFO
+    Additional information about the resource allocation.
+    */
     struct RESOURCE_ALLOCATION_INFO {
+        /** \brief The created size of the resource allocation, in bytes.
+
+        Must be non-zero.
+        */
         uint64_t SizeInBytes;
+
+        /** \brief The offset of the resource in the heap, in bytes.
+         */
         uint64_t HeapOffset;
+
+        /** \brief The offset of the allocation in the resource, in bytes.
+
+         Always zero when the resource is placed in a heap or created with it's own heap.
+        */
         uint64_t OffsetFromResource;
+
+        /** \brief The method to describe how the allocation was created.
+
+        The Method determines how to figure out the size of the allocation.
+        */
         AllocationMethod Method;
+
+        /** \brief Pointer to underlying Heap used for the resource allocation.
+
+        Must be valid for the duration of the resource allocation.
+        */
         Heap* ResourceHeap;
+
+        /** \brief Pointer to ID3D12Resource used for the allocation.
+
+         Must be valid for the duration of the resource allocation.
+        */
         ID3D12Resource* Resource;
     };
 
+    /** \brief ResourceAllocation is MemoryAllocation that uses a ID3D12Resource.
+
+    It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed"
+    in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a
+    ID3D12Heap (called a committed resource).
+
+    It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for perfoming D3D12
+    operations with it (eg. Map, Unmap, etc).
+    */
     class GPGMM_EXPORT ResourceAllocation final : public MemoryAllocation,
                                                   public NonCopyable,
                                                   public IUnknownImpl {
       public:
-        // Constructs a resource allocation from memory containing one or more resources.
+        /** \brief Constructs a resource allocation using memory containing one or more resources.
+
+        @param residencyManager A pointer to ResidencyManager that manages residency for the
+        resource.
+        @param allocator A pointer to the allocator responsible for creating the memory block.
+        @param offsetFromHeap The offset, in bytes, of the placedResource, from the start of the
+        resourceHeap.
+        @param block A pointer to a memory block within the resourceHeap, the placedResource was
+        allocated from.
+        @param method The method to describe how the allocation was created.
+        @param placedResource A pointer to ID3D12Resource "placed" resource created by
+        ID3D12Device::CreatePlacedResource.
+        @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
+        heap.
+        */
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
                            uint64_t offsetFromHeap,
@@ -50,7 +103,19 @@ namespace gpgmm { namespace d3d12 {
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
 
-        // Constructs a resource allocation within a resource.
+        /** \brief Constructs a resource allocation within a resource.
+
+        @param residencyManager A pointer to ResidencyManager that manages residency for the
+        resource.
+        @param allocator A pointer to the allocator responsible for creating the memory block.
+        @param block A pointer to the block within the resourceHeap, the placedResource was
+        allocated from.
+        @param offsetFromResource The offset, in bytes, of the allocation, from the start of the
+        resource.
+        @param resource A pointer to ID3D12Resource resource.
+        @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
+        heap.
+        */
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
                            MemoryBlock* block,
@@ -60,38 +125,81 @@ namespace gpgmm { namespace d3d12 {
 
         ~ResourceAllocation() override;
 
-        // Gets the CPU pointer to the specificed subresource of the resource allocation.
-        // If sub-allocated within the resource, the read or write range and
-        // pointer value will start from the allocation instead of the resource.
+        /** \brief Maps the resource allocation.
+
+        Gets the CPU pointer to the specificed subresource of the resource allocation.
+
+        If sub-allocated within the resource, the read or write range and
+        pointer value will start from the allocation instead of the resource.
+
+        @param subresource Specifies the index number of the subresource.
+        @param readRange A pointer to a D3D12_RANGE structure that describes the range of memory to
+        access.
+        @param[out] dataOut A pointer to a memory block that receives a pointer to the resource
+        data.
+        */
         HRESULT Map(uint32_t subresource = 0,
                     const D3D12_RANGE* readRange = nullptr,
                     void** dataOut = nullptr);
 
+        /** \brief Unmaps the resource allocation.
+
+        Invalidates the CPU pointer to the specified subresource in the resource.
+
+        @param subresource Specifies the index number of the subresource.
+        @param writtenRange A pointer to a D3D12_RANGE structure that describes the range of memory
+        to unmap.
+        */
         void Unmap(uint32_t subresource = 0, const D3D12_RANGE* writtenRange = nullptr);
 
-        // Returns the resource owned by this allocation.
+        /** \brief Returns the resource owned by this allocation.
+
+        \return Pointer to ID3D12Resource, owned by this allocation.
+        */
         ID3D12Resource* GetResource() const;
 
         // Tracks the resource allocation memory for residency.
         HRESULT UpdateResidency(ResidencySet* residencySet) const;
 
-        // Returns if the resource allocation memory will be made resident or not.
+        /** \brief Check if the resource allocation was made resident or not.
+
+        \return True if resident, else, false.
+        */
         bool IsResident() const;
 
-        // Returns the GPU virtual address of the resource allocation.
-        // If sub-allocated within the resource, the GPU virtual address will
-        // start from the allocation instead of the resource.
+        /** \brief Returns the GPU virtual address of the resource allocation.
+
+        If sub-allocated within the resource, the GPU virtual address will
+        start from the allocation instead of the resource.
+
+        \return A D3D12_GPU_VIRTUAL_ADDRESS, equal to UINT64, to represent a location in GPU memory.
+        */
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
-        // Returns the start of the allocation.
-        // If sub-allocated within the resource, the offset could be greater than zero.
+        /** \brief Returns the start of the allocation in the resource.
+
+        If sub-allocated within the resource, the offset could be greater than zero.
+
+        \return A offset, in bytes, of the start of this allocation in the resource.
+        */
         uint64_t GetOffsetFromResource() const;
 
+        /** \brief Returns information about this resource allocation.
+
+        \return A RESOURCE_ALLOCATION_INFO struct containing the information.
+        */
         RESOURCE_ALLOCATION_INFO GetInfo() const;
 
+        /** \brief Returns the class name of this allocation.
+
+        \return A pointer to a C character string with data, "ResourceAllocation".
+        */
         const char* GetTypename() const;
 
-        // Returns the heap assigned to this resource allocation.
+        /** \brief Returns the heap assigned to this resource allocation.
+
+        \return A pointer to the Heap used by this resource allocation.
+        */
         Heap* GetMemory() const;
 
       private:
