@@ -68,7 +68,7 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json 2>&1
 
     - name: Run gpgmm_unittests
       shell: cmd
@@ -80,7 +80,7 @@ jobs:
       shell: cmd
       run: |
         cd base
-        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json
+        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_output=json:${{ github.workspace }}\..\baseline_capture_replay_tests.json 2>&1
 
     - uses: actions/checkout@v2
       with:
@@ -132,19 +132,19 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json 2>&1
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json || true
+        out\Debug\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json
 
     - name: Run gpgmm_capture_replay_tests (with patch)
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json
+        out\Debug\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json 2>&1
 
     - name: Regression check end2end tests
       run: |
