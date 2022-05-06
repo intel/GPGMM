@@ -74,9 +74,6 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html" title="DebugResourceAllocator tracks &quot;live&quot; allocations so they can be reported if leaked.">DebugResourceAllocator</a> tracks "live" allocations so they can be reported if leaked.  
- <a href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#details">More...</a></p>
-
 <p><code>#include &lt;DebugResourceAllocatorD3D12.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::d3d12::DebugResourceAllocator:</div>
@@ -97,10 +94,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b9f233a6fafd6019cb042833e8074e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#a7b9f233a6fafd6019cb042833e8074e8">DebugResourceAllocator</a> ()=default</td></tr>
 <tr class="separator:a7b9f233a6fafd6019cb042833e8074e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4209e5b78054ffcb40a8cc38ca26f92"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#ab4209e5b78054ffcb40a8cc38ca26f92">AddLiveAllocation</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> *allocation)</td></tr>
-<tr class="memdesc:ab4209e5b78054ffcb40a8cc38ca26f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a "live" allocation.  <a href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#ab4209e5b78054ffcb40a8cc38ca26f92">More...</a><br /></td></tr>
 <tr class="separator:ab4209e5b78054ffcb40a8cc38ca26f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1a905dbe86a3da70a92396c0deb092e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#af1a905dbe86a3da70a92396c0deb092e">ReportLiveAllocations</a> () const</td></tr>
-<tr class="memdesc:af1a905dbe86a3da70a92396c0deb092e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report "live" allocations.  <a href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#af1a905dbe86a3da70a92396c0deb092e">More...</a><br /></td></tr>
 <tr class="separator:af1a905dbe86a3da70a92396c0deb092e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_allocator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_allocator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_allocator.html">gpgmm::MemoryAllocator</a></td></tr>
 <tr class="memitem:a546a30ca32c0f4a542ee22539d0076ff inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a546a30ca32c0f4a542ee22539d0076ff">MemoryAllocator</a> ()</td></tr>
@@ -190,11 +185,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_thread_pool.html">ThreadPool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a062a71010a9ea3332e0d160bcd6e4ee6">mThreadPool</a></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html" title="DebugResourceAllocator tracks &quot;live&quot; allocations so they can be reported if leaked.">DebugResourceAllocator</a> tracks "live" allocations so they can be reported if leaked. </p>
-<p >A "live" allocation means the allocation was created (allocated) but not released (de-allocated).</p>
-<p >Use <code>gpgmm_enable_allocator_checks = true</code> to always report for leaks. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7b9f233a6fafd6019cb042833e8074e8" name="a7b9f233a6fafd6019cb042833e8074e8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b9f233a6fafd6019cb042833e8074e8">&#9670;&nbsp;</a></span>DebugResourceAllocator()</h2>
 
@@ -237,14 +228,6 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Add a "live" allocation. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">allocation</td><td>A pointer to a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that uses a ID3D12Resource.">ResourceAllocation</a> to track. </td></tr>
-  </table>
-  </dd>
-</dl>
-
 </div>
 </div>
 <a id="af1a905dbe86a3da70a92396c0deb092e" name="af1a905dbe86a3da70a92396c0deb092e"></a>
@@ -261,9 +244,6 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Report "live" allocations. </p>
-<p >Dumps outstanding or "live" allocations. </p>
 
 </div>
 </div>
