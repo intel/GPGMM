@@ -150,6 +150,12 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2b91bc7a6d3e8e3ad36d6cc02ca598a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598a">ALLOCATOR_MESSAGE_SEVERITY</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2">ALLOCATOR_MESSAGE_SEVERITY_MESSAGE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66">ALLOCATOR_MESSAGE_SEVERITY_INFO</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8">ALLOCATOR_MESSAGE_SEVERITY_WARNING</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95">ALLOCATOR_MESSAGE_SEVERITY_ERROR</a> = 0x3
+ }</td></tr>
+<tr class="separator:ae2b91bc7a6d3e8e3ad36d6cc02ca598a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e37df42bebf066b8cec7189b305682c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682c">ALLOCATOR_RECORD_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99">ALLOCATOR_RECORD_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466">ALLOCATOR_RECORD_FLAG_API_OBJECTS</a> = 0x1
@@ -338,11 +344,15 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocator flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable reuse of resource memory. </p>
-<pre class="fragment">Should only be used for debugging and testing purposes.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
+<pre class="fragment">Mostly used for debugging and testing purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resources are always within the resource budget at creation time. </p>
-<pre class="fragment">Mostly used to debug with residency being over committed.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resource will be created within budget. </p>
+<pre class="fragment">By default or when the flag is not set, create resource may fail when over-budget.
+
+GPGMM applies the flag D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT when residency is
+enabled and this flag is NOT set in order to speed-up resource creation by deferring
+the residency operation on a background thread, upon calling ExecuteCommandLists.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
 <pre class="fragment">Should be only used for debugging and testing purposes.
@@ -350,6 +360,35 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663" name="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Tell GPGMM to allocate exactly what is needed, and to de-allocate memory immediately once no longer needed (instead of re-using it). </p>
 <p >This is very slow and not recommended for general use but may be useful for running with the minimal possible GPU memory footprint or debugging OOM failures. </p>
 </td></tr>
+</table>
+
+</div>
+</div>
+<a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598a" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2b91bc7a6d3e8e3ad36d6cc02ca598a">&#9670;&nbsp;</a></span>ALLOCATOR_MESSAGE_SEVERITY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#ae2b91bc7a6d3e8e3ad36d6cc02ca598a">gpgmm::d3d12::ALLOCATOR_MESSAGE_SEVERITY</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Represents different severity levels used for logging. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aaff83f8713554fde01278c41aac9fd3c2"></a>ALLOCATOR_MESSAGE_SEVERITY_MESSAGE&#160;</td><td class="fielddoc"><p >Message (or debug) severity. </p>
+<pre class="fragment">Message is for debugging purposes only.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aa5aae459e031a128beff7739976c31f66"></a>ALLOCATOR_MESSAGE_SEVERITY_INFO&#160;</td><td class="fielddoc"><p >Info severity. </p>
+<pre class="fragment">Message is for informational purposes only.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aab149ed3f8441b3912d7a81b5b89403f8"></a>ALLOCATOR_MESSAGE_SEVERITY_WARNING&#160;</td><td class="fielddoc"><p >Warning severity. </p>
+<pre class="fragment">A non-fatal message that does not abort execution.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95" name="ae2b91bc7a6d3e8e3ad36d6cc02ca598aadf90d43dbd9e3f961171dd40e6c91d95"></a>ALLOCATOR_MESSAGE_SEVERITY_ERROR&#160;</td><td class="fielddoc"><p >Error severity. </p>
+<pre class="fragment">A fatal message will abort execution.
+</pre> </td></tr>
 </table>
 
 </div>

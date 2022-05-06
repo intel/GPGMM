@@ -90,8 +90,8 @@ Inheritance diagram for gpgmm::d3d12::BufferAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8c34f9fa9f3eec264564a3ccf77d2dd9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8c34f9fa9f3eec264564a3ccf77d2dd9">BufferAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> *resourceAllocator, D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_FLAGS resourceFlags, D3D12_RESOURCE_STATES initialResourceState, uint64_t bufferSize, uint64_t bufferAlignment)</td></tr>
-<tr class="separator:a8c34f9fa9f3eec264564a3ccf77d2dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8408d710774e6aa669afd36eb01e38b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8408d710774e6aa669afd36eb01e38b7">BufferAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> *resourceAllocator, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, D3D12_RESOURCE_FLAGS resourceFlags, D3D12_RESOURCE_STATES initialResourceState, uint64_t bufferSize, uint64_t bufferAlignment)</td></tr>
+<tr class="separator:a8408d710774e6aa669afd36eb01e38b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea26518d59cf4e2e87edd97bab06117d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_buffer_allocator.html#aea26518d59cf4e2e87edd97bab06117d">~BufferAllocator</a> () override=default</td></tr>
 <tr class="separator:aea26518d59cf4e2e87edd97bab06117d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af344fe1204d59ef2dcb96fd01432272b"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_buffer_allocator.html#af344fe1204d59ef2dcb96fd01432272b">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory) override</td></tr>
@@ -191,8 +191,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8c34f9fa9f3eec264564a3ccf77d2dd9" name="a8c34f9fa9f3eec264564a3ccf77d2dd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c34f9fa9f3eec264564a3ccf77d2dd9">&#9670;&nbsp;</a></span>BufferAllocator()</h2>
+<a id="a8408d710774e6aa669afd36eb01e38b7" name="a8408d710774e6aa669afd36eb01e38b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8408d710774e6aa669afd36eb01e38b7">&#9670;&nbsp;</a></span>BufferAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,6 +208,12 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">D3D12_HEAP_TYPE&#160;</td>
           <td class="paramname"><em>heapType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">D3D12_HEAP_FLAGS&#160;</td>
+          <td class="paramname"><em>heapFlags</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
