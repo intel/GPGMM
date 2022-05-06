@@ -9,7 +9,7 @@ var searchData=
   ['addtraceevent_6',['AddTraceEvent',['../classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd',1,'gpgmm::TraceBuffer::AddTraceEvent(char phase, TraceEventCategory category, const char *name, uint64_t id, uint32_t flags, const JSONDict &amp;args={})'],['../classgpgmm_1_1_trace_buffer.html#a57bc53ec3d073b77b43bbf72300d52f2',1,'gpgmm::TraceBuffer::AddTraceEvent(char phase, TraceEventCategory category, const char *name, uint64_t id, uint32_t flags, const char *arg1Name, const Arg1T &amp;arg1Value)']]],
   ['alignto_7',['AlignTo',['../namespacegpgmm.html#abc939d5d95c7eab4af8d12f2234bda92',1,'gpgmm']]],
   ['aligntopoweroftwo_8',['AlignToPowerOfTwo',['../namespacegpgmm.html#ad28f0b0d120a544248f3e7b544d2d932',1,'gpgmm']]],
-  ['allocatememorytask_9',['AllocateMemoryTask',['../classgpgmm_1_1_allocate_memory_task.html#a2b59ccdab2a915d9206e7c67044ae15f',1,'gpgmm::AllocateMemoryTask']]],
+  ['allocatememorytask_9',['AllocateMemoryTask',['../classgpgmm_1_1_allocate_memory_task.html#a470e3705ba914d6376b9763e82efffd3',1,'gpgmm::AllocateMemoryTask']]],
   ['allocatorbase_10',['AllocatorBase',['../classgpgmm_1_1_allocator_base.html#ae4b400b35adb6119cc634fb6771e0e5e',1,'gpgmm::AllocatorBase']]],
   ['allocatornode_11',['AllocatorNode',['../classgpgmm_1_1_allocator_node.html#a3a8b2208e459a4d8d4097eddb8192352',1,'gpgmm::AllocatorNode::AllocatorNode()=default'],['../classgpgmm_1_1_allocator_node.html#a8f264d1a2274e923b6174d6859411976',1,'gpgmm::AllocatorNode::AllocatorNode(std::unique_ptr&lt; T &gt; next)']]],
   ['append_12',['Append',['../classgpgmm_1_1_linked_list.html#a73a6877bfedc702d9f8a4577625db2b1',1,'gpgmm::LinkedList']]],
