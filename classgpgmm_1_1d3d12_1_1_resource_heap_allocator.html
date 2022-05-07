@@ -90,12 +90,12 @@ Inheritance diagram for gpgmm::d3d12::ResourceHeapAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a34c0bb4d3b031af57c973517a6ac5aa1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a34c0bb4d3b031af57c973517a6ac5aa1">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, bool isUMA)</td></tr>
-<tr class="separator:a34c0bb4d3b031af57c973517a6ac5aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a4240cf0134287f2aa0a83021f4368"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a48a4240cf0134287f2aa0a83021f4368">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, bool isUMA, bool isAlwaysInBudget)</td></tr>
+<tr class="separator:a48a4240cf0134287f2aa0a83021f4368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae42895cb0fe11663b8870abf1157f91c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#ae42895cb0fe11663b8870abf1157f91c">~ResourceHeapAllocator</a> () override=default</td></tr>
 <tr class="separator:ae42895cb0fe11663b8870abf1157f91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa31c8d82d1ca8dabed84348e6f2433aa"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#aa31c8d82d1ca8dabed84348e6f2433aa">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory) override</td></tr>
-<tr class="separator:aa31c8d82d1ca8dabed84348e6f2433aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a993d2bada8a32a65cda14496237ded55"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a993d2bada8a32a65cda14496237ded55">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;request) override</td></tr>
+<tr class="separator:a993d2bada8a32a65cda14496237ded55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3efaeb8dc7e2faac4e4fec289cd4bbc8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a3efaeb8dc7e2faac4e4fec289cd4bbc8">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation) override</td></tr>
 <tr class="separator:a3efaeb8dc7e2faac4e4fec289cd4bbc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b3807fd2c3f4f342b0113cb72bed149"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a3b3807fd2c3f4f342b0113cb72bed149">GetTypename</a> () const override</td></tr>
@@ -107,10 +107,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aff2e704e81c66e70928b2cc8f175d2a4 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dfbe6e546cf97914c00c3441d53751b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a9dfbe6e546cf97914c00c3441d53751b">~MemoryAllocator</a> () override</td></tr>
 <tr class="separator:a9dfbe6e546cf97914c00c3441d53751b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a256124103098471c00f4fd4ca998c596 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a256124103098471c00f4fd4ca998c596">TryAllocateMemory</a> (uint64_t requestSize, uint64_t alignment, bool neverAllocate, bool cacheSize, bool prefetchMemory)</td></tr>
-<tr class="separator:a256124103098471c00f4fd4ca998c596 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d914e181d8668301ecf496e63b097d6 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation_event.html">MemoryAllocationEvent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a8d914e181d8668301ecf496e63b097d6">TryAllocateMemoryAsync</a> (uint64_t requestSize, uint64_t alignment)</td></tr>
-<tr class="separator:a8d914e181d8668301ecf496e63b097d6 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79438e57e7861b7def8d83c6c32ba7bd inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a79438e57e7861b7def8d83c6c32ba7bd">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;request)</td></tr>
+<tr class="separator:a79438e57e7861b7def8d83c6c32ba7bd inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1668615745ba47713cc54808349a258 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation_event.html">MemoryAllocationEvent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ac1668615745ba47713cc54808349a258">TryAllocateMemoryAsync</a> (const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;request)</td></tr>
+<tr class="separator:ac1668615745ba47713cc54808349a258 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation)=0</td></tr>
 <tr class="separator:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76e8cb8345bf2e919ae50315d804936f inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a76e8cb8345bf2e919ae50315d804936f">ReleaseMemory</a> ()</td></tr>
@@ -189,8 +189,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a34c0bb4d3b031af57c973517a6ac5aa1" name="a34c0bb4d3b031af57c973517a6ac5aa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34c0bb4d3b031af57c973517a6ac5aa1">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
+<a id="a48a4240cf0134287f2aa0a83021f4368" name="a48a4240cf0134287f2aa0a83021f4368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48a4240cf0134287f2aa0a83021f4368">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,7 +223,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isUMA</em>&#160;</td>
+          <td class="paramname"><em>isUMA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isAlwaysInBudget</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -316,8 +322,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa31c8d82d1ca8dabed84348e6f2433aa" name="aa31c8d82d1ca8dabed84348e6f2433aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa31c8d82d1ca8dabed84348e6f2433aa">&#9670;&nbsp;</a></span>TryAllocateMemory()</h2>
+<a id="a993d2bada8a32a65cda14496237ded55" name="a993d2bada8a32a65cda14496237ded55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a993d2bada8a32a65cda14496237ded55">&#9670;&nbsp;</a></span>TryAllocateMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,37 +334,9 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; gpgmm::d3d12::ResourceHeapAllocator::TryAllocateMemory </td>
           <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>requestSize</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>alignment</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>neverAllocate</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>cacheSize</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>prefetchMemory</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -368,7 +346,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a256124103098471c00f4fd4ca998c596">gpgmm::MemoryAllocator</a>.</p>
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a79438e57e7861b7def8d83c6c32ba7bd">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
