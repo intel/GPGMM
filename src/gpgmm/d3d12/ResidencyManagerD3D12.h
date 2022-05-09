@@ -62,22 +62,22 @@ namespace gpgmm { namespace d3d12 {
         */
         float VideoMemoryBudget;
 
-        /** \brief Specify budget for residency manager.
+        /** \brief Specify the budget, in bytes, for residency.
 
-        Mostly used for debugging and testing purposes because it allows a fixed budget to be
-        artifically set.
+        Allows a fixed budget to be artifically set for testing purposes.
 
         Optional parameter. When 0 is specified, the API will not restrict the residency manager
         budget.
         */
         uint64_t Budget;
 
-        /** \brief Amount of memory to evict, in bytes, should there not be enough budget left.
+        /** \brief Specifies the amount of memory, in bytes, to evict from residency at once,
+        should there not be enough budget left.
 
         Optional parameter. When 0 is specified, the API will automatically set the video memory
         evict size to 50MB.
         */
-        uint64_t EvictLimit;
+        uint64_t EvictBatchSize;
     };
 
     class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
@@ -200,7 +200,7 @@ namespace gpgmm { namespace d3d12 {
 
         const float mVideoMemoryBudget;
         const uint64_t mBudget;
-        const uint64_t mEvictLimit;
+        const uint64_t mEvictBatchSize;
         const bool mIsUMA;
 
         VideoMemorySegment mLocalVideoMemorySegment;

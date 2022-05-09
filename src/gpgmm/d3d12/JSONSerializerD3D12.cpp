@@ -42,8 +42,8 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("PreferredResourceHeapSize", desc.PreferredResourceHeapSize);
         dict.AddItem("MaxResourceHeapSize", desc.MaxResourceHeapSize);
         dict.AddItem("MaxVideoMemoryBudget", desc.MaxVideoMemoryBudget);
-        dict.AddItem("TotalResourceBudgetLimit", desc.TotalResourceBudgetLimit);
-        dict.AddItem("EvictLimit", desc.EvictLimit);
+        dict.AddItem("Budget", desc.Budget);
+        dict.AddItem("EvictBatchSize", desc.EvictBatchSize);
         dict.AddItem("MemoryFragmentationLimit", desc.MemoryFragmentationLimit);
         return dict;
     }

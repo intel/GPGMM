@@ -400,8 +400,8 @@ namespace gpgmm { namespace d3d12 {
             residencyDesc.Device = newDescriptor.Device;
             residencyDesc.IsUMA = newDescriptor.IsUMA;
             residencyDesc.VideoMemoryBudget = newDescriptor.MaxVideoMemoryBudget;
-            residencyDesc.Budget = newDescriptor.TotalResourceBudgetLimit;
-            residencyDesc.EvictLimit = newDescriptor.EvictLimit;
+            residencyDesc.Budget = newDescriptor.Budget;
+            residencyDesc.EvictBatchSize = newDescriptor.EvictBatchSize;
             ReturnIfFailed(newDescriptor.Adapter.As(&residencyDesc.Adapter));
 
             ReturnIfFailed(
