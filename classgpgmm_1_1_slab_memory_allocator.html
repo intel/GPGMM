@@ -91,8 +91,8 @@ Inheritance diagram for gpgmm::SlabMemoryAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2a2e8e64436ed4091bcdfff7e7fd184d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#a2a2e8e64436ed4091bcdfff7e7fd184d">SlabMemoryAllocator</a> (uint64_t blockSize, uint64_t maxSlabSize, uint64_t minSlabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool prefetchSlab, double slabGrowthFactor, <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *memoryAllocator)</td></tr>
-<tr class="separator:a2a2e8e64436ed4091bcdfff7e7fd184d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9e87f42400b95aa7c28d2a618d25e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#a9a9e87f42400b95aa7c28d2a618d25e4">SlabMemoryAllocator</a> (uint64_t blockSize, uint64_t maxSlabSize, uint64_t minSlabSize, uint64_t slabAlignment, double slabFragmentationLimit, bool allowSlabPrefetch, double slabGrowthFactor, <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *memoryAllocator)</td></tr>
+<tr class="separator:a9a9e87f42400b95aa7c28d2a618d25e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad2484cbfa701c9958697eb2b385f686"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#aad2484cbfa701c9958697eb2b385f686">~SlabMemoryAllocator</a> () override</td></tr>
 <tr class="separator:aad2484cbfa701c9958697eb2b385f686"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2a8cee7f82fbf5185e7bd23a5241efb"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#aa2a8cee7f82fbf5185e7bd23a5241efb">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;request) override</td></tr>
@@ -190,8 +190,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2a2e8e64436ed4091bcdfff7e7fd184d" name="a2a2e8e64436ed4091bcdfff7e7fd184d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a2e8e64436ed4091bcdfff7e7fd184d">&#9670;&nbsp;</a></span>SlabMemoryAllocator()</h2>
+<a id="a9a9e87f42400b95aa7c28d2a618d25e4" name="a9a9e87f42400b95aa7c28d2a618d25e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a9e87f42400b95aa7c28d2a618d25e4">&#9670;&nbsp;</a></span>SlabMemoryAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -230,7 +230,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>prefetchSlab</em>, </td>
+          <td class="paramname"><em>allowSlabPrefetch</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
