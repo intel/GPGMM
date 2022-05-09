@@ -91,6 +91,22 @@ namespace {
         return (args.isMember("Description") && args.isMember("ID"));
     }
 
+    D3D12_MESSAGE_SEVERITY GetMessageSeverity(gpgmm::LogSeverity logSeverity) {
+        switch (logSeverity) {
+            case gpgmm::LogSeverity::Error:
+                return D3D12_MESSAGE_SEVERITY_ERROR;
+            case gpgmm::LogSeverity::Warning:
+                return D3D12_MESSAGE_SEVERITY_WARNING;
+            case gpgmm::LogSeverity::Info:
+                return D3D12_MESSAGE_SEVERITY_INFO;
+            case gpgmm::LogSeverity::Debug:
+                return D3D12_MESSAGE_SEVERITY_MESSAGE;
+            default:
+                UNREACHABLE();
+                return D3D12_MESSAGE_SEVERITY_MESSAGE;
+        }
+    }
+
 }  // namespace
 
 class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
@@ -325,7 +341,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
-                                static_cast<D3D12_MESSAGE_SEVERITY>(envParams.EventMessageLevel);
+                                GetMessageSeverity(envParams.EventMessageLevel);
 
                             // Keep recording across multiple playback iterations to ensure all
                             // events will be captured instead of overwritten per iteration.
@@ -335,8 +351,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             }
                         }
 
-                        allocatorDesc.MinLogLevel =
-                            static_cast<D3D12_MESSAGE_SEVERITY>(envParams.LogLevel);
+                        allocatorDesc.MinLogLevel = GetMessageSeverity(envParams.LogLevel);
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.IsUMA != snapshot["IsUMA"].asBool() &&
