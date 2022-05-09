@@ -244,19 +244,21 @@ namespace gpgmm { namespace d3d12 {
         */
         float MaxVideoMemoryBudget;
 
-        /** \brief Total memory available to budget for resources.
+        /** \brief Specify the budget, in bytes, for residency.
 
-        Optional parameter. When 0 is specified, the API will not restrict the resource budget.
+       Allows a fixed budget to be artifically set for testing purposes.
+
+        Optional parameter. When 0 is specified, the API will not restrict the budget.
         */
-        uint64_t TotalResourceBudgetLimit;
+        uint64_t Budget;
 
-        /** \brief Total memory to evict from residency at once, should there not be enough budget
-        left.
+        /** \brief Specifies the amount of resource heaps, in bytes, to evict from residency at
+        once, should there not be enough budget left.
 
         Optional parameter. When 0 is specified, the API will automatically set the video memory
         evict size to 50MB.
         */
-        uint64_t EvictLimit;
+        uint64_t EvictBatchSize;
 
         /** \brief Memory fragmentation limit, expressed as a percentage of the resource heap size,
         that is acceptable to be wasted due to internal fragmentation.

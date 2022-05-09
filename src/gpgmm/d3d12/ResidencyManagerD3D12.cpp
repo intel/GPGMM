@@ -28,7 +28,7 @@
 
 namespace gpgmm { namespace d3d12 {
 
-    static constexpr uint32_t kDefaultEvictLimit = 50ll * 1024ll * 1024ll;  // 50MB
+    static constexpr uint32_t kDefaultEvictBatchSize = 50ll * 1024ll * 1024ll;  // 50MB
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
 
     // static
@@ -62,7 +62,8 @@ namespace gpgmm { namespace d3d12 {
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
           mBudget(descriptor.Budget),
-          mEvictLimit(descriptor.EvictLimit == 0 ? kDefaultEvictLimit : descriptor.EvictLimit),
+          mEvictBatchSize(descriptor.EvictBatchSize == 0 ? kDefaultEvictBatchSize
+                                                         : descriptor.EvictBatchSize),
           mIsUMA(descriptor.IsUMA) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -484,7 +485,7 @@ namespace gpgmm { namespace d3d12 {
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
             uint64_t evictedSizeInBytes = 0;
-            ReturnIfFailed(EvictInternal(mEvictLimit, memorySegmentGroup, &evictedSizeInBytes));
+            ReturnIfFailed(EvictInternal(mEvictBatchSize, memorySegmentGroup, &evictedSizeInBytes));
             if (evictedSizeInBytes == 0) {
                 return E_OUTOFMEMORY;
             }
