@@ -26,6 +26,7 @@ var searchData=
   ['mreplayedallocatestats_23',['mReplayedAllocateStats',['../class_d3_d12_event_trace_replay.html#af5a438fa8766c5e40ad666402fb4411c',1,'D3D12EventTraceReplay']]],
   ['mreplayedallocationstats_24',['mReplayedAllocationStats',['../class_d3_d12_event_trace_replay.html#a3535bb93d6bd1624f464e68fa3583d8d',1,'D3D12EventTraceReplay']]],
   ['mreplayeddeallocatestats_25',['mReplayedDeallocateStats',['../class_d3_d12_event_trace_replay.html#af7468f6776fbff261d7c01c6151b53e2',1,'D3D12EventTraceReplay']]],
-  ['mresourceheaptier_26',['mResourceHeapTier',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a52eb2041d1ae33fd3ae14e88a68715ca',1,'gpgmm::d3d12::D3D12TestBase']]],
-  ['mthreadpool_27',['mThreadPool',['../classgpgmm_1_1_memory_allocator.html#a062a71010a9ea3332e0d160bcd6e4ee6',1,'gpgmm::MemoryAllocator']]]
+  ['mreplayedmemorystats_26',['mReplayedMemoryStats',['../class_d3_d12_event_trace_replay.html#aa458ab88e1a2d947daef561a32510623',1,'D3D12EventTraceReplay']]],
+  ['mresourceheaptier_27',['mResourceHeapTier',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a52eb2041d1ae33fd3ae14e88a68715ca',1,'gpgmm::d3d12::D3D12TestBase']]],
+  ['mthreadpool_28',['mThreadPool',['../classgpgmm_1_1_memory_allocator.html#a062a71010a9ea3332e0d160bcd6e4ee6',1,'gpgmm::MemoryAllocator']]]
 ];
