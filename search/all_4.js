@@ -22,6 +22,6 @@ var searchData=
   ['eventtracewriter_2ecpp_19',['EventTraceWriter.cpp',['../_event_trace_writer_8cpp.html',1,'']]],
   ['eventtracewriter_2eh_20',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
   ['evict_21',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4',1,'gpgmm::d3d12::ResidencyManager']]],
-  ['evictlimit_22',['EvictLimit',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab5b2e06398ba6c604d4e93fda3be6413',1,'gpgmm::d3d12::RESIDENCY_DESC::EvictLimit()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a7544785dd40bf2aa1c2c2c0ca1c3ffda',1,'gpgmm::d3d12::ALLOCATOR_DESC::EvictLimit()']]],
+  ['evictbatchsize_22',['EvictBatchSize',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a53a630fb905d3b72bbeffe1b00030b82',1,'gpgmm::d3d12::RESIDENCY_DESC::EvictBatchSize()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a1b89fa5ae0e519ba4f8414db8f3d725b',1,'gpgmm::d3d12::ALLOCATOR_DESC::EvictBatchSize()']]],
   ['executecommandlists_23',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]]
 ];
