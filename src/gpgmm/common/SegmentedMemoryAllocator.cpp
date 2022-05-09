@@ -127,35 +127,28 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
-        uint64_t requestSize,
-        uint64_t alignment,
-        bool neverAllocate,
-        bool cacheSize,
-        bool prefetchMemory) {
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(requestSize);
+        GPGMM_CHECK_NONZERO(request.SizeInBytes);
 
-        if (alignment != mMemoryAlignment) {
+        if (request.Alignment != mMemoryAlignment) {
             InfoEvent("SegmentedMemoryAllocator.TryAllocateMemory",
                       ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
                 << "Allocation alignment must match memory alignment (" +
-                       std::to_string(alignment) + " vs " + std::to_string(mMemoryAlignment) +
-                       " bytes).";
+                       std::to_string(request.Alignment) + " vs " +
+                       std::to_string(mMemoryAlignment) + " bytes).";
             return {};
         }
 
-        MemorySegment* segment = GetOrCreateFreeSegment(requestSize);
+        MemorySegment* segment = GetOrCreateFreeSegment(request.SizeInBytes);
         ASSERT(segment != nullptr);
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
         if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(
-                GetNextInChain()->TryAllocateMemory(requestSize, mMemoryAlignment, neverAllocate,
-                                                    cacheSize, prefetchMemory),
-                allocation);
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
         } else {
             mInfo.FreeMemoryUsage -= allocation->GetSize();
         }

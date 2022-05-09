@@ -222,10 +222,15 @@ namespace gpgmm { namespace vk {
             FindMemoryTypeIndex(requirements.memoryTypeBits, allocationInfo, &memoryTypeIndex));
 
         MemoryAllocator* allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
-        std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(
-            requirements.size, requirements.alignment,
-            (allocationInfo.flags & GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY), /*cacheSize*/ false,
-            (allocationInfo.flags & GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY));
+
+        MEMORY_ALLOCATION_REQUEST request = {};
+        request.SizeInBytes = requirements.size;
+        request.Alignment = requirements.alignment;
+        request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        request.CacheSize = false;
+        request.AlwaysPrefetch = (allocationInfo.flags & GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
+
+        std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);
         if (memoryAllocation == nullptr) {
             InfoEvent("GpResourceAllocator.TryAllocateResource",
                       ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)

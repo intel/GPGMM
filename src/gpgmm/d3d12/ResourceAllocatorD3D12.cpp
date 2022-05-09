@@ -303,22 +303,18 @@ namespace gpgmm { namespace d3d12 {
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
         HRESULT TryAllocateResource(MemoryAllocator* allocator,
-                                    uint64_t size,
-                                    uint64_t alignment,
-                                    bool neverAllocate,
-                                    bool cacheSize,
-                                    bool prefetchMemory,
+                                    const MEMORY_ALLOCATION_REQUEST& request,
                                     CreateResourceFn&& createResourceFn) {
             // Do not attempt to allocate if the requested size already exceeds the fixed
             // memory size allowed by the allocator. Otherwise, both the memory and resource would
             // be created, immediately released, then likely re-allocated all over again once
             // TryAllocateResource returns.
-            if (allocator->GetMemorySize() != kInvalidSize && size > allocator->GetMemorySize()) {
+            if (allocator->GetMemorySize() != kInvalidSize &&
+                request.SizeInBytes > allocator->GetMemorySize()) {
                 return E_FAIL;
             }
 
-            std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(
-                size, alignment, neverAllocate, cacheSize, prefetchMemory);
+            std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
             if (allocation == nullptr) {
                 InfoEvent("ResourceAllocator.TryAllocateResource",
                           ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
@@ -549,25 +545,28 @@ namespace gpgmm { namespace d3d12 {
                         continue;
                     }
 
+                    MEMORY_ALLOCATION_REQUEST cacheRequest = {};
+                    cacheRequest.SizeInBytes = sizeToCache;
+                    cacheRequest.NeverAllocate = true;
+                    cacheRequest.CacheSize = true;
+                    cacheRequest.AlwaysPrefetch = false;
+
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        allocator->TryAllocateMemory(
-                            sizeToCache, D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT,
-                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
+                        cacheRequest.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+                        allocator->TryAllocateMemory(cacheRequest);
                     }
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        allocator->TryAllocateMemory(
-                            sizeToCache, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
+                        cacheRequest.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+                        allocator->TryAllocateMemory(cacheRequest);
                     }
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        allocator->TryAllocateMemory(
-                            sizeToCache, D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT,
-                            /*neverAllocate*/ true, /*cacheSize*/ true, /*prefetchMemory*/ false);
+                        cacheRequest.Alignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
+                        allocator->TryAllocateMemory(cacheRequest);
                     }
                 }
             }
@@ -689,7 +688,7 @@ namespace gpgmm { namespace d3d12 {
         const bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
-        const bool prefetchMemory =
+        const bool alwaysPrefetch =
             allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY;
 
         // Attempt to allocate using the most effective allocator.;
@@ -708,13 +707,15 @@ namespace gpgmm { namespace d3d12 {
             !mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            const uint64_t alignment =
-                (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
+            MEMORY_ALLOCATION_REQUEST request = {};
+            request.SizeInBytes = newResourceDesc.Width;
+            request.Alignment = (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
+            request.NeverAllocate = neverAllocate;
+            request.CacheSize = false;
+            request.AlwaysPrefetch = false;
 
-            ReturnIfSucceeded(TryAllocateResource(
-                allocator, newResourceDesc.Width, alignment, neverAllocate,
-                /*prefetchMemory*/ false,
-                /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
+            ReturnIfSucceeded(
+                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -744,10 +745,15 @@ namespace gpgmm { namespace d3d12 {
         if (!mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            ReturnIfSucceeded(TryAllocateResource(
-                allocator, resourceInfo.SizeInBytes, resourceInfo.Alignment, neverAllocate,
-                prefetchMemory,
-                /*cacheSize*/ false, [&](const auto& subAllocation) -> HRESULT {
+            MEMORY_ALLOCATION_REQUEST request = {};
+            request.SizeInBytes = resourceInfo.SizeInBytes;
+            request.Alignment = resourceInfo.Alignment;
+            request.NeverAllocate = neverAllocate;
+            request.CacheSize = false;
+            request.AlwaysPrefetch = alwaysPrefetch;
+
+            ReturnIfSucceeded(
+                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -787,10 +793,15 @@ namespace gpgmm { namespace d3d12 {
         if (!mIsAlwaysCommitted) {
             allocator = mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            ReturnIfSucceeded(TryAllocateResource(
-                allocator, resourceInfo.SizeInBytes, GetHeapAlignment(heapFlags), neverAllocate,
-                /*cacheSize*/ false, /*prefetchMemory*/ false,
-                [&](const auto& allocation) -> HRESULT {
+            MEMORY_ALLOCATION_REQUEST request = {};
+            request.SizeInBytes = resourceInfo.SizeInBytes;
+            request.Alignment = GetHeapAlignment(heapFlags);
+            request.NeverAllocate = neverAllocate;
+            request.CacheSize = false;
+            request.AlwaysPrefetch = false;
+
+            ReturnIfSucceeded(
+                TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = ToBackend(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),

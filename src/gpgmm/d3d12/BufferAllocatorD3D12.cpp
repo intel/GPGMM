@@ -36,23 +36,21 @@ namespace gpgmm { namespace d3d12 {
           mBufferAlignment(bufferAlignment) {
     }
 
-    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(uint64_t requestSize,
-                                                                         uint64_t alignment,
-                                                                         bool neverAllocate,
-                                                                         bool cacheSize,
-                                                                         bool prefetchMemory) {
+    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (GetMemorySize() != requestSize || GetMemoryAlignment() != alignment || neverAllocate) {
+        if (GetMemorySize() != request.SizeInBytes || GetMemoryAlignment() != request.Alignment ||
+            request.NeverAllocate) {
             return {};
         }
 
         D3D12_RESOURCE_DESC resourceDescriptor;
         resourceDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDescriptor.Alignment = alignment;
-        resourceDescriptor.Width = requestSize;
+        resourceDescriptor.Alignment = request.Alignment;
+        resourceDescriptor.Width = request.SizeInBytes;
         resourceDescriptor.Height = 1;
         resourceDescriptor.DepthOrArraySize = 1;
         resourceDescriptor.MipLevels = 1;
@@ -65,7 +63,7 @@ namespace gpgmm { namespace d3d12 {
         // Optimized clear is not supported for buffers.
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
-                mHeapType, D3D12_HEAP_FLAG_NONE, requestSize, &resourceDescriptor,
+                mHeapType, D3D12_HEAP_FLAG_NONE, request.SizeInBytes, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
                 &resourceHeap))) {
             return {};

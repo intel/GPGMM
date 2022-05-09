@@ -32,8 +32,23 @@ static constexpr double kDefaultSlabFragmentationLimit = 0.125;
 static constexpr double kNoSlabGrowthFactor = 1.0;
 static constexpr bool kDefaultPrefetchSlab = false;
 
+class SlabMemoryAllocatorTests : public testing::Test {
+  public:
+    MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size,
+                                                 uint64_t alignment,
+                                                 bool neverAllocate = false) {
+        MEMORY_ALLOCATION_REQUEST request = {};
+        request.SizeInBytes = size;
+        request.Alignment = alignment;
+        request.NeverAllocate = neverAllocate;
+        request.CacheSize = false;
+        request.AlwaysPrefetch = false;
+        return request;
+    }
+};
+
 // Verify allocation in a single slab.
-TEST(SlabMemoryAllocatorTests, SingleSlab) {
+TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
 
@@ -46,7 +61,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kDefaultPrefetchSlab, kNoSlabGrowthFactor,
                                       dummyMemoryAllocator.get());
 
-        ASSERT_EQ(allocator.TryAllocateMemory(kBlockSize * 2, 1, false, false, false), nullptr);
+        ASSERT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 2, 1)), nullptr);
     }
 
     // Verify allocation greater then slab size fails.
@@ -58,8 +73,8 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kDefaultPrefetchSlab, kNoSlabGrowthFactor,
                                       dummyMemoryAllocator.get());
 
-        ASSERT_EQ(allocator.TryAllocateMemory(kMaxSlabSize, 1, false, false, false), nullptr);
-        ASSERT_EQ(allocator.TryAllocateMemory(kMaxSlabSize - 1, 1, false, false, false), nullptr);
+        ASSERT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kMaxSlabSize, 1)), nullptr);
+        ASSERT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kMaxSlabSize - 1, 1)), nullptr);
     }
 
     // Verify allocation equal to the slab size always succeeds.
@@ -72,7 +87,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kNoSlabGrowthFactor, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -93,11 +108,11 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
         // Max allocation cannot be more than 1/8th the max slab size or 4 bytes.
         // Since a 10 byte allocation requires a 128 byte slab, allocation should always fail.
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(10, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(10, 1));
         ASSERT_EQ(allocation, nullptr);
 
         // Re-attempt with an allocation that is under the fragmentation limit.
-        allocation = allocator.TryAllocateMemory(14, 1, false, false, false);
+        allocation = allocator.TryAllocateMemory(CreateBasicRequest(14, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -116,7 +131,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kNoSlabGrowthFactor, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
         EXPECT_GE(allocation->GetMemory()->GetSize(), kSlabSize);
@@ -134,7 +149,7 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kNoSlabGrowthFactor, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_GE(allocation->GetSize(), kBlockSize);
         EXPECT_GE(allocation->GetMemory()->GetSize(), kSlabSize);
@@ -151,14 +166,16 @@ TEST(SlabMemoryAllocatorTests, SingleSlab) {
                                       kDefaultPrefetchSlab, kNoSlabGrowthFactor,
                                       dummyMemoryAllocator.get());
 
-        EXPECT_EQ(allocator.TryAllocateMemory(kBlockSize, 1, true, false, false), nullptr);
-        EXPECT_EQ(allocator.TryAllocateMemory(kBlockSize / 2, 1, true, false, false), nullptr);
-        EXPECT_EQ(allocator.TryAllocateMemory(kBlockSize / 4, 1, true, false, false), nullptr);
+        EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1, true)), nullptr);
+        EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize / 2, 1, true)),
+                  nullptr);
+        EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize / 4, 1, true)),
+                  nullptr);
     }
 }
 
 // Verify allocation in multiple slabs.
-TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
+TEST_F(SlabMemoryAllocatorTests, MultipleSlabs) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
 
@@ -175,7 +192,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
         for (uint32_t slabi = 0; slabi < kNumOfSlabs; slabi++) {
             std::unique_ptr<MemoryAllocation> allocation =
-                allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+                allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
             ASSERT_NE(allocation, nullptr);
             allocations.push_back(std::move(allocation));
         }
@@ -202,7 +219,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
         for (uint32_t blocki = 0; blocki < (kDefaultSlabSize * 2 / kBlockSize); blocki++) {
             std::unique_ptr<MemoryAllocation> allocation =
-                allocator.TryAllocateMemory(22, 1, false, false, false);
+                allocator.TryAllocateMemory(CreateBasicRequest(22, 1));
             ASSERT_NE(allocation, nullptr);
             allocations.push_back(std::move(allocation));
         }
@@ -228,37 +245,37 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
 
         // Both allocation A and B go in Slab A, which will become full.
         std::unique_ptr<MemoryAllocation> allocationAinSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationAinSlabA, nullptr);
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationAinSlabA, nullptr);
 
         EXPECT_EQ(allocationAinSlabA->GetMemory(), allocationBInSlabA->GetMemory());
 
         // Allocation C and D go in Slab B, which will become full.
         std::unique_ptr<MemoryAllocation> allocationCInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationCInSlabB, nullptr);
 
         EXPECT_NE(allocationBInSlabA->GetMemory(), allocationCInSlabB->GetMemory());
 
         std::unique_ptr<MemoryAllocation> allocationDInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationDInSlabB, nullptr);
 
         EXPECT_EQ(allocationCInSlabB->GetMemory(), allocationDInSlabB->GetMemory());
 
         // Allocation E and F goes in Slab C, which will become full.
         std::unique_ptr<MemoryAllocation> allocationEInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationEInSlabC, nullptr);
 
         EXPECT_NE(allocationDInSlabB->GetMemory(), allocationEInSlabC->GetMemory());
 
         std::unique_ptr<MemoryAllocation> allocationFInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationFInSlabC, nullptr);
 
         EXPECT_EQ(allocationEInSlabC->GetMemory(), allocationFInSlabC->GetMemory());
@@ -273,7 +290,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         // Full list: C.
 
         std::unique_ptr<MemoryAllocation> allocationGInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationGInSlabB, nullptr);
         EXPECT_EQ(allocationDInSlabB->GetMemory(), allocationGInSlabB->GetMemory());
 
@@ -281,7 +298,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
         // Full list: B -> C.
 
         std::unique_ptr<MemoryAllocation> allocationHInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationGInSlabB, nullptr);
 
         EXPECT_EQ(allocationBInSlabA->GetMemory(), allocationHInSlabA->GetMemory());
@@ -303,7 +320,7 @@ TEST(SlabMemoryAllocatorTests, MultipleSlabs) {
 }
 
 // Verify a very large allocation does not overflow.
-TEST(SlabMemoryAllocatorTests, AllocationOverflow) {
+TEST_F(SlabMemoryAllocatorTests, AllocationOverflow) {
     std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
 
@@ -315,12 +332,12 @@ TEST(SlabMemoryAllocatorTests, AllocationOverflow) {
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     std::unique_ptr<MemoryAllocation> invalidAllocation =
-        allocator.TryAllocateMemory(largeBlock, kDefaultSlabAlignment, true, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(largeBlock, kDefaultSlabAlignment, true));
     ASSERT_EQ(invalidAllocation, nullptr);
 }
 
 // Verify slab will be reused from a pool.
-TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
+TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
     LIFOMemoryPool pool(kDefaultSlabSize);
     std::unique_ptr<PooledMemoryAllocator> poolAllocator =
         std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(), &pool);
@@ -341,7 +358,7 @@ TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
     // Allocate |kNumOfSlabs| worth.
     while (slabMemory.size() < kNumOfSlabs) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kBlockSize);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -362,7 +379,7 @@ TEST(SlabMemoryAllocatorTests, ReuseSlabs) {
     pool.ReleasePool();
 }
 
-TEST(SlabMemoryAllocatorTests, GetInfo) {
+TEST_F(SlabMemoryAllocatorTests, GetInfo) {
     // Test slab allocator.
     {
         std::unique_ptr<DummyMemoryAllocator> dummyMemoryAllocator =
@@ -376,7 +393,7 @@ TEST(SlabMemoryAllocatorTests, GetInfo) {
                                       dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be allocated.
@@ -411,7 +428,7 @@ TEST(SlabMemoryAllocatorTests, GetInfo) {
                                       poolAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_NE(allocation, nullptr);
 
         EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 1u);
@@ -431,7 +448,7 @@ TEST(SlabMemoryAllocatorTests, GetInfo) {
 }
 
 // Grow slabs one after another below kMaxSlabSize.
-TEST(SlabMemoryAllocatorTests, SlabGrowth) {
+TEST_F(SlabMemoryAllocatorTests, SlabGrowth) {
     // Start from kMinSlabSize == kBlockSize.
     {
         constexpr uint64_t kBlockSize = 32;
@@ -445,39 +462,39 @@ TEST(SlabMemoryAllocatorTests, SlabGrowth) {
 
         // Slab A contains 1 allocation.
         std::unique_ptr<MemoryAllocation> allocationAInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabA->GetMemory()->GetSize(), kBlockSize);
 
         // Slab B grows 2x and contains 2 allocations.
         std::unique_ptr<MemoryAllocation> allocationAInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabB->GetMemory()->GetSize(), kBlockSize * 2);
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabB->GetMemory()->GetSize(), kBlockSize * 2);
 
         // Slab C grows 2x and contains 4 allocations.
         std::unique_ptr<MemoryAllocation> allocationAInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabC->GetMemory()->GetSize(), kBlockSize * 4);
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabC->GetMemory()->GetSize(), kBlockSize * 4);
 
         std::unique_ptr<MemoryAllocation> allocationCInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationCInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationCInSlabC->GetMemory()->GetSize(), kBlockSize * 4);
 
         std::unique_ptr<MemoryAllocation> allocationDInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationDInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationDInSlabC->GetMemory()->GetSize(), kBlockSize * 4);
 
@@ -507,12 +524,12 @@ TEST(SlabMemoryAllocatorTests, SlabGrowth) {
 
         // Slab A grows 1x kMinSlabSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabA->GetMemory()->GetSize(), kMinSlabSize);
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabA->GetMemory()->GetSize(), kMinSlabSize);
 
@@ -520,7 +537,7 @@ TEST(SlabMemoryAllocatorTests, SlabGrowth) {
 
         // Slab B grows 2x kMinSlabSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabB->GetMemory()->GetSize(), kMinSlabSize * 2);
 
@@ -536,7 +553,7 @@ TEST(SlabMemoryAllocatorTests, SlabGrowth) {
 }
 
 // Grow slabs until kMaxSlabSize is reached.
-TEST(SlabMemoryAllocatorTests, SlabGrowthLimit) {
+TEST_F(SlabMemoryAllocatorTests, SlabGrowthLimit) {
     // Start from a kMinSlabSize > kBlockSize.
     {
         constexpr uint64_t kBlockSize = 16;
@@ -550,12 +567,12 @@ TEST(SlabMemoryAllocatorTests, SlabGrowthLimit) {
 
         // Slab A grows 1x kMinSlabSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabA->GetMemory()->GetSize(), kMinSlabSize);
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabA->GetMemory()->GetSize(), kMinSlabSize);
 
@@ -563,7 +580,7 @@ TEST(SlabMemoryAllocatorTests, SlabGrowthLimit) {
 
         // Slab B grows 2x kMinSlabSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabB->GetMemory()->GetSize(), kMinSlabSize * 2);
 
@@ -588,33 +605,33 @@ TEST(SlabMemoryAllocatorTests, SlabGrowthLimit) {
 
         // Slab A grows 1x kBlockSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabA->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabA->GetMemory()->GetSize(), kBlockSize);
 
         // Slab B grows 2x kBlockSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabB->GetMemory()->GetSize(), kBlockSize * 2);
 
         EXPECT_NE(allocationAInSlabA->GetMemory(), allocationAInSlabB->GetMemory());
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabB =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabB->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabB->GetMemory()->GetSize(), kBlockSize * 2);
 
         // Slab C STILL grows 2x kBlockSize.
         std::unique_ptr<MemoryAllocation> allocationAInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationAInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationAInSlabC->GetMemory()->GetSize(), kBlockSize * 2);
 
         EXPECT_NE(allocationBInSlabB->GetMemory(), allocationAInSlabC->GetMemory());
 
         std::unique_ptr<MemoryAllocation> allocationBInSlabC =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_EQ(allocationBInSlabC->GetSize(), kBlockSize);
         EXPECT_EQ(allocationBInSlabC->GetMemory()->GetSize(), kBlockSize * 2);
 
@@ -630,7 +647,9 @@ TEST(SlabMemoryAllocatorTests, SlabGrowthLimit) {
     }
 }
 
-TEST(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
+class SlabCacheAllocatorTests : public SlabMemoryAllocatorTests {};
+
+TEST_F(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
@@ -640,12 +659,13 @@ TEST(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
     // Verify requesting an allocation without memory will not return a valid allocation.
     {
         constexpr uint64_t kBlockSize = 4;
-        EXPECT_EQ(allocator.TryAllocateMemory(kBlockSize, 1, true, false, false), nullptr);
-        EXPECT_EQ(allocator.TryAllocateMemory(kBlockSize * 2, 1, true, false, false), nullptr);
+        EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1, true)), nullptr);
+        EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 2, 1, true)),
+                  nullptr);
     }
 }
 
-TEST(SlabCacheAllocatorTests, SingleSlabMultipleAlignments) {
+TEST_F(SlabCacheAllocatorTests, SingleSlabMultipleAlignments) {
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
@@ -656,12 +676,12 @@ TEST(SlabCacheAllocatorTests, SingleSlabMultipleAlignments) {
     {
         constexpr uint64_t kBlockSize = 4;
         std::unique_ptr<MemoryAllocation> allocationWithAlignmentA =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         ASSERT_NE(allocationWithAlignmentA, nullptr);
         EXPECT_EQ(allocationWithAlignmentA->GetSize(), AlignTo(kBlockSize, 1));
 
         std::unique_ptr<MemoryAllocation> allocationWithAlignmentB =
-            allocator.TryAllocateMemory(kBlockSize, 16, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 16));
         ASSERT_NE(allocationWithAlignmentB, nullptr);
         EXPECT_EQ(allocationWithAlignmentB->GetSize(), AlignTo(kBlockSize, 16));
 
@@ -670,7 +690,7 @@ TEST(SlabCacheAllocatorTests, SingleSlabMultipleAlignments) {
     }
 }
 
-TEST(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
+TEST_F(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
@@ -678,29 +698,29 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
                                  kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> firstAllocation =
-        allocator.TryAllocateMemory(22, 1, false, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(22, 1));
     ASSERT_NE(firstAllocation, nullptr);
 
     std::unique_ptr<MemoryAllocation> secondAllocation =
-        allocator.TryAllocateMemory(22, 1, false, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(22, 1));
     ASSERT_NE(secondAllocation, nullptr);
 
     allocator.DeallocateMemory(std::move(firstAllocation));
     allocator.DeallocateMemory(std::move(secondAllocation));
 
     std::unique_ptr<MemoryAllocation> thirdAllocation =
-        allocator.TryAllocateMemory(44, 1, false, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(44, 1));
     ASSERT_NE(thirdAllocation, nullptr);
 
     std::unique_ptr<MemoryAllocation> fourthAllocation =
-        allocator.TryAllocateMemory(44, 1, false, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(44, 1));
     ASSERT_NE(fourthAllocation, nullptr);
 
     allocator.DeallocateMemory(std::move(thirdAllocation));
     allocator.DeallocateMemory(std::move(fourthAllocation));
 }
 
-TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
+TEST_F(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
@@ -709,7 +729,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     {
         constexpr uint64_t allocationSize = 22;
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(allocationSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(allocationSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -720,7 +740,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     {
         constexpr uint64_t allocationSize = 44;
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(allocationSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(allocationSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -731,7 +751,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     {
         constexpr uint64_t allocationSize = 88;
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(allocationSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(allocationSize, 1));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetOffset(), 0u);
         EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -743,7 +763,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
 }
 
-TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {
+TEST_F(SlabCacheAllocatorTests, SingleSlabInBuddy) {
     // 1. Create a buddy allocator as the back-end allocator.
     // 2. Create a slab allocator as the front-end allocator.
     constexpr uint64_t kMaxBlockSize = 256;
@@ -758,7 +778,7 @@ TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {
 
     constexpr uint64_t kBlockSize = 4;
     std::unique_ptr<MemoryAllocation> allocation =
-        allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+        allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetOffset(), 0u);
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -767,7 +787,7 @@ TEST(SlabCacheAllocatorTests, SingleSlabInBuddy) {
     allocator.DeallocateMemory(std::move(allocation));
 }
 
-TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
+TEST_F(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     // 1. Create a buddy allocator as the back-end allocator.
     // 2. Create a slab allocator as the front-end allocator.
     constexpr uint64_t kMaxBlockSize = 256;
@@ -784,7 +804,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     {
         constexpr uint64_t allocationSize = 8;
         std::unique_ptr<MemoryAllocation> firstAllocation =
-            allocator.TryAllocateMemory(allocationSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(allocationSize, 1));
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetOffset(), 0u);
         EXPECT_EQ(firstAllocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -793,7 +813,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
         EXPECT_EQ(firstAllocation->GetMemory()->GetSize(), kDefaultSlabSize);
 
         std::unique_ptr<MemoryAllocation> secondAllocation =
-            allocator.TryAllocateMemory(allocationSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(allocationSize, 1));
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetOffset(), allocationSize);
         EXPECT_EQ(secondAllocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -811,7 +831,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
         std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
         for (uint32_t i = 0; i < kDefaultSlabSize / kSlabSize; i++) {
             std::unique_ptr<MemoryAllocation> allocation =
-                allocator.TryAllocateMemory(kSlabSize, 1, false, false, false);
+                allocator.TryAllocateMemory(CreateBasicRequest(kSlabSize, 1));
             ASSERT_NE(allocation, nullptr);
             EXPECT_EQ(allocation->GetOffset(), i * kSlabSize);
             EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -821,14 +841,14 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
 
         // Next slab-buddy sub-allocation must be in the second buddy.
         std::unique_ptr<MemoryAllocation> firstSlabInSecondBuddy =
-            allocator.TryAllocateMemory(kSlabSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kSlabSize, 1));
         ASSERT_NE(firstSlabInSecondBuddy, nullptr);
         EXPECT_EQ(firstSlabInSecondBuddy->GetOffset(), 0u);
         EXPECT_EQ(firstSlabInSecondBuddy->GetMethod(), AllocationMethod::kSubAllocated);
         EXPECT_GE(firstSlabInSecondBuddy->GetSize(), kSlabSize);
 
         std::unique_ptr<MemoryAllocation> secondSlabInSecondBuddy =
-            allocator.TryAllocateMemory(kSlabSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kSlabSize, 1));
         ASSERT_NE(secondSlabInSecondBuddy, nullptr);
         EXPECT_EQ(secondSlabInSecondBuddy->GetOffset(), kSlabSize);
         EXPECT_EQ(secondSlabInSecondBuddy->GetMethod(), AllocationMethod::kSubAllocated);
@@ -845,7 +865,7 @@ TEST(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     }
 }
 
-TEST(SlabCacheAllocatorTests, GetInfo) {
+TEST_F(SlabCacheAllocatorTests, GetInfo) {
     // Test Slab allocator.
     {
         constexpr uint64_t kBlockSize = 32;
@@ -855,7 +875,7 @@ TEST(SlabCacheAllocatorTests, GetInfo) {
                                      kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be allocated.
@@ -887,7 +907,7 @@ TEST(SlabCacheAllocatorTests, GetInfo) {
                                          std::make_unique<DummyMemoryAllocator>(), &pool));
 
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_NE(allocation, nullptr);
 
         // Single sub-allocation within a slab should be used.
@@ -921,7 +941,7 @@ TEST(SlabCacheAllocatorTests, GetInfo) {
 
         constexpr uint64_t kBlockSize = 4;
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(kBlockSize, 1, false, false, false);
+            allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
         EXPECT_NE(allocation, nullptr);
 
         // Single slab block within buddy memory should be used.
@@ -943,7 +963,7 @@ TEST(SlabCacheAllocatorTests, GetInfo) {
 }
 
 // Pre-fetch |kNumOfSlabs| slabs worth of sub-allocations of various sizes.
-TEST(SlabCacheAllocatorTests, SlabPrefetch) {
+TEST_F(SlabCacheAllocatorTests, SlabPrefetch) {
     constexpr uint64_t kBlockSize = 32;
     constexpr uint64_t kMaxSlabSize = 512;
 
@@ -954,9 +974,9 @@ TEST(SlabCacheAllocatorTests, SlabPrefetch) {
     constexpr uint64_t kNumOfSlabs = 10u;
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
     for (size_t i = 0; i < kNumOfSlabs * (kDefaultSlabSize / kBlockSize); i++) {
-        allocations.push_back(allocator.TryAllocateMemory(kBlockSize, 1, false, false, false));
-        allocations.push_back(allocator.TryAllocateMemory(kBlockSize * 2, 1, false, false, false));
-        allocations.push_back(allocator.TryAllocateMemory(kBlockSize * 3, 1, false, false, false));
+        allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1)));
+        allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 2, 1)));
+        allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 3, 1)));
     }
 
     for (auto& allocation : allocations) {

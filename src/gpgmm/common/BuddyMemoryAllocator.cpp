@@ -40,26 +40,24 @@ namespace gpgmm {
         return SafeDivison(offset, mMemorySize);
     }
 
-    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(uint64_t requestSize,
-                                                                              uint64_t alignment,
-                                                                              bool neverAllocate,
-                                                                              bool cacheSize,
-                                                                              bool prefetchMemory) {
+    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
+        const MEMORY_ALLOCATION_REQUEST& request) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(requestSize);
+        GPGMM_CHECK_NONZERO(request.SizeInBytes);
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (requestSize > mMemorySize) {
+        if (request.SizeInBytes > mMemorySize) {
             InfoEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the memory size (" + std::to_string(requestSize) +
-                       " vs " + std::to_string(mMemorySize) + " bytes).";
+                << "Allocation size exceeded the memory size (" +
+                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mMemorySize) +
+                       " bytes).";
             return {};
         }
 
         // Round allocation size to nearest power-of-two.
-        const uint64_t allocationSize = NextPowerOfTwo(requestSize);
+        const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
 
         // Allocation cannot exceed the memory size.
         if (allocationSize > mMemorySize) {
@@ -74,7 +72,7 @@ namespace gpgmm {
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
-                             &mBuddyBlockAllocator, allocationSize, alignment,
+                             &mBuddyBlockAllocator, allocationSize, request.Alignment,
                              [&](const auto& block) -> MemoryBase* {
                                  const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
                                  std::unique_ptr<MemoryAllocation> memoryAllocation =
@@ -82,10 +80,13 @@ namespace gpgmm {
 
                                  // No existing, allocate new memory for the block.
                                  if (memoryAllocation == nullptr) {
-                                     GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(
-                                                          mMemorySize, mMemoryAlignment,
-                                                          neverAllocate, cacheSize, prefetchMemory),
-                                                      memoryAllocation);
+                                     MEMORY_ALLOCATION_REQUEST newRequest = request;
+                                     newRequest.SizeInBytes = mMemorySize;
+                                     newRequest.Alignment = mMemoryAlignment;
+
+                                     GPGMM_TRY_ASSIGN(
+                                         GetNextInChain()->TryAllocateMemory(newRequest),
+                                         memoryAllocation);
                                  }
 
                                  MemoryBase* memory = memoryAllocation->GetMemory();

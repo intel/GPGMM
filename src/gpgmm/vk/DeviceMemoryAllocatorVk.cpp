@@ -32,14 +32,10 @@ namespace gpgmm { namespace vk {
     }
 
     std::unique_ptr<MemoryAllocation> DeviceMemoryAllocator::TryAllocateMemory(
-        uint64_t requestSize,
-        uint64_t alignment,
-        bool neverAllocate,
-        bool cacheSize,
-        bool prefetchMemory) {
+        const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "DeviceMemoryAllocator.TryAllocateMemory");
 
-        if (neverAllocate) {
+        if (request.NeverAllocate) {
             return {};
         }
 
@@ -54,18 +50,19 @@ namespace gpgmm { namespace vk {
             return {};
         }
 
-        if (requestSize > mMemorySize) {
+        if (request.SizeInBytes > mMemorySize) {
             DebugEvent("DeviceMemoryAllocator.TryAllocateMemory",
                        ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the memory size (" + std::to_string(requestSize) +
-                       " vs " + std::to_string(mMemorySize) + " bytes).";
+                << "Allocation size exceeded the memory size (" +
+                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mMemorySize) +
+                       " bytes).";
             return {};
         }
 
         VkMemoryAllocateInfo allocateInfo = {};
         allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocateInfo.pNext = nullptr;
-        allocateInfo.allocationSize = requestSize;
+        allocateInfo.allocationSize = request.SizeInBytes;
         allocateInfo.memoryTypeIndex = mMemoryTypeIndex;
 
         VkDeviceMemory deviceMemory = VK_NULL_HANDLE;
@@ -75,11 +72,11 @@ namespace gpgmm { namespace vk {
             return {};
         }
 
-        mInfo.UsedMemoryUsage += requestSize;
+        mInfo.UsedMemoryUsage += request.SizeInBytes;
         mInfo.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(
-            this, new DeviceMemory(deviceMemory, mMemoryTypeIndex, requestSize));
+            this, new DeviceMemory(deviceMemory, mMemoryTypeIndex, request.SizeInBytes));
     }
 
     void DeviceMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

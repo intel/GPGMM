@@ -18,13 +18,12 @@ namespace gpgmm {
 
     class AllocateMemoryTask : public VoidCallback {
       public:
-        AllocateMemoryTask(MemoryAllocator* allocator, uint64_t requestSize, uint64_t alignment)
-            : mAllocator(allocator), mRequestSize(requestSize), mAlignment(alignment) {
+        AllocateMemoryTask(MemoryAllocator* allocator, const MEMORY_ALLOCATION_REQUEST& request)
+            : mAllocator(allocator), mRequest(request) {
         }
 
         void operator()() override {
-            mAllocation = mAllocator->TryAllocateMemory(mRequestSize, mAlignment, /*neverAllocate*/
-                                                        false, true, false);
+            mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
         std::unique_ptr<MemoryAllocation> AcquireAllocation() {
@@ -33,8 +32,7 @@ namespace gpgmm {
 
       private:
         MemoryAllocator* const mAllocator;
-        const uint64_t mRequestSize;
-        const uint64_t mAlignment;
+        const MEMORY_ALLOCATION_REQUEST mRequest;
 
         std::unique_ptr<MemoryAllocation> mAllocation;
     };
@@ -81,20 +79,16 @@ namespace gpgmm {
         }
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(uint64_t requestSize,
-                                                                         uint64_t alignment,
-                                                                         bool neverAllocate,
-                                                                         bool cacheSize,
-                                                                         bool prefetchMemory) {
+    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(
+        const MEMORY_ALLOCATION_REQUEST& request) {
         ASSERT(false);
         return {};
     }
 
     std::shared_ptr<MemoryAllocationEvent> MemoryAllocator::TryAllocateMemoryAsync(
-        uint64_t size,
-        uint64_t alignment) {
+        const MEMORY_ALLOCATION_REQUEST& request) {
         std::shared_ptr<AllocateMemoryTask> task =
-            std::make_shared<AllocateMemoryTask>(this, size, alignment);
+            std::make_shared<AllocateMemoryTask>(this, request);
         return std::make_shared<MemoryAllocationEvent>(ThreadPool::PostTask(mThreadPool, task),
                                                        task);
     }
