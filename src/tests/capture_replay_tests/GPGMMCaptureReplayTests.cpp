@@ -93,7 +93,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
         }
 
         if (strcmp("--disable-suballocation", argv[i]) == 0) {
-            mParams.DisableSuballocation = true;
+            mParams.IsSuballocationDisabled = true;
             continue;
         }
 
@@ -235,7 +235,7 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"
                      << "Disable sub-allocation: "
-                     << (mParams.DisableSuballocation ? "true" : "false") << "\n"
+                     << (mParams.IsSuballocationDisabled ? "true" : "false") << "\n"
                      << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n"
                      << "Profile: " << AllocatorProfileToString(mParams.AllocatorProfile) << "\n";
 }
@@ -300,6 +300,10 @@ void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceP
         envParams.PrefetchMemory = forceParams.PrefetchMemory;
     }
 
+    if (forceParams.IsSuballocationDisabled != envParams.IsSuballocationDisabled) {
+        envParams.IsSuballocationDisabled = forceParams.IsSuballocationDisabled;
+    }
+
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
         RunTest(GetParam(), envParams, i);
     }
@@ -311,17 +315,4 @@ void CaptureReplayTestWithParams::LogCallStats(const std::string& name,
         (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
     gpgmm::InfoLog() << name << " per second: " << (1e3 / avgCpuTimePerCallInMs)
                      << " (peak: " << (stats.PeakCpuTime * 1e3) << " ms)";
-}
-
-void CaptureReplayTestWithParams::LogMemoryStats(const std::string& name,
-                                                 const CaptureReplayMemoryStats& stats) const {
-    gpgmm::InfoLog() << name << " total "
-                     << "size (bytes): " << stats.TotalSize / gTestEnv->GetParams().Iterations;
-
-    if (stats.PeakUsage > 0) {
-        gpgmm::InfoLog() << name << " peak usage (bytes): " << stats.PeakUsage;
-    }
-
-    gpgmm::InfoLog() << name << " total "
-                     << "count: " << stats.TotalCount / gTestEnv->GetParams().Iterations;
 }
