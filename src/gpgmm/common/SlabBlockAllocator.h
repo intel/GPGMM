@@ -28,13 +28,14 @@ namespace gpgmm {
     // slab block allocation is always fast.
     class SlabBlockAllocator final : public BlockAllocator {
       public:
-        SlabBlockAllocator() = default;
         SlabBlockAllocator(uint64_t blockCount, uint64_t blockSize);
         ~SlabBlockAllocator() override;
 
         // BlockAllocator interface
         MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) override;
         void DeallocateBlock(MemoryBlock* block) override;
+
+        uint64_t GetBlockCount() const;
 
         const char* GetTypename() const override;
 
@@ -49,8 +50,8 @@ namespace gpgmm {
 
         BlockList mFreeList;
 
-        uint64_t mBlockCount = kInvalidSize;
-        uint64_t mBlockSize = kInvalidSize;
+        const uint64_t mBlockCount;
+        const uint64_t mBlockSize;
 
         uint64_t mNextFreeBlockIndex = kInvalidIndex;  // Next index or "slot" in the slab.
     };

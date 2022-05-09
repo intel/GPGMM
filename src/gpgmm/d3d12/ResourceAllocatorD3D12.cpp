@@ -472,7 +472,8 @@ namespace gpgmm { namespace d3d12 {
                     /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
                     /*slabAlignment*/ heapAlignment,
                     /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
-                    /*enablePrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
+                    /*allowSlabPrefetch*/
+                    !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
                     /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
                     std::move(pooledOrNonPooledAllocator));
             }
@@ -523,7 +524,7 @@ namespace gpgmm { namespace d3d12 {
                         /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
                         /*slabFragmentationLimit*/ 0,
-                        /*enablePrefetch*/ false,
+                        /*allowSlabPrefetch*/ false,
                         /*slabMemoryGrowth*/ 1, std::move(pooledOrNonPooledAllocator));
             }
 

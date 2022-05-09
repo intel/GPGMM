@@ -24,6 +24,9 @@ namespace gpgmm {
 
     SlabBlockAllocator::SlabBlockAllocator(uint64_t blockCount, uint64_t blockSize)
         : mBlockCount(blockCount), mBlockSize(blockSize), mNextFreeBlockIndex(0) {
+        ASSERT(mBlockCount > 0);
+        ASSERT(mBlockSize > 0);
+
         SlabBlock* head = new SlabBlock{};
         head->Offset = 0;
         head->Size = blockSize;
@@ -86,6 +89,10 @@ namespace gpgmm {
         SlabBlock* head = mFreeList.pHead;
         mFreeList.pHead = currBlock;
         currBlock->pNext = head;
+    }
+
+    uint64_t SlabBlockAllocator::GetBlockCount() const {
+        return mBlockCount;
     }
 
     const char* SlabBlockAllocator::GetTypename() const {

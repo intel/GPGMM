@@ -33,7 +33,7 @@ namespace gpgmm {
                                              uint64_t minSlabSize,
                                              uint64_t slabAlignment,
                                              double slabFragmentationLimit,
-                                             bool alwaysPrefetchSlab,
+                                             bool allowSlabPrefetch,
                                              double slabGrowthFactor,
                                              MemoryAllocator* memoryAllocator)
         : mLastUsedSlabSize(0),
@@ -42,7 +42,7 @@ namespace gpgmm {
           mMaxSlabSize(maxSlabSize),
           mMinSlabSize(std::max(minSlabSize, mSlabAlignment)),
           mSlabFragmentationLimit(slabFragmentationLimit),
-          mAlwaysPrefetchSlab(alwaysPrefetchSlab),
+          mAllowSlabPrefetch(allowSlabPrefetch),
           mSlabGrowthFactor(slabGrowthFactor),
           mMemoryAllocator(memoryAllocator) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
@@ -208,10 +208,10 @@ namespace gpgmm {
         //
         // TODO: Measure if the slab allocation time remaining exceeds the prefetch memory task
         // time before deciding to prefetch.
-        if ((request.AlwaysPrefetch || mAlwaysPrefetchSlab) && !request.NeverAllocate &&
+        if ((request.AlwaysPrefetch || mAllowSlabPrefetch) && !request.NeverAllocate &&
             mNextSlabAllocationEvent == nullptr &&
             pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
-            pFreeSlab->BlockCount >= kSlabPrefetchTotalBlockCount) {
+            pFreeSlab->GetBlockCount() >= kSlabPrefetchTotalBlockCount) {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
@@ -311,7 +311,7 @@ namespace gpgmm {
           mMinSlabSize(minSlabSize),
           mSlabAlignment(slabAlignment),
           mSlabFragmentationLimit(slabFragmentationLimit),
-          mAlwaysPrefetchSlab(alwaysPrefetchSlab),
+          mAllowSlabPrefetch(alwaysPrefetchSlab),
           mSlabGrowthFactor(slabGrowthFactor) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
         ASSERT(mSlabGrowthFactor >= 1);
@@ -340,7 +340,7 @@ namespace gpgmm {
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
                 newRequest.SizeInBytes, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
-                mSlabFragmentationLimit, mAlwaysPrefetchSlab, mSlabGrowthFactor, GetNextInChain());
+                mSlabFragmentationLimit, mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
             mSlabAllocators.Append(slabAllocator);
         }

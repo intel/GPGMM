@@ -49,7 +49,7 @@ namespace gpgmm {
                             uint64_t minSlabSize,
                             uint64_t slabAlignment,
                             double slabFragmentationLimit,
-                            bool prefetchSlab,
+                            bool allowSlabPrefetch,
                             double slabGrowthFactor,
                             MemoryAllocator* memoryAllocator);
         ~SlabMemoryAllocator() override;
@@ -68,25 +68,29 @@ namespace gpgmm {
         // and a reference to underlying memory.
         struct Slab : public LinkNode<Slab>, public RefCounted {
             Slab(uint64_t blockCount, uint64_t blockSize)
-                : RefCounted(0), BlockCount(blockCount), Allocator(blockCount, blockSize) {
+                : RefCounted(0), Allocator(blockCount, blockSize) {
             }
 
             ~Slab() {
+                ASSERT(SlabMemory == nullptr);
                 if (IsInList()) {
                     RemoveFromList();
                 }
             }
 
+            uint64_t GetBlockCount() const {
+                return Allocator.GetBlockCount();
+            }
+
             bool IsFull() const {
-                return static_cast<uint32_t>(GetRefCount()) == BlockCount;
+                return static_cast<uint32_t>(GetRefCount()) == Allocator.GetBlockCount();
             }
 
             double GetUsedPercent() const {
-                return SafeDivison(static_cast<uint32_t>(GetRefCount()),
-                                   static_cast<double>(BlockCount));
+                return static_cast<uint32_t>(GetRefCount()) /
+                       static_cast<double>(Allocator.GetBlockCount());
             }
 
-            uint64_t BlockCount = 0;
             SlabBlockAllocator Allocator;
             std::unique_ptr<MemoryAllocation> SlabMemory;
         };
@@ -118,7 +122,7 @@ namespace gpgmm {
         const uint64_t mMinSlabSize;  // Optional size when non-zero.
 
         const double mSlabFragmentationLimit;
-        const bool mAlwaysPrefetchSlab;
+        const bool mAllowSlabPrefetch;
         const double mSlabGrowthFactor;
 
         MemoryAllocator* mMemoryAllocator = nullptr;
@@ -133,7 +137,7 @@ namespace gpgmm {
                            uint64_t minSlabSize,
                            uint64_t slabAlignment,
                            double slabFragmentationLimit,
-                           bool alwaysPrefetchSlab,
+                           bool allowSlabPrefetch,
                            double slabGrowthFactor,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
@@ -171,7 +175,7 @@ namespace gpgmm {
         const uint64_t mSlabAlignment;
 
         const double mSlabFragmentationLimit;
-        const bool mAlwaysPrefetchSlab;
+        const bool mAllowSlabPrefetch;
         const double mSlabGrowthFactor;
 
         LinkedList<MemoryAllocator> mSlabAllocators;
