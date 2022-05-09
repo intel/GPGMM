@@ -30,8 +30,7 @@ namespace gpgmm { namespace d3d12 {
                               ID3D12Device* device,
                               D3D12_HEAP_TYPE heapType,
                               D3D12_HEAP_FLAGS heapFlags,
-                              bool isUMA,
-                              bool isAlwaysInBudget);
+                              bool isUMA);
         ~ResourceHeapAllocator() override = default;
 
         // MemoryAllocator interface
@@ -47,7 +46,6 @@ namespace gpgmm { namespace d3d12 {
         const D3D12_HEAP_TYPE mHeapType;
         const D3D12_HEAP_FLAGS mHeapFlags;
         const bool mIsUMA;
-        const bool mIsAlwaysInBudget;
     };
 
 }}  // namespace gpgmm::d3d12

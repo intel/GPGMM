@@ -45,15 +45,19 @@ namespace gpgmm { namespace d3d12 {
          */
         ALLOCATOR_FLAG_NONE = 0x0,
 
-        /** \brief Disable reuse of resource memory.
+        /** \brief Disable re-use of resource heap.
 
-        Should only be used for debugging and testing purposes.
+        Mostly used for debugging and testing purposes.
         */
         ALLOCATOR_FLAG_ALWAYS_COMMITED = 0x1,
 
-        /** \brief Ensures resources are always within the resource budget at creation time.
+        /** \brief Ensures resources are always created within the budget.
 
-        Mostly used to debug with residency being over committed.
+        By default or when this flag is not set, resource creation may fail when over-budget.
+
+        GPGMM implicitly applies D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT to resource heaps when
+        residency is being used in order to speed-up creation by deferring residency
+        operations until needed (ex. Map(), lock/unlock, or ExecuteCommandLists()).
         */
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
@@ -487,6 +491,8 @@ namespace gpgmm { namespace d3d12 {
                                         Heap** resourceHeapOut);
 
         static HRESULT ReportLiveDeviceObjects(ComPtr<ID3D12Device> device);
+
+        bool IsCreateHeapNotResident() const;
 
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

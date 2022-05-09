@@ -24,12 +24,14 @@ namespace gpgmm { namespace d3d12 {
 
     BufferAllocator::BufferAllocator(ResourceAllocator* resourceAllocator,
                                      D3D12_HEAP_TYPE heapType,
+                                     D3D12_HEAP_FLAGS heapFlags,
                                      D3D12_RESOURCE_FLAGS resourceFlags,
                                      D3D12_RESOURCE_STATES initialResourceState,
                                      uint64_t bufferSize,
                                      uint64_t bufferAlignment)
         : mResourceAllocator(resourceAllocator),
           mHeapType(heapType),
+          mHeapFlags(heapFlags),
           mResourceFlags(resourceFlags),
           mInitialResourceState(initialResourceState),
           mBufferSize(bufferSize),
@@ -63,7 +65,7 @@ namespace gpgmm { namespace d3d12 {
         // Optimized clear is not supported for buffers.
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
-                mHeapType, D3D12_HEAP_FLAG_NONE, request.SizeInBytes, &resourceDescriptor,
+                mHeapType, mHeapFlags, request.SizeInBytes, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
                 &resourceHeap))) {
             return {};

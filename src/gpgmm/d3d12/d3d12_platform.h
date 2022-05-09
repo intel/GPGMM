@@ -20,6 +20,13 @@
 #include <dxgi1_4.h>
 #include <wrl.h>
 
+// Keep backwards compatibility when using D3D12 feature flags that are only defined in a newer
+// D3D12.h versions.
+// Only once ALL builds upgrade to newer D3D12.h, can these re-defines be safely removed.
+#ifndef D3D12_FEATURE_D3D12_OPTIONS7
+#    define D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT static_cast<D3D12_HEAP_FLAGS>(0x800)
+#endif
+
 using Microsoft::WRL::ComPtr;
 
 #endif  // GPGMM_D3D12_D3D12PLATFORM_H_
