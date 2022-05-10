@@ -457,7 +457,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
 TEST_P(D3D12EventTraceReplay, AllocationPerf) {
     TestEnviromentParams forceParams = {};
-    forceParams.Iterations = 100;
     forceParams.PrefetchMemory = true;
     RunTestLoop(forceParams);
 
