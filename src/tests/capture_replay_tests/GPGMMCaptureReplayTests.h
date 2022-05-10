@@ -51,13 +51,13 @@ enum class AllocatorProfile {
 
 struct TestEnviromentParams {
     uint64_t Iterations = 1;                                 // Number of test iterations to run.
-    bool IsCaptureEnabled = false;                           // Should the allocator record.
     gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
-    bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
 
+    bool IsCaptureEnabled = false;    // Should the allocator record.
+    bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
     bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;
-    bool PrefetchMemory = false;
+    bool IsPrefetchAllowed = false;
 
     AllocatorProfile AllocatorProfile =
         AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.

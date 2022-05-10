@@ -92,15 +92,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--disable-suballocation", argv[i]) == 0) {
-            mParams.IsSuballocationDisabled = true;
-            continue;
-        }
-
-        if (strcmp("--never-allocate", argv[i]) == 0) {
-            mParams.IsNeverAllocate = true;
-            continue;
-        }
 
         if (strcmp("--capture", argv[i]) == 0) {
             mParams.IsCaptureEnabled = true;
@@ -170,12 +161,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                    "level for log messages.\n"
                 << " --capture: Capture upon playback.\n"
                 << " --playback-file: Path to captured file to playback.\n"
-                << " --same-caps: Captured device must be compatible with playback device.\n";
-
-            gpgmm::InfoLog()
-                << "Experiment options:"
-                << " --disable-suballocation: Disable memory reuse by sub-allocation.\n"
-                << " --never-allocate: Disable creating backend memory.\n"
+                << " --same-caps: Captured device must be compatible with playback device.\n"
                 << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocator profile.\n";
             continue;
         }
@@ -270,12 +256,16 @@ void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceP
         envParams.Iterations = forceParams.Iterations;
     }
 
-    if (forceParams.PrefetchMemory != envParams.PrefetchMemory) {
-        envParams.PrefetchMemory = forceParams.PrefetchMemory;
+    if (forceParams.IsPrefetchAllowed != envParams.IsPrefetchAllowed) {
+        envParams.IsPrefetchAllowed = forceParams.IsPrefetchAllowed;
     }
 
     if (forceParams.IsSuballocationDisabled != envParams.IsSuballocationDisabled) {
         envParams.IsSuballocationDisabled = forceParams.IsSuballocationDisabled;
+    }
+
+    if (forceParams.IsNeverAllocate != envParams.IsNeverAllocate) {
+        envParams.IsNeverAllocate = forceParams.IsNeverAllocate;
     }
 
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
