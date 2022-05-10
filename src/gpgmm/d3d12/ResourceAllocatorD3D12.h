@@ -470,6 +470,18 @@ namespace gpgmm { namespace d3d12 {
                           ComPtr<ResidencyManager> residencyManager,
                           std::unique_ptr<Caps> caps);
 
+        std::unique_ptr<MemoryAllocator> CreateResourceSubAllocator(
+            const ALLOCATOR_DESC& descriptor,
+            D3D12_HEAP_FLAGS heapFlags,
+            D3D12_HEAP_TYPE heapType,
+            bool allowMSAA);
+
+        std::unique_ptr<MemoryAllocator> CreateStandaloneResourceAllocator(
+            const ALLOCATOR_DESC& descriptor,
+            D3D12_HEAP_FLAGS heapFlags,
+            D3D12_HEAP_TYPE heapType,
+            bool allowMSAA);
+
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -509,6 +521,12 @@ namespace gpgmm { namespace d3d12 {
             mResourceHeapAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mResourceAllocatorOfType;
+
+        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+            mMSAAResourceHeapAllocatorOfType;
+        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+            mMSAAResourceAllocatorOfType;
+
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mBufferAllocatorOfType;
 
