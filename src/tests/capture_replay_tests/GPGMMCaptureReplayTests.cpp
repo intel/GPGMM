@@ -112,29 +112,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        constexpr const char kEventMessageLevel[] = "--event-message-level";
-        arglen = sizeof(kEventMessageLevel) - 1;
-        if (strncmp(argv[i], kEventMessageLevel, arglen) == 0) {
-            const char* level = argv[i] + arglen;
-            if (level[0] != '\0') {
-                if (strcmp(level, "=DEBUG") == 0) {
-                    mParams.EventMessageLevel = gpgmm::LogSeverity::Debug;
-                } else if (strcmp(level, "=INFO") == 0) {
-                    mParams.EventMessageLevel = gpgmm::LogSeverity::Info;
-                } else if (strcmp(level, "=WARN") == 0) {
-                    mParams.EventMessageLevel = gpgmm::LogSeverity::Warning;
-                } else if (strcmp(level, "=ERROR") == 0) {
-                    mParams.EventMessageLevel = gpgmm::LogSeverity::Error;
-                } else {
-                    gpgmm::ErrorLog() << "Invalid event message level " << level;
-                    UNREACHABLE();
-                }
-            } else {
-                mParams.EventMessageLevel = gpgmm::LogSeverity::Info;
-            }
-            continue;
-        }
-
         constexpr const char kLogLevel[] = "--log-level";
         arglen = sizeof(kLogLevel) - 1;
         if (strncmp(argv[i], kLogLevel, arglen) == 0) {
@@ -189,8 +166,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << "Playback options:"
                 << " [--iterations=X]\n"
                 << " --iterations: Number of times to run playback.\n"
-                << " --event-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                   "level for event messages.\n"
                 << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                    "level for log messages.\n"
                 << " --capture: Capture upon playback.\n"
@@ -227,7 +202,6 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                      << "Iterations per test: " << mParams.Iterations << "\n"
                      << "Capture on playback: " << (mParams.IsCaptureEnabled ? "true" : "false")
                      << "\n"
-                     << "Event level: " << LogSeverityToString(mParams.EventMessageLevel) << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
                      << "Require same device caps: "
                      << (mParams.IsSameCapsRequired ? "true" : "false") << "\n";
