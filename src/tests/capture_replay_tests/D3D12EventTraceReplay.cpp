@@ -189,6 +189,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
                         }
 
+                        if (envParams.IsSuballocationDisabled) {
+                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+                        }
+
                         mPlatformTime->StartElapsedTime();
 
                         HRESULT hr = resourceAllocator->CreateResource(
@@ -207,8 +211,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         mReplayedAllocationStats.PeakUsage =
                             std::max(mReplayedAllocationStats.CurrentUsage,
                                      mReplayedAllocationStats.PeakUsage);
-                        mReplayedAllocationStats.TotalCount++;
-                        mReplayedAllocationStats.TotalSize += allocationWithoutID->GetSize();
+
+                        mReplayedMemoryStats.PeakUsage =
+                            std::max(resourceAllocator->GetInfo().UsedMemoryUsage,
+                                     mReplayedMemoryStats.PeakUsage);
 
                         mReplayedAllocateStats.TotalCpuTime += elapsedTime;
                         mReplayedAllocateStats.PeakCpuTime =
@@ -233,8 +239,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         RESOURCE_ALLOCATION_INFO allocationDesc = {};
                         allocationDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
-                        mCapturedAllocationStats.TotalSize += allocationDesc.SizeInBytes;
-                        mCapturedAllocationStats.TotalCount++;
                         mCapturedAllocationStats.CurrentUsage += allocationDesc.SizeInBytes;
                         mCapturedAllocationStats.PeakUsage =
                             std::max(mCapturedAllocationStats.PeakUsage,
@@ -333,10 +337,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 
-                        if (envParams.DisableSuballocation) {
-                            allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
-                        }
-
                         if (envParams.IsCaptureEnabled) {
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
@@ -415,8 +415,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         HEAP_INFO heapInfo = {};
                         heapInfo.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
-                        mCapturedMemoryStats.TotalSize += heapInfo.SizeInBytes;
-                        mCapturedMemoryStats.TotalCount++;
                         mCapturedMemoryStats.CurrentUsage += heapInfo.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
@@ -449,7 +447,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
     CaptureReplayCallStats mReplayedAllocateStats;
     CaptureReplayCallStats mReplayedDeallocateStats;
+
     CaptureReplayMemoryStats mReplayedAllocationStats;
+    CaptureReplayMemoryStats mReplayedMemoryStats;
 
     CaptureReplayMemoryStats mCapturedAllocationStats;
     CaptureReplayMemoryStats mCapturedMemoryStats;
@@ -465,17 +465,21 @@ TEST_P(D3D12EventTraceReplay, AllocationPerf) {
     LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 }
 
-// Verify captured does not regress (ie. consume more memory) upon playback.
-TEST_P(D3D12EventTraceReplay, MemoryUsage) {
+TEST_P(D3D12EventTraceReplay, PeakMemoryUsage) {
     TestEnviromentParams forceParams = {};
     forceParams.IsSameCapsRequired = true;
+
+    // Verify baseline re-play does not regress capture.
+    RunSingleTest(forceParams);
+    EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
+    EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
+
+    // Verify no heap re-use through sub-allocation will regress capture.
+    forceParams.IsSuballocationDisabled = true;
     RunSingleTest(forceParams);
 
-    LogMemoryStats("Allocation", mCapturedAllocationStats);
-    LogMemoryStats("Memory", mCapturedMemoryStats);
-
-    EXPECT_LE(mReplayedAllocationStats.TotalSize, mCapturedAllocationStats.TotalSize);
-    EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
+    EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
+    EXPECT_GE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
 }
 
 // Re-generates traces.

@@ -38,8 +38,6 @@ struct CaptureReplayCallStats {
 };
 
 struct CaptureReplayMemoryStats {
-    uint64_t TotalSize = 0;
-    uint64_t TotalCount = 0;
     uint64_t PeakUsage = 0;
     uint64_t CurrentUsage = 0;
 };
@@ -58,7 +56,7 @@ struct TestEnviromentParams {
     gpgmm::LogSeverity EventMessageLevel = gpgmm::LogSeverity::Debug;  // Level of recording.
     bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
 
-    bool DisableSuballocation = false;
+    bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;
     bool PrefetchMemory = false;
 
