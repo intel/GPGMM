@@ -394,15 +394,6 @@ namespace gpgmm {
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab memory used (MB)",
-                       (info.UsedMemoryUsage) / 1e6);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU slab cache miss-rate (%)",
-                       SafeDivison(mSizeCache.GetStats().NumOfMisses,
-                                   static_cast<double>((mSizeCache.GetStats().NumOfHits +
-                                                        mSizeCache.GetStats().NumOfMisses))) *
-                           100);
-
         return result;
     }
 
