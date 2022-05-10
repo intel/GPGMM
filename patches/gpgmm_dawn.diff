@@ -1,4 +1,4 @@
-From beb21d1d2baa8e0147d4d8ef6a0c46e44e89b811 Mon Sep 17 00:00:00 2001
+From e9627e75c5a3baf15f02fff11838115ada0e1947 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -46,7 +46,7 @@ index 91b835033..6f17c2ec3 100644
  /third_party/gpuweb-cts
  /third_party/jinja2
 diff --git a/DEPS b/DEPS
-index e5a8b0da6..e666940a1 100644
+index e5a8b0da6..740aee04f 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -146,6 +146,10 @@ deps = {
@@ -54,7 +54,7 @@ index e5a8b0da6..e666940a1 100644
    },
  
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@7690524f05784c2eac2938c506b48179b7bc387c',
++    'url': '{github_git}/intel/gpgmm.git@8d8ecf73a0aa3235163ff55f5def13f7b15b36e7',
 +  },
 +
    'third_party/abseil-cpp': {
@@ -437,7 +437,7 @@ index 18d7145c8..098254e5c 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 6b77b3a07..b06def815 100644
+index 6b77b3a07..8e7e55e84 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -127,8 +127,33 @@ namespace dawn::native::d3d12 {
@@ -457,12 +457,12 @@ index 6b77b3a07..b06def815 100644
 +        allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
-+            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +            allocatorDesc.MaxVideoMemoryBudget = 0.95;  // Use up to 95%.
 +        }
 +
 +        if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +            allocatorDesc.Budget = 100000000;  // 100MB
++            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        }
 +
 +        if (IsToggleEnabled(Toggle::DumpResourceAllocator)) {

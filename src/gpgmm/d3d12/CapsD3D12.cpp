@@ -41,16 +41,33 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
+    HRESULT SetCreateHeapNotResidentSupported(ID3D12Device* device,
+                                              bool* createHeapNotResidencySupported) {
+        *createHeapNotResidencySupported = false;
+
+        // Only Windows 10 Build 20348 and later support creating non-resident heaps.
+#ifdef D3D12_FEATURE_D3D12_OPTIONS7
+        D3D12_FEATURE_DATA_D3D12_OPTIONS7 options7 = {};
+        if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &options7,
+                                                  sizeof(options7)))) {
+            *createHeapNotResidencySupported = true;
+        }
+#endif
+        return S_OK;
+    }
+
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
         DXGI_ADAPTER_DESC adapterDesc;
         ReturnIfFailed(adapter->GetDesc(&adapterDesc));
 
-        Caps* caps = new Caps();
+        std::unique_ptr<Caps> caps(new Caps());
         ReturnIfFailed(SetMaxResourceSize(device, &caps->mMaxResourceSize));
         ReturnIfFailed(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
+        ReturnIfFailed(
+            SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
-        *capsOut = caps;
+        *capsOut = caps.release();
         return S_OK;
     }
 
@@ -60,6 +77,10 @@ namespace gpgmm { namespace d3d12 {
 
     uint64_t Caps::GetMaxResourceHeapSize() const {
         return mMaxResourceHeapSize;
+    }
+
+    bool Caps::IsCreateHeapNotResidentSupported() const {
+        return mIsCreateHeapNotResidentSupported;
     }
 
 }}  // namespace gpgmm::d3d12

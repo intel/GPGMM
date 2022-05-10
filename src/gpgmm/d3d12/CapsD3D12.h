@@ -32,11 +32,15 @@ namespace gpgmm { namespace d3d12 {
         // Largest resource heap that this device can make available.
         uint64_t GetMaxResourceHeapSize() const;
 
+        // Allows a resource heap to be created without being resident.
+        bool IsCreateHeapNotResidentSupported() const;
+
       private:
         Caps() = default;
 
         uint64_t mMaxResourceSize = 0;
         uint64_t mMaxResourceHeapSize = 0;
+        bool mIsCreateHeapNotResidentSupported = false;
     };
 
 }}  // namespace gpgmm::d3d12

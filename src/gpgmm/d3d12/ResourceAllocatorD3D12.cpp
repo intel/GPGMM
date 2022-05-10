@@ -158,20 +158,22 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
-        D3D12_HEAP_FLAGS GetHeapFlags(RESOURCE_HEAP_TYPE resourceHeapType) {
+        D3D12_HEAP_FLAGS GetHeapFlags(RESOURCE_HEAP_TYPE resourceHeapType, bool createNotResident) {
+            const D3D12_HEAP_FLAGS createHeapFlags =
+                (createNotResident) ? D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT : D3D12_HEAP_FLAG_NONE;
             switch (resourceHeapType) {
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                 case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                 case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES:
-                    return D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES;
+                    return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS:
                 case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS:
                 case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS:
-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
+                    return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
+                    return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES:
-                    return D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
+                    return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
                 default:
                     UNREACHABLE();
                     return D3D12_HEAP_FLAG_NONE;
@@ -445,7 +447,8 @@ namespace gpgmm { namespace d3d12 {
             const RESOURCE_HEAP_TYPE& resourceHeapType =
                 static_cast<RESOURCE_HEAP_TYPE>(resourceHeapTypeIndex);
 
-            const D3D12_HEAP_FLAGS& heapFlags = GetHeapFlags(resourceHeapType);
+            const D3D12_HEAP_FLAGS& heapFlags =
+                GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
             const D3D12_HEAP_TYPE& heapType = GetHeapType(resourceHeapType);
 
             // General-purpose allocators.
@@ -470,9 +473,10 @@ namespace gpgmm { namespace d3d12 {
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
             std::unique_ptr<MemoryAllocator> bufferOnlyAllocator =
                 std::make_unique<BufferAllocator>(
-                    this, heapType, D3D12_RESOURCE_FLAG_NONE, GetInitialResourceState(heapType),
-                    /*resourceSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*resourceAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+                    this, heapType, heapFlags, D3D12_RESOURCE_FLAG_NONE,
+                    GetInitialResourceState(heapType),
+                    /*bufferSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*bufferAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
 
             std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
             if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
@@ -549,7 +553,7 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapType, heapFlags, mIsUMA, mIsAlwaysInBudget);
+                                                    heapType, heapFlags, mIsUMA);
 
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
@@ -578,7 +582,7 @@ namespace gpgmm { namespace d3d12 {
         bool allowMSAA) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapType, heapFlags, mIsUMA, mIsAlwaysInBudget);
+                                                    heapType, heapFlags, mIsUMA);
 
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
@@ -812,7 +816,8 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
-        const D3D12_HEAP_FLAGS& heapFlags = GetHeapFlags(resourceHeapType);
+        const D3D12_HEAP_FLAGS& heapFlags =
+            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
 
         // Attempt to create a resource allocation by placing a single resource fully contained
         // in a resource heap. This strategy is slightly better then creating a committed
@@ -986,7 +991,7 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
 
-        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
+        if (!(heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) && mResidencyManager != nullptr) {
             ReturnIfFailed(mResidencyManager->Evict(resourceSize, memorySegmentGroup));
         }
 
@@ -1106,6 +1111,17 @@ namespace gpgmm { namespace d3d12 {
         mInfo.UsedBlockUsage -= allocationSize;
 
         SafeRelease(allocation);
+    }
+
+    bool ResourceAllocator::IsCreateHeapNotResident() const {
+        // By default, ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
+        // call MakeResident(). This can be disabled when residency exists and resources are not
+        // required to be "created in budget".
+        if (!mCaps->IsCreateHeapNotResidentSupported()) {
+            return false;
+        }
+
+        return mResidencyManager != nullptr && !mIsAlwaysInBudget;
     }
 
 }}  // namespace gpgmm::d3d12
