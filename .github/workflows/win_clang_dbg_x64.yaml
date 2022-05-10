@@ -144,7 +144,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_capture_replay_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json 2>&1
+        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json 2>&1
 
     - name: Regression check end2end tests
       run: |
