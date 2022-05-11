@@ -18,7 +18,7 @@ var searchData=
   ['buddymemoryallocatortests_15',['BuddyMemoryAllocatorTests',['../class_buddy_memory_allocator_tests.html',1,'']]],
   ['buddymemoryallocatortests_2ecpp_16',['BuddyMemoryAllocatorTests.cpp',['../_buddy_memory_allocator_tests_8cpp.html',1,'']]],
   ['budget_17',['Budget',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b',1,'gpgmm::d3d12::RESIDENCY_DESC::Budget()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a81ccf1803c45d2c3419b114e20b096cc',1,'gpgmm::d3d12::ALLOCATOR_DESC::Budget()']]],
-  ['bufferallocator_18',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8c34f9fa9f3eec264564a3ccf77d2dd9',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
+  ['bufferallocator_18',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8408d710774e6aa669afd36eb01e38b7',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
   ['bufferallocatord3d12_2ecpp_19',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
   ['bufferallocatord3d12_2eh_20',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
 ];
