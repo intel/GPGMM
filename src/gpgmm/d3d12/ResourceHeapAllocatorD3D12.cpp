@@ -30,14 +30,12 @@ namespace gpgmm { namespace d3d12 {
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_TYPE heapType,
                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                 bool isUMA,
-                                                 bool isAlwaysInBudget)
+                                                 bool isUMA)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapType(heapType),
           mHeapFlags(heapFlags),
-          mIsUMA(isUMA),
-          mIsAlwaysInBudget(isAlwaysInBudget) {
+          mIsUMA(isUMA) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -65,9 +63,10 @@ namespace gpgmm { namespace d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice, mIsUMA, mHeapType);
 
-        // CreateHeap will implicitly make the created heap resident. We must ensure enough free
-        // memory exists before allocating to avoid an out-of-memory error when overcommitted.
-        if (mIsAlwaysInBudget && mResidencyManager != nullptr) {
+        // CreateHeap will implicitly make the created heap resident unless
+        // D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is set. Otherwise, CreateHeap could return
+        // out-of-memory when overcommitted if Evict() is not called first.
+        if (!(mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) && mResidencyManager != nullptr) {
             mResidencyManager->Evict(heapSize, memorySegmentGroup);
         }
 
