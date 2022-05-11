@@ -10,6 +10,5 @@ var searchData=
   ['poolsizeinbytes_7',['PoolSizeInBytes',['../structgpgmm_1_1_p_o_o_l___i_n_f_o.html#a22e324d056903cda05e5ed7d29d7413e',1,'gpgmm::POOL_INFO']]],
   ['pprev_8',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
   ['preferredresourceheapsize_9',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['prefetchmemory_10',['PrefetchMemory',['../struct_test_enviroment_params.html#ac031219600a04875af28811da5c40fb0',1,'TestEnviromentParams']]],
-  ['pvulkanfunctions_11',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['pvulkanfunctions_10',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];

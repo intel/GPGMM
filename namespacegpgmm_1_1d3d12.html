@@ -187,8 +187,6 @@ Functions</h2></td></tr>
 <tr class="separator:adedb1d86c49b67204722066f0a8a8760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add235ed62661f00d31810f5fc7effbae"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#add235ed62661f00d31810f5fc7effbae">SetMaxResourceHeapSize</a> (ID3D12Device *device, uint64_t *sizeOut)</td></tr>
 <tr class="separator:add235ed62661f00d31810f5fc7effbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4537f1d56646df04cd974c73b4481f48"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a4537f1d56646df04cd974c73b4481f48">SetCreateHeapNotResidentSupported</a> (ID3D12Device *device, bool *createHeapNotResidencySupported)</td></tr>
-<tr class="separator:a4537f1d56646df04cd974c73b4481f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac27affdc439f0ee00613f15835c347cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac27affdc439f0ee00613f15835c347cd">GetErrorMessage</a> (HRESULT error)</td></tr>
 <tr class="separator:ac27affdc439f0ee00613f15835c347cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d546453012549bbae23809379283851"><td class="memItemLeft" align="right" valign="top">DXGI_MEMORY_SEGMENT_GROUP&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1d546453012549bbae23809379283851">GetPreferredMemorySegmentGroup</a> (ID3D12Device *device, bool isUMA, D3D12_HEAP_TYPE heapType)</td></tr>
@@ -341,16 +339,11 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocator flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
-<pre class="fragment">Mostly used for debugging and testing purposes.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable reuse of resource memory. </p>
+<pre class="fragment">Should only be used for debugging and testing purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
-<pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
-operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-resource will become resident once ExecuteCommandList() is called. However, this flag can be
-used to change this behavior by requiring resource heaps to be always resident at resource
-creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-through the GPU/driver instead of explicitly through GPGMM.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Ensures resources are always within the resource budget at creation time. </p>
+<pre class="fragment">Mostly used to debug with residency being over committed.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
 <pre class="fragment">Should be only used for debugging and testing purposes.
@@ -633,34 +626,6 @@ through the GPU/driver instead of explicitly through GPGMM.
           <td class="paramtype">const D3D12_TILE_SHAPE &amp;&#160;</td>
           <td class="paramname"><em>tile</em></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4537f1d56646df04cd974c73b4481f48" name="a4537f1d56646df04cd974c73b4481f48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4537f1d56646df04cd974c73b4481f48">&#9670;&nbsp;</a></span>SetCreateHeapNotResidentSupported()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::SetCreateHeapNotResidentSupported </td>
-          <td>(</td>
-          <td class="paramtype">ID3D12Device *&#160;</td>
-          <td class="paramname"><em>device</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool *&#160;</td>
-          <td class="paramname"><em>createHeapNotResidencySupported</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
