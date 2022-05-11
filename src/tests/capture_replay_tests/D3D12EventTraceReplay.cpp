@@ -201,11 +201,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
-                        if (!envParams.IsNeverAllocate && FAILED(hr)) {
-                            gpgmm::ErrorLog() << "CreateResource failed with :" << args << ".\n";
+                        if (FAILED(hr)) {
+                            if (envParams.IsNeverAllocate) {
+                                continue;
+                            } else {
+                                gpgmm::ErrorLog()
+                                    << "CreateResource failed with :" << args << ".\n";
+                                ASSERT_SUCCEEDED(hr);
+                            }
                         }
-
-                        ASSERT_SUCCEEDED(hr);
 
                         mReplayedAllocationStats.CurrentUsage += allocationWithoutID->GetSize();
                         mReplayedAllocationStats.PeakUsage =
@@ -312,7 +316,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         // Apply profile (if specified).
                         ALLOCATOR_DESC allocatorDesc =
-                            CreateBasicAllocatorDesc(/*enablePrefetch*/ envParams.PrefetchMemory);
+                            CreateBasicAllocatorDesc(envParams.IsPrefetchAllowed);
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
                             allocatorDesc.Flags |=
@@ -455,37 +459,54 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
-TEST_P(D3D12EventTraceReplay, AllocationPerf) {
+// Verify that playback of a captured trace has the same device capabilities.
+TEST_P(D3D12EventTraceReplay, CheckCaps) {
     TestEnviromentParams forceParams = {};
-    forceParams.PrefetchMemory = true;
+    forceParams.IsSameCapsRequired = true;
+
+    RunSingleTest(forceParams);
+
+    EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
+    EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
+
+    LogCallStats("Allocation(s)", mReplayedAllocateStats);
+    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
+}
+
+// Verify that playback with pre-fetching enabled will succeed.
+TEST_P(D3D12EventTraceReplay, AllowPrefetch) {
+    TestEnviromentParams forceParams = {};
+    forceParams.IsPrefetchAllowed = true;
+
     RunTestLoop(forceParams);
 
     LogCallStats("Allocation(s)", mReplayedAllocateStats);
     LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 }
 
-TEST_P(D3D12EventTraceReplay, PeakMemoryUsage) {
+// Verify no heap re-use through sub-allocation will succeed.
+TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     TestEnviromentParams forceParams = {};
     forceParams.IsSameCapsRequired = true;
-
-    // Verify baseline re-play does not regress capture.
-    RunSingleTest(forceParams);
-    EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
-    EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
-
-    // Verify no heap re-use through sub-allocation will regress capture.
     forceParams.IsSuballocationDisabled = true;
+
     RunSingleTest(forceParams);
+
+    LogCallStats("Allocation(s)", mReplayedAllocateStats);
+    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
     EXPECT_GE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
 }
 
-// Re-generates traces.
-TEST_P(D3D12EventTraceReplay, Regenerate) {
+TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     TestEnviromentParams forceParams = {};
-    forceParams.IsCaptureEnabled = true;
+    forceParams.IsNeverAllocate = true;
+
     RunSingleTest(forceParams);
+
+    EXPECT_LE(mReplayedMemoryStats.PeakUsage, 0u);
+    EXPECT_GE(mReplayedAllocationStats.PeakUsage, 0u);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
