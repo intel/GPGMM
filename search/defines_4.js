@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['internal_5ftrace_5fevent_5fadd_0',['INTERNAL_TRACE_EVENT_ADD',['../_trace_event_8h.html#a595bad3bf70a95af9da1ef5f9d183888',1,'TraceEvent.h']]],
-  ['internal_5ftrace_5fevent_5fadd_5fscoped_1',['INTERNAL_TRACE_EVENT_ADD_SCOPED',['../_trace_event_8h.html#a61fdaf2ad5c3573460690f9072fffe1e',1,'TraceEvent.h']]],
-  ['internal_5ftrace_5fevent_5fadd_5fwith_5fid_2',['INTERNAL_TRACE_EVENT_ADD_WITH_ID',['../_trace_event_8h.html#ae548c17091d227e9f8c7181d674dd4df',1,'TraceEvent.h']]],
-  ['internal_5ftrace_5fevent_5fmetadata_5fadd_3',['INTERNAL_TRACE_EVENT_METADATA_ADD',['../_trace_event_8h.html#ac6e7053a31e2fa16198b26b04316dc7a',1,'TraceEvent.h']]]
+  ['returniffailed_0',['ReturnIfFailed',['../_error_d3_d12_8h.html#a36603177b79030d08b6cdf80b10ff658',1,'ReturnIfFailed():&#160;ErrorD3D12.h'],['../_error_vk_8h.html#a36603177b79030d08b6cdf80b10ff658',1,'ReturnIfFailed():&#160;ErrorVk.h']]],
+  ['returnifsucceeded_1',['ReturnIfSucceeded',['../_error_d3_d12_8h.html#ab0bbab06bb383b99d6e1f6e36ec36e67',1,'ErrorD3D12.h']]],
+  ['returnifsuccess_2',['ReturnIfSuccess',['../_error_vk_8h.html#acb98e909ecd45877bd881546b067b580',1,'ErrorVk.h']]]
 ];

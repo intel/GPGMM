@@ -92,6 +92,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afd8863eaf9267b64008d7e02010ef4cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#afd8863eaf9267b64008d7e02010ef4cd">AlwaysPrefetch</a></td></tr>
 <tr class="memdesc:afd8863eaf9267b64008d7e02010ef4cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to pre-fetch the next memory block needed for a subsquent request based on the requested size.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#afd8863eaf9267b64008d7e02010ef4cd">More...</a><br /></td></tr>
 <tr class="separator:afd8863eaf9267b64008d7e02010ef4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26e2dcc129782a2a4a7c6e5c97ff230a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a26e2dcc129782a2a4a7c6e5c97ff230a">AvailableForAllocation</a></td></tr>
+<tr class="memdesc:a26e2dcc129782a2a4a7c6e5c97ff230a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory available for the allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a26e2dcc129782a2a4a7c6e5c97ff230a">More...</a><br /></td></tr>
+<tr class="separator:a26e2dcc129782a2a4a7c6e5c97ff230a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Describes a request to allocate memory. </p>
@@ -126,6 +129,23 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Request to pre-fetch the next memory block needed for a subsquent request based on the requested size. </p>
+
+</div>
+</div>
+<a id="a26e2dcc129782a2a4a7c6e5c97ff230a" name="a26e2dcc129782a2a4a7c6e5c97ff230a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e2dcc129782a2a4a7c6e5c97ff230a">&#9670;&nbsp;</a></span>AvailableForAllocation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MEMORY_ALLOCATION_REQUEST::AvailableForAllocation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Memory available for the allocation. </p>
+<p >A value of 0 means there is no memory available left in the budget. </p>
 
 </div>
 </div>
