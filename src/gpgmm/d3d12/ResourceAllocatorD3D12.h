@@ -47,7 +47,9 @@ namespace gpgmm { namespace d3d12 {
 
         /** \brief Disable re-use of resource heap.
 
-        Mostly used for debugging and testing purposes.
+        A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
+        for large static resources. Otherwise, this is mostly used for debugging and testing
+        purposes.
         */
         ALLOCATOR_FLAG_ALWAYS_COMMITED = 0x1,
 
@@ -424,6 +426,7 @@ namespace gpgmm { namespace d3d12 {
         /** \brief  Imports an existing D3D12 resource.
 
         Allows externally created D3D12 resources to be used as ResourceAllocations.
+
         Residency is not supported for imported resources.
 
         @param committedResource A COM managed pointer to a D3D12 committed resource.
