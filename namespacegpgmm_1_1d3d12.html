@@ -342,7 +342,9 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocator flags. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
-<pre class="fragment">Mostly used for debugging and testing purposes.
+<pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
+for large static resources. Otherwise, this is mostly used for debugging and testing
+purposes.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
 <pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
