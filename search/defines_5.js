@@ -1,6 +1,25 @@
 var searchData=
 [
-  ['returniffailed_0',['ReturnIfFailed',['../_error_d3_d12_8h.html#a36603177b79030d08b6cdf80b10ff658',1,'ReturnIfFailed():&#160;ErrorD3D12.h'],['../_error_vk_8h.html#a36603177b79030d08b6cdf80b10ff658',1,'ReturnIfFailed():&#160;ErrorVk.h']]],
-  ['returnifsucceeded_1',['ReturnIfSucceeded',['../_error_d3_d12_8h.html#ab0bbab06bb383b99d6e1f6e36ec36e67',1,'ErrorD3D12.h']]],
-  ['returnifsuccess_2',['ReturnIfSuccess',['../_error_vk_8h.html#acb98e909ecd45877bd881546b067b580',1,'ErrorVk.h']]]
+  ['trace_5fcounter1_0',['TRACE_COUNTER1',['../_trace_event_8h.html#a1750f244061164e163224575a1d48e1d',1,'TraceEvent.h']]],
+  ['trace_5fempty_1',['TRACE_EMPTY',['../_trace_event_8h.html#aa8783dbc561426af79aac27ceb4f927e',1,'TraceEvent.h']]],
+  ['trace_5fevent0_2',['TRACE_EVENT0',['../_trace_event_8h.html#a3feabb76c0ac2918798bc11ab55c6a79',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fbegin0_3',['TRACE_EVENT_BEGIN0',['../_trace_event_8h.html#affe689f31abf9fec082f3643e9bb70dd',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fend0_4',['TRACE_EVENT_END0',['../_trace_event_8h.html#a923ccd61e05b09e7d89cc767f5400275',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fflag_5fhas_5fglobal_5fid_5',['TRACE_EVENT_FLAG_HAS_GLOBAL_ID',['../_trace_event_8h.html#a97a4618a3082103ab1d4cecb318dde8f',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fflag_5fhas_5fid_6',['TRACE_EVENT_FLAG_HAS_ID',['../_trace_event_8h.html#abb6d7dfc0ead11eef052473622884298',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fflag_5fhas_5flocal_5fid_7',['TRACE_EVENT_FLAG_HAS_LOCAL_ID',['../_trace_event_8h.html#a2ad11bfb135653988ff03845e1d0151a',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fflag_5fnone_8',['TRACE_EVENT_FLAG_NONE',['../_trace_event_8h.html#a45053fbcf8befa138af1a80ed3f2e943',1,'TraceEvent.h']]],
+  ['trace_5fevent_5finstant1_9',['TRACE_EVENT_INSTANT1',['../_trace_event_8h.html#a00c658df26c7801daac9634c8cf8e289',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fmetadata1_10',['TRACE_EVENT_METADATA1',['../_trace_event_8h.html#a719858f8e279737ff1841c04d9fe35da',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fobject_5fcreated_5fwith_5fid_11',['TRACE_EVENT_OBJECT_CREATED_WITH_ID',['../_trace_event_8h.html#a3b4ca40c5a02c6f1e5269435691f5edc',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fobject_5fdeleted_5fwith_5fid_12',['TRACE_EVENT_OBJECT_DELETED_WITH_ID',['../_trace_event_8h.html#a2a016fde42444d958355c285b5291ea1',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fobject_5fsnapshot_5fwith_5fid_13',['TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID',['../_trace_event_8h.html#ab12d05e8a1c19cc2388a9b63c0e11371',1,'TraceEvent.h']]],
+  ['trace_5fevent_5fphase_5fbegin_14',['TRACE_EVENT_PHASE_BEGIN',['../_trace_event_phase_8h.html#a851499ec031ba9c7083ea9d701542eca',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fcounter_15',['TRACE_EVENT_PHASE_COUNTER',['../_trace_event_phase_8h.html#a64ad100469273699ec8c94040aa46fb1',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fcreate_5fobject_16',['TRACE_EVENT_PHASE_CREATE_OBJECT',['../_trace_event_phase_8h.html#ad446564ed262ca762061389922b63a40',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fdelete_5fobject_17',['TRACE_EVENT_PHASE_DELETE_OBJECT',['../_trace_event_phase_8h.html#ad799ac224f8bd0e7559deaa2373b7e1d',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fend_18',['TRACE_EVENT_PHASE_END',['../_trace_event_phase_8h.html#a2aeab061931b4ac1cba7afe5cbe564c6',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5finstant_19',['TRACE_EVENT_PHASE_INSTANT',['../_trace_event_phase_8h.html#a9e98b3d4f592f8bc0c58bf8f7f1c3e3d',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fmetadata_20',['TRACE_EVENT_PHASE_METADATA',['../_trace_event_phase_8h.html#aef9d9f452f5608cefbf2472088b62954',1,'TraceEventPhase.h']]],
+  ['trace_5fevent_5fphase_5fsnapshot_5fobject_21',['TRACE_EVENT_PHASE_SNAPSHOT_OBJECT',['../_trace_event_phase_8h.html#a5feee463ea7d0619498b3e4526397a44',1,'TraceEventPhase.h']]]
 ];
