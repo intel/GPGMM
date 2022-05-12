@@ -54,12 +54,22 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
-    ComPtr<ResidencyManager> residencyManager;
-    ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
-                                                        &resourceAllocator, &residencyManager));
-    ASSERT_NE(resourceAllocator, nullptr);
-    EXPECT_NE(residencyManager, nullptr);
+    // Creating a allocator with residency should succeed with S_OK.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ComPtr<ResourceAllocator> resourceAllocator;
+        EXPECT_HRESULT(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
+                                                          &resourceAllocator, &residencyManager),
+                       S_OK);
+    }
+
+    // Creating a allocator with NULL residency should succeed with S_FALSE.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        ComPtr<ResourceAllocator> resourceAllocator;
+        EXPECT_HRESULT(ResourceAllocator::CreateAllocator(desc, &resourceAllocator, nullptr),
+                       S_FALSE);
+    }
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {

@@ -21,6 +21,7 @@
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
 #define ASSERT_SUCCEEDED(expr) ASSERT_TRUE(SUCCEEDED(expr))
+#define EXPECT_HRESULT(expr, hr) ASSERT_TRUE(expr == hr)
 
 namespace gpgmm { namespace d3d12 {
 

@@ -45,6 +45,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
+    // Creating a NULL allocator should succeed with S_FALSE.
+    {
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        ComPtr<ResourceAllocator> resourceAllocator;
+        EXPECT_HRESULT(ResourceAllocator::CreateAllocator(desc, nullptr), S_FALSE);
+    }
+
     // Creating an allocator without a device should always fail.
     {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();

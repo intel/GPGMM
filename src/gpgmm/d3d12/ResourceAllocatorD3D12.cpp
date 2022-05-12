@@ -398,26 +398,28 @@ namespace gpgmm { namespace d3d12 {
 #endif
 
         ComPtr<ResidencyManager> residencyManager;
-        if (residencyManagerOut != nullptr) {
-            RESIDENCY_DESC residencyDesc = {};
-            residencyDesc.Device = newDescriptor.Device;
-            residencyDesc.IsUMA = newDescriptor.IsUMA;
-            residencyDesc.VideoMemoryBudget = newDescriptor.MaxVideoMemoryBudget;
-            residencyDesc.Budget = newDescriptor.Budget;
-            residencyDesc.EvictBatchSize = newDescriptor.EvictBatchSize;
-            ReturnIfFailed(newDescriptor.Adapter.As(&residencyDesc.Adapter));
+        RESIDENCY_DESC residencyDesc = {};
+        residencyDesc.Device = newDescriptor.Device;
+        residencyDesc.IsUMA = newDescriptor.IsUMA;
+        residencyDesc.VideoMemoryBudget = newDescriptor.MaxVideoMemoryBudget;
+        residencyDesc.Budget = newDescriptor.Budget;
+        residencyDesc.EvictBatchSize = newDescriptor.EvictBatchSize;
+        ReturnIfFailed(newDescriptor.Adapter.As(&residencyDesc.Adapter));
+        ReturnIfFailed(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
 
-            ReturnIfFailed(
-                ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+        if (resourceAllocatorOut != nullptr) {
+            *resourceAllocatorOut =
+                new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
+
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
+        } else {
+            return S_FALSE;
         }
-
-        *resourceAllocatorOut =
-            new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
-
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
 
         if (residencyManagerOut != nullptr) {
             *residencyManagerOut = residencyManager.Detach();
+        } else {
+            return S_FALSE;
         }
 
         return S_OK;
