@@ -302,8 +302,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">resourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. If NULL is passed and allocator creating would succeed, S_FALSE is returned. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">residencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. Pass NULL to test if residency manager creation would succeed, but not actually create the residency manager. If NULL is passed and residency manager creation would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">resourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">residencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency for resources. </td></tr>
   </table>
   </dd>
 </dl>
