@@ -22,6 +22,5 @@ var searchData=
   ['eventtracewriter_2eh_19',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
   ['evict_20',['Evict',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4',1,'gpgmm::d3d12::ResidencyManager']]],
   ['evictbatchsize_21',['EvictBatchSize',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a53a630fb905d3b72bbeffe1b00030b82',1,'gpgmm::d3d12::RESIDENCY_DESC::EvictBatchSize()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a1b89fa5ae0e519ba4f8414db8f3d725b',1,'gpgmm::d3d12::ALLOCATOR_DESC::EvictBatchSize()']]],
-  ['executecommandlists_22',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]],
-  ['expect_5fhresult_23',['EXPECT_HRESULT',['../_d3_d12_test_8h.html#aedbc8d4cd369573c6d90f831287a2313',1,'D3D12Test.h']]]
+  ['executecommandlists_22',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982',1,'gpgmm::d3d12::ResidencyManager']]]
 ];

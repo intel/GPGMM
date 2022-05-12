@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   7: "acglot",
   8: "adegikmw",
   9: "mo",
-  10: "adegirtu"
+  10: "adgirtu"
 };
 
 var indexSectionNames =
