@@ -383,12 +383,10 @@ namespace gpgmm { namespace d3d12 {
         @param descriptor A reference to ALLOCATOR_DESC structure that describes the allocator.
         @param[out] resourceAllocatorOut Pointer to a memory block that recieves a pointer to the
         resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
-        create the allocator. If NULL is passed and allocator creating would succeed, S_FALSE is
-        returned.
+        create the allocator.
         @param[out] residencyManagerOut Pointer to a memory block that recieves a pointer to the
-        residency manager. Pass NULL to test if residency manager creation would succeed, but not
-        actually create the residency manager. If NULL is passed and residency manager creation
-        would succeed, S_FALSE is returned.
+        residency manager. If NULL is passed, the allocator will be created without using
+        residency for resources.
         */
         static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
                                        ResourceAllocator** resourceAllocatorOut,

@@ -411,10 +411,11 @@ namespace gpgmm { namespace d3d12 {
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
         }
 
-        *resourceAllocatorOut =
-            new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
-
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
+        if (resourceAllocatorOut != nullptr) {
+            *resourceAllocatorOut =
+                new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
+        }
 
         if (residencyManagerOut != nullptr) {
             *residencyManagerOut = residencyManager.Detach();

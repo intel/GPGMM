@@ -41,7 +41,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
     // Creating an invalid allocator should always fail.
     {
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator({}, &resourceAllocator));
+        EXPECT_FAILED(ResourceAllocator::CreateAllocator({}, &resourceAllocator));
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
@@ -51,9 +51,12 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         desc.Device = nullptr;
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
         EXPECT_EQ(resourceAllocator, nullptr);
     }
+
+    // Creating a NULL allocator should always succeed.
+    EXPECT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), nullptr));
 
     // Creating an allocator without an adapter should always fail.
     {
@@ -61,14 +64,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         desc.Adapter = nullptr;
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
     // Creating a new allocator using the defaults should always succeed.
     {
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(
+        EXPECT_SUCCEEDED(
             ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
         EXPECT_NE(resourceAllocator, nullptr);
     }
@@ -81,7 +84,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         desc.MaxResourceHeapSize = kDefaultBufferSize / 2;
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 }

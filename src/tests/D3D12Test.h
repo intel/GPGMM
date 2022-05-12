@@ -22,6 +22,9 @@
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
 #define ASSERT_SUCCEEDED(expr) ASSERT_TRUE(SUCCEEDED(expr))
 
+#define EXPECT_FAILED(expr) EXPECT_TRUE(FAILED(expr))
+#define EXPECT_SUCCEEDED(expr) EXPECT_TRUE(SUCCEEDED(expr))
+
 namespace gpgmm { namespace d3d12 {
 
     struct ALLOCATOR_DESC;
