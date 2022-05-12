@@ -49,6 +49,25 @@ namespace gpgmm { namespace d3d12 {
         // Set the initial video memory limits per segment.
         ReturnIfFailed(residencyManager->UpdateVideoMemorySegments());
 
+        // D3D12 has non-zero memory usage even before any resources have been created, and this
+        // value can vary by OS enviroment. By adding this in addition to the artificial budget
+        // limit, we can create a predictable and reproducible budget.
+        if (descriptor.Budget > 0) {
+            DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
+                residencyManager->GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+
+            localVideoMemorySegmentInfo->Budget =
+                localVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
+            if (!descriptor.IsUMA) {
+                DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
+                    residencyManager->GetVideoMemorySegmentInfo(
+                        DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+
+                nonLocalVideoMemorySegmentInfo->Budget =
+                    nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
+            }
+        }
+
         *residencyManagerOut = residencyManager.release();
 
         return S_OK;
@@ -61,7 +80,7 @@ namespace gpgmm { namespace d3d12 {
           mFence(std::move(fence)),
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
-          mBudget(descriptor.Budget),
+          mIsBudgetRestricted(descriptor.Budget > 0),
           mEvictBatchSize(descriptor.EvictBatchSize == 0 ? kDefaultEvictBatchSize
                                                          : descriptor.EvictBatchSize),
           mIsUMA(descriptor.IsUMA) {
@@ -70,18 +89,6 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(mDevice != nullptr);
         ASSERT(mAdapter != nullptr);
         ASSERT(mFence != nullptr);
-
-        // There is a non-zero memory usage even before any resources have been created, and this
-        // value can vary by enviroment. By adding this in addition to the artificial budget limit,
-        // we can create a predictable and reproducible budget.
-        if (mBudget > 0) {
-            mLocalVideoMemorySegment.Info.Budget =
-                mLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
-            if (!descriptor.IsUMA) {
-                mNonLocalVideoMemorySegment.Info.Budget =
-                    mNonLocalVideoMemorySegment.Info.CurrentUsage + mBudget;
-            }
-        }
     }
 
     ResidencyManager::~ResidencyManager() {
@@ -245,7 +252,7 @@ namespace gpgmm { namespace d3d12 {
             queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
 
         // If we're restricting the budget, leave the budget as is.
-        if (mBudget == 0) {
+        if (!mIsBudgetRestricted) {
             pVideoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
                 mVideoMemoryBudget);

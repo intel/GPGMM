@@ -199,7 +199,7 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<Fence> mFence;
 
         const float mVideoMemoryBudget;
-        const uint64_t mBudget;
+        const bool mIsBudgetRestricted;
         const uint64_t mEvictBatchSize;
         const bool mIsUMA;
 
