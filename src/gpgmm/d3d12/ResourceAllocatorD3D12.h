@@ -344,7 +344,7 @@ namespace gpgmm { namespace d3d12 {
         The call to prefetch is deferred to a seperate background thread by GPGMM which runs
         when the current allocation requested is completed. By default, GPGMM will automatically
         trigger prefetching based on heurstics. Prefetching enables more performance when
-        allocating for large contiguous allocations.
+        allocating for contiguous allocations or many resources of the same size.
 
         Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
         */
