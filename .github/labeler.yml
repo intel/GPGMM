@@ -13,6 +13,13 @@ DEPS:
 - DEPS
 - third_party/**/*
 
+# Add 'Frontend' label to front-end code changes.
 Frontend:
 - src/common/*
 - src/utils/*
+
+# Add 'Build' label to any build file changes.
+Build:
+- build_overrides/**/*
+- '**/BUILD.gn'
+- '**/CMakeLists.txt'
