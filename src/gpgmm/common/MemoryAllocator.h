@@ -186,9 +186,9 @@ namespace gpgmm {
             ASSERT(memory != nullptr);
             memory->Ref();
 
-            // Calling memory allocator must be responsible in fully initializing the memory
-            // allocation. This is because we do not yet know how to map the sub-allocated block to
-            // memory.
+            // Caller is be responsible in fully initializing the memory allocation.
+            // This is because TrySubAllocateMemory() does not necessarily know how to map the
+            // final sub-allocated block to created memory.
             return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
                                                       AllocationMethod::kUndefined, block);
         }
