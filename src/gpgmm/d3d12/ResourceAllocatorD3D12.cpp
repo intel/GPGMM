@@ -709,6 +709,19 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
+        // Restrict the available memory to stay under budget.
+        uint64_t availableMemory = mMaxResourceHeapSize;
+        if (mResidencyManager != nullptr) {
+            DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
+                mResidencyManager->GetVideoMemoryInfo(GetPreferredMemorySegmentGroup(
+                    mDevice.Get(), mIsUMA, allocationDescriptor.HeapType));
+            if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
+                availableMemory = 0;
+            } else {
+                availableMemory = currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
+            }
+        }
+
         const bool neverAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
 
@@ -785,6 +798,7 @@ namespace gpgmm { namespace d3d12 {
             request.NeverAllocate = neverAllocate;
             request.CacheSize = false;
             request.AlwaysPrefetch = alwaysPrefetch;
+            request.AvailableForAllocation = availableMemory;
 
             ReturnIfSucceeded(
                 TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {

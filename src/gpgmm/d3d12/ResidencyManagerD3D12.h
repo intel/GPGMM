@@ -158,6 +158,15 @@ namespace gpgmm { namespace d3d12 {
                                           uint64_t reservation,
                                           uint64_t* reservationOut = nullptr);
 
+        /** \brief  Get the current budget and memory usage.
+
+        @param memorySegmentGroup Memory segment to retrieve info from.
+
+        \return A pointer to DXGI_QUERY_VIDEO_MEMORY_INFO struct of the video memory segment info.
+        */
+        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
+            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+
       private:
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 
@@ -180,9 +189,6 @@ namespace gpgmm { namespace d3d12 {
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
-
-        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemorySegmentInfo(
-            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 

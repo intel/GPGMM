@@ -135,6 +135,18 @@ namespace gpgmm {
                 uint64_t newSlabSize =
                     std::min(ComputeSlabSize(request.SizeInBytes, slabSize * mSlabGrowthFactor),
                              mMaxSlabSize);
+
+                // Revert to using the first computed slab size if growth exceeds
+                // available memory. Otherwise, the new larger slab could cause out-of-memory.
+                if (request.AvailableForAllocation == 0 ||
+                    newSlabSize > request.AvailableForAllocation) {
+                    DebugEvent(GetTypename()) << "Available memory exceeded by new slab: "
+                                              << std::to_string(request.AvailableForAllocation)
+                                              << " vs " << std::to_string(newSlabSize) + " bytes).";
+
+                    newSlabSize = slabSize;
+                }
+
                 if (newSlabSize > slabSize) {
                     cache = GetOrCreateCache(newSlabSize);
                     slabSize = newSlabSize;
@@ -295,6 +307,10 @@ namespace gpgmm {
         result.UsedMemoryUsage = info.UsedMemoryUsage;
         result.FreeMemoryUsage = info.FreeMemoryUsage;
         return result;
+    }
+
+    const char* SlabMemoryAllocator::GetTypename() const {
+        return "SlabMemoryAllocator";
     }
 
     // SlabCacheAllocator

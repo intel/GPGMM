@@ -54,14 +54,13 @@ namespace gpgmm { namespace d3d12 {
         // limit, we can create a predictable and reproducible budget.
         if (descriptor.Budget > 0) {
             DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
-                residencyManager->GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+                residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
 
             localVideoMemorySegmentInfo->Budget =
                 localVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
             if (!descriptor.IsUMA) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
-                    residencyManager->GetVideoMemorySegmentInfo(
-                        DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+                    residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
 
                 nonLocalVideoMemorySegmentInfo->Budget =
                     nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
@@ -183,7 +182,7 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemorySegmentInfo(
+    DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemoryInfo(
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         switch (memorySegmentGroup) {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
@@ -221,7 +220,7 @@ namespace gpgmm { namespace d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
-            GetVideoMemorySegmentInfo(memorySegmentGroup);
+            GetVideoMemoryInfo(memorySegmentGroup);
 
         videoMemorySegmentInfo->AvailableForReservation = reservation;
 
@@ -287,11 +286,11 @@ namespace gpgmm { namespace d3d12 {
 
     HRESULT ResidencyManager::UpdateVideoMemorySegments() {
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
-            GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+            GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
 
         ReturnIfFailed(QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, queryVideoMemoryInfo));
         if (!mIsUMA) {
-            queryVideoMemoryInfo = GetVideoMemorySegmentInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+            queryVideoMemoryInfo = GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
             ReturnIfFailed(
                 QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, queryVideoMemoryInfo));
         }
@@ -312,7 +311,7 @@ namespace gpgmm { namespace d3d12 {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
-            GetVideoMemorySegmentInfo(memorySegmentGroup);
+            GetVideoMemoryInfo(memorySegmentGroup);
         ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
 
         const uint64_t currentUsageAfterEvict =
@@ -393,9 +392,12 @@ namespace gpgmm { namespace d3d12 {
             return E_NOTIMPL;
         }
 
-        // Ensure changes to video memory budget is recorded during tracing.
-        if (IsEventTraceEnabled()) {
-            ReturnIfFailed(UpdateVideoMemorySegments());
+        // Keep video memory segments up-to-date. This must always happen because tests may
+        // want to execute a no-op to get the current budget and usage.
+        ReturnIfFailed(UpdateVideoMemorySegments());
+
+        if (count == 0) {
+            return S_OK;
         }
 
         ID3D12CommandList* commandList = commandLists[0];

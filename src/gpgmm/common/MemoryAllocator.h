@@ -109,6 +109,12 @@ namespace gpgmm {
         on the requested size.
         */
         bool AlwaysPrefetch;
+
+        /** \brief Memory available for the allocation.
+
+        A value of 0 means there is no memory available left to allocate from.
+        */
+        uint64_t AvailableForAllocation;
     };
 
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
