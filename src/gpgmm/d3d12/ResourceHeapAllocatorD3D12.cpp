@@ -82,7 +82,7 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Heap> heap;
         HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap));
         if (FAILED(hr)) {
-            ErrorEvent(GetTypename()) << " failed to create heap: " << GetErrorMessage(hr);
+            InfoEvent(GetTypename()) << " failed to create heap: " << GetErrorMessage(hr);
             return {};
         }
 
