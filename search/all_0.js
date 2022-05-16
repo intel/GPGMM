@@ -73,5 +73,6 @@ var searchData=
   ['assertvulkanfunctionsarevalid_70',['AssertVulkanFunctionsAreValid',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a645ab6f67c5c155e047c1e4ae447b1d8',1,'gpgmm::vk::VulkanFunctions']]],
   ['asynceventimpl_71',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html#a67410e9654d985c1a6afe57735eaf565',1,'gpgmm::AsyncEventImpl::AsyncEventImpl()'],['../classgpgmm_1_1_async_event_impl.html',1,'gpgmm::AsyncEventImpl']]],
   ['asyncthreadpoolimpl_72',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a59a2ce8555af55ff8b234cbd7f647bc1',1,'gpgmm::AsyncThreadPoolImpl::AsyncThreadPoolImpl()'],['../classgpgmm_1_1_async_thread_pool_impl.html',1,'gpgmm::AsyncThreadPoolImpl']]],
-  ['attach_73',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]]
+  ['attach_73',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]],
+  ['availableforallocation_74',['AvailableForAllocation',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a26e2dcc129782a2a4a7c6e5c97ff230a',1,'gpgmm::MEMORY_ALLOCATION_REQUEST']]]
 ];

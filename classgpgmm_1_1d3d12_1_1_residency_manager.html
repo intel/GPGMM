@@ -109,6 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3cd640bcdcf754a458e56f60a84ac91f"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3cd640bcdcf754a458e56f60a84ac91f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t reservation, uint64_t *reservationOut=nullptr)</td></tr>
 <tr class="memdesc:a3cd640bcdcf754a458e56f60a84ac91f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3cd640bcdcf754a458e56f60a84ac91f">More...</a><br /></td></tr>
 <tr class="separator:a3cd640bcdcf754a458e56f60a84ac91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aead46609a3896a7799c979c42bed6b17"><td class="memItemLeft" align="right" valign="top">DXGI_QUERY_VIDEO_MEMORY_INFO *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#aead46609a3896a7799c979c42bed6b17">GetVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup)</td></tr>
+<tr class="memdesc:aead46609a3896a7799c979c42bed6b17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#aead46609a3896a7799c979c42bed6b17">More...</a><br /></td></tr>
+<tr class="separator:aead46609a3896a7799c979c42bed6b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html">gpgmm::d3d12::IUnknownImpl</a></td></tr>
 <tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
 <tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -293,6 +296,33 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aead46609a3896a7799c979c42bed6b17" name="aead46609a3896a7799c979c42bed6b17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aead46609a3896a7799c979c42bed6b17">&#9670;&nbsp;</a></span>GetVideoMemoryInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DXGI_QUERY_VIDEO_MEMORY_INFO * gpgmm::d3d12::ResidencyManager::GetVideoMemoryInfo </td>
+          <td>(</td>
+          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
+          <td class="paramname"><em>memorySegmentGroup</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current budget and memory usage. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">memorySegmentGroup</td><td>Memory segment to retrieve info from.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to DXGI_QUERY_VIDEO_MEMORY_INFO struct of the video memory segment info. </dd></dl>
 
 </div>
 </div>
