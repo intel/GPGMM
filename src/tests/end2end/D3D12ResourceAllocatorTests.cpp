@@ -798,7 +798,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
     }
 }
 
-// Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
+// Creates a bunch of small buffers using the smallest size allowed.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
@@ -819,7 +819,62 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
     allocs.clear();
 }
 
-// Creates a bunch of small buffers using the smallest size allowed so GPU memory is pre-fetched.
+// Verify a 1 byte buffer will be defragmented by creating a heaps large enough to stay under the
+// fragmentation limit.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferDefrag) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.MemoryFragmentationLimit = 0.0265;  // or 2.65%
+
+    // A 1 byte buffer causes 64KB - 1 worth of resource fragmentation.
+    // This means a resource heap equal to 64 pages is required to be created, since 64KB - 1B <
+    // (64KB * 64)* 2.65%.
+
+    // By default, buffer should be sub-allocated.
+    {
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), 64 * 65536u);
+    }
+
+    // Force standalone buffer creation.
+    {
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), 64 * 65536u);
+    }
+
+    // Repeat standalone buffer creation, but using a committed resource.
+    {
+        allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
+
+        ComPtr<ResourceAllocator> commitedAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &commitedAllocator));
+        ASSERT_NE(commitedAllocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(commitedAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), 65536u);
+    }
+}
+
+// Creates a bunch of small buffers using the smallest size allowed with pre-fetching enabled.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
