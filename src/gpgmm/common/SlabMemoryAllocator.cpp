@@ -330,16 +330,15 @@ namespace gpgmm {
 
         GPGMM_CHECK_NONZERO(request.SizeInBytes);
 
-        MEMORY_ALLOCATION_REQUEST newRequest = request;
-        newRequest.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
+        const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
 
         // Create a slab allocator for the new entry.
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(newRequest.SizeInBytes),
-                                            newRequest.CacheSize);
+        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize),
+                                            request.CacheSize);
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
-                newRequest.SizeInBytes, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
+                blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
                 mSlabFragmentationLimit, mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
             mSlabAllocators.Append(slabAllocator);
@@ -348,7 +347,7 @@ namespace gpgmm {
         ASSERT(slabAllocator != nullptr);
 
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(newRequest), subAllocation);
+        GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(request), subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();
