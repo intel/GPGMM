@@ -723,6 +723,17 @@ namespace gpgmm { namespace d3d12 {
         // Attempt to allocate using the most effective allocator.;
         MemoryAllocator* allocator = nullptr;
 
+        // The requested size should always be the non-allocated size when possible. The
+        // sub-allocator uses the unaligned size to determine the size of the heap required to stay
+        // within the fragmentation threshold.
+        //
+        // Only the buffer size can be computed directly from the resource descriptor (width always
+        // represents 1D coorinates, in bytes).
+        const uint64_t requestedSize =
+            (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
+                ? newResourceDesc.Width
+                : resourceInfo.SizeInBytes;
+
         // Attempt to create a resource allocation within the same resource.
         // This has the same performace as sub-allocating resource heaps without the
         // drawback of requiring resource heaps to be 64KB size-aligned. However, this
@@ -737,7 +748,7 @@ namespace gpgmm { namespace d3d12 {
             allocator = mBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = newResourceDesc.Width;
+            request.SizeInBytes = requestedSize;
             request.Alignment = (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
             request.NeverAllocate = neverAllocate;
             request.CacheSize = false;
@@ -780,7 +791,7 @@ namespace gpgmm { namespace d3d12 {
             }
 
             MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = resourceInfo.SizeInBytes;
+            request.SizeInBytes = requestedSize;
             request.Alignment = resourceInfo.Alignment;
             request.NeverAllocate = neverAllocate;
             request.CacheSize = false;
@@ -835,7 +846,7 @@ namespace gpgmm { namespace d3d12 {
             }
 
             MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = resourceInfo.SizeInBytes;
+            request.SizeInBytes = requestedSize;
             request.Alignment = GetHeapAlignment(heapFlags, isMSAA);
             request.NeverAllocate = neverAllocate;
             request.CacheSize = false;
