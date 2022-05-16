@@ -43,6 +43,7 @@ class SlabMemoryAllocatorTests : public testing::Test {
         request.NeverAllocate = neverAllocate;
         request.CacheSize = false;
         request.AlwaysPrefetch = false;
+        request.AvailableForAllocation = kInvalidSize;
         return request;
     }
 };

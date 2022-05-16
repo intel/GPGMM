@@ -16,6 +16,8 @@
 
 #include <gpgmm_d3d12.h>
 
+#include <vector>
+
 using namespace gpgmm::d3d12;
 
 class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test {
@@ -71,4 +73,42 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
                                            &residencyManager);
     }
     GPGMM_TEST_MEMORY_LEAK_END();
+}
+
+// Keeps allocating until it goes over budget.
+TEST_F(D3D12ResidencyManagerTests, OverBudget) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.Budget = 10 * 1024 * 1024;  // 10MB
+
+    ComPtr<ResidencyManager> residencyManager;
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator, &residencyManager));
+
+    DXGI_QUERY_VIDEO_MEMORY_INFO* local =
+        residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+    DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocal =
+        residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+
+    std::vector<ComPtr<ResourceAllocation>> allocations = {};
+    std::vector<Heap*> resourceHeaps = {};
+
+    // Keep allocating until we go over our 10MB budget.
+    while (local->Budget > local->CurrentUsage || nonLocal->Budget > nonLocal->CurrentUsage) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        resourceHeaps.push_back(allocation->GetMemory());
+        allocations.push_back(std::move(allocation));
+
+        // Call ExecuteCommandLists() to update the budget and current usage.
+        ASSERT_SUCCEEDED(residencyManager->ExecuteCommandLists(nullptr, nullptr, nullptr, 0));
+    }
+
+    ASSERT_GT(resourceHeaps.size(), 1u);
+
+    // When over-budget, the resource heap size should remain the same.
+    EXPECT_EQ(resourceHeaps.at(allocations.size() - 1)->GetSize(),
+              resourceHeaps.at(allocations.size() - 2)->GetSize());
 }
