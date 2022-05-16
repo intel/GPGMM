@@ -81,7 +81,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a646cb283db687da0dfb9bec93674b411"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the size, in bytes, of the allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a646cb283db687da0dfb9bec93674b411">More...</a><br /></td></tr>
 <tr class="separator:a646cb283db687da0dfb9bec93674b411"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a421aa93aa5d3fe42580be07e37d13987"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a421aa93aa5d3fe42580be07e37d13987">Alignment</a></td></tr>
-<tr class="memdesc:a421aa93aa5d3fe42580be07e37d13987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the alignment, in bytes, of the allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a421aa93aa5d3fe42580be07e37d13987">More...</a><br /></td></tr>
+<tr class="memdesc:a421aa93aa5d3fe42580be07e37d13987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested alignment, in bytes, of the allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a421aa93aa5d3fe42580be07e37d13987">More...</a><br /></td></tr>
 <tr class="separator:a421aa93aa5d3fe42580be07e37d13987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d7b04df4ac858359500cccb4795981a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a7d7b04df4ac858359500cccb4795981a">NeverAllocate</a></td></tr>
 <tr class="memdesc:a7d7b04df4ac858359500cccb4795981a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to never create underlying memory.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a7d7b04df4ac858359500cccb4795981a">More...</a><br /></td></tr>
@@ -108,8 +108,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Request the alignment, in bytes, of the allocation. </p>
-<p >The allocated size must be a multiple of this alignment value. </p>
+<p>Requested alignment, in bytes, of the allocation. </p>
+<p >This is the alignment value of the memory block, which is not necessarily a multiple of the allocated size. For example, a 128-byte alignment means the memory block offset must be a multiple of 128. But the block size may only be 64 bytes, leaving the other 64 bytes allocated but unused. </p>
 
 </div>
 </div>
