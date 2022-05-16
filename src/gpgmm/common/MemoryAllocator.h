@@ -86,9 +86,12 @@ namespace gpgmm {
         */
         uint64_t SizeInBytes;
 
-        /** \brief Request the alignment, in bytes, of the allocation.
+        /** \brief Requested alignment, in bytes, of the allocation.
 
-        The allocated size must be a multiple of this alignment value.
+        This is the alignment value of the memory block, which is not necessarily a multiple of the
+        allocated size. For example, a 128-byte alignment means the memory block offset must
+        be a multiple of 128. But the block size may only be 64 bytes, leaving the other 64 bytes
+        allocated but unused.
         */
         uint64_t Alignment;
 
