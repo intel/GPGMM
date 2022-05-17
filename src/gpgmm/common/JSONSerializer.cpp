@@ -54,6 +54,29 @@ namespace gpgmm {
     }
 
     // static
+    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATION_REQUEST& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("Alignment", desc.Alignment);
+        dict.AddItem("NeverAllocate", desc.NeverAllocate);
+        dict.AddItem("CacheSize", desc.CacheSize);
+        dict.AddItem("AlwaysPrefetch", desc.AlwaysPrefetch);
+        dict.AddItem("AvailableForAllocation", desc.AvailableForAllocation);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATION_INFO& info) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", info.SizeInBytes);
+        dict.AddItem("Offset", info.Offset);
+        dict.AddItem("Method", info.Method);
+        dict.AddItem("Memory", info.Memory);
+        dict.AddItem("Allocator", info.Allocator);
+        return dict;
+    }
+
+    // static
     JSONDict JSONSerializer::Serialize(const void* objectPtr) {
         JSONDict dict;
         dict.AddItem(TraceEventID::kIdRefKey, ToString(objectPtr));

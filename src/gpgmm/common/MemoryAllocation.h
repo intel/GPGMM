@@ -57,6 +57,39 @@ namespace gpgmm {
     class MemoryBase;
     class MemoryAllocator;
 
+    /** \struct MEMORY_ALLOCATION_INFO
+    Additional information about the memory allocation.
+    */
+    struct MEMORY_ALLOCATION_INFO {
+        /** \brief The created size of the memory allocation, in bytes.
+
+        Must be non-zero.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief The offset relative to memory, in bytes.
+         */
+        uint64_t Offset;
+
+        /** \brief The method to describe how the allocation was created.
+
+        The Method determines how to figure out the size of the allocation.
+        */
+        AllocationMethod Method;
+
+        /** \brief Pointer to underlying memory object.
+
+        Must be valid for the duration of the allocation.
+        */
+        MemoryBase* Memory;
+
+        /** \brief Pointer to allocator that created this allocation.
+
+        Must be valid for the duration of the allocation.
+        */
+        MemoryAllocator* Allocator;
+    };
+
     /** \brief Represents a location and range in memory.
 
     It can represent a allocation in memory one of two ways: 1) a range within a memory block or 2)
@@ -110,6 +143,12 @@ namespace gpgmm {
         MemoryAllocation& operator=(const MemoryAllocation&) = default;
         bool operator==(const MemoryAllocation&) const;
         bool operator!=(const MemoryAllocation& other) const;
+
+        /** \brief Returns information about this memory allocation.
+
+        \return A MEMORY_ALLOCATION_INFO struct containing the information.
+        */
+        MEMORY_ALLOCATION_INFO GetInfo() const;
 
         /** \brief Returns the memory assigned to this allocation.
 

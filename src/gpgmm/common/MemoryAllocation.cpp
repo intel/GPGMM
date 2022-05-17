@@ -65,6 +65,10 @@ namespace gpgmm {
         return !operator==(other);
     }
 
+    MEMORY_ALLOCATION_INFO MemoryAllocation::GetInfo() const {
+        return {GetSize(), mOffset, mMethod, mMemory, mAllocator};
+    }
+
     MemoryBase* MemoryAllocation::GetMemory() const {
         return mMemory;
     }
