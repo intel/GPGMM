@@ -100,10 +100,12 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a7fbe85cef890e6e3f0de7cb2b33b1f9d"><td class="memItemLeft" align="right" valign="top">static D3D12_RESOURCE_DESC&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a7fbe85cef890e6e3f0de7cb2b33b1f9d">CreateBasicBufferDesc</a> (uint64_t width)</td></tr>
-<tr class="separator:a7fbe85cef890e6e3f0de7cb2b33b1f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d7c7291c761f8fa9a329d900f895b59"><td class="memItemLeft" align="right" valign="top">static D3D12_RESOURCE_DESC&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a3d7c7291c761f8fa9a329d900f895b59">CreateBasicBufferDesc</a> (uint64_t width, uint64_t alignment=0)</td></tr>
+<tr class="separator:a3d7c7291c761f8fa9a329d900f895b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad00159d95c2d77ffa40e9abb07dd8094"><td class="memItemLeft" align="right" valign="top">static D3D12_RESOURCE_DESC&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#ad00159d95c2d77ffa40e9abb07dd8094">CreateBasicTextureDesc</a> (DXGI_FORMAT format, uint64_t width, uint64_t height, uint32_t sampleCount=1)</td></tr>
 <tr class="separator:ad00159d95c2d77ffa40e9abb07dd8094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac81ad416973b12c22cd84b87ded4419b"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html">MEMORY_ALLOCATION_EXPECT</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#ac81ad416973b12c22cd84b87ded4419b">GenerateBufferAllocations</a> ()</td></tr>
+<tr class="separator:ac81ad416973b12c22cd84b87ded4419b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -127,6 +129,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a092adcd62630f99c62183588e6c90dd6 inherit pro_methods_class_g_p_g_m_m_test_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31bde82efe3f39061cec23834ffdc60e inherit pro_methods_class_g_p_g_m_m_test_base"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_debug_platform.html">gpgmm::DebugPlatform</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_p_g_m_m_test_base.html#a31bde82efe3f39061cec23834ffdc60e">GetDebugPlatform</a> ()</td></tr>
 <tr class="separator:a31bde82efe3f39061cec23834ffdc60e inherit pro_methods_class_g_p_g_m_m_test_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_static_methods_class_g_p_g_m_m_test_base"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_class_g_p_g_m_m_test_base')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="class_g_p_g_m_m_test_base.html">GPGMMTestBase</a></td></tr>
+<tr class="memitem:a5c5fc2410537b3d73e30b6780d1506f1 inherit pro_static_methods_class_g_p_g_m_m_test_base"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html">MEMORY_ALLOCATION_EXPECT</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_p_g_m_m_test_base.html#a5c5fc2410537b3d73e30b6780d1506f1">GenerateTestAllocations</a> (uint64_t alignment)</td></tr>
+<tr class="separator:a5c5fc2410537b3d73e30b6780d1506f1 inherit pro_static_methods_class_g_p_g_m_m_test_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a70b6d4034273c0c15878258a45e1a08a" name="a70b6d4034273c0c15878258a45e1a08a"></a>
@@ -147,8 +152,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7fbe85cef890e6e3f0de7cb2b33b1f9d" name="a7fbe85cef890e6e3f0de7cb2b33b1f9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fbe85cef890e6e3f0de7cb2b33b1f9d">&#9670;&nbsp;</a></span>CreateBasicBufferDesc()</h2>
+<a id="a3d7c7291c761f8fa9a329d900f895b59" name="a3d7c7291c761f8fa9a329d900f895b59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d7c7291c761f8fa9a329d900f895b59">&#9670;&nbsp;</a></span>CreateBasicBufferDesc()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -160,8 +165,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">D3D12_RESOURCE_DESC gpgmm::d3d12::D3D12TestBase::CreateBasicBufferDesc </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>width</em></td><td>)</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>alignment</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -210,6 +225,31 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac81ad416973b12c22cd84b87ded4419b" name="ac81ad416973b12c22cd84b87ded4419b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac81ad416973b12c22cd84b87ded4419b">&#9670;&nbsp;</a></span>GenerateBufferAllocations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html">MEMORY_ALLOCATION_EXPECT</a> &gt; gpgmm::d3d12::D3D12TestBase::GenerateBufferAllocations </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>

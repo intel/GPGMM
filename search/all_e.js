@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['offset_0',['Offset',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#aa3aa1ca1718d94d74d86ccb3f538a686',1,'gpgmm::MEMORY_ALLOCATION_INFO::Offset()'],['../structgpgmm_1_1_memory_block.html#a7912870ebc9457c28358322b9d481c7d',1,'gpgmm::MemoryBlock::Offset()']]],
+  ['offset_0',['Offset',['../structgpgmm_1_1_memory_block.html#a7912870ebc9457c28358322b9d481c7d',1,'gpgmm::MemoryBlock']]],
   ['offsetfromresource_1',['OffsetFromResource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#abd6b8ab32ee8e7c16c292c469f4b7293',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
   ['operator_20int_2',['operator int',['../classgpgmm_1_1_flags.html#a7ab8f46047cbea7fd539173861fdfc59',1,'gpgmm::Flags']]],
   ['operator_21_3',['operator!',['../classgpgmm_1_1_flags.html#a85018fbf511e59b3d1153dde344c5655',1,'gpgmm::Flags']]],
   ['operator_21_3d_4',['operator!=',['../classgpgmm_1_1_memory_allocation.html#a52088dfac9aa8a4ee409032a5b62e806',1,'gpgmm::MemoryAllocation::operator!=()'],['../classgpgmm_1_1_flags.html#a056f2749392c9fc6ffee5d24d1c50645',1,'gpgmm::Flags::operator!=()'],['../classgpgmm_1_1_scoped_ref.html#a7b7f97a5a6a44c2217f43abfd50289ec',1,'gpgmm::ScopedRef::operator!=()']]],
   ['operator_26_5',['operator&amp;',['../classgpgmm_1_1_flags.html#af037106086157731db5bb566b9810a23',1,'gpgmm::Flags::operator&amp;(const Flags &amp;flags) const'],['../classgpgmm_1_1_flags.html#a958dbb94f19e4ae4754531d2a95910b1',1,'gpgmm::Flags::operator&amp;(EnumT flag) const']]],
-  ['operator_26_3d_6',['operator&amp;=',['../classgpgmm_1_1_flags.html#a66c1d5aa48d57c2d11c5beb0c2837973',1,'gpgmm::Flags::operator&amp;=(EnumT flag)'],['../classgpgmm_1_1_flags.html#abba3934d86042f478cc358082cc7016e',1,'gpgmm::Flags::operator&amp;=(const Flags &amp;flags)']]],
+  ['operator_26_3d_6',['operator&amp;=',['../classgpgmm_1_1_flags.html#abba3934d86042f478cc358082cc7016e',1,'gpgmm::Flags::operator&amp;=(const Flags &amp;flags)'],['../classgpgmm_1_1_flags.html#a66c1d5aa48d57c2d11c5beb0c2837973',1,'gpgmm::Flags::operator&amp;=(EnumT flag)']]],
   ['operator_28_29_7',['operator()',['../classgpgmm_1_1_allocate_memory_task.html#ae4be062d7424f4d8f9501ce5ff730b23',1,'gpgmm::AllocateMemoryTask::operator()()'],['../classgpgmm_1_1_void_callback.html#aa8f08b06a261d3e5e40df04f0b17f9ec',1,'gpgmm::VoidCallback::operator()()']]],
   ['operator_2b_3d_8',['operator+=',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html#a90dd52c5b51a0808069bd2f2f1649f17',1,'gpgmm::MEMORY_ALLOCATOR_INFO']]],
   ['operator_2d_3e_9',['operator-&gt;',['../classgpgmm_1_1_scoped_ref.html#a2a01206927fc7c695446b2d5100dce32',1,'gpgmm::ScopedRef::operator-&gt;() const'],['../classgpgmm_1_1_scoped_ref.html#a19ce7eb45ad53489dc49a62953769888',1,'gpgmm::ScopedRef::operator-&gt;()']]],
