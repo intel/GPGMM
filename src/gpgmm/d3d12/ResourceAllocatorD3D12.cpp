@@ -773,7 +773,7 @@ namespace gpgmm { namespace d3d12 {
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
-                    ReturnIfFailed(resourceHeap->GetPageable().As(&committedResource));
+                    ReturnIfFailed(resourceHeap->As(&committedResource));
 
                     *resourceAllocationOut = new ResourceAllocation{
                         mResidencyManager.Get(),      subAllocation.GetAllocator(),
@@ -989,10 +989,13 @@ namespace gpgmm { namespace d3d12 {
         // CreatePlacedResource will fail.
         ComPtr<ID3D12Resource> placedResource;
         {
+            ComPtr<ID3D12Heap> heap;
+            ReturnIfFailed(resourceHeap->As(&heap));
+
             ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
             ReturnIfFailed(mDevice->CreatePlacedResource(
-                resourceHeap->GetHeap(), resourceOffset, resourceDescriptor, initialResourceState,
-                clearValue, IID_PPV_ARGS(&placedResource)));
+                heap.Get(), resourceOffset, resourceDescriptor, initialResourceState, clearValue,
+                IID_PPV_ARGS(&placedResource)));
         }
 
         *placedResourceOut = placedResource.Detach();

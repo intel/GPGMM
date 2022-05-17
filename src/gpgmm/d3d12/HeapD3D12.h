@@ -59,9 +59,9 @@ namespace gpgmm { namespace d3d12 {
         */
         MemoryPool* MemoryPool;
 
-        /** \brief Pointer to ID3D12Heap or NULL, if this heap has none.
+        /** \brief Pointer to ID3D12Pageable, the underlying heap created by D3D12.
          */
-        ID3D12Heap* Heap;
+        ID3D12Pageable* Pageable;
     };
 
     /** \struct HEAP_DESC
@@ -104,6 +104,7 @@ namespace gpgmm { namespace d3d12 {
         implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
 
         @param descriptor A reference to HEAP_DESC structure that describes the heap.
+        @param residencyManager A pointer to the ResidencyManager used to manage this heap.
         @param[out] heapOut Pointer to a memory block that recieves a pointer to the
         heap.
         */
@@ -119,11 +120,22 @@ namespace gpgmm { namespace d3d12 {
 
         ~Heap();
 
-        /** \brief Get the ID3D12Heap.
+        /** \brief Returns a ComPtr object that represents the interface specified.
 
-        \return Return a pointer to ID3D12Heap or NULL, if this heap has none.
+        For example, to get a ID3D12Heap:
+
+        \code
+        ComPtr<ID3D12Heap> heap;
+        HRESULT hr = resourceHeap->As(&heap);
+        \endcode
+
+        \return Error HRESULT if the specified interface was not represented by the
+        heap.
         */
-        ID3D12Heap* GetHeap() const;
+        template <typename T>
+        HRESULT As(Microsoft::WRL::Details::ComPtrRef<ComPtr<T>> ptr) const {
+            return mPageable.As(ptr);
+        }
 
         /** \brief Determine if the heap is resident or not.
 
@@ -146,7 +158,6 @@ namespace gpgmm { namespace d3d12 {
         friend ResourceAllocator;
 
         const char* GetTypename() const;
-        ComPtr<ID3D12Pageable> GetPageable() const;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was

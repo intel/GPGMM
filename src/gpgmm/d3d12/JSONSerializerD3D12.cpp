@@ -144,8 +144,9 @@ namespace gpgmm { namespace d3d12 {
         if (desc.MemoryPool != nullptr) {
             dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
         }
-        if (desc.Heap != nullptr) {
-            dict.AddItem("Heap", Serialize(desc.Heap->GetDesc()));
+        ComPtr<ID3D12Heap> heap;
+        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
+            dict.AddItem("Heap", Serialize(heap->GetDesc()));
         }
         return dict;
     }
