@@ -97,9 +97,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a952b1d52bf868c4f0faa0c59ad3b96ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92c752270518e33c6b550cf64ac7b71a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a92c752270518e33c6b550cf64ac7b71a">~Heap</a> ()</td></tr>
 <tr class="separator:a92c752270518e33c6b550cf64ac7b71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0db7ac06f73a7fb70b1be6917d35139"><td class="memItemLeft" align="right" valign="top">ID3D12Heap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ab0db7ac06f73a7fb70b1be6917d35139">GetHeap</a> () const</td></tr>
-<tr class="memdesc:ab0db7ac06f73a7fb70b1be6917d35139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ID3D12Heap.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#ab0db7ac06f73a7fb70b1be6917d35139">More...</a><br /></td></tr>
-<tr class="separator:ab0db7ac06f73a7fb70b1be6917d35139"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e13c4360d9aca83cb4a607466534294"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a3e13c4360d9aca83cb4a607466534294"><td class="memTemplItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294">As</a> (Microsoft::WRL::Details::ComPtrRef&lt; ComPtr&lt; T &gt; &gt; ptr) const</td></tr>
+<tr class="memdesc:a3e13c4360d9aca83cb4a607466534294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a ComPtr object that represents the interface specified.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294">More...</a><br /></td></tr>
+<tr class="separator:a3e13c4360d9aca83cb4a607466534294"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">IsResident</a> () const</td></tr>
 <tr class="memdesc:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the heap is resident or not.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">More...</a><br /></td></tr>
 <tr class="separator:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,6 +238,40 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3e13c4360d9aca83cb4a607466534294" name="a3e13c4360d9aca83cb4a607466534294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e13c4360d9aca83cb4a607466534294">&#9670;&nbsp;</a></span>As()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::Heap::As </td>
+          <td>(</td>
+          <td class="paramtype">Microsoft::WRL::Details::ComPtrRef&lt; ComPtr&lt; T &gt; &gt;&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a ComPtr object that represents the interface specified. </p>
+<p >For example, to get a ID3D12Heap:</p>
+<div class="fragment"><div class="line">ComPtr&lt;ID3D12Heap&gt; heap;</div>
+<div class="line">HRESULT hr = resourceHeap-&gt;As(&amp;heap);</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Error HRESULT if the specified interface was not represented by the heap. </dd></dl>
+
+</div>
+</div>
 <a id="afc93ec742774c95c85ac59e66885ef57" name="afc93ec742774c95c85ac59e66885ef57"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afc93ec742774c95c85ac59e66885ef57">&#9670;&nbsp;</a></span>CreateHeap()</h2>
 
@@ -282,30 +317,11 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> structure that describes the heap. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">residencyManager</td><td>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> used to manage this heap. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">heapOut</td><td>Pointer to a memory block that recieves a pointer to the heap. </td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="ab0db7ac06f73a7fb70b1be6917d35139" name="ab0db7ac06f73a7fb70b1be6917d35139"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0db7ac06f73a7fb70b1be6917d35139">&#9670;&nbsp;</a></span>GetHeap()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ID3D12Heap * gpgmm::d3d12::Heap::GetHeap </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the ID3D12Heap. </p>
-<dl class="section return"><dt>Returns</dt><dd>Return a pointer to ID3D12Heap or NULL, if this heap has none. </dd></dl>
 
 </div>
 </div>

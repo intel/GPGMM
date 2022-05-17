@@ -84,8 +84,6 @@ Macros</h2></td></tr>
 <tr class="separator:a61853729d7e6250443a195e8ace7ecb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cc18e4163a6e3cc6d81b6046f10b726"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_error_8h.html#a4cc18e4163a6e3cc6d81b6046f10b726">GPGMM_TRY_ASSIGN</a>(expr,  value)</td></tr>
 <tr class="separator:a4cc18e4163a6e3cc6d81b6046f10b726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff012b7f520b8f93fe18be6d346438d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_error_8h.html#aff012b7f520b8f93fe18be6d346438d2">GPGMM_INVALID_IF</a>(expr,  messageId, ...)</td></tr>
-<tr class="separator:aff012b7f520b8f93fe18be6d346438d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a61853729d7e6250443a195e8ace7ecb8" name="a61853729d7e6250443a195e8ace7ecb8"></a>
@@ -110,47 +108,6 @@ Macros</h2></td></tr>
 <div class="line">    }                             \</div>
 <div class="line">    for (;;)                      \</div>
 <div class="line">    break</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aff012b7f520b8f93fe18be6d346438d2" name="aff012b7f520b8f93fe18be6d346438d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff012b7f520b8f93fe18be6d346438d2">&#9670;&nbsp;</a></span>GPGMM_INVALID_IF</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define GPGMM_INVALID_IF</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">expr, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">messageId, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">if</span> (<a class="code hl_define" href="_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8">GPGMM_UNLIKELY</a>(expr)) {                              \</div>
-<div class="line">        DebugEvent(GetTypename(), messageId) &lt;&lt; __VA_ARGS__; \</div>
-<div class="line">        return {};                                           \</div>
-<div class="line">    }                                                        \</div>
-<div class="line">    for (;;)                                                 \</div>
-<div class="line">    break</div>
-<div class="ttc" id="a_compiler_8h_html_a340f9dce5de45b8d0224407c14caf9d8"><div class="ttname"><a href="_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8">GPGMM_UNLIKELY</a></div><div class="ttdeci">#define GPGMM_UNLIKELY(X)</div><div class="ttdef"><b>Definition:</b> Compiler.h:93</div></div>
 </div><!-- fragment -->
 </div>
 </div>
