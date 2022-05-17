@@ -107,8 +107,10 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!heap->IsResident()) {
+            ComPtr<ID3D12Pageable> pageable;
+            ReturnIfFailed(heap->As(&pageable));
             ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
-                                        heap->GetPageable().GetAddressOf()));
+                                        pageable.GetAddressOf()));
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -359,7 +361,11 @@ namespace gpgmm { namespace d3d12 {
             heap->RemoveFromList();
 
             evictedSizeInBytes += heap->GetSize();
-            objectsToEvict.push_back(heap->GetPageable().Get());
+
+            ComPtr<ID3D12Pageable> pageable;
+            ReturnIfFailed(heap->As(&pageable));
+
+            objectsToEvict.push_back(pageable.Get());
         }
 
         if (objectsToEvict.size() > 0) {
@@ -419,12 +425,15 @@ namespace gpgmm { namespace d3d12 {
                 // update its position in the LRU.
                 heap->RemoveFromList();
             } else {
+                ComPtr<ID3D12Pageable> pageable;
+                ReturnIfFailed(heap->As(&pageable));
+
                 if (heap->GetMemorySegmentGroup() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
                     localSizeToMakeResident += heap->GetSize();
-                    localHeapsToMakeResident.push_back(heap->GetPageable().Get());
+                    localHeapsToMakeResident.push_back(pageable.Get());
                 } else {
                     nonLocalSizeToMakeResident += heap->GetSize();
-                    nonLocalHeapsToMakeResident.push_back(heap->GetPageable().Get());
+                    nonLocalHeapsToMakeResident.push_back(pageable.Get());
                 }
             }
 

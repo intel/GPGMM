@@ -75,16 +75,6 @@ namespace gpgmm { namespace d3d12 {
         return "Heap";
     }
 
-    ComPtr<ID3D12Pageable> Heap::GetPageable() const {
-        return mPageable;
-    }
-
-    ID3D12Heap* Heap::GetHeap() const {
-        ComPtr<ID3D12Heap> heap;
-        mPageable.As(&heap);
-        return heap.Get();
-    }
-
     uint64_t Heap::GetLastUsedFenceValue() const {
         return mLastUsedFenceValue;
     }
@@ -118,6 +108,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), IsResident(), mMemorySegmentGroup, GetRefCount(), GetPool(), GetHeap()};
+        return {GetSize(),     IsResident(), mMemorySegmentGroup,
+                GetRefCount(), GetPool(),    mPageable.Get()};
     }
 }}  // namespace gpgmm::d3d12

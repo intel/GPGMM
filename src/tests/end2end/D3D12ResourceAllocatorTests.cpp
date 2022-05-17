@@ -303,7 +303,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     // Commmitted resources cannot be backed by a D3D12 heap.
     Heap* resourceHeap = allocation->GetMemory();
     ASSERT_NE(resourceHeap, nullptr);
-    ASSERT_EQ(resourceHeap->GetHeap(), nullptr);
+
+    ComPtr<ID3D12Heap> heap;
+    ASSERT_FAILED(resourceHeap->As(&heap));
 
     // Commited resources must use all the memory allocated.
     EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, kDefaultBufferSize);
