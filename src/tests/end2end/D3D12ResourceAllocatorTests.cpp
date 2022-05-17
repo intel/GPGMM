@@ -113,6 +113,44 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
     ASSERT_EQ(allocation, nullptr);
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    for (auto& alloc : GenerateBufferAllocations()) {
+        ComPtr<ResourceAllocation> allocation;
+        EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                      {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                      D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                  alloc.succeeds);
+    }
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyRetained) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    std::set<ComPtr<ResourceAllocation>> allocs = {};
+    for (auto& alloc : GenerateBufferAllocations()) {
+        ComPtr<ResourceAllocation> allocation;
+        EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                      {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                      D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                  alloc.succeeds);
+
+        if (allocation == nullptr) {
+            continue;
+        }
+
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_TRUE(allocs.insert(allocation).second);
+    }
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
@@ -798,27 +836,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &thirdAllocation));
         ASSERT_EQ(thirdAllocation, nullptr);
     }
-}
-
-// Creates a bunch of small buffers using the smallest size allowed.
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
-    ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(
-        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
-    ASSERT_NE(resourceAllocator, nullptr);
-
-    constexpr uint64_t kNumOfBuffers = 1000u;
-
-    std::set<ComPtr<ResourceAllocation>> allocs = {};
-    for (uint64_t i = 0; i < kNumOfBuffers; i++) {
-        ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        ASSERT_NE(allocation, nullptr);
-        allocs.insert(allocation);
-    }
-
-    allocs.clear();
 }
 
 // Verify a 1 byte buffer will be defragmented by creating a heaps large enough to stay under the

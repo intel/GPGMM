@@ -17,8 +17,11 @@
 
 #include <gtest/gtest.h>
 
+#include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformDebug.h"
+
+#include <vector>
 
 #define GPGMM_SKIP_TEST_IF(expr)                            \
     do {                                                    \
@@ -43,6 +46,12 @@ namespace gpgmm {
     class DebugPlatform;
 }  // namespace gpgmm
 
+struct MEMORY_ALLOCATION_EXPECT {
+    uint64_t size;
+    uint64_t alignment;
+    bool succeeds;
+};
+
 class GPGMMTestBase {
   protected:
     virtual ~GPGMMTestBase();
@@ -51,6 +60,8 @@ class GPGMMTestBase {
     void TearDown();
 
     gpgmm::DebugPlatform* GetDebugPlatform();
+
+    static std::vector<MEMORY_ALLOCATION_EXPECT> GenerateTestAllocations(uint64_t alignment);
 };
 
 void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv);

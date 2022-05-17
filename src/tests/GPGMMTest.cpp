@@ -36,6 +36,53 @@ gpgmm::DebugPlatform* GPGMMTestBase::GetDebugPlatform() {
     return mDebugPlatform.get();
 }
 
+// static
+std::vector<MEMORY_ALLOCATION_EXPECT> GPGMMTestBase::GenerateTestAllocations(uint64_t alignment) {
+    return {
+        // Edge-case fails.
+        {0, 0, false},
+        {0, 1, false},
+        {gpgmm::kInvalidSize, 1, false},
+
+        // Edge-case pass.
+        {1, gpgmm::kInvalidSize, true},
+        {alignment - 1, 1, true},
+        {alignment + 1, 1, true},
+        {1, alignment - 1, true},
+        {1, alignment + 1, true},
+
+        // Common small sizes, likely sub-allocated.
+        {256, alignment, true},
+        {1 * 1024, alignment, true},
+        {4 * 1024, alignment, true},
+
+        // Common large sizes, likely standalone.
+        {16 * 1024 * 1024, 0, true},
+        {64 * 1024 * 1024, 0, true},
+
+        // Mixed sizes, any method.
+        {1 * 1024, 1, true},
+        {64 * 1024 * 1024, 0, true},
+        {1 * 1024, 1, true},
+        {64 * 1024 * 1024, 0, true},
+        {1 * 1024, 1, true},
+        {64 * 1024 * 1024, 0, true},
+
+        // Increasing sizes, any method.
+        {alignment * 1, 0, true},
+        {alignment * 2, 0, true},
+        {alignment * 4, 0, true},
+        {alignment * 8, 0, true},
+        {alignment * 16, 0, true},
+        {alignment * 32, 0, true},
+        {alignment * 64, 0, true},
+        {alignment * 128, 0, true},
+        {alignment * 256, 0, true},
+        {alignment * 512, 0, true},
+        {alignment * 1024, 0, true},
+    };
+}
+
 // GPGMMTestEnvironment
 
 void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {

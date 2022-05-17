@@ -79,10 +79,10 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicBufferDesc(uint64_t width) {
+    D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicBufferDesc(uint64_t width, uint64_t alignment) {
         D3D12_RESOURCE_DESC resourceDesc;
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDesc.Alignment = 0;
+        resourceDesc.Alignment = alignment;
         resourceDesc.Width = width;
         resourceDesc.Height = 1;
         resourceDesc.DepthOrArraySize = 1;
@@ -118,6 +118,11 @@ namespace gpgmm { namespace d3d12 {
             (sampleCount > 1) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
 
         return resourceDesc;
+    }
+
+    // static
+    std::vector<MEMORY_ALLOCATION_EXPECT> D3D12TestBase::GenerateBufferAllocations() {
+        return GPGMMTestBase::GenerateTestAllocations(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
     }
 
 }}  // namespace gpgmm::d3d12
