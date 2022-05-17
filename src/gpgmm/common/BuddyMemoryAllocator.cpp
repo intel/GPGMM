@@ -48,26 +48,19 @@ namespace gpgmm {
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        if (request.SizeInBytes > mMemorySize) {
-            InfoEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the memory size (" +
-                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mMemorySize) +
-                       " bytes).";
-            return {};
-        }
+        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+                         "Allocation size exceeded the memory size (" +
+                             std::to_string(request.SizeInBytes) + " vs " +
+                             std::to_string(mMemorySize) + " bytes).");
 
         // Round allocation size to nearest power-of-two.
         const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
 
         // Allocation cannot exceed the memory size.
-        if (allocationSize > mMemorySize) {
-            InfoEvent("BuddyMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Aligned allocation size exceeded the memory size (" +
-                       std::to_string(allocationSize) + " vs " + std::to_string(mMemorySize) +
-                       " bytes).";
-
-            return {};
-        }
+        GPGMM_INVALID_IF(allocationSize > mMemorySize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+                         "Allocation size exceeded the memory size (" +
+                             std::to_string(allocationSize) + " vs " + std::to_string(mMemorySize) +
+                             " bytes).");
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;

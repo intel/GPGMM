@@ -95,22 +95,16 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (request.SizeInBytes > mBlockSize) {
-            InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the block size (" +
-                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mBlockSize) +
-                       " bytes).";
-            return {};
-        }
+        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+                         "Allocation size exceeded the block size (" +
+                             std::to_string(request.SizeInBytes) + " vs " +
+                             std::to_string(mBlockSize) + " bytes).");
 
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize));
-        if (slabSize > mMaxSlabSize) {
-            InfoEvent("SlabMemoryAllocator.TryAllocateMemory", ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Slab size exceeded the max slab size (" + std::to_string(slabSize) + " vs " +
-                       std::to_string(mMaxSlabSize) + " bytes).";
-            return {};
-        }
+        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+                         "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
+                             " vs " + std::to_string(mMaxSlabSize) + " bytes).");
 
         // Get or create the cache containing slabs of the slab size.
         SlabCache* cache = GetOrCreateCache(slabSize);

@@ -50,14 +50,10 @@ namespace gpgmm { namespace vk {
             return {};
         }
 
-        if (request.SizeInBytes > mMemorySize) {
-            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory",
-                       ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED)
-                << "Allocation size exceeded the memory size (" +
-                       std::to_string(request.SizeInBytes) + " vs " + std::to_string(mMemorySize) +
-                       " bytes).";
-            return {};
-        }
+        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+                         "Request size exceeded the memory size (" +
+                             std::to_string(request.SizeInBytes) + " vs " +
+                             std::to_string(mMemorySize) + " bytes).");
 
         VkMemoryAllocateInfo allocateInfo = {};
         allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
