@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['memory_5fallocation_5fexpect_0',['MEMORY_ALLOCATION_EXPECT',['../struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html',1,'']]],
+  ['memory_5fallocation_5finfo_0',['MEMORY_ALLOCATION_INFO',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html',1,'gpgmm']]],
   ['memory_5fallocation_5frequest_1',['MEMORY_ALLOCATION_REQUEST',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html',1,'gpgmm']]],
   ['memory_5fallocator_5finfo_2',['MEMORY_ALLOCATOR_INFO',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html',1,'gpgmm']]],
   ['memory_5fsize_5finfo_3',['MEMORY_SIZE_INFO',['../structgpgmm_1_1_m_e_m_o_r_y___s_i_z_e___i_n_f_o.html',1,'gpgmm']]],
