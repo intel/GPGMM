@@ -89,13 +89,20 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
             ID3D12Device* device,
             D3D12_RESOURCE_DESC& resourceDescriptor) {
-            // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
-            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo
             if (resourceDescriptor.Alignment == 0 &&
                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
-                return {
-                    AlignTo(resourceDescriptor.Width, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
-                    D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
+                // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
+                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo.
+                D3D12_RESOURCE_ALLOCATION_INFO bufferInfo = {
+                    kInvalidSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
+                // Overflow must fail rather then ASSERT.
+                if (resourceDescriptor.Width > (std::numeric_limits<uint64_t>::max() -
+                                                (D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT - 1))) {
+                    return bufferInfo;
+                }
+
+                bufferInfo.SizeInBytes = AlignTo(resourceDescriptor.Width, bufferInfo.Alignment);
+                return bufferInfo;
             }
 
             // Small textures can take advantage of smaller alignments. For example,
@@ -121,8 +128,8 @@ namespace gpgmm { namespace d3d12 {
             // required alignment is for this resource.
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
-                WarnEvent("ResourceAllocator.GetResourceAllocationInfo",
-                          ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT)
+                DebugEvent("ResourceAllocator.GetResourceAllocationInfo",
+                           ALLOCATOR_MESSAGE_ID_RESOURCE_MISALIGNMENT)
                     << "Resource alignment is much larger due to D3D12 (" +
                            std::to_string(resourceDescriptor.Alignment) + " vs " +
                            std::to_string(resourceInfo.Alignment) + " bytes) for resource : " +

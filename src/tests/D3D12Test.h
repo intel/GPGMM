@@ -17,6 +17,8 @@
 
 #include "tests/GPGMMTest.h"
 
+#include <vector>
+
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
@@ -38,12 +40,14 @@ namespace gpgmm { namespace d3d12 {
 
         ALLOCATOR_DESC CreateBasicAllocatorDesc(bool isPrefetchAllowed = false) const;
 
-        static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width);
+        static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width, uint64_t alignment = 0);
 
         static D3D12_RESOURCE_DESC CreateBasicTextureDesc(DXGI_FORMAT format,
                                                           uint64_t width,
                                                           uint64_t height,
                                                           uint32_t sampleCount = 1);
+
+        static std::vector<MEMORY_ALLOCATION_EXPECT> GenerateBufferAllocations();
 
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
