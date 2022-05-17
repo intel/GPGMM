@@ -134,14 +134,11 @@ namespace gpgmm {
 
         GPGMM_CHECK_NONZERO(request.SizeInBytes);
 
-        if (request.Alignment != mMemoryAlignment) {
-            InfoEvent("SegmentedMemoryAllocator.TryAllocateMemory",
-                      ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
-                << "Allocation alignment must match memory alignment (" +
-                       std::to_string(request.Alignment) + " vs " +
-                       std::to_string(mMemoryAlignment) + " bytes).";
-            return {};
-        }
+        GPGMM_INVALID_IF(request.Alignment != mMemoryAlignment,
+                         ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH,
+                         "Allocation alignment must match memory alignment (" +
+                             std::to_string(request.Alignment) + " vs " +
+                             std::to_string(mMemoryAlignment) + " bytes).");
 
         MemorySegment* segment = GetOrCreateFreeSegment(request.SizeInBytes);
         ASSERT(segment != nullptr);

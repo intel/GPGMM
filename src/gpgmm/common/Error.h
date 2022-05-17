@@ -37,6 +37,14 @@ namespace gpgmm {
     for (;;)                          \
     break
 
+#define GPGMM_INVALID_IF(expr, messageId, ...)               \
+    if (GPGMM_UNLIKELY(expr)) {                              \
+        DebugEvent(GetTypename(), messageId) << __VA_ARGS__; \
+        return {};                                           \
+    }                                                        \
+    for (;;)                                                 \
+    break
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_ERROR_H_
