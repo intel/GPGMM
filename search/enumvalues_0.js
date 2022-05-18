@@ -26,7 +26,5 @@ var searchData=
   ['allocator_5frecord_5fflag_5fcounters_23',['ALLOCATOR_RECORD_FLAG_COUNTERS',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca3738202ef7d628a1a5876f7819d8b310',1,'gpgmm::d3d12']]],
   ['allocator_5frecord_5fflag_5fnone_24',['ALLOCATOR_RECORD_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99',1,'gpgmm::d3d12']]],
   ['allocator_5frecord_5fscope_5fper_5finstance_25',['ALLOCATOR_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6',1,'gpgmm::d3d12']]],
-  ['allocator_5frecord_5fscope_5fper_5fprocess_26',['ALLOCATOR_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931',1,'gpgmm::d3d12']]],
-  ['allocator_5fsuballocation_5falgorithm_5fbuddy_5fsystem_27',['ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM',['../namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4a7270c45e70fa3cf957c6219f8fa8b17d',1,'gpgmm::d3d12']]],
-  ['allocator_5fsuballocation_5falgorithm_5fslab_28',['ALLOCATOR_SUBALLOCATION_ALGORITHM_SLAB',['../namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4a949e577d71610807a30c0fe4110c4281',1,'gpgmm::d3d12']]]
+  ['allocator_5frecord_5fscope_5fper_5fprocess_26',['ALLOCATOR_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931',1,'gpgmm::d3d12']]]
 ];
