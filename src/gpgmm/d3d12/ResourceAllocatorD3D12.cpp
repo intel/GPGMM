@@ -20,6 +20,7 @@
 #include "gpgmm/common/Debug.h"
 #include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/MemorySize.h"
+#include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/common/StandaloneMemoryAllocator.h"
@@ -563,13 +564,18 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
-            pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
-                std::move(resourceHeapAllocator), heapAlignment);
+            if (descriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_FIXED_POOL) {
+                pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
+                    descriptor.PreferredResourceHeapSize, std::move(resourceHeapAllocator));
+            } else {
+                pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
+                    std::move(resourceHeapAllocator), heapAlignment);
+            }
         } else {
             pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
         }
 
-        if (descriptor.SubAllocationAlgorithm == ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM) {
+        if (descriptor.SubAllocationAlgorithm == ALLOCATOR_ALGORITHM_BUDDY_SYSTEM) {
             return std::make_unique<BuddyMemoryAllocator>(
                 /*systemSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
                 /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
@@ -599,9 +605,14 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
-            const uint64_t& heapAlignment = GetHeapAlignment(heapFlags, allowMSAA);
-            pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
-                std::move(resourceHeapAllocator), heapAlignment);
+            if (descriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_FIXED_POOL) {
+                pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
+                    descriptor.PreferredResourceHeapSize, std::move(resourceHeapAllocator));
+            } else {
+                const uint64_t& heapAlignment = GetHeapAlignment(heapFlags, allowMSAA);
+                pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
+                    std::move(resourceHeapAllocator), heapAlignment);
+            }
         } else {
             pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
         }
