@@ -225,9 +225,6 @@ namespace gpgmm {
                 ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor),
                 mMaxSlabSize);
 
-            DebugEvent(GetTypename())
-                << "Requesting prefetched slab: " << nextSlabSize << " bytes.";
-
             MEMORY_ALLOCATION_REQUEST prefetchSlabRequest = {};
             prefetchSlabRequest.SizeInBytes = nextSlabSize;
             prefetchSlabRequest.Alignment = mSlabAlignment;

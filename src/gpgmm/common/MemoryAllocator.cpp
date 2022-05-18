@@ -14,6 +14,8 @@
 
 #include "gpgmm/common/MemoryAllocator.h"
 
+#include "gpgmm/common/Debug.h"
+
 namespace gpgmm {
 
     class AllocateMemoryTask : public VoidCallback {
@@ -23,6 +25,8 @@ namespace gpgmm {
         }
 
         void operator()() override {
+            DebugEvent(mAllocator->GetTypename())
+                << "Prefetch request: " << JSONSerializer::Serialize(mRequest).ToString();
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
