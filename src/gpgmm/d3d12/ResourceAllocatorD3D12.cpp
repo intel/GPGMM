@@ -326,20 +326,18 @@ namespace gpgmm { namespace d3d12 {
 
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
             if (allocation == nullptr) {
-                InfoEvent("ResourceAllocator.TryAllocateResource",
-                          ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << std::string(allocator->GetTypename()) +
-                           " failed to allocate memory for resource.";
-
+                InfoEvent(allocator->GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                    << "Failed to allocate memory for request: " +
+                           gpgmm::JSONSerializer::Serialize(request).ToString();
                 return E_FAIL;
             }
+
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent("ResourceAllocator.TryAllocateResource",
-                          ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << std::string(allocator->GetTypename()) +
-                           " failed to create resource using allocated memory: " +
-                           GetErrorMessage(hr);
+                InfoEvent(allocator->GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                    << "Failed to create resource using allocation: " +
+                           gpgmm::JSONSerializer::Serialize(allocation->GetInfo()).ToString() +
+                           " due to error: " + GetErrorMessage(hr);
                 allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;
@@ -787,12 +785,12 @@ namespace gpgmm { namespace d3d12 {
                         subAllocation.GetBlock(),     subAllocation.GetOffset(),
                         std::move(committedResource), resourceHeap};
 
-                    if (subAllocation.GetSize() > newResourceDesc.Width) {
-                        InfoEvent("ResourceAllocator.CreateResource",
+                    if (subAllocation.GetSize() > request.SizeInBytes) {
+                        InfoEvent(GetTypename(),
                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
-                            << "Resource allocation size is larger then the resource size (" +
+                            << "Resource allocation is larger then the requested size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(newResourceDesc.Width) + " bytes).";
+                                   std::to_string(request.SizeInBytes) + " bytes).";
                     }
 
                     return S_OK;
@@ -837,12 +835,12 @@ namespace gpgmm { namespace d3d12 {
                                                                     std::move(placedResource),
                                                                     resourceHeap};
 
-                    if (subAllocation.GetSize() > resourceInfo.SizeInBytes) {
-                        InfoEvent("ResourceAllocator.CreateResource",
+                    if (subAllocation.GetSize() > request.SizeInBytes) {
+                        InfoEvent(GetTypename(),
                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
-                            << "Resource allocation size is larger then the resource size (" +
+                            << "Resource allocation is larger then the requested size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(resourceInfo.SizeInBytes) + " bytes).";
+                                   std::to_string(request.SizeInBytes) + " bytes).";
                     }
 
                     return S_OK;
@@ -889,12 +887,12 @@ namespace gpgmm { namespace d3d12 {
                                                                     std::move(placedResource),
                                                                     resourceHeap};
 
-                    if (allocation.GetSize() > resourceInfo.SizeInBytes) {
-                        InfoEvent("ResourceAllocator.CreateResource",
+                    if (allocation.GetSize() > request.SizeInBytes) {
+                        InfoEvent(GetTypename(),
                                   ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
-                            << "Resource allocation size is larger then the resource size (" +
+                            << "Resource allocation is larger then the requested size (" +
                                    std::to_string(allocation.GetSize()) + " vs " +
-                                   std::to_string(resourceInfo.SizeInBytes) + " bytes).";
+                                   std::to_string(request.SizeInBytes) + " bytes).";
                     }
 
                     return S_OK;
@@ -910,8 +908,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            InfoEvent("ResourceAllocator.CreateResource",
-                      ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
+            InfoEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_NON_POOLED)
                 << "Resource allocation could not be created from memory pool.";
         }
 
