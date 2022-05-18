@@ -6,5 +6,6 @@ var searchData=
   ['allocator_5fmessage_5fid_3',['ALLOCATOR_MESSAGE_ID',['../namespacegpgmm.html#a9d813b66f6a9ec8f8331919c20bafb79',1,'gpgmm']]],
   ['allocator_5frecord_5fflags_4',['ALLOCATOR_RECORD_FLAGS',['../namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682c',1,'gpgmm::d3d12']]],
   ['allocator_5frecord_5fscope_5',['ALLOCATOR_RECORD_SCOPE',['../namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8',1,'gpgmm::d3d12']]],
-  ['allocatorprofile_6',['AllocatorProfile',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52',1,'GPGMMCaptureReplayTests.h']]]
+  ['allocator_5fsuballocation_5falgorithm_6',['ALLOCATOR_SUBALLOCATION_ALGORITHM',['../namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4',1,'gpgmm::d3d12']]],
+  ['allocatorprofile_7',['AllocatorProfile',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52',1,'GPGMMCaptureReplayTests.h']]]
 ];
