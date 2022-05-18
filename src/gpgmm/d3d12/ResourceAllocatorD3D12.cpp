@@ -569,16 +569,23 @@ namespace gpgmm { namespace d3d12 {
             pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
         }
 
-        // TODO: Re-enable the buddy allocator?
-        return std::make_unique<SlabCacheAllocator>(
-            /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
-            /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
-            /*slabAlignment*/ heapAlignment,
-            /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
-            /*allowSlabPrefetch*/
-            !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
-            /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
-            std::move(pooledOrNonPooledAllocator));
+        if (descriptor.SubAllocationAlgorithm == ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM) {
+            return std::make_unique<BuddyMemoryAllocator>(
+                /*systemSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
+                /*memoryAlignment*/ heapAlignment, std::move(pooledOrNonPooledAllocator));
+        } else {
+            // TODO: Re-enable the buddy allocator?
+            return std::make_unique<SlabCacheAllocator>(
+                /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
+                /*slabAlignment*/ heapAlignment,
+                /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
+                /*allowSlabPrefetch*/
+                !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
+                /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
+                std::move(pooledOrNonPooledAllocator));
+        }
     }
 
     std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateStandaloneResourceAllocator(
