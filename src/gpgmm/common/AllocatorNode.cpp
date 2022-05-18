@@ -25,21 +25,19 @@ namespace gpgmm {
 
     template <typename T>
     AllocatorNode<T>::~AllocatorNode() {
-        // Deletes adjacent node recursively (post-order).
-        mNext.RemoveAndDeleteAll();
-        if (LinkNode<T>::IsInList()) {
-            LinkNode<T>::RemoveFromList();
+        LinkNode<T>* pNext = LinkNode<T>::next();
+        if (pNext != nullptr) {
+            SafeDelete(pNext->value());
         }
-
-        ASSERT(mNext.empty());
     }
 
     template <typename T>
     T* AllocatorNode<T>::GetNextInChain() const {
-        if (mNext.head() == mNext.end()) {
+        LinkNode<T>* pNext = LinkNode<T>::next();
+        if (pNext == nullptr) {
             return nullptr;
         }
-        return mNext.head()->value();
+        return pNext->value();
     }
 
     template <typename T>
@@ -49,11 +47,11 @@ namespace gpgmm {
 
     template <typename T>
     T* AllocatorNode<T>::InsertIntoChain(std::unique_ptr<T> next) {
-        ASSERT(mNext.empty());
         ASSERT(next != nullptr);
-        next->mParent = this->value();
-        mNext.Append(next.release());
-        return mNext.tail()->value();
+        T* nextPtr = next.release();
+        nextPtr->mParent = this->value();
+        LinkNode<T>::InsertBefore(nextPtr);
+        return nextPtr->value();
     }
 
     // Explictly instantiate the template to ensure the compiler has the

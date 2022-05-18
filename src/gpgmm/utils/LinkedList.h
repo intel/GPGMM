@@ -112,8 +112,13 @@ namespace gpgmm {
         void InsertBefore(LinkNode<T>* e) {
             this->next_ = e;
             this->previous_ = e->previous_;
-            e->previous_->next_ = this;
-            e->previous_ = this;
+
+            // If |e| belongs to a list, e->previous_ is non-null.
+            // Otherwise, null.
+            if (e->previous_) {
+                e->previous_->next_ = this;
+                e->previous_ = this;
+            }
         }
 
         // Insert |this| into the linked list, after |e|.

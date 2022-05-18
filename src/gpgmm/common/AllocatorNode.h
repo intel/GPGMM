@@ -21,24 +21,43 @@
 
 namespace gpgmm {
 
-    // Stores allocators as a doubly-linked list.
-    // A allocator becomes a linked node where allocations made between the parent and the next
-    // allocator form a one-way edge (ie. child sub-allocates parent's allocation). This results in
-    // trivial lifetime management and traversals.
+    /** \brief  Chain together allocators as a doubly linked list.
+
+    A allocator becomes a node in a linked-list where allocations made between the parent and the
+    child allocator form a one-way edge (child sub-allocates parent's allocation).
+
+    This scheme results in trivial lifetime management and traversals between multiple allocators
+    that depend on each other.
+    */
     template <typename T>
     class AllocatorNode : public LinkNode<T> {
       public:
+        /** \brief Construct the node without a child.
+         */
         AllocatorNode() = default;
+
+        /** \brief Construct the node as a parent or with a child.
+
+        @param next Pointer to the next or child node.
+        */
         explicit AllocatorNode(std::unique_ptr<T> next);
+
         virtual ~AllocatorNode();
 
+        /** \brief Returns the next node in the chain.
+
+        \return Pointer to the child or next node. NULL if none exists.
+        */
         T* GetNextInChain() const;
+
+        /** \brief Returns the next node in the chain.
+
+        \return Pointer to the parent or previous node. NULL if none exists
+        */
         T* GetParent() const;
 
       private:
         T* InsertIntoChain(std::unique_ptr<T> next);
-
-        LinkedList<T> mNext;
         T* mParent = nullptr;
     };
 
