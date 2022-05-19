@@ -327,9 +327,13 @@ namespace gpgmm { namespace d3d12 {
 
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
             if (allocation == nullptr) {
-                InfoEvent(allocator->GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
-                    << "Failed to allocate memory for request: " +
-                           gpgmm::JSONSerializer::Serialize(request).ToString();
+                // NeverAllocate always fails, so suppress it.
+                if (!request.NeverAllocate) {
+                    InfoEvent(allocator->GetTypename(),
+                              ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_FAILED)
+                        << "Failed to allocate memory for request: " +
+                               gpgmm::JSONSerializer::Serialize(request).ToString();
+                }
                 return E_FAIL;
             }
 
