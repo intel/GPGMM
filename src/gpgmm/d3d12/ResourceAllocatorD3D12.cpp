@@ -399,7 +399,8 @@ namespace gpgmm { namespace d3d12 {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
-            gpgmm::WarningLog() << "Debug layer must be installed and enabled.\n";
+            gpgmm::WarningLog()
+                << "Debug layer must be installed and enabled to use GPGMM_ENABLE_DEVICE_CHECKS.\n";
         }
 #endif
 

@@ -55,7 +55,7 @@ declare_args() {
   gpgmm_shared_library = false
 
   # Enables checking of allocator leaks.
-  # Sets -dGPGMM_ENABLE_PRECISE_ALLOCATOR_DEBUG
+  # Sets -dGPGMM_ENABLE_ALLOCATOR_CHECKS
   gpgmm_enable_allocator_checks = is_debug
 
   # Enables ASSERT on severity functionality.
