@@ -245,11 +245,11 @@ void CaptureReplayTestWithParams::RunSingleTest(const TestEnviromentParams& forc
 void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceParams) {
     TestEnviromentParams envParams = gTestEnv->GetParams();
     if (forceParams.IsCaptureEnabled != envParams.IsCaptureEnabled) {
-        envParams.IsCaptureEnabled = forceParams.IsCaptureEnabled;
+        envParams.IsCaptureEnabled |= forceParams.IsCaptureEnabled;
     }
 
     if (forceParams.IsSameCapsRequired != envParams.IsSameCapsRequired) {
-        envParams.IsSameCapsRequired = forceParams.IsSameCapsRequired;
+        envParams.IsSameCapsRequired |= forceParams.IsSameCapsRequired;
     }
 
     if (forceParams.Iterations != envParams.Iterations) {
@@ -257,15 +257,15 @@ void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceP
     }
 
     if (forceParams.IsPrefetchAllowed != envParams.IsPrefetchAllowed) {
-        envParams.IsPrefetchAllowed = forceParams.IsPrefetchAllowed;
+        envParams.IsPrefetchAllowed |= forceParams.IsPrefetchAllowed;
     }
 
     if (forceParams.IsSuballocationDisabled != envParams.IsSuballocationDisabled) {
-        envParams.IsSuballocationDisabled = forceParams.IsSuballocationDisabled;
+        envParams.IsSuballocationDisabled |= forceParams.IsSuballocationDisabled;
     }
 
     if (forceParams.IsNeverAllocate != envParams.IsNeverAllocate) {
-        envParams.IsNeverAllocate = forceParams.IsNeverAllocate;
+        envParams.IsNeverAllocate |= forceParams.IsNeverAllocate;
     }
 
     for (uint32_t i = 0; i < envParams.Iterations; i++) {
