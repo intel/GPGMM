@@ -134,8 +134,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a8ab05c28f34f8023a5de8a2037daa4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab52ecb8f9358cd8afc4a5a30cfb9d93f">ALLOCATOR_RECORD_SCOPE_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a> &gt;</td></tr>
 <tr class="separator:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb6716a7aa24ebf09a7c61136b46b217"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb6716a7aa24ebf09a7c61136b46b217">ALLOCATOR_ALGORITHM_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> &gt;</td></tr>
-<tr class="separator:adb6716a7aa24ebf09a7c61136b46b217"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51f5c1dba97e19b3a65d333249f12fa2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a51f5c1dba97e19b3a65d333249f12fa2">ALLOCATOR_SUBALLOCATION_ALGORITHM_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4">ALLOCATOR_SUBALLOCATION_ALGORITHM</a> &gt;</td></tr>
+<tr class="separator:a51f5c1dba97e19b3a65d333249f12fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a978095e9c5b00f02cf77e0a74e89d0fc">ALLOCATION_FLAGS_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> &gt;</td></tr>
 <tr class="separator:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d7ae6593e6b94d510cc0c30b9b3510e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d7ae6593e6b94d510cc0c30b9b3510e">RESOURCE_ALLOCATOR_INFO</a> = <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html">MEMORY_ALLOCATOR_INFO</a></td></tr>
@@ -169,12 +169,10 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6">ALLOCATOR_RECORD_SCOPE_PER_INSTANCE</a> = 0x1
  }</td></tr>
 <tr class="separator:af588c6de3c0eb44ef046610a1caee5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">ALLOCATOR_ALGORITHM_SLAB</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 0x3
+<tr class="memitem:a735d2802051229a0475d7587a9b54cd4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4">ALLOCATOR_SUBALLOCATION_ALGORITHM</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4a949e577d71610807a30c0fe4110c4281">ALLOCATOR_SUBALLOCATION_ALGORITHM_SLAB</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4a7270c45e70fa3cf957c6219f8fa8b17d">ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM</a> = 0x1
  }</td></tr>
-<tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a735d2802051229a0475d7587a9b54cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073">ALLOCATION_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
@@ -233,20 +231,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adb6716a7aa24ebf09a7c61136b46b217" name="adb6716a7aa24ebf09a7c61136b46b217"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb6716a7aa24ebf09a7c61136b46b217">&#9670;&nbsp;</a></span>ALLOCATOR_ALGORITHM_TYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#adb6716a7aa24ebf09a7c61136b46b217">gpgmm::d3d12::ALLOCATOR_ALGORITHM_TYPE</a> = typedef <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="addd8571a3cf9c1c8893f16f664612090" name="addd8571a3cf9c1c8893f16f664612090"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#addd8571a3cf9c1c8893f16f664612090">&#9670;&nbsp;</a></span>ALLOCATOR_FLAGS_TYPE</h2>
 
@@ -283,6 +267,20 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#ab52ecb8f9358cd8afc4a5a30cfb9d93f">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_TYPE</a> = typedef <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt;<a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51f5c1dba97e19b3a65d333249f12fa2" name="a51f5c1dba97e19b3a65d333249f12fa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51f5c1dba97e19b3a65d333249f12fa2">&#9670;&nbsp;</a></span>ALLOCATOR_SUBALLOCATION_ALGORITHM_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#a51f5c1dba97e19b3a65d333249f12fa2">gpgmm::d3d12::ALLOCATOR_SUBALLOCATION_ALGORITHM_TYPE</a> = typedef <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt;<a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4">ALLOCATOR_SUBALLOCATION_ALGORITHM</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -344,47 +342,6 @@ trigger prefetching based on heurstics. Prefetching enables more performance whe
 allocating for contiguous allocations or many resources of the same size.
 
 Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="ad3946897dfb4221430841cc3d229a8c0" name="ad3946897dfb4221430841cc3d229a8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3946897dfb4221430841cc3d229a8c0">&#9670;&nbsp;</a></span>ALLOCATOR_ALGORITHM</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Specify the algorithms used for allocation. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechnianism. </p>
-<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-
-The slab allocator does not suffer from internal fragmentation but could externally fragment
-when many unique request sizes are used. Slab allocation also does not require
-PreferredResourceHeapSize to be specified.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59" name="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy allocation mechnianism. </p>
-<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
-
-It is recommend to specify a a large enough PreferredResourceHeapSize such that many
-requests can fit but not too large that creating the larger resource heap becomes the
-bottleneck and negates any beneifit.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681" name="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
-<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
-
-Fixed-size pool limits recycling to resource heaps equal to
-PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313" name="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
-<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
 </pre> </td></tr>
 </table>
 
@@ -477,6 +434,38 @@ through the GPU/driver instead of explicitly through GPGMM.
 </td></tr>
 <tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6" name="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6"></a>ALLOCATOR_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per allocator object. </p>
 </td></tr>
+</table>
+
+</div>
+</div>
+<a id="a735d2802051229a0475d7587a9b54cd4" name="a735d2802051229a0475d7587a9b54cd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a735d2802051229a0475d7587a9b54cd4">&#9670;&nbsp;</a></span>ALLOCATOR_SUBALLOCATION_ALGORITHM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a735d2802051229a0475d7587a9b54cd4">gpgmm::d3d12::ALLOCATOR_SUBALLOCATION_ALGORITHM</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Specify the algorithm to use for sub-allocation. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a735d2802051229a0475d7587a9b54cd4a949e577d71610807a30c0fe4110c4281" name="a735d2802051229a0475d7587a9b54cd4a949e577d71610807a30c0fe4110c4281"></a>ALLOCATOR_SUBALLOCATION_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechnianism. </p>
+<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
+
+The slab allocator does not suffer from internal fragmentation but could externally fragment
+when many unique request sizes are used. Slab allocation also does not require
+PreferredResourceHeapSize to be specified since slabs are resized by specifying
+MemoryGrowthFactor instead.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a735d2802051229a0475d7587a9b54cd4a7270c45e70fa3cf957c6219f8fa8b17d" name="a735d2802051229a0475d7587a9b54cd4a7270c45e70fa3cf957c6219f8fa8b17d"></a>ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy allocation mechnianism. </p>
+<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
+
+It is recommend to specify a a large enough PreferredResourceHeapSize such that many
+requests can fit but not too large that creating the larger resource heap becomes the
+bottleneck and negates any beneifit.
+</pre> </td></tr>
 </table>
 
 </div>
