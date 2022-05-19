@@ -15,11 +15,17 @@ DEPS:
 
 # Add 'Frontend' label to front-end code changes.
 Frontend:
-- src/common/*
-- src/utils/*
+- src/common/**/*
+- src/utils/**/*
 
 # Add 'Build' label to any build file changes.
 Build:
 - build_overrides/**/*
 - '**/BUILD.gn'
 - '**/CMakeLists.txt'
+
+# Add 'Test' label to any testing changes.
+Test:
+- .github/workflows/**/*
+- src/fuzzers/**/*
+- src/tests/**/*
