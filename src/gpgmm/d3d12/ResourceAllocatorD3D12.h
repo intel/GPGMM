@@ -178,19 +178,22 @@ namespace gpgmm { namespace d3d12 {
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
-        The slab allocator does not suffer from internal fragmentation but could externally fragment
-        when many unique request sizes are used. Slab allocation also does not require
-        PreferredResourceHeapSize to be specified.
+        Slab allocation does not suffer from internal fragmentation but could externally fragment
+        when many unique request sizes are used.
         */
         ALLOCATOR_ALGORITHM_SLAB = 0x0,
 
-        /** \brief Use the buddy allocation mechanism.
+        /** \brief Use the buddy system mechanism.
 
         Buddy system allocate/deallocates in O(Log2) time using O(1) space.
 
-        It is recommend to specify a a large enough PreferredResourceHeapSize such that many
-        requests can fit but not too large that creating the larger resource heap becomes the
-        bottleneck and negates any beneifit.
+        Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
+        does not suffer from external fragmentation as much since the resource heap size does not
+        change.
+
+        It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
+        requests can fit within the specified PreferredResourceHeapSize but not too large where
+        creating the larger resource heap becomes a bigger bottleneck.
         */
         ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x1,
 
@@ -550,6 +553,11 @@ namespace gpgmm { namespace d3d12 {
             D3D12_HEAP_TYPE heapType,
             bool allowMSAA);
 
+        std::unique_ptr<MemoryAllocator> CreateSmallBufferAllocator(
+            const ALLOCATOR_DESC& descriptor,
+            D3D12_HEAP_FLAGS heapFlags,
+            D3D12_HEAP_TYPE heapType);
+
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -598,7 +606,7 @@ namespace gpgmm { namespace d3d12 {
             mMSAAResourceAllocatorOfType;
 
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mBufferAllocatorOfType;
+            mSmallBufferAllocatorOfType;
 
         std::unique_ptr<DebugResourceAllocator> mDebugAllocator;
     };
