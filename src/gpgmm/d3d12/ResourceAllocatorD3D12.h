@@ -170,20 +170,19 @@ namespace gpgmm { namespace d3d12 {
         std::string TraceFile;
     };
 
-    /** \enum ALLOCATOR_SUBALLOCATION_ALGORITHM
-    Specify the algorithm to use for sub-allocation.
+    /** \enum ALLOCATOR_ALGORITHM
+    Specify the algorithms used for allocation.
     */
-    enum ALLOCATOR_SUBALLOCATION_ALGORITHM {
+    enum ALLOCATOR_ALGORITHM {
         /** \brief Use the slab allocation mechnianism.
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
         The slab allocator does not suffer from internal fragmentation but could externally fragment
         when many unique request sizes are used. Slab allocation also does not require
-        PreferredResourceHeapSize to be specified since slabs are resized by specifying
-        MemoryGrowthFactor instead.
+        PreferredResourceHeapSize to be specified.
         */
-        ALLOCATOR_SUBALLOCATION_ALGORITHM_SLAB = 0x0,
+        ALLOCATOR_ALGORITHM_SLAB = 0x0,
 
         /** \brief Use the buddy allocation mechnianism.
 
@@ -193,11 +192,27 @@ namespace gpgmm { namespace d3d12 {
         requests can fit but not too large that creating the larger resource heap becomes the
         bottleneck and negates any beneifit.
         */
-        ALLOCATOR_SUBALLOCATION_ALGORITHM_BUDDY_SYSTEM = 0x1,
+        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x1,
+
+        /** \brief Recycles resource heaps of a size being specified.
+
+        Fixed pools allocate/deallocate in O(1) time using O(N) space.
+
+        Fixed-size pool limits recycling to resource heaps equal to
+        PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
+        equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+        */
+        ALLOCATOR_ALGORITHM_FIXED_POOL = 0x2,
+
+        /** \brief Recycles resource heaps of any size using multiple pools.
+
+        Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
+        */
+        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x3,
     };
 
-    using ALLOCATOR_SUBALLOCATION_ALGORITHM_TYPE = Flags<ALLOCATOR_SUBALLOCATION_ALGORITHM>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_SUBALLOCATION_ALGORITHM_TYPE)
+    using ALLOCATOR_ALGORITHM_TYPE = Flags<ALLOCATOR_ALGORITHM>;
+    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_ALGORITHM_TYPE)
 
     /** \struct ALLOCATOR_DESC
     Specify parameters for creating allocators.
@@ -258,8 +273,16 @@ namespace gpgmm { namespace d3d12 {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        ALLOCATOR_SUBALLOCATION_ALGORITHM SubAllocationAlgorithm =
-            ALLOCATOR_SUBALLOCATION_ALGORITHM_SLAB;
+        ALLOCATOR_ALGORITHM SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+
+        /** \brief Specifies the algorithm to use for resource heap pooling.
+
+        Used to evaluate how allocation implementations perform with various algorithms that
+        sub-divide resource heaps.
+
+        Optional parameter. By default, the slab allocator is used.
+        */
+        ALLOCATOR_ALGORITHM PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
 
         /** \brief Specifies the preferred size of the resource heap.
 

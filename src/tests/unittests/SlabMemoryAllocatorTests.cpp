@@ -339,9 +339,8 @@ TEST_F(SlabMemoryAllocatorTests, AllocationOverflow) {
 
 // Verify slab will be reused from a pool.
 TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
-    LIFOMemoryPool pool(kDefaultSlabSize);
-    std::unique_ptr<PooledMemoryAllocator> poolAllocator =
-        std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(), &pool);
+    std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
+        kDefaultSlabSize, std::make_unique<DummyMemoryAllocator>());
 
     constexpr uint64_t kBlockSize = 32;
     constexpr uint64_t kMaxSlabSize = 512;
@@ -367,7 +366,7 @@ TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
         allocations.push_back(std::move(allocation));
     }
 
-    ASSERT_EQ(pool.GetPoolSize(), 0u);
+    EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, 0u);
 
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
@@ -375,9 +374,9 @@ TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    ASSERT_EQ(pool.GetPoolSize(), kNumOfSlabs);
+    EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, kDefaultSlabSize * kNumOfSlabs);
 
-    pool.ReleasePool();
+    poolAllocator->ReleaseMemory();
 }
 
 TEST_F(SlabMemoryAllocatorTests, GetInfo) {
@@ -416,10 +415,9 @@ TEST_F(SlabMemoryAllocatorTests, GetInfo) {
 
     // Test slab + pool allocator.
     {
-        LIFOMemoryPool pool(kDefaultSlabSize);
         std::unique_ptr<PooledMemoryAllocator> poolAllocator =
-            std::make_unique<PooledMemoryAllocator>(std::make_unique<DummyMemoryAllocator>(),
-                                                    &pool);
+            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize,
+                                                    std::make_unique<DummyMemoryAllocator>());
 
         constexpr uint64_t kBlockSize = 32;
         constexpr uint64_t kMaxSlabSize = 512;
@@ -898,14 +896,13 @@ TEST_F(SlabCacheAllocatorTests, GetInfo) {
 
     // Test Slab + pooled allocator.
     {
-        LIFOMemoryPool pool(kDefaultSlabSize);
         constexpr uint64_t kBlockSize = 32;
         constexpr uint64_t kMaxSlabSize = 512;
-        SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
-                                     kDefaultSlabFragmentationLimit, kDefaultPrefetchSlab,
-                                     kNoSlabGrowthFactor,
-                                     std::make_unique<PooledMemoryAllocator>(
-                                         std::make_unique<DummyMemoryAllocator>(), &pool));
+        SlabCacheAllocator allocator(
+            kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+            kDefaultPrefetchSlab, kNoSlabGrowthFactor,
+            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize,
+                                                    std::make_unique<DummyMemoryAllocator>()));
 
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));

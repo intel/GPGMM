@@ -15,14 +15,14 @@
 #include "gpgmm/common/PooledMemoryAllocator.h"
 
 #include "gpgmm/common/Debug.h"
-#include "gpgmm/common/MemoryPool.h"
+#include "gpgmm/common/LIFOMemoryPool.h"
 #include "gpgmm/utils/Assert.h"
 
 namespace gpgmm {
 
-    PooledMemoryAllocator::PooledMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
-                                                 MemoryPool* pool)
-        : MemoryAllocator(std::move(memoryAllocator)), mPool(pool) {
+    PooledMemoryAllocator::PooledMemoryAllocator(uint64_t memorySize,
+                                                 std::unique_ptr<MemoryAllocator> memoryAllocator)
+        : MemoryAllocator(std::move(memoryAllocator)), mPool(new LIFOMemoryPool(memorySize)) {
         ASSERT(mPool != nullptr);
     }
 
@@ -62,6 +62,10 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory));
+    }
+
+    void PooledMemoryAllocator::ReleaseMemory() {
+        mPool->ReleasePool();
     }
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {
