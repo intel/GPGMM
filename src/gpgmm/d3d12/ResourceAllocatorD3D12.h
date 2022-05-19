@@ -174,7 +174,7 @@ namespace gpgmm { namespace d3d12 {
     Specify the algorithms used for allocation.
     */
     enum ALLOCATOR_ALGORITHM {
-        /** \brief Use the slab allocation mechnianism.
+        /** \brief Use the slab allocation mechanism.
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
@@ -184,7 +184,7 @@ namespace gpgmm { namespace d3d12 {
         */
         ALLOCATOR_ALGORITHM_SLAB = 0x0,
 
-        /** \brief Use the buddy allocation mechnianism.
+        /** \brief Use the buddy allocation mechanism.
 
         Buddy system allocate/deallocates in O(Log2) time using O(1) space.
 
