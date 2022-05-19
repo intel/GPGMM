@@ -935,6 +935,13 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
             clearValue, initialResourceState, &committedResource, &resourceHeap));
 
+        if (resourceInfo.SizeInBytes > requestedSize) {
+            InfoEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
+                << "Resource allocation is larger then the requested size (" +
+                       std::to_string(resourceInfo.SizeInBytes) + " vs " +
+                       std::to_string(requestedSize) + " bytes).";
+        }
+
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).
         const uint64_t allocationSize = resourceHeap->GetSize();
