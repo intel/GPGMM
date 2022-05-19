@@ -362,14 +362,14 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </div><div class="memdoc">
 <p >Specify the algorithms used for allocation. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechnianism. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
 <pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
 The slab allocator does not suffer from internal fragmentation but could externally fragment
 when many unique request sizes are used. Slab allocation also does not require
 PreferredResourceHeapSize to be specified.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59" name="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy allocation mechnianism. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59" name="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy allocation mechanism. </p>
 <pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
 
 It is recommend to specify a a large enough PreferredResourceHeapSize such that many
