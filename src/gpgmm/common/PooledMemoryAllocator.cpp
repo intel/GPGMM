@@ -26,6 +26,10 @@ namespace gpgmm {
         ASSERT(mPool != nullptr);
     }
 
+    PooledMemoryAllocator::~PooledMemoryAllocator() {
+        mPool->ReleasePool();
+    }
+
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
         const MEMORY_ALLOCATION_REQUEST& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
