@@ -469,12 +469,13 @@ namespace gpgmm { namespace d3d12 {
             mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
                 CreateResourceSubAllocator(descriptor, heapFlags, heapType, /*allowMSAA*/ true);
 
-            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] = CreateStandaloneResourceAllocator(
-                descriptor, heapFlags, heapType, /*isMSAA*/ false);
+            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
+                std::make_unique<StandaloneMemoryAllocator>(
+                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, /*isMSAA*/ false));
 
             mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                CreateStandaloneResourceAllocator(descriptor, heapFlags, heapType,
-                                                  /*allowMSAA*/ true);
+                std::make_unique<StandaloneMemoryAllocator>(
+                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, /*isMSAA*/ true));
 
             // Dedicated allocators.
             // Buffers are always 64KB aligned.
@@ -595,7 +596,7 @@ namespace gpgmm { namespace d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateStandaloneResourceAllocator(
+    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceHeapAllocator(
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         D3D12_HEAP_TYPE heapType,
@@ -604,21 +605,18 @@ namespace gpgmm { namespace d3d12 {
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                     heapType, heapFlags, mIsUMA);
 
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             if (descriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_FIXED_POOL) {
-                pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
-                    descriptor.PreferredResourceHeapSize, std::move(resourceHeapAllocator));
+                return std::make_unique<PooledMemoryAllocator>(descriptor.PreferredResourceHeapSize,
+                                                               std::move(resourceHeapAllocator));
             } else {
                 const uint64_t& heapAlignment = GetHeapAlignment(heapFlags, allowMSAA);
-                pooledOrNonPooledAllocator = std::make_unique<SegmentedMemoryAllocator>(
-                    std::move(resourceHeapAllocator), heapAlignment);
+                return std::make_unique<SegmentedMemoryAllocator>(std::move(resourceHeapAllocator),
+                                                                  heapAlignment);
             }
-        } else {
-            pooledOrNonPooledAllocator = std::move(resourceHeapAllocator);
         }
 
-        return std::make_unique<StandaloneMemoryAllocator>(std::move(pooledOrNonPooledAllocator));
+        return resourceHeapAllocator;
     }
 
     ResourceAllocator::~ResourceAllocator() {

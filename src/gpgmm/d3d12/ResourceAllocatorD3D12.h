@@ -544,7 +544,7 @@ namespace gpgmm { namespace d3d12 {
             D3D12_HEAP_TYPE heapType,
             bool allowMSAA);
 
-        std::unique_ptr<MemoryAllocator> CreateStandaloneResourceAllocator(
+        std::unique_ptr<MemoryAllocator> CreateResourceHeapAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             D3D12_HEAP_TYPE heapType,
