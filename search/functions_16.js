@@ -32,7 +32,7 @@ var searchData=
   ['_7ememorysegment_29',['~MemorySegment',['../classgpgmm_1_1_memory_segment.html#a7a32c70b053691b627b44f8316000156',1,'gpgmm::MemorySegment']]],
   ['_7enoncopyable_30',['~NonCopyable',['../classgpgmm_1_1_non_copyable.html#af5b8594075da49a18f1bddb86558cf56',1,'gpgmm::NonCopyable']]],
   ['_7eplatformtime_31',['~PlatformTime',['../classgpgmm_1_1_platform_time.html#afb333936a922289eaf337d13900af464',1,'gpgmm::PlatformTime']]],
-  ['_7epooledmemoryallocator_32',['~PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html#a88def0d005a8cad2020edc9c115218ad',1,'gpgmm::PooledMemoryAllocator']]],
+  ['_7epooledmemoryallocator_32',['~PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html#a75246c224716c41defb992061273b250',1,'gpgmm::PooledMemoryAllocator']]],
   ['_7eresidencymanager_33',['~ResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ac6939df6d0f4b781e799a86779e5b475',1,'gpgmm::d3d12::ResidencyManager']]],
   ['_7eresourceallocation_34',['~ResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a81c9c29380413b93da9e8a26796173e8',1,'gpgmm::d3d12::ResourceAllocation']]],
   ['_7eresourceallocator_35',['~ResourceAllocator',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#ab0f521b9fd60871fcc98716c6141c6b7',1,'gpgmm::d3d12::ResourceAllocator']]],
