@@ -189,8 +189,8 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                      << "Capture on playback: " << (mParams.IsCaptureEnabled ? "true" : "false")
                      << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
-                     << "Require same device caps: "
-                     << (mParams.IsSameCapsRequired ? "true" : "false") << "\n";
+                     << "Require same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
+                     << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"
