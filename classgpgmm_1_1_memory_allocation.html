@@ -68,6 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classgpgmm_1_1_memory_allocation-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">gpgmm::MemoryAllocation Class Reference</div></div>
@@ -122,8 +123,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a274bbaab428e2d65b8715952c535ebce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a274bbaab428e2d65b8715952c535ebce">GetAllocator</a> () const</td></tr>
 <tr class="memdesc:a274bbaab428e2d65b8715952c535ebce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the allocator responsible for allocating the memory for this allocation.  <a href="classgpgmm_1_1_memory_allocation.html#a274bbaab428e2d65b8715952c535ebce">More...</a><br /></td></tr>
 <tr class="separator:a274bbaab428e2d65b8715952c535ebce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8c320d220a2a4c6c9a5f274a25b817b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#af8c320d220a2a4c6c9a5f274a25b817b">SetAllocator</a> (<a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *allocator)</td></tr>
-<tr class="separator:af8c320d220a2a4c6c9a5f274a25b817b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0981e61eeca068d3506f99abcad0d406"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a0981e61eeca068d3506f99abcad0d406">GetSize</a> () const</td></tr>
 <tr class="memdesc:a0981e61eeca068d3506f99abcad0d406"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size, in bytes, of the memory allocation.  <a href="classgpgmm_1_1_memory_allocation.html#a0981e61eeca068d3506f99abcad0d406">More...</a><br /></td></tr>
 <tr class="separator:a0981e61eeca068d3506f99abcad0d406"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,6 +135,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b91e96e69e43585323e668d196b9ae7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7">GetBlock</a> () const</td></tr>
 <tr class="memdesc:a4b91e96e69e43585323e668d196b9ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The block used to assign a range of memory for this allocation.  <a href="classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7">More...</a><br /></td></tr>
 <tr class="separator:a4b91e96e69e43585323e668d196b9ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a1f5fddabf32874b04a4175515ab67ca2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a1f5fddabf32874b04a4175515ab67ca2">mAllocator</a></td></tr>
+<tr class="separator:a1f5fddabf32874b04a4175515ab67ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -552,24 +556,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="af8c320d220a2a4c6c9a5f274a25b817b" name="af8c320d220a2a4c6c9a5f274a25b817b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8c320d220a2a4c6c9a5f274a25b817b">&#9670;&nbsp;</a></span>SetAllocator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gpgmm::MemoryAllocation::SetAllocator </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td>
-          <td class="paramname"><em>allocator</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Friends And Related Function Documentation</h2>
 <a id="aea1126d5a764b0d074d2d6edb5a09f23" name="aea1126d5a764b0d074d2d6edb5a09f23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea1126d5a764b0d074d2d6edb5a09f23">&#9670;&nbsp;</a></span>MemoryAllocator</h2>
@@ -587,6 +573,29 @@ Friends</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a1f5fddabf32874b04a4175515ab67ca2" name="a1f5fddabf32874b04a4175515ab67ca2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f5fddabf32874b04a4175515ab67ca2">&#9670;&nbsp;</a></span>mAllocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a>* gpgmm::MemoryAllocation::mAllocator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
