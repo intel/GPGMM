@@ -1,4 +1,4 @@
-From e9627e75c5a3baf15f02fff11838115ada0e1947 Mon Sep 17 00:00:00 2001
+From e4ad0adcbd174be400713c8b94fa599967209e78 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -19,7 +19,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  .../native/d3d12/CommandRecordingContext.cpp  | 20 ++---
  .../native/d3d12/CommandRecordingContext.h    |  4 +-
  src/dawn/native/d3d12/D3D12Backend.cpp        | 17 +++-
- src/dawn/native/d3d12/DeviceD3D12.cpp         | 89 +++++++++++++++----
+ src/dawn/native/d3d12/DeviceD3D12.cpp         | 90 +++++++++++++++----
  src/dawn/native/d3d12/DeviceD3D12.h           | 17 ++--
  .../ShaderVisibleDescriptorAllocatorD3D12.cpp | 26 ++++--
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  6 +-
@@ -30,7 +30,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          | 11 +++
  src/dawn/native/d3d12/UtilsD3D12.h            |  2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   | 17 ++--
- 25 files changed, 249 insertions(+), 132 deletions(-)
+ 25 files changed, 250 insertions(+), 132 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -189,7 +189,7 @@ index 883d0239d..03afbf061 100644
          VulkanUseD32S8,
          VulkanUseS8,
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
-index 84fbbb67c..71f681815 100644
+index 84fbbb67c..06ea1a26a 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn/native/d3d12/BufferD3D12.cpp
 @@ -188,7 +188,11 @@ namespace dawn::native::d3d12 {
@@ -211,7 +211,7 @@ index 84fbbb67c..71f681815 100644
          // Track the underlying heap to ensure residency.
 -        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -        commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
-+        mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
++        commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
  
          // Return the resource barrier.
          return TransitionUsageAndGetResourceBarrier(commandContext, barrier, newUsage);
@@ -437,10 +437,10 @@ index 18d7145c8..098254e5c 100644
  
      AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 6b77b3a07..8e7e55e84 100644
+index 6b77b3a07..3d7e4fffe 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
-@@ -127,8 +127,33 @@ namespace dawn::native::d3d12 {
+@@ -127,8 +127,34 @@ namespace dawn::native::d3d12 {
  
          mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
  
@@ -463,6 +463,7 @@ index 6b77b3a07..8e7e55e84 100644
 +        if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +            allocatorDesc.Budget = 100000000;  // 100MB
 +            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
++            allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +        }
 +
 +        if (IsToggleEnabled(Toggle::DumpResourceAllocator)) {
@@ -476,7 +477,7 @@ index 6b77b3a07..8e7e55e84 100644
  
          // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
          DAWN_TRY_ASSIGN(
-@@ -248,8 +273,8 @@ namespace dawn::native::d3d12 {
+@@ -248,8 +274,8 @@ namespace dawn::native::d3d12 {
          return mCommandAllocatorManager.get();
      }
  
@@ -487,7 +488,7 @@ index 6b77b3a07..8e7e55e84 100644
      }
  
      ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -318,7 +343,6 @@ namespace dawn::native::d3d12 {
+@@ -318,7 +344,6 @@ namespace dawn::native::d3d12 {
          // Perform cleanup operations to free unused objects
          ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -495,7 +496,7 @@ index 6b77b3a07..8e7e55e84 100644
          DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
          mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
          mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -521,16 +545,55 @@ namespace dawn::native::d3d12 {
+@@ -521,16 +546,55 @@ namespace dawn::native::d3d12 {
          return {};
      }
  
@@ -556,7 +557,7 @@ index 6b77b3a07..8e7e55e84 100644
      }
  
      Ref<TextureBase> Device::CreateD3D12ExternalTexture(
-@@ -578,6 +641,7 @@ namespace dawn::native::d3d12 {
+@@ -578,6 +642,7 @@ namespace dawn::native::d3d12 {
          SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
          SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
          SetToggle(Toggle::UseD3D12ResidencyManagement, true);
@@ -564,7 +565,7 @@ index 6b77b3a07..8e7e55e84 100644
          SetToggle(Toggle::UseDXC, false);
  
          // Disable optimizations when using FXC
-@@ -674,11 +738,6 @@ namespace dawn::native::d3d12 {
+@@ -674,11 +739,6 @@ namespace dawn::native::d3d12 {
              ::CloseHandle(mFenceEvent);
          }
  
@@ -804,7 +805,7 @@ index 6e67a1aef..41f7935f6 100644
  }  // namespace dawn::native::d3d12
  
 diff --git a/src/dawn/native/d3d12/TextureD3D12.cpp b/src/dawn/native/d3d12/TextureD3D12.cpp
-index b86abbde8..73fb2f221 100644
+index b86abbde8..ab66fc59f 100644
 --- a/src/dawn/native/d3d12/TextureD3D12.cpp
 +++ b/src/dawn/native/d3d12/TextureD3D12.cpp
 @@ -557,12 +557,8 @@ namespace dawn::native::d3d12 {
@@ -876,7 +877,7 @@ index b86abbde8..73fb2f221 100644
 -            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
 +        // Track the underlying heap to ensure residency.
 +        if (GetTextureState() != TextureState::OwnedExternal) {
-+            mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
++            commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
          }
  
          std::vector<D3D12_RESOURCE_BARRIER> barriers;
@@ -890,7 +891,7 @@ index b86abbde8..73fb2f221 100644
 -            commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
 +        // Track the underlying heap to ensure residency.
 +        if (GetTextureState() != TextureState::OwnedExternal) {
-+            mResourceAllocation->UpdateResidency(commandContext->GetResidencySet());
++            commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
          }
  
          HandleTransitionSpecialCases(commandContext);
