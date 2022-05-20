@@ -64,7 +64,8 @@ namespace gpgmm {
     }
 
     // Returns a new slab size of a power-of-two value.
-    uint64_t SlabMemoryAllocator::ComputeSlabSize(uint64_t requestSize, uint64_t slabSize) const {
+    uint64_t SlabMemoryAllocator::ComputeSlabSize(uint64_t requestSize,
+                                                  uint64_t baseSlabSize) const {
         ASSERT(requestSize <= mBlockSize);
 
         // If the left over empty space is less than |mSlabFragmentationLimit| x slab size,
@@ -72,11 +73,12 @@ namespace gpgmm {
         // 512KB block fits exactly 8 blocks with no wasted space. But a 3MB block has 1MB worth of
         // empty space leftover which exceeds |mSlabFragmentationLimit| x slab size or 500KB.
         const uint64_t fragmentedBytes = mBlockSize - requestSize;
-        while (requestSize > slabSize || fragmentedBytes > (mSlabFragmentationLimit * slabSize)) {
-            slabSize *= 2;
+        while (requestSize > baseSlabSize ||
+               fragmentedBytes > (mSlabFragmentationLimit * baseSlabSize)) {
+            baseSlabSize *= 2;
         }
 
-        return NextPowerOfTwo(slabSize);
+        return NextPowerOfTwo(baseSlabSize);
     }
 
     SlabMemoryAllocator::SlabCache* SlabMemoryAllocator::GetOrCreateCache(uint64_t slabSize) {
@@ -100,8 +102,13 @@ namespace gpgmm {
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mBlockSize) + " bytes).");
 
-        uint64_t slabSize =
-            ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize));
+        // If the slab size excceeds available memory, reset from the smallest size.
+        uint64_t slabSize = std::max(mMinSlabSize, mLastUsedSlabSize);
+        if (request.AvailableForAllocation < slabSize) {
+            slabSize = mMinSlabSize;
+        }
+
+        slabSize = ComputeSlabSize(request.SizeInBytes, slabSize);
         GPGMM_INVALID_IF(slabSize > mMaxSlabSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
                          "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
                              " vs " + std::to_string(mMaxSlabSize) + " bytes).");
@@ -130,10 +137,8 @@ namespace gpgmm {
                     std::min(ComputeSlabSize(request.SizeInBytes, slabSize * mSlabGrowthFactor),
                              mMaxSlabSize);
 
-                // Revert to using the first computed slab size if growth exceeds
-                // available memory. Otherwise, the new larger slab could cause out-of-memory.
-                if (request.AvailableForAllocation == 0 ||
-                    newSlabSize > request.AvailableForAllocation) {
+                // If the new slab size exceeds available memory, re-use the previous, smaller size.
+                if (newSlabSize > request.AvailableForAllocation) {
                     DebugEvent(GetTypename()) << "Available memory exceeded by new slab: "
                                               << std::to_string(request.AvailableForAllocation)
                                               << " vs " << std::to_string(newSlabSize) + " bytes).";
@@ -160,12 +165,13 @@ namespace gpgmm {
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment,
                 [&](const auto& block) -> MemoryBase* {
-                    // Re-use existing memory, if the slab isn't new.
+                    // Re-use memory from the free slab.
                     if (pFreeSlab->SlabMemory != nullptr) {
                         return pFreeSlab->SlabMemory->GetMemory();
                     }
 
-                    // Use pre-fetched memory if possible, else, throw it away.
+                    // Or use pre-fetched memory if possible. Else, throw it away and create a new
+                    // slab.
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
@@ -221,19 +227,19 @@ namespace gpgmm {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
-            const uint32_t nextSlabSize = std::min(
+            const uint64_t nextSlabSize = std::min(
                 ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor),
                 mMaxSlabSize);
 
-            MEMORY_ALLOCATION_REQUEST prefetchSlabRequest = {};
-            prefetchSlabRequest.SizeInBytes = nextSlabSize;
-            prefetchSlabRequest.Alignment = mSlabAlignment;
-            prefetchSlabRequest.NeverAllocate = false;
-            prefetchSlabRequest.CacheSize = true;
-            prefetchSlabRequest.AlwaysPrefetch = false;
+            if (nextSlabSize < request.AvailableForAllocation) {
+                MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
+                newSlabRequest.SizeInBytes = nextSlabSize;
+                newSlabRequest.Alignment = mSlabAlignment;
+                newSlabRequest.AlwaysPrefetch = false;
 
-            mNextSlabAllocationEvent =
-                mMemoryAllocator->TryAllocateMemoryAsync(prefetchSlabRequest);
+                GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemoryAsync(newSlabRequest),
+                                 mNextSlabAllocationEvent);
+            }
         }
 
         // Wrap the block in the containing slab. Since the slab's block could reside in another

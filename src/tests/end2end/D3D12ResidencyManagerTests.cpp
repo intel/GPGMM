@@ -108,7 +108,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     ASSERT_GT(resourceHeaps.size(), 1u);
 
-    // When over-budget, the resource heap size should remain the same.
-    EXPECT_EQ(resourceHeaps.at(allocations.size() - 1)->GetSize(),
+    // When over-budget, the resource heap size should not increase.
+    EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetSize(),
               resourceHeaps.at(allocations.size() - 2)->GetSize());
 }

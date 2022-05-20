@@ -64,7 +64,7 @@ namespace gpgmm {
         const char* GetTypename() const override;
 
       private:
-        uint64_t ComputeSlabSize(uint64_t requestSize, uint64_t slabSize) const;
+        uint64_t ComputeSlabSize(uint64_t requestSize, uint64_t minSlabSize) const;
 
         // Slab is a node in a doubly-linked list that contains a free-list of blocks
         // and a reference to underlying memory.
