@@ -63,7 +63,7 @@ namespace gpgmm { namespace d3d12 {
             ResourceAllocationEntry(allocation, allocation->GetAllocator()), true);
 
         // Inject |this| allocator so DeallocateMemory shrinks the cache.
-        allocation->SetAllocator(this);
+        allocation->SetDebugAllocator(this);
     }
 
     void DebugResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

@@ -81,10 +81,6 @@ namespace gpgmm {
         return mAllocator;
     }
 
-    void MemoryAllocation::SetAllocator(MemoryAllocator* allocator) {
-        mAllocator = allocator;
-    }
-
     uint64_t MemoryAllocation::GetSize() const {
         switch (mMethod) {
             case gpgmm::AllocationMethod::kStandalone:

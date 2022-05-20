@@ -171,4 +171,8 @@ namespace gpgmm { namespace d3d12 {
         return ToBackend(MemoryAllocation::GetMemory());
     }
 
+    void ResourceAllocation::SetDebugAllocator(MemoryAllocator* allocator) {
+        mAllocator = allocator;
+    }
+
 }}  // namespace gpgmm::d3d12

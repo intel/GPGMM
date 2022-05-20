@@ -24,6 +24,7 @@
 
 namespace gpgmm { namespace d3d12 {
 
+    class DebugResourceAllocator;
     class Heap;
     class ResidencyManager;
     class ResidencySet;
@@ -203,6 +204,10 @@ namespace gpgmm { namespace d3d12 {
         Heap* GetMemory() const;
 
       private:
+        // Only DebugResourceAllocator may inject itself to ensure |this| cannot leak.
+        friend DebugResourceAllocator;
+        void SetDebugAllocator(MemoryAllocator* allocator);
+
         void DeleteThis() override;
 
         ResidencyManager* const mResidencyManager;

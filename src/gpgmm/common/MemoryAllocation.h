@@ -167,7 +167,6 @@ namespace gpgmm {
         \return A pointer to MemoryAllocator which is the allocator used.
         */
         MemoryAllocator* GetAllocator() const;
-        void SetAllocator(MemoryAllocator* allocator);
 
         /** \brief The size, in bytes, of the memory allocation.
 
@@ -198,10 +197,10 @@ namespace gpgmm {
       protected:
         friend class MemoryAllocator;
 
-      private:
         MemoryAllocator* mAllocator;
-        MemoryBase* mMemory;
 
+      private:
+        MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
         MemoryBlock* mBlock;
