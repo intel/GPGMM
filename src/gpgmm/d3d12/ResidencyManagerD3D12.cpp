@@ -39,7 +39,8 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<Fence> residencyFence;
         {
             Fence* ptr = nullptr;
-            ReturnIfFailed(Fence::CreateFence(descriptor.Device, 0, &ptr));
+            ReturnIfFailed(
+                Fence::CreateFence(descriptor.Device, descriptor.InitialFenceValue, &ptr));
             residencyFence.reset(ptr);
         }
 

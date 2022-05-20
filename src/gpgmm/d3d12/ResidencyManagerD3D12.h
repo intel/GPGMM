@@ -78,6 +78,16 @@ namespace gpgmm { namespace d3d12 {
         evict size to 50MB.
         */
         uint64_t EvictBatchSize;
+
+        /** \brief Initial fence value to use when managing heaps for residency.
+
+        Fence value gets assigned to each managed heap and increments each time ExecuteCommandList()
+        is called. When over budget, these fence values are compared to determine which heaps can be
+        evicted.
+
+        Optional parameter. Zero by default.
+        */
+        uint64_t InitialFenceValue;
     };
 
     class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
