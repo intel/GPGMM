@@ -508,6 +508,7 @@ namespace gpgmm { namespace d3d12 {
                     cacheRequest.NeverAllocate = true;
                     cacheRequest.CacheSize = true;
                     cacheRequest.AlwaysPrefetch = false;
+                    cacheRequest.AvailableForAllocation = kInvalidSize;
 
                     if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
                                   D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
@@ -761,8 +762,11 @@ namespace gpgmm { namespace d3d12 {
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(GetPreferredMemorySegmentGroup(
                     mDevice.Get(), mIsUMA, allocationDescriptor.HeapType));
+
+            // If over-budget, only free memory is left available.
+            // TODO: Consider optimizing GetInfoInternal().
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
-                availableMemory = 0;
+                availableMemory = GetInfoInternal().FreeMemoryUsage;
             } else {
                 availableMemory = currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
             }
@@ -1110,7 +1114,10 @@ namespace gpgmm { namespace d3d12 {
 
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
+        return GetInfoInternal();
+    }
 
+    RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfoInternal() const {
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
 
