@@ -187,6 +187,7 @@ namespace gpgmm {
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
+            mInfo.FreeMemoryUsage -= segment->GetInfo().PoolSizeInBytes;
             segment->ReleasePool();
         }
     }
