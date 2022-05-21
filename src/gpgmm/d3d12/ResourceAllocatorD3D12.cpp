@@ -1121,16 +1121,15 @@ namespace gpgmm { namespace d3d12 {
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
 
-        for (const auto& allocator : mResourceAllocatorOfType) {
-            result += allocator->GetInfo();
-        }
+        for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
+             resourceHeapTypeIndex++) {
+            result += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
 
-        for (const auto& allocator : mSmallBufferAllocatorOfType) {
-            result += allocator->GetInfo();
-        }
+            result += mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
 
-        for (const auto& allocator : mResourceHeapAllocatorOfType) {
-            result += allocator->GetInfo();
+            result += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
         }
 
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MB)",
