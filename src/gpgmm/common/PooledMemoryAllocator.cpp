@@ -36,6 +36,8 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
+        GPGMM_CHECK_NONZERO(request.SizeInBytes);
+
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
@@ -69,6 +71,7 @@ namespace gpgmm {
     }
 
     void PooledMemoryAllocator::ReleaseMemory() {
+        mInfo.FreeMemoryUsage -= mPool->GetInfo().PoolSizeInBytes;
         mPool->ReleasePool();
     }
 
