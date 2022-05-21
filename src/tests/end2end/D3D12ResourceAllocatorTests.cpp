@@ -274,7 +274,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateMultisampledTexture) {
         EXPECT_TRUE(gpgmm::IsAligned(
             allocation->GetSize(),
             static_cast<uint32_t>(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)));
+
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
     }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 0u);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
@@ -416,6 +420,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     EXPECT_EQ(tinyBufferAllocB->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
     EXPECT_EQ(tinyBufferAllocB->GetSize(), kSubAllocationSize);
 
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 2u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
+
     // Both buffers should be allocated in sequence, back-to-back.
     EXPECT_EQ(tinyBufferAllocA->GetOffsetFromResource() + kSubAllocationSize,
               tinyBufferAllocB->GetOffsetFromResource());
@@ -441,6 +448,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     EXPECT_EQ(tinyBufferAllocC->GetSize(), kSubAllocationSize);
     EXPECT_EQ(tinyBufferAllocC->GetOffsetFromResource(), 0u);
     EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
+
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 3u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 2u);
 
     // Write kSubAllocationSize worth of bytes with value 0xAA in mapped subAllocation A.
     std::vector<uint8_t> dataAA(kSubAllocationSize, 0xAA);
@@ -468,6 +478,19 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     for (uint32_t i = 0; i < kSubAllocationSize; i++, mappedByte++) {
         EXPECT_EQ(*mappedByte, 0xBB);
     }
+
+    // Deallocate in reverse order (for good measure).
+    tinyBufferAllocA = nullptr;
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 2u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 2u);
+
+    tinyBufferAllocB = nullptr;
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
+
+    tinyBufferAllocC = nullptr;
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 0u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 0u);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
