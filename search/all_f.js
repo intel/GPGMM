@@ -19,12 +19,14 @@ var searchData=
   ['pooledmemoryallocator_16',['PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html',1,'gpgmm::PooledMemoryAllocator'],['../classgpgmm_1_1_pooled_memory_allocator.html#a9c431f7774219038da24e605b1313ee7',1,'gpgmm::PooledMemoryAllocator::PooledMemoryAllocator()']]],
   ['pooledmemoryallocator_2ecpp_17',['PooledMemoryAllocator.cpp',['../_pooled_memory_allocator_8cpp.html',1,'']]],
   ['pooledmemoryallocator_2eh_18',['PooledMemoryAllocator.h',['../_pooled_memory_allocator_8h.html',1,'']]],
-  ['poolsizeinbytes_19',['PoolSizeInBytes',['../structgpgmm_1_1_p_o_o_l___i_n_f_o.html#a22e324d056903cda05e5ed7d29d7413e',1,'gpgmm::POOL_INFO']]],
-  ['posttask_20',['PostTask',['../classgpgmm_1_1_thread_pool.html#aa96de69b917159d6509e9dd6a2ffd591',1,'gpgmm::ThreadPool']]],
-  ['posttaskimpl_21',['postTaskImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#aff0cafb6e7f2bd2793a5f3b13a07acda',1,'gpgmm::AsyncThreadPoolImpl']]],
-  ['pprev_22',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
-  ['preferredresourceheapsize_23',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['previous_24',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
-  ['prevpoweroftwo_25',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
-  ['pvulkanfunctions_26',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['pooledmemoryallocatortests_19',['PooledMemoryAllocatorTests',['../class_pooled_memory_allocator_tests.html',1,'']]],
+  ['pooledmemoryallocatortests_2ecpp_20',['PooledMemoryAllocatorTests.cpp',['../_pooled_memory_allocator_tests_8cpp.html',1,'']]],
+  ['poolsizeinbytes_21',['PoolSizeInBytes',['../structgpgmm_1_1_p_o_o_l___i_n_f_o.html#a22e324d056903cda05e5ed7d29d7413e',1,'gpgmm::POOL_INFO']]],
+  ['posttask_22',['PostTask',['../classgpgmm_1_1_thread_pool.html#aa96de69b917159d6509e9dd6a2ffd591',1,'gpgmm::ThreadPool']]],
+  ['posttaskimpl_23',['postTaskImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#aff0cafb6e7f2bd2793a5f3b13a07acda',1,'gpgmm::AsyncThreadPoolImpl']]],
+  ['pprev_24',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
+  ['preferredresourceheapsize_25',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['previous_26',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
+  ['prevpoweroftwo_27',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
+  ['pvulkanfunctions_28',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];
