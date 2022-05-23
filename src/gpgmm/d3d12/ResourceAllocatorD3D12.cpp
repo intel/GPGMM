@@ -506,7 +506,7 @@ namespace gpgmm { namespace d3d12 {
                     MEMORY_ALLOCATION_REQUEST cacheRequest = {};
                     cacheRequest.SizeInBytes = sizeToCache;
                     cacheRequest.NeverAllocate = true;
-                    cacheRequest.CacheSize = true;
+                    cacheRequest.AlwaysCacheSize = true;
                     cacheRequest.AlwaysPrefetch = false;
                     cacheRequest.AvailableForAllocation = kInvalidSize;
 
@@ -759,30 +759,8 @@ namespace gpgmm { namespace d3d12 {
             return E_INVALIDARG;
         }
 
-        // Restrict the available memory to stay under budget.
-        uint64_t availableMemory = mMaxResourceHeapSize;
-        if (mResidencyManager != nullptr) {
-            DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
-                mResidencyManager->GetVideoMemoryInfo(GetPreferredMemorySegmentGroup(
-                    mDevice.Get(), mIsUMA, allocationDescriptor.HeapType));
-
-            // If over-budget, only free memory is left available.
-            // TODO: Consider optimizing GetInfoInternal().
-            if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
-                availableMemory = GetInfoInternal().FreeMemoryUsage;
-            } else {
-                availableMemory = currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
-            }
-        }
-
-        const bool neverAllocate =
-            allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
-
         const bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
-
-        const bool alwaysPrefetch =
-            allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY;
 
         const bool isMSAA = resourceDescriptor.SampleDesc.Count > 1;
 
@@ -795,10 +773,32 @@ namespace gpgmm { namespace d3d12 {
         //
         // Only the buffer size can be computed directly from the resource descriptor (width always
         // represents 1D coorinates, in bytes).
-        const uint64_t requestedSize =
-            (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
-                ? newResourceDesc.Width
-                : resourceInfo.SizeInBytes;
+        MEMORY_ALLOCATION_REQUEST request = {};
+        request.SizeInBytes = (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
+                                  ? newResourceDesc.Width
+                                  : resourceInfo.SizeInBytes;
+        request.NeverAllocate =
+            (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        request.AlwaysPrefetch =
+            (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
+        request.AlwaysCacheSize = (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
+        request.AvailableForAllocation = mMaxResourceHeapSize;
+
+        // Limit available memory to unused budget when residency is enabled.
+        if (mResidencyManager != nullptr) {
+            DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
+                mResidencyManager->GetVideoMemoryInfo(GetPreferredMemorySegmentGroup(
+                    mDevice.Get(), mIsUMA, allocationDescriptor.HeapType));
+
+            // If over-budget, only free memory is left available.
+            // TODO: Consider optimizing GetInfoInternal().
+            if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
+                request.AvailableForAllocation = GetInfoInternal().FreeMemoryUsage;
+            } else {
+                request.AvailableForAllocation =
+                    currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
+            }
+        }
 
         // Attempt to create a resource allocation within the same resource.
         // This has the same performace as sub-allocating resource heaps without the
@@ -813,11 +813,11 @@ namespace gpgmm { namespace d3d12 {
             !mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = requestedSize;
             request.Alignment = (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
-            request.NeverAllocate = neverAllocate;
-            request.CacheSize = false;
+
+            // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
+            // through |this| via CreateCommittedResource which is already locked by
+            // CreateResource().
             request.AlwaysPrefetch = false;
 
             ReturnIfSucceeded(
@@ -856,13 +856,7 @@ namespace gpgmm { namespace d3d12 {
                 allocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = requestedSize;
             request.Alignment = resourceInfo.Alignment;
-            request.NeverAllocate = neverAllocate;
-            request.CacheSize = false;
-            request.AlwaysPrefetch = alwaysPrefetch;
-            request.AvailableForAllocation = availableMemory;
 
             ReturnIfSucceeded(
                 TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
@@ -912,12 +906,7 @@ namespace gpgmm { namespace d3d12 {
                     mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            MEMORY_ALLOCATION_REQUEST request = {};
-            request.SizeInBytes = requestedSize;
             request.Alignment = GetHeapAlignment(heapFlags, isMSAA);
-            request.NeverAllocate = neverAllocate;
-            request.CacheSize = false;
-            request.AlwaysPrefetch = false;
 
             ReturnIfSucceeded(
                 TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
@@ -951,7 +940,7 @@ namespace gpgmm { namespace d3d12 {
         // the most expensive so it's used as a last resort or if the developer needs larger
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
-        if (neverAllocate) {
+        if (request.NeverAllocate) {
             return E_OUTOFMEMORY;
         }
 
@@ -966,11 +955,11 @@ namespace gpgmm { namespace d3d12 {
             allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
             clearValue, initialResourceState, &committedResource, &resourceHeap));
 
-        if (resourceInfo.SizeInBytes > requestedSize) {
+        if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             InfoEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_RESOURCE_ALLOCATION_MISALIGNMENT)
                 << "Resource allocation is larger then the requested size (" +
                        std::to_string(resourceInfo.SizeInBytes) + " vs " +
-                       std::to_string(requestedSize) + " bytes).";
+                       std::to_string(request.SizeInBytes) + " bytes).";
         }
 
         // Using committed resources will create a tightly allocated resource allocations.

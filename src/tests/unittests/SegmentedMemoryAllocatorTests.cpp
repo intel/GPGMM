@@ -27,7 +27,7 @@ MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size, uint64_t alignment) 
     request.SizeInBytes = size;
     request.Alignment = alignment;
     request.NeverAllocate = false;
-    request.CacheSize = false;
+    request.AlwaysCacheSize = false;
     request.AlwaysPrefetch = false;
     return request;
 }

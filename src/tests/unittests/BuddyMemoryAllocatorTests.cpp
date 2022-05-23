@@ -35,7 +35,7 @@ class BuddyMemoryAllocatorTests : public testing::Test {
         request.SizeInBytes = size;
         request.Alignment = alignment;
         request.NeverAllocate = false;
-        request.CacheSize = false;
+        request.AlwaysCacheSize = false;
         request.AlwaysPrefetch = false;
         return request;
     }

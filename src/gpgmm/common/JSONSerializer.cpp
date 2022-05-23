@@ -59,7 +59,7 @@ namespace gpgmm {
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("NeverAllocate", desc.NeverAllocate);
-        dict.AddItem("CacheSize", desc.CacheSize);
+        dict.AddItem("AlwaysCacheSize", desc.AlwaysCacheSize);
         dict.AddItem("AlwaysPrefetch", desc.AlwaysPrefetch);
         dict.AddItem("AvailableForAllocation", desc.AvailableForAllocation);
         return dict;
