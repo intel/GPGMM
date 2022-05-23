@@ -106,7 +106,7 @@ namespace gpgmm {
         /** \brief Request to additionally cache for the allocated size, to speed-up subsequent
         requests of the same request size.
         */
-        bool CacheSize;
+        bool AlwaysCacheSize;
 
         /** \brief Request to pre-fetch the next memory block needed for a subsquent request based
         on the requested size.

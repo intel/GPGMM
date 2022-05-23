@@ -227,7 +227,7 @@ namespace gpgmm { namespace vk {
         request.SizeInBytes = requirements.size;
         request.Alignment = requirements.alignment;
         request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
-        request.CacheSize = false;
+        request.AlwaysCacheSize = false;
         request.AlwaysPrefetch = (allocationInfo.flags & GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);

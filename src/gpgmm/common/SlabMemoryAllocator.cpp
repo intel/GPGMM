@@ -356,8 +356,8 @@ namespace gpgmm {
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
 
         // Create a slab allocator for the new entry.
-        auto entry = mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize),
-                                            request.CacheSize);
+        auto entry =
+            mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), request.AlwaysCacheSize);
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
