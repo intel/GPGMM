@@ -23,8 +23,18 @@
 
 namespace gpgmm {
 
-    constexpr static uint64_t kSlabPrefetchTotalBlockCount = 4u;
+    // Disables pre-fetching of memory objects that have too little space.
+    constexpr static uint64_t kSlabPrefetchMinBlockCount = 4u;
+
+    // Disables pre-fetching of memory objects that are under-utilizied.
     constexpr static double kSlabPrefetchUsageThreshold = 0.50;
+
+    // Disables pre-fetching of memory objects that are too large.
+    // Larger memory objects require more time on the device to allocate memory and could block a
+    // subsequent allocation request using a previously allocated memory object. This threshold
+    // is used to restrict pre-fetching to smaller memory blocks to ensure the application is busy
+    // and not waiting on the next pre-fetched allocation.
+    constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = 64 * 1024 * 1024;
 
     // SlabMemoryAllocator
 
@@ -223,15 +233,15 @@ namespace gpgmm {
         if ((request.AlwaysPrefetch || mAllowSlabPrefetch) && !request.NeverAllocate &&
             mNextSlabAllocationEvent == nullptr &&
             pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
-            pFreeSlab->GetBlockCount() >= kSlabPrefetchTotalBlockCount) {
+            pFreeSlab->GetBlockCount() >= kSlabPrefetchMinBlockCount) {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
             const uint64_t nextSlabSize = std::min(
                 ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor),
                 mMaxSlabSize);
-
-            if (nextSlabSize < request.AvailableForAllocation) {
+            if (nextSlabSize < request.AvailableForAllocation &&
+                nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
                 MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
                 newSlabRequest.SizeInBytes = nextSlabSize;
                 newSlabRequest.Alignment = mSlabAlignment;
