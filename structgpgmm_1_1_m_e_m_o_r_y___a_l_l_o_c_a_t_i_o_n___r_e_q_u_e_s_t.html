@@ -86,9 +86,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a7d7b04df4ac858359500cccb4795981a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a7d7b04df4ac858359500cccb4795981a">NeverAllocate</a></td></tr>
 <tr class="memdesc:a7d7b04df4ac858359500cccb4795981a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to never create underlying memory.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a7d7b04df4ac858359500cccb4795981a">More...</a><br /></td></tr>
 <tr class="separator:a7d7b04df4ac858359500cccb4795981a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a509462c671682c534748ed79b094cd1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a509462c671682c534748ed79b094cd1a">CacheSize</a></td></tr>
-<tr class="memdesc:a509462c671682c534748ed79b094cd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to additionally cache for the allocated size, to speed-up subsequent requests of the same request size.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a509462c671682c534748ed79b094cd1a">More...</a><br /></td></tr>
-<tr class="separator:a509462c671682c534748ed79b094cd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94c06358013c63f0f142db8b69ce567"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#af94c06358013c63f0f142db8b69ce567">AlwaysCacheSize</a></td></tr>
+<tr class="memdesc:af94c06358013c63f0f142db8b69ce567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to additionally cache for the allocated size, to speed-up subsequent requests of the same request size.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#af94c06358013c63f0f142db8b69ce567">More...</a><br /></td></tr>
+<tr class="separator:af94c06358013c63f0f142db8b69ce567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd8863eaf9267b64008d7e02010ef4cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#afd8863eaf9267b64008d7e02010ef4cd">AlwaysPrefetch</a></td></tr>
 <tr class="memdesc:afd8863eaf9267b64008d7e02010ef4cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to pre-fetch the next memory block needed for a subsquent request based on the requested size.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#afd8863eaf9267b64008d7e02010ef4cd">More...</a><br /></td></tr>
 <tr class="separator:afd8863eaf9267b64008d7e02010ef4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,6 +113,22 @@ Public Attributes</h2></td></tr>
 
 <p>Requested alignment, in bytes, of the allocation. </p>
 <p >This is the alignment value of the memory block, which is not necessarily a multiple of the allocated size. For example, a 128-byte alignment means the memory block offset must be a multiple of 128. But the block size may only be 64 bytes, leaving the other 64 bytes allocated but unused. </p>
+
+</div>
+</div>
+<a id="af94c06358013c63f0f142db8b69ce567" name="af94c06358013c63f0f142db8b69ce567"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af94c06358013c63f0f142db8b69ce567">&#9670;&nbsp;</a></span>AlwaysCacheSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::MEMORY_ALLOCATION_REQUEST::AlwaysCacheSize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Request to additionally cache for the allocated size, to speed-up subsequent requests of the same request size. </p>
 
 </div>
 </div>
@@ -146,22 +162,6 @@ Public Attributes</h2></td></tr>
 
 <p>Memory available for the allocation. </p>
 <p >A value of 0 means there is no memory available left to allocate from. </p>
-
-</div>
-</div>
-<a id="a509462c671682c534748ed79b094cd1a" name="a509462c671682c534748ed79b094cd1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a509462c671682c534748ed79b094cd1a">&#9670;&nbsp;</a></span>CacheSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gpgmm::MEMORY_ALLOCATION_REQUEST::CacheSize</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Request to additionally cache for the allocated size, to speed-up subsequent requests of the same request size. </p>
 
 </div>
 </div>
