@@ -80,7 +80,7 @@ Inheritance diagram for gpgmm::LIFOMemoryPool:</div>
  <div class="center">
   <img src="classgpgmm_1_1_l_i_f_o_memory_pool.png" usemap="#gpgmm::LIFOMemoryPool_map" alt=""/>
   <map id="gpgmm::LIFOMemoryPool_map" name="gpgmm::LIFOMemoryPool_map">
-<area href="classgpgmm_1_1_memory_pool.html" alt="gpgmm::MemoryPool" shape="rect" coords="0,0,156,24"/>
+<area href="classgpgmm_1_1_memory_pool.html" title="Stores a collection of same-sized memory allocations." alt="gpgmm::MemoryPool" shape="rect" coords="0,0,156,24"/>
 <area href="classgpgmm_1_1_memory_segment.html" alt="gpgmm::MemorySegment" shape="rect" coords="0,112,156,136"/>
   </map>
 </div></div>
@@ -92,32 +92,51 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8a8a74e4bb248dfaf064695a739f83e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a8a8a74e4bb248dfaf064695a739f83e1">~LIFOMemoryPool</a> () override=default</td></tr>
 <tr class="separator:a8a8a74e4bb248dfaf064695a739f83e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25449353cbe14c030fc93bdd25203b43"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a25449353cbe14c030fc93bdd25203b43">AcquireFromPool</a> (uint64_t memoryIndex=kInvalidIndex) override</td></tr>
+<tr class="memdesc:a25449353cbe14c030fc93bdd25203b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a memory allocation from the pool using an optional index.  <a href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a25449353cbe14c030fc93bdd25203b43">More...</a><br /></td></tr>
 <tr class="separator:a25449353cbe14c030fc93bdd25203b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1c7f6f17939dd4e06ecf51d896e6bcf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#ac1c7f6f17939dd4e06ecf51d896e6bcf">ReturnToPool</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation, uint64_t memoryIndex=kInvalidIndex) override</td></tr>
+<tr class="memdesc:ac1c7f6f17939dd4e06ecf51d896e6bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a memory allocation back to the pool using an optional index.  <a href="classgpgmm_1_1_l_i_f_o_memory_pool.html#ac1c7f6f17939dd4e06ecf51d896e6bcf">More...</a><br /></td></tr>
 <tr class="separator:ac1c7f6f17939dd4e06ecf51d896e6bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad089f51051ad579a75f1580133cefbd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#ad089f51051ad579a75f1580133cefbd5">ReleasePool</a> () override</td></tr>
-<tr class="separator:ad089f51051ad579a75f1580133cefbd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ad9fca85a0b4bcf3128751c68d6ce58"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a4ad9fca85a0b4bcf3128751c68d6ce58">ReleasePool</a> (uint64_t bytesToFree=kInvalidSize) override</td></tr>
+<tr class="memdesc:a4ad9fca85a0b4bcf3128751c68d6ce58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate or shrink the pool.  <a href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a4ad9fca85a0b4bcf3128751c68d6ce58">More...</a><br /></td></tr>
+<tr class="separator:a4ad9fca85a0b4bcf3128751c68d6ce58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dfb0ccb485b96c4ba2c5105bf9c9b3d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a6dfb0ccb485b96c4ba2c5105bf9c9b3d">GetPoolSize</a> () const override</td></tr>
+<tr class="memdesc:a6dfb0ccb485b96c4ba2c5105bf9c9b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the pool.  <a href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a6dfb0ccb485b96c4ba2c5105bf9c9b3d">More...</a><br /></td></tr>
 <tr class="separator:a6dfb0ccb485b96c4ba2c5105bf9c9b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_pool"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_pool')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_pool.html">gpgmm::MemoryPool</a></td></tr>
 <tr class="memitem:ac6320bbc9162d64f29069ad55ceeb845 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#ac6320bbc9162d64f29069ad55ceeb845">MemoryPool</a> (uint64_t memorySize)</td></tr>
+<tr class="memdesc:ac6320bbc9162d64f29069ad55ceeb845 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a pool for memory of the specified size.  <a href="classgpgmm_1_1_memory_pool.html#ac6320bbc9162d64f29069ad55ceeb845">More...</a><br /></td></tr>
 <tr class="separator:ac6320bbc9162d64f29069ad55ceeb845 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a084b843e7a93b6bb10f432dc7780c881 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a084b843e7a93b6bb10f432dc7780c881">~MemoryPool</a> ()</td></tr>
 <tr class="separator:a084b843e7a93b6bb10f432dc7780c881 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7446b6107a3c069a99d84b353b350197 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197">AcquireFromPool</a> (uint64_t memoryIndex=kInvalidIndex)=0</td></tr>
+<tr class="memdesc:a7446b6107a3c069a99d84b353b350197 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a memory allocation from the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197">More...</a><br /></td></tr>
 <tr class="separator:a7446b6107a3c069a99d84b353b350197 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55e54ecee941a16bc9dc837bd9b508a7 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7">ReturnToPool</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation, uint64_t memoryIndex=kInvalidIndex)=0</td></tr>
+<tr class="memdesc:a55e54ecee941a16bc9dc837bd9b508a7 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a memory allocation back to the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7">More...</a><br /></td></tr>
 <tr class="separator:a55e54ecee941a16bc9dc837bd9b508a7 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae336637ab2adc681d669b15aa4b9daf6 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#ae336637ab2adc681d669b15aa4b9daf6">ReleasePool</a> ()=0</td></tr>
-<tr class="separator:ae336637ab2adc681d669b15aa4b9daf6 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d301fb93b67a9dae861606c5a1ace16 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16">ReleasePool</a> (uint64_t bytesToRelease=kInvalidSize)=0</td></tr>
+<tr class="memdesc:a8d301fb93b67a9dae861606c5a1ace16 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate or shrink the pool.  <a href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16">More...</a><br /></td></tr>
+<tr class="separator:a8d301fb93b67a9dae861606c5a1ace16 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7814ef9db6cfc2169b539e32afbd7586 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a7814ef9db6cfc2169b539e32afbd7586">GetPoolSize</a> () const =0</td></tr>
+<tr class="memdesc:a7814ef9db6cfc2169b539e32afbd7586 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the pool.  <a href="classgpgmm_1_1_memory_pool.html#a7814ef9db6cfc2169b539e32afbd7586">More...</a><br /></td></tr>
 <tr class="separator:a7814ef9db6cfc2169b539e32afbd7586 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3c4f16141b4b3e5ee55ef85cc381cd5 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#ad3c4f16141b4b3e5ee55ef85cc381cd5">GetMemorySize</a> () const</td></tr>
+<tr class="memdesc:ad3c4f16141b4b3e5ee55ef85cc381cd5 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of the memory allocations being pooled.  <a href="classgpgmm_1_1_memory_pool.html#ad3c4f16141b4b3e5ee55ef85cc381cd5">More...</a><br /></td></tr>
 <tr class="separator:ad3c4f16141b4b3e5ee55ef85cc381cd5 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20023ebb3475f0eda85b36560dc24782 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_p_o_o_l___i_n_f_o.html">POOL_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a20023ebb3475f0eda85b36560dc24782">GetInfo</a> () const</td></tr>
-<tr class="separator:a20023ebb3475f0eda85b36560dc24782 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197e8430f0aa0008d91d234e95821757 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___p_o_o_l___i_n_f_o.html">MEMORY_POOL_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a197e8430f0aa0008d91d234e95821757">GetInfo</a> () const</td></tr>
+<tr class="memdesc:a197e8430f0aa0008d91d234e95821757 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns information about this memory pool.  <a href="classgpgmm_1_1_memory_pool.html#a197e8430f0aa0008d91d234e95821757">More...</a><br /></td></tr>
+<tr class="separator:a197e8430f0aa0008d91d234e95821757 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add33370df8da09a0524f3c304be52d49 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#add33370df8da09a0524f3c304be52d49">GetTypename</a> () const</td></tr>
+<tr class="memdesc:add33370df8da09a0524f3c304be52d49 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the class name of this allocation.  <a href="classgpgmm_1_1_memory_pool.html#add33370df8da09a0524f3c304be52d49">More...</a><br /></td></tr>
 <tr class="separator:add33370df8da09a0524f3c304be52d49 inherit pub_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classgpgmm_1_1_memory_pool"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgpgmm_1_1_memory_pool')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_pool.html">gpgmm::MemoryPool</a></td></tr>
+<tr class="memitem:a095a6ae81f207ed910ca01be3cb1fa39 inherit pro_methods_classgpgmm_1_1_memory_pool"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a095a6ae81f207ed910ca01be3cb1fa39 inherit pro_methods_classgpgmm_1_1_memory_pool"><td class="memTemplItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a095a6ae81f207ed910ca01be3cb1fa39">TrimPoolUntil</a> (T &amp;pool, uint64_t bytesToRelease)</td></tr>
+<tr class="separator:a095a6ae81f207ed910ca01be3cb1fa39 inherit pro_methods_classgpgmm_1_1_memory_pool"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab105ac4bf4f9110f032ea8369d62e503" name="ab105ac4bf4f9110f032ea8369d62e503"></a>
@@ -196,6 +215,14 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Retrieves a memory allocation from the pool using an optional index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">memoryIndex</td><td>Optional index of the memory object to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197">gpgmm::MemoryPool</a>.</p>
 
 </div>
@@ -223,12 +250,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get the size of the pool. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of memory allocations in the pool. </dd></dl>
+
 <p>Implements <a class="el" href="classgpgmm_1_1_memory_pool.html#a7814ef9db6cfc2169b539e32afbd7586">gpgmm::MemoryPool</a>.</p>
 
 </div>
 </div>
-<a id="ad089f51051ad579a75f1580133cefbd5" name="ad089f51051ad579a75f1580133cefbd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad089f51051ad579a75f1580133cefbd5">&#9670;&nbsp;</a></span>ReleasePool()</h2>
+<a id="a4ad9fca85a0b4bcf3128751c68d6ce58" name="a4ad9fca85a0b4bcf3128751c68d6ce58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ad9fca85a0b4bcf3128751c68d6ce58">&#9670;&nbsp;</a></span>ReleasePool()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,9 +267,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gpgmm::LIFOMemoryPool::ReleasePool </td>
+          <td class="memname">uint64_t gpgmm::LIFOMemoryPool::ReleasePool </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>bytesToRelease</em> = <code>kInvalidSize</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -250,7 +281,16 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgpgmm_1_1_memory_pool.html#ae336637ab2adc681d669b15aa4b9daf6">gpgmm::MemoryPool</a>.</p>
+<p>Deallocate or shrink the pool. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bytesToRelease</td><td>Optional size, in bytes, to release from the pool. If no size is specified or kInvalidSize, the entire pool will be released.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total amount, in bytes, released by the pool. </dd></dl>
+
+<p>Implements <a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16">gpgmm::MemoryPool</a>.</p>
 
 </div>
 </div>
@@ -287,6 +327,14 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a memory allocation back to the pool using an optional index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">memoryIndex</td><td>Optional index of the memory object to return. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7">gpgmm::MemoryPool</a>.</p>
 

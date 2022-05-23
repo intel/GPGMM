@@ -14,5 +14,6 @@ var searchData=
   ['memorycachetests_2ecpp_11',['MemoryCacheTests.cpp',['../_memory_cache_tests_8cpp.html',1,'']]],
   ['memorypool_2ecpp_12',['MemoryPool.cpp',['../_memory_pool_8cpp.html',1,'']]],
   ['memorypool_2eh_13',['MemoryPool.h',['../_memory_pool_8h.html',1,'']]],
-  ['memorysize_2eh_14',['MemorySize.h',['../_memory_size_8h.html',1,'']]]
+  ['memorypooltests_2ecpp_14',['MemoryPoolTests.cpp',['../_memory_pool_tests_8cpp.html',1,'']]],
+  ['memorysize_2eh_15',['MemorySize.h',['../_memory_size_8h.html',1,'']]]
 ];
