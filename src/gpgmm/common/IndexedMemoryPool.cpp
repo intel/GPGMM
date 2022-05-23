@@ -33,17 +33,13 @@ namespace gpgmm {
                                          uint64_t memoryIndex) {
         ASSERT(allocation != nullptr);
         ASSERT(memoryIndex < mPool.size());
+        ASSERT(allocation->GetSize() == GetMemorySize());
+
         mPool[memoryIndex] = std::move(allocation);
     }
 
-    void IndexedMemoryPool::ReleasePool() {
-        for (auto& allocation : mPool) {
-            if (allocation != nullptr) {
-                allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
-            }
-        }
-
-        mPool.clear();
+    uint64_t IndexedMemoryPool::ReleasePool(uint64_t bytesToRelease) {
+        return TrimPoolUntil(mPool, bytesToRelease);
     }
 
     uint64_t IndexedMemoryPool::GetPoolSize() const {

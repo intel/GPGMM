@@ -855,16 +855,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kStandalone);
     }
-
-    // Check the first small texture of size A cannot be reused when creating a larger texture of
-    // size B.
-    {
-        ComPtr<ResourceAllocation> thirdAllocation;
-        ASSERT_FAILED(poolAllocator->CreateResource(
-            reusePoolOnlyDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 128, 128),
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &thirdAllocation));
-        ASSERT_EQ(thirdAllocation, nullptr);
-    }
 }
 
 // Verify a 1 byte buffer will be defragmented by creating a heaps large enough to stay under the
