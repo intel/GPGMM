@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Stores a collection of same-sized memory allocations.  
+<p>Stores a collection of memory allocations.  
  <a href="classgpgmm_1_1_memory_pool.html#details">More...</a></p>
 
 <p><code>#include &lt;MemoryPool.h&gt;</code></p>
@@ -126,7 +126,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a095a6ae81f207ed910ca01be3cb1fa39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Stores a collection of same-sized memory allocations. </p>
+<div class="textblock"><p >Stores a collection of memory allocations. </p>
 <p >Memory allocations stored in the pool must ALL be in the same state (ex. "free pool").</p>
 <p >To grow the pool, created memory allocations are inserted into the pool by <a class="el" href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7" title="Returns a memory allocation back to the pool using an optional index.">ReturnToPool()</a>.</p>
 <p >To shrink the pool, existing allocations can removed out by <a class="el" href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197" title="Retrieves a memory allocation from the pool using an optional index.">AcquireFromPool()</a> or de-allocated together by <a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16" title="Deallocate or shrink the pool.">ReleasePool()</a>. </p>
@@ -158,7 +158,7 @@ Protected Member Functions</h2></td></tr>
 <p>Constructs a pool for memory of the specified size. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">memorySize.</td><td>The size of the memory object stored in the pool. </td></tr>
+    <tr><td class="paramname">memorySize</td><td>Size, in bytes, of the memory object stored in the pool. </td></tr>
   </table>
   </dd>
 </dl>
