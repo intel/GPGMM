@@ -680,16 +680,19 @@ namespace gpgmm { namespace d3d12 {
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
 
-        if (mUseDetailedTimingEvents) {
-            GetInfo();
-        }
-
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
 #if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
         mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
 #endif
+
+        if (mUseDetailedTimingEvents) {
+            // Update the current usage counters.
+            GetInfo();
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT((*resourceAllocationOut)->GetMemory(),
+                                              (*resourceAllocationOut)->GetMemory()->GetInfo());
+        }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocationOut,
                                           (*resourceAllocationOut)->GetInfo());
