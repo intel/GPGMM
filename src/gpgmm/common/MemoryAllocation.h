@@ -190,7 +190,7 @@ namespace gpgmm {
 
         /** \brief The block used to assign a range of memory for this allocation.
 
-        \Return A pointer to the MemoryBlock.
+        \return A pointer to the MemoryBlock.
         */
         MemoryBlock* GetBlock() const;
 

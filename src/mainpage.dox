@@ -1,0 +1,15 @@
+/** \mainpage GPGMM, General-Purpose GPU Memory Management Library API documentation.
+
+\section main_table_of_contents Public interfaces
+
+\subpage gpgmm_d3d12.h
+- gpgmm::d3d12::ResidencyManager (controls when GPU memory is available)
+- gpgmm::d3d12::ResourceAllocator (creates gpgmm::d3d12::ResourceAllocation).
+- gpgmm::d3d12::ResourceAllocation (wraps D3D12 resources with metadata).
+- gpgmm::d3d12::Heap (wraps D3D12 heaps and committed resources for residency).
+- gpgmm::d3d12::ResidencySet (tracks managed heaps to become resident).
+
+\subpage gpgmm_vk.h
+- gpgmm::vk::GpResourceAllocator_T (creates gpgmm::vk::GpResourceAllocation_T).
+
+**/
