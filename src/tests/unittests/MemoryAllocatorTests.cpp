@@ -36,9 +36,9 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
         DestructCount++;
     }
 
-    void ReleaseMemory() override {
-        MemoryAllocator::ReleaseMemory();
+    uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override {
         ReleaseMemoryCount++;
+        return MemoryAllocator::ReleaseMemory(bytesToRelease);
     }
 };
 

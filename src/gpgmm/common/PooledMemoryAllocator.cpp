@@ -70,8 +70,10 @@ namespace gpgmm {
         mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory));
     }
 
-    void PooledMemoryAllocator::ReleaseMemory() {
-        mInfo.FreeMemoryUsage -= mPool->ReleasePool();
+    uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
+        const uint64_t bytesReleased = mPool->ReleasePool(bytesToRelease);
+        mInfo.FreeMemoryUsage -= bytesReleased;
+        return bytesReleased;
     }
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {

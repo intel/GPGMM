@@ -645,19 +645,51 @@ namespace gpgmm { namespace d3d12 {
         return "ResourceAllocator";
     }
 
-    void ResourceAllocator::Trim() {
+    uint64_t ResourceAllocator::Trim(uint64_t bytesToTrim) {
         std::lock_guard<std::mutex> lock(mMutex);
+        uint64_t bytesTrimmed = 0;
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
-            mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
-            mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
-            mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
-            mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
-            mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
+            // Trim in order of largest-to-smallest heap alignment. This is because trimming larger
+            // heaps will more likely exceed the amount of bytes needed then smaller ones. But if
+            // this causes over-trimming, then smaller heaps would be better.
+            // TODO: Consider adding controls to change policy.
+            bytesTrimmed +=
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
+            if (bytesTrimmed >= bytesToTrim) {
+                return bytesTrimmed;
+            }
+
+            bytesTrimmed +=
+                mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
+            if (bytesTrimmed >= bytesToTrim) {
+                return bytesTrimmed;
+            }
+
+            bytesTrimmed +=
+                mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
+            if (bytesTrimmed >= bytesToTrim) {
+                return bytesTrimmed;
+            }
+
+            bytesTrimmed +=
+                mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
+            if (bytesTrimmed >= bytesToTrim) {
+                return bytesTrimmed;
+            }
+
+            bytesTrimmed +=
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
+            if (bytesTrimmed >= bytesToTrim) {
+                return bytesTrimmed;
+            }
         }
 
-        // TODO: Check when nothing trims.
-        GetInfoInternal();
+        if (bytesTrimmed > 0) {
+            GetInfoInternal();
+        }
+
+        return bytesTrimmed;
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,

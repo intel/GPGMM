@@ -97,11 +97,12 @@ namespace gpgmm {
                                                        task);
     }
 
-    void MemoryAllocator::ReleaseMemory() {
+    uint64_t MemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (GetNextInChain() != nullptr) {
-            GetNextInChain()->ReleaseMemory();
+            return GetNextInChain()->ReleaseMemory(bytesToRelease);
         }
+        return 0;
     }
 
     uint64_t MemoryAllocator::GetMemorySize() const {

@@ -524,8 +524,13 @@ namespace gpgmm { namespace d3d12 {
         app's memory usage and in general, will lead to increased memory usage by the overall
         system. Apps should call Trim() when going idle for a period of time since there is a
         brief performance hit when the internal resource heaps get reallocated by the OS.
+
+        @param bytesToTrim Optional. Amount of memory, in bytes, to trim. If UINT64_MAX, all memory
+        is freed.
+
+        \return Amount of memory, in bytes, trimmed.
         */
-        void Trim();
+        uint64_t Trim(uint64_t bytesToTrim = kInvalidSize);
 
         /** \brief  Return the current allocator usage.
 

@@ -148,7 +148,7 @@ namespace gpgmm {
 
         // Free memory retained by |this| memory allocator.
         // Used to reuse memory between calls to TryAllocateMemory.
-        virtual void ReleaseMemory();
+        virtual uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize);
 
         // Get the fixed-memory sized of |this| memory allocator.
         // If this allocator only allocates memory blocks using the same size, this value
