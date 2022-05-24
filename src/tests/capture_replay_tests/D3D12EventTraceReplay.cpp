@@ -342,6 +342,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         if (envParams.IsCaptureEnabled) {
+                            allocatorDesc.RecordOptions.Flags |=
+                                static_cast<ALLOCATOR_RECORD_FLAGS_TYPE>(
+                                    envParams.CaptureEventMask);
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =

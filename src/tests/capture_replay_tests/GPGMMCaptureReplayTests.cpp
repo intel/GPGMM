@@ -98,8 +98,21 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        constexpr const char kCaptureMask[] = "--capture-mask=";
+        arglen = sizeof(kCaptureMask) - 1;
+        if (strncmp(argv[i], kCaptureMask, arglen) == 0) {
+            const char* mask = argv[i] + arglen;
+            mParams.CaptureEventMask = strtoul(mask, nullptr, 0);
+            continue;
+        }
+
         if (strcmp("--same-caps", argv[i]) == 0) {
             mParams.IsSameCapsRequired = true;
+            continue;
+        }
+
+        if (strcmp("--disable-suballocation", argv[i]) == 0) {
+            mParams.IsSuballocationDisabled = true;
             continue;
         }
 
@@ -160,9 +173,10 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                    "level for log messages.\n"
                 << " --capture: Capture upon playback.\n"
+                << " --capture-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
-                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocator profile.\n";
+                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocation profile.\n";
             continue;
         }
     }
@@ -186,7 +200,10 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Capture on playback: " << (mParams.IsCaptureEnabled ? "true" : "false")
+                     << "Capture on playback: "
+                     << (mParams.IsCaptureEnabled
+                             ? "true (" + gpgmm::ToHexStr(mParams.CaptureEventMask) + ")"
+                             : "false")
                      << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
                      << "Require same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
@@ -196,7 +213,6 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                         "-------------------\n"
                      << "Disable sub-allocation: "
                      << (mParams.IsSuballocationDisabled ? "true" : "false") << "\n"
-                     << "Never allocate: " << (mParams.IsNeverAllocate ? "true" : "false") << "\n"
                      << "Profile: " << AllocatorProfileToString(mParams.AllocatorProfile) << "\n";
 }
 
