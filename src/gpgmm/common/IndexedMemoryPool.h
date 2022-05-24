@@ -30,7 +30,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> AcquireFromPool(uint64_t memoryIndex) override;
         void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
                           uint64_t memoryIndex) override;
-        void ReleasePool() override;
+        uint64_t ReleasePool(uint64_t bytesToRelease) override;
 
         uint64_t GetPoolSize() const override;
 

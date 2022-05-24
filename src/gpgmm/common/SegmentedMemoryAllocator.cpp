@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/Debug.h"
 #include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Math.h"
 #include "gpgmm/utils/Utils.h"
 
 namespace gpgmm {
@@ -140,7 +141,8 @@ namespace gpgmm {
                              std::to_string(request.Alignment) + " vs " +
                              std::to_string(mMemoryAlignment) + " bytes).");
 
-        MemorySegment* segment = GetOrCreateFreeSegment(request.SizeInBytes);
+        const uint64_t memorySize = AlignTo(request.SizeInBytes, mMemoryAlignment);
+        MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
         ASSERT(segment != nullptr);
 
         std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
@@ -187,8 +189,7 @@ namespace gpgmm {
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
-            mInfo.FreeMemoryUsage -= segment->GetInfo().PoolSizeInBytes;
-            segment->ReleasePool();
+            mInfo.FreeMemoryUsage -= segment->ReleasePool();
         }
     }
 

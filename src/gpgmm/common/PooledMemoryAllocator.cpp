@@ -27,7 +27,7 @@ namespace gpgmm {
     }
 
     PooledMemoryAllocator::~PooledMemoryAllocator() {
-        mPool->ReleasePool();
+        mPool->ReleasePool(kInvalidSize);
     }
 
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
@@ -71,8 +71,7 @@ namespace gpgmm {
     }
 
     void PooledMemoryAllocator::ReleaseMemory() {
-        mInfo.FreeMemoryUsage -= mPool->GetInfo().PoolSizeInBytes;
-        mPool->ReleasePool();
+        mInfo.FreeMemoryUsage -= mPool->ReleasePool();
     }
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {

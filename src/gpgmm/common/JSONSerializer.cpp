@@ -28,9 +28,9 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const POOL_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const MEMORY_POOL_INFO& info) {
         JSONDict dict;
-        dict.AddItem("PoolSizeInBytes", info.PoolSizeInBytes);
+        dict.AddItem("SizeInBytes", info.SizeInBytes);
         return dict;
     }
 

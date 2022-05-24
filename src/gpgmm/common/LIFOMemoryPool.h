@@ -32,7 +32,7 @@ namespace gpgmm {
             uint64_t memoryIndex = kInvalidIndex) override;
         void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
                           uint64_t memoryIndex = kInvalidIndex) override;
-        void ReleasePool() override;
+        uint64_t ReleasePool(uint64_t bytesToFree = kInvalidSize) override;
 
         uint64_t GetPoolSize() const override;
 
