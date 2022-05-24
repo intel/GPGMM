@@ -16,7 +16,6 @@
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
-#include "gpgmm/common/ConditionalMemoryAllocator.h"
 #include "gpgmm/common/Debug.h"
 #include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/MemorySize.h"
@@ -35,9 +34,6 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
-#include "gpgmm/utils/Math.h"
-#include "gpgmm/utils/PlatformTime.h"
-#include "gpgmm/utils/Utils.h"
 
 namespace gpgmm { namespace d3d12 {
     namespace {
@@ -701,18 +697,9 @@ namespace gpgmm { namespace d3d12 {
 
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
-        // Timer isn't thread safe so it cannot be shared between invocations of CreateResource.
-        std::unique_ptr<PlatformTime> timer(CreatePlatformTime());
-
-        timer->StartElapsedTime();
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
-        const double allocationLatency = timer->EndElapsedTime() * 1e6;
-        GPGMM_UNUSED(allocationLatency);
-
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation latency (us)",
-                       allocationLatency);
 
         if (IsEventTraceEnabled()) {
             GetInfo();
