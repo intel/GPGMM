@@ -101,9 +101,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0cd91fd5837e8c97dd65640618fad822"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a0cd91fd5837e8c97dd65640618fad822">CreateResource</a> (ComPtr&lt; ID3D12Resource &gt; committedResource, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> **resourceAllocationOut)</td></tr>
 <tr class="memdesc:a0cd91fd5837e8c97dd65640618fad822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a0cd91fd5837e8c97dd65640618fad822">More...</a><br /></td></tr>
 <tr class="separator:a0cd91fd5837e8c97dd65640618fad822"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac999b311270e333753de21558f957204"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204">Trim</a> (uint64_t bytesToTrim=kInvalidSize)</td></tr>
-<tr class="memdesc:ac999b311270e333753de21558f957204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recycle resource heaps held internally by GPGMM.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204">More...</a><br /></td></tr>
-<tr class="separator:ac999b311270e333753de21558f957204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbe9099ec19561196e9d64e4b0289809"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#acbe9099ec19561196e9d64e4b0289809">Trim</a> ()</td></tr>
+<tr class="memdesc:acbe9099ec19561196e9d64e4b0289809"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recycle resource heaps held internally by GPGMM.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#acbe9099ec19561196e9d64e4b0289809">More...</a><br /></td></tr>
+<tr class="separator:acbe9099ec19561196e9d64e4b0289809"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6326a2e0f9e34d2cde4234c04379434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d7ae6593e6b94d510cc0c30b9b3510e">RESOURCE_ALLOCATOR_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">GetInfo</a> () const override</td></tr>
 <tr class="memdesc:ad6326a2e0f9e34d2cde4234c04379434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current allocator usage.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">More...</a><br /></td></tr>
 <tr class="separator:ad6326a2e0f9e34d2cde4234c04379434"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,8 +123,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac1668615745ba47713cc54808349a258 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation)=0</td></tr>
 <tr class="separator:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize)</td></tr>
-<tr class="separator:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76e8cb8345bf2e919ae50315d804936f inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a76e8cb8345bf2e919ae50315d804936f">ReleaseMemory</a> ()</td></tr>
+<tr class="separator:a76e8cb8345bf2e919ae50315d804936f inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">GetMemorySize</a> () const</td></tr>
 <tr class="separator:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a564db9c2513986b224660e396e37493e inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a564db9c2513986b224660e396e37493e">GetMemoryAlignment</a> () const</td></tr>
@@ -469,31 +469,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ac999b311270e333753de21558f957204" name="ac999b311270e333753de21558f957204"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac999b311270e333753de21558f957204">&#9670;&nbsp;</a></span>Trim()</h2>
+<a id="acbe9099ec19561196e9d64e4b0289809" name="acbe9099ec19561196e9d64e4b0289809"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbe9099ec19561196e9d64e4b0289809">&#9670;&nbsp;</a></span>Trim()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t gpgmm::d3d12::ResourceAllocator::Trim </td>
+          <td class="memname">void gpgmm::d3d12::ResourceAllocator::Trim </td>
           <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>bytesToTrim</em> = <code>kInvalidSize</code></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Recycle resource heaps held internally by GPGMM. </p>
-<p >When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204" title="Recycle resource heaps held internally by GPGMM.">Trim()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">bytesToTrim</td><td>Optional. Amount of memory, in bytes, to trim. If UINT64_MAX, all memory is freed.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, trimmed. </dd></dl>
+<p >When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#acbe9099ec19561196e9d64e4b0289809" title="Recycle resource heaps held internally by GPGMM.">Trim()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS. </p>
 
 </div>
 </div>
