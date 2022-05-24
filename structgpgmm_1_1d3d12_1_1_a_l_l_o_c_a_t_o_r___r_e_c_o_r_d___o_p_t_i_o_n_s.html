@@ -86,6 +86,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae169d62c949f95574f3e2209a90400fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">ALLOCATOR_RECORD_SCOPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#ae169d62c949f95574f3e2209a90400fe">EventScope</a> = <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931">ALLOCATOR_RECORD_SCOPE_PER_PROCESS</a></td></tr>
 <tr class="memdesc:ae169d62c949f95574f3e2209a90400fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the scope of the events.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#ae169d62c949f95574f3e2209a90400fe">More...</a><br /></td></tr>
 <tr class="separator:ae169d62c949f95574f3e2209a90400fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8407f808d092f3e62ba522900fbbe62a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a8407f808d092f3e62ba522900fbbe62a">UseDetailedTimingEvents</a> = false</td></tr>
+<tr class="memdesc:a8407f808d092f3e62ba522900fbbe62a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Record detailed timing events.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a8407f808d092f3e62ba522900fbbe62a">More...</a><br /></td></tr>
+<tr class="separator:a8407f808d092f3e62ba522900fbbe62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91d788c3e7ae7d218d7b4ada97149403"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a91d788c3e7ae7d218d7b4ada97149403">TraceFile</a></td></tr>
 <tr class="memdesc:a91d788c3e7ae7d218d7b4ada97149403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path to trace file.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a91d788c3e7ae7d218d7b4ada97149403">More...</a><br /></td></tr>
 <tr class="separator:a91d788c3e7ae7d218d7b4ada97149403"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +162,24 @@ Public Attributes</h2></td></tr>
 
 <p>Path to trace file. </p>
 <p >Optional parameter. By default, a trace file is created for you. </p>
+
+</div>
+</div>
+<a id="a8407f808d092f3e62ba522900fbbe62a" name="a8407f808d092f3e62ba522900fbbe62a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8407f808d092f3e62ba522900fbbe62a">&#9670;&nbsp;</a></span>UseDetailedTimingEvents</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS::UseDetailedTimingEvents = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Record detailed timing events. </p>
+<p >Records detailed trace events when a resource allocation is created. Details include the current usage by the allocator.</p>
+<p >Optional parameter. By default, detailed timing events will only be recorded when the App calls GetInfo() directly. </p>
 
 </div>
 </div>

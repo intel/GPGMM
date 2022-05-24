@@ -85,7 +85,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html">DeviceMemoryAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html">GpCreateAllocatorInfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies how allocators should be created.  <a href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation___t.html">GpResourceAllocation_T</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,9 +209,9 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
   <table class="params">
     <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the buffer and allocation. </td></tr>
     <tr><td class="paramname">pBufferCreateInfo</td><td>A pointer to a VkBufferCreateInfo that describes the buffer to create. </td></tr>
-    <tr><td class="paramname">pBuffer</td><td>A pointer to a VkBuffer that will be created using the allocation. </td></tr>
+    <tr><td class="paramname">buffer[out]</td><td>A pointer to a VkBuffer that will be created using the allocation. </td></tr>
     <tr><td class="paramname">pAllocationCreateInfo</td><td>A pointer to a <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> that describes the allocation. </td></tr>
-    <tr><td class="paramname">allocationOut</td><td>A pointer to <a class="el" href="struct_gp_resource_allocation.html" title="Opaque handle to a resource allocation object.">GpResourceAllocation</a> that represents the buffer allocation. </td></tr>
+    <tr><td class="paramname">allocationOut[out]</td><td>A pointer to <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> that represents the buffer allocation. </td></tr>
   </table>
   </dd>
 </dl>
@@ -248,7 +247,7 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 <p>Create allocator used to create and manage video memory for the App specified device and instance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">info</td><td>A reference to <a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html" title="Specifies how allocators should be created.">GpCreateAllocatorInfo</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">info</td><td>A reference to <a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html">GpCreateAllocatorInfo</a> structure that describes the allocator. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">allocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. If NULL is passed and allocator creating would succeed, VK_INCOMPLETE is returned. </td></tr>
   </table>
   </dd>
@@ -293,7 +292,7 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
   <table class="params">
     <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the buffer and allocation. </td></tr>
     <tr><td class="paramname">buffer</td><td>A VkBuffer that was also created by the allocator. </td></tr>
-    <tr><td class="paramname">allocation</td><td>A <a class="el" href="struct_gp_resource_allocation.html" title="Opaque handle to a resource allocation object.">GpResourceAllocation</a> that was created by the allocator. </td></tr>
+    <tr><td class="paramname">allocation</td><td>A <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> that was created by the allocator. </td></tr>
   </table>
   </dd>
 </dl>
