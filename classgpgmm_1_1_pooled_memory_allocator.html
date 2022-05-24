@@ -98,8 +98,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a35de65889d666149dba47b35a702afa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbb393ab1ff1128ce4b73361c5747283"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#abbb393ab1ff1128ce4b73361c5747283">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation) override</td></tr>
 <tr class="separator:abbb393ab1ff1128ce4b73361c5747283"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2d9d8cd5c3cb14478d4b2324ff678c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#aa2d9d8cd5c3cb14478d4b2324ff678c7">ReleaseMemory</a> () override</td></tr>
-<tr class="separator:aa2d9d8cd5c3cb14478d4b2324ff678c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fd35f384d89ba91ac4d8c12f583c95c"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a2fd35f384d89ba91ac4d8c12f583c95c">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize) override</td></tr>
+<tr class="separator:a2fd35f384d89ba91ac4d8c12f583c95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab1e6d2f5d580b5d10e9be7808df14f4"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#aab1e6d2f5d580b5d10e9be7808df14f4">GetMemorySize</a> () const override</td></tr>
 <tr class="separator:aab1e6d2f5d580b5d10e9be7808df14f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd1bcd1e12766e9d38bd24b79a3c2091"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#acd1bcd1e12766e9d38bd24b79a3c2091">GetTypename</a> () const override</td></tr>
@@ -117,8 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac1668615745ba47713cc54808349a258 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation)=0</td></tr>
 <tr class="separator:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76e8cb8345bf2e919ae50315d804936f inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a76e8cb8345bf2e919ae50315d804936f">ReleaseMemory</a> ()</td></tr>
-<tr class="separator:a76e8cb8345bf2e919ae50315d804936f inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize)</td></tr>
+<tr class="separator:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">GetMemorySize</a> () const</td></tr>
 <tr class="separator:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a564db9c2513986b224660e396e37493e inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a564db9c2513986b224660e396e37493e">GetMemoryAlignment</a> () const</td></tr>
@@ -329,8 +329,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa2d9d8cd5c3cb14478d4b2324ff678c7" name="aa2d9d8cd5c3cb14478d4b2324ff678c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2d9d8cd5c3cb14478d4b2324ff678c7">&#9670;&nbsp;</a></span>ReleaseMemory()</h2>
+<a id="a2fd35f384d89ba91ac4d8c12f583c95c" name="a2fd35f384d89ba91ac4d8c12f583c95c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fd35f384d89ba91ac4d8c12f583c95c">&#9670;&nbsp;</a></span>ReleaseMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,9 +339,10 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gpgmm::PooledMemoryAllocator::ReleaseMemory </td>
+          <td class="memname">uint64_t gpgmm::PooledMemoryAllocator::ReleaseMemory </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>bytesToRelease</em> = <code>kInvalidSize</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -352,7 +353,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a76e8cb8345bf2e919ae50315d804936f">gpgmm::MemoryAllocator</a>.</p>
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
