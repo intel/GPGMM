@@ -163,6 +163,16 @@ namespace gpgmm { namespace d3d12 {
         */
         ALLOCATOR_RECORD_SCOPE EventScope = ALLOCATOR_RECORD_SCOPE_PER_PROCESS;
 
+        /** \brief Record detailed timing events.
+
+        Records detailed trace events when a resource allocation is created. Details include the
+        current usage by the allocator.
+
+        Optional parameter. By default, detailed timing events will only be recorded when the App
+        calls GetInfo() directly.
+        */
+        bool UseDetailedTimingEvents = false;
+
         /** \brief Path to trace file.
 
         Optional parameter. By default, a trace file is created for you.
@@ -600,6 +610,7 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsAlwaysInBudget;
         const uint64_t mMaxResourceHeapSize;
         const bool mShutdownEventTrace;
+        const bool mUseDetailedTimingEvents;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 

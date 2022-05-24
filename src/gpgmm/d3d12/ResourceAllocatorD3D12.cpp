@@ -418,7 +418,8 @@ namespace gpgmm { namespace d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mShutdownEventTrace(descriptor.RecordOptions.EventScope &
-                              ALLOCATOR_RECORD_SCOPE_PER_INSTANCE) {
+                              ALLOCATOR_RECORD_SCOPE_PER_INSTANCE),
+          mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
@@ -654,6 +655,9 @@ namespace gpgmm { namespace d3d12 {
             mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
             mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory();
         }
+
+        // TODO: Check when nothing trims.
+        GetInfoInternal();
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -676,7 +680,7 @@ namespace gpgmm { namespace d3d12 {
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
 
-        if (IsEventTraceEnabled()) {
+        if (mUseDetailedTimingEvents) {
             GetInfo();
         }
 
