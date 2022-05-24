@@ -9,22 +9,9 @@
 
 GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applications or middleware libraries that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded Video Memory Manager (VidMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
 
-* [Documentation](https://intel.github.io/GPGMM/)
+* [API Documentation](https://intel.github.io/GPGMM/)
 * [Changelog](https://github.com/intel/GPGMM/releases)
 * [License](https://github.com/intel/GPGMM/blob/main/LICENSE)
-
-```mermaid
-graph TD;
-    MyGfxAPI-->gpgmm::vk
-    MyGfxAPI-->gpgmm::d3d12
-    MyMLApp-->DirectML.h
-    MyD3D12VideoApp-->gpgmm::d3d12
-    DirectML.h-->gpgmm::d3d12
-    gpgmm::d3d12-->GPGMM
-    gpgmm::vk-->GPGMM
-    GPGMM-->D3D12.h
-    GPGMM-->Vulkan.h
-```
 
 ## Build and Run
 
@@ -61,7 +48,7 @@ To build with a backend, please set the corresponding argument from following ta
 
 | Backend | Build argument |
 |---------|--------------|
-| DirectX 12 | `gpgmm_enable_d3d12=true` (default on winos) |
+| DirectX 12 | `gpgmm_enable_d3d12=true` |
 | Vulkan | `gpgmm_enable_vk=true` |
 
 ### Build
@@ -70,115 +57,117 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 
 ### Run tests
 
-#### Run unit tests:
 ```sh
-> out/Debug/gpgmm_unittests
+> cd out/Debug
 ```
 
-Unit tests check the front-end code in isolation or without a backend GPU.
+#### Run unit tests:
+```sh
+> gpgmm_unittests
+```
+
+Unit tests check the front-end code in isolation or without a GPU.
 
 #### Run end2end tests:
 ```sh
-> out/Debug/gpgmm_end2end_tests
+> gpgmm_end2end_tests
 ```
 
-End2End tests check both the front AND backend code with a backend GPU.
+End2End tests check both the front AND backend code with a GPU.
 
 #### Run capture replay tests:
 ```sh
-> out/Debug/gpgmm_capture_replay_tests
+> gpgmm_capture_replay_tests
 ```
 
-Capture replay tests checks using pre-recorded memory patterns with a backend GPU.
+Capture replay checks using pre-recorded memory patterns with a GPU.
 
 #### Run fuzzing tests:
 ```sh
-> out/Debug/gpgmm_*_fuzzer
+> gpgmm_*_fuzzer
 ```
 
-Fuzzer checks using random memory patterns with a backend GPU.
+Fuzzer checks using random memory patterns with a GPU.
 
 ## How do I use it?
 
-To allocate, you create an allocator then create allocations from it:
+First create an allocator then second, create allocations from it:
 
 ### D3D12
 ```cpp
-gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {/* fill this out */};
+// Required
+gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
+allocatorDesc.Device = Device;
+allocatorDesc.Adapter = Adapter;
 
+// Use CheckFeatureSupport
+allocatorDesc.IsUMA = true;
+allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
+
+ComPtr<gpgmm::d3d12::ResidencyManager> residency; // Optional
 ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
-gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator);
+gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator, &residency);
 ```
 
 ```cpp
-D3D12_RESOURCE_DESC& resourceDesc = {/* fill this out */};
-D3D12_RESOURCE_STATES initialState = {/* fill this out */}
-
-gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {/* fill this out */};
+D3D12_RESOURCE_DESC& resourceDesc = {};
+D3D12_RESOURCE_STATES initialState = {}
+gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
 
 ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
-allocator->CreateResource(allocationDesc, resourceDesc, initialState, /*pOptimizedClear*/nullptr, &allocation);
+allocator->CreateResource(allocationDesc, resourceDesc, initialState, nullptr, &allocation);
 ```
 
-Then to clean-up:
-
-```cpp
-// Make sure GPU is finished using it
-allocation.Release();
-```
+GPUs do not support page-faulting, so it's up the GPU application to avoid using too much
+physical GPU memory. GPGMM integrates residency into the resource allocators to simplify and optimize allocation:
 
 ```cpp
-allocator.Release();
+gpgmm::d3d12::ResidencySet set;
+set.Insert(allocation->GetMemory());
+
+residency->ExecuteCommandList(&queue, &commandList, &set, 1);
+
+// Prepare for next frame.
+set.Reset();
 ```
+
+Residency also works for non-resources too:
+
+```cpp
+// Wraps a ID3D12DescriptorHeap, ID3D12QueryHeap, etc.
+class HeapWrapper : public gpgmm::d3d12::Heap {};
+
+HeapWrapper heap;
+residency->InsertHeap(&heap);
+residency->LockHeap(heap) // Pin it (eg. shader-visible)
+```
+
+To clean-up, simply call `Release()` once the is GPU is finished.
 
 ### Vulkan
 
 ```cpp
-gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {/* fill this out */};
+gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {};
 
 gpgmm::vk::GpResourceAllocator resourceAllocator;
 gpgmm::vk::gpCreateResourceAllocator(allocatorInfo, &resourceAllocator)
 ```
 
 ```cpp
-VkBufferCreateInfo bufferInfo = {/* fill this out */};
+VkBufferCreateInfo bufferInfo = {};
 VkBuffer buffer;
+
 gpgmm::vk::GpResourceAllocation allocation;
-gpgmm::vk::GpResourceAllocationCreateInfo allocationInfo = {/* fill this out */};
+gpgmm::vk::GpResourceAllocationCreateInfo allocationInfo = {};
 
 gpgmm::vk::gpCreateBuffer(resourceAllocator, &bufferInfo, &buffer, &allocationInfo, &allocation)
 ```
 
 Then to clean-up:
 ```cpp
-// Make sure GPU is finished using it
-gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation);
-```
-
-```cpp
+gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation); // Make sure GPU is finished!
 gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
-
-## Residency Management
-GPUs do not support page-faulting, so it's up the GPU application to avoid using too much
-physical GPU memory. GPGMM integrates residency into the resource allocators to simplify and optimize memory management.
-
-### D3D12
-
-1. Create a `d3d12::ResourceAllocator` like before but specify a `d3d12::ResidencyManager` too.
-2. Now `d3d12::ResourceAllocator::CreateResource` will manage every resource created for residency.
-3. A `d3d12::ResidencySet` tracks a collection of resource allocations that should be resident for a given command-list (1:1 relationship).
-4. Add resource allocations into the resident set by passing `ResourceAllocation::GetMemory` to `ResidencySet::Insert`.
-5. Then use `d3d12::ResidencyManager::ExecuteCommandLists` with the residency set, queue, and command list.
-
-Residency also works for non-resource heaps too (descriptor or query heaps):
-1. Sub-class `d3d12::Heap`.
-2. Call `d3d12::ResidencyManager::InsertHeap` on it after creation.
-3. Then use  `d3d12::ResidencyManager::LockHeap` or `d3d12::ResidencyManager::UnlockHeap` to keep it resident or not, respectively.
-
-### Vulkan
-
-Coming soon!
 
 ## Project/build integration
 GPGMM has built-in GN or CMake build targets.
@@ -215,9 +204,9 @@ Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
 4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
-Then import:
+Then include the public header:
 ```cpp
-#include <gpgmm_d3d12.h> // or gpgmm_vulkan.h
+#include <gpgmm_*.h> // Ex. gpgmm_d3d12.h
 ```
 
 # Prerequisites
