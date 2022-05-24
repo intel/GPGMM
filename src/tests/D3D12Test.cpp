@@ -58,6 +58,8 @@ namespace gpgmm { namespace d3d12 {
 
     ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc(bool isPrefetchAllowed) const {
         ALLOCATOR_DESC desc = {};
+
+        // Required parameters.
         desc.Adapter = mAdapter;
         desc.Device = mDevice;
         desc.IsUMA = mIsUMA;
@@ -73,6 +75,7 @@ namespace gpgmm { namespace d3d12 {
         desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
 #else
         desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
+        desc.RecordOptions.UseDetailedTimingEvents = true;
 #endif
 
         return desc;
