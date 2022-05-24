@@ -8,7 +8,8 @@ var searchData=
   ['pleft_5',['pLeft',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html#ad876112812f84b6d8aba69006c060e0c',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::SplitLink']]],
   ['pnext_6',['pNext',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
   ['poolalgorithm_7',['PoolAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3ee6242ed4122b527e73a2bec2539c7c',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['pprev_8',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
-  ['preferredresourceheapsize_9',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['pvulkanfunctions_10',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['poolsizeinbytes_8',['PoolSizeInBytes',['../structgpgmm_1_1_p_o_o_l___i_n_f_o.html#a22e324d056903cda05e5ed7d29d7413e',1,'gpgmm::POOL_INFO']]],
+  ['pprev_9',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
+  ['preferredresourceheapsize_10',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['pvulkanfunctions_11',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];
