@@ -59,6 +59,7 @@ namespace gpgmm {
 
         /** \brief Returns a memory allocation back to the pool using an optional index.
 
+        @param allocation A pointer to MemoryAllocation which will be returned.
         @param memoryIndex Optional index of the memory object to return.
         */
         virtual void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,

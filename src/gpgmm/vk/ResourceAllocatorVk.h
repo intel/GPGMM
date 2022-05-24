@@ -34,12 +34,12 @@ namespace gpgmm { namespace vk {
     VK_DEFINE_HANDLE(GpResourceAllocator)
 
     /** \struct GpResourceAllocation
-    \breif Opaque handle to a resource allocation object.
+    \brief Opaque handle to a resource allocation object.
     */
     VK_DEFINE_HANDLE(GpResourceAllocation)
 
     /** \struct GpCreateAllocatorInfo
-    Specifies how allocators should be created.
+    \brief Specifies how allocators should be created.
     */
     struct GpCreateAllocatorInfo {
         /** \brief Function pointer to Vulkan functions.
@@ -139,10 +139,10 @@ namespace gpgmm { namespace vk {
 
     @param allocator A GpResourceAllocator used to create the buffer and allocation.
     @param pBufferCreateInfo A pointer to a VkBufferCreateInfo that describes the buffer to create.
-    @param buffer[out] A pointer to a VkBuffer that will be created using the allocation.
+    @param pBuffer A pointer to a VkBuffer that will be created using the allocation.
     @param pAllocationCreateInfo A pointer to a GpResourceAllocationCreateInfo that describes the
     allocation.
-    @param allocationOut[out] A pointer to GpResourceAllocation that represents the buffer
+    @param allocationOut A pointer to GpResourceAllocation that represents the buffer
     allocation.
     */
     GPGMM_EXPORT VkResult
