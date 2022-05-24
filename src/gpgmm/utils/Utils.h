@@ -50,6 +50,14 @@ namespace gpgmm {
         return output.str();
     }
 
+    // Converts T to a hexadecimal string.
+    template <typename T>
+    std::string ToHexStr(T object) {
+        std::stringstream stream;
+        stream << "0x" << std::hex << object;
+        return stream.str();
+    }
+
     // Used to combine multiple ToString calls for concatenation.
     // Eg. ToString("a", "b", "c") == "abc".
     template <typename T, typename... Args>

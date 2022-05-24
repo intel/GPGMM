@@ -17,9 +17,7 @@
 namespace gpgmm {
 
     std::string ToString(const void* object) {
-        std::stringstream output;
-        output << "0x" << std::hex << static_cast<uint64_t>(reinterpret_cast<uintptr_t>(object));
-        return output.str();
+        return ToHexStr(static_cast<uint64_t>(reinterpret_cast<uintptr_t>(object)));
     }
 
 }  // namespace gpgmm
