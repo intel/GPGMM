@@ -19,7 +19,7 @@ var searchData=
   ['residencymanager_16',['ResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html',1,'gpgmm::d3d12']]],
   ['residencymanagerd3d12_2ecpp_17',['ResidencyManagerD3D12.cpp',['../_residency_manager_d3_d12_8cpp.html',1,'']]],
   ['residencymanagerd3d12_2eh_18',['ResidencyManagerD3D12.h',['../_residency_manager_d3_d12_8h.html',1,'']]],
-  ['residencyset_19',['ResidencySet',['../classgpgmm_1_1d3d12_1_1_residency_set.html',1,'gpgmm::d3d12::ResidencySet'],['../classgpgmm_1_1d3d12_1_1_residency_set.html#a4c40988a4d15a82e6b6e28b637db5c5a',1,'gpgmm::d3d12::ResidencySet::ResidencySet()']]],
+  ['residencyset_19',['ResidencySet',['../classgpgmm_1_1d3d12_1_1_residency_set.html',1,'gpgmm::d3d12::ResidencySet'],['../classgpgmm_1_1d3d12_1_1_residency_set.html#a39f516f14518434213601063387b43ad',1,'gpgmm::d3d12::ResidencySet::ResidencySet(const ResidencySet &amp;)=default'],['../classgpgmm_1_1d3d12_1_1_residency_set.html#a4c40988a4d15a82e6b6e28b637db5c5a',1,'gpgmm::d3d12::ResidencySet::ResidencySet()']]],
   ['residencysetd3d12_2ecpp_20',['ResidencySetD3D12.cpp',['../_residency_set_d3_d12_8cpp.html',1,'']]],
   ['residencysetd3d12_2eh_21',['ResidencySetD3D12.h',['../_residency_set_d3_d12_8h.html',1,'']]],
   ['residencysets_22',['ResidencySets',['../structgpgmm_1_1d3d12_1_1_e_x_e_c_u_t_e___c_o_m_m_a_n_d___l_i_s_t_s___d_e_s_c.html#a535bdd3b27feed406f06ed476e465b16',1,'gpgmm::d3d12::EXECUTE_COMMAND_LISTS_DESC']]],
