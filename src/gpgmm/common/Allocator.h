@@ -26,6 +26,7 @@ namespace gpgmm {
         ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
         ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH,
         ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED,
+        ALLOCATOR_MESSAGE_ID_SIZE_MISMATCH,
     };
 
     class AllocatorBase : public NonCopyable {

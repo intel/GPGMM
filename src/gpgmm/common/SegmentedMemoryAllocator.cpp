@@ -104,7 +104,7 @@ namespace gpgmm {
         if (existingFreeSegment == mFreeSegments.end()) {
             ASSERT(mFreeSegments.empty());
             MemorySegment* newFreeSegment = new MemorySegment{memorySize};
-            mFreeSegments.Append(newFreeSegment);
+            mFreeSegments.push_back(newFreeSegment);
             return newFreeSegment;
         }
 

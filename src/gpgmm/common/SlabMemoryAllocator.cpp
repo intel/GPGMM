@@ -68,8 +68,8 @@ namespace gpgmm {
         }
 
         for (SlabCache& cache : mCaches) {
-            cache.FreeList.RemoveAndDeleteAll();
-            cache.FullList.RemoveAndDeleteAll();
+            cache.FreeList.clear();
+            cache.FullList.clear();
         }
     }
 
@@ -124,28 +124,37 @@ namespace gpgmm {
                              " vs " + std::to_string(mMaxSlabSize) + " bytes).");
 
         // Get or create the cache containing slabs of the slab size.
-        SlabCache* cache = GetOrCreateCache(slabSize);
-        ASSERT(cache != nullptr);
+        SlabCache* pCache = GetOrCreateCache(slabSize);
+        ASSERT(pCache != nullptr);
 
         // Check free-list since HEAD must always exist (linked-list is self-referential).
-        auto* pFreeHead = cache->FreeList.head();
+        auto* pFreeHead = pCache->FreeList.head();
         Slab* pFreeSlab = pFreeHead->value();
 
         // Splice the full slab from the free-list to the full-list.
-        if (!cache->FreeList.empty() && pFreeSlab->IsFull()) {
-            pFreeHead->RemoveFromList();
-            pFreeHead->InsertBefore(cache->FullList.head());
-            pFreeSlab = cache->FreeList.head()->value();
+        if (!pCache->FreeList.empty() && pFreeSlab->IsFull()) {
+            pCache->FreeList.pop_front();
+            pCache->FullList.push_front(pFreeHead);
+            pFreeSlab = pCache->FreeList.head()->value();
             pFreeHead = nullptr;
         }
 
-        // Push new free slab at free-list HEAD
-        if (cache->FreeList.empty() || pFreeSlab->IsFull()) {
+        // Push a new free slab at free-list HEAD.
+        if (pCache->FreeList.empty() || pFreeSlab->IsFull()) {
             // Get the next free slab.
             if (mLastUsedSlabSize > 0) {
                 uint64_t newSlabSize =
                     std::min(ComputeSlabSize(request.SizeInBytes, slabSize * mSlabGrowthFactor),
                              mMaxSlabSize);
+
+                // If the new slab size is not larger then the total size of full slabs, then re-use
+                // the previous, smaller size. Otherwise, the larger slab would likely never be
+                // fully used. For example, assuming 2x growth, 2x2MB slabs need to be fully used
+                // before creating a 4MB one. If not, half of the growth (or 2MB) could be wasted.
+                const uint64_t numOfSlabsInNewSlabSize = newSlabSize / slabSize;
+                if (pCache->FullList.size() + pFreeSlab->IsFull() < numOfSlabsInNewSlabSize) {
+                    newSlabSize = slabSize;
+                }
 
                 // If the new slab size exceeds available memory, re-use the previous, smaller size.
                 if (newSlabSize > request.AvailableForAllocation) {
@@ -157,13 +166,13 @@ namespace gpgmm {
                 }
 
                 if (newSlabSize > slabSize) {
-                    cache = GetOrCreateCache(newSlabSize);
+                    pCache = GetOrCreateCache(newSlabSize);
                     slabSize = newSlabSize;
                 }
             }
 
             Slab* pNewFreeSlab = new Slab(SafeDivison(slabSize, mBlockSize), mBlockSize);
-            pNewFreeSlab->InsertBefore(cache->FreeList.head());
+            pCache->FreeList.push_front(pNewFreeSlab);
             pFreeSlab = pNewFreeSlab;
         }
 
@@ -194,8 +203,8 @@ namespace gpgmm {
                             return pFreeSlab->SlabMemory->GetMemory();
                         }
 
-                        DebugEvent(GetTypename())
-                            << "Pre-fetch slab memory is incompatible (" << slabSize << " vs  "
+                        DebugEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_SIZE_MISMATCH)
+                            << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                             << prefetchedMemory->GetSize() << " bytes.";
 
                         mMemoryAllocator->DeallocateMemory(std::move(prefetchedMemory));
@@ -240,8 +249,11 @@ namespace gpgmm {
             const uint64_t nextSlabSize = std::min(
                 ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor),
                 mMaxSlabSize);
+
+            const uint64_t numOfSlabsInNextSlabSize = nextSlabSize / mLastUsedSlabSize;
             if (nextSlabSize < request.AvailableForAllocation &&
-                nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
+                nextSlabSize <= kSlabPrefetchMemorySizeThreshold &&
+                pCache->FullList.size() >= numOfSlabsInNextSlabSize) {
                 MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
                 newSlabRequest.SizeInBytes = nextSlabSize;
                 newSlabRequest.Alignment = mSlabAlignment;
@@ -287,8 +299,8 @@ namespace gpgmm {
         // Splice the slab from the full-list to free-list.
         if (slab->IsFull()) {
             SlabCache* cache = GetOrCreateCache(slabMemory->GetSize());
-            slab->RemoveFromList();
-            slab->InsertBefore(cache->FreeList.head());
+            cache->FullList.remove(slab);
+            cache->FreeList.push_front(slab);
         }
 
         mInfo.UsedBlockCount--;
@@ -341,8 +353,8 @@ namespace gpgmm {
     }
 
     SlabCacheAllocator::~SlabCacheAllocator() {
-        mSizeCache.RemoveAndDeleteAll();
-        mSlabAllocators.RemoveAndDeleteAll();
+        mSizeCache.clear();
+        mSlabAllocators.clear();
     }
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
@@ -364,7 +376,7 @@ namespace gpgmm {
                 blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
                 mSlabFragmentationLimit, mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
-            mSlabAllocators.Append(slabAllocator);
+            mSlabAllocators.push_back(slabAllocator);
         }
 
         ASSERT(slabAllocator != nullptr);

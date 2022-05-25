@@ -29,16 +29,55 @@ class FakeObject final : public LinkNode<FakeObject> {
     }
 };
 
-TEST(LinkedListTests, RemoveAndDeleteAll) {
+TEST(LinkedListTests, Insert) {
+    LinkNode<FakeObject>* start = new FakeObject();
+    LinkNode<FakeObject>* middle = new FakeObject();
+    LinkNode<FakeObject>* end = new FakeObject();
+
+    LinkedList<FakeObject> list;
+    list.push_front(middle);
+    list.push_front(start);
+    list.push_back(end);
+
+    EXPECT_EQ(list.head(), start);
+    EXPECT_EQ(list.tail(), end);
+
+    EXPECT_FALSE(list.empty());
+    EXPECT_EQ(list.size(), 3u);
+}
+
+TEST(LinkedListTests, Remove) {
+    LinkNode<FakeObject>* start = new FakeObject();
+    LinkNode<FakeObject>* middle = new FakeObject();
+    LinkNode<FakeObject>* end = new FakeObject();
+
+    LinkedList<FakeObject> list;
+    list.push_back(start);
+    list.push_back(middle);
+    list.push_back(end);
+
+    list.remove(middle);
+    list.remove(start);
+    list.remove(end);
+
+    EXPECT_TRUE(list.empty());
+    EXPECT_EQ(list.size(), 0u);
+}
+
+TEST(LinkedListTests, Clear) {
     LinkNode<FakeObject>* first = new FakeObject();
     LinkNode<FakeObject>* second = new FakeObject();
     LinkNode<FakeObject>* third = new FakeObject();
 
     LinkedList<FakeObject> list;
-    list.Append(first);
-    list.Append(second);
-    list.Append(third);
+    list.push_back(first);
+    list.push_back(second);
+    list.push_back(third);
 
-    list.RemoveAndDeleteAll();
+    EXPECT_EQ(list.size(), 3u);
+
+    list.clear();
+
     EXPECT_TRUE(list.empty());
+    EXPECT_EQ(list.size(), 0u);
 }

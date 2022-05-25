@@ -26,7 +26,7 @@ namespace gpgmm {
     template <typename T>
     AllocatorNode<T>::~AllocatorNode() {
         // Deletes adjacent node recursively (post-order).
-        mNext.RemoveAndDeleteAll();
+        mNext.clear();
         if (LinkNode<T>::IsInList()) {
             LinkNode<T>::RemoveFromList();
         }
@@ -52,7 +52,7 @@ namespace gpgmm {
         ASSERT(mNext.empty());
         ASSERT(next != nullptr);
         next->mParent = this->value();
-        mNext.Append(next.release());
+        mNext.push_back(next.release());
         return mNext.tail()->value();
     }
 
