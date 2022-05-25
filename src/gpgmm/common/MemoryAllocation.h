@@ -92,10 +92,8 @@ namespace gpgmm {
 
     /** \brief Represents a location and range in memory.
 
-    It can represent a allocation in memory one of two ways: 1) a range within a memory block or 2)
+    It can represent a location in memory by one of two ways: 1) a range within a memory block or 2)
     a memory block of the entire memory range.
-
-    MemoryAllocation is meant to be handle like interface and should not be used directly.
     */
     class GPGMM_EXPORT MemoryAllocation {
       public:
