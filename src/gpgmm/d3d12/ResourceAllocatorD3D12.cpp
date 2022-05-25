@@ -375,7 +375,7 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
             gpgmm::WarningLog()
-                << "Debug layer must be installed and enabled to use GPGMM_ENABLE_DEVICE_CHECKS.\n";
+                << "Debug layer must be installed and enabled to use GPGMM_ENABLE_DEVICE_CHECKS.";
         }
 #endif
 
@@ -391,6 +391,11 @@ namespace gpgmm { namespace d3d12 {
 
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+        }
+
+        if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !residencyManager) {
+            gpgmm::WarningLog() << "Residency must be specified and enabled to use "
+                                   "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET.";
         }
 
         if (resourceAllocatorOut != nullptr) {
