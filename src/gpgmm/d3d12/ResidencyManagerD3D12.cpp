@@ -44,6 +44,11 @@ namespace gpgmm { namespace d3d12 {
             residencyFence.reset(ptr);
         }
 
+        if (descriptor.VideoMemoryBudget != 0 && descriptor.Budget != 0) {
+            gpgmm::WarningLog()
+                << "Video memory budget was ignored since a budget was already specified.";
+        }
+
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, std::move(residencyFence)));
 
