@@ -73,7 +73,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that uses a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that uses a ID3D12Resource.  
+<p><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  
  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#details">More...</a></p>
 
 <p><code>#include &lt;ResourceAllocationD3D12.h&gt;</code></p>
@@ -216,9 +216,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a1f5fddabf32874b04a4175515ab67ca2 inherit pro_attribs_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that uses a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that uses a ID3D12Resource. </p>
+<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource. </p>
 <p >It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed" in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a ID3D12Heap (called a committed resource).</p>
-<p >It is recommend to use <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that uses a ID3D12Resource.">ResourceAllocation</a> instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
+<p >It is recommend to use <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7fe2813b449ffd4a717be63a7e326057" name="a7fe2813b449ffd4a717be63a7e326057"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7fe2813b449ffd4a717be63a7e326057">&#9670;&nbsp;</a></span>ResourceAllocation() <span class="overload">[1/2]</span></h2>
