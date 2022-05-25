@@ -1127,7 +1127,7 @@ namespace gpgmm { namespace d3d12 {
 
         TRACE_COUNTER1(
             TraceEventCategory::Default, "GPU memory utilization (%)",
-            SafeDivison(result.UsedMemoryUsage,
+            SafeDivison(result.UsedBlockUsage,
                         static_cast<double>(result.UsedMemoryUsage + result.FreeMemoryUsage)) *
                 100);
 
