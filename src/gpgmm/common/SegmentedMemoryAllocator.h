@@ -42,7 +42,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
             const MEMORY_ALLOCATION_REQUEST& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
-        void ReleaseMemory() override;
+        uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
         uint64_t GetMemoryAlignment() const override;
         const char* GetTypename() const override;
 

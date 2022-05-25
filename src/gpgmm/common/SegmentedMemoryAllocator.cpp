@@ -183,14 +183,24 @@ namespace gpgmm {
         pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory));
     }
 
-    void SegmentedMemoryAllocator::ReleaseMemory() {
+    uint64_t SegmentedMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
         std::lock_guard<std::mutex> lock(mMutex);
 
+        uint64_t totalBytesReleased = 0;
         for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
             MemorySegment* segment = node->value();
             ASSERT(segment != nullptr);
-            mInfo.FreeMemoryUsage -= segment->ReleasePool();
+            const uint64_t bytesReleasedPerSegment = segment->ReleasePool(bytesToRelease);
+            bytesToRelease -= bytesReleasedPerSegment;
+            mInfo.FreeMemoryUsage -= bytesReleasedPerSegment;
+            totalBytesReleased += bytesReleasedPerSegment;
+
+            if (totalBytesReleased >= bytesToRelease) {
+                break;
+            }
         }
+
+        return totalBytesReleased;
     }
 
     uint64_t SegmentedMemoryAllocator::GetMemoryAlignment() const {

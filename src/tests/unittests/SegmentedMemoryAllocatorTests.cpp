@@ -50,7 +50,7 @@ TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
     allocator.DeallocateMemory(std::move(allocation));
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 
-    allocator.ReleaseMemory();
+    EXPECT_EQ(allocator.ReleaseMemory(), kDefaultMemorySize);
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 }
 
@@ -73,9 +73,11 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
     allocator.DeallocateMemory(std::move(firstAllocation));
     allocator.DeallocateMemory(std::move(secondAllocation));
 
-    EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), kDefaultMemorySize);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), kDefaultMemorySize);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), 0u);
 
-    allocator.ReleaseMemory();
+    EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 1u);
 }
 
@@ -137,9 +139,16 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 5u);
 
+    // Release the first three allocations in order then release the others together.
     allocator.DeallocateMemory(std::move(firstAllocation));
+    EXPECT_EQ(allocator.ReleaseMemory(firstMemorySize), firstMemorySize);
+
     allocator.DeallocateMemory(std::move(secondAllocation));
+    EXPECT_EQ(allocator.ReleaseMemory(secondMemorySize), secondMemorySize);
+
     allocator.DeallocateMemory(std::move(thirdAllocation));
+    EXPECT_EQ(allocator.ReleaseMemory(thirdMemorySize), thirdMemorySize);
+
     allocator.DeallocateMemory(std::move(fourthAllocation));
     allocator.DeallocateMemory(std::move(fifthAllocation));
     allocator.DeallocateMemory(std::move(sixthAllocation));
@@ -147,9 +156,12 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 5u);
 
-    allocator.ReleaseMemory();
+    const uint64_t totalUnreleasedSize =
+        fourthMemorySize + fifthMemorySize + thirdMemorySize + firstMemorySize;
+    EXPECT_EQ(allocator.ReleaseMemory(totalUnreleasedSize), totalUnreleasedSize);
 
     EXPECT_EQ(allocator.GetSegmentSizeForTesting(), 5u);
+    EXPECT_EQ(allocator.ReleaseMemory(), 0u);
 }
 
 TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {

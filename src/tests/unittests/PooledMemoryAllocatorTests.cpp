@@ -55,7 +55,7 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
     allocator.DeallocateMemory(std::move(allocation));
     EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
 
-    allocator.ReleaseMemory();
+    EXPECT_EQ(allocator.ReleaseMemory(), kDefaultMemorySize);
     EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 }
 
@@ -77,9 +77,11 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
     allocator.DeallocateMemory(std::move(firstAllocation));
     allocator.DeallocateMemory(std::move(secondAllocation));
 
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), kDefaultMemorySize);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), kDefaultMemorySize);
+    EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), 0u);
 
-    allocator.ReleaseMemory();
+    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
     EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
 }
 
