@@ -13,85 +13,12 @@ GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applica
 * [Changelog](https://github.com/intel/GPGMM/releases)
 * [License](https://github.com/intel/GPGMM/blob/main/LICENSE)
 
-## Build and Run
-
-### Install `depot_tools`
-
-GPGMM uses the Chromium build system and dependency management so you need to [install depot_tools] and add it to the PATH.
-
-[install depot_tools]: http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up
-
-**Notes**:
- * On Windows, you'll need to set the environment variable `DEPOT_TOOLS_WIN_TOOLCHAIN=0`. This tells depot_tools to use your locally installed version of Visual Studio (by default, depot_tools will try to download a Google-internal version).
-
-### Get the code
-
-Get the source code as follows:
-
-```sh
-# Clone the repo as "GPGMM"
-> git clone https://github.com/intel/GPGMM.git GPGMM && cd GPGMM
-
-# Bootstrap the gclient configuration
-> cp scripts/standalone.gclient .gclient
-
-# Fetch external dependencies and toolchains with gclient
-> gclient sync
-```
-
-### Setting up the build
-Generate build files using `gn args out/Debug` or `gn args out/Release`.
-
-A text editor will appear asking build arguments, the most common argument is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
-
-To build with a backend, please set the corresponding argument from following table.
-
-| Backend | Build argument |
-|---------|--------------|
-| DirectX 12 | `gpgmm_enable_d3d12=true` |
-| Vulkan | `gpgmm_enable_vk=true` |
-
-### Build
-
-Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
-
-### Run tests
-
-```sh
-> cd out/Debug
-```
-
-#### Run unit tests:
-```sh
-> gpgmm_unittests
-```
-
-Unit tests check the front-end code in isolation or without a GPU.
-
-#### Run end2end tests:
-```sh
-> gpgmm_end2end_tests
-```
-
-End2End tests check both the front AND backend code with a GPU.
-
-#### Run capture replay tests:
-```sh
-> gpgmm_capture_replay_tests
-```
-
-Capture replay checks using pre-recorded memory patterns with a GPU.
-
-#### Run fuzzing tests:
-```sh
-> gpgmm_*_fuzzer
-```
-
-Fuzzer checks using random memory patterns with a GPU.
-
 ## How do I use it?
 
-First create an allocator then second, create allocations from it:
+### Prerequisites
+* Error handing uses GPU API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
+
+First create an allocator then create allocations from it:
 
 ### D3D12
 ```cpp
@@ -169,7 +96,49 @@ gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation); // Make sure 
 gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
 
-## Project/build integration
+## Build and Run
+
+### Install `depot_tools`
+
+GPGMM uses the Chromium build system and dependency management so you need to [install depot_tools] and add it to the PATH.
+
+[install depot_tools]: http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up
+
+**Notes**:
+ * On Windows, you'll need to set the environment variable `DEPOT_TOOLS_WIN_TOOLCHAIN=0`. This tells depot_tools to use your locally installed version of Visual Studio (by default, depot_tools will try to download a Google-internal version).
+
+### Get the code
+
+Get the source code as follows:
+
+```sh
+# Clone the repo as "GPGMM"
+> git clone https://github.com/intel/GPGMM.git GPGMM && cd GPGMM
+
+# Bootstrap the gclient configuration
+> cp scripts/standalone.gclient .gclient
+
+# Fetch external dependencies and toolchains with gclient
+> gclient sync
+```
+
+### Setting up the build
+Generate build files using `gn args out/Debug` or `gn args out/Release`.
+
+A text editor will appear asking build arguments, the most common argument is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
+
+To build with a backend, please set the corresponding argument from following table.
+
+| Backend | Build argument |
+|---------|--------------|
+| DirectX 12 | `gpgmm_enable_d3d12=true` |
+| Vulkan | `gpgmm_enable_vk=true` |
+
+### Build
+
+Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
+
+## Project integration
 GPGMM has built-in GN or CMake build targets.
 
 ### GN
@@ -209,8 +178,41 @@ Then include the public header:
 #include <gpgmm_*.h> // Ex. gpgmm_d3d12.h
 ```
 
-# Prerequisites
-* Error handing uses API error codes (`HRESULT` and `VkResult` for D3D12 and Vulkan, respectively).
+## Testing
+
+Verify functionality by generating deterministic or random memory patterns then running them against GPUs.
+
+```sh
+> cd out/Debug
+```
+
+### Run unit tests:
+```sh
+> gpgmm_unittests
+```
+
+Unit tests check the front-end code in isolation or without a GPU.
+
+### Run end2end tests:
+```sh
+> gpgmm_end2end_tests
+```
+
+End2End tests check both the front AND backend code with a GPU.
+
+### Run capture replay tests:
+```sh
+> gpgmm_capture_replay_tests
+```
+
+Capture replay checks using pre-recorded memory patterns with a GPU.
+
+### Run fuzzing tests:
+```sh
+> gpgmm_*_fuzzer
+```
+
+Fuzzer checks using random memory patterns with a GPU.
 
 ## License
 
