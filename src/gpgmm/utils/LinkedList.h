@@ -184,8 +184,26 @@ namespace gpgmm {
         }
 
         // Appends |e| to the end of the linked list.
-        void Append(LinkNode<T>* e) {
+        void push_back(LinkNode<T>* e) {
             e->InsertBefore(&root_);
+            size_++;
+        }
+
+        // Prepend |e| to the start of the linked list.
+        void push_front(LinkNode<T>* e) {
+            e->InsertBefore(head());
+            size_++;
+        }
+
+        // Removes the first node in the linked list.
+        void pop_front() {
+            remove(head());
+        }
+
+        // Removes |e| from the linked list, decreasing the size by 1.
+        void remove(LinkNode<T>* e) {
+            e->RemoveFromList();
+            size_--;
         }
 
         LinkNode<T>* head() const {
@@ -205,9 +223,9 @@ namespace gpgmm {
         }
 
         // Empty the list by deleting all nodes.
-        // ~T must check if IsInList and call RemoveFromList to unlink itself or RemoveAndDeleteAll
+        // ~T must check if IsInList and call RemoveFromList to unlink itself or clear
         // will ASSERT to indicate programmer error.
-        void RemoveAndDeleteAll() const {
+        void clear() {
             auto curr = head();
             while (curr != end()) {
                 auto next = curr->next();
@@ -215,10 +233,16 @@ namespace gpgmm {
                 curr = next;
             }
             ASSERT(empty());
+            size_ = 0;
+        }
+
+        size_t size() const {
+            return size_;
         }
 
       private:
         LinkNode<T> root_;
+        size_t size_ = 0;
     };
 
 }  // namespace gpgmm

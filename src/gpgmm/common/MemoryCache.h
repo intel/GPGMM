@@ -136,7 +136,7 @@ namespace gpgmm {
         MemoryCache() = default;
 
         ~MemoryCache() {
-            RemoveAndDeleteAll();
+            clear();
             ASSERT(GetSize() == 0);
         }
 
@@ -181,7 +181,7 @@ namespace gpgmm {
             return mCache.cend();
         }
 
-        void RemoveAndDeleteAll() {
+        void clear() {
             for (auto it = mCache.begin(); it != mCache.end();) {
                 if ((*it)->Unref()) {
                     CacheEntryT* item = (*it);

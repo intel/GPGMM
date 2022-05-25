@@ -178,7 +178,7 @@ namespace gpgmm { namespace d3d12 {
         LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
         ASSERT(cache != nullptr);
 
-        cache->Append(heap);
+        cache->push_back(heap);
 
         ASSERT(heap->IsInList());
 
