@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencySetD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
@@ -181,6 +182,28 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("MemoryPoolPreference", desc.MemoryPoolPreference);
         dict.AddItem("CreationNodeMask", desc.CreationNodeMask);
         dict.AddItem("VisibleNodeMask", desc.VisibleNodeMask);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc) {
+        JSONDict dict;
+        JSONArray residencySets;
+        for (uint64_t i = 0; i < desc.Count; i++) {
+            residencySets.AddItem(Serialize(*desc.ResidencySets[i]));
+        }
+        dict.AddItem("ResidencySets", residencySets);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const ResidencySet& residencySet) {
+        JSONDict dict;
+        JSONArray heaps;
+        for (auto& heap : residencySet) {
+            heaps.AddItem(gpgmm::JSONSerializer::Serialize(heap));
+        }
+        dict.AddItem("Heaps", heaps);
         return dict;
     }
 

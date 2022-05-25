@@ -28,17 +28,21 @@ namespace gpgmm { namespace d3d12 {
 
     The set must be updated to ensure each heap is made resident for execution.
     */
-    class GPGMM_EXPORT ResidencySet {
+    class GPGMM_EXPORT ResidencySet final {
       public:
         /** \brief  Create a residency set or collection of heaps to manage together for residency.
          */
-        ResidencySet() = default;
+        ResidencySet();
+        ~ResidencySet();
+
+        ResidencySet(const ResidencySet&) = default;
+        ResidencySet& operator=(const ResidencySet&) = default;
 
         /** \brief  Insert heap into this residency set.
 
         @param heap A pointer to Heap about to be inserted.
         \return S_OK if heap was inserted or S_FALSE if heap already exists, else error.
-         */
+        */
         HRESULT Insert(Heap* heap);
 
         /** \brief  Reset this residency set.
@@ -51,6 +55,8 @@ namespace gpgmm { namespace d3d12 {
         std::set<Heap*>::iterator end() const;
 
       private:
+        const char* GetTypename() const;
+
         std::set<Heap*> mSet;
     };
 
