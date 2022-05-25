@@ -462,8 +462,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
-// Verify that playback of a captured trace has the same device capabilities.
-TEST_P(D3D12EventTraceReplay, CheckCaps) {
+// Verify that playback of a captured trace does not exceed peak usage.
+TEST_P(D3D12EventTraceReplay, PeakUsage) {
     TestEnviromentParams forceParams = {};
     forceParams.IsSameCapsRequired = true;
 
