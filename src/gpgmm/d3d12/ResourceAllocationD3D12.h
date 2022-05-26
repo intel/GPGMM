@@ -183,7 +183,7 @@ namespace gpgmm { namespace d3d12 {
 
         \return A offset, in bytes, of the start of this allocation in the resource.
         */
-        uint64_t GetOffsetFromResource() const;
+        size_t GetOffsetFromResource() const;
 
         /** \brief Returns information about this resource allocation.
 
@@ -213,7 +213,7 @@ namespace gpgmm { namespace d3d12 {
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
 
-        const uint64_t mOffsetFromResource;
+        const size_t mOffsetFromResource;
     };
 
 }}  // namespace gpgmm::d3d12
