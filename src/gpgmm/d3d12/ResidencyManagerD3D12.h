@@ -90,6 +90,16 @@ namespace gpgmm { namespace d3d12 {
         uint64_t InitialFenceValue;
     };
 
+    /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
+
+    A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
+    resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a
+    ResidencySet upon calling ResidencyManager::ExecuteCommandLists or through a
+    operation that always requires the Heap to be resident (eg. Map, Unmap).
+
+    Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
+    and ID3D12Device::MakeResident to page-out or page-in heaps, respectively.
+    **/
     class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
       public:
         /** \brief  Create residency residency manager to manage video memory.

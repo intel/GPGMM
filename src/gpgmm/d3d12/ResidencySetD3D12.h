@@ -24,9 +24,17 @@ namespace gpgmm { namespace d3d12 {
 
     class Heap;
 
-    /** \brief Represents a set of heaps which are referenced by a command list.
+    /** \brief Represents a set of heaps which will be "made resident" when executing a
+    command-list.
 
-    The set must be updated to ensure each heap is made resident for execution.
+    A residency set helps track heaps for residency which will be referenced together by a
+    command-list. The application uses a ResidencySet by inserting heaps, by calling
+    ResourceAllocation::GetMemory, into the set. Once ResidencyManager::ExecuteCommandLists is
+    called, the set can be reset or cleared for the next frame.
+
+    Without a ResidencySet, the application would need to manually ResidencyManager::LockHeap and
+    ResidencyManager::UnlockHeap each heap before and after ResidencyManager::ExecuteCommandLists,
+    respectively.
     */
     class GPGMM_EXPORT ResidencySet final {
       public:
@@ -41,6 +49,7 @@ namespace gpgmm { namespace d3d12 {
         /** \brief  Insert heap into this residency set.
 
         @param heap A pointer to Heap about to be inserted.
+
         \return S_OK if heap was inserted or S_FALSE if heap already exists, else error.
         */
         HRESULT Insert(Heap* heap);

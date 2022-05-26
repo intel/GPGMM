@@ -88,12 +88,13 @@ namespace gpgmm { namespace d3d12 {
         bool IsExternal;
     };
 
-    /** \brief Heap is used to represent ID3D12Heap allocations, as well as an implicit heap
-    representing a committed resource, and also serves as a node within
-    the ResidencyManager's residency cache. This node is inserted into the cache when it is first
-    created, and any time it is scheduled to be used by the GPU. This node is removed from the
-    cache when it is evicted from video memory due to budget constraints, or when the
-    memory is released.
+    /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
+    heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.
+
+    Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into
+    the cache when it is first created, and any time it is scheduled to be used by the GPU. This
+    node is removed from the cache when it is evicted from video memory due to budget constraints,
+    or when the memory is released.
     */
     class GPGMM_EXPORT Heap : public MemoryBase, public LinkNode<Heap> {
       public:
