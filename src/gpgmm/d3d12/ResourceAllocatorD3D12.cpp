@@ -1127,16 +1127,13 @@ namespace gpgmm { namespace d3d12 {
             result += mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
         }
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory unused (MB)",
-                       (result.UsedMemoryUsage - result.UsedBlockUsage) / 1e6);
-
         TRACE_COUNTER1(
-            TraceEventCategory::Default, "GPU memory utilization (%)",
+            TraceEventCategory::Default, "GPU allocation utilization (%)",
             SafeDivison(result.UsedBlockUsage,
                         static_cast<double>(result.UsedMemoryUsage + result.FreeMemoryUsage)) *
                 100);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory free (MB)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation free (MB)",
                        result.FreeMemoryUsage / 1e6);
 
         return result;

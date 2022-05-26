@@ -269,17 +269,11 @@ namespace gpgmm { namespace d3d12 {
             TraceEventCategory::Default,
             ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
                                                                                  : "Shared",
-                     " GPU memory budget (MB)")
+                     " GPU memory utilization (%)")
                 .c_str(),
-            pVideoMemoryInfo->Budget / 1e6);
-
-        TRACE_COUNTER1(
-            TraceEventCategory::Default,
-            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                 : "Shared",
-                     " GPU memory used (MB)")
-                .c_str(),
-            pVideoMemoryInfo->CurrentUsage / 1e6);
+            (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
+                ? 100
+                : (pVideoMemoryInfo->Budget - pVideoMemoryInfo->CurrentUsage) / 1e6);
 
         // Reservations are optional.
         if (pVideoMemoryInfo->CurrentReservation > 0) {
