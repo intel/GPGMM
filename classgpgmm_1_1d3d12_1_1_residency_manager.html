@@ -75,6 +75,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  
+ <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a></p>
+
 <p><code>#include &lt;ResidencyManagerD3D12.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::d3d12::ResidencyManager:</div>
@@ -145,7 +148,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a81388d2ec697cabc7bae3f129c1b1eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a81388d2ec697cabc7bae3f129c1b1eba">More...</a><br /></td></tr>
 <tr class="separator:a81388d2ec697cabc7bae3f129c1b1eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache. </p>
+<p >A <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is considered "resident" when it is accessible by the GPU. A <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> can be made explicitly resident by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#acd4b2d67bd10d99318ed1fb6444f58ee" title="Locks the specified heap.">ResidencyManager::LockHeap</a> or implicitly resident by using the <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> with a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencySet</a> upon calling <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> or through a operation that always requires the <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> to be resident (eg. Map, Unmap).</p>
+<p >Internally, the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> keeps the application in-budget by calling ID3D12Device::Evict and ID3D12Device::MakeResident to page-out or page-in heaps, respectively. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac6939df6d0f4b781e799a86779e5b475" name="ac6939df6d0f4b781e799a86779e5b475"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6939df6d0f4b781e799a86779e5b475">&#9670;&nbsp;</a></span>~ResidencyManager()</h2>
 
@@ -291,7 +298,7 @@ Static Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">queue</td><td>The command queue to submit to. </td></tr>
     <tr><td class="paramname">commandLists</td><td>The array of ID3D12CommandList command lists to be executed. </td></tr>
-    <tr><td class="paramname">residencySets</td><td>The array of <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which are referenced by a command list.">ResidencySet</a> residency sets to make resident. </td></tr>
+    <tr><td class="paramname">residencySets</td><td>The array of <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencySet</a> residency sets to make resident. </td></tr>
     <tr><td class="paramname">count</td><td>The size of commandLists and residencySets arrays. </td></tr>
   </table>
   </dd>
