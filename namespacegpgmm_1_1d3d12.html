@@ -101,7 +101,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_fence.html">Fence</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committed resource, and also serves as a node within the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a>'s residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,10 +114,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a set of heaps which will be "made resident" when executing a command-list.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a set of heaps which are referenced by a command list.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,7 +124,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a>.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html">ResourceHeapAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,6 +220,10 @@ Functions</h2></td></tr>
 <tr class="separator:a409b96a06f8c6d51dc45b3635c8c061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe198cab730bda500c14194a2786c482"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#afe198cab730bda500c14194a2786c482">IsAllowedToUseSmallAlignment</a> (const D3D12_RESOURCE_DESC &amp;resourceDescriptor)</td></tr>
 <tr class="separator:afe198cab730bda500c14194a2786c482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1386cd5d0022f1d3fc162a2b91e50612"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1386cd5d0022f1d3fc162a2b91e50612">GetDebugObjectName</a> (ComPtr&lt; ID3D12Object &gt; object)</td></tr>
+<tr class="separator:a1386cd5d0022f1d3fc162a2b91e50612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8fe1b30b9b5ec14e128374532d246b"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2b8fe1b30b9b5ec14e128374532d246b">SetDebugObjectName</a> (ComPtr&lt; ID3D12Object &gt; object, std::string name)</td></tr>
+<tr class="separator:a2b8fe1b30b9b5ec14e128374532d246b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a978095e9c5b00f02cf77e0a74e89d0fc" name="a978095e9c5b00f02cf77e0a74e89d0fc"></a>
@@ -493,6 +495,24 @@ through the GPU/driver instead of explicitly through GPGMM.
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a1386cd5d0022f1d3fc162a2b91e50612" name="a1386cd5d0022f1d3fc162a2b91e50612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1386cd5d0022f1d3fc162a2b91e50612">&#9670;&nbsp;</a></span>GetDebugObjectName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gpgmm::d3d12::GetDebugObjectName </td>
+          <td>(</td>
+          <td class="paramtype">ComPtr&lt; ID3D12Object &gt;&#160;</td>
+          <td class="paramname"><em>object</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac27affdc439f0ee00613f15835c347cd" name="ac27affdc439f0ee00613f15835c347cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac27affdc439f0ee00613f15835c347cd">&#9670;&nbsp;</a></span>GetErrorMessage()</h2>
 
@@ -732,6 +752,34 @@ through the GPU/driver instead of explicitly through GPGMM.
           <td></td>
           <td class="paramtype">bool *&#160;</td>
           <td class="paramname"><em>createHeapNotResidencySupported</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b8fe1b30b9b5ec14e128374532d246b" name="a2b8fe1b30b9b5ec14e128374532d246b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b8fe1b30b9b5ec14e128374532d246b">&#9670;&nbsp;</a></span>SetDebugObjectName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::SetDebugObjectName </td>
+          <td>(</td>
+          <td class="paramtype">ComPtr&lt; ID3D12Object &gt;&#160;</td>
+          <td class="paramname"><em>object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

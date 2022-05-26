@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache.  
+<p><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committed resource, and also serves as a node within the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a>'s residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released.  
  <a href="classgpgmm_1_1d3d12_1_1_heap.html#details">More...</a></p>
 
 <p><code>#include &lt;HeapD3D12.h&gt;</code></p>
@@ -104,6 +104,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">IsResident</a> () const</td></tr>
 <tr class="memdesc:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the heap is resident or not.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">More...</a><br /></td></tr>
 <tr class="separator:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a827430dff30f14282c0b1e97d3dcb34f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a827430dff30f14282c0b1e97d3dcb34f">GetDebugName</a> () const</td></tr>
+<tr class="memdesc:a827430dff30f14282c0b1e97d3dcb34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the debug name.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#a827430dff30f14282c0b1e97d3dcb34f">More...</a><br /></td></tr>
+<tr class="separator:a827430dff30f14282c0b1e97d3dcb34f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8b74a23310b1ad02ff86c3f62df324"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a8a8b74a23310b1ad02ff86c3f62df324">SetDebugName</a> (std::string name) const</td></tr>
+<tr class="memdesc:a8a8b74a23310b1ad02ff86c3f62df324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associate a debug name.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#a8a8b74a23310b1ad02ff86c3f62df324">More...</a><br /></td></tr>
+<tr class="separator:a8a8b74a23310b1ad02ff86c3f62df324"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeab55534248d3676fd0958233c24da8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#aaeab55534248d3676fd0958233c24da8">GetInfo</a> () const</td></tr>
 <tr class="memdesc:aaeab55534248d3676fd0958233c24da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get information about the heap.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#aaeab55534248d3676fd0958233c24da8">More...</a><br /></td></tr>
 <tr class="separator:aaeab55534248d3676fd0958233c24da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,8 +184,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a153fce82aa0c5ccdb509860de17779ab inherit pro_methods_classgpgmm_1_1_non_copyable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache. </p>
-<p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> serves as a node within the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
+<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committed resource, and also serves as a node within the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a>'s residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a952b1d52bf868c4f0faa0c59ad3b96ed" name="a952b1d52bf868c4f0faa0c59ad3b96ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a952b1d52bf868c4f0faa0c59ad3b96ed">&#9670;&nbsp;</a></span>Heap()</h2>
@@ -318,11 +323,31 @@ template&lt;typename T &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> structure that describes the heap. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">residencyManager</td><td>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> used to manage this heap. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">residencyManager</td><td>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> used to manage this heap. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">heapOut</td><td>Pointer to a memory block that recieves a pointer to the heap. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a827430dff30f14282c0b1e97d3dcb34f" name="a827430dff30f14282c0b1e97d3dcb34f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a827430dff30f14282c0b1e97d3dcb34f">&#9670;&nbsp;</a></span>GetDebugName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gpgmm::d3d12::Heap::GetDebugName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the debug name. </p>
+<dl class="section return"><dt>Returns</dt><dd>A string that contains the debug name associated with the heap. </dd></dl>
 
 </div>
 </div>
@@ -397,6 +422,32 @@ template&lt;typename T &gt; </div>
 
 <p>Determine if the heap is resident or not. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the heap is resident, false if not. </dd></dl>
+
+</div>
+</div>
+<a id="a8a8b74a23310b1ad02ff86c3f62df324" name="a8a8b74a23310b1ad02ff86c3f62df324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a8b74a23310b1ad02ff86c3f62df324">&#9670;&nbsp;</a></span>SetDebugName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::Heap::SetDebugName </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Associate a debug name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>A string that contains the debug name to associate with the heap. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

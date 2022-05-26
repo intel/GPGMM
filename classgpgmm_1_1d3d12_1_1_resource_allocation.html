@@ -129,6 +129,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">GetMemory</a> () const</td></tr>
 <tr class="memdesc:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">More...</a><br /></td></tr>
 <tr class="separator:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a086ed31b654ec484ad7af87043702cd1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a086ed31b654ec484ad7af87043702cd1">GetDebugName</a> () const</td></tr>
+<tr class="memdesc:a086ed31b654ec484ad7af87043702cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the debug name.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a086ed31b654ec484ad7af87043702cd1">More...</a><br /></td></tr>
+<tr class="separator:a086ed31b654ec484ad7af87043702cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39154d597698b2aebe729c8b339c3f06"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a39154d597698b2aebe729c8b339c3f06">SetDebugName</a> (std::string name) const</td></tr>
+<tr class="memdesc:a39154d597698b2aebe729c8b339c3f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associate a debug name.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a39154d597698b2aebe729c8b339c3f06">More...</a><br /></td></tr>
+<tr class="separator:a39154d597698b2aebe729c8b339c3f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_allocation"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_allocation')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_allocation.html">gpgmm::MemoryAllocation</a></td></tr>
 <tr class="memitem:acbebdd6253faea0ecd45fe982fc46747 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#acbebdd6253faea0ecd45fe982fc46747">MemoryAllocation</a> ()</td></tr>
 <tr class="memdesc:acbebdd6253faea0ecd45fe982fc46747 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contructs an invalid memory allocation.  <a href="classgpgmm_1_1_memory_allocation.html#acbebdd6253faea0ecd45fe982fc46747">More...</a><br /></td></tr>
@@ -279,13 +285,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Constructs a resource allocation using memory containing one or more resources. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">residencyManager</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> that manages residency for the resource. </td></tr>
+    <tr><td class="paramname">residencyManager</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> that manages residency for the resource. </td></tr>
     <tr><td class="paramname">allocator</td><td>A pointer to the allocator responsible for creating the memory block. </td></tr>
     <tr><td class="paramname">offsetFromHeap</td><td>The offset, in bytes, of the placedResource, from the start of the resourceHeap. </td></tr>
     <tr><td class="paramname">block</td><td>A pointer to a memory block within the resourceHeap, the placedResource was allocated from. </td></tr>
     <tr><td class="paramname">method</td><td>The method to describe how the allocation was created. </td></tr>
     <tr><td class="paramname">placedResource</td><td>A pointer to ID3D12Resource "placed" resource created by ID3D12Device::CreatePlacedResource. </td></tr>
-    <tr><td class="paramname">resourceHeap</td><td>A pointer to the underlying <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> that will contain the placedResource. heap. </td></tr>
+    <tr><td class="paramname">resourceHeap</td><td>A pointer to the underlying <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> that will contain the placedResource. heap. </td></tr>
   </table>
   </dd>
 </dl>
@@ -345,12 +351,12 @@ Additional Inherited Members</h2></td></tr>
 <p>Constructs a resource allocation within a resource. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">residencyManager</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> that manages residency for the resource. </td></tr>
+    <tr><td class="paramname">residencyManager</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> that manages residency for the resource. </td></tr>
     <tr><td class="paramname">allocator</td><td>A pointer to the allocator responsible for creating the memory block. </td></tr>
     <tr><td class="paramname">block</td><td>A pointer to the block within the resourceHeap, the placedResource was allocated from. </td></tr>
     <tr><td class="paramname">offsetFromResource</td><td>The offset, in bytes, of the allocation, from the start of the resource. </td></tr>
     <tr><td class="paramname">resource</td><td>A pointer to ID3D12Resource resource. </td></tr>
-    <tr><td class="paramname">resourceHeap</td><td>A pointer to the underlying <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> that will contain the placedResource. heap. </td></tr>
+    <tr><td class="paramname">resourceHeap</td><td>A pointer to the underlying <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> that will contain the placedResource. heap. </td></tr>
   </table>
   </dd>
 </dl>
@@ -383,6 +389,26 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a086ed31b654ec484ad7af87043702cd1" name="a086ed31b654ec484ad7af87043702cd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a086ed31b654ec484ad7af87043702cd1">&#9670;&nbsp;</a></span>GetDebugName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gpgmm::d3d12::ResourceAllocation::GetDebugName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the debug name. </p>
+<dl class="section return"><dt>Returns</dt><dd>A string that contains the debug name associated with the resource allocation. </dd></dl>
+
+</div>
+</div>
 <a id="a1d80ddaa72841a41425b31e761c68ece" name="a1d80ddaa72841a41425b31e761c68ece"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d80ddaa72841a41425b31e761c68ece">&#9670;&nbsp;</a></span>GetGPUVirtualAddress()</h2>
 
@@ -440,7 +466,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the heap assigned to this resource allocation. </p>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> used by this resource allocation. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent ID3D12Heap allocations, as well as an implicit heap representing a committe...">Heap</a> used by this resource allocation. </dd></dl>
 
 </div>
 </div>
@@ -565,6 +591,32 @@ Additional Inherited Members</h2></td></tr>
     <tr><td class="paramdir"></td><td class="paramname">subresource</td><td>Specifies the index number of the subresource. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">readRange</td><td>A pointer to a D3D12_RANGE structure that describes the range of memory to access. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">dataOut</td><td>A pointer to a memory block that receives a pointer to the resource data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a39154d597698b2aebe729c8b339c3f06" name="a39154d597698b2aebe729c8b339c3f06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39154d597698b2aebe729c8b339c3f06">&#9670;&nbsp;</a></span>SetDebugName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::ResourceAllocation::SetDebugName </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Associate a debug name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>A string that contains the debug name to associate with the resource allocation. </td></tr>
   </table>
   </dd>
 </dl>
