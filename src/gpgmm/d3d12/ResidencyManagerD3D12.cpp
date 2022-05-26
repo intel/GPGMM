@@ -478,6 +478,9 @@ namespace gpgmm { namespace d3d12 {
         queue->ExecuteCommandLists(count, &commandList);
         ReturnIfFailed(mFence->Signal(queue));
 
+        GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
+                                      (EXECUTE_COMMAND_LISTS_DESC{residencySets, count}));
+
         return S_OK;
     }
 

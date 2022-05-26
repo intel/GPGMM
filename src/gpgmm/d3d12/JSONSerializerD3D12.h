@@ -26,12 +26,18 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATOR_RECORD_OPTIONS;
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_INFO;
+    class ResidencySet;
 
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
         const D3D12_RESOURCE_DESC& resourceDescriptor;
         D3D12_RESOURCE_STATES initialResourceState;
         const D3D12_CLEAR_VALUE* clearValue;
+    };
+
+    struct EXECUTE_COMMAND_LISTS_DESC {
+        ResidencySet* const* ResidencySets;
+        uint32_t Count;
     };
 
     class JSONSerializer final : public gpgmm::JSONSerializer {
@@ -44,6 +50,7 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
         static JSONDict Serialize(const HEAP_INFO& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& desc);
+        static JSONDict Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc);
 
       private:
         static JSONDict Serialize(const ALLOCATOR_RECORD_OPTIONS& desc);
@@ -53,6 +60,7 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
         static JSONDict Serialize(const D3D12_HEAP_DESC& desc);
         static JSONDict Serialize(const D3D12_HEAP_PROPERTIES& desc);
+        static JSONDict Serialize(const ResidencySet& residencySet);
     };
 
 }}  // namespace gpgmm::d3d12

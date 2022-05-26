@@ -53,6 +53,16 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
         ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
         ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
     }
+
+    // Re-inserting allocation between two sets should always succeed.
+    {
+        ResidencySet setA;
+        ASSERT_SUCCEEDED(setA.Insert(allocation->GetMemory()));
+        ResidencySet setB(setA);
+        EXPECT_EQ(setA.Insert(allocation->GetMemory()), S_FALSE);
+        ResidencySet setC;
+        EXPECT_EQ(setC.Insert(allocation->GetMemory()), S_OK);
+    }
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
