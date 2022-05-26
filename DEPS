@@ -228,11 +228,11 @@ hooks = [
     'action': ['python3', 'build/util/lastchange.py',
                '-o', 'build/util/LASTCHANGE'],
   },
-  # Apply Dawn-GPGMM integration patch.
+  # Apply Dawn integration patch.
   # Patch can be removed should GPGMM be merged into upstream.
   # Removes un-tracked files from previous apply.
   {
-    'name': 'apply_dawn_integration_patch_1',
+    'name': 'apply_dawn_patch_1',
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
@@ -241,20 +241,20 @@ hooks = [
   },
   # Removes un-staged changes from previous apply.
   {
-    'name': 'apply_dawn_integration_patch_2',
+    'name': 'apply_dawn_patch_2',
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
-                'checkout', '--', '.',
+                'checkout', '.',
     ],
   },
   {
-    'name': 'apply_dawn_integration_patch_3',
+    'name': 'apply_dawn_patch_3',
     'pattern': '.',
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
                 'apply', '--ignore-space-change', '--ignore-whitespace',
-                '../../patches/gpgmm_dawn.diff',
+                '../../.patches/dawn.diff',
     ],
   },
 ]

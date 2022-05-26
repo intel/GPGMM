@@ -6,14 +6,14 @@ on:
     paths:
       - 'src/**'
       - 'DEPS'
-      - 'patches/gpgmm_dawn.diff'
+      - '.patches/dawn.diff'
 
   pull_request:
     branches: main
     paths:
       - 'src/**'
       - 'DEPS'
-      - 'patches/gpgmm_dawn.diff'
+      - '.patches/dawn.diff'
 
 jobs:
 
