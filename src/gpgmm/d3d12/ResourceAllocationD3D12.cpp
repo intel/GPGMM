@@ -31,7 +31,7 @@ namespace gpgmm { namespace d3d12 {
     namespace {
 
         // Returns a resource range from the start of the allocation.
-        D3D12_RANGE GetResourceRange(const D3D12_RANGE* range, uint64_t offset) {
+        D3D12_RANGE GetResourceRange(const D3D12_RANGE* range, size_t offset) {
             if (range == nullptr) {
                 return {};
             }
@@ -154,7 +154,7 @@ namespace gpgmm { namespace d3d12 {
         return mResource->GetGPUVirtualAddress() + mOffsetFromResource;
     }
 
-    uint64_t ResourceAllocation::GetOffsetFromResource() const {
+    size_t ResourceAllocation::GetOffsetFromResource() const {
         return mOffsetFromResource;
     }
 
