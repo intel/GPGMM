@@ -82,7 +82,7 @@ namespace gpgmm {
     struct MEMORY_ALLOCATION_REQUEST {
         /** \brief Request the size, in bytes, of the allocation.
 
-        Actual allocated size might be larger due to allocator constraints.
+        The requested allocation size is the minimum size required to allocate.
         */
         uint64_t SizeInBytes;
 
@@ -120,53 +120,104 @@ namespace gpgmm {
         uint64_t AvailableForAllocation;
     };
 
+    /** \brief MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.
+
+    Internally, MemoryAllocator sub-allocates existing memory objects into smaller chucks
+    (called memory blocks) or allocates whole memory objects then decides which memory blocks
+    or objects to cache. Since cached memory objects count against the application's memory
+    usage, freeing this cache periodically by calling ReleaseMemory() is highly recommended.
+    */
     class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
       public:
+        /** \brief Constructs a standalone MemoryAllocator.
+
+        A "standalone MemoryAllocator" means it does not depend on any other allocator to service
+        requests.
+        */
         MemoryAllocator();
 
-        // Constructs a MemoryAllocator that owns a single child allocator.
+        /** \brief Constructs a MemoryAllocator that also owns a (child) allocator.
+
+        @param next A dependant MemoryAllocator that will be used for requesting more memory.
+        */
         explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> next);
 
         virtual ~MemoryAllocator() override;
 
-        // Attempts to allocate memory and return an allocation that has at-least
-        // |requestedSize| allocated space whose value is a multiple of |alignment|. If it cannot,
-        // return nullptr. The returned allocation is only valid for the lifetime of |this|
-        // allocator.
+        /** \brief Create a memory allocation.
+
+        Creates a MemoryAllocation that has at-least requested size whose value is a multiple of the
+        requested alignment. If it cannot, return nullptr. The returned allocation is only valid for
+        the lifetime of MemoryAllocator.
+
+        @param request A MEMORY_ALLOCATION_REQUEST to describes what to allocate.
+
+        \return A pointer to MemoryAllocation. If NULL, the request could not be full-filled.
+        */
         virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(
             const MEMORY_ALLOCATION_REQUEST& request);
 
-        // Non-blocking version of TryAllocateMemory.
-        // Caller must wait for the event to complete before using the resulting allocation.
+        /** \brief Non-blocking version of TryAllocateMemory.
+
+        Caller must wait for the event to complete before using the resulting allocation.
+
+        \return A pointer to MemoryAllocationEvent. Must be non-null.
+        */
         std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(
             const MEMORY_ALLOCATION_REQUEST& request);
 
-        // Free the allocation by deallocating the block used to sub-allocate it and the underlying
-        // memory block used with it. Caller must assume |allocation| is invalid after
-        // DeallocateMemory gets called.
+        /** \brief Free a memory allocation.
+
+        After DeallocateMemory is called, the MemoryAllocation is longer valid.
+
+        @param allocation A MemoryAllocation to de-allocate. Must be non-null.
+        */
         virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
 
-        // Free memory retained by |this| memory allocator.
-        // Used to reuse memory between calls to TryAllocateMemory.
+        /** \brief Return free memory back to the OS.
+
+        @param bytesToRelease Amount of memory to release, in bytes. A kInvalidSize means ALL memory
+        will be released.
+
+        \return Amount of memory, in bytes, released. The released size might be smaller then
+        bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
+        total up to the amount.
+        */
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize);
 
-        // Get the fixed-memory sized of |this| memory allocator.
-        // If this allocator only allocates memory blocks using the same size, this value
-        // is guarenteed to valid. Otherwise, kInvalidSize is returned to denote any memory size
-        // could be created by |this| allocator.
+        /** \brief Get the fixed-memory sized of the MemoryAllocator.
+
+        If this allocator only allocates memory blocks using the same size, this value
+        is guarenteed to valid. Otherwise, kInvalidSize is returned to denote any memory size
+        could be created by |this| allocator.
+
+        \return Size of memory, in bytes.
+        */
         virtual uint64_t GetMemorySize() const;
 
-        // Get the fixed-memory alignment of |this| memory allocator.
-        // If this allocator only allocates memory using the same alignment, this value
-        // is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is
-        // allowed.
+        /** \brief Get the fixed-memory alignment of the MemoryAllocator.
+
+        If this allocator only allocates memory using the same alignment, this value
+        is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is
+        allowed.
+
+        \return Alignment of memory, in bytes.
+        */
         virtual uint64_t GetMemoryAlignment() const;
 
-        // Get memory allocator usage.
-        // Should be overridden when a child or block allocator is used to avoid
-        // over-counting.
+        /** \brief Get memory allocator usage.
+
+        Should be overridden when a child or block allocator is used to avoid
+        over-counting.
+
+        \return A MEMORY_ALLOCATOR_INFO struct containing the current usage.
+        */
         virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
 
+        /** \brief Identifies the allocator type.
+
+        The type is used for profiling and debugging purposes only.
+        */
         const char* GetTypename() const override;
 
       protected:
