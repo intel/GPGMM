@@ -20,7 +20,7 @@ var searchData=
   ['debug_2eh_17',['Debug.h',['../_debug_8h.html',1,'']]],
   ['debugevent_18',['DebugEvent',['../namespacegpgmm.html#ac543e60f5c87d4e7c967f7529fd8a709',1,'gpgmm']]],
   ['debuglog_19',['DebugLog',['../namespacegpgmm.html#a00f44f53fe9091fc6bcc56395d21a790',1,'gpgmm::DebugLog(const char *file, const char *function, int line)'],['../namespacegpgmm.html#a1bf2485321c48f77406f3097db5fddc4',1,'gpgmm::DebugLog()']]],
-  ['debugname_20',['DebugName',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#ada0b80ec1ce7223878b30d61e6742b8f',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::DebugName()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa306a32673748802f822de9821c8c8b1',1,'gpgmm::d3d12::ALLOCATION_DESC::DebugName()']]],
+  ['debugname_20',['DebugName',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#ada0b80ec1ce7223878b30d61e6742b8f',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::DebugName()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a1bf383e2f509558fd16cbf1c3aba0bd3',1,'gpgmm::d3d12::ALLOCATION_DESC::DebugName()']]],
   ['debugplatform_21',['DebugPlatform',['../classgpgmm_1_1_debug_platform.html',1,'gpgmm']]],
   ['debugresourceallocator_22',['DebugResourceAllocator',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#a7b9f233a6fafd6019cb042833e8074e8',1,'gpgmm::d3d12::DebugResourceAllocator::DebugResourceAllocator()'],['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html',1,'gpgmm::d3d12::DebugResourceAllocator']]],
   ['debugresourceallocatord3d12_2ecpp_23',['DebugResourceAllocatorD3D12.cpp',['../_debug_resource_allocator_d3_d12_8cpp.html',1,'']]],
