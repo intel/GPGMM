@@ -16,7 +16,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/out/Debug",
       "environment": [],
-      "externalConsole": true
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug end2end tests",
@@ -30,7 +30,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/out/Debug",
       "environment": [],
-      "externalConsole": true
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug capture replay tests",
@@ -44,7 +44,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/out/Debug",
       "environment": [],
-      "externalConsole": true
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug WebNN end2end tests",
@@ -59,7 +59,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/out/Debug",
       "environment": [],
-      "externalConsole": true
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug Dawn end2end tests",
@@ -75,7 +75,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/out/Debug",
       "environment": [],
-      "externalConsole": true
+      "console": "integratedTerminal"
     },
   ]
 }
