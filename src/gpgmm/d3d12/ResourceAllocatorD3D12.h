@@ -343,19 +343,19 @@ namespace gpgmm { namespace d3d12 {
         uint64_t EvictBatchSize;
 
         /** \brief Memory fragmentation limit, expressed as a percentage of the resource heap size,
-        that is acceptable to be wasted due to internal fragmentation.
+        that is acceptable to be wasted due to fragmentation.
 
-        Internal fragmentation is when the resource allocation size is larger then the resource
-        size requested. This occurs when the type of resource (buffer or texture) and
-        sub-allocation algorithm (buddy, slab, etc) have different alignment requirements. For
-        example, a 192KB page-aligned resource may need to allocate 256KB of binary-allocated
-        space, which if allowed, has a fragmentation limit of 1/3rd.
+        Fragmentation occurs when the allocation is larger then the resource size.
+        This occurs when the type of resource (buffer or texture) and allocator have different
+        alignment requirements. For example, a 192KB resource may need to allocate 256KB of
+        allocated space, which is equivalent to a fragmentation limit of 33%.
 
-        When |PreferredResourceHeapSize| is non-zero, |MemoryFragmentationLimit| could be
-        exceeded.
+        When PreferredResourceHeapSize is non-zero, the MemoryFragmentationLimit could be
+        exceeded. Also, the MemoryFragmentationLimit should never be zero, as some fragmentation
+        can occur.
 
-        Optional parameter. When 0 is specified, the API will automatically set the resource
-        fragmentation limit to 1/8th the resource heap size.
+        Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
+        resource heap size.
         */
         double MemoryFragmentationLimit;
 
