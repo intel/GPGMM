@@ -440,27 +440,29 @@ namespace gpgmm { namespace d3d12 {
                 GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
             const D3D12_HEAP_TYPE& heapType = GetHeapType(resourceHeapType);
 
+            const uint64_t msaaHeapAlignment = GetHeapAlignment(heapFlags, true);
+            const uint64_t heapAlignment = GetHeapAlignment(heapFlags, false);
+
             // General-purpose allocators.
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
             mResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceSubAllocator(descriptor, heapFlags, heapType,
-                                           /*allowMSAA*/ false);
+                CreateResourceSubAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
             mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceSubAllocator(descriptor, heapFlags, heapType, /*allowMSAA*/ true);
+                CreateResourceSubAllocator(descriptor, heapFlags, heapType, msaaHeapAlignment);
 
             mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
                 std::make_unique<StandaloneMemoryAllocator>(
-                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, /*isMSAA*/ false));
+                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, heapAlignment));
 
             mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                std::make_unique<StandaloneMemoryAllocator>(
-                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, /*isMSAA*/ true));
+                std::make_unique<StandaloneMemoryAllocator>(CreateResourceHeapAllocator(
+                    descriptor, heapFlags, heapType, msaaHeapAlignment));
 
             // Resource specific allocators.
             mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
-                CreateSmallBufferAllocator(descriptor, heapFlags, heapType);
+                CreateSmallBufferAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
             // Cache resource sizes commonly requested.
             // Ensures the next block is always made available upon first request without
@@ -514,11 +516,9 @@ namespace gpgmm { namespace d3d12 {
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         D3D12_HEAP_TYPE heapType,
-        bool allowMSAA) {
-        const uint64_t heapAlignment = GetHeapAlignment(heapFlags, allowMSAA);
-
+        uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
-            CreateResourceHeapAllocator(descriptor, heapFlags, heapType, allowMSAA);
+            CreateResourceHeapAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
         switch (descriptor.SubAllocationAlgorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
@@ -550,7 +550,7 @@ namespace gpgmm { namespace d3d12 {
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         D3D12_HEAP_TYPE heapType,
-        bool allowMSAA) {
+        uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                     heapType, heapFlags, mIsUMA);
@@ -563,7 +563,7 @@ namespace gpgmm { namespace d3d12 {
                 }
                 case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
                     return std::make_unique<SegmentedMemoryAllocator>(
-                        std::move(resourceHeapAllocator), GetHeapAlignment(heapFlags, allowMSAA));
+                        std::move(resourceHeapAllocator), heapAlignment);
                 }
                 default: {
                     UNREACHABLE();
@@ -578,21 +578,21 @@ namespace gpgmm { namespace d3d12 {
     std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSmallBufferAllocator(
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
-        D3D12_HEAP_TYPE heapType) {
+        D3D12_HEAP_TYPE heapType,
+        uint64_t heapAlignment) {
         // Buffers are always 64KB aligned.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
         std::unique_ptr<MemoryAllocator> smallBufferOnlyAllocator =
-            std::make_unique<BufferAllocator>(
-                this, heapType, heapFlags, D3D12_RESOURCE_FLAG_NONE,
-                GetInitialResourceState(heapType),
-                /*bufferSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                /*bufferAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            std::make_unique<BufferAllocator>(this, heapType, heapFlags, D3D12_RESOURCE_FLAG_NONE,
+                                              GetInitialResourceState(heapType),
+                                              /*bufferSize*/ heapAlignment,
+                                              /*bufferAlignment*/ heapAlignment);
 
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             // Small buffers always use a 64KB heap.
             pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
-                D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT, std::move(smallBufferOnlyAllocator));
+                heapAlignment, std::move(smallBufferOnlyAllocator));
         } else {
             pooledOrNonPooledAllocator = std::move(smallBufferOnlyAllocator);
         }
@@ -600,16 +600,16 @@ namespace gpgmm { namespace d3d12 {
         switch (descriptor.SubAllocationAlgorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
                 return std::make_unique<BuddyMemoryAllocator>(
-                    /*systemSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*memorySize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*memoryAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*systemSize*/ heapAlignment,
+                    /*memorySize*/ heapAlignment,
+                    /*memoryAlignment*/ heapAlignment,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
             case ALLOCATOR_ALGORITHM_SLAB: {
                 return std::make_unique<SlabCacheAllocator>(
-                    /*maxSlabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*slabSize*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-                    /*slabAlignment*/ D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+                    /*maxSlabSize*/ heapAlignment,
+                    /*slabSize*/ heapAlignment,
+                    /*slabAlignment*/ heapAlignment,
                     /*slabFragmentationLimit*/ 0,
                     /*allowSlabPrefetch*/ false,
                     /*slabMemoryGrowth*/ 1,
