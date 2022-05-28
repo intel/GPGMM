@@ -11,7 +11,7 @@ var searchData=
   ['getbuffermemoryrequirements_8',['GetBufferMemoryRequirements',['../structgpgmm_1_1vk_1_1_gp_resource_allocator___t.html#a82f56566ea9dd60c7688dd53122aed05',1,'gpgmm::vk::GpResourceAllocator_T']]],
   ['getcaps_9',['GetCaps',['../structgpgmm_1_1vk_1_1_gp_resource_allocator___t.html#a150992a8b98014dc59ce609bfc8264aa',1,'gpgmm::vk::GpResourceAllocator_T']]],
   ['getcurrentfence_10',['GetCurrentFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a621d14907488b93142f3e5586835ea2d',1,'gpgmm::d3d12::Fence']]],
-  ['getdebugname_11',['GetDebugName',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a086ed31b654ec484ad7af87043702cd1',1,'gpgmm::d3d12::ResourceAllocation']]],
+  ['getdebugname_11',['GetDebugName',['../classgpgmm_1_1d3d12_1_1_object.html#af2fcbef409bec3e24cd135916249e5b3',1,'gpgmm::d3d12::Object']]],
   ['getdebugplatform_12',['GetDebugPlatform',['../class_g_p_g_m_m_test_base.html#a31bde82efe3f39061cec23834ffdc60e',1,'GPGMMTestBase']]],
   ['getdefaultlogmessagelevel_13',['GetDefaultLogMessageLevel',['../namespacegpgmm.html#a7b7b7a5efc7a03d28f471038ad14084b',1,'gpgmm']]],
   ['getdevice_14',['GetDevice',['../structgpgmm_1_1vk_1_1_gp_resource_allocator___t.html#ab53328c3c11c34dacdeffe75e327af29',1,'gpgmm::vk::GpResourceAllocator_T']]],

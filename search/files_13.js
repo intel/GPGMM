@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['windowsplatformdebug_2ecpp_0',['WindowsPlatformDebug.cpp',['../_windows_platform_debug_8cpp.html',1,'']]],
-  ['windowstime_2ecpp_1',['WindowsTime.cpp',['../_windows_time_8cpp.html',1,'']]],
-  ['windowsutils_2ecpp_2',['WindowsUtils.cpp',['../_windows_utils_8cpp.html',1,'']]],
-  ['windowsutils_2eh_3',['WindowsUtils.h',['../_windows_utils_8h.html',1,'']]],
-  ['workerthread_2ecpp_4',['WorkerThread.cpp',['../_worker_thread_8cpp.html',1,'']]],
-  ['workerthread_2eh_5',['WorkerThread.h',['../_worker_thread_8h.html',1,'']]]
+  ['vk_5fplatform_2eh_0',['vk_platform.h',['../vk__platform_8h.html',1,'']]],
+  ['vkresourceallocatortests_2ecpp_1',['VKResourceAllocatorTests.cpp',['../_v_k_resource_allocator_tests_8cpp.html',1,'']]],
+  ['vktest_2ecpp_2',['VKTest.cpp',['../_v_k_test_8cpp.html',1,'']]],
+  ['vktest_2eh_3',['VKTest.h',['../_v_k_test_8h.html',1,'']]]
 ];
