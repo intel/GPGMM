@@ -18,12 +18,12 @@
 
 using namespace gpgmm::d3d12;
 
-class TestIUnknownImplSubClass : public IUnknownImpl {
+class TestIUnknownImplSubClass final : public IUnknownImpl {
   public:
     TestIUnknownImplSubClass() {
         mInstanceCount++;
     }
-    virtual ~TestIUnknownImplSubClass() {
+    ~TestIUnknownImplSubClass() override {
         mInstanceCount--;
     }
     static uint32_t mInstanceCount;
