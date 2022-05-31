@@ -118,14 +118,19 @@ namespace gpgmm {
         Metadata = 1,
     };
 
+    enum TraceEventPhase {
+        None = 0,
+        Object = 1,
+        Instant = 2,
+        Duration = 4,
+        Counter = 8,
+    };
+
     class EventTraceWriter;
     class PlatformTime;
 
     void StartupEventTrace(const std::string& traceFile,
-                           bool skipDurationEvents,
-                           bool skipObjectEvents,
-                           bool skipInstantEvents,
-                           bool skipCounterEvents);
+                           const TraceEventPhase& ignoreMask);
 
     void ShutdownEventTrace();
 

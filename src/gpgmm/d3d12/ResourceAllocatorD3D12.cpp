@@ -356,12 +356,8 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
-            StartupEventTrace(
-                descriptor.RecordOptions.TraceFile,
-                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_TIMINGS),
-                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_OBJECTS),
-                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_API_CALLS),
-                !(newDescriptor.RecordOptions.Flags & ALLOCATOR_RECORD_FLAG_COUNTERS));
+            StartupEventTrace(descriptor.RecordOptions.TraceFile,
+                              static_cast<TraceEventPhase>(newDescriptor.RecordOptions.Flags | 0));
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         }

@@ -30,11 +30,7 @@ namespace gpgmm {
       public:
         EventTraceWriter();
 
-        void SetConfiguration(const std::string& traceFile,
-                              bool skipDurationEvents,
-                              bool skipObjectEvents,
-                              bool skipInstantEvents,
-                              bool skipCounterEvents);
+        void SetConfiguration(const std::string& traceFile, const TraceEventPhase& ignoreMask);
 
         ~EventTraceWriter();
 
@@ -57,10 +53,7 @@ namespace gpgmm {
         std::unordered_map<std::thread::id, std::unique_ptr<std::vector<TraceEvent>>>
             mBufferPerThread;
 
-        bool mSkipDurationEvents = false;
-        bool mSkipObjectEvents = false;
-        bool mSkipInstantEvents = false;
-        bool mSkipCounterEvents = false;
+        TraceEventPhase mIgnoreMask;
     };
 
 }  // namespace gpgmm
