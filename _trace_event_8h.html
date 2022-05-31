@@ -141,11 +141,21 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871">gpgmm::Metadata</a> = 1
  }</td></tr>
 <tr class="separator:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af07e47c92a100a7aa1cce31b0bb8d829"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">gpgmm::TraceEventPhase</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829ab3d74d0a85423b16b636d754a75a9593">gpgmm::None</a> = 0
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829af109f7f94b017353b296778cd01e36e8">gpgmm::Object</a> = 1
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c">gpgmm::Instant</a> = 2
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829afdf9cbc5861e83287cab80fef3740041">gpgmm::Duration</a> = 4
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a23d8d00143f497b0e1d92a4caef900ff">gpgmm::Counter</a> = 8
+<br />
+ }</td></tr>
+<tr class="separator:af07e47c92a100a7aa1cce31b0bb8d829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a56e3f84202bff81ada088f1d496c6aca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a56e3f84202bff81ada088f1d496c6aca">gpgmm::StartupEventTrace</a> (const std::string &amp;traceFile, bool skipDurationEvents, bool skipObjectEvents, bool skipInstantEvents, bool skipCounterEvents)</td></tr>
-<tr class="separator:a56e3f84202bff81ada088f1d496c6aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbbf691371390b91763764005a301e24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#afbbf691371390b91763764005a301e24">gpgmm::StartupEventTrace</a> (const std::string &amp;traceFile, const TraceEventPhase &amp;ignoreMask)</td></tr>
+<tr class="separator:afbbf691371390b91763764005a301e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e06cd628d6c539216da169d2fd2d98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98">gpgmm::ShutdownEventTrace</a> ()</td></tr>
 <tr class="separator:a57e06cd628d6c539216da169d2fd2d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4e7758d833df0093cf8c892c9632aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">gpgmm::IsEventTraceEnabled</a> ()</td></tr>
@@ -199,7 +209,7 @@ Variables</h2></td></tr>
 <div class="line">                                          __VA_ARGS__);                        \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 <div class="ttc" id="a_trace_event_8h_html_a66921627f287947ace92fdf52ef8bd6c"><div class="ttname"><a href="_trace_event_8h.html#a66921627f287947ace92fdf52ef8bd6c">kNoId</a></div><div class="ttdeci">const uint64_t kNoId</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:50</div></div>
-<div class="ttc" id="aclassgpgmm_1_1_trace_buffer_html_a9f943ebf28e6fe98d7e5181f0251d0dd"><div class="ttname"><a href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">gpgmm::TraceBuffer::AddTraceEvent</a></div><div class="ttdeci">static void AddTraceEvent(char phase, TraceEventCategory category, const char *name, uint64_t id, uint32_t flags, const JSONDict &amp;args={})</div><div class="ttdef"><b>Definition:</b> TraceEvent.cpp:73</div></div>
+<div class="ttc" id="aclassgpgmm_1_1_trace_buffer_html_a9f943ebf28e6fe98d7e5181f0251d0dd"><div class="ttname"><a href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">gpgmm::TraceBuffer::AddTraceEvent</a></div><div class="ttdeci">static void AddTraceEvent(char phase, TraceEventCategory category, const char *name, uint64_t id, uint32_t flags, const JSONDict &amp;args={})</div><div class="ttdef"><b>Definition:</b> TraceEvent.cpp:68</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -287,7 +297,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">        gpgmm::TraceBuffer::AddTraceEvent</a>(phase, category_group, name,                   \</div>
 <div class="line">                                          <a class="code hl_class" href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a>(<span class="keywordtype">id</span>).GetID(), __VA_ARGS__); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
-<div class="ttc" id="aclassgpgmm_1_1_trace_event_i_d_html"><div class="ttname"><a href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a></div><div class="ttdef"><b>Definition:</b> TraceEvent.h:134</div></div>
+<div class="ttc" id="aclassgpgmm_1_1_trace_event_i_d_html"><div class="ttname"><a href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a></div><div class="ttdef"><b>Definition:</b> TraceEvent.h:139</div></div>
 </div><!-- fragment -->
 </div>
 </div>

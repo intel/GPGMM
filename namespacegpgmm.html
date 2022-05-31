@@ -248,6 +248,16 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871">Metadata</a> = 1
  }</td></tr>
 <tr class="separator:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af07e47c92a100a7aa1cce31b0bb8d829"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829ab3d74d0a85423b16b636d754a75a9593">None</a> = 0
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829af109f7f94b017353b296778cd01e36e8">Object</a> = 1
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c">Instant</a> = 2
+, <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829afdf9cbc5861e83287cab80fef3740041">Duration</a> = 4
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a23d8d00143f497b0e1d92a4caef900ff">Counter</a> = 8
+<br />
+ }</td></tr>
+<tr class="separator:af07e47c92a100a7aa1cce31b0bb8d829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a977ac5299d49f79ffab44f0a5c8b0caf"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf">LogSeverity</a> { <a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafaa603905470e2a5b8c13e96b579ef0dba">Debug</a>
 , <a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa4059b0251f66a18cb56f544728796875">Info</a>
 , <a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa0eaadb4fcb48a0a0ed7bc9868be9fbaa">Warning</a>
@@ -283,8 +293,8 @@ Functions</h2></td></tr>
 <tr class="separator:a6ea3d78ed065b398f2e34f4dd8b2ae65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32892309d78ee85a15a988b5138ee547"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a32892309d78ee85a15a988b5138ee547">FindSegment</a> (<a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *start, <a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *end, uint64_t size)</td></tr>
 <tr class="separator:a32892309d78ee85a15a988b5138ee547"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56e3f84202bff81ada088f1d496c6aca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a56e3f84202bff81ada088f1d496c6aca">StartupEventTrace</a> (const std::string &amp;traceFile, bool skipDurationEvents, bool skipObjectEvents, bool skipInstantEvents, bool skipCounterEvents)</td></tr>
-<tr class="separator:a56e3f84202bff81ada088f1d496c6aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbbf691371390b91763764005a301e24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#afbbf691371390b91763764005a301e24">StartupEventTrace</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask)</td></tr>
+<tr class="separator:afbbf691371390b91763764005a301e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e06cd628d6c539216da169d2fd2d98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98">ShutdownEventTrace</a> ()</td></tr>
 <tr class="separator:a57e06cd628d6c539216da169d2fd2d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4e7758d833df0093cf8c892c9632aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a> ()</td></tr>
@@ -531,6 +541,27 @@ Variables</h2></td></tr>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1" name="ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1"></a>Default&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871" name="ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871"></a>Metadata&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="af07e47c92a100a7aa1cce31b0bb8d829" name="af07e47c92a100a7aa1cce31b0bb8d829"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af07e47c92a100a7aa1cce31b0bb8d829">&#9670;&nbsp;</a></span>TraceEventPhase</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">gpgmm::TraceEventPhase</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af07e47c92a100a7aa1cce31b0bb8d829ab3d74d0a85423b16b636d754a75a9593" name="af07e47c92a100a7aa1cce31b0bb8d829ab3d74d0a85423b16b636d754a75a9593"></a>None&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af07e47c92a100a7aa1cce31b0bb8d829af109f7f94b017353b296778cd01e36e8" name="af07e47c92a100a7aa1cce31b0bb8d829af109f7f94b017353b296778cd01e36e8"></a>Object&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c" name="af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c"></a>Instant&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af07e47c92a100a7aa1cce31b0bb8d829afdf9cbc5861e83287cab80fef3740041" name="af07e47c92a100a7aa1cce31b0bb8d829afdf9cbc5861e83287cab80fef3740041"></a>Duration&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af07e47c92a100a7aa1cce31b0bb8d829a23d8d00143f497b0e1d92a4caef900ff" name="af07e47c92a100a7aa1cce31b0bb8d829a23d8d00143f497b0e1d92a4caef900ff"></a>Counter&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -1332,8 +1363,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a56e3f84202bff81ada088f1d496c6aca" name="a56e3f84202bff81ada088f1d496c6aca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56e3f84202bff81ada088f1d496c6aca">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
+<a id="afbbf691371390b91763764005a301e24" name="afbbf691371390b91763764005a301e24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbbf691371390b91763764005a301e24">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1347,26 +1378,8 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>skipDurationEvents</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>skipObjectEvents</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>skipInstantEvents</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>skipCounterEvents</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;&#160;</td>
+          <td class="paramname"><em>ignoreMask</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
