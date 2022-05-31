@@ -142,7 +142,7 @@ namespace gpgmm { namespace vk {
     @param pBuffer A pointer to a VkBuffer that will be created using the allocation.
     @param pAllocationCreateInfo A pointer to a GpResourceAllocationCreateInfo that describes the
     allocation.
-    @param allocationOut A pointer to GpResourceAllocation that represents the buffer
+    @param[out] allocationOut A pointer to GpResourceAllocation that represents the buffer
     allocation.
     */
     GPGMM_EXPORT VkResult
