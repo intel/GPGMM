@@ -17,6 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
 #include "gpgmm/common/MemoryAllocation.h"
+#include "gpgmm/d3d12/DebugObjectD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/NonCopyable.h"
@@ -66,6 +67,10 @@ namespace gpgmm { namespace d3d12 {
          Must be valid for the duration of the resource allocation.
         */
         ID3D12Resource* Resource;
+
+        /** \brief Debug name associated with the resource allocation.
+         */
+        std::string DebugName;
     };
 
     /** \brief ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.
@@ -79,6 +84,7 @@ namespace gpgmm { namespace d3d12 {
     */
     class GPGMM_EXPORT ResourceAllocation final : public MemoryAllocation,
                                                   public NonCopyable,
+                                                  public DebugObject,
                                                   public IUnknownImpl {
       public:
         /** \brief Constructs a resource allocation using memory containing one or more resources.
@@ -94,7 +100,6 @@ namespace gpgmm { namespace d3d12 {
         @param placedResource A pointer to ID3D12Resource "placed" resource created by
         ID3D12Device::CreatePlacedResource.
         @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
-        heap.
         */
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
@@ -115,7 +120,6 @@ namespace gpgmm { namespace d3d12 {
         resource.
         @param resource A pointer to ID3D12Resource resource.
         @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
-        heap.
         */
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
@@ -207,6 +211,8 @@ namespace gpgmm { namespace d3d12 {
         // Only DebugResourceAllocator may inject itself to ensure |this| cannot leak.
         friend DebugResourceAllocator;
         void SetDebugAllocator(MemoryAllocator* allocator);
+
+        HRESULT SetDebugNameImpl(const std::string& name) override;
 
         void DeleteThis() override;
 

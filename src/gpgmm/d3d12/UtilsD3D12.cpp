@@ -15,6 +15,7 @@
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include "gpgmm/utils/Math.h"
+#include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm { namespace d3d12 {
 
@@ -423,6 +424,16 @@ namespace gpgmm { namespace d3d12 {
         }
 
         return GetTileCount(resourceDescriptor, tile) <= 16;
+    }
+
+    HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name) {
+        if (object == nullptr) {
+            return E_POINTER;
+        }
+        if (name.empty()) {
+            return S_FALSE;
+        }
+        return object->SetName(TCharToWString(name.c_str()).c_str());
     }
 
 }}  // namespace gpgmm::d3d12

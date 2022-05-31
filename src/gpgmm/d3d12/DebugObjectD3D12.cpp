@@ -11,22 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef GPGMM_D3D12_UTILSD3D12_H_
-#define GPGMM_D3D12_UTILSD3D12_H_
 
-#include "gpgmm/d3d12/d3d12_platform.h"
-
-#include <string>
+#include "gpgmm/d3d12/DebugObjectD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
 
-    DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
-                                                             bool isUMA,
-                                                             D3D12_HEAP_TYPE heapType);
-    bool IsDepthFormat(DXGI_FORMAT format);
-    bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
-    HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name);
+    std::string DebugObject::GetDebugName() const {
+        return mDebugName;
+    }
+
+    HRESULT DebugObject::SetDebugName(const std::string& name) {
+        mDebugName = name;
+        return SetDebugNameImpl(name);
+    }
 
 }}  // namespace gpgmm::d3d12
-
-#endif  // GPGMM_D3D12_UTILSD3D12_H_

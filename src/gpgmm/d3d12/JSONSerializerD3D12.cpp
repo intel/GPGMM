@@ -142,13 +142,20 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("IsResident", desc.IsResident);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
         dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
+
+        if (!desc.DebugName.empty()) {
+            dict.AddItem("DebugName", desc.DebugName);
+        }
+
         if (desc.MemoryPool != nullptr) {
             dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
         }
+
         ComPtr<ID3D12Heap> heap;
         if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
             dict.AddItem("Heap", Serialize(heap->GetDesc()));
         }
+
         return dict;
     }
 
@@ -161,6 +168,11 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("Method", desc.Method);
         dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
         dict.AddItem("Resource", Serialize(desc.Resource->GetDesc()));
+
+        if (!desc.DebugName.empty()) {
+            dict.AddItem("DebugName", desc.DebugName);
+        }
+
         return dict;
     }
 

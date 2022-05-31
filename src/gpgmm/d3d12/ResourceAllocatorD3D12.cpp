@@ -719,6 +719,10 @@ namespace gpgmm { namespace d3d12 {
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
 
+        if (!allocationDescriptor.DebugName.empty()) {
+            (*resourceAllocationOut)->SetDebugName(allocationDescriptor.DebugName);
+        }
+
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
@@ -1113,6 +1117,7 @@ namespace gpgmm { namespace d3d12 {
         resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = resourceSize;
         resourceHeapDesc.IsExternal = false;
+        resourceHeapDesc.DebugName = "Resource heap (committed)";
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         Heap* resourceHeap = nullptr;

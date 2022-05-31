@@ -19,6 +19,7 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm { namespace d3d12 {
 
@@ -26,6 +27,10 @@ namespace gpgmm { namespace d3d12 {
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              ResidencyManager* const residencyManager,
                              Heap** heapOut) {
+        if (!descriptor.Pageable) {
+            return E_POINTER;
+        }
+
         std::unique_ptr<Heap> heap(new Heap(std::move(descriptor.Pageable),
                                             descriptor.MemorySegmentGroup, descriptor.SizeInBytes,
                                             descriptor.IsExternal));
@@ -34,7 +39,15 @@ namespace gpgmm { namespace d3d12 {
             ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
         }
 
-        *heapOut = heap.release();
+        if (!descriptor.IsExternal) {
+            ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), heap->GetInfo());
+        }
+
+        if (heapOut != nullptr) {
+            *heapOut = heap.release();
+        }
+
         return S_OK;
     }
 
@@ -50,8 +63,6 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(mPageable != nullptr);
         if (!mIsExternal) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(this, GetInfo());
-            mPageable->SetName(L"GPGMM managed heap");
         }
     }
 
@@ -108,7 +119,11 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(),     IsResident(), mMemorySegmentGroup,
-                GetRefCount(), GetPool(),    mPageable.Get()};
+        return {GetSize(), IsResident(),    mMemorySegmentGroup, GetRefCount(),
+                GetPool(), mPageable.Get(), GetDebugName()};
+    }
+
+    HRESULT Heap::SetDebugNameImpl(const std::string& name) {
+        return SetDebugObjectName(mPageable.Get(), name);
     }
 }}  // namespace gpgmm::d3d12

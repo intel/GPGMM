@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_HEAPD3D12_H_
 
 #include "gpgmm/common/Memory.h"
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/DebugObjectD3D12.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
@@ -62,6 +62,10 @@ namespace gpgmm { namespace d3d12 {
         /** \brief Pointer to ID3D12Pageable, the underlying heap created by D3D12.
          */
         ID3D12Pageable* Pageable;
+
+        /** \brief Debug name associated with the heap.
+         */
+        std::string DebugName;
     };
 
     /** \struct HEAP_DESC
@@ -86,6 +90,10 @@ namespace gpgmm { namespace d3d12 {
         External heaps are not supported for residency.
         */
         bool IsExternal;
+
+        /** \brief Debug name associated with the heap.
+         */
+        std::string DebugName;
     };
 
     /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
@@ -96,7 +104,7 @@ namespace gpgmm { namespace d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    class GPGMM_EXPORT Heap : public MemoryBase, public LinkNode<Heap> {
+    class GPGMM_EXPORT Heap : public MemoryBase, public DebugObject, public LinkNode<Heap> {
       public:
         /** \brief  Create a heap managed by GPGMM.
 
@@ -119,7 +127,7 @@ namespace gpgmm { namespace d3d12 {
              uint64_t size,
              bool isExternal = false);
 
-        ~Heap();
+        ~Heap() override;
 
         /** \brief Returns a ComPtr object that represents the interface specified.
 
@@ -158,6 +166,7 @@ namespace gpgmm { namespace d3d12 {
         friend ResidencyManager;
         friend ResourceAllocator;
 
+        HRESULT SetDebugNameImpl(const std::string& name) override;
         const char* GetTypename() const;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
