@@ -21,10 +21,10 @@
 
 namespace gpgmm { namespace vk {
 
-    class DeviceMemory : public MemoryBase {
+    class DeviceMemory final : public MemoryBase {
       public:
         DeviceMemory(VkDeviceMemory memory, uint32_t memoryTypeIndex, uint64_t size);
-        ~DeviceMemory() = default;
+        ~DeviceMemory() override = default;
 
         VkDeviceMemory GetDeviceMemory() const;
         uint32_t GetMemoryTypeIndex() const;

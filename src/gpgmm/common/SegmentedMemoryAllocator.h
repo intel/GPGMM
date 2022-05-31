@@ -24,10 +24,10 @@ namespace gpgmm {
     // Represents one or more memory blocks managed in a pool.
     // A memory segment is a node in a linked-list so it may be cached and reuse by the segmented
     // allocator.
-    class MemorySegment : public LIFOMemoryPool, public LinkNode<MemorySegment> {
+    class MemorySegment final : public LIFOMemoryPool, public LinkNode<MemorySegment> {
       public:
         explicit MemorySegment(uint64_t memorySize);
-        virtual ~MemorySegment();
+        ~MemorySegment() override;
     };
 
     // SegmentedMemoryAllocator maintains a sorted segmented list of memory pools to allocate

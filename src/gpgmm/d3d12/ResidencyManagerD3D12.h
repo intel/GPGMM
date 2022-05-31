@@ -114,7 +114,7 @@ namespace gpgmm { namespace d3d12 {
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               ResidencyManager** residencyManagerOut);
 
-        ~ResidencyManager();
+        ~ResidencyManager() override;
 
         /** \brief  Locks the specified heap.
 

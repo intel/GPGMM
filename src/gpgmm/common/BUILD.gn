@@ -110,6 +110,7 @@ config("gpgmm_common_config") {
       "-Wredundant-move",
       "-Wshadow-field",
       "-Wstrict-prototypes",
+      "-Wsuggest-destructor-override",
       "-Wtautological-unsigned-zero-compare",
       "-Wunreachable-code-aggressive",
     ]

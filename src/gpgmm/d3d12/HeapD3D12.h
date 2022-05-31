@@ -119,7 +119,7 @@ namespace gpgmm { namespace d3d12 {
              uint64_t size,
              bool isExternal = false);
 
-        ~Heap();
+        ~Heap() override;
 
         /** \brief Returns a ComPtr object that represents the interface specified.
 

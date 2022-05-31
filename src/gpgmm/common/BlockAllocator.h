@@ -28,7 +28,7 @@ namespace gpgmm {
     // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
     class BlockAllocator : public AllocatorBase {
       public:
-        virtual ~BlockAllocator() = default;
+        ~BlockAllocator() override = default;
 
         virtual MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment) = 0;
         virtual void DeallocateBlock(MemoryBlock* block) = 0;
