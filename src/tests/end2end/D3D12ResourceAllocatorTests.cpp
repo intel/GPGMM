@@ -391,7 +391,89 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     ASSERT_NE(allocationB, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    ALLOCATION_DESC desc = {};
+    desc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+
+    // Byte-aligned upload buffer within.
+    {
+        ALLOCATION_DESC smallBufferDesc = desc;
+        smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferDesc, CreateBasicBufferDesc(4u, 1), D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr, &smallBuffer));
+        ASSERT_NE(smallBuffer, nullptr);
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallBuffer->GetSize(), 4u);
+        EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
+    }
+
+    // Custom-aligned upload buffer within.
+    {
+        ALLOCATION_DESC smallBufferDesc = desc;
+        smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferDesc, CreateBasicBufferDesc(4u, 16), D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr, &smallBuffer));
+        ASSERT_NE(smallBuffer, nullptr);
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallBuffer->GetSize(), 16u);
+        EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
+    }
+
+    // Constant upload buffer within.
+    {
+        ALLOCATION_DESC smallBufferDesc = desc;
+        smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferDesc, CreateBasicBufferDesc(4u, 0), D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr, &smallBuffer));
+        ASSERT_NE(smallBuffer, nullptr);
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallBuffer->GetSize(), 256u);
+        EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
+        EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
+    }
+
+    // Create a read-back buffer within.
+    {
+        ALLOCATION_DESC smallBufferDesc = desc;
+        smallBufferDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
+
+        ComPtr<ResourceAllocation> smallerBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &smallerBuffer));
+        ASSERT_NE(smallerBuffer, nullptr);
+        EXPECT_EQ(smallerBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallerBuffer->GetSize(), 4u);
+        EXPECT_EQ(smallerBuffer->GetOffsetFromResource(), 0u);
+    }
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
@@ -401,94 +483,98 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSuballocatedWithin) {
     desc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
     desc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
-    constexpr uint32_t kSubAllocationSize = 4u;
+    const D3D12_RESOURCE_DESC& smallBufferDesc = CreateBasicBufferDesc(4u, 1);
 
-    // Create two tiny buffers that will be byte-aligned.
-    ComPtr<ResourceAllocation> tinyBufferAllocA;
+    // Create two small buffers that will be byte-aligned.
+    ComPtr<ResourceAllocation> smallBufferA;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        &tinyBufferAllocA));
-    ASSERT_NE(tinyBufferAllocA, nullptr);
-    EXPECT_EQ(tinyBufferAllocA->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
-    EXPECT_EQ(tinyBufferAllocA->GetSize(), kSubAllocationSize);
+        desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferA));
+    ASSERT_NE(smallBufferA, nullptr);
+    EXPECT_EQ(smallBufferA->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    EXPECT_EQ(smallBufferA->GetSize(), smallBufferDesc.Width);
 
-    ComPtr<ResourceAllocation> tinyBufferAllocB;
+    ComPtr<ResourceAllocation> smallBufferB;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        &tinyBufferAllocB));
-    ASSERT_NE(tinyBufferAllocB, nullptr);
-    EXPECT_EQ(tinyBufferAllocB->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
-    EXPECT_EQ(tinyBufferAllocB->GetSize(), kSubAllocationSize);
+        desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferB));
+    ASSERT_NE(smallBufferB, nullptr);
+    EXPECT_EQ(smallBufferB->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    EXPECT_EQ(smallBufferB->GetSize(), smallBufferDesc.Width);
 
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 2u);
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
-
-    // Both buffers should be allocated in sequence, back-to-back.
-    EXPECT_EQ(tinyBufferAllocA->GetOffsetFromResource() + kSubAllocationSize,
-              tinyBufferAllocB->GetOffsetFromResource());
-
-    EXPECT_EQ(tinyBufferAllocA->GetResource(), tinyBufferAllocB->GetResource());
-
-    EXPECT_EQ(tinyBufferAllocA->GetGPUVirtualAddress() + kSubAllocationSize,
-              tinyBufferAllocB->GetGPUVirtualAddress());
-
-    // Mapping a resource allocation allocated within itself must use the entire resource.
-    ASSERT_FAILED(tinyBufferAllocA->Map(1));
-    ASSERT_FAILED(tinyBufferAllocB->Map(1));
-
-    // Create another using a new heap type, it must be given it's own resource.
-    desc.HeapType = D3D12_HEAP_TYPE_READBACK;
-
-    ComPtr<ResourceAllocation> tinyBufferAllocC;
+    ComPtr<ResourceAllocation> smallBufferC;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-        desc, CreateBasicBufferDesc(kSubAllocationSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
-        &tinyBufferAllocC));
-    ASSERT_NE(tinyBufferAllocC, nullptr);
-    EXPECT_EQ(tinyBufferAllocC->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
-    EXPECT_EQ(tinyBufferAllocC->GetSize(), kSubAllocationSize);
-    EXPECT_EQ(tinyBufferAllocC->GetOffsetFromResource(), 0u);
-    EXPECT_NE(tinyBufferAllocC->GetResource(), tinyBufferAllocA->GetResource());
+        desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferC));
+    ASSERT_NE(smallBufferC, nullptr);
+    EXPECT_EQ(smallBufferC->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    EXPECT_EQ(smallBufferC->GetSize(), smallBufferDesc.Width);
 
     EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 3u);
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 2u);
+    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
 
-    // Write kSubAllocationSize worth of bytes with value 0xAA in mapped subAllocation A.
-    std::vector<uint8_t> dataAA(kSubAllocationSize, 0xAA);
+    // Should be allocated in sequence, back-to-back.
+    EXPECT_EQ(smallBufferA->GetOffsetFromResource() + smallBufferDesc.Width,
+              smallBufferB->GetOffsetFromResource());
+
+    EXPECT_EQ(smallBufferB->GetOffsetFromResource() + smallBufferDesc.Width,
+              smallBufferC->GetOffsetFromResource());
+
+    EXPECT_EQ(smallBufferA->GetGPUVirtualAddress() + smallBufferDesc.Width,
+              smallBufferB->GetGPUVirtualAddress());
+
+    EXPECT_EQ(smallBufferB->GetGPUVirtualAddress() + smallBufferDesc.Width,
+              smallBufferC->GetGPUVirtualAddress());
+
+    // Should share the same resource.
+    EXPECT_EQ(smallBufferA->GetResource(), smallBufferB->GetResource());
+    EXPECT_EQ(smallBufferB->GetResource(), smallBufferC->GetResource());
+
+    // Mapping within must use the entire resource.
+    ASSERT_FAILED(smallBufferA->Map(/*subresource*/ 1));
+    ASSERT_FAILED(smallBufferB->Map(/*subresource*/ 1));
+    ASSERT_FAILED(smallBufferC->Map(/*subresource*/ 1));
+
+    // Fill small buffer C with value 0xCC.
+    std::vector<uint8_t> dataCC(smallBufferC->GetSize(), 0xCC);
+    void* mappedBufferC = nullptr;
+    ASSERT_SUCCEEDED(smallBufferC->Map(0, nullptr, &mappedBufferC));
+    memcpy(mappedBufferC, dataCC.data(), dataCC.size());
+
+    // Fill small buffer A with value 0xAA.
+    std::vector<uint8_t> dataAA(smallBufferA->GetSize(), 0xAA);
     void* mappedBufferA = nullptr;
-    ASSERT_SUCCEEDED(tinyBufferAllocA->Map(0, nullptr, &mappedBufferA));
+    ASSERT_SUCCEEDED(smallBufferA->Map(0, nullptr, &mappedBufferA));
     memcpy(mappedBufferA, dataAA.data(), dataAA.size());
 
-    // Write kSubAllocationSize worth of bytes with value 0xBB in mapped subAllocation B.
-    std::vector<uint8_t> dataBB(kSubAllocationSize, 0xBB);
+    // Fill small buffer B with value 0xBB.
+    std::vector<uint8_t> dataBB(smallBufferB->GetSize(), 0xBB);
     void* mappedBufferB = nullptr;
-    ASSERT_SUCCEEDED(tinyBufferAllocB->Map(0, nullptr, &mappedBufferB));
+    ASSERT_SUCCEEDED(smallBufferB->Map(0, nullptr, &mappedBufferB));
     memcpy(mappedBufferB, dataBB.data(), dataBB.size());
 
     EXPECT_NE(mappedBufferA, mappedBufferB);
+    EXPECT_NE(mappedBufferB, mappedBufferC);
 
-    // Map the entire buffer and check both allocated ranges.
+    // Map the entire resource and check values, in-order.
     void* mappedBuffer = nullptr;
-    ASSERT_SUCCEEDED(tinyBufferAllocB->GetResource()->Map(0, nullptr, &mappedBuffer));
+    ASSERT_SUCCEEDED(smallBufferB->GetResource()->Map(0, nullptr, &mappedBuffer));
 
     const uint8_t* mappedByte = static_cast<uint8_t*>(mappedBuffer);
-    for (uint32_t i = 0; i < kSubAllocationSize; i++, mappedByte++) {
+    for (uint32_t i = 0; i < smallBufferA->GetSize(); i++, mappedByte++) {
         EXPECT_EQ(*mappedByte, 0xAA);
     }
 
-    for (uint32_t i = 0; i < kSubAllocationSize; i++, mappedByte++) {
+    for (uint32_t i = 0; i < smallBufferB->GetSize(); i++, mappedByte++) {
         EXPECT_EQ(*mappedByte, 0xBB);
     }
 
+    for (uint32_t i = 0; i < smallBufferC->GetSize(); i++, mappedByte++) {
+        EXPECT_EQ(*mappedByte, 0xCC);
+    }
+
     // Deallocate in reverse order (for good measure).
-    tinyBufferAllocA = nullptr;
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 2u);
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 2u);
+    smallBufferA = nullptr;
+    smallBufferB = nullptr;
+    smallBufferC = nullptr;
 
-    tinyBufferAllocB = nullptr;
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
-    EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
-
-    tinyBufferAllocC = nullptr;
     EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 0u);
     EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 0u);
 }
@@ -793,7 +879,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferGetInfo) {
 
         ComPtr<ResourceAllocation> firstAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize),
+            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
@@ -806,7 +892,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferGetInfo) {
 
         ComPtr<ResourceAllocation> secondAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize),
+            allocationWithinDesc, CreateBasicBufferDesc(kBufferSize, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
         EXPECT_EQ(secondAllocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
