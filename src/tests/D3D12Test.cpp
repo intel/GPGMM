@@ -102,10 +102,11 @@ namespace gpgmm { namespace d3d12 {
     D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicTextureDesc(DXGI_FORMAT format,
                                                               uint64_t width,
                                                               uint64_t height,
-                                                              uint32_t sampleCount) {
+                                                              uint32_t sampleCount,
+                                                              uint64_t alignment) {
         D3D12_RESOURCE_DESC resourceDesc;
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        resourceDesc.Alignment = 0;
+        resourceDesc.Alignment = alignment;
         resourceDesc.Width = width;
         resourceDesc.Height = height;
         resourceDesc.DepthOrArraySize = 1;

@@ -606,11 +606,13 @@ namespace gpgmm { namespace d3d12 {
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
             case ALLOCATOR_ALGORITHM_SLAB: {
+                // Any amount of fragmentation must be allowed for small buffers since the resource
+                // heap size cannot change.
                 return std::make_unique<SlabCacheAllocator>(
                     /*maxSlabSize*/ heapAlignment,
                     /*slabSize*/ heapAlignment,
                     /*slabAlignment*/ heapAlignment,
-                    /*slabFragmentationLimit*/ 0,
+                    /*slabFragmentationLimit*/ 1,
                     /*allowSlabPrefetch*/ false,
                     /*slabMemoryGrowth*/ 1,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
@@ -819,7 +821,25 @@ namespace gpgmm { namespace d3d12 {
             !mIsAlwaysCommitted && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            request.Alignment = (newResourceDesc.Alignment == 0) ? 1 : newResourceDesc.Alignment;
+            // GetResourceAllocationInfo() always rejects smaller alignments than 64KB.
+            if (resourceDescriptor.Alignment == 0) {
+                // Only constant buffers must be 256B aligned.
+                request.Alignment = (initialResourceState == D3D12_RESOURCE_STATE_GENERIC_READ)
+                                        ? D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT
+                                        : 1;
+            } else {
+                request.Alignment = resourceDescriptor.Alignment;
+            }
+
+            if (resourceDescriptor.Alignment != 0 &&
+                resourceDescriptor.Alignment > request.Alignment) {
+                DebugEvent("ResourceAllocator.CreateResource",
+                           ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
+                    << "Requested resource alignment is much larger than required (" +
+                           std::to_string(resourceDescriptor.Alignment) + " vs " +
+                           std::to_string(request.Alignment) + " bytes) for resource : " +
+                           JSONSerializer::Serialize(resourceDescriptor).ToString() + ".";
+            }
 
             // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
             // through |this| via CreateCommittedResource which is already locked by
