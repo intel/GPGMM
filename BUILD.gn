@@ -28,7 +28,7 @@ group("all") {
   }
 
   if (gpgmm_enable_webnn) {
-    deps += [ "//third_party/webnn_native/src/tests:webnn_end2end_tests" ]
+    deps += [ "//third_party/webnn_native/src/webnn/tests:webnn_end2end_tests" ]
   }
 }
 
