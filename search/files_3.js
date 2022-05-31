@@ -10,12 +10,14 @@ var searchData=
   ['d3d12test_2eh_7',['D3D12Test.h',['../_d3_d12_test_8h.html',1,'']]],
   ['debug_2ecpp_8',['Debug.cpp',['../_debug_8cpp.html',1,'']]],
   ['debug_2eh_9',['Debug.h',['../_debug_8h.html',1,'']]],
-  ['debugresourceallocatord3d12_2ecpp_10',['DebugResourceAllocatorD3D12.cpp',['../_debug_resource_allocator_d3_d12_8cpp.html',1,'']]],
-  ['debugresourceallocatord3d12_2eh_11',['DebugResourceAllocatorD3D12.h',['../_debug_resource_allocator_d3_d12_8h.html',1,'']]],
-  ['defaults_2eh_12',['Defaults.h',['../_defaults_8h.html',1,'']]],
-  ['devicememoryallocatorvk_2ecpp_13',['DeviceMemoryAllocatorVk.cpp',['../_device_memory_allocator_vk_8cpp.html',1,'']]],
-  ['devicememoryallocatorvk_2eh_14',['DeviceMemoryAllocatorVk.h',['../_device_memory_allocator_vk_8h.html',1,'']]],
-  ['devicememoryvk_2ecpp_15',['DeviceMemoryVk.cpp',['../_device_memory_vk_8cpp.html',1,'']]],
-  ['devicememoryvk_2eh_16',['DeviceMemoryVk.h',['../_device_memory_vk_8h.html',1,'']]],
-  ['dummymemoryallocator_2eh_17',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
+  ['debugobjectd3d12_2ecpp_10',['DebugObjectD3D12.cpp',['../_debug_object_d3_d12_8cpp.html',1,'']]],
+  ['debugobjectd3d12_2eh_11',['DebugObjectD3D12.h',['../_debug_object_d3_d12_8h.html',1,'']]],
+  ['debugresourceallocatord3d12_2ecpp_12',['DebugResourceAllocatorD3D12.cpp',['../_debug_resource_allocator_d3_d12_8cpp.html',1,'']]],
+  ['debugresourceallocatord3d12_2eh_13',['DebugResourceAllocatorD3D12.h',['../_debug_resource_allocator_d3_d12_8h.html',1,'']]],
+  ['defaults_2eh_14',['Defaults.h',['../_defaults_8h.html',1,'']]],
+  ['devicememoryallocatorvk_2ecpp_15',['DeviceMemoryAllocatorVk.cpp',['../_device_memory_allocator_vk_8cpp.html',1,'']]],
+  ['devicememoryallocatorvk_2eh_16',['DeviceMemoryAllocatorVk.h',['../_device_memory_allocator_vk_8h.html',1,'']]],
+  ['devicememoryvk_2ecpp_17',['DeviceMemoryVk.cpp',['../_device_memory_vk_8cpp.html',1,'']]],
+  ['devicememoryvk_2eh_18',['DeviceMemoryVk.h',['../_device_memory_vk_8h.html',1,'']]],
+  ['dummymemoryallocator_2eh_19',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
 ];
