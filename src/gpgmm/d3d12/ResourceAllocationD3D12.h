@@ -40,6 +40,12 @@ namespace gpgmm { namespace d3d12 {
         */
         uint64_t SizeInBytes;
 
+        /** \brief The alignment of the resource allocation, in bytes.
+
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t Alignment;
+
         /** \brief The offset of the resource in the heap, in bytes.
          */
         uint64_t HeapOffset;

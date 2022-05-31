@@ -72,7 +72,8 @@ namespace gpgmm { namespace vk {
         mInfo.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(
-            this, new DeviceMemory(deviceMemory, mMemoryTypeIndex, request.SizeInBytes));
+            this, new DeviceMemory(deviceMemory, mMemoryTypeIndex, request.SizeInBytes,
+                                   request.Alignment));
     }
 
     void DeviceMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

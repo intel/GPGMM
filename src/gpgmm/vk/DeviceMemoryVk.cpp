@@ -16,8 +16,11 @@
 
 namespace gpgmm { namespace vk {
 
-    DeviceMemory::DeviceMemory(VkDeviceMemory memory, uint32_t memoryTypeIndex, uint64_t size)
-        : MemoryBase(size), mMemory(memory), mMemoryTypeIndex(memoryTypeIndex) {
+    DeviceMemory::DeviceMemory(VkDeviceMemory memory,
+                               uint32_t memoryTypeIndex,
+                               uint64_t size,
+                               uint64_t alignment)
+        : MemoryBase(size, alignment), mMemory(memory), mMemoryTypeIndex(memoryTypeIndex) {
     }
 
     VkDeviceMemory DeviceMemory::GetDeviceMemory() const {

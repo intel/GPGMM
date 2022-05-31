@@ -49,10 +49,14 @@ namespace gpgmm { namespace d3d12 {
             return {};
         }
 
+        D3D12_RESOURCE_ALLOCATION_INFO info = {};
+        info.SizeInBytes = request.SizeInBytes;
+        info.Alignment = request.Alignment;
+
         D3D12_RESOURCE_DESC resourceDescriptor;
         resourceDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDescriptor.Alignment = request.Alignment;
-        resourceDescriptor.Width = request.SizeInBytes;
+        resourceDescriptor.Alignment = info.Alignment;
+        resourceDescriptor.Width = info.SizeInBytes;
         resourceDescriptor.Height = 1;
         resourceDescriptor.DepthOrArraySize = 1;
         resourceDescriptor.MipLevels = 1;
@@ -65,7 +69,7 @@ namespace gpgmm { namespace d3d12 {
         // Optimized clear is not supported for buffers.
         Heap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
-                mHeapType, mHeapFlags, request.SizeInBytes, &resourceDescriptor,
+                mHeapType, mHeapFlags, info, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
                 &resourceHeap))) {
             return {};
