@@ -33,15 +33,9 @@ namespace gpgmm {
     }
 
     void EventTraceWriter::SetConfiguration(const std::string& traceFile,
-                                            bool skipDurationEvents,
-                                            bool skipObjectEvents,
-                                            bool skipInstantEvents,
-                                            bool skipCounterEvents) {
+                                            const TraceEventPhase& ignoreMask) {
         mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
-        mSkipDurationEvents = skipDurationEvents;
-        mSkipObjectEvents = skipObjectEvents;
-        mSkipInstantEvents = skipInstantEvents;
-        mSkipCounterEvents = skipCounterEvents;
+        mIgnoreMask = ignoreMask;
     }
 
     EventTraceWriter::~EventTraceWriter() {
@@ -68,22 +62,26 @@ namespace gpgmm {
         JSONArray traceEvents;
         std::vector<TraceEvent> mergedBuffer = MergeAndClearBuffers();
         for (const TraceEvent& traceEvent : mergedBuffer) {
-            if (mSkipDurationEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||
-                                        traceEvent.mPhase == TRACE_EVENT_PHASE_END)) {
+            if (mIgnoreMask & TraceEventPhase::Duration &&
+                (traceEvent.mPhase == TRACE_EVENT_PHASE_BEGIN ||
+                 traceEvent.mPhase == TRACE_EVENT_PHASE_END)) {
                 continue;
             }
 
-            if (mSkipObjectEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_CREATE_OBJECT ||
-                                      traceEvent.mPhase == TRACE_EVENT_PHASE_DELETE_OBJECT ||
-                                      traceEvent.mPhase == TRACE_EVENT_PHASE_SNAPSHOT_OBJECT)) {
+            if (mIgnoreMask & TraceEventPhase::Object &&
+                (traceEvent.mPhase == TRACE_EVENT_PHASE_CREATE_OBJECT ||
+                 traceEvent.mPhase == TRACE_EVENT_PHASE_DELETE_OBJECT ||
+                 traceEvent.mPhase == TRACE_EVENT_PHASE_SNAPSHOT_OBJECT)) {
                 continue;
             }
 
-            if (mSkipInstantEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_INSTANT)) {
+            if (mIgnoreMask & TraceEventPhase::Instant &&
+                (traceEvent.mPhase == TRACE_EVENT_PHASE_INSTANT)) {
                 continue;
             }
 
-            if (mSkipCounterEvents && (traceEvent.mPhase == TRACE_EVENT_PHASE_COUNTER)) {
+            if (mIgnoreMask & TraceEventPhase::Counter &&
+                (traceEvent.mPhase == TRACE_EVENT_PHASE_COUNTER)) {
                 continue;
             }
 
