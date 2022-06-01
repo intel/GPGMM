@@ -158,10 +158,6 @@ namespace gpgmm {
 
                 // If the new slab size exceeds available memory, re-use the previous, smaller size.
                 if (newSlabSize > request.AvailableForAllocation) {
-                    DebugEvent(GetTypename())
-                        << "New slab exceeded budget (" << std::to_string(newSlabSize) << " vs "
-                        << std::to_string(request.AvailableForAllocation) + " bytes).";
-
                     newSlabSize = slabSize;
                 }
 
