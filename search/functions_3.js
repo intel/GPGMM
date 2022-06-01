@@ -8,7 +8,7 @@ var searchData=
   ['debugresourceallocator_5',['DebugResourceAllocator',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#a7b9f233a6fafd6019cb042833e8074e8',1,'gpgmm::d3d12::DebugResourceAllocator']]],
   ['deletethis_6',['DeleteThis',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a6b125e84fc9a47302e56d20808a60fc3',1,'gpgmm::d3d12::IUnknownImpl']]],
   ['detach_7',['Detach',['../classgpgmm_1_1_scoped_ref.html#af3adac8c781999245303e89c551543ca',1,'gpgmm::ScopedRef']]],
-  ['devicememory_8',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html#ab391c6fc65c59da6f2d59f6a43303c8d',1,'gpgmm::vk::DeviceMemory']]],
+  ['devicememory_8',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html#ad6c975e96d1ee9bd7e9b423cabe49d9a',1,'gpgmm::vk::DeviceMemory']]],
   ['devicememoryallocator_9',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html#a0a1aee5a816433c29c7f25b0b9f4cc5b',1,'gpgmm::vk::DeviceMemoryAllocator']]],
   ['dummybuddyblockallocator_10',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html#a07e8442b77c5f5771dc05926ffacacf8',1,'DummyBuddyBlockAllocator']]],
   ['dummymemoryallocator_11',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html#a4110b0faa02b9ab391c8f2fec7aa716c',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator()=default'],['../classgpgmm_1_1_dummy_memory_allocator.html#a6a7370bf1c499323f770ab83c230efdb',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator(std::unique_ptr&lt; MemoryAllocator &gt; next)']]],
