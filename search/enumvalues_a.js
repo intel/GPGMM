@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['warning_0',['Warning',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa0eaadb4fcb48a0a0ed7bc9868be9fbaa',1,'gpgmm']]]
+  ['resource_5fallocator_5ffeature_5fsuballocation_5fsupport_0',['RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa1df19b2b5da4914587591550ecf8a30a',1,'gpgmm::d3d12']]]
 ];
