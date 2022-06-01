@@ -799,6 +799,12 @@ namespace gpgmm { namespace d3d12 {
             // TODO: Consider optimizing GetInfoInternal().
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
                 request.AvailableForAllocation = GetInfoInternal().FreeMemoryUsage;
+
+                DebugEvent(GetTypename())
+                    << "Current usage exceeded budget ("
+                    << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
+                    << std::to_string(currentVideoInfo->Budget) + " bytes).";
+
             } else {
                 request.AvailableForAllocation =
                     currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
