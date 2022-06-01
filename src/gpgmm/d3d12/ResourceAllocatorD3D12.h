@@ -450,6 +450,12 @@ namespace gpgmm { namespace d3d12 {
         Required parameter. GPGMM always initializes to D3D12_HEAP_TYPE_DEFAULT.
         */
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        /** \brief Associates a name with the given allocation.
+
+        Optional parameter. By default, no name is associated.
+        */
+        std::string DebugName;
     };
 
     using RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;

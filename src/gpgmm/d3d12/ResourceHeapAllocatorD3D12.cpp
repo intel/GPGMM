@@ -91,6 +91,7 @@ namespace gpgmm { namespace d3d12 {
         resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = heapSize;
         resourceHeapDesc.IsExternal = false;
+        resourceHeapDesc.DebugName = "Resource heap";
 
         Heap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, &resourceHeap))) {

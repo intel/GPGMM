@@ -23,6 +23,7 @@
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include <utility>
 
@@ -159,8 +160,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(),   GetOffset(), mOffsetFromResource,
-                GetMethod(), GetMemory(), mResource.Get()};
+        return {GetSize(),   GetOffset(),     mOffsetFromResource, GetMethod(),
+                GetMemory(), mResource.Get(), GetDebugName()};
     }
 
     const char* ResourceAllocation::GetTypename() const {
@@ -173,6 +174,15 @@ namespace gpgmm { namespace d3d12 {
 
     void ResourceAllocation::SetDebugAllocator(MemoryAllocator* allocator) {
         mAllocator = allocator;
+    }
+
+    HRESULT ResourceAllocation::SetDebugNameImpl(const std::string& name) {
+        // D3D name is set per resource.
+        if (!GetDebugName().empty() && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+            return S_FALSE;
+        }
+
+        return SetDebugObjectName(mResource.Get(), name);
     }
 
 }}  // namespace gpgmm::d3d12

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "gpgmm/common/Debug.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Math.h"
@@ -25,6 +26,8 @@
 using namespace gpgmm::d3d12;
 
 static constexpr uint64_t kDefaultBufferSize = 4ll * 1024ll * 1024ll;  // 4MB
+
+#define GPGMM_GET_VAR_NAME(x) (#x)
 
 class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test {
   protected:
@@ -487,6 +490,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
 
     // Create two small buffers that will be byte-aligned.
     ComPtr<ResourceAllocation> smallBufferA;
+    desc.DebugName = GPGMM_GET_VAR_NAME(smallBufferA);
+
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferA));
     ASSERT_NE(smallBufferA, nullptr);
@@ -494,6 +499,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(smallBufferA->GetSize(), smallBufferDesc.Width);
 
     ComPtr<ResourceAllocation> smallBufferB;
+    desc.DebugName = GPGMM_GET_VAR_NAME(smallBufferB);
+
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferB));
     ASSERT_NE(smallBufferB, nullptr);
@@ -501,6 +508,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(smallBufferB->GetSize(), smallBufferDesc.Width);
 
     ComPtr<ResourceAllocation> smallBufferC;
+    desc.DebugName = GPGMM_GET_VAR_NAME(smallBufferC);
+
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         desc, smallBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &smallBufferC));
     ASSERT_NE(smallBufferC, nullptr);
