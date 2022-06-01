@@ -139,6 +139,7 @@ namespace gpgmm { namespace d3d12 {
     JSONDict JSONSerializer::Serialize(const HEAP_INFO& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("IsResident", desc.IsResident);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
         dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
@@ -163,6 +164,7 @@ namespace gpgmm { namespace d3d12 {
     JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_INFO& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
