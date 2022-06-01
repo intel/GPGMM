@@ -84,11 +84,8 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a235c2130bf71698d851998abd57f94dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">MemorySegmentGroup is the video memory segment the heap resides (local or non-local).  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc">More...</a><br /></td></tr>
 <tr class="separator:a235c2130bf71698d851998abd57f94dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2389164925b57ec3d13631a8e659dc2f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f">SizeInBytes</a></td></tr>
-<tr class="memdesc:a2389164925b57ec3d13631a8e659dc2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created size of the heap, in bytes.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f">More...</a><br /></td></tr>
+<tr class="memdesc:a2389164925b57ec3d13631a8e659dc2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the managed heap, in bytes.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f">More...</a><br /></td></tr>
 <tr class="separator:a2389164925b57ec3d13631a8e659dc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#aad452e7c7a2ddd7bb683403bf50d3dec">Alignment</a></td></tr>
-<tr class="memdesc:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alignment of the heap, in bytes.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#aad452e7c7a2ddd7bb683403bf50d3dec">More...</a><br /></td></tr>
-<tr class="separator:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c5aeaef7bc547187b49a6b56444127e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a7c5aeaef7bc547187b49a6b56444127e">IsExternal</a></td></tr>
 <tr class="memdesc:a7c5aeaef7bc547187b49a6b56444127e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies to leave the heap unmanaged by GPGMM.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a7c5aeaef7bc547187b49a6b56444127e">More...</a><br /></td></tr>
 <tr class="separator:a7c5aeaef7bc547187b49a6b56444127e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,23 +96,6 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Specifies properties of a managed heap. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="aad452e7c7a2ddd7bb683403bf50d3dec" name="aad452e7c7a2ddd7bb683403bf50d3dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad452e7c7a2ddd7bb683403bf50d3dec">&#9670;&nbsp;</a></span>Alignment</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t gpgmm::d3d12::HEAP_DESC::Alignment</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Alignment of the heap, in bytes. </p>
-<p >Must be non-zero. SizeInBytes is always a multiple of the alignment. </p>
-
-</div>
-</div>
 <a id="ac6cd3ef241d544a35768ebe77eb44988" name="ac6cd3ef241d544a35768ebe77eb44988"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6cd3ef241d544a35768ebe77eb44988">&#9670;&nbsp;</a></span>DebugName</h2>
 
@@ -193,7 +173,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Created size of the heap, in bytes. </p>
+<p>The size of the managed heap, in bytes. </p>
 
 </div>
 </div>
