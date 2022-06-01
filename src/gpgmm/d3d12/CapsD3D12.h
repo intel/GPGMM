@@ -35,12 +35,16 @@ namespace gpgmm { namespace d3d12 {
         // Allows a resource heap to be created without being resident.
         bool IsCreateHeapNotResidentSupported() const;
 
+        // Allows a resource to be shared between multiple command queues.
+        bool IsResourceAccessAlwaysCoherent() const;
+
       private:
         Caps() = default;
 
         uint64_t mMaxResourceSize = 0;
         uint64_t mMaxResourceHeapSize = 0;
         bool mIsCreateHeapNotResidentSupported = false;
+        bool mIsResourceAccessAlwaysCoherent = false;
     };
 
 }}  // namespace gpgmm::d3d12

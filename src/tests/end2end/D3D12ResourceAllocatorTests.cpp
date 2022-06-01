@@ -1086,3 +1086,33 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
 
     EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, 0u);
 }
+
+TEST_F(D3D12ResourceAllocatorTests, CheckFeatureSupport) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    // Request information with invalid data size.
+    {
+        struct WrongData {
+            uint64_t bigItem;
+        } WrongData = {};
+
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
+            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, &WrongData, sizeof(WrongData)));
+    }
+
+    // Request information with no data.
+    {
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
+            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, nullptr, 0));
+    }
+
+    // Request information with valid data size.
+    {
+        ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT data = {};
+        ASSERT_SUCCEEDED(resourceAllocator->CheckFeatureSupport(
+            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, &data, sizeof(data)));
+    }
+}

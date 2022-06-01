@@ -458,6 +458,28 @@ namespace gpgmm { namespace d3d12 {
         std::string DebugName;
     };
 
+    /** \struct ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT
+
+    Details the resource allocator limitations, including if sharing resources between command
+    queues is coherent.
+    */
+    struct ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT {
+        /** \brief Describes multi-queue resource access behavior.
+
+        For example, if two allocations belong to the same resource where each allocation is
+        referenced with a different command-queue, will accessing one stomp over the other. D3D12
+        does not guarentee such behavior is safe but it is defined per GPU vendor.
+        */
+        bool IsResourceAccessAlwaysCoherent;
+    };
+
+    /** \enum ALLOCATOR_FEATURE
+    Additional capabilities featured by resource allocators.
+    */
+    enum ALLOCATOR_FEATURE {
+        RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT,
+    };
+
     using RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
 
     /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
@@ -570,6 +592,24 @@ namespace gpgmm { namespace d3d12 {
         The type is used for profiling and debugging purposes only.
         */
         const char* GetTypename() const override;
+
+        /** \brief Gets information about the features that are supported by the resource allocator.
+
+        @param feature A constant from the ALLOCATOR_FEATURE enumeration describing the feature(s)
+        that you want to query for support.
+        @param pFeatureSupportData A pointer to the data structure that corresponds to the value of
+        the feature parameter. To determine the corresponding data structure for each constant, see
+        ALLOCATOR_FEATURE.
+        @param featureSupportDataSize The sie of the structure pointed by the pFeatureSupportData
+        parameter.
+
+        \return Returns S_OK if successful. Returns E_INVALIDARG if unsupported data type is passed
+        to pFeatureSupportData or if a size mismatch is detected for the featureSupportDataSize
+        parameter.
+        */
+        HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
+                                    void* pFeatureSupportData,
+                                    uint32_t featureSupportDataSize);
 
       private:
         friend BufferAllocator;
