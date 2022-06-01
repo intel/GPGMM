@@ -40,11 +40,11 @@
 // expect of an assert and in release it tries to give hints to make the compiler generate better
 // code.
 #if defined(GPGMM_ENABLE_ASSERTS)
-#    define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
-        do {                                                          \
-            if (!(condition)) {                                       \
-                HandleAssertionFailure(file, func, line, #condition); \
-            }                                                         \
+#    define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition)        \
+        do {                                                                 \
+            if (!(condition)) {                                              \
+                gpgmm::HandleAssertionFailure(file, func, line, #condition); \
+            }                                                                \
         } while (GPGMM_ASSERT_LOOP_CONDITION)
 #else
 #    if defined(GPGMM_COMPILER_MSVC)
@@ -78,9 +78,13 @@
 #    define UNREACHABLE GPGMM_UNREACHABLE
 #endif
 
-void HandleAssertionFailure(const char* file,
-                            const char* function,
-                            int line,
-                            const char* condition);
+namespace gpgmm {
+
+    void HandleAssertionFailure(const char* file,
+                                const char* function,
+                                int line,
+                                const char* condition);
+
+}
 
 #endif  // GPGMM_UTILS_ASSERT_H_
