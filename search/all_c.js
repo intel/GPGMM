@@ -32,7 +32,7 @@ var searchData=
   ['memoryallocator_2eh_29',['MemoryAllocator.h',['../_memory_allocator_8h.html',1,'']]],
   ['memoryallocatortests_30',['MemoryAllocatorTests',['../class_memory_allocator_tests.html',1,'']]],
   ['memoryallocatortests_2ecpp_31',['MemoryAllocatorTests.cpp',['../_memory_allocator_tests_8cpp.html',1,'']]],
-  ['memorybase_32',['MemoryBase',['../classgpgmm_1_1_memory_base.html',1,'gpgmm::MemoryBase'],['../classgpgmm_1_1_memory_base.html#a3b65212d2077e6522a5e20e38e2ab745',1,'gpgmm::MemoryBase::MemoryBase()']]],
+  ['memorybase_32',['MemoryBase',['../classgpgmm_1_1_memory_base.html',1,'gpgmm::MemoryBase'],['../classgpgmm_1_1_memory_base.html#ae4e5a34168732af1bf6b236c7c03a303',1,'gpgmm::MemoryBase::MemoryBase()']]],
   ['memoryblock_33',['MemoryBlock',['../structgpgmm_1_1_memory_block.html',1,'gpgmm']]],
   ['memorycache_34',['MemoryCache',['../classgpgmm_1_1_memory_cache.html',1,'gpgmm::MemoryCache&lt; T &gt;'],['../classgpgmm_1_1_memory_cache.html#addbd7d3f6e3b3aec84a1c8237b05f34e',1,'gpgmm::MemoryCache::MemoryCache()']]],
   ['memorycache_2eh_35',['MemoryCache.h',['../_memory_cache_8h.html',1,'']]],

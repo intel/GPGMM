@@ -161,7 +161,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a> services a fixed or variable sized <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a>.  <a href="classgpgmm_1_1_memory_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a memory object.  <a href="classgpgmm_1_1_memory_base.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,6 +289,8 @@ Functions</h2></td></tr>
 <tr class="separator:a57e06cd628d6c539216da169d2fd2d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4e7758d833df0093cf8c892c9632aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a> ()</td></tr>
 <tr class="separator:a7a4e7758d833df0093cf8c892c9632aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ad016a9b35300004a5bca19541c3dfe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a6ad016a9b35300004a5bca19541c3dfe">HandleAssertionFailure</a> (const char *file, const char *function, int line, const char *condition)</td></tr>
+<tr class="separator:a6ad016a9b35300004a5bca19541c3dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b7b7a5efc7a03d28f471038ad14084b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf">LogSeverity</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7b7b7a5efc7a03d28f471038ad14084b">GetDefaultLogMessageLevel</a> ()</td></tr>
 <tr class="separator:a7b7b7a5efc7a03d28f471038ad14084b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ee70f837acebdd6b1d5ed579be5c995"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a4ee70f837acebdd6b1d5ed579be5c995">SetLogMessageLevel</a> (const <a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf">LogSeverity</a> &amp;newLevel)</td></tr>
@@ -914,6 +915,46 @@ template&lt;typename T &gt; </div>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6ad016a9b35300004a5bca19541c3dfe" name="a6ad016a9b35300004a5bca19541c3dfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ad016a9b35300004a5bca19541c3dfe">&#9670;&nbsp;</a></span>HandleAssertionFailure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gpgmm::HandleAssertionFailure </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>function</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>condition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
