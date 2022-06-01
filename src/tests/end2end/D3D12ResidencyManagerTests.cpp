@@ -29,6 +29,21 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     void TearDown() override {
         D3D12TestBase::TearDown();
     }
+
+    // Allocator description specific for testing residency in a controlled and predictable
+    // fashion.
+    ALLOCATOR_DESC CreateBasicAllocatorDesc(uint64_t budget = 0) const {
+        ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
+        desc.Budget = budget;
+
+        // Disable pre-fetching since it will could cause over-committment unpredictably.
+        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+
+        // Require MakeResident/Evict occur near CreateResource, for debugging purposes.
+        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
+
+        return desc;
+    }
 };
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
@@ -87,8 +102,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
 
 // Keeps allocating until it goes over budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
-    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.Budget = 10 * 1024 * 1024;  // 10MB
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc(10 * 1024 * 1024);
 
     ComPtr<ResidencyManager> residencyManager;
     ComPtr<ResourceAllocator> resourceAllocator;
