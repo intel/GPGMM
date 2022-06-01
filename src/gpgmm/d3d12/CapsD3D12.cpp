@@ -67,6 +67,11 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(
             SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
+        // D3D12 has no feature to detect support and must be set manually.
+        if (adapterDesc.VendorId == kIntel_VkVendor) {
+            caps->mIsResourceAccessAlwaysCoherent = true;
+        }
+
         *capsOut = caps.release();
         return S_OK;
     }
@@ -81,6 +86,10 @@ namespace gpgmm { namespace d3d12 {
 
     bool Caps::IsCreateHeapNotResidentSupported() const {
         return mIsCreateHeapNotResidentSupported;
+    }
+
+    bool Caps::IsResourceAccessAlwaysCoherent() const {
+        return mIsResourceAccessAlwaysCoherent;
     }
 
 }}  // namespace gpgmm::d3d12
