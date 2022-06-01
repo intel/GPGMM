@@ -273,7 +273,7 @@ namespace gpgmm { namespace d3d12 {
                 .c_str(),
             (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
                 ? 100
-                : (pVideoMemoryInfo->Budget - pVideoMemoryInfo->CurrentUsage) / 1e6);
+                : SafeDivison(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
 
         // Reservations are optional.
         if (pVideoMemoryInfo->CurrentReservation > 0) {
