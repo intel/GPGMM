@@ -98,6 +98,25 @@ namespace gpgmm {
         }
     }
 
+    uint64_t MemoryAllocation::GetAlignment() const {
+        switch (mMethod) {
+            case gpgmm::AllocationMethod::kStandalone:
+                ASSERT(mMemory != nullptr);
+                return mMemory->GetAlignment();
+            // Sub-allocation cannot be further divided and must have a alignment equal to the
+            // the size.
+            case gpgmm::AllocationMethod::kSubAllocated:
+            case gpgmm::AllocationMethod::kSubAllocatedWithin: {
+                ASSERT(mBlock != nullptr);
+                return mBlock->Size;
+            }
+            default: {
+                UNREACHABLE();
+                return kInvalidSize;
+            }
+        }
+    }
+
     uint64_t MemoryAllocation::GetOffset() const {
         return mOffset;
     }

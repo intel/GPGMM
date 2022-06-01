@@ -970,8 +970,8 @@ namespace gpgmm { namespace d3d12 {
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(
-            allocationDescriptor.HeapType, heapFlags, resourceInfo.SizeInBytes, &newResourceDesc,
-            clearValue, initialResourceState, &committedResource, &resourceHeap));
+            allocationDescriptor.HeapType, heapFlags, resourceInfo, &newResourceDesc, clearValue,
+            initialResourceState, &committedResource, &resourceHeap));
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             InfoEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
@@ -1022,6 +1022,7 @@ namespace gpgmm { namespace d3d12 {
         resourceHeapDesc.MemorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type);
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
+        resourceHeapDesc.Alignment = resourceInfo.Alignment;
         resourceHeapDesc.IsExternal = true;
 
         Heap* resourceHeap = nullptr;
@@ -1072,7 +1073,7 @@ namespace gpgmm { namespace d3d12 {
     HRESULT ResourceAllocator::CreateCommittedResource(
         D3D12_HEAP_TYPE heapType,
         D3D12_HEAP_FLAGS heapFlags,
-        uint64_t resourceSize,
+        const D3D12_RESOURCE_ALLOCATION_INFO& info,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
@@ -1087,7 +1088,7 @@ namespace gpgmm { namespace d3d12 {
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
 
         if (!(heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) && mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->Evict(resourceSize, memorySegmentGroup));
+            ReturnIfFailed(mResidencyManager->Evict(info.SizeInBytes, memorySegmentGroup));
         }
 
         D3D12_HEAP_PROPERTIES heapProperties = {};
@@ -1106,9 +1107,10 @@ namespace gpgmm { namespace d3d12 {
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.Pageable = committedResource;
         resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
-        resourceHeapDesc.SizeInBytes = resourceSize;
+        resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap (committed)";
+        resourceHeapDesc.Alignment = info.Alignment;
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         Heap* resourceHeap = nullptr;

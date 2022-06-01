@@ -160,8 +160,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(),   GetOffset(),     mOffsetFromResource, GetMethod(),
-                GetMemory(), mResource.Get(), GetDebugName()};
+        return {GetSize(),   GetAlignment(), GetOffset(),     mOffsetFromResource,
+                GetMethod(), GetMemory(),    mResource.Get(), GetDebugName()};
     }
 
     const char* ResourceAllocation::GetTypename() const {

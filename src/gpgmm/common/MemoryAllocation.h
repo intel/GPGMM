@@ -142,51 +142,57 @@ namespace gpgmm {
         bool operator==(const MemoryAllocation&) const;
         bool operator!=(const MemoryAllocation& other) const;
 
-        /** \brief Returns information about this memory allocation.
+        /** \brief Get the information about this memory allocation.
 
         \return A MEMORY_ALLOCATION_INFO struct containing the information.
         */
         MEMORY_ALLOCATION_INFO GetInfo() const;
 
-        /** \brief Returns the memory assigned to this allocation.
+        /** \brief Get the memory assigned to this allocation.
 
         \return A pointer to the MemoryBase used by this allocation.
         */
         MemoryBase* GetMemory() const;
 
-        /** \brief Returns a byte addressable pointer mapped by this allocation.
+        /** \brief Get the byte addressable pointer mapped by this allocation.
 
         \return A pointer to uint8_t which is mapped by the allocation.
         */
         uint8_t* GetMappedPointer() const;
 
-        /** \brief Returns the allocator responsible for allocating the memory for this allocation.
+        /** \brief Get the allocator responsible for allocating the memory for this allocation.
 
         \return A pointer to MemoryAllocator which is the allocator used.
         */
         MemoryAllocator* GetAllocator() const;
 
-        /** \brief The size, in bytes, of the memory allocation.
+        /** \brief Get the size of the memory allocation.
 
-        \return The size, in bytes, of the allocation.
+        \return Size, in bytes, of the allocation.
         */
         uint64_t GetSize() const;
 
+        /** \brief Get the alignment of the memory allocation.
+
+        \return Alignment, in bytes, of the allocation.
+        */
+        uint64_t GetAlignment() const;
+
         /** \brief The offset, in bytes, where the memory allocation was allocated in memory.
 
-        \return The offset, in bytes, of the allocation.
+        \return Offset, in bytes, of the allocation.
         */
         uint64_t GetOffset() const;
 
-        /** \brief The method to describe how the allocation was created.
+        /** \brief Get the method to describe how the allocation was created.
 
         The Method determines how to figure out the size of the allocation.
 
-        \return The method used to create memory for this allocation.
+        \return AllocationMethod used to create memory for this allocation.
         */
         AllocationMethod GetMethod() const;
 
-        /** \brief The block used to assign a range of memory for this allocation.
+        /** \brief Get the block used to assign a range of memory for this allocation.
 
         \return A pointer to the MemoryBlock.
         */

@@ -92,6 +92,7 @@ namespace gpgmm { namespace d3d12 {
         resourceHeapDesc.SizeInBytes = heapSize;
         resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap";
+        resourceHeapDesc.Alignment = heapDesc.Alignment;
 
         Heap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, &resourceHeap))) {

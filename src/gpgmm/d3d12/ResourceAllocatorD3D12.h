@@ -612,7 +612,7 @@ namespace gpgmm { namespace d3d12 {
 
         HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
                                         D3D12_HEAP_FLAGS heapFlags,
-                                        uint64_t resourceSize,
+                                        const D3D12_RESOURCE_ALLOCATION_INFO& info,
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialResourceState,

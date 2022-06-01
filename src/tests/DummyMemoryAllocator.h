@@ -41,7 +41,8 @@ namespace gpgmm {
 
             mInfo.UsedMemoryCount++;
             mInfo.UsedMemoryUsage += request.SizeInBytes;
-            return std::make_unique<MemoryAllocation>(this, new MemoryBase(request.SizeInBytes));
+            return std::make_unique<MemoryAllocation>(
+                this, new MemoryBase(request.SizeInBytes, request.Alignment));
         }
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {

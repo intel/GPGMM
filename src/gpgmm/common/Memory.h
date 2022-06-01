@@ -22,23 +22,48 @@ namespace gpgmm {
 
     class MemoryPool;
 
-    // Represents a allocated memory block or heap.
-    // When memory is sub-allocated it will have a non-zero refcount.
+    /** \brief Represents a memory object.
+
+    When memory is sub-allocated, it will have a non-zero refcount.
+    */
     class MemoryBase : public RefCounted, public NonCopyable {
       public:
-        explicit MemoryBase(uint64_t size);
+        /** \brief Constructs a memory object of the specified size and alignment.
+
+        @param size Size, in bytes, of the memory object.
+        @param alignment Alignment, in bytes, of the memory object.
+        */
+        explicit MemoryBase(uint64_t size, uint64_t alignment);
         virtual ~MemoryBase();
 
-        // Return the size of the memory block or heap.
+        /** \brief Return the size of the memory object.
+
+        \return Size, in bytes, of the memory object.
+        */
         uint64_t GetSize() const;
 
-        // Get the memory pool of the memory block or heap.
-        // When memory gets de-allocated, it will be returned to this pool.
+        /** \brief Return the alignment of the memory object.
+
+        \return Alignment, in bytes, of the memory object.
+        */
+        uint64_t GetAlignment() const;
+
+        /** \brief Get the memory pool managing the object.
+
+        \return A pointer to MemoryPool managing this memory object.
+        */
         MemoryPool* GetPool() const;
+
+        /** \brief Set the memory pool to manage this object.
+
+        @param pool A pointer to MemoryPool used to manage this object.
+        */
         void SetPool(MemoryPool* pool);
 
       private:
         const uint64_t mSize;
+        const uint64_t mAlignment;
+
         MemoryPool* mPool = nullptr;
     };
 

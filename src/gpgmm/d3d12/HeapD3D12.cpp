@@ -33,7 +33,7 @@ namespace gpgmm { namespace d3d12 {
 
         std::unique_ptr<Heap> heap(new Heap(std::move(descriptor.Pageable),
                                             descriptor.MemorySegmentGroup, descriptor.SizeInBytes,
-                                            descriptor.IsExternal));
+                                            descriptor.Alignment, descriptor.IsExternal));
 
         if (residencyManager != nullptr) {
             ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
@@ -54,8 +54,9 @@ namespace gpgmm { namespace d3d12 {
     Heap::Heap(ComPtr<ID3D12Pageable> pageable,
                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                uint64_t size,
+               uint64_t alignment,
                bool isExternal)
-        : MemoryBase(size),
+        : MemoryBase(size, alignment),
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(memorySegmentGroup),
           mResidencyLock(0),
@@ -119,8 +120,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), IsResident(),    mMemorySegmentGroup, GetRefCount(),
-                GetPool(), mPageable.Get(), GetDebugName()};
+        return {GetSize(),     GetAlignment(), IsResident(),    mMemorySegmentGroup,
+                GetRefCount(), GetPool(),      mPageable.Get(), GetDebugName()};
     }
 
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {

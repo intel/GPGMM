@@ -18,6 +18,7 @@
 
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
+#include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
@@ -34,9 +35,15 @@ namespace gpgmm { namespace d3d12 {
     Additional information about the heap.
     */
     struct HEAP_INFO {
-        /** \brief The created size of the managed heap, in bytes.
+        /** \brief Created size of the heap, in bytes.
          */
         uint64_t SizeInBytes;
+
+        /** \brief Alignment of the heap, in bytes.
+
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t Alignment;
 
         /** \brief Check if the heap is resident or not.
          */
@@ -81,9 +88,15 @@ namespace gpgmm { namespace d3d12 {
         */
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
 
-        /** \brief The size of the managed heap, in bytes.
+        /** \brief Created size of the heap, in bytes.
          */
         uint64_t SizeInBytes;
+
+        /** \brief Alignment of the heap, in bytes.
+
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t Alignment;
 
         /** \brief Specifies to leave the heap unmanaged by GPGMM.
 
@@ -125,6 +138,7 @@ namespace gpgmm { namespace d3d12 {
         Heap(ComPtr<ID3D12Pageable> pageable,
              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
              uint64_t size,
+             uint64_t alignment = kInvalidSize,
              bool isExternal = false);
 
         ~Heap() override;

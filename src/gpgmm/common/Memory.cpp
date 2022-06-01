@@ -19,7 +19,8 @@
 
 namespace gpgmm {
 
-    MemoryBase::MemoryBase(uint64_t size) : RefCounted(0), mSize(size) {
+    MemoryBase::MemoryBase(uint64_t size, uint64_t alignment)
+        : RefCounted(0), mSize(size), mAlignment(alignment) {
         ASSERT(mSize != kInvalidSize);
     }
 
@@ -29,6 +30,10 @@ namespace gpgmm {
 
     uint64_t MemoryBase::GetSize() const {
         return mSize;
+    }
+
+    uint64_t MemoryBase::GetAlignment() const {
+        return mAlignment;
     }
 
     MemoryPool* MemoryBase::GetPool() const {
