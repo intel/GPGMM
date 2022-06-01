@@ -18,15 +18,19 @@
 
 #include <cstdlib>
 
-void HandleAssertionFailure(const char* file,
-                            const char* function,
-                            int line,
-                            const char* condition) {
-    gpgmm::ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
-                      << "): " << condition;
+namespace gpgmm {
+
+    void HandleAssertionFailure(const char* file,
+                                const char* function,
+                                int line,
+                                const char* condition) {
+        gpgmm::ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
+                          << "): " << condition;
 #if defined(GPGMM_ABORT_ON_ASSERT)
-    abort();
+        abort();
 #else
-    GPGMM_BREAKPOINT();
+        GPGMM_BREAKPOINT();
 #endif
-}
+    }
+
+}  // namespace gpgmm
