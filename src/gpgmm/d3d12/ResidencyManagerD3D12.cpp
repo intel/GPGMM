@@ -377,6 +377,9 @@ namespace gpgmm { namespace d3d12 {
 
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
+
+            InfoEvent("GPU page-out") << "Number of allocations: " << objectsToEvict.size() << " ("
+                                      << evictedSizeInBytes << " bytes).";
         }
 
         if (evictedSizeInBytesOut != nullptr) {
@@ -478,11 +481,6 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    // Note that MakeResident is a synchronous function and can add a significant
-    // overhead to command recording. In the future, it may be possible to decrease this
-    // overhead by using MakeResident on a secondary thread, or by instead making use of
-    // the EnqueueMakeResident function (which is not available on all Windows 10
-    // platforms).
     HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
@@ -490,6 +488,9 @@ namespace gpgmm { namespace d3d12 {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.MakeResident");
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
+
+        InfoEvent("GPU page-in") << "Number of allocations: " << numberOfObjectsToMakeResident
+                                 << " (" << sizeToMakeResident << " bytes).";
 
         // Decrease the overhead from using MakeResident, a synchronous call, by calling the
         // asynchronous MakeResident, called EnqueueMakeResident, instead first. Should
