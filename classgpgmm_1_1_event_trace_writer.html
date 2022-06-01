@@ -79,8 +79,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b34f87f224ac1ae0c21cdb00504499c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a5b34f87f224ac1ae0c21cdb00504499c">EventTraceWriter</a> ()</td></tr>
 <tr class="separator:a5b34f87f224ac1ae0c21cdb00504499c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88fd64829406a93328f560a68a642faf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a88fd64829406a93328f560a68a642faf">SetConfiguration</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask)</td></tr>
-<tr class="separator:a88fd64829406a93328f560a68a642faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab065cae9d0fce1d48b5e113839a9b0b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#ab065cae9d0fce1d48b5e113839a9b0b7">SetConfiguration</a> (const std::string &amp;traceFile, bool skipDurationEvents, bool skipObjectEvents, bool skipInstantEvents, bool skipCounterEvents)</td></tr>
+<tr class="separator:ab065cae9d0fce1d48b5e113839a9b0b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd834ccebcf9f653ef49d9af2f8ad16a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#afd834ccebcf9f653ef49d9af2f8ad16a">~EventTraceWriter</a> ()</td></tr>
 <tr class="separator:afd834ccebcf9f653ef49d9af2f8ad16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe5129b0b3f506ef7944dccfb9d370e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#abe5129b0b3f506ef7944dccfb9d370e0">EnqueueTraceEvent</a> (char phase, <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">TraceEventCategory</a> category, const char *name, uint64_t id, uint32_t flags, const <a class="el" href="classgpgmm_1_1_j_s_o_n_dict.html">JSONDict</a> &amp;args)</td></tr>
@@ -193,8 +193,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a88fd64829406a93328f560a68a642faf" name="a88fd64829406a93328f560a68a642faf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88fd64829406a93328f560a68a642faf">&#9670;&nbsp;</a></span>SetConfiguration()</h2>
+<a id="ab065cae9d0fce1d48b5e113839a9b0b7" name="ab065cae9d0fce1d48b5e113839a9b0b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab065cae9d0fce1d48b5e113839a9b0b7">&#9670;&nbsp;</a></span>SetConfiguration()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,8 +208,26 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;&#160;</td>
-          <td class="paramname"><em>ignoreMask</em>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skipDurationEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skipObjectEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skipInstantEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skipCounterEvents</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
