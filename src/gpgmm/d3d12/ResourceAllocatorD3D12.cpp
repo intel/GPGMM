@@ -101,12 +101,9 @@ namespace gpgmm { namespace d3d12 {
             // required alignment is for this resource.
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
-                DebugEvent("ResourceAllocator.GetResourceAllocationInfo",
-                           ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
-                    << "Resource alignment is much larger due to D3D12 (" +
-                           std::to_string(resourceDescriptor.Alignment) + " vs " +
-                           std::to_string(resourceInfo.Alignment) + " bytes) for resource : " +
-                           JSONSerializer::Serialize(resourceDescriptor).ToString() + ".";
+                DebugLog() << "ID3D12Device::GetResourceAllocationInfo re-aligned (" +
+                                  std::to_string(resourceDescriptor.Alignment) + " vs " +
+                                  std::to_string(resourceInfo.Alignment) + " bytes)";
 
                 resourceDescriptor.Alignment = 0;
                 resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
@@ -833,12 +830,10 @@ namespace gpgmm { namespace d3d12 {
 
             if (resourceDescriptor.Alignment != 0 &&
                 resourceDescriptor.Alignment > request.Alignment) {
-                DebugEvent("ResourceAllocator.CreateResource",
-                           ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
-                    << "Requested resource alignment is much larger than required (" +
+                DebugEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH)
+                    << "Resource alignment is much larger than required (" +
                            std::to_string(resourceDescriptor.Alignment) + " vs " +
-                           std::to_string(request.Alignment) + " bytes) for resource : " +
-                           JSONSerializer::Serialize(resourceDescriptor).ToString() + ".";
+                           std::to_string(request.Alignment) + " bytes)";
             }
 
             // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
