@@ -74,8 +74,7 @@ var menudata={children:[
 {text:"k",url:"namespacemembers_eval.html#index_k"},
 {text:"m",url:"namespacemembers_eval.html#index_m"},
 {text:"n",url:"namespacemembers_eval.html#index_n"},
-{text:"o",url:"namespacemembers_eval.html#index_o"},
-{text:"r",url:"namespacemembers_eval.html#index_r"}]}]}]},
+{text:"o",url:"namespacemembers_eval.html#index_o"}]}]}]},
 {text:"Classes",url:"annotated.html",children:[
 {text:"Class List",url:"annotated.html"},
 {text:"Class Index",url:"classes.html"},

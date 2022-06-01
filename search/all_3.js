@@ -40,7 +40,7 @@ var searchData=
   ['device_37',['Device',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ac532e66c935cc87bc431f1e0f0564175',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['device_38',['device',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#aa7358241e3fe2e757151f23df6648526',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
   ['device_39',['Device',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a7fad963cc70495b611e255860a1aeaf3',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['devicememory_40',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html#ab391c6fc65c59da6f2d59f6a43303c8d',1,'gpgmm::vk::DeviceMemory::DeviceMemory()'],['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk::DeviceMemory']]],
+  ['devicememory_40',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html#ad6c975e96d1ee9bd7e9b423cabe49d9a',1,'gpgmm::vk::DeviceMemory::DeviceMemory()'],['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk::DeviceMemory']]],
   ['devicememoryallocator_41',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html#a0a1aee5a816433c29c7f25b0b9f4cc5b',1,'gpgmm::vk::DeviceMemoryAllocator::DeviceMemoryAllocator()'],['../classgpgmm_1_1vk_1_1_device_memory_allocator.html',1,'gpgmm::vk::DeviceMemoryAllocator']]],
   ['devicememoryallocatorvk_2ecpp_42',['DeviceMemoryAllocatorVk.cpp',['../_device_memory_allocator_vk_8cpp.html',1,'']]],
   ['devicememoryallocatorvk_2eh_43',['DeviceMemoryAllocatorVk.h',['../_device_memory_allocator_vk_8h.html',1,'']]],
