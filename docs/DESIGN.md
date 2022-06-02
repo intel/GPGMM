@@ -24,13 +24,11 @@ However, this approach restricts itself to having a single GMM made specific for
 
 2. 3rd party allocator and residency library.
 
-GMM becomes spread out across projects, by different authors, with various degrees of OS support (ex. residency requires multiple implementations depending on OS version). This also performs best for single-process applications since multiple GMMs per process, are inherently inefficient since they will battle each for available GPU memory.
+GMM becomes spread out across projects, by different authors, with various degrees of OS support (residency requires multiple implementations depending on OS version). Since allocators and residency are in seperate libraries, neither can help each optimize each other (avoiding large heap sizes). This also performs best for single-process applications since multiple GMMs per process, are inherently inefficient since they will battle each for available GPU memory.
 
 3. Create a unified GPU memory manager.
 
-Unified GMMs are not lightweight but are able to handle multiple clients at once: offering incremental portability, sharing of code between projects or backends, and cooperative memory sharing at the lowest level.
-
-However, a single code base also means bugs could be shared too.
+Unified GMMs are not lightweight but are able to handle multiple users at once: offering incremental portability, sharing of code between projects or backend APIs, with cooperative memory sharing at the lowest level. However, a single code base also means bugs could be shared too.
 
 This was the chosen design of GPGMM.
 
@@ -204,8 +202,6 @@ https://intel.github.io/GPGMM/
 
 
 ## Test Plan
-
-
 
 | Test name                | Sub-Component                                | Coverage                                          |
 | -------------------------| -----------------------------------------|-----------------------------------------------|
