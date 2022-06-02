@@ -59,6 +59,7 @@ namespace gpgmm {
         JSONArray(const JSONArray& other);
 
         std::string ToString() const;
+        bool IsEmpty() const;
 
         // Per JSON data type
         void AddItem(const std::string& value);

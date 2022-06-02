@@ -113,6 +113,10 @@ namespace gpgmm {
         mHasItem = other.mHasItem;
     }
 
+    bool JSONArray::IsEmpty() const {
+        return !mHasItem;
+    }
+
     std::string JSONArray::ToString() const {
         return mSS.str() + " ]";
     }
