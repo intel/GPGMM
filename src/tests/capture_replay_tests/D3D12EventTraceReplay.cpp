@@ -402,7 +402,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const std::string& allocatorID = event["id"].asString();
 
                         auto it = allocatorToID.find(allocatorID);
-                        ASSERT_TRUE(it != allocatorToID.end());
+                        if (it == allocatorToID.end()) {
+                            continue;
+                        }
+
                         ASSERT_EQ(allocatorToID.erase(allocatorID), 1u);
                     } break;
 
@@ -430,14 +433,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
-                        const std::string& traceEventID = event["id"].asString();
-                        auto it = heapInfoToID.find(traceEventID);
-                        ASSERT_TRUE(it != heapInfoToID.end());
+                        const std::string& heapID = event["id"].asString();
+                        auto it = heapInfoToID.find(heapID);
+                        if (it == heapInfoToID.end()) {
+                            continue;
+                        }
 
                         HEAP_INFO heapInfo = it->second;
                         mCapturedMemoryStats.CurrentUsage -= heapInfo.SizeInBytes;
 
-                        ASSERT_EQ(heapInfoToID.erase(traceEventID), 1u);
+                        ASSERT_EQ(heapInfoToID.erase(heapID), 1u);
 
                     } break;
 
