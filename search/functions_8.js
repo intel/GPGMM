@@ -15,7 +15,7 @@ var searchData=
   ['isblockcompressionformat_12',['IsBlockCompressionFormat',['../namespacegpgmm_1_1d3d12.html#a8bc0035030f56ef1558acabd9daa3022',1,'gpgmm::d3d12']]],
   ['iscreateheapnotresidentsupported_13',['IsCreateHeapNotResidentSupported',['../classgpgmm_1_1d3d12_1_1_caps.html#ac8606ea39fe989fb437104485e0f4c17',1,'gpgmm::d3d12::Caps']]],
   ['isdepthformat_14',['IsDepthFormat',['../namespacegpgmm_1_1d3d12.html#a19e0ecbc81b189ae3fc0db4162ad5733',1,'gpgmm::d3d12']]],
-  ['isempty_15',['IsEmpty',['../classgpgmm_1_1_j_s_o_n_dict.html#af00e2d22bafd105f59e9a392fe8d82cd',1,'gpgmm::JSONDict']]],
+  ['isempty_15',['IsEmpty',['../classgpgmm_1_1_j_s_o_n_array.html#a121342978df474257f428013ef09d409',1,'gpgmm::JSONArray::IsEmpty()'],['../classgpgmm_1_1_j_s_o_n_dict.html#af00e2d22bafd105f59e9a392fe8d82cd',1,'gpgmm::JSONDict::IsEmpty()']]],
   ['iseventtraceenabled_16',['IsEventTraceEnabled',['../namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa',1,'gpgmm']]],
   ['isinlist_17',['IsInList',['../classgpgmm_1_1_link_node.html#a52b5ec22c4fda10c969dd0d47d295aa9',1,'gpgmm::LinkNode']]],
   ['isinresidencylrucache_18',['IsInResidencyLRUCache',['../classgpgmm_1_1d3d12_1_1_heap.html#a66f53435585765b9e80613996684156a',1,'gpgmm::d3d12::Heap']]],
