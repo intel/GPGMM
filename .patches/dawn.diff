@@ -1,4 +1,4 @@
-From 6577571c117ad716355c40d74d5b1ab49a1c3085 Mon Sep 17 00:00:00 2001
+From f2724b093745556795b76ad7214b694f3f93ed37 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -14,15 +14,15 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/Device.cpp                    |   1 +
  src/dawn/native/Toggles.cpp                   |   8 ++
  src/dawn/native/Toggles.h                     |   2 +
- src/dawn/native/d3d12/BufferD3D12.cpp         |  51 +++++----
+ src/dawn/native/d3d12/BufferD3D12.cpp         |  51 ++++----
  src/dawn/native/d3d12/BufferD3D12.h           |   7 +-
  src/dawn/native/d3d12/CommandBufferD3D12.cpp  |   9 +-
- .../native/d3d12/CommandRecordingContext.cpp  |  20 ++--
+ .../native/d3d12/CommandRecordingContext.cpp  |  20 +--
  .../native/d3d12/CommandRecordingContext.h    |   5 +-
  src/dawn/native/d3d12/D3D12Backend.cpp        |  17 ++-
- src/dawn/native/d3d12/DeviceD3D12.cpp         | 106 +++++++++++++++---
- src/dawn/native/d3d12/DeviceD3D12.h           |  20 ++--
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  25 ++++-
+ src/dawn/native/d3d12/DeviceD3D12.cpp         | 114 +++++++++++++++---
+ src/dawn/native/d3d12/DeviceD3D12.h           |  20 +--
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  25 +++-
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |   6 +-
  src/dawn/native/d3d12/StagingBufferD3D12.cpp  |  22 +---
  src/dawn/native/d3d12/StagingBufferD3D12.h    |   4 +-
@@ -31,7 +31,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 26 files changed, 283 insertions(+), 137 deletions(-)
+ 26 files changed, 291 insertions(+), 137 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -47,7 +47,7 @@ index 64220a0df..5f960d1a9 100644
  /third_party/jinja2
  /third_party/jsoncpp
 diff --git a/DEPS b/DEPS
-index e7f7d6276..2155b6984 100644
+index e7f7d6276..5200d24ad 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -148,6 +148,10 @@ deps = {
@@ -55,7 +55,7 @@ index e7f7d6276..2155b6984 100644
    },
  
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@061e57a768608e7f2268918fca65ddf8c082a7c3',
++    'url': '{github_git}/intel/gpgmm.git@70cd3fa9b49c9cec2cd1a7fb02d5feef0f4656c3',
 +  },
 +
    'third_party/abseil-cpp': {
@@ -495,10 +495,10 @@ index 9747b41c0..50db56dbd 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 90ddc3041..52bcbf540 100644
+index 90ddc3041..c82b3fb90 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
-@@ -130,8 +130,35 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
+@@ -130,8 +130,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
  
      mSamplerHeapCache = std::make_unique<SamplerHeapCache>(this);
  
@@ -514,29 +514,37 @@ index 90ddc3041..52bcbf540 100644
 +        static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +    allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
 +
++    gpgmm::d3d12::ResidencyManager** residencyManager = nullptr;
 +    if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
 +        allocatorDesc.MaxVideoMemoryBudget = 0.95;  // Use up to 95%.
++        residencyManager = mResidencyManager.GetAddressOf();
 +    }
 +
-+    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
++    if (residencyManager != nullptr &&
++        IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +        allocatorDesc.Budget = 100000000;  // 100MB
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +    }
 +
 +    if (IsToggleEnabled(Toggle::DumpResourceAllocator)) {
-+        allocatorDesc.RecordOptions.Flags |= gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_CAPTURE;
++        allocatorDesc.RecordOptions.Flags |= gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
++        allocatorDesc.RecordOptions.MinMessageLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 +        allocatorDesc.RecordOptions.EventScope = gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_PER_INSTANCE;
-+        allocatorDesc.RecordOptions.TraceFile = "dawn_gpgmm_d3d12.json";
++        allocatorDesc.RecordOptions.TraceFile = "dawn_resource_allocator_dump.json";
++    }
++
++    if (IsToggleEnabled(Toggle::RecordDetailedTimingInTraceEvents)) {
++        allocatorDesc.RecordOptions.UseDetailedTimingEvents = true;
 +    }
 +
 +    DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResourceAllocator::CreateAllocator(
-+                              allocatorDesc, &mResourceAllocator, &mResidencyManager),
++                              allocatorDesc, &mResourceAllocator, residencyManager),
 +                          "D3D12 create resource allocator"));
  
      // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
      DAWN_TRY_ASSIGN(
-@@ -248,8 +275,8 @@ CommandAllocatorManager* Device::GetCommandAllocatorManager() const {
+@@ -248,8 +283,8 @@ CommandAllocatorManager* Device::GetCommandAllocatorManager() const {
      return mCommandAllocatorManager.get();
  }
  
@@ -547,7 +555,7 @@ index 90ddc3041..52bcbf540 100644
  }
  
  ResultOrError<CommandRecordingContext*> Device::GetPendingCommandContext() {
-@@ -316,7 +343,6 @@ MaybeError Device::TickImpl() {
+@@ -316,7 +351,6 @@ MaybeError Device::TickImpl() {
      // Perform cleanup operations to free unused objects
      ExecutionSerial completedSerial = GetCompletedCommandSerial();
  
@@ -555,7 +563,7 @@ index 90ddc3041..52bcbf540 100644
      DAWN_TRY(mCommandAllocatorManager->Tick(completedSerial));
      mViewShaderVisibleDescriptorAllocator->Tick(completedSerial);
      mSamplerShaderVisibleDescriptorAllocator->Tick(completedSerial);
-@@ -490,9 +516,9 @@ void Device::CopyFromStagingToBufferImpl(CommandRecordingContext* commandContext
+@@ -490,9 +524,9 @@ void Device::CopyFromStagingToBufferImpl(CommandRecordingContext* commandContext
      StagingBuffer* srcBuffer = ToBackend(source);
      dstBuffer->TrackUsageAndTransitionNow(commandContext, wgpu::BufferUsage::CopyDst);
  
@@ -568,7 +576,7 @@ index 90ddc3041..52bcbf540 100644
  }
  
  MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
-@@ -521,15 +547,63 @@ MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
+@@ -521,15 +555,63 @@ MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
      return {};
  }
  
@@ -637,7 +645,7 @@ index 90ddc3041..52bcbf540 100644
  }
  
  Ref<TextureBase> Device::CreateD3D12ExternalTexture(
-@@ -577,6 +651,7 @@ void Device::InitTogglesFromDriver() {
+@@ -577,6 +659,7 @@ void Device::InitTogglesFromDriver() {
      SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
      SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
      SetToggle(Toggle::UseD3D12ResidencyManagement, true);
@@ -645,7 +653,7 @@ index 90ddc3041..52bcbf540 100644
      SetToggle(Toggle::UseDXC, false);
  
      // Disable optimizations when using FXC
-@@ -712,11 +787,6 @@ void Device::DestroyImpl() {
+@@ -712,11 +795,6 @@ void Device::DestroyImpl() {
          ::CloseHandle(mFenceEvent);
      }
  
