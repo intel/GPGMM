@@ -54,7 +54,6 @@ struct TestEnviromentParams {
     gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
     uint64_t CaptureEventMask = 0;
 
-    bool IsCaptureEnabled = false;    // Should the allocator record.
     bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
     bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;

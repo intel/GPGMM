@@ -92,12 +92,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-
-        if (strcmp("--capture", argv[i]) == 0) {
-            mParams.IsCaptureEnabled = true;
-            continue;
-        }
-
         constexpr const char kCaptureMask[] = "--capture-mask=";
         arglen = sizeof(kCaptureMask) - 1;
         if (strncmp(argv[i], kCaptureMask, arglen) == 0) {
@@ -172,7 +166,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --iterations: Number of times to run playback.\n"
                 << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                    "level for log messages.\n"
-                << " --capture: Capture upon playback.\n"
                 << " --capture-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
@@ -200,11 +193,6 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Playback mode: "
-                     << (mParams.IsCaptureEnabled
-                             ? "Recapture (" + gpgmm::ToHexStr(mParams.CaptureEventMask) + ")"
-                             : "Replay")
-                     << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
                      << "Same caps required: " << (mParams.IsSameCapsRequired ? "true" : "false")
                      << "\n";
@@ -260,8 +248,9 @@ void CaptureReplayTestWithParams::RunSingleTest(const TestEnviromentParams& forc
 
 void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceParams) {
     TestEnviromentParams envParams = gTestEnv->GetParams();
-    if (forceParams.IsCaptureEnabled != envParams.IsCaptureEnabled) {
-        envParams.IsCaptureEnabled |= forceParams.IsCaptureEnabled;
+
+    if (forceParams.CaptureEventMask != envParams.CaptureEventMask) {
+        envParams.CaptureEventMask |= forceParams.CaptureEventMask;
     }
 
     if (forceParams.IsSameCapsRequired != envParams.IsSameCapsRequired) {

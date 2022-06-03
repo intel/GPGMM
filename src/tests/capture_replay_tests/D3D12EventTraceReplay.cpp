@@ -341,7 +341,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 
-                        if (envParams.IsCaptureEnabled) {
+                        if (envParams.CaptureEventMask != 0) {
                             allocatorDesc.RecordOptions.Flags |=
                                 static_cast<ALLOCATOR_RECORD_FLAGS_TYPE>(
                                     envParams.CaptureEventMask);
@@ -466,6 +466,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedAllocationStats;
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
+
+// Playback a captured trace into a new trace with capture-only events.
+TEST_P(D3D12EventTraceReplay, Recapture) {
+    TestEnviromentParams forceParams = {};
+    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_CAPTURE;
+    RunSingleTest(forceParams);
+}
 
 // Verify that playback of a captured trace does not exceed peak usage.
 TEST_P(D3D12EventTraceReplay, PeakUsage) {
