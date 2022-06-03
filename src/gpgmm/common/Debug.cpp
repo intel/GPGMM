@@ -32,7 +32,8 @@ namespace gpgmm {
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity) << mName << ": " << description;
+        gpgmm::Log(mSeverity) << mName << "(" << mMessageId << ")"
+                              << ": " << description;
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(mSeverity < LogSeverity::Warning);

@@ -42,15 +42,14 @@ namespace gpgmm { namespace vk {
         const uint64_t maxDeviceMemoryAllocationCount =
             mResourceAllocator->GetCaps()->GetMaxDeviceAllocationCount();
         if (mInfo.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
-            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory",
-                       ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)
+            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", MESSAGE_ID_ALLOCATOR_FAILED)
                 << "Device exceeded max number of device memory allocations (" +
                        std::to_string(mInfo.UsedMemoryCount) + " vs " +
                        std::to_string(maxDeviceMemoryAllocationCount) + ").";
             return {};
         }
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Request size exceeded the memory size (" +
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mMemorySize) + " bytes).");

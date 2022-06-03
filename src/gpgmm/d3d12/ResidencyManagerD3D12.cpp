@@ -385,8 +385,9 @@ namespace gpgmm { namespace d3d12 {
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
 
-            InfoEvent("GPU page-out") << "Number of allocations: " << objectsToEvict.size() << " ("
-                                      << evictedSizeInBytes << " bytes).";
+            InfoEvent("GPU page-out", MESSAGE_ID_BUDGET_EXCEEDED)
+                << "Number of allocations: " << objectsToEvict.size() << " (" << evictedSizeInBytes
+                << " bytes).";
         }
 
         if (evictedSizeInBytesOut != nullptr) {
@@ -495,8 +496,9 @@ namespace gpgmm { namespace d3d12 {
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
 
-        InfoEvent("GPU page-in") << "Number of allocations: " << numberOfObjectsToMakeResident
-                                 << " (" << sizeToMakeResident << " bytes).";
+        InfoEvent("GPU page-in", MESSAGE_ID_BUDGET_EXCEEDED)
+            << "Number of allocations: " << numberOfObjectsToMakeResident << " ("
+            << sizeToMakeResident << " bytes).";
 
         // Decrease the overhead from using MakeResident, a synchronous call, by calling the
         // asynchronous MakeResident, called EnqueueMakeResident, instead first. Should
