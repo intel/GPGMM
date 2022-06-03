@@ -176,7 +176,7 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --capture-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
-                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Allocation profile.\n";
+                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Profile to apply.\n";
             continue;
         }
     }
@@ -200,13 +200,13 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Capture on playback: "
+                     << "Playback mode: "
                      << (mParams.IsCaptureEnabled
-                             ? "true (" + gpgmm::ToHexStr(mParams.CaptureEventMask) + ")"
-                             : "false")
+                             ? "Recapture (" + gpgmm::ToHexStr(mParams.CaptureEventMask) + ")"
+                             : "Replay")
                      << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
-                     << "Require same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
+                     << "Same caps required: " << (mParams.IsSameCapsRequired ? "true" : "false")
                      << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
