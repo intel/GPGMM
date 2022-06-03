@@ -73,7 +73,11 @@ namespace gpgmm { namespace d3d12 {
             }
         }
 
-        *residencyManagerOut = residencyManager.release();
+        if (residencyManager != nullptr) {
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
+
+            *residencyManagerOut = residencyManager.release();
+        }
 
         return S_OK;
     }

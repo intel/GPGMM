@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
@@ -222,6 +223,17 @@ namespace gpgmm { namespace d3d12 {
         if (!heaps.IsEmpty()) {
             dict.AddItem("Heaps", heaps);
         }
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const RESIDENCY_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("IsUMA", desc.IsUMA);
+        dict.AddItem("VideoMemoryBudget", desc.VideoMemoryBudget);
+        dict.AddItem("Budget", desc.Budget);
+        dict.AddItem("EvictBatchSize", desc.EvictBatchSize);
+        dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
         return dict;
     }
 

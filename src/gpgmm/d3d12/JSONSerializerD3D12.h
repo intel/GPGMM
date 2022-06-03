@@ -27,6 +27,7 @@ namespace gpgmm { namespace d3d12 {
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_INFO;
     class ResidencySet;
+    struct RESIDENCY_DESC;
 
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
@@ -51,6 +52,7 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const HEAP_INFO& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& desc);
         static JSONDict Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc);
+        static JSONDict Serialize(const RESIDENCY_DESC& desc);
 
       private:
         static JSONDict Serialize(const ALLOCATOR_RECORD_OPTIONS& desc);
