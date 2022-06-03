@@ -412,7 +412,6 @@ namespace gpgmm { namespace d3d12 {
             return S_OK;
         }
 
-        ID3D12CommandList* commandList = commandLists[0];
         ResidencySet* residencySet = residencySets[0];
 
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
@@ -472,7 +471,7 @@ namespace gpgmm { namespace d3d12 {
                            (localSizeToMakeResident + nonLocalSizeToMakeResident) / 1e6);
         }
 
-        queue->ExecuteCommandLists(count, &commandList);
+        queue->ExecuteCommandLists(count, commandLists);
         ReturnIfFailed(mFence->Signal(queue));
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
