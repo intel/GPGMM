@@ -117,7 +117,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
     std::vector<Heap*> resourceHeaps = {};
 
-    // Keep allocating until we go over our 10MB budget.
+    // Keep allocating until we reach the 10MB budget.
     while (local->Budget > local->CurrentUsage || nonLocal->Budget > nonLocal->CurrentUsage) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
@@ -132,7 +132,24 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     ASSERT_GT(resourceHeaps.size(), 1u);
 
-    // When over-budget, the resource heap size should not increase.
+    // With no budget left, the last resource heap size should not increase.
     EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetSize(),
               resourceHeaps.at(allocations.size() - 2)->GetSize());
+
+    // But when going over budget, should evict a previous resource heap with a new one of the same
+    // size.
+    {
+        RESIDENCY_INFO beforeInfo = residencyManager->GetInfo();
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        RESIDENCY_INFO afterInfo = residencyManager->GetInfo();
+
+        EXPECT_TRUE(allocation->IsResident());
+
+        EXPECT_EQ(afterInfo.MemoryCount - beforeInfo.MemoryCount, 0u);
+        EXPECT_EQ(afterInfo.MemoryUsage - beforeInfo.MemoryUsage, 0u);
+    }
 }
