@@ -474,6 +474,12 @@ TEST_P(D3D12EventTraceReplay, Recapture) {
     RunSingleTest(forceParams);
 }
 
+// Playback the captured trace as-is.
+TEST_P(D3D12EventTraceReplay, Replay) {
+    TestEnviromentParams forceParams = {};
+    RunSingleTest(forceParams);
+}
+
 // Verify that playback of a captured trace does not exceed peak usage.
 TEST_P(D3D12EventTraceReplay, PeakUsage) {
     TestEnviromentParams forceParams = {};
