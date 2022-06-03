@@ -53,7 +53,7 @@ namespace gpgmm { namespace d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
         const uint64_t heapSize = AlignTo(request.SizeInBytes, request.Alignment);
         if (heapSize > request.SizeInBytes) {
-            InfoEvent("ResourceHeapAllocator.TryAllocateMemory", MESSAGE_ID_ALIGNMENT_MISMATCH)
+            DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
                 << "Resource heap size is larger then the requested size (" +
                        std::to_string(heapSize) + " vs " + std::to_string(request.SizeInBytes) +
                        " bytes).";

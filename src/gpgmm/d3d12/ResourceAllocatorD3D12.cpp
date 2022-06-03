@@ -861,7 +861,7 @@ namespace gpgmm { namespace d3d12 {
                         std::move(committedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > request.SizeInBytes) {
-                        InfoEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
+                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
                             << "Resource allocation is larger then the requested size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
                                    std::to_string(request.SizeInBytes) + " bytes).";
@@ -904,7 +904,7 @@ namespace gpgmm { namespace d3d12 {
                                                                     resourceHeap};
 
                     if (subAllocation.GetSize() > request.SizeInBytes) {
-                        InfoEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
+                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
                             << "Resource allocation is larger then the requested size (" +
                                    std::to_string(subAllocation.GetSize()) + " vs " +
                                    std::to_string(request.SizeInBytes) + " bytes).";
@@ -950,7 +950,7 @@ namespace gpgmm { namespace d3d12 {
                                                                     resourceHeap};
 
                     if (allocation.GetSize() > request.SizeInBytes) {
-                        InfoEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
+                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
                             << "Resource allocation is larger then the requested size (" +
                                    std::to_string(allocation.GetSize()) + " vs " +
                                    std::to_string(request.SizeInBytes) + " bytes).";
@@ -980,7 +980,7 @@ namespace gpgmm { namespace d3d12 {
             initialResourceState, &committedResource, &resourceHeap));
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            InfoEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
+            DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
                 << "Resource allocation is larger then the requested size (" +
                        std::to_string(resourceInfo.SizeInBytes) + " vs " +
                        std::to_string(request.SizeInBytes) + " bytes).";
