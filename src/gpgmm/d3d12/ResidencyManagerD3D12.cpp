@@ -517,4 +517,22 @@ namespace gpgmm { namespace d3d12 {
 
         return S_OK;
     }
+
+    RESIDENCY_INFO ResidencyManager::GetInfo() const {
+        RESIDENCY_INFO info = {};
+        for (auto curr = mLocalVideoMemorySegment.cache.head();
+             curr != mLocalVideoMemorySegment.cache.end(); curr = curr->next()) {
+            info.MemoryUsage += curr->value()->GetSize();
+            info.MemoryCount++;
+        }
+
+        for (auto curr = mNonLocalVideoMemorySegment.cache.head();
+             curr != mNonLocalVideoMemorySegment.cache.end(); curr = curr->next()) {
+            info.MemoryUsage += curr->value()->GetSize();
+            info.MemoryCount++;
+        }
+
+        return info;
+    }
+
 }}  // namespace gpgmm::d3d12

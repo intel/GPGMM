@@ -90,6 +90,19 @@ namespace gpgmm { namespace d3d12 {
         uint64_t InitialFenceValue;
     };
 
+    /** \struct RESIDENCY_INFO
+    Additional information about the residency manager.
+    */
+    struct RESIDENCY_INFO {
+        /** \brief Amount of memory, in bytes, being made resident.
+         */
+        uint64_t MemoryUsage = 0;
+
+        /** \brief Number of heaps currently being made resident.
+         */
+        uint64_t MemoryCount = 0;
+    };
+
     /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
 
     A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
@@ -186,6 +199,12 @@ namespace gpgmm { namespace d3d12 {
         */
         DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+
+        /** \brief  Return the current residency manager usage.
+
+        \return A RESIDENCY_INFO struct.
+        */
+        RESIDENCY_INFO GetInfo() const;
 
       private:
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
