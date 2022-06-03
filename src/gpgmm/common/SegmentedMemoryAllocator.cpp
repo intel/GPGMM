@@ -135,8 +135,7 @@ namespace gpgmm {
 
         GPGMM_CHECK_NONZERO(request.SizeInBytes);
 
-        GPGMM_INVALID_IF(request.Alignment != mMemoryAlignment,
-                         ALLOCATOR_MESSAGE_ID_ALIGNMENT_MISMATCH,
+        GPGMM_INVALID_IF(request.Alignment != mMemoryAlignment, MESSAGE_ID_ALIGNMENT_MISMATCH,
                          "Allocation alignment must match memory alignment (" +
                              std::to_string(request.Alignment) + " vs " +
                              std::to_string(mMemoryAlignment) + " bytes).");

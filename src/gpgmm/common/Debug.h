@@ -64,6 +64,15 @@
 
 namespace gpgmm {
 
+    enum EVENT_MESSAGE_ID {
+        MESSAGE_ID_UNKNOWN,
+        MESSAGE_ID_SIZE_EXCEEDED,
+        MESSAGE_ID_ALIGNMENT_MISMATCH,
+        MESSAGE_ID_ALLOCATOR_FAILED,
+        MESSAGE_ID_PREFETCH_FAILED,
+        MESSAGE_ID_BUDGET_EXCEEDED
+    };
+
     struct LOG_MESSAGE {
         std::string Description;
         int ID;

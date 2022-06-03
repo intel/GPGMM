@@ -232,8 +232,7 @@ namespace gpgmm { namespace vk {
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);
         if (memoryAllocation == nullptr) {
-            InfoEvent("GpResourceAllocator.TryAllocateResource",
-                      ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED)
+            InfoEvent("GpResourceAllocator.TryAllocateResource", MESSAGE_ID_ALLOCATOR_FAILED)
                 << std::string(allocator->GetTypename()) +
                        " failed to allocate memory for resource.";
 

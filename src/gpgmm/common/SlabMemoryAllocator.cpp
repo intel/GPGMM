@@ -141,7 +141,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Allocation size exceeded the block size (" +
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mBlockSize) + " bytes).");
@@ -149,7 +149,7 @@ namespace gpgmm {
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize),
                             request.AvailableForAllocation);
-        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
                              " vs " + std::to_string(mMaxSlabSize) + " bytes).");
 
@@ -225,7 +225,7 @@ namespace gpgmm {
                             return pFreeSlab->SlabMemory->GetMemory();
                         }
 
-                        DebugEvent(GetTypename(), ALLOCATOR_MESSAGE_ID_SIZE_MISMATCH)
+                        DebugEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
                             << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                             << prefetchedMemory->GetSize() << " bytes.";
 

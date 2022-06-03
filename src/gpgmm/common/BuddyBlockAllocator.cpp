@@ -147,7 +147,7 @@ namespace gpgmm {
     MemoryBlock* BuddyBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
         GPGMM_CHECK_NONZERO(requestSize);
 
-        GPGMM_INVALID_IF(requestSize > mMaxBlockSize, ALLOCATOR_MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(requestSize > mMaxBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Require size exceeded the max block size.");
 
         // Compute the level
@@ -158,7 +158,7 @@ namespace gpgmm {
         uint64_t currBlockLevel = GetNextFreeAlignedBlock(sizeToLevel, alignment);
 
         // Error when no free blocks exist (allocator is full)
-        GPGMM_INVALID_IF(currBlockLevel == kInvalidOffset, ALLOCATOR_MESSAGE_ID_ALLOCATOR_FAILED,
+        GPGMM_INVALID_IF(currBlockLevel == kInvalidOffset, MESSAGE_ID_ALLOCATOR_FAILED,
                          "Reached capacity");
 
         // Split free blocks level-by-level.
