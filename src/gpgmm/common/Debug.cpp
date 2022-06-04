@@ -40,7 +40,7 @@ namespace gpgmm {
 #endif
 
         if (mSeverity >= gRecordEventLevel) {
-            LOG_MESSAGE message{description, mMessageId};
+            EVENT_MESSAGE message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
     }

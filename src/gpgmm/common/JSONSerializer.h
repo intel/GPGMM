@@ -24,12 +24,12 @@ namespace gpgmm {
     struct MEMORY_ALLOCATOR_INFO;
     struct MEMORY_ALLOCATION_INFO;
     struct MEMORY_ALLOCATION_REQUEST;
-    struct LOG_MESSAGE;
+    struct EVENT_MESSAGE;
 
     class JSONSerializer {
       public:
         static JSONDict Serialize();
-        static JSONDict Serialize(const LOG_MESSAGE& desc);
+        static JSONDict Serialize(const EVENT_MESSAGE& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const MEMORY_ALLOCATION_REQUEST& desc);
         static JSONDict Serialize(const MEMORY_ALLOCATION_INFO& info);

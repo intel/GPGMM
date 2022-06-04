@@ -74,7 +74,7 @@ namespace gpgmm {
         MESSAGE_ID_BUDGET_EXCEEDED
     };
 
-    struct LOG_MESSAGE {
+    struct EVENT_MESSAGE {
         std::string Description;
         int ID;
     };
