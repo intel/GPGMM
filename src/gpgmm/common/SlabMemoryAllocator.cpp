@@ -31,10 +31,11 @@ namespace gpgmm {
 
     // Disables pre-fetching of memory objects that are too large.
     // Larger memory objects require more time on the device to allocate memory and could block a
-    // subsequent allocation request using a previously allocated memory object. This threshold
-    // is used to restrict pre-fetching to smaller memory blocks to ensure the application is busy
-    // and not waiting on the next pre-fetched allocation.
-    constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = 64 * 1024 * 1024;
+    // subsequent allocation request using the device with a previously allocated memory object.
+    // This threshold is used to restrict pre-fetching to smaller memory blocks to minimize the
+    // the amount of time required for the application to be busy or not waiting on the next
+    // allocation.
+    constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = 64u * 1024 * 1024;
 
     // SlabMemoryAllocator
 
@@ -273,10 +274,8 @@ namespace gpgmm {
                                          request.AvailableForAllocation),
                          mMaxSlabSize);
 
-            const uint64_t numOfSlabsInNextSlabSize = nextSlabSize / mLastUsedSlabSize;
             if (nextSlabSize < request.AvailableForAllocation &&
-                nextSlabSize <= kSlabPrefetchMemorySizeThreshold &&
-                pCache->FullList.size() >= numOfSlabsInNextSlabSize) {
+                nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
                 MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
                 newSlabRequest.SizeInBytes = nextSlabSize;
                 newSlabRequest.Alignment = mSlabAlignment;
