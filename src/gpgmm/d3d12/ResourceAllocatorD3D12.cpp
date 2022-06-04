@@ -706,8 +706,7 @@ namespace gpgmm { namespace d3d12 {
             (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
                                   clearValue}));
 
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
-
+        std::lock_guard<std::mutex> lock(mMutex);
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               resourceAllocationOut));
@@ -725,7 +724,7 @@ namespace gpgmm { namespace d3d12 {
 
         if (mUseDetailedTimingEvents) {
             // Update the current usage counters.
-            GetInfo();
+            GetInfoInternal();
             GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT((*resourceAllocationOut)->GetMemory(),
                                               (*resourceAllocationOut)->GetMemory()->GetInfo());
         }
@@ -741,7 +740,7 @@ namespace gpgmm { namespace d3d12 {
                                                       D3D12_RESOURCE_STATES initialResourceState,
                                                       const D3D12_CLEAR_VALUE* clearValue,
                                                       ResourceAllocation** resourceAllocationOut) {
-        std::lock_guard<std::mutex> lock(mMutex);
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
@@ -1137,6 +1136,8 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfoInternal() const {
+        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.GetInfo");
+
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
 
