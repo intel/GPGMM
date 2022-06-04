@@ -346,7 +346,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 static_cast<ALLOCATOR_RECORD_FLAGS_TYPE>(
                                     envParams.CaptureEventMask);
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
-                            allocatorDesc.RecordOptions.TraceFile = traceFile.path;
+
+                            const size_t indexOfExt = traceFile.path.find_last_of(".");
+                            const std::string newTraceFilePathWithoutExt =
+                                traceFile.path.substr(0, indexOfExt) + "_new";
+
+                            allocatorDesc.RecordOptions.TraceFile =
+                                newTraceFilePathWithoutExt + ".json";
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(envParams.LogLevel);
 

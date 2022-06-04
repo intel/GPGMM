@@ -160,14 +160,20 @@ namespace gpgmm {
         traceData.AddItem("traceEvents", traceEvents);
 
         std::ofstream outFile;
-        outFile.open(mTraceFile);
-        if (!outFile.fail()) {
-            InfoLog() << mTraceFile + " exists and will be overwritten.";
+
+        // Open the file but do not create it.
+        outFile.open(mTraceFile, std::ios_base::out | std::ios_base::in);
+        if (outFile.is_open()) {
+            WarningLog() << mTraceFile + " exists and will be overwritten.";
         }
 
+        // Re-open it but allow to be created.
+        outFile.open(mTraceFile, std::ios_base::out);
         outFile << traceData.ToString();
         outFile.flush();
         outFile.close();
+
+        DebugLog() << "Flushed " << mergedBuffer.size() << " events to disk.";
     }
 
     std::vector<TraceEvent>* EventTraceWriter::GetOrCreateBufferFromTLS() {
