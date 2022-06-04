@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/gpgmm/common/Debug.cpp File Reference</title>
+<title>GPGMM: src/gpgmm/common/EventMessage.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,14 +68,14 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
-  <div class="headertitle"><div class="title">Debug.cpp File Reference</div></div>
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">EventMessage.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_debug_8h.html">gpgmm/common/Debug.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_event_message_8h.html">gpgmm/common/EventMessage.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_trace_event_8h.html">gpgmm/common/TraceEvent.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_assert_8h.html">gpgmm/utils/Assert.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_log_8h.html">gpgmm/utils/Log.h</a>&quot;</code><br />
+<code>#include &lt;mutex&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -84,8 +84,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1ec6249a8274fa6a1c38dbae05f3743d"><td class="memItemLeft" align="right" valign="top">LogSeverity&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a1ec6249a8274fa6a1c38dbae05f3743d">gpgmm::GetDefaultEventMessageLevel</a> ()</td></tr>
+<tr class="separator:a1ec6249a8274fa6a1c38dbae05f3743d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41c5885f592531f8b1bb30f9e0fc82f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a41c5885f592531f8b1bb30f9e0fc82f5">gpgmm::SetEventMessageLevel</a> (const LogSeverity &amp;newLevel)</td></tr>
 <tr class="separator:a41c5885f592531f8b1bb30f9e0fc82f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa89c2ef25497231b74a19dfa7b8bb9e4"><td class="memItemLeft" align="right" valign="top">LogSeverity&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#aa89c2ef25497231b74a19dfa7b8bb9e4">gpgmm::GetEventMessageLevel</a> ()</td></tr>
+<tr class="separator:aa89c2ef25497231b74a19dfa7b8bb9e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac543e60f5c87d4e7c967f7529fd8a709"><td class="memItemLeft" align="right" valign="top">EventMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ac543e60f5c87d4e7c967f7529fd8a709">gpgmm::DebugEvent</a> (const char *name, int messageId)</td></tr>
 <tr class="separator:ac543e60f5c87d4e7c967f7529fd8a709"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5422417ab2bf7c989cb1fe4d7e6195e1"><td class="memItemLeft" align="right" valign="top">EventMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a5422417ab2bf7c989cb1fe4d7e6195e1">gpgmm::InfoEvent</a> (const char *name, int messageId)</td></tr>
@@ -94,11 +98,6 @@ Functions</h2></td></tr>
 <tr class="separator:aea958111e401705339ddcc41d50c099e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ce85bdbbdfb1efebb93a6eea5f3db43"><td class="memItemLeft" align="right" valign="top">EventMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a9ce85bdbbdfb1efebb93a6eea5f3db43">gpgmm::ErrorEvent</a> (const char *name, int messageId)</td></tr>
 <tr class="separator:a9ce85bdbbdfb1efebb93a6eea5f3db43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:af530c486f89c78ee4ca13c86f5c00201"><td class="memItemLeft" align="right" valign="top">LogSeverity&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#af530c486f89c78ee4ca13c86f5c00201">gpgmm::gRecordEventLevel</a> = LogSeverity::Info</td></tr>
-<tr class="separator:af530c486f89c78ee4ca13c86f5c00201"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

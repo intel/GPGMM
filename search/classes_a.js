@@ -16,6 +16,5 @@ var searchData=
   ['linknode_3c_20memoryallocator_20_3e_13',['LinkNode&lt; MemoryAllocator &gt;',['../classgpgmm_1_1_link_node.html',1,'gpgmm']]],
   ['linknode_3c_20memorysegment_20_3e_14',['LinkNode&lt; MemorySegment &gt;',['../classgpgmm_1_1_link_node.html',1,'gpgmm']]],
   ['linknode_3c_20slab_20_3e_15',['LinkNode&lt; Slab &gt;',['../classgpgmm_1_1_link_node.html',1,'gpgmm']]],
-  ['log_5fmessage_16',['LOG_MESSAGE',['../structgpgmm_1_1_l_o_g___m_e_s_s_a_g_e.html',1,'gpgmm']]],
-  ['logmessage_17',['LogMessage',['../classgpgmm_1_1_log_message.html',1,'gpgmm']]]
+  ['logmessage_16',['LogMessage',['../classgpgmm_1_1_log_message.html',1,'gpgmm']]]
 ];
