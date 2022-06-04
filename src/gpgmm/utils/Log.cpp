@@ -21,6 +21,7 @@
 
 #include <cstdio>
 #include <thread>
+#include <mutex>
 
 #if defined(GPGMM_PLATFORM_ANDROID)
 #    include <android/log.h>
@@ -42,6 +43,7 @@ namespace gpgmm {
 
     // Messages with equal or greater to severity will be logged.
     static LogSeverity gLogMessageLevel = GetDefaultLogMessageLevel();
+    static std::mutex mMutex;
 
     namespace {
 
@@ -82,10 +84,12 @@ namespace gpgmm {
     }  // anonymous namespace
 
     void SetLogMessageLevel(const LogSeverity& newLevel) {
+        std::lock_guard<std::mutex> lock(mMutex);
         gLogMessageLevel = newLevel;
     }
 
-    const LogSeverity& GetLogMessageLevel() {
+    LogSeverity GetLogMessageLevel() {
+        std::lock_guard<std::mutex> lock(mMutex);
         return gLogMessageLevel;
     }
 
@@ -122,7 +126,7 @@ namespace gpgmm {
 #endif  // defined(GPGMM_PLATFORM_WINDOWS)
 
         // If this message is below the global severity level, do not print it.
-        if (gLogMessageLevel > mSeverity) {
+        if (GetLogMessageLevel() > mSeverity) {
             return;
         }
 
