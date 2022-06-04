@@ -17,12 +17,22 @@
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Log.h"
 
+#include <mutex>
+
 namespace gpgmm {
+
     // Messages with equal or greater to severity will be logged.
     static LogSeverity gRecordEventLevel = LogSeverity::Info;
+    static std::mutex mMutex;
 
     void SetEventMessageLevel(const LogSeverity& newLevel) {
+        std::lock_guard<std::mutex> lock(mMutex);
         gRecordEventLevel = newLevel;
+    }
+
+    LogSeverity GetEventMessageLevel() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return gRecordEventLevel;
     }
 
     EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
@@ -39,7 +49,7 @@ namespace gpgmm {
         ASSERT(mSeverity < LogSeverity::Warning);
 #endif
 
-        if (mSeverity >= gRecordEventLevel) {
+        if (mSeverity >= GetEventMessageLevel()) {
             EVENT_MESSAGE message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
