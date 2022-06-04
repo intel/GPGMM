@@ -21,8 +21,16 @@
 
 namespace gpgmm {
 
+    LogSeverity GetDefaultEventMessageLevel() {
+#if defined(NDEBUG)
+        return LogSeverity::Info;
+#else
+        return LogSeverity::Debug;
+#endif  // defined(NDEBUG)
+    }
+
     // Messages with equal or greater to severity will be logged.
-    static LogSeverity gRecordEventLevel = LogSeverity::Info;
+    static LogSeverity gRecordEventLevel = GetDefaultEventMessageLevel();
     static std::mutex mMutex;
 
     void SetEventMessageLevel(const LogSeverity& newLevel) {
@@ -34,6 +42,8 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
         return gRecordEventLevel;
     }
+
+    // EventMessage
 
     EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
         : LogMessage(level), mSeverity(level), mName(name), mMessageId(messageId) {
