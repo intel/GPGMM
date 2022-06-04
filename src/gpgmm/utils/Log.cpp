@@ -20,8 +20,8 @@
 #include "Utils.h"
 
 #include <cstdio>
-#include <thread>
 #include <mutex>
+#include <thread>
 
 #if defined(GPGMM_PLATFORM_ANDROID)
 #    include <android/log.h>

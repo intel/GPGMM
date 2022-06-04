@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 
+#include "gpgmm/common/Debug.h"
 #include "gpgmm/utils/Assert.h"
-#include "gpgmm/utils/Log.h"
 
 #include <mutex>
 
@@ -46,7 +46,7 @@ namespace gpgmm {
     // EventMessage
 
     EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
-        : LogMessage(level), mSeverity(level), mName(name), mMessageId(messageId) {
+        : mSeverity(level), mName(name), mMessageId(messageId) {
     }
 
     EventMessage::~EventMessage() {

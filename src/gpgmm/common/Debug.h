@@ -17,11 +17,6 @@
 
 #include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/common/TraceEvent.h"
-#include "gpgmm/utils/Log.h"
-#include "gpgmm/utils/NonCopyable.h"
-
-#include <sstream>
-#include <string>
 
 #ifdef GPGMM_DISABLE_TRACING
 
@@ -62,55 +57,5 @@
         !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
 
 #endif  // GPGMM_DISABLE_TRACING
-
-namespace gpgmm {
-
-    enum EVENT_MESSAGE_ID {
-        MESSAGE_ID_UNKNOWN,
-        MESSAGE_ID_SIZE_EXCEEDED,
-        MESSAGE_ID_ALIGNMENT_MISMATCH,
-        MESSAGE_ID_ALLOCATOR_FAILED,
-        MESSAGE_ID_PREFETCH_FAILED,
-        MESSAGE_ID_BUDGET_EXCEEDED
-    };
-
-    struct EVENT_MESSAGE {
-        std::string Description;
-        int ID;
-    };
-
-    class EventMessage : public LogMessage, public NonCopyable {
-      public:
-        EventMessage(const LogSeverity& level,
-                     const char* name,
-                     int messageId = MESSAGE_ID_UNKNOWN);
-        ~EventMessage();
-
-        EventMessage(EventMessage&& other) = default;
-        EventMessage& operator=(EventMessage&& other) = default;
-
-        template <typename T>
-        EventMessage& operator<<(T&& value) {
-            mStream << value;
-            return *this;
-        }
-
-      private:
-        LogSeverity mSeverity;
-        const char* mName = nullptr;
-        int mMessageId = 0;
-
-        std::ostringstream mStream;
-    };
-
-    EventMessage DebugEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage InfoEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage WarnEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage ErrorEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-
-    // Messages of a given severity to be recorded.
-    void SetEventMessageLevel(const LogSeverity& level);
-
-}  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_DEBUG_H_

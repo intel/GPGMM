@@ -15,7 +15,7 @@
 
 #include "gpgmm/vk/DeviceMemoryAllocatorVk.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/vk/BackendVk.h"
 #include "gpgmm/vk/CapsVk.h"
 #include "gpgmm/vk/DeviceMemoryVk.h"

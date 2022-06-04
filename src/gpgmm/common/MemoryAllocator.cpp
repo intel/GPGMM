@@ -14,7 +14,8 @@
 
 #include "gpgmm/common/MemoryAllocator.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/JSONSerializer.h"
 
 namespace gpgmm {
 
