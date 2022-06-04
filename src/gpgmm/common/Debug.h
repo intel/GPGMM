@@ -18,6 +18,7 @@
 #include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/NonCopyable.h"
 
 #include <sstream>
 #include <string>
@@ -78,9 +79,11 @@ namespace gpgmm {
         int ID;
     };
 
-    class EventMessage : public LogMessage {
+    class EventMessage : public LogMessage, public NonCopyable {
       public:
-        EventMessage(const LogSeverity& level, const char* name, int messageId = 0);
+        EventMessage(const LogSeverity& level,
+                     const char* name,
+                     int messageId = MESSAGE_ID_UNKNOWN);
         ~EventMessage();
 
         EventMessage(EventMessage&& other) = default;
@@ -100,10 +103,10 @@ namespace gpgmm {
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const char* name, int messageId = 0);
-    EventMessage InfoEvent(const char* name, int messageId = 0);
-    EventMessage WarnEvent(const char* name, int messageId = 0);
-    EventMessage ErrorEvent(const char* name, int messageId = 0);
+    EventMessage DebugEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
+    EventMessage InfoEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
+    EventMessage WarnEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
+    EventMessage ErrorEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);
