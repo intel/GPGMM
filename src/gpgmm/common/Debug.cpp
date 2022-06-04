@@ -19,7 +19,7 @@
 
 namespace gpgmm {
     // Messages with equal or greater to severity will be logged.
-    LogSeverity gRecordEventLevel = LogSeverity::Info;
+    static LogSeverity gRecordEventLevel = LogSeverity::Info;
 
     void SetEventMessageLevel(const LogSeverity& newLevel) {
         gRecordEventLevel = newLevel;
