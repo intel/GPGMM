@@ -21,7 +21,6 @@ target_sources(gpgmm_common PRIVATE
     "BuddyMemoryAllocator.h"
     "ConditionalMemoryAllocator.cpp"
     "ConditionalMemoryAllocator.h"
-    "Debug.h"
     "Defaults.h"
     "Error.h"
     "EventTraceWriter.cpp"

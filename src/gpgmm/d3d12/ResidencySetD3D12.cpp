@@ -14,7 +14,7 @@
 
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm { namespace d3d12 {
 

@@ -14,7 +14,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Assert.h"
 
 #include <mutex>
