@@ -1011,16 +1011,20 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDefrag) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
-        CreateBasicAllocatorDesc(/*enablePrefetch*/ true), &resourceAllocator));
+        CreateBasicAllocatorDesc(/*allowPrefetch*/ true), &resourceAllocator));
     ASSERT_NE(resourceAllocator, nullptr);
 
     constexpr uint64_t kNumOfBuffers = 1000u;
 
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY;
+
     std::set<ComPtr<ResourceAllocation>> allocs = {};
     for (uint64_t i = 0; i < kNumOfBuffers; i++) {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(1),
+                                                           D3D12_RESOURCE_STATE_COMMON, nullptr,
+                                                           &allocation));
         ASSERT_NE(allocation, nullptr);
         allocs.insert(allocation);
     }
