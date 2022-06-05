@@ -15,8 +15,8 @@
 #ifndef GPGMM_COMMON_TRACEEVENT_H_
 #define GPGMM_COMMON_TRACEEVENT_H_
 
+#include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/common/TraceEventPhase.h"
-#include "gpgmm/utils/JSONEncoder.h"
 
 #include <memory>
 #include <string>
@@ -42,6 +42,11 @@
 #define TRACE_EVENT_INSTANT0(category_group, name, scope, args) TRACE_EMPTY
 #define TRACE_COUNTER1(category_group, name, value) TRACE_EMPTY
 #define TRACE_EVENT_METADATA1(category_group, name, arg1_name, arg1_value) TRACE_EMPTY
+
+#define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc) TRACE_EMPTY
 
 #else // !GPGMM_DISABLE_TRACING
 
@@ -108,6 +113,35 @@ const uint64_t kNoId = 0;
         gpgmm::TraceBuffer::AddTraceEvent(phase, category_group, name, kNoId,  \
                                           __VA_ARGS__);                        \
     } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr)                                 \
+    do {                                                                     \
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default,      \
+                                            (*objPtr).GetTypename(), objPtr); \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr)                             \
+    do {                                                                     \
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default,      \
+                                            (*objPtr).GetTypename(), objPtr); \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc)                   \
+    do {                                                                  \
+        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(                              \
+            TraceEventCategory::Default, (*objPtr).GetTypename(), objPtr, \
+            GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled()));           \
+    } while (false)
+
+#define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc)                                \
+    do {                                                                         \
+        TRACE_EVENT_INSTANT1(TraceEventCategory::Default, name,                  \
+                              GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled())); \
+    } while (false)
+
+// Helper macro to avoid evaluating the arguments when the condition doesn't hold.
+#define GPGMM_LAZY_SERIALIZE(object, condition) \
+        !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
 
 #endif
 

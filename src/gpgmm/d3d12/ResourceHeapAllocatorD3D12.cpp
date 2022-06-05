@@ -15,7 +15,7 @@
 
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"

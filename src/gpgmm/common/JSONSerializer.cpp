@@ -15,7 +15,7 @@
 #include "gpgmm/common/JSONSerializer.h"
 
 #include "gpgmm/common/Allocator.h"
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryPool.h"
 #include "gpgmm/utils/Utils.h"
@@ -35,7 +35,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const LOG_MESSAGE& desc) {
+    JSONDict JSONSerializer::Serialize(const EVENT_MESSAGE& desc) {
         JSONDict dict;
         dict.AddItem("Description", desc.Description);
         dict.AddItem("ID", desc.ID);

@@ -12,21 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 
+#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Assert.h"
-#include "gpgmm/utils/Log.h"
+
+#include <mutex>
 
 namespace gpgmm {
+
+    LogSeverity GetDefaultEventMessageLevel() {
+#if defined(NDEBUG)
+        return LogSeverity::Info;
+#else
+        return LogSeverity::Debug;
+#endif  // defined(NDEBUG)
+    }
+
     // Messages with equal or greater to severity will be logged.
-    LogSeverity gRecordEventLevel = LogSeverity::Info;
+    static LogSeverity gRecordEventLevel = GetDefaultEventMessageLevel();
+    static std::mutex mMutex;
 
     void SetEventMessageLevel(const LogSeverity& newLevel) {
+        std::lock_guard<std::mutex> lock(mMutex);
         gRecordEventLevel = newLevel;
     }
 
+    LogSeverity GetEventMessageLevel() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return gRecordEventLevel;
+    }
+
+    // EventMessage
+
     EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
-        : LogMessage(level), mSeverity(level), mName(name), mMessageId(messageId) {
+        : mSeverity(level), mName(name), mMessageId(messageId) {
     }
 
     EventMessage::~EventMessage() {
@@ -39,8 +59,8 @@ namespace gpgmm {
         ASSERT(mSeverity < LogSeverity::Warning);
 #endif
 
-        if (mSeverity >= gRecordEventLevel) {
-            LOG_MESSAGE message{description, mMessageId};
+        if (mSeverity >= GetEventMessageLevel()) {
+            EVENT_MESSAGE message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
     }

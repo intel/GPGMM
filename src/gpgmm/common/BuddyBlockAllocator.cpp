@@ -15,8 +15,8 @@
 
 #include "gpgmm/common/BuddyBlockAllocator.h"
 
-#include "gpgmm/common/Debug.h"
 #include "gpgmm/common/Error.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Math.h"
 #include "gpgmm/utils/Utils.h"

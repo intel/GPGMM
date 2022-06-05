@@ -14,7 +14,7 @@
 
 #include "gpgmm/common/SlabMemoryAllocator.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Utils.h"

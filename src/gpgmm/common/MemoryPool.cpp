@@ -14,7 +14,7 @@
 
 #include "gpgmm/common/MemoryPool.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
 

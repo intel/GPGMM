@@ -15,7 +15,7 @@
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/utils/Math.h"
 

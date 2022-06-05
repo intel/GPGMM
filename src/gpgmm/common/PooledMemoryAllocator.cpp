@@ -14,8 +14,8 @@
 
 #include "gpgmm/common/PooledMemoryAllocator.h"
 
-#include "gpgmm/common/Debug.h"
 #include "gpgmm/common/LIFOMemoryPool.h"
+#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Assert.h"
 
 namespace gpgmm {

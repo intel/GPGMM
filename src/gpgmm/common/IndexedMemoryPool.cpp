@@ -14,8 +14,8 @@
 
 #include "gpgmm/common/IndexedMemoryPool.h"
 
-#include "gpgmm/common/Debug.h"
 #include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
 

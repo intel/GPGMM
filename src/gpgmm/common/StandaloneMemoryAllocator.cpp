@@ -14,7 +14,7 @@
 
 #include "gpgmm/common/StandaloneMemoryAllocator.h"
 
-#include "gpgmm/common/Debug.h"
+#include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
 
