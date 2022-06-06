@@ -97,7 +97,54 @@ gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation); // Make sure 
 gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
 
+
+## Project integration
+
+It is recommended to use the built-in GN or CMake build targets.
+
+### GN
+
+BUILD.gn
+```gn
+source_set("proj") {
+  deps = [ "${gpgmm_dir}:gpgmm" ]
+}
+```
+Create `build_overrides/gpgmm.gni` file in root directory.
+
+### CMake
+
+CMakeLists.txt
+```cmake
+add_subdirectory(gpgmm)
+target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/src)
+target_link_libraries(proj PRIVATE gpgmm ...)
+```
+
+### Shared library
+
+Alternatively, GPGMM can be built as a shared library which can be distributed through the application.
+
+
+#### Dynamic Linked Library (DLL)
+
+Use `is_clang=false gpgmm_shared_library=true` when [Setting up the build](#Setting-up-the-build).
+Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the shared library (DLL).
+
+Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
+1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
+2. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src` and `gpgmm\src\include` to **Additional Include Directories**.
+3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
+4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
+
+Then include the public header:
+```cpp
+#include <gpgmm_*.h> // Ex. gpgmm_d3d12.h
+```
+
 ## Build and Run
+
+For development, you must use GN to generate the build. CMake is only supported for production builds (ie. no tests).
 
 ### Install `depot_tools`
 
@@ -138,46 +185,6 @@ To build with a backend, please set the corresponding argument from following ta
 ### Build
 
 Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
-
-## Project integration
-GPGMM has built-in GN or CMake build targets.
-
-### GN
-
-BUILD.gn
-```gn
-source_set("proj") {
-  deps = [ "${gpgmm_dir}:gpgmm" ]
-}
-```
-Create `build_overrides/gpgmm.gni` file in root directory.
-
-### CMake
-
-CMakeLists.txt
-```cmake
-add_subdirectory(gpgmm)
-target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/src)
-target_link_libraries(proj PRIVATE gpgmm ...)
-```
-
-### Visual Studio (MSVC)
-
-Dynamic Linked Library (DLL)
-
-Use `is_clang=false gpgmm_shared_library=true` when [Setting up the build](#Setting-up-the-build).
-Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the shared library (DLL).
-
-Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
-1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
-2. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src` and `gpgmm\src\include` to **Additional Include Directories**.
-3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
-4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
-
-Then include the public header:
-```cpp
-#include <gpgmm_*.h> // Ex. gpgmm_d3d12.h
-```
 
 ## Testing
 
