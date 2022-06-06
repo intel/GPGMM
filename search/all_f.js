@@ -27,7 +27,8 @@ var searchData=
   ['preferredresourceheapsize_24',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['previous_25',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
   ['prevpoweroftwo_26',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
-  ['push_5fback_27',['push_back',['../classgpgmm_1_1_linked_list.html#aec30ce08cab34f488b56851597607998',1,'gpgmm::LinkedList']]],
-  ['push_5ffront_28',['push_front',['../classgpgmm_1_1_linked_list.html#a81a985f8595b06abc48979258ca20cb1',1,'gpgmm::LinkedList']]],
-  ['pvulkanfunctions_29',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['processtasksinworkerthread_27',['ProcessTasksInWorkerThread',['../classgpgmm_1_1_async_thread_pool_impl.html#a1da28fdc9ca5cbafabfdacdfbf4d0cc9',1,'gpgmm::AsyncThreadPoolImpl']]],
+  ['push_5fback_28',['push_back',['../classgpgmm_1_1_linked_list.html#aec30ce08cab34f488b56851597607998',1,'gpgmm::LinkedList']]],
+  ['push_5ffront_29',['push_front',['../classgpgmm_1_1_linked_list.html#a81a985f8595b06abc48979258ca20cb1',1,'gpgmm::LinkedList']]],
+  ['pvulkanfunctions_30',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];
