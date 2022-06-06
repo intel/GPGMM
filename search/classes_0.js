@@ -9,6 +9,5 @@ var searchData=
   ['allocatorbase_6',['AllocatorBase',['../classgpgmm_1_1_allocator_base.html',1,'gpgmm']]],
   ['allocatornode_7',['AllocatorNode',['../classgpgmm_1_1_allocator_node.html',1,'gpgmm']]],
   ['allocatornode_3c_20memoryallocator_20_3e_8',['AllocatorNode&lt; MemoryAllocator &gt;',['../classgpgmm_1_1_allocator_node.html',1,'gpgmm']]],
-  ['asynceventimpl_9',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html',1,'gpgmm']]],
-  ['asyncthreadpoolimpl_10',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html',1,'gpgmm']]]
+  ['asynceventimpl_9',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html',1,'gpgmm']]]
 ];
