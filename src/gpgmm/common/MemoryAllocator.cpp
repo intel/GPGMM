@@ -26,8 +26,7 @@ namespace gpgmm {
         }
 
         void operator()() override {
-            DebugEvent(mAllocator->GetTypename())
-                << "Prefetch request: " << JSONSerializer::Serialize(mRequest).ToString();
+            DebugLog() << "AllocateMemoryTask: " << JSONSerializer::Serialize(mRequest).ToString();
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 

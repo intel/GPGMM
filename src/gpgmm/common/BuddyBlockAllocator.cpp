@@ -148,7 +148,7 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(requestSize);
 
         GPGMM_INVALID_IF(requestSize > mMaxBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
-                         "Require size exceeded the max block size.");
+                         "Requested size exceeded max block size.");
 
         // Compute the level
         const uint32_t sizeToLevel = ComputeLevelFromBlockSize(requestSize);
@@ -159,7 +159,7 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         GPGMM_INVALID_IF(currBlockLevel == kInvalidOffset, MESSAGE_ID_ALLOCATOR_FAILED,
-                         "Reached capacity");
+                         "Allocated size exceeded allocator capacity");
 
         // Split free blocks level-by-level.
         // Terminate when the current block level is equal to the computed level of the requested

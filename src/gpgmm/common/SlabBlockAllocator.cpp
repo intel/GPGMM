@@ -47,13 +47,12 @@ namespace gpgmm {
         GPGMM_CHECK_NONZERO(requestSize);
 
         GPGMM_INVALID_IF(requestSize > mBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
-                         "Allocation size exceeded the block size. (" +
-                             std::to_string(requestSize) + " vs " + std::to_string(mBlockSize) +
-                             " bytes).");
+                         "Allocation size exceeded the block size (" + std::to_string(requestSize) +
+                             " vs " + std::to_string(mBlockSize) + " bytes).");
 
         // Offset must be equal to a multiple of |mBlockSize|.
         GPGMM_INVALID_IF(!IsAligned(mBlockSize, alignment), MESSAGE_ID_ALIGNMENT_MISMATCH,
-                         "Allocation alignment is not a multiple of the block size. (" +
+                         "Allocation alignment is not a multiple of the block size (" +
                              std::to_string(alignment) + " vs " + std::to_string(mBlockSize) +
                              " bytes).");
 
