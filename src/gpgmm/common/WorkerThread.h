@@ -65,6 +65,9 @@ namespace gpgmm {
       private:
         // Return event to wait on until the callback runs.
         virtual std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback) = 0;
+
+        // Check if the thread pool needs to start running a worker thread.
+        virtual void checkAndRunPendingTasks() = 0;
     };
 
 }  // namespace gpgmm

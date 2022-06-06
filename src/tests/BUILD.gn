@@ -120,6 +120,7 @@ test("gpgmm_unittests") {
     "unittests/SlabBlockAllocatorTests.cpp",
     "unittests/SlabMemoryAllocatorTests.cpp",
     "unittests/UtilsTest.cpp",
+    "unittests/WorkerThreadTests.cpp",
   ]
 
   # When building inside Chromium, use their gtest main function because it is
