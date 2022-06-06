@@ -85,28 +85,29 @@ namespace gpgmm {
                                                   uint64_t availableForAllocation) const {
         ASSERT(requestSize <= mBlockSize);
 
+        uint64_t slabSize = baseSlabSize;
+
         // If the left over empty space is less than |mSlabFragmentationLimit| x slab size,
         // then the fragmentation is acceptable and we are done. For example, a 4MB slab and and a
         // 512KB block fits exactly 8 blocks with no wasted space. But a 3MB block has 1MB worth of
         // empty space leftover which exceeds |mSlabFragmentationLimit| x slab size or 500KB.
         const uint64_t fragmentedBytes = mBlockSize - requestSize;
-        while (requestSize > baseSlabSize ||
-               fragmentedBytes > (mSlabFragmentationLimit * baseSlabSize)) {
-            baseSlabSize *= 2;
+        while (requestSize > slabSize || fragmentedBytes > (mSlabFragmentationLimit * slabSize)) {
+            slabSize *= 2;
         }
 
-        uint64_t nextSlabSize = NextPowerOfTwo(baseSlabSize);
+        slabSize = NextPowerOfTwo(slabSize);
 
         // If the larger slab excceeds available memory, re-use a slab instead.
         // Otherwise, creating a larger slab will page-out smaller slabs.
-        if (availableForAllocation < nextSlabSize) {
+        if (availableForAllocation < slabSize) {
             const uint64_t slabSizeUnderBudget = FindNextFreeSlabOfSize(requestSize);
             DebugLog() << "Unable to use slab size due to available memory: ("
-                       << slabSizeUnderBudget << " vs " << nextSlabSize << " bytes).";
-            nextSlabSize = slabSizeUnderBudget;
+                       << slabSizeUnderBudget << " vs " << slabSize << " bytes).";
+            slabSize = slabSizeUnderBudget;
         }
 
-        return nextSlabSize;
+        return slabSize;
     }
 
     uint64_t SlabMemoryAllocator::FindNextFreeSlabOfSize(uint64_t requestSize) const {
