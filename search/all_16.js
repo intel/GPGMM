@@ -13,6 +13,5 @@ var searchData=
   ['windowsutils_2ecpp_10',['WindowsUtils.cpp',['../_windows_utils_8cpp.html',1,'']]],
   ['windowsutils_2eh_11',['WindowsUtils.h',['../_windows_utils_8h.html',1,'']]],
   ['workerthread_2ecpp_12',['WorkerThread.cpp',['../_worker_thread_8cpp.html',1,'']]],
-  ['workerthread_2eh_13',['WorkerThread.h',['../_worker_thread_8h.html',1,'']]],
-  ['workerthreadtests_2ecpp_14',['WorkerThreadTests.cpp',['../_worker_thread_tests_8cpp.html',1,'']]]
+  ['workerthread_2eh_13',['WorkerThread.h',['../_worker_thread_8h.html',1,'']]]
 ];
