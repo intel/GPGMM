@@ -37,6 +37,11 @@ namespace gpgmm {
     // allocation.
     constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = 64u * 1024 * 1024;
 
+    // Coverage is the fraction of total misses that should be eliminated because of pre-fetching.
+    // If coverage goes below the specified min. coverage threshold, a warning event will be
+    // emitted.
+    constexpr static double kPrefetchCoverageWarnMinThreshold = 0.50;
+
     // SlabMemoryAllocator
 
     SlabMemoryAllocator::SlabMemoryAllocator(uint64_t blockSize,
@@ -223,12 +228,15 @@ namespace gpgmm {
                         // Assign pre-fetched memory to the slab.
                         if (prefetchedMemory->GetSize() == slabSize) {
                             pFreeSlab->SlabMemory = std::move(prefetchedMemory);
+                            mPrefetchCoverageStats.NumOfMissesEliminated++;
                             return pFreeSlab->SlabMemory->GetMemory();
                         }
 
                         DebugEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
                             << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                             << prefetchedMemory->GetSize() << " bytes.";
+
+                        mPrefetchCoverageStats.NumOfMisses++;
 
                         mMemoryAllocator->DeallocateMemory(std::move(prefetchedMemory));
                     }
@@ -255,6 +263,24 @@ namespace gpgmm {
         // the next slab size will be larger than the previous slab size.
         mLastUsedSlabSize = slabSize;
 
+        // Disable pre-fetching when coverage goes below threshold.
+        // TODO: Consider re-enabling when AlwaysCacheSize=true.
+        bool allowSlabPrefetch = mAllowSlabPrefetch;
+        if (allowSlabPrefetch &&
+            mPrefetchCoverageStats.NumOfMissesEliminated < mPrefetchCoverageStats.NumOfMisses) {
+            const double currentCoverage =
+                SafeDivison(mPrefetchCoverageStats.NumOfMissesEliminated,
+                            static_cast<double>(mPrefetchCoverageStats.NumOfMissesEliminated +
+                                                mPrefetchCoverageStats.NumOfMisses));
+            if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
+                WarnEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
+                    << "Allow prefetch disabled, coverage went below threshold: ("
+                    << currentCoverage * 100 << " vs " << kPrefetchCoverageWarnMinThreshold * 100
+                    << "%";
+                allowSlabPrefetch = false;
+            }
+        }
+
         // Prefetch memory for future slab.
         //
         // This check is overly conservative since waiting for the device to retrieve pre-fetched
@@ -269,13 +295,21 @@ namespace gpgmm {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
-            const uint64_t nextSlabSize =
+            uint64_t nextSlabSize =
                 std::min(ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor,
                                          request.AvailableForAllocation),
                          mMaxSlabSize);
 
-            if (nextSlabSize < request.AvailableForAllocation &&
-                nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
+            // If under growth phase (and accounting that the current slab will soon become
+            // full), reset the slab size back to the last size. Otherwise, the pre-fetch will
+            // always miss the cache since the larger slab cannot be used until enough smaller slabs
+            // become full first.
+            const uint64_t numOfSlabsInNextSlabSize = nextSlabSize / mLastUsedSlabSize;
+            if (pCache->FullList.size() + 1 < numOfSlabsInNextSlabSize) {
+                nextSlabSize = mLastUsedSlabSize;
+            }
+
+            if (nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
                 MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
                 newSlabRequest.SizeInBytes = nextSlabSize;
                 newSlabRequest.Alignment = mSlabAlignment;
@@ -360,7 +394,7 @@ namespace gpgmm {
                                            uint64_t minSlabSize,
                                            uint64_t slabAlignment,
                                            double slabFragmentationLimit,
-                                           bool alwaysPrefetchSlab,
+                                           bool allowPrefetchSlab,
                                            double slabGrowthFactor,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
         : MemoryAllocator(std::move(memoryAllocator)),
@@ -368,7 +402,7 @@ namespace gpgmm {
           mMinSlabSize(minSlabSize),
           mSlabAlignment(slabAlignment),
           mSlabFragmentationLimit(slabFragmentationLimit),
-          mAllowSlabPrefetch(alwaysPrefetchSlab),
+          mAllowSlabPrefetch(allowPrefetchSlab),
           mSlabGrowthFactor(slabGrowthFactor) {
         ASSERT(IsPowerOfTwo(mMaxSlabSize));
         ASSERT(mSlabGrowthFactor >= 1);
@@ -395,8 +429,8 @@ namespace gpgmm {
         SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
         if (slabAllocator == nullptr) {
             slabAllocator = new SlabMemoryAllocator(
-                blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment,
-                mSlabFragmentationLimit, mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
+                blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment, mSlabFragmentationLimit,
+                mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
             mSlabAllocators.push_back(slabAllocator);
         }
