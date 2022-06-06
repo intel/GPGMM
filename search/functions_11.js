@@ -25,13 +25,12 @@ var searchData=
   ['setvideomemoryreservation_22',['SetVideoMemoryReservation',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a3cd640bcdcf754a458e56f60a84ac91f',1,'gpgmm::d3d12::ResidencyManager']]],
   ['shutdowneventtrace_23',['ShutdownEventTrace',['../namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98',1,'gpgmm']]],
   ['signal_24',['Signal',['../classgpgmm_1_1d3d12_1_1_fence.html#a191325987019c75e5d0d5ea07f975506',1,'gpgmm::d3d12::Fence::Signal()'],['../classgpgmm_1_1_memory_allocation_event.html#a902d8c29242f04f4f58eb5c3bb3af95a',1,'gpgmm::MemoryAllocationEvent::Signal()'],['../classgpgmm_1_1_async_event_impl.html#af037ff4dea70caccd5df13d29f120184',1,'gpgmm::AsyncEventImpl::Signal()'],['../classgpgmm_1_1_event.html#aa25c487548844ac3857418ee54f1bf5d',1,'gpgmm::Event::Signal()']]],
-  ['singlethreadpoolasyncimpl_25',['SingleThreadPoolAsyncImpl',['../classgpgmm_1_1_single_thread_pool_async_impl.html#a211fb13406e94ffe10562f165f86f7d5',1,'gpgmm::SingleThreadPoolAsyncImpl']]],
-  ['size_26',['size',['../classgpgmm_1_1_linked_list.html#ad82b39061ee44538739197509652d7fe',1,'gpgmm::LinkedList']]],
-  ['slabblockallocator_27',['SlabBlockAllocator',['../classgpgmm_1_1_slab_block_allocator.html#a99f4324ae8931f373d68e821f06e946e',1,'gpgmm::SlabBlockAllocator']]],
-  ['slabcacheallocator_28',['SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html#a45f8a9c6e199a2d368e5fc85bd266590',1,'gpgmm::SlabCacheAllocator']]],
-  ['slabmemoryallocator_29',['SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html#a9a9e87f42400b95aa7c28d2a618d25e4',1,'gpgmm::SlabMemoryAllocator']]],
-  ['standalonememoryallocator_30',['StandaloneMemoryAllocator',['../classgpgmm_1_1_standalone_memory_allocator.html#ad6b28028d01f354c4b20de1f5ce3628a',1,'gpgmm::StandaloneMemoryAllocator']]],
-  ['startelapsedtime_31',['StartElapsedTime',['../classgpgmm_1_1_windows_time.html#ad3004285a11ee282f94fe749f141e947',1,'gpgmm::WindowsTime::StartElapsedTime()'],['../classgpgmm_1_1_platform_time.html#a8073f12d3133ba7e31498b26e99f6aa4',1,'gpgmm::PlatformTime::StartElapsedTime()']]],
-  ['startmemorycheck_32',['StartMemoryCheck',['../classgpgmm_1_1_windows_debug_platform.html#a47d4b553b08999699767334505e0bcdc',1,'gpgmm::WindowsDebugPlatform::StartMemoryCheck()'],['../classgpgmm_1_1_debug_platform.html#ab8b269d9f000126c2f301d8b7f33b080',1,'gpgmm::DebugPlatform::StartMemoryCheck()']]],
-  ['startupeventtrace_33',['StartupEventTrace',['../namespacegpgmm.html#afbbf691371390b91763764005a301e24',1,'gpgmm']]]
+  ['size_25',['size',['../classgpgmm_1_1_linked_list.html#ad82b39061ee44538739197509652d7fe',1,'gpgmm::LinkedList']]],
+  ['slabblockallocator_26',['SlabBlockAllocator',['../classgpgmm_1_1_slab_block_allocator.html#a99f4324ae8931f373d68e821f06e946e',1,'gpgmm::SlabBlockAllocator']]],
+  ['slabcacheallocator_27',['SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html#a45f8a9c6e199a2d368e5fc85bd266590',1,'gpgmm::SlabCacheAllocator']]],
+  ['slabmemoryallocator_28',['SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html#a9a9e87f42400b95aa7c28d2a618d25e4',1,'gpgmm::SlabMemoryAllocator']]],
+  ['standalonememoryallocator_29',['StandaloneMemoryAllocator',['../classgpgmm_1_1_standalone_memory_allocator.html#ad6b28028d01f354c4b20de1f5ce3628a',1,'gpgmm::StandaloneMemoryAllocator']]],
+  ['startelapsedtime_30',['StartElapsedTime',['../classgpgmm_1_1_windows_time.html#ad3004285a11ee282f94fe749f141e947',1,'gpgmm::WindowsTime::StartElapsedTime()'],['../classgpgmm_1_1_platform_time.html#a8073f12d3133ba7e31498b26e99f6aa4',1,'gpgmm::PlatformTime::StartElapsedTime()']]],
+  ['startmemorycheck_31',['StartMemoryCheck',['../classgpgmm_1_1_windows_debug_platform.html#a47d4b553b08999699767334505e0bcdc',1,'gpgmm::WindowsDebugPlatform::StartMemoryCheck()'],['../classgpgmm_1_1_debug_platform.html#ab8b269d9f000126c2f301d8b7f33b080',1,'gpgmm::DebugPlatform::StartMemoryCheck()']]],
+  ['startupeventtrace_32',['StartupEventTrace',['../namespacegpgmm.html#afbbf691371390b91763764005a301e24',1,'gpgmm']]]
 ];
