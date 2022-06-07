@@ -15,29 +15,30 @@
 #define GPGMM_D3D12_ERRORD3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/Compiler.h"
 
 #include <string>
 
 namespace gpgmm { namespace d3d12 {
 
-#define ReturnIfFailed(expr) \
-    {                        \
-        HRESULT hr = expr;   \
-        if (FAILED(hr)) {    \
-            return hr;       \
-        }                    \
-    }                        \
-    for (;;)                 \
+#define ReturnIfFailed(expr)              \
+    {                                     \
+        HRESULT hr = expr;                \
+        if (GPGMM_UNLIKELY(FAILED(hr))) { \
+            return hr;                    \
+        }                                 \
+    }                                     \
+    for (;;)                              \
     break
 
-#define ReturnIfSucceeded(expr) \
-    {                           \
-        HRESULT hr = expr;      \
-        if (SUCCEEDED(hr)) {    \
-            return hr;          \
-        }                       \
-    }                           \
-    for (;;)                    \
+#define ReturnIfSucceeded(expr)            \
+    {                                      \
+        HRESULT hr = expr;                 \
+        if (GPGMM_LIKELY(SUCCEEDED(hr))) { \
+            return hr;                     \
+        }                                  \
+    }                                      \
+    for (;;)                               \
     break
 
     std::string GetErrorMessage(HRESULT error);
