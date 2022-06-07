@@ -98,7 +98,7 @@ namespace gpgmm {
 
         return std::make_unique<MemoryAllocation>(/*allocator*/ this, subAllocation->GetMemory(),
                                                   memoryOffset, AllocationMethod::kSubAllocated,
-                                                  block);
+                                                  block, request.SizeInBytes);
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {

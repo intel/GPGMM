@@ -267,8 +267,8 @@ namespace gpgmm {
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the
             // final sub-allocated block to created memory.
-            return std::make_unique<MemoryAllocation>(nullptr, memory, kInvalidOffset,
-                                                      AllocationMethod::kUndefined, block);
+            return std::make_unique<MemoryAllocation>(
+                nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
         }
 
         MEMORY_ALLOCATOR_INFO mInfo = {};

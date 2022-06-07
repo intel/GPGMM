@@ -113,6 +113,7 @@ namespace gpgmm {
         @param method The method to describe how the allocation was created.
         @param block A pointer to a memory block within the resourceHeap, the placedResource was
         allocated from.
+        @param requestSize The unaligned size, in bytes, of the size requested.
         @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
         */
         MemoryAllocation(MemoryAllocator* allocator,
@@ -120,6 +121,7 @@ namespace gpgmm {
                          uint64_t offset,
                          AllocationMethod method,
                          MemoryBlock* block,
+                         uint64_t requestSize,
                          uint8_t* mappedPointer = nullptr);
 
         /** \brief Constructs a "standalone" memory allocation.
@@ -129,10 +131,12 @@ namespace gpgmm {
         @param allocator A pointer to the allocator responsible for creating the memory block.
         @param memory A pointer to the underlying MemoryBase that will contain the memory
         allocation.
+        @param requestSize The unaligned size, in bytes, of the size requested.
         @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
         */
         MemoryAllocation(MemoryAllocator* allocator,
                          MemoryBase* memory,
+                         uint64_t requestSize,
                          uint8_t* mappedPointer = nullptr);
 
         virtual ~MemoryAllocation() = default;
@@ -172,6 +176,12 @@ namespace gpgmm {
         */
         uint64_t GetSize() const;
 
+        /** \brief Get the requested size of the memory allocation.
+
+        \return Size, in bytes, of the request used to create the memory allocation.
+        */
+        uint64_t GetRequestSize() const;
+
         /** \brief Get the alignment of the memory allocation.
 
         \return Alignment, in bytes, of the allocation.
@@ -209,6 +219,7 @@ namespace gpgmm {
         AllocationMethod mMethod;
         MemoryBlock* mBlock;
 
+        uint64_t mRequestSize;
         uint8_t* mMappedPointer;
     };
 }  // namespace gpgmm

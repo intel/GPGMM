@@ -340,7 +340,7 @@ TEST_F(SlabMemoryAllocatorTests, AllocationOverflow) {
 // Verify slab will be reused from a pool.
 TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
     std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        kDefaultSlabSize, std::make_unique<DummyMemoryAllocator>());
+        kDefaultSlabSize, kDefaultSlabAlignment, std::make_unique<DummyMemoryAllocator>());
 
     constexpr uint64_t kBlockSize = 32;
     constexpr uint64_t kMaxSlabSize = 512;
@@ -416,7 +416,7 @@ TEST_F(SlabMemoryAllocatorTests, GetInfo) {
     // Test slab + pool allocator.
     {
         std::unique_ptr<PooledMemoryAllocator> poolAllocator =
-            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize,
+            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize, kDefaultSlabAlignment,
                                                     std::make_unique<DummyMemoryAllocator>());
 
         constexpr uint64_t kBlockSize = 32;
@@ -931,7 +931,7 @@ TEST_F(SlabCacheAllocatorTests, GetInfo) {
         SlabCacheAllocator allocator(
             kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
             kDefaultPrefetchSlab, kNoSlabGrowthFactor,
-            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize,
+            std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize, kDefaultSlabAlignment,
                                                     std::make_unique<DummyMemoryAllocator>()));
 
         std::unique_ptr<MemoryAllocation> allocation =

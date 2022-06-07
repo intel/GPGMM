@@ -102,6 +102,7 @@ namespace gpgmm { namespace d3d12 {
         resourceHeap.
         @param block A pointer to a memory block within the resourceHeap, the placedResource was
         allocated from.
+        @param requestSize The unaligned size, in bytes, of the size requested.
         @param method The method to describe how the allocation was created.
         @param placedResource A pointer to ID3D12Resource "placed" resource created by
         ID3D12Device::CreatePlacedResource.
@@ -111,6 +112,7 @@ namespace gpgmm { namespace d3d12 {
                            MemoryAllocator* allocator,
                            uint64_t offsetFromHeap,
                            MemoryBlock* block,
+                           uint64_t requestSize,
                            AllocationMethod method,
                            ComPtr<ID3D12Resource> placedResource,
                            Heap* resourceHeap);
@@ -122,6 +124,7 @@ namespace gpgmm { namespace d3d12 {
         @param allocator A pointer to the allocator responsible for creating the memory block.
         @param block A pointer to the block within the resourceHeap, the placedResource was
         allocated from.
+        @param requestSize The unaligned size, in bytes, of the size requested.
         @param offsetFromResource The offset, in bytes, of the allocation, from the start of the
         resource.
         @param resource A pointer to ID3D12Resource resource.
@@ -130,6 +133,7 @@ namespace gpgmm { namespace d3d12 {
         ResourceAllocation(ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
                            MemoryBlock* block,
+                           uint64_t requestSize,
                            uint64_t offsetFromResource,
                            ComPtr<ID3D12Resource> resource,
                            Heap* resourceHeap);

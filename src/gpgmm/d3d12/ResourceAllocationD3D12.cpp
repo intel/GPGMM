@@ -45,10 +45,11 @@ namespace gpgmm { namespace d3d12 {
                                            MemoryAllocator* allocator,
                                            uint64_t offsetFromHeap,
                                            MemoryBlock* block,
+                                           uint64_t requestSize,
                                            AllocationMethod method,
                                            ComPtr<ID3D12Resource> placedResource,
                                            Heap* resourceHeap)
-        : MemoryAllocation(allocator, resourceHeap, offsetFromHeap, method, block),
+        : MemoryAllocation(allocator, resourceHeap, offsetFromHeap, method, block, requestSize),
           mResidencyManager(residencyManager),
           mResource(std::move(placedResource)),
           mOffsetFromResource(0) {
@@ -59,6 +60,7 @@ namespace gpgmm { namespace d3d12 {
     ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
                                            MemoryBlock* block,
+                                           uint64_t requestSize,
                                            uint64_t offsetFromResource,
                                            ComPtr<ID3D12Resource> resource,
                                            Heap* resourceHeap)
@@ -66,7 +68,8 @@ namespace gpgmm { namespace d3d12 {
                            resourceHeap,
                            kInvalidOffset,
                            AllocationMethod::kSubAllocatedWithin,
-                           block),
+                           block,
+                           requestSize),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(offsetFromResource) {

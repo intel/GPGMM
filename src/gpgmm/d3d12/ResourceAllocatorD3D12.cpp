@@ -63,22 +63,6 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
             ID3D12Device* device,
             D3D12_RESOURCE_DESC& resourceDescriptor) {
-            if (resourceDescriptor.Alignment == 0 &&
-                resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
-                // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
-                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo.
-                D3D12_RESOURCE_ALLOCATION_INFO bufferInfo = {
-                    kInvalidSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
-                // Overflow must fail rather then ASSERT.
-                if (resourceDescriptor.Width > (std::numeric_limits<uint64_t>::max() -
-                                                (D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT - 1))) {
-                    return bufferInfo;
-                }
-
-                bufferInfo.SizeInBytes = AlignTo(resourceDescriptor.Width, bufferInfo.Alignment);
-                return bufferInfo;
-            }
-
             // Small textures can take advantage of smaller alignments. For example,
             // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
             // Must be non-depth or without render-target to use small resource alignment.
@@ -553,7 +537,8 @@ namespace gpgmm { namespace d3d12 {
             switch (descriptor.PoolAlgorithm) {
                 case ALLOCATOR_ALGORITHM_FIXED_POOL: {
                     return std::make_unique<PooledMemoryAllocator>(
-                        descriptor.PreferredResourceHeapSize, std::move(resourceHeapAllocator));
+                        descriptor.PreferredResourceHeapSize, heapAlignment,
+                        std::move(resourceHeapAllocator));
                 }
                 case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
                     return std::make_unique<SegmentedMemoryAllocator>(
@@ -586,7 +571,7 @@ namespace gpgmm { namespace d3d12 {
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             // Small buffers always use a 64KB heap.
             pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
-                heapAlignment, std::move(smallBufferOnlyAllocator));
+                heapAlignment, heapAlignment, std::move(smallBufferOnlyAllocator));
         } else {
             pooledOrNonPooledAllocator = std::move(smallBufferOnlyAllocator);
         }
@@ -752,8 +737,7 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize ||
-            resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
+        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             return E_OUTOFMEMORY;
         }
 
@@ -834,14 +818,6 @@ namespace gpgmm { namespace d3d12 {
                 request.Alignment = resourceDescriptor.Alignment;
             }
 
-            if (resourceDescriptor.Alignment != 0 &&
-                resourceDescriptor.Alignment > request.Alignment) {
-                DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                    << "Resource alignment is much larger than required (" +
-                           std::to_string(resourceDescriptor.Alignment) + " vs " +
-                           std::to_string(request.Alignment) + " bytes)";
-            }
-
             // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
             // through |this| via CreateCommittedResource which is already locked by
             // CreateResource().
@@ -855,17 +831,13 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->As(&committedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.Get(),      subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(),     subAllocation.GetOffset(),
-                        std::move(committedResource), resourceHeap};
-
-                    if (subAllocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
+                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
+                                                                    subAllocation.GetAllocator(),
+                                                                    subAllocation.GetBlock(),
+                                                                    resourceDescriptor.Width,
+                                                                    subAllocation.GetOffset(),
+                                                                    std::move(committedResource),
+                                                                    resourceHeap};
 
                     return S_OK;
                 }));
@@ -895,27 +867,15 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    subAllocation.GetAllocator(),
-                                                                    subAllocation.GetOffset(),
-                                                                    subAllocation.GetBlock(),
-                                                                    subAllocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
-
-                    if (subAllocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
+                    *resourceAllocationOut = new ResourceAllocation{
+                        mResidencyManager.Get(),   subAllocation.GetAllocator(),
+                        subAllocation.GetOffset(), subAllocation.GetBlock(),
+                        request.SizeInBytes,       subAllocation.GetMethod(),
+                        std::move(placedResource), resourceHeap};
 
                     return S_OK;
                 }));
         }
-
-        const D3D12_HEAP_FLAGS& heapFlags =
-            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
 
         // Attempt to create a resource allocation by placing a single resource fully contained
         // in a resource heap. This strategy is slightly better then creating a committed
@@ -931,7 +891,7 @@ namespace gpgmm { namespace d3d12 {
                     mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            request.Alignment = GetHeapAlignment(heapFlags, isMSAA);
+            request.Alignment = allocator->GetMemoryAlignment();
 
             ReturnIfSucceeded(
                 TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
@@ -941,20 +901,11 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    allocation.GetAllocator(),
-                                                                    allocation.GetOffset(),
-                                                                    allocation.GetBlock(),
-                                                                    allocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
-
-                    if (allocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(allocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(),   allocation.GetAllocator(),
+                                               allocation.GetOffset(),    allocation.GetBlock(),
+                                               request.SizeInBytes,       allocation.GetMethod(),
+                                               std::move(placedResource), resourceHeap};
 
                     return S_OK;
                 }));
@@ -973,18 +924,14 @@ namespace gpgmm { namespace d3d12 {
                 << "Resource allocation could not be created from memory pool.";
         }
 
+        const D3D12_HEAP_FLAGS& heapFlags =
+            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
+
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, heapFlags, resourceInfo, &newResourceDesc, clearValue,
             initialResourceState, &committedResource, &resourceHeap));
-
-        if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                << "Resource allocation is larger then the requested size (" +
-                       std::to_string(resourceInfo.SizeInBytes) + " vs " +
-                       std::to_string(request.SizeInBytes) + " bytes).";
-        }
 
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).
@@ -997,6 +944,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*allocator*/ this,
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
+                                                        request.SizeInBytes,
                                                         AllocationMethod::kStandalone,
                                                         std::move(committedResource),
                                                         resourceHeap};
@@ -1043,6 +991,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*allocator*/ this,
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
+                                                        resourceInfo.SizeInBytes,
                                                         AllocationMethod::kStandalone,
                                                         std::move(resource),
                                                         resourceHeap};

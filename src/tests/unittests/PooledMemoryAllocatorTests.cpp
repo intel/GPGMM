@@ -39,7 +39,8 @@ class PooledMemoryAllocatorTests : public testing::Test {
 };
 
 TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
-    PooledMemoryAllocator allocator(kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+    PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
+                                    std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> invalidAllocation =
         allocator.TryAllocateMemory(CreateBasicRequest(0, kDefaultMemoryAlignment));
@@ -60,7 +61,8 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
 }
 
 TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
-    PooledMemoryAllocator allocator(kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+    PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
+                                    std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> firstAllocation = allocator.TryAllocateMemory(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -86,7 +88,8 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
 }
 
 TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
-    PooledMemoryAllocator allocator(kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+    PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
+                                    std::make_unique<DummyMemoryAllocator>());
     {
         std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(
             CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -111,7 +114,8 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
 }
 
 TEST_F(PooledMemoryAllocatorTests, GetInfo) {
-    PooledMemoryAllocator allocator(kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+    PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
+                                    std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));

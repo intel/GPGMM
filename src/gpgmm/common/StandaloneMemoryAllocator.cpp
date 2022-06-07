@@ -34,9 +34,9 @@ namespace gpgmm {
         mInfo.UsedBlockCount++;
         mInfo.UsedBlockUsage += request.SizeInBytes;
 
-        return std::make_unique<MemoryAllocation>(this, allocation->GetMemory(), /*offset*/ 0,
-                                                  allocation->GetMethod(),
-                                                  new MemoryBlock{0, request.SizeInBytes});
+        return std::make_unique<MemoryAllocation>(
+            this, allocation->GetMemory(), /*offset*/ 0, allocation->GetMethod(),
+            new MemoryBlock{0, request.SizeInBytes}, request.SizeInBytes);
     }
 
     void StandaloneMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
@@ -57,6 +57,10 @@ namespace gpgmm {
         MEMORY_ALLOCATOR_INFO result = mInfo;
         result += GetNextInChain()->GetInfo();
         return result;
+    }
+
+    uint64_t StandaloneMemoryAllocator::GetMemoryAlignment() const {
+        return GetNextInChain()->GetMemoryAlignment();
     }
 
     const char* StandaloneMemoryAllocator::GetTypename() const {
