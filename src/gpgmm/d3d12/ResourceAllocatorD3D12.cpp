@@ -818,14 +818,6 @@ namespace gpgmm { namespace d3d12 {
                 request.Alignment = resourceDescriptor.Alignment;
             }
 
-            if (resourceDescriptor.Alignment != 0 &&
-                resourceDescriptor.Alignment > request.Alignment) {
-                DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                    << "Resource alignment is much larger than required (" +
-                           std::to_string(resourceDescriptor.Alignment) + " vs " +
-                           std::to_string(request.Alignment) + " bytes)";
-            }
-
             // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
             // through |this| via CreateCommittedResource which is already locked by
             // CreateResource().
@@ -842,17 +834,10 @@ namespace gpgmm { namespace d3d12 {
                     *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
                                                                     subAllocation.GetAllocator(),
                                                                     subAllocation.GetBlock(),
-                                                                    request.SizeInBytes,
+                                                                    resourceDescriptor.Width,
                                                                     subAllocation.GetOffset(),
                                                                     std::move(committedResource),
                                                                     resourceHeap};
-
-                    if (subAllocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
 
                     return S_OK;
                 }));
@@ -888,13 +873,6 @@ namespace gpgmm { namespace d3d12 {
                         request.SizeInBytes,       subAllocation.GetMethod(),
                         std::move(placedResource), resourceHeap};
 
-                    if (subAllocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(subAllocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
-
                     return S_OK;
                 }));
         }
@@ -929,13 +907,6 @@ namespace gpgmm { namespace d3d12 {
                                                request.SizeInBytes,       allocation.GetMethod(),
                                                std::move(placedResource), resourceHeap};
 
-                    if (allocation.GetSize() > request.SizeInBytes) {
-                        DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                            << "Resource allocation is larger then the requested size (" +
-                                   std::to_string(allocation.GetSize()) + " vs " +
-                                   std::to_string(request.SizeInBytes) + " bytes).";
-                    }
-
                     return S_OK;
                 }));
         }
@@ -961,13 +932,6 @@ namespace gpgmm { namespace d3d12 {
         ReturnIfFailed(CreateCommittedResource(
             allocationDescriptor.HeapType, heapFlags, resourceInfo, &newResourceDesc, clearValue,
             initialResourceState, &committedResource, &resourceHeap));
-
-        if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
-                << "Resource allocation is larger then the requested size (" +
-                       std::to_string(resourceInfo.SizeInBytes) + " vs " +
-                       std::to_string(request.SizeInBytes) + " bytes).";
-        }
 
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).

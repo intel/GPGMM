@@ -48,6 +48,8 @@ namespace gpgmm { namespace d3d12 {
       private:
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
+        const char* GetTypename() const override;
+
         class ResourceAllocationEntry {
           public:
             explicit ResourceAllocationEntry(ResourceAllocation* allocation);  // For lookup

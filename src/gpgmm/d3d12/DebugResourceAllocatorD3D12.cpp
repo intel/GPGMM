@@ -59,6 +59,13 @@ namespace gpgmm { namespace d3d12 {
     void DebugResourceAllocator::AddLiveAllocation(ResourceAllocation* allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
+        if (allocation->GetSize() > allocation->GetRequestSize()) {
+            DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
+                << "Resource allocation is larger then the requested size (" +
+                       std::to_string(allocation->GetSize()) + " vs " +
+                       std::to_string(allocation->GetRequestSize()) + " bytes).";
+        }
+
         mLiveAllocations.GetOrCreate(
             ResourceAllocationEntry(allocation, allocation->GetAllocator()), true);
 
@@ -78,6 +85,10 @@ namespace gpgmm { namespace d3d12 {
         ASSERT(entry->HasOneRef());
 
         entry->GetValue().GetAllocator()->DeallocateMemory(std::move(allocation));
+    }
+
+    const char* DebugResourceAllocator::GetTypename() const {
+        return "DebugResourceAllocator";
     }
 
 }}  // namespace gpgmm::d3d12
