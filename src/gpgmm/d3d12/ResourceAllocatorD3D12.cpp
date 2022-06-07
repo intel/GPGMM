@@ -752,8 +752,7 @@ namespace gpgmm { namespace d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize ||
-            resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
+        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             return E_OUTOFMEMORY;
         }
 
