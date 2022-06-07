@@ -31,21 +31,37 @@
 
 namespace gpgmm {
 
+    /** \struct MEMORY_ALLOCATOR_INFO
+    Information about the memory allocator.
+    */
     struct MEMORY_ALLOCATOR_INFO {
-        // Number of used sub-allocated blocks within the same memory.
+        /** \brief Number of used sub-allocated blocks within the same memory.
+         */
         uint32_t UsedBlockCount;
 
-        // Total size (in bytes) of used sub-allocated blocks.
+        /** \brief Total size, in bytes, of used sub-allocated blocks.
+         */
         uint64_t UsedBlockUsage;
 
-        // Number of used memory allocations.
+        /** \brief Number of used memory allocations.
+         */
         uint32_t UsedMemoryCount;
 
-        // Total size (in bytes) of used memory.
+        /** \brief Total size, in bytes, of used memory.
+         */
         uint64_t UsedMemoryUsage;
 
-        // Total size (in bytes) of free memory.
+        /** \brief Total size, in bytes, of free memory.
+         */
         uint64_t FreeMemoryUsage;
+
+        /** \brief Cache misses not eliminated by prefetching.
+         */
+        uint64_t PrefetchedMemoryMisses;
+
+        /** \brief Cache misses eliminated because of prefetching.
+         */
+        uint64_t PrefetchedMemoryMissesEliminated;
 
         MEMORY_ALLOCATOR_INFO& operator+=(const MEMORY_ALLOCATOR_INFO& rhs) {
             UsedBlockCount += rhs.UsedBlockCount;
@@ -53,6 +69,8 @@ namespace gpgmm {
             FreeMemoryUsage += rhs.FreeMemoryUsage;
             UsedMemoryUsage += rhs.UsedMemoryUsage;
             UsedMemoryCount += rhs.UsedMemoryCount;
+            PrefetchedMemoryMisses += rhs.PrefetchedMemoryMisses;
+            PrefetchedMemoryMissesEliminated += rhs.PrefetchedMemoryMissesEliminated;
             return *this;
         }
     };

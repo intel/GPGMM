@@ -1162,6 +1162,12 @@ namespace gpgmm { namespace d3d12 {
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation free (MB)",
                        result.FreeMemoryUsage / 1e6);
 
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory prefetch (%)",
+                       SafeDivison(result.PrefetchedMemoryMissesEliminated,
+                                   static_cast<double>(result.PrefetchedMemoryMisses +
+                                                       result.PrefetchedMemoryMissesEliminated)) *
+                           100);
+
         return result;
     }
 

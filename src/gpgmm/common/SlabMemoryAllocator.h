@@ -122,13 +122,6 @@ namespace gpgmm {
 
         uint64_t mLastUsedSlabSize = 0;
 
-        struct PrefetchCoverageStats {
-            uint64_t NumOfMisses = 0;
-            uint64_t NumOfMissesEliminated = 0;
-        };
-
-        PrefetchCoverageStats mPrefetchCoverageStats;
-
         const uint64_t mBlockSize;
         const uint64_t mSlabAlignment;
         const uint64_t mMaxSlabSize;
