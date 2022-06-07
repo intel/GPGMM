@@ -229,7 +229,7 @@ namespace gpgmm {
                         // Assign pre-fetched memory to the slab.
                         if (prefetchedMemory->GetSize() == slabSize) {
                             pFreeSlab->SlabMemory = std::move(prefetchedMemory);
-                            mPrefetchCoverageStats.NumOfMissesEliminated++;
+                            mInfo.PrefetchedMemoryMissesEliminated++;
                             return pFreeSlab->SlabMemory->GetMemory();
                         }
 
@@ -237,7 +237,7 @@ namespace gpgmm {
                             << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                             << prefetchedMemory->GetSize() << " bytes.";
 
-                        mPrefetchCoverageStats.NumOfMisses++;
+                        mInfo.PrefetchedMemoryMisses++;
 
                         mMemoryAllocator->DeallocateMemory(std::move(prefetchedMemory));
                     }
@@ -268,11 +268,11 @@ namespace gpgmm {
         // TODO: Consider re-enabling when AlwaysCacheSize=true.
         bool allowSlabPrefetch = mAllowSlabPrefetch;
         if (allowSlabPrefetch &&
-            mPrefetchCoverageStats.NumOfMissesEliminated < mPrefetchCoverageStats.NumOfMisses) {
+            mInfo.PrefetchedMemoryMissesEliminated < mInfo.PrefetchedMemoryMisses) {
             const double currentCoverage =
-                SafeDivison(mPrefetchCoverageStats.NumOfMissesEliminated,
-                            static_cast<double>(mPrefetchCoverageStats.NumOfMissesEliminated +
-                                                mPrefetchCoverageStats.NumOfMisses));
+                SafeDivison(mInfo.PrefetchedMemoryMissesEliminated,
+                            static_cast<double>(mInfo.PrefetchedMemoryMissesEliminated +
+                                                mInfo.PrefetchedMemoryMisses));
             if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
                 WarnEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
                     << "Allow prefetch disabled, coverage went below threshold: ("
@@ -477,6 +477,8 @@ namespace gpgmm {
             const MEMORY_ALLOCATOR_INFO& info = entry->GetValue().pSlabAllocator->GetInfo();
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedBlockUsage += info.UsedBlockUsage;
+            result.PrefetchedMemoryMisses += info.PrefetchedMemoryMisses;
+            result.PrefetchedMemoryMissesEliminated += info.PrefetchedMemoryMissesEliminated;
         }
 
         // Memory allocator is common across slab allocators.
