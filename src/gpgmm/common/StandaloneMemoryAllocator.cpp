@@ -59,6 +59,10 @@ namespace gpgmm {
         return result;
     }
 
+    uint64_t StandaloneMemoryAllocator::GetMemoryAlignment() const {
+        return GetNextInChain()->GetMemoryAlignment();
+    }
+
     const char* StandaloneMemoryAllocator::GetTypename() const {
         return "StandaloneMemoryAllocator";
     }

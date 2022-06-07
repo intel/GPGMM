@@ -25,6 +25,7 @@ namespace gpgmm {
     class PooledMemoryAllocator final : public MemoryAllocator {
       public:
         PooledMemoryAllocator(uint64_t memorySize,
+                              uint64_t memoryAlignment,
                               std::unique_ptr<MemoryAllocator> memoryAllocator);
         ~PooledMemoryAllocator() override;
 
@@ -34,10 +35,12 @@ namespace gpgmm {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
         uint64_t GetMemorySize() const override;
+        uint64_t GetMemoryAlignment() const override;
         const char* GetTypename() const override;
 
       private:
         std::unique_ptr<MemoryPool> mPool;
+        uint64_t mMemoryAlignment;
     };
 
 }  // namespace gpgmm

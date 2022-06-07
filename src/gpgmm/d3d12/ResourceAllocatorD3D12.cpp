@@ -553,7 +553,8 @@ namespace gpgmm { namespace d3d12 {
             switch (descriptor.PoolAlgorithm) {
                 case ALLOCATOR_ALGORITHM_FIXED_POOL: {
                     return std::make_unique<PooledMemoryAllocator>(
-                        descriptor.PreferredResourceHeapSize, std::move(resourceHeapAllocator));
+                        descriptor.PreferredResourceHeapSize, heapAlignment,
+                        std::move(resourceHeapAllocator));
                 }
                 case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
                     return std::make_unique<SegmentedMemoryAllocator>(
@@ -586,7 +587,7 @@ namespace gpgmm { namespace d3d12 {
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             // Small buffers always use a 64KB heap.
             pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
-                heapAlignment, std::move(smallBufferOnlyAllocator));
+                heapAlignment, heapAlignment, std::move(smallBufferOnlyAllocator));
         } else {
             pooledOrNonPooledAllocator = std::move(smallBufferOnlyAllocator);
         }
@@ -913,9 +914,6 @@ namespace gpgmm { namespace d3d12 {
                 }));
         }
 
-        const D3D12_HEAP_FLAGS& heapFlags =
-            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
-
         // Attempt to create a resource allocation by placing a single resource fully contained
         // in a resource heap. This strategy is slightly better then creating a committed
         // resource because a placed resource's heap will not be reallocated by the OS until Trim()
@@ -930,7 +928,7 @@ namespace gpgmm { namespace d3d12 {
                     mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            request.Alignment = GetHeapAlignment(heapFlags, isMSAA);
+            request.Alignment = allocator->GetMemoryAlignment();
 
             ReturnIfSucceeded(
                 TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
@@ -971,6 +969,9 @@ namespace gpgmm { namespace d3d12 {
             InfoEvent(GetTypename(), MESSAGE_ID_UNKNOWN)
                 << "Resource allocation could not be created from memory pool.";
         }
+
+        const D3D12_HEAP_FLAGS& heapFlags =
+            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
 
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;

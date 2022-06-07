@@ -457,7 +457,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+        kDefaultMemorySize, kDefaultMemoryAlignment, std::make_unique<DummyMemoryAllocator>());
 
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
@@ -518,7 +518,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
     std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        kDefaultMemorySize, std::make_unique<DummyMemoryAllocator>());
+        kDefaultMemorySize, kDefaultMemoryAlignment, std::make_unique<DummyMemoryAllocator>());
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
 

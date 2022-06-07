@@ -21,8 +21,11 @@
 namespace gpgmm {
 
     PooledMemoryAllocator::PooledMemoryAllocator(uint64_t memorySize,
+                                                 uint64_t memoryAlignment,
                                                  std::unique_ptr<MemoryAllocator> memoryAllocator)
-        : MemoryAllocator(std::move(memoryAllocator)), mPool(new LIFOMemoryPool(memorySize)) {
+        : MemoryAllocator(std::move(memoryAllocator)),
+          mPool(new LIFOMemoryPool(memorySize)),
+          mMemoryAlignment(memoryAlignment) {
         ASSERT(mPool != nullptr);
     }
 
@@ -78,6 +81,10 @@ namespace gpgmm {
 
     uint64_t PooledMemoryAllocator::GetMemorySize() const {
         return mPool->GetMemorySize();
+    }
+
+    uint64_t PooledMemoryAllocator::GetMemoryAlignment() const {
+        return mMemoryAlignment;
     }
 
     const char* PooledMemoryAllocator::GetTypename() const {
