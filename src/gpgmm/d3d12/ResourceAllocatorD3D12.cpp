@@ -839,10 +839,13 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->As(&committedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.Get(),      subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(),     subAllocation.GetOffset(),
-                        std::move(committedResource), resourceHeap};
+                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
+                                                                    subAllocation.GetAllocator(),
+                                                                    subAllocation.GetBlock(),
+                                                                    request.SizeInBytes,
+                                                                    subAllocation.GetOffset(),
+                                                                    std::move(committedResource),
+                                                                    resourceHeap};
 
                     if (subAllocation.GetSize() > request.SizeInBytes) {
                         DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
@@ -879,13 +882,11 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    subAllocation.GetAllocator(),
-                                                                    subAllocation.GetOffset(),
-                                                                    subAllocation.GetBlock(),
-                                                                    subAllocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
+                    *resourceAllocationOut = new ResourceAllocation{
+                        mResidencyManager.Get(),   subAllocation.GetAllocator(),
+                        subAllocation.GetOffset(), subAllocation.GetBlock(),
+                        request.SizeInBytes,       subAllocation.GetMethod(),
+                        std::move(placedResource), resourceHeap};
 
                     if (subAllocation.GetSize() > request.SizeInBytes) {
                         DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
@@ -922,13 +923,11 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    allocation.GetAllocator(),
-                                                                    allocation.GetOffset(),
-                                                                    allocation.GetBlock(),
-                                                                    allocation.GetMethod(),
-                                                                    std::move(placedResource),
-                                                                    resourceHeap};
+                    *resourceAllocationOut =
+                        new ResourceAllocation{mResidencyManager.Get(),   allocation.GetAllocator(),
+                                               allocation.GetOffset(),    allocation.GetBlock(),
+                                               request.SizeInBytes,       allocation.GetMethod(),
+                                               std::move(placedResource), resourceHeap};
 
                     if (allocation.GetSize() > request.SizeInBytes) {
                         DebugEvent(GetTypename(), MESSAGE_ID_ALIGNMENT_MISMATCH)
@@ -981,6 +980,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*allocator*/ this,
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
+                                                        request.SizeInBytes,
                                                         AllocationMethod::kStandalone,
                                                         std::move(committedResource),
                                                         resourceHeap};
@@ -1027,6 +1027,7 @@ namespace gpgmm { namespace d3d12 {
                                                         /*allocator*/ this,
                                                         /*offsetFromHeap*/ kInvalidOffset,
                                                         /*block*/ nullptr,
+                                                        resourceInfo.SizeInBytes,
                                                         AllocationMethod::kStandalone,
                                                         std::move(resource),
                                                         resourceHeap};

@@ -101,7 +101,7 @@ namespace gpgmm { namespace d3d12 {
         mInfo.UsedMemoryUsage += heapSize;
         mInfo.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(this, resourceHeap);
+        return std::make_unique<MemoryAllocation>(this, resourceHeap, request.SizeInBytes);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

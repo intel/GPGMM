@@ -36,23 +36,27 @@ namespace gpgmm {
                                        uint64_t offset,
                                        AllocationMethod method,
                                        MemoryBlock* block,
+                                       uint64_t requestSize,
                                        uint8_t* mappedPointer)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(offset),
           mMethod(method),
           mBlock(block),
+          mRequestSize(requestSize),
           mMappedPointer(mappedPointer) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
                                        MemoryBase* memory,
+                                       uint64_t requestSize,
                                        uint8_t* mappedPointer)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(0),
           mMethod(AllocationMethod::kStandalone),
           mBlock(nullptr),
+          mRequestSize(requestSize),
           mMappedPointer(mappedPointer) {
     }
 
@@ -96,6 +100,10 @@ namespace gpgmm {
                 return kInvalidSize;
             }
         }
+    }
+
+    uint64_t MemoryAllocation::GetRequestSize() const {
+        return mRequestSize;
     }
 
     uint64_t MemoryAllocation::GetAlignment() const {
