@@ -63,22 +63,6 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
             ID3D12Device* device,
             D3D12_RESOURCE_DESC& resourceDescriptor) {
-            if (resourceDescriptor.Alignment == 0 &&
-                resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER) {
-                // Buffers are always 64KB size-aligned and resource-aligned. See Remarks.
-                // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getresourceallocationinfo.
-                D3D12_RESOURCE_ALLOCATION_INFO bufferInfo = {
-                    kInvalidSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT};
-                // Overflow must fail rather then ASSERT.
-                if (resourceDescriptor.Width > (std::numeric_limits<uint64_t>::max() -
-                                                (D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT - 1))) {
-                    return bufferInfo;
-                }
-
-                bufferInfo.SizeInBytes = AlignTo(resourceDescriptor.Width, bufferInfo.Alignment);
-                return bufferInfo;
-            }
-
             // Small textures can take advantage of smaller alignments. For example,
             // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
             // Must be non-depth or without render-target to use small resource alignment.
