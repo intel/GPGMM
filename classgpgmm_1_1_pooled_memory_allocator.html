@@ -90,8 +90,8 @@ Inheritance diagram for gpgmm::PooledMemoryAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9c431f7774219038da24e605b1313ee7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a9c431f7774219038da24e605b1313ee7">PooledMemoryAllocator</a> (uint64_t memorySize, std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> &gt; memoryAllocator)</td></tr>
-<tr class="separator:a9c431f7774219038da24e605b1313ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8cd54251575173c48d9d2feddeb5a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#abd8cd54251575173c48d9d2feddeb5a0">PooledMemoryAllocator</a> (uint64_t memorySize, uint64_t memoryAlignment, std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> &gt; memoryAllocator)</td></tr>
+<tr class="separator:abd8cd54251575173c48d9d2feddeb5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88def0d005a8cad2020edc9c115218ad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a88def0d005a8cad2020edc9c115218ad">~PooledMemoryAllocator</a> () override</td></tr>
 <tr class="separator:a88def0d005a8cad2020edc9c115218ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35de65889d666149dba47b35a702afa0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a35de65889d666149dba47b35a702afa0">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html">MEMORY_ALLOCATION_REQUEST</a> &amp;request) override</td></tr>
@@ -106,6 +106,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab1e6d2f5d580b5d10e9be7808df14f4"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#aab1e6d2f5d580b5d10e9be7808df14f4">GetMemorySize</a> () const override</td></tr>
 <tr class="memdesc:aab1e6d2f5d580b5d10e9be7808df14f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory sized of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_pooled_memory_allocator.html#aab1e6d2f5d580b5d10e9be7808df14f4">More...</a><br /></td></tr>
 <tr class="separator:aab1e6d2f5d580b5d10e9be7808df14f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5211b56b43b3a9591350703209e94130"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a5211b56b43b3a9591350703209e94130">GetMemoryAlignment</a> () const override</td></tr>
+<tr class="memdesc:a5211b56b43b3a9591350703209e94130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory alignment of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_pooled_memory_allocator.html#a5211b56b43b3a9591350703209e94130">More...</a><br /></td></tr>
+<tr class="separator:a5211b56b43b3a9591350703209e94130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd1bcd1e12766e9d38bd24b79a3c2091"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#acd1bcd1e12766e9d38bd24b79a3c2091">GetTypename</a> () const override</td></tr>
 <tr class="memdesc:acd1bcd1e12766e9d38bd24b79a3c2091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies the allocator type.  <a href="classgpgmm_1_1_pooled_memory_allocator.html#acd1bcd1e12766e9d38bd24b79a3c2091">More...</a><br /></td></tr>
 <tr class="separator:acd1bcd1e12766e9d38bd24b79a3c2091"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,8 +211,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9c431f7774219038da24e605b1313ee7" name="a9c431f7774219038da24e605b1313ee7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c431f7774219038da24e605b1313ee7">&#9670;&nbsp;</a></span>PooledMemoryAllocator()</h2>
+<a id="abd8cd54251575173c48d9d2feddeb5a0" name="abd8cd54251575173c48d9d2feddeb5a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd8cd54251575173c48d9d2feddeb5a0">&#9670;&nbsp;</a></span>PooledMemoryAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,6 +222,12 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
           <td class="paramname"><em>memorySize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>memoryAlignment</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -296,6 +305,37 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">gpgmm::MemoryAllocator</a>.</p>
+
+</div>
+</div>
+<a id="a5211b56b43b3a9591350703209e94130" name="a5211b56b43b3a9591350703209e94130"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5211b56b43b3a9591350703209e94130">&#9670;&nbsp;</a></span>GetMemoryAlignment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::PooledMemoryAllocator::GetMemoryAlignment </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the fixed-memory alignment of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a>. </p>
+<p >If this allocator only allocates memory using the same alignment, this value is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is allowed.</p>
+<dl class="section return"><dt>Returns</dt><dd>Alignment of memory, in bytes. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a564db9c2513986b224660e396e37493e">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>

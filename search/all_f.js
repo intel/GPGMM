@@ -15,7 +15,7 @@ var searchData=
   ['pleft_12',['pLeft',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html#ad876112812f84b6d8aba69006c060e0c',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::SplitLink']]],
   ['pnext_13',['pNext',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
   ['poolalgorithm_14',['PoolAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3ee6242ed4122b527e73a2bec2539c7c',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['pooledmemoryallocator_15',['PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html',1,'gpgmm::PooledMemoryAllocator'],['../classgpgmm_1_1_pooled_memory_allocator.html#a9c431f7774219038da24e605b1313ee7',1,'gpgmm::PooledMemoryAllocator::PooledMemoryAllocator()']]],
+  ['pooledmemoryallocator_15',['PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html',1,'gpgmm::PooledMemoryAllocator'],['../classgpgmm_1_1_pooled_memory_allocator.html#abd8cd54251575173c48d9d2feddeb5a0',1,'gpgmm::PooledMemoryAllocator::PooledMemoryAllocator()']]],
   ['pooledmemoryallocator_2ecpp_16',['PooledMemoryAllocator.cpp',['../_pooled_memory_allocator_8cpp.html',1,'']]],
   ['pooledmemoryallocator_2eh_17',['PooledMemoryAllocator.h',['../_pooled_memory_allocator_8h.html',1,'']]],
   ['pooledmemoryallocatortests_18',['PooledMemoryAllocatorTests',['../class_pooled_memory_allocator_tests.html',1,'']]],

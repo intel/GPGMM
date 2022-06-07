@@ -98,6 +98,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6b7a0f2f2413bb8e88bc049138ab2a2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_standalone_memory_allocator.html#a6b7a0f2f2413bb8e88bc049138ab2a2e">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; subAllocation) override</td></tr>
 <tr class="memdesc:a6b7a0f2f2413bb8e88bc049138ab2a2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a memory allocation.  <a href="classgpgmm_1_1_standalone_memory_allocator.html#a6b7a0f2f2413bb8e88bc049138ab2a2e">More...</a><br /></td></tr>
 <tr class="separator:a6b7a0f2f2413bb8e88bc049138ab2a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac963a714297f803e19d9ea224edb8d5d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_standalone_memory_allocator.html#ac963a714297f803e19d9ea224edb8d5d">GetMemoryAlignment</a> () const override</td></tr>
+<tr class="memdesc:ac963a714297f803e19d9ea224edb8d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory alignment of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_standalone_memory_allocator.html#ac963a714297f803e19d9ea224edb8d5d">More...</a><br /></td></tr>
+<tr class="separator:ac963a714297f803e19d9ea224edb8d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c6a5dc663c20ee5848662960395c6ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html">MEMORY_ALLOCATOR_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_standalone_memory_allocator.html#a9c6a5dc663c20ee5848662960395c6ed">GetInfo</a> () const override</td></tr>
 <tr class="memdesc:a9c6a5dc663c20ee5848662960395c6ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get memory allocator usage.  <a href="classgpgmm_1_1_standalone_memory_allocator.html#a9c6a5dc663c20ee5848662960395c6ed">More...</a><br /></td></tr>
 <tr class="separator:a9c6a5dc663c20ee5848662960395c6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,6 +290,37 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_o_r___i_n_f_o.html">MEMORY_ALLOCATOR_INFO</a> struct containing the current usage. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a6e653a5ae7e8a323cdc4c535f05a9ef9">gpgmm::MemoryAllocator</a>.</p>
+
+</div>
+</div>
+<a id="ac963a714297f803e19d9ea224edb8d5d" name="ac963a714297f803e19d9ea224edb8d5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac963a714297f803e19d9ea224edb8d5d">&#9670;&nbsp;</a></span>GetMemoryAlignment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::StandaloneMemoryAllocator::GetMemoryAlignment </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the fixed-memory alignment of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a>. </p>
+<p >If this allocator only allocates memory using the same alignment, this value is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is allowed.</p>
+<dl class="section return"><dt>Returns</dt><dd>Alignment of memory, in bytes. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a564db9c2513986b224660e396e37493e">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
