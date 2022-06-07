@@ -74,6 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="d3d12__platform_8h.html">gpgmm/d3d12/d3d12_platform.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_compiler_8h.html">gpgmm/utils/Compiler.h</a>&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -111,14 +112,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                        \</div>
-<div class="line">        HRESULT hr = expr;   \</div>
-<div class="line">        if (FAILED(hr)) {    \</div>
-<div class="line">            return hr;       \</div>
-<div class="line">        }                    \</div>
-<div class="line">    }                        \</div>
-<div class="line">    for (;;)                 \</div>
+<b>Value:</b><div class="fragment"><div class="line">    {                                     \</div>
+<div class="line">        HRESULT hr = expr;                \</div>
+<div class="line">        if (<a class="code hl_define" href="_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8">GPGMM_UNLIKELY</a>(FAILED(hr))) { \</div>
+<div class="line">            return hr;                    \</div>
+<div class="line">        }                                 \</div>
+<div class="line">    }                                     \</div>
+<div class="line">    for (;;)                              \</div>
 <div class="line">    break</div>
+<div class="ttc" id="a_compiler_8h_html_a340f9dce5de45b8d0224407c14caf9d8"><div class="ttname"><a href="_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8">GPGMM_UNLIKELY</a></div><div class="ttdeci">#define GPGMM_UNLIKELY(X)</div><div class="ttdef"><b>Definition:</b> Compiler.h:93</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -137,14 +139,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                           \</div>
-<div class="line">        HRESULT hr = expr;      \</div>
-<div class="line">        if (SUCCEEDED(hr)) {    \</div>
-<div class="line">            return hr;          \</div>
-<div class="line">        }                       \</div>
-<div class="line">    }                           \</div>
-<div class="line">    for (;;)                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">    {                                      \</div>
+<div class="line">        HRESULT hr = expr;                 \</div>
+<div class="line">        if (<a class="code hl_define" href="_compiler_8h.html#aeae8895397fbafcfba4910a68e7332ba">GPGMM_LIKELY</a>(SUCCEEDED(hr))) { \</div>
+<div class="line">            return hr;                     \</div>
+<div class="line">        }                                  \</div>
+<div class="line">    }                                      \</div>
+<div class="line">    for (;;)                               \</div>
 <div class="line">    break</div>
+<div class="ttc" id="a_compiler_8h_html_aeae8895397fbafcfba4910a68e7332ba"><div class="ttname"><a href="_compiler_8h.html#aeae8895397fbafcfba4910a68e7332ba">GPGMM_LIKELY</a></div><div class="ttdeci">#define GPGMM_LIKELY(X)</div><div class="ttdef"><b>Definition:</b> Compiler.h:90</div></div>
 </div><!-- fragment -->
 </div>
 </div>
