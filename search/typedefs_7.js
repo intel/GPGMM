@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_5ftype_0',['value_type',['../classgpgmm_1_1_flags.html#a7571944b56f71c3dc84fd4ec54efc9b5',1,'gpgmm::Flags']]]
+  ['underlyingtype_0',['UnderlyingType',['../classgpgmm_1_1d3d12_1_1_residency_set.html#aa9ec54fe066278aa184581434d5a451d',1,'gpgmm::d3d12::ResidencySet']]]
 ];
