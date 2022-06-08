@@ -60,13 +60,15 @@ namespace gpgmm { namespace d3d12 {
         */
         HRESULT Reset();
 
-        std::set<Heap*>::iterator begin() const;
-        std::set<Heap*>::iterator end() const;
+        using UnderlyingType = std::set<Heap*>;
+
+        UnderlyingType::iterator begin() const;
+        UnderlyingType::iterator end() const;
 
       private:
         const char* GetTypename() const;
 
-        std::set<Heap*> mSet;
+        UnderlyingType mSet;
     };
 
 }}  // namespace gpgmm::d3d12

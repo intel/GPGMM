@@ -41,11 +41,11 @@ namespace gpgmm { namespace d3d12 {
         return S_OK;
     }
 
-    std::set<Heap*>::iterator ResidencySet::begin() const {
+    ResidencySet::UnderlyingType::iterator ResidencySet::begin() const {
         return mSet.begin();
     }
 
-    std::set<Heap*>::iterator ResidencySet::end() const {
+    ResidencySet::UnderlyingType::iterator ResidencySet::end() const {
         return mSet.end();
     }
 
