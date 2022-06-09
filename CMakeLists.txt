@@ -120,6 +120,7 @@ set(CMAKE_CXX_STANDARD "14")
 ################################################################################
 add_subdirectory(third_party)
 add_subdirectory(src/gpgmm)
+add_subdirectory(src/tests)
 
 ################################################################################
 # Install GPGMM

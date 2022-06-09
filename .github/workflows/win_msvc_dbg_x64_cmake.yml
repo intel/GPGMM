@@ -65,3 +65,9 @@ jobs:
       run: |
         cd test
         cmake --build .
+
+    - name: Run gpgmm_unittests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        src\tests\Debug\gpgmm_unittests.exe

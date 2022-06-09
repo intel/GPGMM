@@ -16,3 +16,11 @@
 if (NOT TARGET Vulkan-Headers)
     add_subdirectory(${GPGMM_VK_HEADERS_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-headers")
 endif()
+
+################################################################################
+# Build subdirectories
+################################################################################
+
+# Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+add_subdirectory(googletest)
