@@ -480,8 +480,11 @@ namespace gpgmm { namespace d3d12 {
                            (localSizeToMakeResident + nonLocalSizeToMakeResident) / 1e6);
         }
 
-        queue->ExecuteCommandLists(count, commandLists);
-        ReturnIfFailed(mFence->Signal(queue));
+        // Queue and command-lists may not be specified since they are not capturable for playback.
+        if (commandLists != nullptr && queue != nullptr) {
+            queue->ExecuteCommandLists(count, commandLists);
+            ReturnIfFailed(mFence->Signal(queue));
+        }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
                                       (EXECUTE_COMMAND_LISTS_DESC{residencySets, count}));

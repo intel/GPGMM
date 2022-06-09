@@ -80,6 +80,7 @@ namespace gpgmm { namespace d3d12 {
 
         if (IsDumpResourceAllocatorEnabled()) {
             desc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
+            desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
         }
 
         return desc;
