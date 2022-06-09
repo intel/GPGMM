@@ -128,15 +128,20 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> allocationInfoToID;
-        std::unordered_map<std::string, HEAP_INFO> heapInfoToID;
+        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> capturedAllocationInfo;
+        std::unordered_map<std::string, HEAP_INFO> capturedHeapInfo;
 
         ComPtr<ResourceAllocation> allocationWithoutID;
 
-        std::unordered_map<std::string, ComPtr<ResourceAllocator>> allocatorToID;
-        std::unordered_map<std::string, ComPtr<ResourceAllocation>> allocationToID;
+        std::unordered_map<std::string, ComPtr<ResourceAllocator>> createdAllocatorToID;
+        std::unordered_map<std::string, ComPtr<ResidencyManager>> createdResidencyManagerToID;
+        std::unordered_map<std::string, ComPtr<ResourceAllocation>> createdAllocationToID;
+        std::unordered_map<std::string, Heap*> createdHeapToID;
 
         std::string currentAllocatorID;
+        std::string currentResidencyID;
+
+        std::vector<ResidencySet> currentResidencySets;
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
@@ -144,6 +149,52 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
              eventIndex++) {
             const Json::Value& event = traceEvents[eventIndex];
+
+            if (event["name"].asString() == "ResidencyManager.ExecuteCommandLists") {
+                switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_INSTANT: {
+                        const Json::Value& args = event["args"];
+                        ASSERT_FALSE(args.empty());
+
+                        // TODO: Consider encoding type instead of checking fields.
+                        if (IsErrorEvent(args)) {
+                            continue;
+                        }
+
+                        // Create ResidencySets.
+                        std::vector<ResidencySet*> residencySetPtrs;
+                        for (auto& setJson : args["ResidencySets"]) {
+                            ResidencySet set = {};
+                            for (auto heap : setJson["Heaps"]) {
+                                const std::string heapId = heap["id_ref"].asString();
+                                if (createdHeapToID.find(heapId) == createdHeapToID.end()) {
+                                    break;
+                                }
+                                set.Insert(createdHeapToID[heapId]);
+                            }
+                            residencySetPtrs.push_back(&set);
+                            currentResidencySets.push_back(std::move(set));
+                        }
+
+                        ResidencyManager* residencyManager =
+                            createdResidencyManagerToID[currentResidencyID].Get();
+                        ASSERT_NE(residencyManager, nullptr);
+
+                        ASSERT_SUCCEEDED(residencyManager->ExecuteCommandLists(
+                            nullptr, nullptr, residencySetPtrs.data(), residencySetPtrs.size()));
+
+                        // Prepare for the next frame.
+                        for (auto& set : currentResidencySets) {
+                            set.Reset();
+                        }
+
+                    } break;
+
+                    default:
+                        break;
+                }
+            }
+
             if (event["name"].asString() == "ResourceAllocator.CreateResource") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_INSTANT: {
@@ -178,11 +229,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const D3D12_RESOURCE_DESC resourceDescriptor =
                             ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
 
-                        auto it = allocatorToID.find(currentAllocatorID);
-                        ASSERT_TRUE(it != allocatorToID.end());
+                        auto it = createdAllocatorToID.find(currentAllocatorID);
+                        ASSERT_TRUE(it != createdAllocatorToID.end());
 
                         ResourceAllocator* resourceAllocator =
-                            allocatorToID[currentAllocatorID].Get();
+                            createdAllocatorToID[currentAllocatorID].Get();
                         ASSERT_NE(resourceAllocator, nullptr);
 
                         if (envParams.IsNeverAllocate) {
@@ -234,7 +285,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
-                        if (allocationInfoToID.find(allocationID) != allocationInfoToID.end()) {
+                        if (capturedAllocationInfo.find(allocationID) !=
+                            capturedAllocationInfo.end()) {
                             continue;
                         }
 
@@ -249,7 +301,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                      mCapturedAllocationStats.CurrentUsage);
 
                         ASSERT_TRUE(
-                            allocationInfoToID.insert({allocationID, allocationDesc}).second);
+                            capturedAllocationInfo.insert({allocationID, allocationDesc}).second);
                     } break;
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
@@ -260,7 +312,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_TRUE(allocationWithoutID != nullptr);
                         const std::string& allocationID = event["id"].asString();
                         ASSERT_TRUE(
-                            allocationToID.insert({allocationID, allocationWithoutID}).second);
+                            createdAllocationToID.insert({allocationID, allocationWithoutID})
+                                .second);
+
+                        std::string heapID = ToString(allocationWithoutID->GetMemory());
+                        createdHeapToID.insert({heapID, allocationWithoutID->GetMemory()});
 
                         ASSERT_TRUE(allocationWithoutID.Reset() == 1);
                     } break;
@@ -268,26 +324,27 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
 
-                        auto it = allocationInfoToID.find(allocationID);
-                        if (it == allocationInfoToID.end()) {
+                        auto it = capturedAllocationInfo.find(allocationID);
+                        if (it == capturedAllocationInfo.end()) {
                             continue;
                         }
 
                         const RESOURCE_ALLOCATION_INFO& allocationDesc = it->second;
                         mCapturedAllocationStats.CurrentUsage -= allocationDesc.SizeInBytes;
 
-                        ASSERT_EQ(allocationInfoToID.erase(allocationID), 1u);
+                        ASSERT_EQ(capturedAllocationInfo.erase(allocationID), 1u);
 
-                        if (allocationToID.find(allocationID) == allocationToID.end()) {
+                        if (createdAllocationToID.find(allocationID) ==
+                            createdAllocationToID.end()) {
                             continue;
                         }
 
                         mReplayedAllocationStats.CurrentUsage -=
-                            allocationToID[allocationID]->GetSize();
+                            createdAllocationToID[allocationID]->GetSize();
 
                         mPlatformTime->StartElapsedTime();
 
-                        const bool didDeallocate = allocationToID.erase(allocationID);
+                        const bool didDeallocate = createdAllocationToID.erase(allocationID);
 
                         const double elapsedTime = mPlatformTime->EndElapsedTime();
 
@@ -303,11 +360,59 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
+            } else if (event["name"].asString() == "ResidencyManager") {
+                switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
+                        const std::string& residencyManagerID = event["id"].asString();
+                        if (createdResidencyManagerToID.find(residencyManagerID) !=
+                            createdResidencyManagerToID.end()) {
+                            continue;
+                        }
+
+                        const Json::Value& snapshot = event["args"]["snapshot"];
+                        ASSERT_FALSE(snapshot.empty());
+
+                        RESIDENCY_DESC residencyDesc = {};
+                        residencyDesc.Device = mDevice;
+                        residencyDesc.Adapter = mAdapter;
+                        residencyDesc.Budget = snapshot["Budget"].asUInt64();
+                        residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
+                        residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
+
+                        ComPtr<ResidencyManager> residencyManager;
+                        ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
+                            residencyDesc, &residencyManager));
+
+                        ASSERT_TRUE(createdResidencyManagerToID
+                                        .insert({residencyManagerID, std::move(residencyManager)})
+                                        .second);
+                    } break;
+
+                    case TRACE_EVENT_PHASE_CREATE_OBJECT: {
+                        // Assume subsequent events are always against this residency instance.
+                        // This is because call trace events have no ID associated with them.
+                        currentResidencyID = event["id"].asString();
+                    } break;
+
+                    case TRACE_EVENT_PHASE_DELETE_OBJECT: {
+                        const std::string& residencyManagerID = event["id"].asString();
+
+                        auto it = createdResidencyManagerToID.find(residencyManagerID);
+                        if (it == createdResidencyManagerToID.end()) {
+                            continue;
+                        }
+
+                        ASSERT_EQ(createdResidencyManagerToID.erase(residencyManagerID), 1u);
+                    } break;
+
+                    default:
+                        break;
+                }
             } else if (event["name"].asString() == "ResourceAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
-                        if (allocatorToID.find(allocatorID) != allocatorToID.end()) {
+                        if (createdAllocatorToID.find(allocatorID) != createdAllocatorToID.end()) {
                             continue;
                         }
 
@@ -389,12 +494,18 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
                         }
 
+                        ComPtr<ResidencyManager> residencyManager;
+                        if (createdResidencyManagerToID.find(currentResidencyID) !=
+                            createdResidencyManagerToID.end()) {
+                            residencyManager = createdResidencyManagerToID[currentResidencyID];
+                        }
+
                         ComPtr<ResourceAllocator> resourceAllocator;
-                        ASSERT_SUCCEEDED(
-                            ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+                        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+                            allocatorDesc, &resourceAllocator, &residencyManager));
 
                         ASSERT_TRUE(
-                            allocatorToID.insert({allocatorID, std::move(resourceAllocator)})
+                            createdAllocatorToID.insert({allocatorID, std::move(resourceAllocator)})
                                 .second);
                     } break;
 
@@ -407,12 +518,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
 
-                        auto it = allocatorToID.find(allocatorID);
-                        if (it == allocatorToID.end()) {
+                        auto it = createdAllocatorToID.find(allocatorID);
+                        if (it == createdAllocatorToID.end()) {
                             continue;
                         }
 
-                        ASSERT_EQ(allocatorToID.erase(allocatorID), 1u);
+                        ASSERT_EQ(createdAllocatorToID.erase(allocatorID), 1u);
                     } break;
 
                     default:
@@ -422,7 +533,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        if (heapInfoToID.find(heapID) != heapInfoToID.end()) {
+                        if (capturedHeapInfo.find(heapID) != capturedHeapInfo.end()) {
                             continue;
                         }
 
@@ -435,20 +546,20 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
 
-                        ASSERT_TRUE(heapInfoToID.insert({heapID, heapInfo}).second);
+                        ASSERT_TRUE(capturedHeapInfo.insert({heapID, heapInfo}).second);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        auto it = heapInfoToID.find(heapID);
-                        if (it == heapInfoToID.end()) {
+                        auto it = capturedHeapInfo.find(heapID);
+                        if (it == capturedHeapInfo.end()) {
                             continue;
                         }
 
                         HEAP_INFO heapInfo = it->second;
                         mCapturedMemoryStats.CurrentUsage -= heapInfo.SizeInBytes;
 
-                        ASSERT_EQ(heapInfoToID.erase(heapID), 1u);
+                        ASSERT_EQ(capturedHeapInfo.erase(heapID), 1u);
 
                     } break;
 
@@ -458,9 +569,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             }
         }
 
-        EXPECT_TRUE(allocationInfoToID.empty());
-        EXPECT_TRUE(allocatorToID.empty());
-        EXPECT_TRUE(heapInfoToID.empty());
+        EXPECT_TRUE(createdAllocatorToID.empty());
+        EXPECT_TRUE(capturedAllocationInfo.empty());
+        EXPECT_TRUE(capturedHeapInfo.empty());
     }
 
     CaptureReplayCallStats mReplayedAllocateStats;
