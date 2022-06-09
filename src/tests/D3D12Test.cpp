@@ -78,6 +78,10 @@ namespace gpgmm { namespace d3d12 {
         desc.RecordOptions.UseDetailedTimingEvents = true;
 #endif
 
+        if (IsDumpResourceAllocatorEnabled()) {
+            desc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
+        }
+
         return desc;
     }
 

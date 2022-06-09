@@ -36,6 +36,10 @@ gpgmm::DebugPlatform* GPGMMTestBase::GetDebugPlatform() {
     return mDebugPlatform.get();
 }
 
+bool GPGMMTestBase::IsDumpResourceAllocatorEnabled() const {
+    return gTestEnv->IsDumpResourceAllocatorEnabled();
+}
+
 // static
 std::vector<MEMORY_ALLOCATION_EXPECT> GPGMMTestBase::GenerateTestAllocations(uint64_t alignment) {
     return {
@@ -83,11 +87,26 @@ std::vector<MEMORY_ALLOCATION_EXPECT> GPGMMTestBase::GenerateTestAllocations(uin
     };
 }
 
+void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {
+    gTestEnv = new GPGMMTestEnvironment(argc, argv);
+    testing::AddGlobalTestEnvironment(gTestEnv);
+}
+
 // GPGMMTestEnvironment
 
-void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {
-    gTestEnv = new GPGMMTestEnvironment();
-    testing::AddGlobalTestEnvironment(gTestEnv);
+GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp("--dump", argv[i]) == 0) {
+            mIsDumpResourceAllocatorEnabled = true;
+            continue;
+        }
+
+        if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
+            gpgmm::InfoLog() << "Global options:\n"
+                             << " --dump: Record all events to disk.\n";
+            continue;
+        }
+    }
 }
 
 // static
@@ -96,4 +115,8 @@ void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
 }
 
 void GPGMMTestEnvironment::SetUp() {
+}
+
+bool GPGMMTestEnvironment::IsDumpResourceAllocatorEnabled() const {
+    return mIsDumpResourceAllocatorEnabled;
 }

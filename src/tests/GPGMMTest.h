@@ -61,6 +61,8 @@ class GPGMMTestBase {
 
     gpgmm::DebugPlatform* GetDebugPlatform();
 
+    bool IsDumpResourceAllocatorEnabled() const;
+
     static std::vector<MEMORY_ALLOCATION_EXPECT> GenerateTestAllocations(uint64_t alignment);
 };
 
@@ -68,11 +70,16 @@ void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv);
 
 class GPGMMTestEnvironment : public testing::Environment {
   public:
-    GPGMMTestEnvironment() = default;
+    GPGMMTestEnvironment(int argc, char** argv);
 
     static void SetEnvironment(GPGMMTestEnvironment* env);
 
     void SetUp() override;
+
+    bool IsDumpResourceAllocatorEnabled() const;
+
+  private:
+    bool mIsDumpResourceAllocatorEnabled = false;
 };
 
 #endif  // TESTS_GPGMMTEST_H_
