@@ -66,6 +66,12 @@ jobs:
         cd test
         cmake --build .
 
+    - name: Run gpgmm_end2end_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        src\tests\Debug\gpgmm_end2end_tests.exe 2>&1
+
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |

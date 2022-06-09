@@ -18,6 +18,10 @@
 
 add_executable(gpgmm_unittests)
 
+target_link_libraries(gpgmm_unittests PRIVATE
+   gpgmm_common_config
+)
+
 target_sources(gpgmm_unittests PRIVATE
     "DummyMemoryAllocator.h"
     "unittests/BuddyBlockAllocatorTests.cpp"
@@ -37,5 +41,43 @@ target_sources(gpgmm_unittests PRIVATE
     "UnittestsMain.cpp"
 )
 
-target_include_directories(gpgmm_unittests PRIVATE "${GPGMM_ROOT_DIR}/src")
-target_link_libraries(gpgmm_unittests gpgmm gtest)
+target_link_libraries(gpgmm_unittests PRIVATE
+   gpgmm
+   gtest
+)
+
+###############################################################################
+# End2End tests
+###############################################################################
+
+add_executable(gpgmm_end2end_tests)
+
+target_sources(gpgmm_end2end_tests PRIVATE
+    "GPGMMTest.cpp"
+    "GPGMMTest.h"
+    "End2EndTestsMain.cpp"
+)
+
+target_link_libraries(gpgmm_end2end_tests
+  PRIVATE gpgmm_common_config
+)
+
+if (GPGMM_ENABLE_D3D12)
+  target_sources(gpgmm_end2end_tests PRIVATE
+      "D3D12Test.cpp"
+      "D3D12Test.h"
+      "end2end/D3D12IUnknownImplTests.cpp"
+      "end2end/D3D12ResidencyManagerTests.cpp"
+      "end2end/D3D12ResourceAllocatorTests.cpp"
+  )
+
+  target_link_libraries(gpgmm_end2end_tests PRIVATE
+     d3d12.lib
+     dxgi.lib
+  )
+endif()
+
+target_link_libraries(gpgmm_end2end_tests PRIVATE
+     gpgmm
+     gtest
+)
