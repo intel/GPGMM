@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'src/**'
+      - '**/CMakeLists.txt'
 
   pull_request:
     paths:
       - 'src/**'
+      - '**/CMakeLists.txt'
 
 jobs:
 
@@ -58,7 +60,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake . -DCMAKE_BUILD_TYPE=Debug -DGPGMM_ENABLE_VK=OFF -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+        cmake . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Build for main branch (with patch)
       shell: cmd
@@ -70,10 +72,10 @@ jobs:
       shell: cmd
       run: |
         cd test
-        src\tests\Debug\gpgmm_end2end_tests.exe 2>&1
+        Debug\gpgmm_end2end_tests.exe 2>&1
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |
         cd test
-        src\tests\Debug\gpgmm_unittests.exe
+        Debug\gpgmm_unittests.exe
