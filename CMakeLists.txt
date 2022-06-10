@@ -25,6 +25,13 @@ project(
 # FOLDER property to name them.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# Always specify (aka initialize) the output directories.
+# Otherwise, the runtime (exe) and library (DLL), could be built under different folders
+# paths where running the executable directly could fail to find the DLL.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
 if(NOT CMAKE_BUILD_TYPE)
     message(WARNING "CMAKE_BUILD_TYPE not set, forcing it to Debug")
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
