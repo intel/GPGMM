@@ -24,3 +24,7 @@ endif()
 # Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(googletest)
+
+if (GPGMM_ENABLE_VK_LOADER)
+    add_subdirectory(${GPGMM_VK_DEPS_DIR}/vulkan-loader/src)
+endif()

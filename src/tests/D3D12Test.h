@@ -44,7 +44,7 @@ namespace gpgmm { namespace d3d12 {
 
         static D3D12_RESOURCE_DESC CreateBasicTextureDesc(DXGI_FORMAT format,
                                                           uint64_t width,
-                                                          uint64_t height,
+                                                          uint32_t height,
                                                           uint32_t sampleCount = 1,
                                                           uint64_t alignment = 0);
 

@@ -91,12 +91,10 @@ namespace gpgmm {
         return (number == 0) ? false : (number & (number - 1)) == 0;
     }
 
-    bool IsAligned(uint32_t number, size_t multiple) {
-        ASSERT(multiple <= UINT32_MAX);
+    bool IsAligned(uint64_t number, size_t multiple) {
         ASSERT(multiple != 0);
         if (IsPowerOfTwo(multiple)) {
-            uint32_t multiple32 = static_cast<uint32_t>(multiple);
-            return (number & (multiple32 - 1)) == 0;
+            return (number & (multiple - 1)) == 0;
         }
         return number % multiple == 0;
     }

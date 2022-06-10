@@ -33,7 +33,7 @@ namespace gpgmm {
 
     bool IsPowerOfTwo(uint64_t number);
     uint64_t NextPowerOfTwo(uint64_t number);
-    bool IsAligned(uint32_t number, size_t multiple);
+    bool IsAligned(uint64_t number, size_t multiple);
 
     template <typename T>
     T AlignToPowerOfTwo(T number, size_t alignment) {
