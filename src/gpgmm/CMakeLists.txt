@@ -15,6 +15,11 @@
 
 add_library(gpgmm)
 
+target_compile_definitions(gpgmm PRIVATE "GPGMM_IMPLEMENTATION")
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(gpgmm PRIVATE "GPGMM_SHARED_LIBRARY")
+endif()
+
 target_link_libraries(gpgmm
     PRIVATE gpgmm_utils
             gpgmm_common
@@ -37,6 +42,16 @@ endif()
 # so no need for static linking.
 if (WINDOWS_STORE)
     target_link_libraries(gpgmm PRIVATE debug dxgi.lib)
+endif()
+
+if (MSVC)
+  target_compile_options(gpgmm PRIVATE
+    /wd4244
+    /wd4702
+    /wd4245
+    /wd4275
+    /wd4251
+  )
 endif()
 
 if (GPGMM_ENABLE_D3D12)
@@ -77,6 +92,11 @@ if (GPGMM_ENABLE_D3D12)
 endif()
 
 if (GPGMM_ENABLE_VK)
+
+  if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS)
+    target_compile_definitions(gpgmm PRIVATE "GPGMM_STATIC_VULKAN_FUNCTIONS")
+  endif()
+
   target_sources(gpgmm PRIVATE
         "vk/CapsVk.cpp"
         "vk/CapsVk.h"
@@ -91,6 +111,12 @@ if (GPGMM_ENABLE_VK)
         "vk/FunctionsVk.h"
         "vk/vk_platform.h"
     )
+
+    if (GPGMM_ENABLE_VK_LOADER)
+      target_link_libraries(gpgmm PRIVATE
+        Vulkan::Vulkan
+      )
+    endif()
 
     target_link_libraries(gpgmm PUBLIC Vulkan-Headers)
     target_include_directories(gpgmm PRIVATE ${GPGMM_VK_TOOLS_DIR})

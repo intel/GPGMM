@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/VKTest.h"
+#include "tests/VKTest.h"
 
 #include <gpgmm_vk.h>
 

@@ -77,6 +77,18 @@ if (GPGMM_ENABLE_D3D12)
   )
 endif()
 
+if (GPGMM_ENABLE_VK)
+  target_sources(gpgmm_end2end_tests PRIVATE
+      "VKTest.cpp"
+      "VKTest.h"
+      "end2end/VKResourceAllocatorTests.cpp"
+  )
+
+  target_link_libraries(gpgmm_end2end_tests PRIVATE
+     Vulkan::Vulkan
+  )
+endif()
+
 target_link_libraries(gpgmm_end2end_tests PRIVATE
      gpgmm
      gtest

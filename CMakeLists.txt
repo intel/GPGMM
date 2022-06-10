@@ -75,8 +75,22 @@ elseif(UNIX)
     set(ENABLE_VK ON)
 endif()
 
+# Uses our built version of the Vulkan loader on platforms where we can't
+# assume to have one present at the system level.
+set(ENABLE_VK_LOADER OFF)
+if (APPLE OR (UNIX AND NOT ANDROID))
+	if (ENABLE_VK)
+			set(ENABLE_VK_LOADER ON)
+	endif()
+endif()
+
+# TODO: Enable shared library.
+set(BUILD_SHARED_LIBS 0)
+
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
+option_if_not_defined(GPGMM_ENABLE_VK_STATIC_FUNCTIONS "Links Vulkan functions by statically importing them" ON)
+option_if_not_defined(GPGMM_ENABLE_VK_LOADER "Enables compilation of Vulkan loader" ${ENABLE_VK_LOADER})
 
 set_if_not_defined(GPGMM_THIRD_PARTY_DIR "${GPGMM_SOURCE_DIR}/third_party" "Directory in which to find third-party dependencies.")
 set_if_not_defined(GPGMM_VK_DEPS_DIR "${GPGMM_THIRD_PARTY_DIR}/vulkan-deps" "Directory in which to find vulkan-deps")
@@ -84,6 +98,13 @@ set_if_not_defined(GPGMM_VK_HEADERS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-headers/src
 set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "Directory in which to find Vulkan-Tools")
 
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
+
+# The Vulkan loader is an optional dependency.
+if (GPGMM_ENABLE_VK)
+	if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS OR GPGMM_ENABLE_VK_LOADER)
+		set(GPGMM_ENABLE_VK_LOADER ON)
+	endif()
+endif()
 
 ################################################################################
 # GPGMM's public and common "configs"

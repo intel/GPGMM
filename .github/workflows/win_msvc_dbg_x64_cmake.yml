@@ -58,7 +58,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+        cmake . -DCMAKE_BUILD_TYPE=Debug -DGPGMM_ENABLE_VK=OFF -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Build for main branch (with patch)
       shell: cmd
