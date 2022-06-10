@@ -1,6 +1,6 @@
 *.pyc
 
-# Directories added by gclient sync and the GN build
+### Depot tools (gclient sync) and GN ###
 /.cipd
 /.gclient
 /.gclient_entries
@@ -17,12 +17,14 @@
 /tools
 /out
 
-# Files and directories added by CMake build
+### CMake ###
 CMakeFiles
 CMakeCache.txt
 [Dd]ebug/
 [Rr]elease/
 [Ll]og/
+cmake_install.cmake
+cmake_uninstall.cmake
 
 *.pdb
 *.filters
@@ -83,6 +85,10 @@ GitHub.sublime-settings
 Session.vim
 .netrwhist
 tags
+
+## Visual Studio ###
+*.vcxproj*
+*.sln
 
 ### VisualStudioCode ###
 .vscode/*
