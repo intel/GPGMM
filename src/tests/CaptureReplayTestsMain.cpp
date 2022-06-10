@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
+#include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
 int main(int argc, char** argv) {
     InitGPGMMCaptureReplayTestEnvironment(argc, argv);
