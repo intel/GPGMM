@@ -94,6 +94,7 @@ endif()
 # TODO: Enable shared library.
 set(BUILD_SHARED_LIBS 0)
 
+option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
 option_if_not_defined(GPGMM_ENABLE_VK_STATIC_FUNCTIONS "Links Vulkan functions by statically importing them" ON)
@@ -111,6 +112,10 @@ if (GPGMM_ENABLE_VK)
 	if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS OR GPGMM_ENABLE_VK_LOADER)
 		set(GPGMM_ENABLE_VK_LOADER ON)
 	endif()
+endif()
+
+if (GPGMM_ENABLE_TESTS)
+    enable_testing()
 endif()
 
 ################################################################################
@@ -148,7 +153,10 @@ set(CMAKE_CXX_STANDARD "14")
 ################################################################################
 add_subdirectory(third_party)
 add_subdirectory(src/gpgmm)
-add_subdirectory(src/tests)
+
+if (GPGMM_ENABLE_TESTS)
+  add_subdirectory(src/tests)
+endif()
 
 ################################################################################
 # Install GPGMM
