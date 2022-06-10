@@ -12,18 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+################################################################################
+# Build subdirectories
+################################################################################
+
 # Check if the target was already added with NOT TARGET.
 if (NOT TARGET Vulkan-Headers)
     add_subdirectory(${GPGMM_VK_HEADERS_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-headers")
 endif()
 
-################################################################################
-# Build subdirectories
-################################################################################
-
-# Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-add_subdirectory(googletest)
+if (GPGMM_ENABLE_TESTS)
+  # Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  add_subdirectory(googletest)
+endif()
 
 if (GPGMM_ENABLE_VK_LOADER)
     add_subdirectory(${GPGMM_VK_DEPS_DIR}/vulkan-loader/src)
