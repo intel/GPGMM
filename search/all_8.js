@@ -22,7 +22,7 @@ var searchData=
   ['internal_5ftrace_5fevent_5fadd_5fscoped_19',['INTERNAL_TRACE_EVENT_ADD_SCOPED',['../_trace_event_8h.html#a61fdaf2ad5c3573460690f9072fffe1e',1,'TraceEvent.h']]],
   ['internal_5ftrace_5fevent_5fadd_5fwith_5fid_20',['INTERNAL_TRACE_EVENT_ADD_WITH_ID',['../_trace_event_8h.html#ae548c17091d227e9f8c7181d674dd4df',1,'TraceEvent.h']]],
   ['internal_5ftrace_5fevent_5fmetadata_5fadd_21',['INTERNAL_TRACE_EVENT_METADATA_ADD',['../_trace_event_8h.html#ac6e7053a31e2fa16198b26b04316dc7a',1,'TraceEvent.h']]],
-  ['isaligned_22',['IsAligned',['../namespacegpgmm.html#ad5e2416193c458e4960b1a298d4eeded',1,'gpgmm']]],
+  ['isaligned_22',['IsAligned',['../namespacegpgmm.html#a57e5b5b966c5dfc7d90e80f9aa6ffe5a',1,'gpgmm']]],
   ['isallowedtousesmallalignment_23',['IsAllowedToUseSmallAlignment',['../namespacegpgmm_1_1d3d12.html#afe198cab730bda500c14194a2786c482',1,'gpgmm::d3d12']]],
   ['isblockcompressionformat_24',['IsBlockCompressionFormat',['../namespacegpgmm_1_1d3d12.html#a8bc0035030f56ef1558acabd9daa3022',1,'gpgmm::d3d12']]],
   ['iscreateheapnotresidentsupported_25',['IsCreateHeapNotResidentSupported',['../classgpgmm_1_1d3d12_1_1_caps.html#ac8606ea39fe989fb437104485e0f4c17',1,'gpgmm::d3d12::Caps']]],

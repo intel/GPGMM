@@ -10,7 +10,7 @@ var searchData=
   ['insertafter_7',['InsertAfter',['../classgpgmm_1_1_link_node.html#ad73ec5a8e94076e40874938812cc9c9f',1,'gpgmm::LinkNode']]],
   ['insertbefore_8',['InsertBefore',['../classgpgmm_1_1_link_node.html#a46be6fc55e00ae4ae06d048e0449045e',1,'gpgmm::LinkNode']]],
   ['insertheap_9',['InsertHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a7ec4639b59f22df4eef133e93dd73fe9',1,'gpgmm::d3d12::ResidencyManager']]],
-  ['isaligned_10',['IsAligned',['../namespacegpgmm.html#ad5e2416193c458e4960b1a298d4eeded',1,'gpgmm']]],
+  ['isaligned_10',['IsAligned',['../namespacegpgmm.html#a57e5b5b966c5dfc7d90e80f9aa6ffe5a',1,'gpgmm']]],
   ['isallowedtousesmallalignment_11',['IsAllowedToUseSmallAlignment',['../namespacegpgmm_1_1d3d12.html#afe198cab730bda500c14194a2786c482',1,'gpgmm::d3d12']]],
   ['isblockcompressionformat_12',['IsBlockCompressionFormat',['../namespacegpgmm_1_1d3d12.html#a8bc0035030f56ef1558acabd9daa3022',1,'gpgmm::d3d12']]],
   ['iscreateheapnotresidentsupported_13',['IsCreateHeapNotResidentSupported',['../classgpgmm_1_1d3d12_1_1_caps.html#ac8606ea39fe989fb437104485e0f4c17',1,'gpgmm::d3d12::Caps']]],
