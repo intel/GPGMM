@@ -79,3 +79,9 @@ jobs:
       run: |
         cd test
         Debug\gpgmm_unittests.exe
+
+    - name: Run gpgmm_capture_replay_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG 2>&1

@@ -25,6 +25,9 @@ if (GPGMM_ENABLE_TESTS)
   # Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   add_subdirectory(googletest)
+
+  # JsonCpp is only used for capture_replay_tests.
+  add_subdirectory(jsoncpp/source)
 endif()
 
 if (GPGMM_ENABLE_VK_LOADER)

@@ -93,3 +93,53 @@ target_link_libraries(gpgmm_end2end_tests PRIVATE
      gpgmm
      gtest
 )
+
+###############################################################################
+# Capture replay tests
+###############################################################################
+
+add_executable(gpgmm_capture_replay_tests)
+
+set(TRACE_INDEX_FILE_NAME "traces.json")
+set(TRACE_INPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/capture_replay_tests/traces")
+set(TRACE_INDEX_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${TRACE_INDEX_FILE_NAME}")
+
+add_custom_command(
+  TARGET gpgmm_capture_replay_tests PRE_BUILD
+  COMMAND python3 ${GPGMM_ROOT_DIR}/scripts/generate_capture_replay_trace_index.py --traces_dir "${TRACE_INPUT_DIR}" --trace_index "${TRACE_INDEX_OUTPUT_PATH}"
+  COMMENT "Generating capture replay trace index"
+  VERBATIM
+)
+
+target_compile_definitions(gpgmm_capture_replay_tests PRIVATE -DGPGMM_CAPTURE_REPLAY_TESTS_TRACE_INDEX="${TRACE_INDEX_OUTPUT_PATH}")
+
+target_sources(gpgmm_capture_replay_tests PRIVATE
+    "GPGMMTest.cpp"
+    "GPGMMTest.h"
+    "capture_replay_tests/GPGMMCaptureReplayTests.cpp"
+    "capture_replay_tests/GPGMMCaptureReplayTests.h"
+    "CaptureReplayTestsMain.cpp"
+)
+
+target_link_libraries(gpgmm_capture_replay_tests
+  PRIVATE gpgmm_common_config
+)
+
+if (GPGMM_ENABLE_D3D12)
+  target_sources(gpgmm_capture_replay_tests PRIVATE
+      "D3D12Test.cpp"
+      "D3D12Test.h"
+      "capture_replay_tests/D3D12EventTraceReplay.cpp"
+  )
+
+  target_link_libraries(gpgmm_capture_replay_tests PRIVATE
+     d3d12.lib
+     dxgi.lib
+  )
+endif()
+
+target_link_libraries(gpgmm_capture_replay_tests PRIVATE
+     gpgmm
+     gtest
+     jsoncpp_static
+)
