@@ -254,7 +254,7 @@ hooks = [
     'condition': 'checkout_dawn',
     'action': [ 'git', '-C', './third_party/dawn/',
                 'apply', '--ignore-space-change', '--ignore-whitespace',
-                '../../.patches/dawn.diff',
+                '../../.github/workflows/.patches/dawn.diff',
     ],
   },
 ]
