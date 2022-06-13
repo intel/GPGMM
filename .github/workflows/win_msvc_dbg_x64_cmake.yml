@@ -5,11 +5,13 @@ on:
     paths:
       - 'src/**'
       - '**/CMakeLists.txt'
+      - '**/*_cmake.yml'
 
   pull_request:
     paths:
       - 'src/**'
       - '**/CMakeLists.txt'
+      - '**/*_cmake.yml'
 
 jobs:
 
@@ -50,7 +52,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake --build .
+        cmake --build . --config Debug
 
     - name: Generate project for main branch (with patch)
       shell: cmd
@@ -62,7 +64,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake --build .
+        cmake --build . --config Debug
 
     - name: Run gpgmm_end2end_tests (with patch)
       shell: cmd
