@@ -1,15 +1,12 @@
-/** \mainpage GPGMM, General-Purpose GPU Memory Management Library API documentation.
+/**
+\mainpage
 
-\section main_table_of_contents Public interfaces
+\section _build Build instructions
+The build instructions are located in the file
+<a HREF="https://github.com/intel/GPGMM/blob/main/README.md">README.md</a> in the top-directory of the project.
 
-\subpage gpgmm_d3d12.h
-- gpgmm::d3d12::ResidencyManager (controls when GPU memory is available)
-- gpgmm::d3d12::ResourceAllocator (creates gpgmm::d3d12::ResourceAllocation).
-- gpgmm::d3d12::ResourceAllocation (wraps D3D12 resources with metadata).
-- gpgmm::d3d12::Heap (wraps D3D12 heaps and committed resources for residency).
-- gpgmm::d3d12::ResidencySet (tracks managed heaps to become resident).
-
-\subpage gpgmm_vk.h
-- gpgmm::vk::GpResourceAllocator_T (creates gpgmm::vk::GpResourceAllocation_T).
+The latest version of the source is available in the project's GitHub repository:
+<a HREF="https://github.com/intel/GPGMM">
+gpgmm</a>
 
 **/
