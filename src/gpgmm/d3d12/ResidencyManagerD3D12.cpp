@@ -271,28 +271,22 @@ namespace gpgmm { namespace d3d12 {
         }
 
         // Not all segments could be used.
-        if (pVideoMemoryInfo->CurrentUsage > 0) {
-            TRACE_COUNTER1(
-                TraceEventCategory::Default,
-                ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                     : "Shared",
-                         " GPU memory utilization (%)")
-                    .c_str(),
-                (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
-                    ? 100
-                    : SafeDivison(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
-        }
+        GPGMM_TRACE_EVENT_METRIC(
+            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                 : "Shared",
+                     " GPU memory utilization (%)")
+                .c_str(),
+            (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
+                ? 100
+                : SafeDivison(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
 
         // Reservations are optional.
-        if (pVideoMemoryInfo->CurrentReservation > 0) {
-            TRACE_COUNTER1(
-                TraceEventCategory::Default,
-                ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                     : "Shared",
-                         " GPU memory reserved (MB)")
-                    .c_str(),
-                pVideoMemoryInfo->CurrentReservation / 1e6);
-        }
+        GPGMM_TRACE_EVENT_METRIC(
+            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                 : "Shared",
+                     " GPU memory reserved (MB)")
+                .c_str(),
+            pVideoMemoryInfo->CurrentReservation / 1e6);
 
         return S_OK;
     }
@@ -380,8 +374,7 @@ namespace gpgmm { namespace d3d12 {
         }
 
         if (objectsToEvict.size() > 0) {
-            TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-out (MB)",
-                           evictedSizeInBytes / 1e6);
+            GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)", evictedSizeInBytes / 1e6);
 
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
@@ -475,10 +468,8 @@ namespace gpgmm { namespace d3d12 {
                                         nonLocalHeapsToMakeResident.data()));
         }
 
-        if (localSizeToMakeResident > 0 || nonLocalSizeToMakeResident > 0) {
-            TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory page-in (MB)",
-                           (localSizeToMakeResident + nonLocalSizeToMakeResident) / 1e6);
-        }
+        GPGMM_TRACE_EVENT_METRIC("GPU memory page-in (MB)",
+                                 (localSizeToMakeResident + nonLocalSizeToMakeResident) / 1e6);
 
         // Queue and command-lists may not be specified since they are not capturable for playback.
         if (commandLists != nullptr && queue != nullptr) {
