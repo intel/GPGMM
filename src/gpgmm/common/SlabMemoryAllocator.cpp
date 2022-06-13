@@ -487,6 +487,11 @@ namespace gpgmm {
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
 
+        // Size cache is common across slab allocators.
+        const CacheStats& sizeCacheStats = mSizeCache.GetStats();
+        result.CacheSizeHits = sizeCacheStats.NumOfHits;
+        result.CacheSizeMisses = sizeCacheStats.NumOfMisses;
+
         return result;
     }
 

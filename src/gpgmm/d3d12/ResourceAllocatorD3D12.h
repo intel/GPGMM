@@ -429,7 +429,7 @@ namespace gpgmm { namespace d3d12 {
 
         Allow internal data structures used for resource allocation to be cached in-memory.
         */
-        ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x16,
+        ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x10,
     };
 
     using ALLOCATION_FLAGS_TYPE = Flags<ALLOCATION_FLAGS>;

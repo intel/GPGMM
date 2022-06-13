@@ -50,6 +50,8 @@ namespace gpgmm { namespace d3d12 {
 
         static std::vector<MEMORY_ALLOCATION_EXPECT> GenerateBufferAllocations();
 
+        bool IsSizeCacheEnabled() const;
+
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;
