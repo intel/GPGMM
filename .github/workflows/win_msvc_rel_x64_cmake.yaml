@@ -1,0 +1,83 @@
+name: win_msvc_rel_x64_cmake
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - '**/CMakeLists.txt'
+
+  pull_request:
+    paths:
+      - 'src/**'
+      - '**/CMakeLists.txt'
+
+jobs:
+
+  job:
+
+    runs-on: windows-2019
+
+    steps:
+    - name: Git config
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - name: Install vcpkg
+      shell: cmd
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - uses: actions/checkout@v2
+      with:
+        path: test
+        fetch-depth: 0
+
+    - name: Generate shared library for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    - name: Build shared library for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake --build .
+
+    - name: Generate project for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    - name: Build for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test
+        cmake --build .
+
+    - name: Run gpgmm_end2end_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        Release\gpgmm_end2end_tests.exe 2>&1
+
+    - name: Run gpgmm_unittests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        Release\gpgmm_unittests.exe
+
+    - name: Run gpgmm_capture_replay_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        Release\gpgmm_capture_replay_tests.exe
