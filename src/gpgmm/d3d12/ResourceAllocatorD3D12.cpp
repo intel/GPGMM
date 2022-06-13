@@ -279,6 +279,11 @@ namespace gpgmm { namespace d3d12 {
                 return E_FAIL;
             }
 
+            // Requested resource size should be already aligned with the fixed memory size required
+            // by the allocator.
+            ASSERT(allocator->GetMemorySize() == kInvalidSize ||
+                   allocator->GetMemorySize() % request.Alignment == 0);
+
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.
@@ -813,7 +818,7 @@ namespace gpgmm { namespace d3d12 {
                 // Only constant buffers must be 256B aligned.
                 request.Alignment = (initialResourceState == D3D12_RESOURCE_STATE_GENERIC_READ)
                                         ? D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT
-                                        : 1;
+                                        : NextPowerOfTwo(newResourceDesc.Width);
             } else {
                 request.Alignment = resourceDescriptor.Alignment;
             }
