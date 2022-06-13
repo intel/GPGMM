@@ -20,13 +20,14 @@ var searchData=
   ['gpgmm_5fstatic_5fget_5ffunc_17',['GPGMM_STATIC_GET_FUNC',['../_functions_vk_8cpp.html#afdc791b22beaaebea441ea239d304ebb',1,'FunctionsVk.cpp']]],
   ['gpgmm_5ftest_5fmemory_5fleak_5fend_18',['GPGMM_TEST_MEMORY_LEAK_END',['../_g_p_g_m_m_test_8h.html#a95e06e2a0d202e7c005d717603d0240e',1,'GPGMMTest.h']]],
   ['gpgmm_5ftest_5fmemory_5fleak_5fstart_19',['GPGMM_TEST_MEMORY_LEAK_START',['../_g_p_g_m_m_test_8h.html#a99a7ab7c55ab63e9c66c7180a5562054',1,'GPGMMTest.h']]],
-  ['gpgmm_5ftrace_5fevent_5fobject_5fcall_20',['GPGMM_TRACE_EVENT_OBJECT_CALL',['../_trace_event_8h.html#a7b409d863ba401fda37265f837d2f924',1,'TraceEvent.h']]],
-  ['gpgmm_5ftrace_5fevent_5fobject_5fdestroy_21',['GPGMM_TRACE_EVENT_OBJECT_DESTROY',['../_trace_event_8h.html#a52fb37c3d1889039da545c16dee1dc2f',1,'TraceEvent.h']]],
-  ['gpgmm_5ftrace_5fevent_5fobject_5fnew_22',['GPGMM_TRACE_EVENT_OBJECT_NEW',['../_trace_event_8h.html#a915d5dc4d8c076d4afc488bdf8639fed',1,'TraceEvent.h']]],
-  ['gpgmm_5ftrace_5fevent_5fobject_5fsnapshot_23',['GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT',['../_trace_event_8h.html#af10c0e9298d4daf16a693cf77573e824',1,'TraceEvent.h']]],
-  ['gpgmm_5ftry_5fassign_24',['GPGMM_TRY_ASSIGN',['../_error_8h.html#a4cc18e4163a6e3cc6d81b6046f10b726',1,'Error.h']]],
-  ['gpgmm_5funlikely_25',['GPGMM_UNLIKELY',['../_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8',1,'Compiler.h']]],
-  ['gpgmm_5funreachable_26',['GPGMM_UNREACHABLE',['../_assert_8h.html#a581f0226a27916c79d91d563e9cff43a',1,'Assert.h']]],
-  ['gpgmm_5funused_27',['GPGMM_UNUSED',['../_compiler_8h.html#aee0d8082114365d8537cfe7ebdd75a48',1,'Compiler.h']]],
-  ['gpgmm_5funused_5ffunc_28',['GPGMM_UNUSED_FUNC',['../_compiler_8h.html#a8ea4d34cddd8af563b888cf55c6d2c39',1,'Compiler.h']]]
+  ['gpgmm_5ftrace_5fevent_5fmetric_20',['GPGMM_TRACE_EVENT_METRIC',['../_trace_event_8h.html#adba6c4aed6077ad2ac31464d4f1a0de3',1,'TraceEvent.h']]],
+  ['gpgmm_5ftrace_5fevent_5fobject_5fcall_21',['GPGMM_TRACE_EVENT_OBJECT_CALL',['../_trace_event_8h.html#a7b409d863ba401fda37265f837d2f924',1,'TraceEvent.h']]],
+  ['gpgmm_5ftrace_5fevent_5fobject_5fdestroy_22',['GPGMM_TRACE_EVENT_OBJECT_DESTROY',['../_trace_event_8h.html#a52fb37c3d1889039da545c16dee1dc2f',1,'TraceEvent.h']]],
+  ['gpgmm_5ftrace_5fevent_5fobject_5fnew_23',['GPGMM_TRACE_EVENT_OBJECT_NEW',['../_trace_event_8h.html#a915d5dc4d8c076d4afc488bdf8639fed',1,'TraceEvent.h']]],
+  ['gpgmm_5ftrace_5fevent_5fobject_5fsnapshot_24',['GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT',['../_trace_event_8h.html#af10c0e9298d4daf16a693cf77573e824',1,'TraceEvent.h']]],
+  ['gpgmm_5ftry_5fassign_25',['GPGMM_TRY_ASSIGN',['../_error_8h.html#a4cc18e4163a6e3cc6d81b6046f10b726',1,'Error.h']]],
+  ['gpgmm_5funlikely_26',['GPGMM_UNLIKELY',['../_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8',1,'Compiler.h']]],
+  ['gpgmm_5funreachable_27',['GPGMM_UNREACHABLE',['../_assert_8h.html#a581f0226a27916c79d91d563e9cff43a',1,'Assert.h']]],
+  ['gpgmm_5funused_28',['GPGMM_UNUSED',['../_compiler_8h.html#aee0d8082114365d8537cfe7ebdd75a48',1,'Compiler.h']]],
+  ['gpgmm_5funused_5ffunc_29',['GPGMM_UNUSED_FUNC',['../_compiler_8h.html#a8ea4d34cddd8af563b888cf55c6d2c39',1,'Compiler.h']]]
 ];
