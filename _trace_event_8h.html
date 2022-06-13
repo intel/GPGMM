@@ -145,8 +145,6 @@ Macros</h2></td></tr>
 <tr class="separator:a7b409d863ba401fda37265f837d2f924"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c752aa65ef2bc022a0735a6a669124"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(object,  condition)&#160;&#160;&#160;        !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)</td></tr>
 <tr class="separator:af7c752aa65ef2bc022a0735a6a669124"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adba6c4aed6077ad2ac31464d4f1a0de3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_trace_event_8h.html#adba6c4aed6077ad2ac31464d4f1a0de3">GPGMM_TRACE_EVENT_METRIC</a>(name,  value)</td></tr>
-<tr class="separator:adba6c4aed6077ad2ac31464d4f1a0de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -208,41 +206,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="adba6c4aed6077ad2ac31464d4f1a0de3" name="adba6c4aed6077ad2ac31464d4f1a0de3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adba6c4aed6077ad2ac31464d4f1a0de3">&#9670;&nbsp;</a></span>GPGMM_TRACE_EVENT_METRIC</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define GPGMM_TRACE_EVENT_METRIC</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">value&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                          \</div>
-<div class="line">        if (value == 0) break;                                    \</div>
-<div class="line">        <a class="code hl_define" href="_trace_event_8h.html#a1750f244061164e163224575a1d48e1d">TRACE_COUNTER1</a>(<a class="code hl_enumeration" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">TraceEventCategory</a>::<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">Default</a>, name, value); \</div>
-<div class="line">    } while (false)</div>
-<div class="ttc" id="a_trace_event_8h_html_a1750f244061164e163224575a1d48e1d"><div class="ttname"><a href="_trace_event_8h.html#a1750f244061164e163224575a1d48e1d">TRACE_COUNTER1</a></div><div class="ttdeci">#define TRACE_COUNTER1(category_group, name, value)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:66</div></div>
-<div class="ttc" id="anamespacegpgmm_html_ae50b3049f91a97681a340ff73f6b4b7f"><div class="ttname"><a href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">gpgmm::TraceEventCategory</a></div><div class="ttdeci">TraceEventCategory</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:158</div></div>
-<div class="ttc" id="anamespacegpgmm_html_ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1"><div class="ttname"><a href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">gpgmm::Default</a></div><div class="ttdeci">@ Default</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:159</div></div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a7b409d863ba401fda37265f837d2f924" name="a7b409d863ba401fda37265f837d2f924"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b409d863ba401fda37265f837d2f924">&#9670;&nbsp;</a></span>GPGMM_TRACE_EVENT_OBJECT_CALL</h2>
 
@@ -272,8 +235,9 @@ Variables</h2></td></tr>
 <div class="line">        TRACE_EVENT_INSTANT1(<a class="code hl_enumvalue" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">TraceEventCategory::Default</a>, name,                  \</div>
 <div class="line">                              <a class="code hl_define" href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, <a class="code hl_function" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a>())); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
-<div class="ttc" id="a_trace_event_8h_html_af7c752aa65ef2bc022a0735a6a669124"><div class="ttname"><a href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a></div><div class="ttdeci">#define GPGMM_LAZY_SERIALIZE(object, condition)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:144</div></div>
+<div class="ttc" id="a_trace_event_8h_html_af7c752aa65ef2bc022a0735a6a669124"><div class="ttname"><a href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a></div><div class="ttdeci">#define GPGMM_LAZY_SERIALIZE(object, condition)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:143</div></div>
 <div class="ttc" id="anamespacegpgmm_html_a7a4e7758d833df0093cf8c892c9632aa"><div class="ttname"><a href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">gpgmm::IsEventTraceEnabled</a></div><div class="ttdeci">bool IsEventTraceEnabled()</div><div class="ttdef"><b>Definition:</b> TraceEvent.cpp:50</div></div>
+<div class="ttc" id="anamespacegpgmm_html_ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1"><div class="ttname"><a href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">gpgmm::Default</a></div><div class="ttdeci">@ Default</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:151</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -395,7 +359,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">        gpgmm::TraceBuffer::AddTraceEvent</a>(phase, category_group, name, <a class="code hl_variable" href="_trace_event_8h.html#a66921627f287947ace92fdf52ef8bd6c">kNoId</a>,  \</div>
 <div class="line">                                          __VA_ARGS__);                        \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
-<div class="ttc" id="a_trace_event_8h_html_a66921627f287947ace92fdf52ef8bd6c"><div class="ttname"><a href="_trace_event_8h.html#a66921627f287947ace92fdf52ef8bd6c">kNoId</a></div><div class="ttdeci">const uint64_t kNoId</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:56</div></div>
+<div class="ttc" id="a_trace_event_8h_html_a66921627f287947ace92fdf52ef8bd6c"><div class="ttname"><a href="_trace_event_8h.html#a66921627f287947ace92fdf52ef8bd6c">kNoId</a></div><div class="ttdeci">const uint64_t kNoId</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:55</div></div>
 <div class="ttc" id="aclassgpgmm_1_1_trace_buffer_html_a9f943ebf28e6fe98d7e5181f0251d0dd"><div class="ttname"><a href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">gpgmm::TraceBuffer::AddTraceEvent</a></div><div class="ttdeci">static void AddTraceEvent(char phase, TraceEventCategory category, const char *name, uint64_t id, uint32_t flags, const JSONDict &amp;args={})</div><div class="ttdef"><b>Definition:</b> TraceEvent.cpp:73</div></div>
 </div><!-- fragment -->
 </div>
@@ -484,7 +448,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="classgpgmm_1_1_trace_buffer.html#a9f943ebf28e6fe98d7e5181f0251d0dd">        gpgmm::TraceBuffer::AddTraceEvent</a>(phase, category_group, name,                   \</div>
 <div class="line">                                          <a class="code hl_class" href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a>(<span class="keywordtype">id</span>).GetID(), __VA_ARGS__); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
-<div class="ttc" id="aclassgpgmm_1_1_trace_event_i_d_html"><div class="ttname"><a href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a></div><div class="ttdef"><b>Definition:</b> TraceEvent.h:181</div></div>
+<div class="ttc" id="aclassgpgmm_1_1_trace_event_i_d_html"><div class="ttname"><a href="classgpgmm_1_1_trace_event_i_d.html">gpgmm::TraceEventID</a></div><div class="ttdef"><b>Definition:</b> TraceEvent.h:173</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -522,7 +486,7 @@ Variables</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="_trace_event_8h.html#a595bad3bf70a95af9da1ef5f9d183888">INTERNAL_TRACE_EVENT_ADD</a>(<a class="code hl_define" href="_trace_event_phase_8h.html#aef9d9f452f5608cefbf2472088b62954">TRACE_EVENT_PHASE_METADATA</a>, category_group,  \</div>
 <div class="line">                             name, <a class="code hl_define" href="_trace_event_8h.html#a45053fbcf8befa138af1a80ed3f2e943">TRACE_EVENT_FLAG_NONE</a>, __VA_ARGS__)</div>
 <div class="ttc" id="a_trace_event_8h_html_a45053fbcf8befa138af1a80ed3f2e943"><div class="ttname"><a href="_trace_event_8h.html#a45053fbcf8befa138af1a80ed3f2e943">TRACE_EVENT_FLAG_NONE</a></div><div class="ttdeci">#define TRACE_EVENT_FLAG_NONE</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:32</div></div>
-<div class="ttc" id="a_trace_event_8h_html_a595bad3bf70a95af9da1ef5f9d183888"><div class="ttname"><a href="_trace_event_8h.html#a595bad3bf70a95af9da1ef5f9d183888">INTERNAL_TRACE_EVENT_ADD</a></div><div class="ttdeci">#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name,...)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:112</div></div>
+<div class="ttc" id="a_trace_event_8h_html_a595bad3bf70a95af9da1ef5f9d183888"><div class="ttname"><a href="_trace_event_8h.html#a595bad3bf70a95af9da1ef5f9d183888">INTERNAL_TRACE_EVENT_ADD</a></div><div class="ttdeci">#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name,...)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:111</div></div>
 <div class="ttc" id="a_trace_event_phase_8h_html_aef9d9f452f5608cefbf2472088b62954"><div class="ttname"><a href="_trace_event_phase_8h.html#aef9d9f452f5608cefbf2472088b62954">TRACE_EVENT_PHASE_METADATA</a></div><div class="ttdeci">#define TRACE_EVENT_PHASE_METADATA</div><div class="ttdef"><b>Definition:</b> TraceEventPhase.h:24</div></div>
 </div><!-- fragment -->
 </div>
@@ -826,7 +790,7 @@ Variables</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="_trace_event_8h.html#ae548c17091d227e9f8c7181d674dd4df">INTERNAL_TRACE_EVENT_ADD_WITH_ID</a>(<a class="code hl_define" href="_trace_event_phase_8h.html#ad446564ed262ca762061389922b63a40">TRACE_EVENT_PHASE_CREATE_OBJECT</a>, category_group, name, <span class="keywordtype">id</span>, \</div>
 <div class="line">                                     <a class="code hl_define" href="_trace_event_8h.html#abb6d7dfc0ead11eef052473622884298">TRACE_EVENT_FLAG_HAS_ID</a>)</div>
 <div class="ttc" id="a_trace_event_8h_html_abb6d7dfc0ead11eef052473622884298"><div class="ttname"><a href="_trace_event_8h.html#abb6d7dfc0ead11eef052473622884298">TRACE_EVENT_FLAG_HAS_ID</a></div><div class="ttdeci">#define TRACE_EVENT_FLAG_HAS_ID</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:33</div></div>
-<div class="ttc" id="a_trace_event_8h_html_ae548c17091d227e9f8c7181d674dd4df"><div class="ttname"><a href="_trace_event_8h.html#ae548c17091d227e9f8c7181d674dd4df">INTERNAL_TRACE_EVENT_ADD_WITH_ID</a></div><div class="ttdeci">#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id,...)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:106</div></div>
+<div class="ttc" id="a_trace_event_8h_html_ae548c17091d227e9f8c7181d674dd4df"><div class="ttname"><a href="_trace_event_8h.html#ae548c17091d227e9f8c7181d674dd4df">INTERNAL_TRACE_EVENT_ADD_WITH_ID</a></div><div class="ttdeci">#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id,...)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:105</div></div>
 <div class="ttc" id="a_trace_event_phase_8h_html_ad446564ed262ca762061389922b63a40"><div class="ttname"><a href="_trace_event_phase_8h.html#ad446564ed262ca762061389922b63a40">TRACE_EVENT_PHASE_CREATE_OBJECT</a></div><div class="ttdeci">#define TRACE_EVENT_PHASE_CREATE_OBJECT</div><div class="ttdef"><b>Definition:</b> TraceEventPhase.h:21</div></div>
 </div><!-- fragment -->
 </div>
