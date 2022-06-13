@@ -1,4 +1,4 @@
-name: doxygen_builder
+name: "Doxygen Builder"
 
 on:
   push:
