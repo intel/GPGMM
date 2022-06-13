@@ -23,6 +23,8 @@ First create an allocator then create allocations from it:
 
 ### D3D12
 ```cpp
+#include <gpgmm_d3d12.h>
+
 // Required
 gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
 allocatorDesc.Device = Device;
@@ -75,6 +77,8 @@ To clean-up, simply call `Release()` once the is GPU is finished.
 ### Vulkan
 
 ```cpp
+#include <gpgmm_vk.h>
+
 gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {};
 
 gpgmm::vk::GpResourceAllocator resourceAllocator;
@@ -97,14 +101,16 @@ gpgmm::vk::gpDestroyBuffer(resourceAllocator, buffer, allocation); // Make sure 
 gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
 
+# Project integration
 
-## Project integration
+It is recommended to use the built-in GN or CMake build targets. Otherwise, a shared library can be used for other build systems.
 
-It is recommended to use the built-in GN or CMake build targets.
+## Target-based builds
 
 ### GN
 
 BUILD.gn
+
 ```gn
 source_set("proj") {
   deps = [ "${gpgmm_dir}:gpgmm" ]
@@ -115,21 +121,26 @@ Create `build_overrides/gpgmm.gni` file in root directory.
 ### CMake
 
 CMakeLists.txt
+
 ```cmake
 add_subdirectory(gpgmm)
 target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/src)
 target_link_libraries(proj PRIVATE gpgmm ...)
 ```
 
-### Shared library
+## Shared library
 
-Alternatively, GPGMM can be built as a shared library which can be distributed through the application.
-
-
-#### Dynamic Linked Library (DLL)
+### GN
 
 Use `is_clang=false gpgmm_shared_library=true` when [Setting up the build](#Setting-up-the-build).
-Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the shared library (DLL).
+Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the shared library.
+
+### CMake
+
+```cmake
+cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug .
+cmake --build .
+```
 
 Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
@@ -137,14 +148,9 @@ Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
 4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
-Then include the public header:
-```cpp
-#include <gpgmm_*.h> // Ex. gpgmm_d3d12.h
-```
+# Build and Run
 
-## Build and Run
-
-For development, you must use GN to generate the build. CMake is only supported for production builds (ie. no tests).
+## GN
 
 ### Install `depot_tools`
 
@@ -170,7 +176,7 @@ Get the source code as follows:
 > gclient sync
 ```
 
-### Setting up the build
+### Configure the build
 Generate build files using `gn args out/Debug` or `gn args out/Release`.
 
 A text editor will appear asking build arguments, the most common argument is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
@@ -185,6 +191,31 @@ To build with a backend, please set the corresponding argument from following ta
 ### Build
 
 Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
+
+## CMake
+
+### Install `CMake`
+
+CMake 3.14 or higher is required: https://cmake.org/install/.
+
+### Configure the build
+
+Generate build files using `cmake . -DCMAKE_BUILD_TYPE=Debug` or `cmake . -DCMAKE_BUILD_TYPE=Release`.
+
+To build with a backend, please specify the corresponding argument from following table.
+
+| Backend | Build argument |
+|---------|--------------|
+| DirectX 12 | `GPGMM_ENABLE_D3D12=ON` |
+| Vulkan | `GPGMM_ENABLE_VK=ON` |
+
+For example, `cmake . -DGPGMM_ENABLE_VK=OFF` builds without Vulkan.
+
+### Build
+
+```cmake
+cmake --build .
+```
 
 ## Testing
 

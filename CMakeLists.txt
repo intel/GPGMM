@@ -91,9 +91,6 @@ if (APPLE OR (UNIX AND NOT ANDROID))
 	endif()
 endif()
 
-# TODO: Enable shared library.
-set(BUILD_SHARED_LIBS 0)
-
 option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
@@ -154,7 +151,9 @@ set(CMAKE_CXX_STANDARD "14")
 add_subdirectory(third_party)
 add_subdirectory(src/gpgmm)
 
-if (GPGMM_ENABLE_TESTS)
+# Tests use GPGMM internals (eg. gpgmm_common, gpgmm_utils, etc) which are never
+# exported and must be statically built.
+if (GPGMM_ENABLE_TESTS AND NOT BUILD_SHARED_LIBS)
   add_subdirectory(src/tests)
 endif()
 
