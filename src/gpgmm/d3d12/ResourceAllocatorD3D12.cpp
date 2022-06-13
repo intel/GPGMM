@@ -443,50 +443,51 @@ namespace gpgmm { namespace d3d12 {
                 CreateSmallBufferAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
             // Cache resource sizes commonly requested.
-            // Ensures the next block is always made available upon first request without
-            // increasing the memory footprint. Since resources are always sized-aligned, the
+            // Allows the next memory block to be made available upon request without
+            // increasing memory footprint. Since resources are always sized-aligned, the
             // cached size must be requested per alignment {4KB, 64KB, or 4MB}. To avoid unbounded
             // cache growth, a known set of pre-defined sizes initializes the allocators.
-
 #if defined(GPGMM_ENABLE_SIZE_CACHE)
-            // Temporary suppress log messages emitted from internal cache-miss requests.
             {
+                // Temporary suppress log messages emitted from internal cache-miss requests.
                 ScopedLogLevel scopedLogLevel(LogSeverity::Info);
+
+                MEMORY_ALLOCATION_REQUEST cacheRequest = {};
+                cacheRequest.NeverAllocate = true;
+                cacheRequest.AlwaysCacheSize = true;
+                cacheRequest.AlwaysPrefetch = false;
+                cacheRequest.AvailableForAllocation = kInvalidSize;
+
                 for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
-                    MemoryAllocator* allocator =
-                        mResourceAllocatorOfType[resourceHeapTypeIndex].get();
-                    const uint64_t sizeToCache = MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes;
-                    if (sizeToCache > allocator->GetMemorySize()) {
-                        continue;
-                    }
+                    MemoryAllocator* allocator = nullptr;
+                    cacheRequest.SizeInBytes = MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes;
 
-                    MEMORY_ALLOCATION_REQUEST cacheRequest = {};
-                    cacheRequest.SizeInBytes = sizeToCache;
-                    cacheRequest.NeverAllocate = true;
-                    cacheRequest.AlwaysCacheSize = true;
-                    cacheRequest.AlwaysPrefetch = false;
-                    cacheRequest.AvailableForAllocation = kInvalidSize;
-
-                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    allocator = mSmallBufferAllocatorOfType[resourceHeapTypeIndex].get();
+                    if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
+                        IsAligned(cacheRequest.SizeInBytes,
                                   D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
                         cacheRequest.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
                         allocator->TryAllocateMemory(cacheRequest);
                     }
 
-                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    allocator = mResourceAllocatorOfType[resourceHeapTypeIndex].get();
+                    if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
+                        IsAligned(cacheRequest.SizeInBytes,
                                   D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)) {
                         cacheRequest.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
                         allocator->TryAllocateMemory(cacheRequest);
                     }
 
-                    if (IsAligned(MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes,
+                    allocator = mMSAAResourceAllocatorOfType[resourceHeapTypeIndex].get();
+                    if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
+                        IsAligned(cacheRequest.SizeInBytes,
                                   D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)) {
                         cacheRequest.Alignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
                         allocator->TryAllocateMemory(cacheRequest);
                     }
                 }
             }
-#endif
+#endif  // defined(GPGMM_ENABLE_SIZE_CACHE)
         }
     }
 
@@ -1111,11 +1112,17 @@ namespace gpgmm { namespace d3d12 {
         TRACE_COUNTER1(TraceEventCategory::Default, "GPU allocation free (MB)",
                        result.FreeMemoryUsage / 1e6);
 
-        TRACE_COUNTER1(TraceEventCategory::Default, "GPU memory prefetch (%)",
+        TRACE_COUNTER1(TraceEventCategory::Default, "GPU prefetch memory miss (%)",
                        SafeDivison(result.PrefetchedMemoryMissesEliminated,
                                    static_cast<double>(result.PrefetchedMemoryMisses +
                                                        result.PrefetchedMemoryMissesEliminated)) *
                            100);
+
+        TRACE_COUNTER1(
+            TraceEventCategory::Default, "GPU size cache miss (%)",
+            SafeDivison(result.CacheSizeMisses,
+                        static_cast<double>(result.CacheSizeMisses + result.CacheSizeHits)) *
+                100);
 
         return result;
     }

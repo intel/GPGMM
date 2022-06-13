@@ -134,4 +134,12 @@ namespace gpgmm { namespace d3d12 {
         return GPGMMTestBase::GenerateTestAllocations(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
     }
 
+    bool D3D12TestBase::IsSizeCacheEnabled() const {
+#if defined(GPGMM_ENABLE_SIZE_CACHE)
+        return true;
+#else
+        return false;
+#endif
+    }
+
 }}  // namespace gpgmm::d3d12
