@@ -16,20 +16,43 @@
 # Build subdirectories
 ################################################################################
 
-# Check if the target was already added with NOT TARGET.
-if (NOT TARGET Vulkan-Headers)
-    add_subdirectory(${GPGMM_VK_HEADERS_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-headers")
-endif()
+include(FetchContent)
+
+set(FETCHCONTENT_BASE_DIR "${GPGMM_THIRD_PARTY_DIR}")
 
 if (GPGMM_ENABLE_TESTS)
-  # Prevent overriding the GPGMM's compiler/linker settings (or "mismatch detected" LNK2005 errors result)
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  add_subdirectory(googletest)
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        6b74da4757a549563d7c37c8fae3e704662a043b
+  )
 
-  # JsonCpp is only used for capture_replay_tests.
-  add_subdirectory(jsoncpp/source)
-endif()
+	# For Windows: Prevent overriding the parent project's compiler/linker settings
+	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(googletest)
 
-if (GPGMM_ENABLE_VK_LOADER)
-    add_subdirectory(${GPGMM_VK_DEPS_DIR}/vulkan-loader/src)
-endif()
+  FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+    GIT_TAG        9059f5cad030ba11d37818847443a53918c327b1
+  )
+  FetchContent_MakeAvailable(jsoncpp)
+endif() # GPGMM_ENABLE_TESTS
+
+if (GPGMM_ENABLE_VK)
+  FetchContent_Declare(
+    vulkan-headers
+    GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
+    GIT_TAG        76f00ef6cbb1886eb1162d1fa39bee8b51e22ee8
+  )
+  FetchContent_MakeAvailable(vulkan-headers)
+
+  if (GPGMM_ENABLE_VK_LOADER)
+    FetchContent_Declare(
+      vulkan-loader
+      GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
+      GIT_TAG        f503824ff8cbecfe39fb96ac89cbe959355dc311
+    )
+    FetchContent_MakeAvailable(vulkan-loader)
+  endif() # GPGMM_ENABLE_VK_LOADER
+endif() # GPGMM_ENABLE_VK
