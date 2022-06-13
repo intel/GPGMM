@@ -131,7 +131,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
     }
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyRetained) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyDeallocateAtEnd) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
@@ -284,7 +284,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateMultisampledTexture) {
     EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 0u);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, ImportBuffer) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferImported) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
@@ -954,7 +954,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
 
 // Verify a 1 byte buffer will be defragmented by creating a heaps large enough to stay under the
 // fragmentation limit.
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferDefrag) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
     allocatorDesc.MemoryFragmentationLimit = 0.0265;  // or 2.65%
 
