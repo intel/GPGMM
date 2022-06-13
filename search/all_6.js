@@ -83,7 +83,7 @@ var searchData=
   ['gpdestroybuffer_80',['gpDestroyBuffer',['../namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c',1,'gpgmm::vk']]],
   ['gpdestroyresourceallocator_81',['gpDestroyResourceAllocator',['../namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006',1,'gpgmm::vk']]],
   ['gpgmm_82',['gpgmm',['../namespacegpgmm.html',1,'']]],
-  ['gpgmm_2c_20general_2dpurpose_20gpu_20memory_20management_20library_20api_20documentation_2e_83',['GPGMM, General-Purpose GPU Memory Management Library API documentation.',['../index.html',1,'']]],
+  ['gpgmm_83',['GPGMM',['../index.html',1,'']]],
   ['gpgmm_5fassert_84',['GPGMM_ASSERT',['../_assert_8h.html#a1fca1a089c61625b53f8f69133cf8075',1,'Assert.h']]],
   ['gpgmm_5fassert_5fcallsite_5fhelper_85',['GPGMM_ASSERT_CALLSITE_HELPER',['../_assert_8h.html#ae5a05c4273d21c6ff18fdf21b62516f3',1,'Assert.h']]],
   ['gpgmm_5fassert_5floop_5fcondition_86',['GPGMM_ASSERT_LOOP_CONDITION',['../_assert_8h.html#ac73d8c5e0784a01ad5fb8f5118dcde5a',1,'Assert.h']]],
