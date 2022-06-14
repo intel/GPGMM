@@ -25,13 +25,7 @@ if (GPGMM_ENABLE_D3D12)
 		 dxgi.lib
   )
 
-	# Target explaination:
-  # gpgmm_common_config target fixes duplicate min/max symbol error (on Windows).
-	# gpgmm_public_config target adds include paths to src/ and src/include.
-  # gpgmm is the main library target.
 	target_link_libraries(D3D12Sample PRIVATE
-    gpgmm_common_config
-    gpgmm_public_config
     gpgmm
   )
 endif()
