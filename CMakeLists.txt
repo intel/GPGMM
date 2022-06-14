@@ -91,6 +91,8 @@ if (APPLE OR (UNIX AND NOT ANDROID))
 	endif()
 endif()
 
+option_if_not_defined(GPGMM_STANDALONE "When building from GPGMM's repository" ON)
+
 option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
@@ -155,6 +157,10 @@ add_subdirectory(src/gpgmm)
 # exported and must be statically built.
 if (GPGMM_ENABLE_TESTS AND NOT BUILD_SHARED_LIBS)
   add_subdirectory(src/tests)
+endif()
+
+if (GPGMM_STANDALONE)
+  add_subdirectory(src/samples)
 endif()
 
 ################################################################################

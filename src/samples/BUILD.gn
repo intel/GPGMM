@@ -11,30 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import("build_overrides/gpgmm_features.gni")
-import("build_overrides/gpgmm_overrides_with_defaults.gni")
 
-group("all") {
-  testonly = true
+import("../../build_overrides/gpgmm_overrides_with_defaults.gni")
 
-  deps = [
-    "src/fuzzers",
-    "src/tests:gpgmm_tests",
-    "third_party:external_tests",
-  ]
+import("${gpgmm_root_dir}/build_overrides/gpgmm_features.gni")
 
-  if (gpgmm_standalone) {
-    deps += [ "src/samples" ]
+group("samples") {
+  deps = []
+  if (gpgmm_enable_d3d12) {
+    deps = [ ":D3D12Sample" ]
   }
 }
 
-# This target is built when no specific target is specified on the command line.
-group("default") {
-  testonly = true
-  deps = [ ":all" ]
-}
-
-# This target is built when under third_party.
-group("gpgmm") {
-  deps = [ "src/gpgmm:gpgmm" ]
+executable("D3D12Sample") {
+  deps = [ "${gpgmm_root_dir}:gpgmm" ]
+  sources = [ "D3D12Sample.cpp" ]
+  libs = [
+    "d3d12.lib",
+    "dxgi.lib",
+  ]
 }

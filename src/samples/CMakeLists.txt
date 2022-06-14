@@ -11,30 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import("build_overrides/gpgmm_features.gni")
-import("build_overrides/gpgmm_overrides_with_defaults.gni")
 
-group("all") {
-  testonly = true
+if (GPGMM_ENABLE_D3D12)
+  add_executable(D3D12Sample)
 
-  deps = [
-    "src/fuzzers",
-    "src/tests:gpgmm_tests",
-    "third_party:external_tests",
-  ]
+  target_sources(D3D12Sample PRIVATE
+        "D3D12Sample.cpp"
+  )
 
-  if (gpgmm_standalone) {
-    deps += [ "src/samples" ]
-  }
-}
+	# Required to use D3D12.
+  target_link_libraries(D3D12Sample PRIVATE
+     d3d12.lib
+		 dxgi.lib
+  )
 
-# This target is built when no specific target is specified on the command line.
-group("default") {
-  testonly = true
-  deps = [ ":all" ]
-}
-
-# This target is built when under third_party.
-group("gpgmm") {
-  deps = [ "src/gpgmm:gpgmm" ]
-}
+	# Target explaination:
+  # gpgmm_common_config target fixes duplicate min/max symbol error (on Windows).
+	# gpgmm_public_config target adds include paths to src/ and src/include.
+  # gpgmm is the main library target.
+	target_link_libraries(D3D12Sample PRIVATE
+    gpgmm_common_config
+    gpgmm_public_config
+    gpgmm
+  )
+endif()
