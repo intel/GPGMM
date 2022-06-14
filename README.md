@@ -196,8 +196,6 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 
 ### Install `CMake`
 
-GPGMM requires CMake 3.14 or higher: https://cmake.org/install/.
-
 ### Configure the build
 
 Generate build files using `cmake . -DCMAKE_BUILD_TYPE=Debug` or `cmake . -DCMAKE_BUILD_TYPE=Release`.
@@ -209,7 +207,29 @@ To build with a backend, please specify the corresponding argument from followin
 | DirectX 12 | `GPGMM_ENABLE_D3D12=ON` |
 | Vulkan | `GPGMM_ENABLE_VK=ON` |
 
-For example, `cmake . -DGPGMM_ENABLE_VK=OFF` builds without Vulkan.
+For example, adding `-DGPGMM_ENABLE_VK=OFF` builds without Vulkan.
+
+Additional build options further configure GPGMM:
+
+| Build option | Build argument |
+|---------|--------------|
+| Disable compilation of tests | `GPGMM_ENABLE_TESTS=OFF` |
+| GPGMM is NOT being built in GPGMM repo | `GPGMM_STANDALONE=OFF` |
+| Compile GPGMM as shared library | `BUILD_SHARED_LIBS` |
+
+For example, adding `-dGPGMM_STANDALONE=OFF`, and `-dBUILD_SHARED_LIBS` builds GPGMM as a shared DLL.
+
+**Notes**: CMake 3.14 or higher is required for `GPGMM_ENABLE_TESTS` or `GPGMM_ENABLE_VK`.
+
+#### Vulkan-specific
+
+The following build options are only available when `GPGMM_ENABLE_VK=ON`:
+
+| Build option | Build argument |
+|---------|--------------|
+| Import Vulkan functions statically | `GPGMM_ENABLE_VK_STATIC_FUNCTIONS=ON` |
+
+For example, adding `-dGPGMM_ENABLE_VK_STATIC_FUNCTIONS=ON` will use Vulkan by statically linking functions (from the built-in Vulkan Loader).
 
 ### Build
 
