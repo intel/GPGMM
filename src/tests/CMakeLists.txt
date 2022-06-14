@@ -143,3 +143,11 @@ target_link_libraries(gpgmm_capture_replay_tests PRIVATE
      gtest
      jsoncpp_static
 )
+
+################################################################################
+# Run test executions by `make test` or `cmake --build . --target RUN_TESTS`
+# for Linux or Windows, respectively.
+################################################################################
+add_test(NAME gpgmm_test_unittests COMMAND gpgmm_unittests)
+add_test(NAME gpgmm_test_end2end_tests COMMAND gpgmm_end2end_tests)
+add_test(NAME gpgmm_test_capture_replay_tests COMMAND gpgmm_capture_replay_tests)
