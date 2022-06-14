@@ -94,9 +94,9 @@ Inheritance diagram for gpgmm::d3d12::ResourceAllocation:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aebd875978bec64517bb946fc3b354072"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aebd875978bec64517bb946fc3b354072">ResourceAllocation</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> &amp;desc)</td></tr>
-<tr class="memdesc:aebd875978bec64517bb946fc3b354072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a resource allocation using memory containing one or more resources.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aebd875978bec64517bb946fc3b354072">More...</a><br /></td></tr>
-<tr class="separator:aebd875978bec64517bb946fc3b354072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6760013a84a54ae4c7d1e9c836af73d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a6760013a84a54ae4c7d1e9c836af73d2">ResourceAllocation</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> &amp;desc, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, <a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *allocator, <a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *block, ComPtr&lt; ID3D12Resource &gt; resource)</td></tr>
+<tr class="memdesc:a6760013a84a54ae4c7d1e9c836af73d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a resource allocation using memory containing one or more resources.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a6760013a84a54ae4c7d1e9c836af73d2">More...</a><br /></td></tr>
+<tr class="separator:a6760013a84a54ae4c7d1e9c836af73d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81c9c29380413b93da9e8a26796173e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a81c9c29380413b93da9e8a26796173e8">~ResourceAllocation</a> () override</td></tr>
 <tr class="separator:a81c9c29380413b93da9e8a26796173e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44961b0c02815582c9b80cb889786afe"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a44961b0c02815582c9b80cb889786afe">Map</a> (uint32_t subresource=0, const D3D12_RANGE *readRange=nullptr, void **dataOut=nullptr)</td></tr>
@@ -242,8 +242,8 @@ Additional Inherited Members</h2></td></tr>
 <p >It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed" in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a ID3D12Heap (called a committed resource).</p>
 <p >It is recommend to use <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aebd875978bec64517bb946fc3b354072" name="aebd875978bec64517bb946fc3b354072"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebd875978bec64517bb946fc3b354072">&#9670;&nbsp;</a></span>ResourceAllocation()</h2>
+<a id="a6760013a84a54ae4c7d1e9c836af73d2" name="a6760013a84a54ae4c7d1e9c836af73d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6760013a84a54ae4c7d1e9c836af73d2">&#9670;&nbsp;</a></span>ResourceAllocation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,8 +252,36 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">gpgmm::d3d12::ResourceAllocation::ResourceAllocation </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> &amp;&#160;</td>
-          <td class="paramname"><em>desc</em></td><td>)</td>
+          <td class="paramname"><em>desc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *&#160;</td>
+          <td class="paramname"><em>residencyManager</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td>
+          <td class="paramname"><em>allocator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ComPtr&lt; ID3D12Resource &gt;&#160;</td>
+          <td class="paramname"><em>resource</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -262,6 +290,10 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">desc</td><td>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> describing the resource allocation. </td></tr>
+    <tr><td class="paramname">residencyManager</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> which manages residency for the resource allocation. </td></tr>
+    <tr><td class="paramname">allocator</td><td>A pointer to <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.">MemoryAllocator</a> which created the resourceHeap for the resource. </td></tr>
+    <tr><td class="paramname">block</td><td>A pointer to <a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> which describes the region in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> being allocated. </td></tr>
+    <tr><td class="paramname">resource</td><td>A pointer to the ID3D12Resource used for the allocation. </td></tr>
   </table>
   </dd>
 </dl>

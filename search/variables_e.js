@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['pageable_0',['Pageable',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a305f79b50a18071f33ab41acac911477',1,'gpgmm::d3d12::HEAP_DESC']]],
+  ['pageable_0',['Pageable',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#ae63d487a1ece1e1f60fa99f2416fbee0',1,'gpgmm::d3d12::HEAP_INFO::Pageable()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a305f79b50a18071f33ab41acac911477',1,'gpgmm::d3d12::HEAP_DESC::Pageable()']]],
   ['path_1',['path',['../struct_trace_file.html#af31c4705878768456d2519d7aa4470f5',1,'TraceFile']]],
   ['peakcputime_2',['PeakCpuTime',['../struct_capture_replay_call_stats.html#a59805d9995955eb8849bbf650197f27f',1,'CaptureReplayCallStats']]],
   ['peakusage_3',['PeakUsage',['../struct_capture_replay_memory_stats.html#a8b3e9ff58d4db82928050ea8b0b9d37c',1,'CaptureReplayMemoryStats']]],
