@@ -421,7 +421,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
     ALLOCATION_DESC desc = {};
     desc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
 
-    // Byte-aligned upload buffer within.
     {
         ALLOCATION_DESC smallBufferDesc = desc;
         smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
@@ -434,13 +433,12 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+        EXPECT_EQ(smallBuffer->GetAlignment(), 4u);  // Must re-align.
 
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
     }
-
-    // Custom-aligned upload buffer within.
     {
         ALLOCATION_DESC smallBufferDesc = desc;
         smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
@@ -453,44 +451,57 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 16u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+        EXPECT_EQ(smallBuffer->GetAlignment(), 16u);
 
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
     }
-
-    // Constant upload buffer within.
     {
         ALLOCATION_DESC smallBufferDesc = desc;
         smallBufferDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
         ComPtr<ResourceAllocation> smallBuffer;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            smallBufferDesc, CreateBasicBufferDesc(4u, 0), D3D12_RESOURCE_STATE_GENERIC_READ,
-            nullptr, &smallBuffer));
+            smallBufferDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+            &smallBuffer));
         ASSERT_NE(smallBuffer, nullptr);
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 256u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+        EXPECT_EQ(smallBuffer->GetAlignment(), 256u);  // Re-align
 
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryCount, 1u);
         EXPECT_EQ(resourceAllocator->GetInfo().UsedBlockUsage, smallBuffer->GetSize());
     }
-
-    // Create a read-back buffer within.
     {
         ALLOCATION_DESC smallBufferDesc = desc;
         smallBufferDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
 
-        ComPtr<ResourceAllocation> smallerBuffer;
+        ComPtr<ResourceAllocation> smallBuffer;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
-            &smallerBuffer));
-        ASSERT_NE(smallerBuffer, nullptr);
-        EXPECT_EQ(smallerBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
-        EXPECT_EQ(smallerBuffer->GetSize(), 4u);
-        EXPECT_EQ(smallerBuffer->GetOffsetFromResource(), 0u);
+            &smallBuffer));
+        ASSERT_NE(smallBuffer, nullptr);
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallBuffer->GetSize(), 4u);
+        EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+        EXPECT_EQ(smallBuffer->GetAlignment(), 4u);
+    }
+    {
+        ALLOCATION_DESC smallBufferDesc = desc;
+        smallBufferDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &smallBuffer));
+        ASSERT_NE(smallBuffer, nullptr);
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+        EXPECT_EQ(smallBuffer->GetSize(), 4u);
+        EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
+        EXPECT_EQ(smallBuffer->GetAlignment(), 4u);  // Re-align
     }
 }
 
