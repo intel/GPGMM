@@ -79,29 +79,88 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a11e0adbc4965c8506d362e5ae51ece93"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a11e0adbc4965c8506d362e5ae51ece93">SizeInBytes</a></td></tr>
-<tr class="memdesc:a11e0adbc4965c8506d362e5ae51ece93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocated size, in bytes, of the memory allocation. Must be non-zero. SizeInBytes is always a multiple of the alignment.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a11e0adbc4965c8506d362e5ae51ece93">More...</a><br /></td></tr>
+<tr class="memdesc:a11e0adbc4965c8506d362e5ae51ece93"><td class="mdescLeft">&#160;</td><td class="mdescRight">The created size of the memory allocation, in bytes.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a11e0adbc4965c8506d362e5ae51ece93">More...</a><br /></td></tr>
 <tr class="separator:a11e0adbc4965c8506d362e5ae51ece93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a316a8367915d0b30d8948fb8a79c4e6f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a316a8367915d0b30d8948fb8a79c4e6f">Alignment</a></td></tr>
-<tr class="memdesc:a316a8367915d0b30d8948fb8a79c4e6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocated alignment, in bytes, of the memory allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a316a8367915d0b30d8948fb8a79c4e6f">More...</a><br /></td></tr>
-<tr class="separator:a316a8367915d0b30d8948fb8a79c4e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3aa1ca1718d94d74d86ccb3f538a686"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#aa3aa1ca1718d94d74d86ccb3f538a686">Offset</a></td></tr>
+<tr class="memdesc:aa3aa1ca1718d94d74d86ccb3f538a686"><td class="mdescLeft">&#160;</td><td class="mdescRight">The offset relative to memory, in bytes.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#aa3aa1ca1718d94d74d86ccb3f538a686">More...</a><br /></td></tr>
+<tr class="separator:aa3aa1ca1718d94d74d86ccb3f538a686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40cde38dd59e73d49533f9740d3bfe0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a40cde38dd59e73d49533f9740d3bfe0e">Method</a></td></tr>
+<tr class="memdesc:a40cde38dd59e73d49533f9740d3bfe0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The method to describe how the allocation was created.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a40cde38dd59e73d49533f9740d3bfe0e">More...</a><br /></td></tr>
+<tr class="separator:a40cde38dd59e73d49533f9740d3bfe0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a522d1ac8869047f9f3b2e4d337d7e398"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a522d1ac8869047f9f3b2e4d337d7e398">Memory</a></td></tr>
+<tr class="memdesc:a522d1ac8869047f9f3b2e4d337d7e398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to underlying memory object.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a522d1ac8869047f9f3b2e4d337d7e398">More...</a><br /></td></tr>
+<tr class="separator:a522d1ac8869047f9f3b2e4d337d7e398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72f7eadef3065427b5cfac78359f7fb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a72f7eadef3065427b5cfac78359f7fb2">Allocator</a></td></tr>
+<tr class="memdesc:a72f7eadef3065427b5cfac78359f7fb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to allocator that created this allocation.  <a href="structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a72f7eadef3065427b5cfac78359f7fb2">More...</a><br /></td></tr>
+<tr class="separator:a72f7eadef3065427b5cfac78359f7fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Additional information about the memory allocation. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a316a8367915d0b30d8948fb8a79c4e6f" name="a316a8367915d0b30d8948fb8a79c4e6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a316a8367915d0b30d8948fb8a79c4e6f">&#9670;&nbsp;</a></span>Alignment</h2>
+<a id="a72f7eadef3065427b5cfac78359f7fb2" name="a72f7eadef3065427b5cfac78359f7fb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72f7eadef3065427b5cfac78359f7fb2">&#9670;&nbsp;</a></span>Allocator</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t gpgmm::MEMORY_ALLOCATION_INFO::Alignment</td>
+          <td class="memname"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a>* gpgmm::MEMORY_ALLOCATION_INFO::Allocator</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Allocated alignment, in bytes, of the memory allocation. </p>
-<p >Must be non-zero. </p>
+<p>Pointer to allocator that created this allocation. </p>
+<p >Must be valid for the duration of the allocation. </p>
+
+</div>
+</div>
+<a id="a522d1ac8869047f9f3b2e4d337d7e398" name="a522d1ac8869047f9f3b2e4d337d7e398"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a522d1ac8869047f9f3b2e4d337d7e398">&#9670;&nbsp;</a></span>Memory</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a>* gpgmm::MEMORY_ALLOCATION_INFO::Memory</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pointer to underlying memory object. </p>
+<p >Must be valid for the duration of the allocation. </p>
+
+</div>
+</div>
+<a id="a40cde38dd59e73d49533f9740d3bfe0e" name="a40cde38dd59e73d49533f9740d3bfe0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40cde38dd59e73d49533f9740d3bfe0e">&#9670;&nbsp;</a></span>Method</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a> gpgmm::MEMORY_ALLOCATION_INFO::Method</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The method to describe how the allocation was created. </p>
+<p >The Method determines how to figure out the size of the allocation. </p>
+
+</div>
+</div>
+<a id="aa3aa1ca1718d94d74d86ccb3f538a686" name="aa3aa1ca1718d94d74d86ccb3f538a686"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3aa1ca1718d94d74d86ccb3f538a686">&#9670;&nbsp;</a></span>Offset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MEMORY_ALLOCATION_INFO::Offset</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The offset relative to memory, in bytes. </p>
 
 </div>
 </div>
@@ -117,7 +176,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Allocated size, in bytes, of the memory allocation. Must be non-zero. SizeInBytes is always a multiple of the alignment. </p>
+<p>The created size of the memory allocation, in bytes. </p>
+<p >Must be non-zero. </p>
 
 </div>
 </div>
