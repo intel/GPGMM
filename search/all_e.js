@@ -2,7 +2,7 @@ var searchData=
 [
   ['object_0',['Object',['../namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829af109f7f94b017353b296778cd01e36e8',1,'gpgmm']]],
   ['offset_1',['Offset',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#aa3aa1ca1718d94d74d86ccb3f538a686',1,'gpgmm::MEMORY_ALLOCATION_INFO::Offset()'],['../structgpgmm_1_1_memory_block.html#a7912870ebc9457c28358322b9d481c7d',1,'gpgmm::MemoryBlock::Offset()']]],
-  ['offsetfromresource_2',['OffsetFromResource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#abd6b8ab32ee8e7c16c292c469f4b7293',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO']]],
+  ['offsetfromresource_2',['OffsetFromResource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#ace6b9d28bc36b509250b558e9c20ce84',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]],
   ['operator_20int_3',['operator int',['../classgpgmm_1_1_flags.html#a7ab8f46047cbea7fd539173861fdfc59',1,'gpgmm::Flags']]],
   ['operator_21_4',['operator!',['../classgpgmm_1_1_flags.html#a85018fbf511e59b3d1153dde344c5655',1,'gpgmm::Flags']]],
   ['operator_21_3d_5',['operator!=',['../classgpgmm_1_1_flags.html#a056f2749392c9fc6ffee5d24d1c50645',1,'gpgmm::Flags::operator!=()'],['../classgpgmm_1_1_scoped_ref.html#a7b7f97a5a6a44c2217f43abfd50289ec',1,'gpgmm::ScopedRef::operator!=()'],['../classgpgmm_1_1_memory_allocation.html#a52088dfac9aa8a4ee409032a5b62e806',1,'gpgmm::MemoryAllocation::operator!=()']]],

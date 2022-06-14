@@ -60,7 +60,7 @@ var searchData=
   ['message_5fid_5fsize_5fexceeded_57',['MESSAGE_ID_SIZE_EXCEEDED',['../namespacegpgmm.html#a017b83da843023caf0c78af3a854947ca65beeb4baa7e845aa0d062d50f1288d6',1,'gpgmm']]],
   ['message_5fid_5funknown_58',['MESSAGE_ID_UNKNOWN',['../namespacegpgmm.html#a017b83da843023caf0c78af3a854947ca3602c555a1efe41fbbe56338e21d3ad5',1,'gpgmm']]],
   ['metadata_59',['Metadata',['../namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871',1,'gpgmm']]],
-  ['method_60',['Method',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a40cde38dd59e73d49533f9740d3bfe0e',1,'gpgmm::MEMORY_ALLOCATION_INFO::Method()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a6879648986755e30f38d42f68eb6b672',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::Method()']]],
+  ['method_60',['Method',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a40cde38dd59e73d49533f9740d3bfe0e',1,'gpgmm::MEMORY_ALLOCATION_INFO::Method()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a8ab76e5fe780f00640a70c2fd27986c2',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC::Method()']]],
   ['minfo_61',['mInfo',['../classgpgmm_1_1_memory_allocator.html#abb48e6e173b0bf1f9114eabd061c999b',1,'gpgmm::MemoryAllocator']]],
   ['minloglevel_62',['MinLogLevel',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a4bfa70f54b3fd335ccd3fae33f7d4d2b',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['minmessagelevel_63',['MinMessageLevel',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a52f9ccb994d6dfb3629fa7f762bcde8e',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]],
