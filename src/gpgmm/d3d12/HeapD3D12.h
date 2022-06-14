@@ -35,24 +35,9 @@ namespace gpgmm { namespace d3d12 {
     Additional information about the heap.
     */
     struct HEAP_INFO {
-        /** \brief Created size of the heap, in bytes.
-         */
-        uint64_t SizeInBytes;
-
-        /** \brief Alignment of the heap, in bytes.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
-        */
-        uint64_t Alignment;
-
         /** \brief Check if the heap is resident or not.
          */
         bool IsResident;
-
-        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
-        non-local).
-        */
-        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
 
         /** \brief The number of sub-allocations made using this heap.
 
@@ -65,29 +50,12 @@ namespace gpgmm { namespace d3d12 {
         A NULL pool means this heap cannot be recycled by GPGMM.
         */
         MemoryPool* MemoryPool;
-
-        /** \brief Pointer to ID3D12Pageable, the underlying heap created by D3D12.
-         */
-        ID3D12Pageable* Pageable;
-
-        /** \brief Debug name associated with the heap.
-         */
-        std::string DebugName;
     };
 
     /** \struct HEAP_DESC
     Specifies properties of a managed heap.
     */
     struct HEAP_DESC {
-        /** \brief Pageable is ComPtr to the parent interface of ID3D12Resource or ID3D12Heap.
-         */
-        ComPtr<ID3D12Pageable> Pageable;
-
-        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
-        non-local).
-        */
-        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
-
         /** \brief Created size of the heap, in bytes.
          */
         uint64_t SizeInBytes;
@@ -97,6 +65,15 @@ namespace gpgmm { namespace d3d12 {
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
         uint64_t Alignment;
+
+        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
+        non-local).
+        */
+        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+
+        /** \brief Pageable is ComPtr to the parent interface of ID3D12Resource or ID3D12Heap.
+         */
+        ComPtr<ID3D12Pageable> Pageable;
 
         /** \brief Specifies to leave the heap unmanaged by GPGMM.
 

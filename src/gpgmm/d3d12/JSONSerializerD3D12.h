@@ -24,6 +24,7 @@ namespace gpgmm { namespace d3d12 {
     struct ALLOCATION_DESC;
     struct ALLOCATOR_DESC;
     struct ALLOCATOR_RECORD_OPTIONS;
+    struct HEAP_DESC;
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_DESC;
     struct RESOURCE_ALLOCATION_INFO;
@@ -50,7 +51,8 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
         static JSONDict Serialize(const ALLOCATION_DESC& desc);
         static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
-        static JSONDict Serialize(const HEAP_INFO& desc);
+        static JSONDict Serialize(const HEAP_DESC& desc);
+        static JSONDict Serialize(const HEAP_INFO& info);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_DESC& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& info);
         static JSONDict Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc);

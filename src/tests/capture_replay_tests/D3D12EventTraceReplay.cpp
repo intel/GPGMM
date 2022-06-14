@@ -129,7 +129,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
         std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> capturedAllocationInfo;
-        std::unordered_map<std::string, HEAP_INFO> capturedHeapInfo;
+        std::unordered_map<std::string, HEAP_DESC> capturedHeapDesc;
 
         ComPtr<ResourceAllocation> allocationWithoutID;
 
@@ -533,33 +533,33 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        if (capturedHeapInfo.find(heapID) != capturedHeapInfo.end()) {
+                        if (capturedHeapDesc.find(heapID) != capturedHeapDesc.end()) {
                             continue;
                         }
 
                         const Json::Value& snapshot = event["args"]["snapshot"];
 
-                        HEAP_INFO heapInfo = {};
-                        heapInfo.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
+                        HEAP_DESC heapDesc = {};
+                        heapDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
 
-                        mCapturedMemoryStats.CurrentUsage += heapInfo.SizeInBytes;
+                        mCapturedMemoryStats.CurrentUsage += heapDesc.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
 
-                        ASSERT_TRUE(capturedHeapInfo.insert({heapID, heapInfo}).second);
+                        ASSERT_TRUE(capturedHeapDesc.insert({heapID, heapDesc}).second);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        auto it = capturedHeapInfo.find(heapID);
-                        if (it == capturedHeapInfo.end()) {
+                        auto it = capturedHeapDesc.find(heapID);
+                        if (it == capturedHeapDesc.end()) {
                             continue;
                         }
 
-                        HEAP_INFO heapInfo = it->second;
-                        mCapturedMemoryStats.CurrentUsage -= heapInfo.SizeInBytes;
+                        HEAP_DESC heapDesc = it->second;
+                        mCapturedMemoryStats.CurrentUsage -= heapDesc.SizeInBytes;
 
-                        ASSERT_EQ(capturedHeapInfo.erase(heapID), 1u);
+                        ASSERT_EQ(capturedHeapDesc.erase(heapID), 1u);
 
                     } break;
 
@@ -571,7 +571,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         EXPECT_TRUE(createdAllocatorToID.empty());
         EXPECT_TRUE(capturedAllocationInfo.empty());
-        EXPECT_TRUE(capturedHeapInfo.empty());
+        EXPECT_TRUE(capturedHeapDesc.empty());
     }
 
     CaptureReplayCallStats mReplayedAllocateStats;

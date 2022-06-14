@@ -41,7 +41,7 @@ namespace gpgmm { namespace d3d12 {
 
         if (!descriptor.IsExternal) {
             ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), heap->GetInfo());
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
         }
 
         if (heapOut != nullptr) {
@@ -120,8 +120,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(),     GetAlignment(), IsResident(),    mMemorySegmentGroup,
-                GetRefCount(), GetPool(),      mPageable.Get(), GetDebugName()};
+        return {IsResident(), GetRefCount(), GetPool()};
     }
 
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {
