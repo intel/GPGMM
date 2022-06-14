@@ -54,6 +54,19 @@ jobs:
         cd test
         cmake --build . --config Release
 
+    - name: Generate D3D12 example app for main branch (with patch)
+      shell: cmd
+      run: |
+        mkdir test_examples
+        cd test_examples
+        cmake ..\test\examples\D3D12ProjectTemplate -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    - name: Build D3D12 example app for main branch (with patch)
+      shell: cmd
+      run: |
+        cd test_examples
+        cmake --build . --config Release
+
     - name: Generate project for main branch (with patch)
       shell: cmd
       run: |
