@@ -139,7 +139,7 @@ Then use `ninja -C out/Release gpgmm` or `ninja -C out/Debug gpgmm` to build the
 
 ```cmake
 cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug .
-cmake --build .
+cmake --build . --config Debug
 ```
 
 Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
