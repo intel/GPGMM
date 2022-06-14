@@ -21,9 +21,9 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 target_link_libraries(gpgmm
-    PRIVATE gpgmm_utils
-            gpgmm_common
-            gpgmm_common_config
+    PUBLIC gpgmm_utils
+           gpgmm_common
+           gpgmm_common_config
 )
 
 # Only win32 app needs to link with user32.lib
