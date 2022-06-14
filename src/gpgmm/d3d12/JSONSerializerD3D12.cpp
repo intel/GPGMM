@@ -137,25 +137,32 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const HEAP_INFO& desc) {
+    JSONDict JSONSerializer::Serialize(const HEAP_DESC& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("IsResident", desc.IsResident);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
-        dict.AddItem("SubAllocatedRefs", desc.SubAllocatedRefs);
+
+        ComPtr<ID3D12Heap> heap;
+        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
+            dict.AddItem("Heap", Serialize(heap->GetDesc()));
+        }
 
         if (!desc.DebugName.empty()) {
             dict.AddItem("DebugName", desc.DebugName);
         }
 
-        if (desc.MemoryPool != nullptr) {
-            dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(desc.MemoryPool));
-        }
+        return dict;
+    }
 
-        ComPtr<ID3D12Heap> heap;
-        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
-            dict.AddItem("Heap", Serialize(heap->GetDesc()));
+    // static
+    JSONDict JSONSerializer::Serialize(const HEAP_INFO& info) {
+        JSONDict dict;
+        dict.AddItem("IsResident", info.IsResident);
+        dict.AddItem("SubAllocatedRefs", info.SubAllocatedRefs);
+
+        if (info.MemoryPool != nullptr) {
+            dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(info.MemoryPool));
         }
 
         return dict;
