@@ -122,10 +122,39 @@ Create `build_overrides/gpgmm.gni` file in root directory.
 
 CMakeLists.txt
 
+Using CMake 3.14 or newer:
+
 ```cmake
-add_subdirectory(gpgmm)
-target_include_directories(proj PRIVATE gpgmm/src/include gpgmm/src)
-target_link_libraries(proj PRIVATE gpgmm ...)
+include(FetchContent)
+FetchContent_Declare(gpgmm
+  GIT_REPOSITORY https://github.com/intel/gpgmm.git
+  GIT_TAG main
+)
+
+# Specify GPGMM build options (see below).
+...
+
+FetchContent_MakeAvailable(gpgmm)
+```
+
+Or alternatively, manually fetch:
+
+```sh
+git clone https://github.com/intel/gpgmm.git third_party/gpgmm
+```
+
+And make available:
+```cmake
+add_subdirectory(third_party/gpgmm)
+...
+
+# Specify GPGMM build options (see below).
+...
+```
+
+Then add:
+```cmake
+target_link_libraries(proj PRIVATE gpgmm)
 ```
 
 ## Shared library
@@ -149,6 +178,8 @@ Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
 # Build and Run
+
+Building GPGMM for development.
 
 ## GN
 
@@ -195,6 +226,10 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 ## CMake
 
 ### Install `CMake`
+
+GPGMM uses CMake 3.14 or higher for the build system and dependency management, so you need to [install cmake] and add it to the PATH.
+
+[install cmake]: https://cmake.org/download/
 
 ### Configure the build
 
