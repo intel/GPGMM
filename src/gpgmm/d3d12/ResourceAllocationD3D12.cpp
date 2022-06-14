@@ -41,39 +41,17 @@ namespace gpgmm { namespace d3d12 {
 
     }  // namespace
 
-    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* allocator,
-                                           uint64_t offsetFromHeap,
-                                           MemoryBlock* block,
-                                           uint64_t requestSize,
-                                           AllocationMethod method,
-                                           ComPtr<ID3D12Resource> placedResource,
-                                           Heap* resourceHeap)
-        : MemoryAllocation(allocator, resourceHeap, offsetFromHeap, method, block, requestSize),
-          mResidencyManager(residencyManager),
-          mResource(std::move(placedResource)),
-          mOffsetFromResource(0) {
-        ASSERT(resourceHeap != nullptr);
-        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-    }
-
-    ResourceAllocation::ResourceAllocation(ResidencyManager* residencyManager,
-                                           MemoryAllocator* allocator,
-                                           MemoryBlock* block,
-                                           uint64_t requestSize,
-                                           uint64_t offsetFromResource,
-                                           ComPtr<ID3D12Resource> resource,
-                                           Heap* resourceHeap)
-        : MemoryAllocation(allocator,
-                           resourceHeap,
-                           kInvalidOffset,
-                           AllocationMethod::kSubAllocatedWithin,
-                           block,
-                           requestSize),
-          mResidencyManager(residencyManager),
-          mResource(std::move(resource)),
-          mOffsetFromResource(offsetFromResource) {
-        ASSERT(resourceHeap != nullptr);
+    ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc)
+        : MemoryAllocation(desc.Allocator,
+                           desc.ResourceHeap,
+                           desc.HeapOffset,
+                           desc.Method,
+                           desc.Block,
+                           desc.SizeInBytes),
+          mResidencyManager(desc.ResidencyManager),
+          mResource(desc.Resource),
+          mOffsetFromResource(desc.OffsetFromResource) {
+        ASSERT(desc.ResourceHeap != nullptr);
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
@@ -163,8 +141,7 @@ namespace gpgmm { namespace d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(),   GetAlignment(), GetOffset(),     mOffsetFromResource,
-                GetMethod(), GetMemory(),    mResource.Get(), GetDebugName()};
+        return {GetSize(), GetAlignment(), GetDebugName()};
     }
 
     const char* ResourceAllocation::GetTypename() const {

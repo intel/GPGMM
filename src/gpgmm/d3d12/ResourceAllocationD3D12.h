@@ -30,33 +30,28 @@ namespace gpgmm { namespace d3d12 {
     class ResidencyManager;
     class ResidencySet;
 
-    /** \struct RESOURCE_ALLOCATION_INFO
-    Additional information about the resource allocation.
+    /** \struct RESOURCE_ALLOCATION_DESC
+    Describes a resource allocation.
     */
-    struct RESOURCE_ALLOCATION_INFO {
-        /** \brief The created size of the resource allocation, in bytes.
+    struct RESOURCE_ALLOCATION_DESC {
+        /** \brief Requested size, in bytes, of the resource allocation.
 
         Must be non-zero.
         */
         uint64_t SizeInBytes;
 
-        /** \brief The alignment of the resource allocation, in bytes.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
-        */
-        uint64_t Alignment;
-
-        /** \brief The offset of the resource in the heap, in bytes.
+        /** \brief Offset, in bytes, of the resource in the heap.
          */
         uint64_t HeapOffset;
 
-        /** \brief The offset of the allocation in the resource, in bytes.
+        /** \brief Offset, in bytes, of the allocation, from the start of the
+        resource.
 
          Always zero when the resource is placed in a heap or created with it's own heap.
         */
         uint64_t OffsetFromResource;
 
-        /** \brief The method to describe how the allocation was created.
+        /** \brief Method to describe how the allocation was created.
 
         The Method determines how to figure out the size of the allocation.
         */
@@ -73,6 +68,34 @@ namespace gpgmm { namespace d3d12 {
          Must be valid for the duration of the resource allocation.
         */
         ID3D12Resource* Resource;
+
+        /** \brief Residency manager which manages residency for the resource allocation.
+         */
+        ResidencyManager* ResidencyManager;
+
+        /** \brief Allocator that created the memory for resource allocation.
+         */
+        MemoryAllocator* Allocator;
+
+        /** \brief Block in memory of the resource allocation.
+         */
+        MemoryBlock* Block;
+    };
+
+    /** \struct RESOURCE_ALLOCATION_INFO
+    Additional information about the resource allocation.
+    */
+    struct RESOURCE_ALLOCATION_INFO {
+        /** \brief Allocated size, in bytes, of the resource allocation.
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Allocated alignment, in bytes, of the resource allocation.
+
+        Must be non-zero.
+        */
+        uint64_t Alignment;
 
         /** \brief Debug name associated with the resource allocation.
          */
@@ -95,48 +118,9 @@ namespace gpgmm { namespace d3d12 {
       public:
         /** \brief Constructs a resource allocation using memory containing one or more resources.
 
-        @param residencyManager A pointer to ResidencyManager that manages residency for the
-        resource.
-        @param allocator A pointer to the allocator responsible for creating the memory block.
-        @param offsetFromHeap The offset, in bytes, of the placedResource, from the start of the
-        resourceHeap.
-        @param block A pointer to a memory block within the resourceHeap, the placedResource was
-        allocated from.
-        @param requestSize The unaligned size, in bytes, of the size requested.
-        @param method The method to describe how the allocation was created.
-        @param placedResource A pointer to ID3D12Resource "placed" resource created by
-        ID3D12Device::CreatePlacedResource.
-        @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
+        @param desc A RESOURCE_ALLOCATION_DESC describing the resource allocation.
         */
-        ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* allocator,
-                           uint64_t offsetFromHeap,
-                           MemoryBlock* block,
-                           uint64_t requestSize,
-                           AllocationMethod method,
-                           ComPtr<ID3D12Resource> placedResource,
-                           Heap* resourceHeap);
-
-        /** \brief Constructs a resource allocation within a resource.
-
-        @param residencyManager A pointer to ResidencyManager that manages residency for the
-        resource.
-        @param allocator A pointer to the allocator responsible for creating the memory block.
-        @param block A pointer to the block within the resourceHeap, the placedResource was
-        allocated from.
-        @param requestSize The unaligned size, in bytes, of the size requested.
-        @param offsetFromResource The offset, in bytes, of the allocation, from the start of the
-        resource.
-        @param resource A pointer to ID3D12Resource resource.
-        @param resourceHeap A pointer to the underlying Heap that will contain the placedResource.
-        */
-        ResourceAllocation(ResidencyManager* residencyManager,
-                           MemoryAllocator* allocator,
-                           MemoryBlock* block,
-                           uint64_t requestSize,
-                           uint64_t offsetFromResource,
-                           ComPtr<ID3D12Resource> resource,
-                           Heap* resourceHeap);
+        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc);
 
         ~ResourceAllocation() override;
 

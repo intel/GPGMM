@@ -837,13 +837,18 @@ namespace gpgmm { namespace d3d12 {
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->As(&committedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                                    subAllocation.GetAllocator(),
-                                                                    subAllocation.GetBlock(),
-                                                                    resourceDescriptor.Width,
-                                                                    subAllocation.GetOffset(),
-                                                                    std::move(committedResource),
-                                                                    resourceHeap};
+                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    allocationDesc.ResidencyManager = mResidencyManager.Get();
+                    allocationDesc.Allocator = subAllocation.GetAllocator();
+                    allocationDesc.Block = subAllocation.GetBlock();
+                    allocationDesc.SizeInBytes = resourceDescriptor.Width;
+                    allocationDesc.HeapOffset = kInvalidOffset;
+                    allocationDesc.Method = AllocationMethod::kSubAllocatedWithin;
+                    allocationDesc.OffsetFromResource = subAllocation.GetOffset();
+                    allocationDesc.Resource = committedResource.Get();
+                    allocationDesc.ResourceHeap = resourceHeap;
+
+                    *resourceAllocationOut = new ResourceAllocation{allocationDesc};
 
                     return S_OK;
                 }));
@@ -873,11 +878,18 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut = new ResourceAllocation{
-                        mResidencyManager.Get(),   subAllocation.GetAllocator(),
-                        subAllocation.GetOffset(), subAllocation.GetBlock(),
-                        request.SizeInBytes,       subAllocation.GetMethod(),
-                        std::move(placedResource), resourceHeap};
+                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    allocationDesc.ResidencyManager = mResidencyManager.Get();
+                    allocationDesc.Allocator = subAllocation.GetAllocator();
+                    allocationDesc.Block = subAllocation.GetBlock();
+                    allocationDesc.SizeInBytes = request.SizeInBytes;
+                    allocationDesc.HeapOffset = subAllocation.GetOffset();
+                    allocationDesc.Resource = placedResource.Get();
+                    allocationDesc.ResourceHeap = resourceHeap;
+                    allocationDesc.Method = subAllocation.GetMethod();
+                    allocationDesc.OffsetFromResource = 0;
+
+                    *resourceAllocationOut = new ResourceAllocation{allocationDesc};
 
                     return S_OK;
                 }));
@@ -907,11 +919,18 @@ namespace gpgmm { namespace d3d12 {
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
 
-                    *resourceAllocationOut =
-                        new ResourceAllocation{mResidencyManager.Get(),   allocation.GetAllocator(),
-                                               allocation.GetOffset(),    allocation.GetBlock(),
-                                               request.SizeInBytes,       allocation.GetMethod(),
-                                               std::move(placedResource), resourceHeap};
+                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    allocationDesc.ResidencyManager = mResidencyManager.Get();
+                    allocationDesc.Allocator = allocation.GetAllocator();
+                    allocationDesc.Block = allocation.GetBlock();
+                    allocationDesc.SizeInBytes = request.SizeInBytes;
+                    allocationDesc.HeapOffset = allocation.GetOffset();
+                    allocationDesc.Resource = placedResource.Get();
+                    allocationDesc.ResourceHeap = resourceHeap;
+                    allocationDesc.Method = allocation.GetMethod();
+                    allocationDesc.OffsetFromResource = 0;
+
+                    *resourceAllocationOut = new ResourceAllocation{allocationDesc};
 
                     return S_OK;
                 }));
@@ -946,14 +965,18 @@ namespace gpgmm { namespace d3d12 {
         mInfo.UsedMemoryCount++;
         mInfo.UsedBlockUsage += allocationSize;
 
-        *resourceAllocationOut = new ResourceAllocation{mResidencyManager.Get(),
-                                                        /*allocator*/ this,
-                                                        /*offsetFromHeap*/ kInvalidOffset,
-                                                        /*block*/ nullptr,
-                                                        request.SizeInBytes,
-                                                        AllocationMethod::kStandalone,
-                                                        std::move(committedResource),
-                                                        resourceHeap};
+        RESOURCE_ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.ResidencyManager = mResidencyManager.Get();
+        allocationDesc.Allocator = this;
+        allocationDesc.HeapOffset = kInvalidOffset;
+        allocationDesc.Block = nullptr;
+        allocationDesc.SizeInBytes = request.SizeInBytes;
+        allocationDesc.Method = AllocationMethod::kStandalone;
+        allocationDesc.Resource = committedResource.Get();
+        allocationDesc.ResourceHeap = resourceHeap;
+        allocationDesc.OffsetFromResource = 0;
+
+        *resourceAllocationOut = new ResourceAllocation{allocationDesc};
 
         return S_OK;
     }
@@ -993,14 +1016,18 @@ namespace gpgmm { namespace d3d12 {
         mInfo.UsedMemoryCount++;
         mInfo.UsedBlockUsage += resourceInfo.SizeInBytes;
 
-        *resourceAllocationOut = new ResourceAllocation{/*residencyManager*/ nullptr,
-                                                        /*allocator*/ this,
-                                                        /*offsetFromHeap*/ kInvalidOffset,
-                                                        /*block*/ nullptr,
-                                                        resourceInfo.SizeInBytes,
-                                                        AllocationMethod::kStandalone,
-                                                        std::move(resource),
-                                                        resourceHeap};
+        RESOURCE_ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.ResidencyManager = nullptr;
+        allocationDesc.Allocator = this;
+        allocationDesc.HeapOffset = kInvalidSize;
+        allocationDesc.Block = nullptr;
+        allocationDesc.SizeInBytes = resourceInfo.SizeInBytes;
+        allocationDesc.Method = AllocationMethod::kStandalone;
+        allocationDesc.Resource = resource.Get();
+        allocationDesc.ResourceHeap = resourceHeap;
+        allocationDesc.OffsetFromResource = 0;
+
+        *resourceAllocationOut = new ResourceAllocation{allocationDesc};
 
         return S_OK;
     }

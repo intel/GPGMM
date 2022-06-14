@@ -70,7 +70,7 @@ namespace gpgmm {
     }
 
     MEMORY_ALLOCATION_INFO MemoryAllocation::GetInfo() const {
-        return {GetSize(), mOffset, mMethod, mMemory, mAllocator};
+        return {GetSize(), GetAlignment()};
     }
 
     MemoryBase* MemoryAllocation::GetMemory() const {

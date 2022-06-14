@@ -69,10 +69,7 @@ namespace gpgmm {
     JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATION_INFO& info) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", info.SizeInBytes);
-        dict.AddItem("Offset", info.Offset);
-        dict.AddItem("Method", info.Method);
-        dict.AddItem("Memory", info.Memory);
-        dict.AddItem("Allocator", info.Allocator);
+        dict.AddItem("Alignment", info.Alignment);
         return dict;
     }
 

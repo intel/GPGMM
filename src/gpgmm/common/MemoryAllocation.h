@@ -61,33 +61,16 @@ namespace gpgmm {
     Additional information about the memory allocation.
     */
     struct MEMORY_ALLOCATION_INFO {
-        /** \brief The created size of the memory allocation, in bytes.
-
-        Must be non-zero.
+        /** \brief Allocated size, in bytes, of the memory allocation.
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
         uint64_t SizeInBytes;
 
-        /** \brief The offset relative to memory, in bytes.
-         */
-        uint64_t Offset;
+        /** \brief Allocated alignment, in bytes, of the memory allocation.
 
-        /** \brief The method to describe how the allocation was created.
-
-        The Method determines how to figure out the size of the allocation.
+        Must be non-zero.
         */
-        AllocationMethod Method;
-
-        /** \brief Pointer to underlying memory object.
-
-        Must be valid for the duration of the allocation.
-        */
-        MemoryBase* Memory;
-
-        /** \brief Pointer to allocator that created this allocation.
-
-        Must be valid for the duration of the allocation.
-        */
-        MemoryAllocator* Allocator;
+        uint64_t Alignment;
     };
 
     /** \brief Represents a location and range in memory.
