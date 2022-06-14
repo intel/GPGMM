@@ -62,24 +62,6 @@ namespace gpgmm { namespace d3d12 {
         Must be valid for the duration of the resource allocation.
         */
         Heap* ResourceHeap;
-
-        /** \brief Pointer to ID3D12Resource used for the allocation.
-
-         Must be valid for the duration of the resource allocation.
-        */
-        ID3D12Resource* Resource;
-
-        /** \brief Residency manager which manages residency for the resource allocation.
-         */
-        ResidencyManager* ResidencyManager;
-
-        /** \brief Allocator that created the memory for resource allocation.
-         */
-        MemoryAllocator* Allocator;
-
-        /** \brief Block in memory of the resource allocation.
-         */
-        MemoryBlock* Block;
     };
 
     /** \struct RESOURCE_ALLOCATION_INFO
@@ -119,8 +101,18 @@ namespace gpgmm { namespace d3d12 {
         /** \brief Constructs a resource allocation using memory containing one or more resources.
 
         @param desc A RESOURCE_ALLOCATION_DESC describing the resource allocation.
+        @param residencyManager A pointer to ResidencyManager which manages residency for the
+        resource allocation.
+        @param allocator A pointer to MemoryAllocator which created the resourceHeap for the
+        resource.
+        @param block A pointer to MemoryBlock which describes the region in Heap being allocated.
+        @param resource A pointer to the ID3D12Resource used for the allocation.
         */
-        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc);
+        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
+                           ResidencyManager* residencyManager,
+                           MemoryAllocator* allocator,
+                           MemoryBlock* block,
+                           ComPtr<ID3D12Resource> resource);
 
         ~ResourceAllocation() override;
 

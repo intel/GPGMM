@@ -169,7 +169,6 @@ namespace gpgmm { namespace d3d12 {
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
         dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
-        dict.AddItem("Resource", Serialize(desc.Resource->GetDesc()));
         return dict;
     }
 
