@@ -196,7 +196,7 @@ Then use `ninja -C out/Release` or `ninja -C out/Debug` to build.
 
 ### Install `CMake`
 
-CMake 3.14 or higher is required: https://cmake.org/install/.
+GPGMM requires CMake 3.14 or higher: https://cmake.org/install/.
 
 ### Configure the build
 
@@ -217,12 +217,17 @@ For example, `cmake . -DGPGMM_ENABLE_VK=OFF` builds without Vulkan.
 cmake --build .
 ```
 
-## Testing
+# Testing
 
-Verify functionality by generating deterministic or random memory patterns then running them against GPUs.
+* Unit tests check the front-end code in isolation or without a GPU.
+* End2End tests check both the front AND backend code with a GPU.
+* Capture replay checks using pre-recorded memory patterns with a GPU.
+* Fuzzer checks using random memory patterns with a GPU.
+
+## GN
 
 ```sh
-> cd out/Debug
+> cd out/Debug # or out/Release
 ```
 
 ### Run unit tests:
@@ -230,28 +235,32 @@ Verify functionality by generating deterministic or random memory patterns then 
 > gpgmm_unittests
 ```
 
-Unit tests check the front-end code in isolation or without a GPU.
-
 ### Run end2end tests:
 ```sh
 > gpgmm_end2end_tests
 ```
-
-End2End tests check both the front AND backend code with a GPU.
 
 ### Run capture replay tests:
 ```sh
 > gpgmm_capture_replay_tests
 ```
 
-Capture replay checks using pre-recorded memory patterns with a GPU.
-
 ### Run fuzzing tests:
 ```sh
-> gpgmm_*_fuzzer
+> gpgmm_*_fuzzer  -max_total_time=<seconds_to_run>
 ```
 
-Fuzzer checks using random memory patterns with a GPU.
+## CMake
+
+```sh
+> cd Debug # or Release
+```
+
+### Run ALL tests (after build)
+
+```sh
+> cmake --build . --target RUN_TESTS
+```
 
 ## License
 
