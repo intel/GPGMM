@@ -47,6 +47,7 @@
 #define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_METRIC(name, value) TRACE_EMPTY
 
 #else // !GPGMM_DISABLE_TRACING
 
@@ -142,6 +143,13 @@ const uint64_t kNoId = 0;
 // Helper macro to avoid evaluating the arguments when the condition doesn't hold.
 #define GPGMM_LAZY_SERIALIZE(object, condition) \
         !(condition) ? JSONSerializer::Serialize() : JSONSerializer::Serialize(object)
+
+// Works like TRACE_COUNTER1 but filters out zero'd samples.
+#define GPGMM_TRACE_EVENT_METRIC(name, value)                     \
+    do {                                                          \
+        if (value == 0) break;                                    \
+        TRACE_COUNTER1(TraceEventCategory::Default, name, value); \
+    } while (false)
 
 #endif
 
