@@ -14,6 +14,7 @@
 /third_party/llvm-build
 /third_party/vulkan*
 /third_party/webnn_native
+/third_party/libFuzzer
 /tools
 /out
 
