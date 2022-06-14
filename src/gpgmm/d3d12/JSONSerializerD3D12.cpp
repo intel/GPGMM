@@ -162,18 +162,25 @@ namespace gpgmm { namespace d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_INFO& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_DESC& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
-        dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
         dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
         dict.AddItem("Resource", Serialize(desc.Resource->GetDesc()));
+        return dict;
+    }
 
-        if (!desc.DebugName.empty()) {
-            dict.AddItem("DebugName", desc.DebugName);
+    // static
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_INFO& info) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", info.SizeInBytes);
+        dict.AddItem("Alignment", info.Alignment);
+
+        if (!info.DebugName.empty()) {
+            dict.AddItem("DebugName", info.DebugName);
         }
 
         return dict;
