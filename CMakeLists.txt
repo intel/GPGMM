@@ -120,12 +120,17 @@ endif()
 ################################################################################
 # GPGMM's public and common "configs"
 ################################################################################
+set(GPGMM_INCLUDE_DIRS
+  "${GPGMM_ROOT_DIR}/src"
+	"${GPGMM_INCLUDE_DIR}"
+)
+
+# Where GPGMM public .h files can be found.
+# Sets directory for header files to be searched.
+include_directories(${GPGMM_INCLUDE_DIRS})
 
 add_library(gpgmm_public_config INTERFACE)
-target_include_directories(gpgmm_public_config INTERFACE
-    "${GPGMM_ROOT_DIR}/src"
-    "${GPGMM_ROOT_DIR}/src/include"
-)
+target_include_directories(gpgmm_public_config INTERFACE "${GPGMM_INCLUDE_DIRS}")
 
 add_library(gpgmm_common_config INTERFACE)
 target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
