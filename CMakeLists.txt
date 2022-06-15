@@ -25,6 +25,8 @@ project(
 # FOLDER property to name them.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # Always specify (aka initialize) the output directories.
 # Otherwise, the runtime (exe) and library (DLL), could be built under different folders
 # paths where running the executable directly could fail to find the DLL.
@@ -185,8 +187,6 @@ endif()
 if(WIN32)
   target_compile_definitions(gpgmm_common_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
 endif()
-
-set(CMAKE_CXX_STANDARD "14")
 
 # ###############################################################################
 # Build subdirectories
