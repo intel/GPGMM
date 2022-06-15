@@ -78,9 +78,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aea8dd5cadda9d7c1af0ab968667f6571"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aea8dd5cadda9d7c1af0ab968667f6571">SizeInBytes</a></td></tr>
-<tr class="memdesc:aea8dd5cadda9d7c1af0ab968667f6571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size, in bytes, of the resource allocation.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aea8dd5cadda9d7c1af0ab968667f6571">More...</a><br /></td></tr>
-<tr class="separator:aea8dd5cadda9d7c1af0ab968667f6571"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6349c2d4d91032e648e5712c2476ad77"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a6349c2d4d91032e648e5712c2476ad77">RequestSizeInBytes</a></td></tr>
+<tr class="memdesc:a6349c2d4d91032e648e5712c2476ad77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size, in bytes, of the resource allocation.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a6349c2d4d91032e648e5712c2476ad77">More...</a><br /></td></tr>
+<tr class="separator:a6349c2d4d91032e648e5712c2476ad77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeeba45039b3912861fd6cd09099abd8e"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aeeba45039b3912861fd6cd09099abd8e">HeapOffset</a></td></tr>
 <tr class="memdesc:aeeba45039b3912861fd6cd09099abd8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset, in bytes, of the resource in the heap.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aeeba45039b3912861fd6cd09099abd8e">More...</a><br /></td></tr>
 <tr class="separator:aeeba45039b3912861fd6cd09099abd8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,6 +147,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6349c2d4d91032e648e5712c2476ad77" name="a6349c2d4d91032e648e5712c2476ad77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6349c2d4d91032e648e5712c2476ad77">&#9670;&nbsp;</a></span>RequestSizeInBytes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::d3d12::RESOURCE_ALLOCATION_DESC::RequestSizeInBytes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Requested size, in bytes, of the resource allocation. </p>
+<p >Must be non-zero. </p>
+
+</div>
+</div>
 <a id="a31e9293316610fd2b9b4af4f07ec9f22" name="a31e9293316610fd2b9b4af4f07ec9f22"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a31e9293316610fd2b9b4af4f07ec9f22">&#9670;&nbsp;</a></span>ResourceHeap</h2>
 
@@ -161,23 +178,6 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer to underlying <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> used for the resource allocation. </p>
 <p >Must be valid for the duration of the resource allocation. </p>
-
-</div>
-</div>
-<a id="aea8dd5cadda9d7c1af0ab968667f6571" name="aea8dd5cadda9d7c1af0ab968667f6571"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea8dd5cadda9d7c1af0ab968667f6571">&#9670;&nbsp;</a></span>SizeInBytes</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t gpgmm::d3d12::RESOURCE_ALLOCATION_DESC::SizeInBytes</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Requested size, in bytes, of the resource allocation. </p>
-<p >Must be non-zero. </p>
 
 </div>
 </div>
