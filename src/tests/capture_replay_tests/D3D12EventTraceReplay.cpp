@@ -551,6 +551,8 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
 
     RunSingleTest(forceParams);
 
+    gpgmm::InfoLog() << "GPU memory (peak): " << mReplayedMemoryStats.PeakUsage / 1e6 << " MB";
+
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }
 
