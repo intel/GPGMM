@@ -714,11 +714,9 @@ namespace gpgmm { namespace d3d12 {
         mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
 #endif
 
+        // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
-            // Update the current usage counters.
             GetInfoInternal();
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT((*resourceAllocationOut)->GetMemory(),
-                                              (*resourceAllocationOut)->GetMemory()->GetInfo());
         }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocationOut,
