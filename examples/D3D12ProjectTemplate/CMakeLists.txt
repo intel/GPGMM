@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 project(D3D12ProjectTemplate LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+
 include(FetchContent)
 FetchContent_Declare(gpgmm
   GIT_REPOSITORY https://github.com/intel/gpgmm.git
