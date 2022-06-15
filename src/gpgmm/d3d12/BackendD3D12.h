@@ -17,7 +17,7 @@
 
 #include "gpgmm/common/Backend.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class Heap;
     class ResourceAllocation;
@@ -32,6 +32,6 @@ namespace gpgmm { namespace d3d12 {
         return gpgmm::ToBackend<BackendTrait>(common);
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif

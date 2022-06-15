@@ -14,7 +14,7 @@
 
 #include "gpgmm/vk/DeviceMemoryVk.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     DeviceMemory::DeviceMemory(VkDeviceMemory memory,
                                uint32_t memoryTypeIndex,
@@ -31,4 +31,4 @@ namespace gpgmm { namespace vk {
         return mMemoryTypeIndex;
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

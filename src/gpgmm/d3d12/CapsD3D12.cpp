@@ -19,7 +19,7 @@
 #include <cmath>
 #include <memory>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     HRESULT SetMaxResourceSize(ID3D12Device* device, uint64_t* sizeOut) {
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
@@ -92,4 +92,4 @@ namespace gpgmm { namespace d3d12 {
         return mIsResourceAccessAlwaysCoherent;
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

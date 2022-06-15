@@ -18,7 +18,7 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryCache.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class ResourceAllocation;
 
@@ -67,6 +67,6 @@ namespace gpgmm { namespace d3d12 {
         MemoryCache<ResourceAllocationEntry> mLiveAllocations = {};
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_

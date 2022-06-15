@@ -17,7 +17,7 @@
 #include "gpgmm/utils/Math.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                              bool isUMA,
@@ -436,4 +436,4 @@ namespace gpgmm { namespace d3d12 {
         return object->SetName(TCharToWString(name.c_str()).c_str());
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

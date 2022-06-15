@@ -27,7 +27,7 @@
 
 #include <utility>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     namespace {
 
@@ -169,4 +169,4 @@ namespace gpgmm { namespace d3d12 {
         return SetDebugObjectName(mResource.Get(), name);
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

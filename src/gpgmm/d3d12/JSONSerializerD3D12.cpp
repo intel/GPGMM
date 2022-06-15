@@ -22,7 +22,7 @@
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     // static
     JSONDict JSONSerializer::Serialize() {
@@ -250,4 +250,4 @@ namespace gpgmm { namespace d3d12 {
         return dict;
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

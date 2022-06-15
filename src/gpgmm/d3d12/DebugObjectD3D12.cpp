@@ -14,7 +14,7 @@
 
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     std::string DebugObject::GetDebugName() const {
         return mDebugName;
@@ -25,4 +25,4 @@ namespace gpgmm { namespace d3d12 {
         return SetDebugNameImpl(name);
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

@@ -26,7 +26,7 @@ namespace gpgmm {
     class MemoryAllocation;
 }  // namespace gpgmm
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     /** \struct GpResourceAllocator
     \brief Opaque handle to a allocator object.
@@ -201,6 +201,6 @@ namespace gpgmm { namespace vk {
         std::vector<VkMemoryType> mMemoryTypes;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_RESOURCEALLOCATORVK_H_

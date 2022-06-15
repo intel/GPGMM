@@ -22,7 +22,7 @@
 #define ASSERT_FAILED(expr) ASSERT_TRUE((expr) != VK_SUCCESS)
 #define ASSERT_SUCCESS(expr) ASSERT_TRUE((expr) == VK_SUCCESS)
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     struct GpCreateAllocatorInfo;
 
@@ -39,6 +39,6 @@ namespace gpgmm { namespace vk {
         VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // TESTS_VKTEST_H_

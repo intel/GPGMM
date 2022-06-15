@@ -18,7 +18,7 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/vk/vk_platform.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     VK_DEFINE_HANDLE(GpResourceAllocator)
 
@@ -40,6 +40,6 @@ namespace gpgmm { namespace vk {
         VkDeviceSize mMemorySize;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_

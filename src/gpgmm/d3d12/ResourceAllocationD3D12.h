@@ -23,7 +23,7 @@
 #include "gpgmm/utils/NonCopyable.h"
 #include "include/gpgmm_export.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class DebugResourceAllocator;
     class Heap;
@@ -209,6 +209,6 @@ namespace gpgmm { namespace d3d12 {
         const size_t mOffsetFromResource;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_

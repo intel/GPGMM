@@ -20,7 +20,7 @@
 
 #include <set>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class Heap;
 
@@ -71,6 +71,6 @@ namespace gpgmm { namespace d3d12 {
         UnderlyingType mSet;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif

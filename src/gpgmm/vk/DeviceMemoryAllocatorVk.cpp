@@ -21,7 +21,7 @@
 #include "gpgmm/vk/DeviceMemoryVk.h"
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     DeviceMemoryAllocator::DeviceMemoryAllocator(GpResourceAllocator resourceAllocator,
                                                  uint32_t memoryTypeIndex,
@@ -90,4 +90,4 @@ namespace gpgmm { namespace vk {
         SafeRelease(allocation);
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

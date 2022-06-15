@@ -36,7 +36,7 @@
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
     namespace {
 
         // Combines heap type and flags used to allocate memory for resources into a single type for
@@ -1229,4 +1229,4 @@ namespace gpgmm { namespace d3d12 {
         return E_INVALIDARG;
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

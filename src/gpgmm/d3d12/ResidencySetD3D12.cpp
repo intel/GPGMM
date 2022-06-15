@@ -16,7 +16,7 @@
 
 #include "gpgmm/common/TraceEvent.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     ResidencySet::ResidencySet() {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -53,4 +53,4 @@ namespace gpgmm { namespace d3d12 {
         return "ResidencySet";
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

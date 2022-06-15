@@ -21,7 +21,7 @@
 #include "gpgmm/vk/DeviceMemoryVk.h"
 #include "gpgmm/vk/ErrorVk.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     VkResult gpCreateResourceAllocator(const GpCreateAllocatorInfo& info,
                                        GpResourceAllocator* allocatorOut) {
@@ -261,4 +261,4 @@ namespace gpgmm { namespace vk {
     Caps* GpResourceAllocator_T::GetCaps() const {
         return mCaps.get();
     }
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

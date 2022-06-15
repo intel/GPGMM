@@ -20,7 +20,7 @@
 
 #include <string>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
 
@@ -55,6 +55,6 @@ namespace gpgmm { namespace d3d12 {
         std::string mDebugName;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_DEBUGOBJECTD3D12_H_

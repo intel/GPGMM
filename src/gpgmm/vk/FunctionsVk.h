@@ -14,7 +14,7 @@
 
 #include "gpgmm/vk/vk_platform.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     // Vulkan entrypoints used by GPGMM.
     struct VulkanFunctions {
@@ -50,4 +50,4 @@ namespace gpgmm { namespace vk {
         PFN_vkDestroyImage DestroyImage = nullptr;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
