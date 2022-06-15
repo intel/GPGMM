@@ -411,13 +411,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 static_cast<ALLOCATOR_RECORD_FLAGS_TYPE>(
                                     envParams.CaptureEventMask);
                             allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
-
-                            const size_t indexOfExt = traceFile.path.find_last_of(".");
-                            const std::string newTraceFilePathWithoutExt =
-                                traceFile.path.substr(0, indexOfExt) + "_new";
-
-                            allocatorDesc.RecordOptions.TraceFile =
-                                newTraceFilePathWithoutExt + ".json";
+                            allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(envParams.LogLevel);
 
@@ -540,16 +534,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
-// Playback a captured trace into a new trace with capture-only events.
-TEST_P(D3D12EventTraceReplay, Recapture) {
-    TestEnviromentParams forceParams = {};
-    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_CAPTURE;
-    RunSingleTest(forceParams);
-}
-
 // Playback the captured trace as-is.
 TEST_P(D3D12EventTraceReplay, Replay) {
     TestEnviromentParams forceParams = {};
+
     RunSingleTest(forceParams);
 
     LogCallStats("Allocation(s)", mReplayedAllocateStats);
@@ -584,6 +572,7 @@ TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     forceParams.IsSuballocationDisabled = true;
 
     RunSingleTest(forceParams);
+
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }
 
@@ -594,6 +583,14 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     RunSingleTest(forceParams);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, 0u);
+}
+
+// Playback captured trace into a new trace with capture-only events.
+// Test must run last since the new trace will replace the old trace.
+TEST_P(D3D12EventTraceReplay, Recapture) {
+    TestEnviromentParams forceParams = {};
+    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_CAPTURE;
+    RunSingleTest(forceParams);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
