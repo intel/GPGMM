@@ -91,6 +91,14 @@ if (APPLE OR (UNIX AND NOT ANDROID))
 	endif()
 endif()
 
+set(ENABLE_ALLOCATOR_CHECKS OFF)
+set(ENABLE_ASSERT_ON_WARNING OFF)
+
+if($<CONFIG:Debug>)
+  set(ENABLE_ALLOCATOR_CHECKS ON)
+  set(ENABLE_ASSERT_ON_WARNING ON)
+endif()
+
 option_if_not_defined(GPGMM_STANDALONE "When building from GPGMM's repository" ON)
 
 option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
@@ -105,6 +113,11 @@ set_if_not_defined(GPGMM_VK_HEADERS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-headers/src
 set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "Directory in which to find Vulkan-Tools")
 
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
+option_if_not_defined(GPGMM_FORCE_TRACING "Enables event tracing even in release builds" OFF)
+option_if_not_defined(GPGMM_ENABLE_DEVICE_CHECKS "Enables checking of device leaks" OFF)
+option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_CHECKS "Enables checking of allocator leaks" ${ENABLE_ALLOCATOR_CHECKS})
+option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" ${ENABLE_ASSERT_ON_WARNING})
+option_if_not_defined(GPGMM_ENABLE_SIZE_CACHE "Enables warming of caches with common sizes" ON)
 
 # The Vulkan loader is an optional dependency.
 if (GPGMM_ENABLE_VK)
@@ -140,35 +153,58 @@ if (GPGMM_ALWAYS_ASSERT OR $<CONFIG:Debug>)
     # TODO: rename definition
     target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
 endif()
-if (GPGMM_ENABLE_D3D12)
-    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_D3D12")
+
+if(GPGMM_ENABLE_D3D12)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_D3D12")
 endif()
-if (GPGMM_ENABLE_VK)
-    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_VK")
+
+if(GPGMM_ENABLE_VK)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_VK")
 endif()
-if (WIN32)
-    target_compile_definitions(gpgmm_common_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
+
+if(NOT $<CONFIG:Debug> AND NOT GPGMM_FORCE_TRACING)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_DISABLE_TRACING")
+endif()
+
+if(GPGMM_ENABLE_DEVICE_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_DEVICE_CHECKS")
+endif()
+
+if(GPGMM_ENABLE_ALLOCATOR_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_CHECKS")
+endif()
+
+if(GPGMM_ENABLE_ASSERT_ON_WARNING)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERT_ON_WARNING")
+endif()
+
+if(GPGMM_ENABLE_SIZE_CACHE)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_SIZE_CACHE")
+endif()
+
+if(WIN32)
+  target_compile_definitions(gpgmm_common_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
 endif()
 
 set(CMAKE_CXX_STANDARD "14")
 
-################################################################################
+# ###############################################################################
 # Build subdirectories
-################################################################################
+# ###############################################################################
 add_subdirectory(third_party)
 add_subdirectory(src/gpgmm)
 
 # Tests use GPGMM internals (eg. gpgmm_common, gpgmm_utils, etc) which are never
 # exported and must be statically built.
-if (GPGMM_ENABLE_TESTS AND NOT BUILD_SHARED_LIBS)
+if(GPGMM_ENABLE_TESTS AND NOT BUILD_SHARED_LIBS)
   add_subdirectory(src/tests)
 endif()
 
-if (GPGMM_STANDALONE)
+if(GPGMM_STANDALONE)
   add_subdirectory(src/samples)
 endif()
 
-################################################################################
+# ###############################################################################
 # Install GPGMM
-################################################################################
+# ###############################################################################
 install(TARGETS gpgmm DESTINATION lib)
