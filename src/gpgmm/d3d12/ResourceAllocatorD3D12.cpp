@@ -719,9 +719,6 @@ namespace gpgmm { namespace d3d12 {
             GetInfoInternal();
         }
 
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocationOut,
-                                          (*resourceAllocationOut)->GetInfo());
-
         return S_OK;
     }
 
