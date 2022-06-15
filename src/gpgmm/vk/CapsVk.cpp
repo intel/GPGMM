@@ -18,7 +18,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     // static
     VkResult Caps::CreateCaps(VkPhysicalDevice physicalDevice,
@@ -49,4 +49,4 @@ namespace gpgmm { namespace vk {
         return mVulkanApiVersion;
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

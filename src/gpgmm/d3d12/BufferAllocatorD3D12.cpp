@@ -20,7 +20,7 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     BufferAllocator::BufferAllocator(ResourceAllocator* resourceAllocator,
                                      D3D12_HEAP_TYPE heapType,
@@ -99,4 +99,4 @@ namespace gpgmm { namespace d3d12 {
         return mBufferAlignment;
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

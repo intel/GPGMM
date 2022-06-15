@@ -19,7 +19,7 @@
 
 #include <cstdint>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class Fence {
       public:
@@ -51,6 +51,6 @@ namespace gpgmm { namespace d3d12 {
         uint64_t mLastSignaledFence;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_FENCED3D12_H_

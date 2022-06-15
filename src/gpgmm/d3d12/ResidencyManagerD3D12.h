@@ -23,7 +23,7 @@
 #include <memory>
 #include <mutex>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class Fence;
     class Heap;
@@ -254,6 +254,6 @@ namespace gpgmm { namespace d3d12 {
         std::mutex mMutex;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_

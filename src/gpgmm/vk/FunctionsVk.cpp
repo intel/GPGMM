@@ -33,7 +33,7 @@
         functionName = reinterpret_cast<decltype(functionName)>(vk##functionName); \
     } while (0)
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
     void VulkanFunctions::LoadInstanceFunctions(VkInstance instance) {
         GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetDeviceProcAddr);
         GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetPhysicalDeviceMemoryProperties);
@@ -97,4 +97,4 @@ namespace gpgmm { namespace vk {
         ASSERT(DestroyImage != nullptr);
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

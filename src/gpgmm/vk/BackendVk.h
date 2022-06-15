@@ -17,7 +17,7 @@
 
 #include "gpgmm/common/Backend.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     class DeviceMemory;
 
@@ -30,6 +30,6 @@ namespace gpgmm { namespace vk {
         return gpgmm::ToBackend<BackendTrait>(common);
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_BACKENDVK_H_

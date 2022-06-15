@@ -20,7 +20,7 @@
 
 #include <cstdint>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class Caps {
       public:
@@ -47,6 +47,6 @@ namespace gpgmm { namespace d3d12 {
         bool mIsResourceAccessAlwaysCoherent = false;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_CAPSD3D12_H_

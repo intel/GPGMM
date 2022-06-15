@@ -30,7 +30,7 @@ namespace gpgmm {
     class PlatformTime;
 }  // namespace gpgmm
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class BufferAllocator;
     class Caps;
@@ -699,6 +699,6 @@ namespace gpgmm { namespace d3d12 {
         std::unique_ptr<DebugResourceAllocator> mDebugAllocator;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_

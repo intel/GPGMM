@@ -18,7 +18,7 @@
 
 #include <string>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                              bool isUMA,
@@ -27,6 +27,6 @@ namespace gpgmm { namespace d3d12 {
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
     HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name);
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_UTILSD3D12_H_

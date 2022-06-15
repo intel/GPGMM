@@ -19,7 +19,7 @@
 
 #include "gpgmm/vk/vk_platform.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     class DeviceMemory final : public MemoryBase {
       public:
@@ -37,6 +37,6 @@ namespace gpgmm { namespace vk {
         uint32_t mMemoryTypeIndex = 0;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_DEVICEMEMORYVK_H_

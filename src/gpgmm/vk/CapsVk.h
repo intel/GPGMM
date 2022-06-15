@@ -19,7 +19,7 @@
 
 #include <cstdint>
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     struct VulkanFunctions;
 
@@ -40,6 +40,6 @@ namespace gpgmm { namespace vk {
         uint32_t mVulkanApiVersion = 0;
     };
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_CAPSVK_H_

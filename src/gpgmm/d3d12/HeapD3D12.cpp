@@ -21,7 +21,7 @@
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
@@ -126,4 +126,4 @@ namespace gpgmm { namespace d3d12 {
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {
         return SetDebugObjectName(mPageable.Get(), name);
     }
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

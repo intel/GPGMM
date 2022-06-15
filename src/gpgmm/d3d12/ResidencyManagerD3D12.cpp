@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     static constexpr uint32_t kDefaultEvictBatchSize = 50ll * 1024ll * 1024ll;  // 50MB
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
@@ -539,4 +539,4 @@ namespace gpgmm { namespace d3d12 {
         return info;
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

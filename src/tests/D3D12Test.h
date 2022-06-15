@@ -27,7 +27,7 @@
 #define EXPECT_FAILED(expr) EXPECT_TRUE(FAILED(expr))
 #define EXPECT_SUCCEEDED(expr) EXPECT_TRUE(SUCCEEDED(expr))
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     struct ALLOCATOR_DESC;
     class ResourceAllocator;
@@ -60,6 +60,6 @@ namespace gpgmm { namespace d3d12 {
         D3D12_RESOURCE_HEAP_TIER mResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // TESTS_D3D12TEST_H_

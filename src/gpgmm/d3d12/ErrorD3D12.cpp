@@ -20,7 +20,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     std::string GetErrorMessage(HRESULT error) {
         std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
@@ -30,4 +30,4 @@ namespace gpgmm { namespace d3d12 {
         return ss.str();
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

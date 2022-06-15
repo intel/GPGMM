@@ -19,7 +19,7 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
@@ -48,6 +48,6 @@ namespace gpgmm { namespace d3d12 {
         const bool mIsUMA;
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_RESOURCEHEAPALLOCATORD3D12_H_

@@ -18,7 +18,7 @@
 #include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     // Forward declare backend types.
     struct ALLOCATION_DESC;
@@ -69,6 +69,6 @@ namespace gpgmm { namespace d3d12 {
         static JSONDict Serialize(const ResidencySet& residencySet);
     };
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif  // GPGMM_D3D12_JSONSERIALIZERD3D12_H_

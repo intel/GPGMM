@@ -17,7 +17,7 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Assert.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     // static
     HRESULT Fence::CreateFence(ComPtr<ID3D12Device> device,
@@ -100,4 +100,4 @@ namespace gpgmm { namespace d3d12 {
         return mFence.Get();
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

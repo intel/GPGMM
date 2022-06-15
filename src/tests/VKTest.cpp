@@ -18,7 +18,7 @@
 
 #include <vector>
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
     void VKTestBase::SetUp() {
         GPGMMTestBase::SetUp();
@@ -139,4 +139,4 @@ namespace gpgmm { namespace vk {
         return allocatorInfo;
     }
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk

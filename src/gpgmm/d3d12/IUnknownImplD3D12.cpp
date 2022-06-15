@@ -14,7 +14,7 @@
 
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
     IUnknownImpl::IUnknownImpl() : RefCounted(1) {
     }
 
@@ -51,4 +51,4 @@ namespace gpgmm { namespace d3d12 {
     void IUnknownImpl::DeleteThis() {
         delete this;
     }
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

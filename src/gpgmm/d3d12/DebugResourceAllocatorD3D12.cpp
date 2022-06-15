@@ -20,7 +20,7 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/utils/Utils.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     DebugResourceAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
         ResourceAllocation* allocation)
@@ -91,4 +91,4 @@ namespace gpgmm { namespace d3d12 {
         return "DebugResourceAllocator";
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

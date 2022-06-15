@@ -16,7 +16,7 @@
 
 #include <gpgmm_d3d12.h>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     void D3D12TestBase::SetUp() {
         GPGMMTestBase::SetUp();
@@ -142,4 +142,4 @@ namespace gpgmm { namespace d3d12 {
 #endif
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

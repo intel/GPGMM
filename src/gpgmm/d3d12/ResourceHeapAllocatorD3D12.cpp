@@ -24,7 +24,7 @@
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/Math.h"
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
@@ -118,4 +118,4 @@ namespace gpgmm { namespace d3d12 {
         return "ResourceHeapAllocator";
     }
 
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12

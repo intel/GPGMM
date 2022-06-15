@@ -16,7 +16,7 @@
 
 #include "gpgmm/vk/vk_platform.h"
 
-namespace gpgmm { namespace vk {
+namespace gpgmm::vk {
 
 #define ReturnIfFailed(expr)        \
     {                               \
@@ -38,6 +38,6 @@ namespace gpgmm { namespace vk {
     for (;;)                        \
     break
 
-}}  // namespace gpgmm::vk
+}  // namespace gpgmm::vk
 
 #endif  // GPGMM_VK_ERRORVK_H_

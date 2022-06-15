@@ -25,7 +25,7 @@
 
 #include <memory>
 
-namespace gpgmm { namespace d3d12 {
+namespace gpgmm::d3d12 {
 
     class ResidencySet;
     class ResidencyManager;
@@ -182,6 +182,6 @@ namespace gpgmm { namespace d3d12 {
         RefCounted mResidencyLock;
         bool mIsExternal;
     };
-}}  // namespace gpgmm::d3d12
+}  // namespace gpgmm::d3d12
 
 #endif
