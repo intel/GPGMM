@@ -68,12 +68,13 @@ namespace gpgmm { namespace d3d12 {
     Additional information about the resource allocation.
     */
     struct RESOURCE_ALLOCATION_INFO {
-        /** \brief Allocated size, in bytes, of the resource allocation.
+        /** \brief Created size, in bytes, of the resource allocation.
+
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
         uint64_t SizeInBytes;
 
-        /** \brief Allocated alignment, in bytes, of the resource allocation.
+        /** \brief Created alignment, in bytes, of the resource allocation.
 
         Must be non-zero.
         */

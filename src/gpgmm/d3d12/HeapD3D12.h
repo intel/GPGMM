@@ -57,12 +57,14 @@ namespace gpgmm { namespace d3d12 {
     */
     struct HEAP_DESC {
         /** \brief Created size of the heap, in bytes.
-         */
-        uint64_t SizeInBytes;
-
-        /** \brief Alignment of the heap, in bytes.
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Created alignment of the heap, in bytes.
+
+        Must be non-zero
         */
         uint64_t Alignment;
 
