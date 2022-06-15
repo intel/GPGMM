@@ -171,7 +171,7 @@ namespace gpgmm { namespace d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_DESC& desc) {
         JSONDict dict;
-        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("RequestSizeInBytes", desc.RequestSizeInBytes);
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);

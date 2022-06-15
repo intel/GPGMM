@@ -38,7 +38,7 @@ namespace gpgmm { namespace d3d12 {
 
         Must be non-zero.
         */
-        uint64_t SizeInBytes;
+        uint64_t RequestSizeInBytes;
 
         /** \brief Offset, in bytes, of the resource in the heap.
          */

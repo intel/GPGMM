@@ -51,7 +51,7 @@ namespace gpgmm { namespace d3d12 {
                            desc.HeapOffset,
                            desc.Method,
                            block,
-                           desc.SizeInBytes),
+                           desc.RequestSizeInBytes),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
