@@ -166,6 +166,7 @@ namespace gpgmm {
         if (outFile.is_open()) {
             WarningLog() << mTraceFile + " exists and will be overwritten.";
         }
+        outFile.close();
 
         // Re-open it but allow to be created.
         outFile.open(mTraceFile, std::ios_base::out);
