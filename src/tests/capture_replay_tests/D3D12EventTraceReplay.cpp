@@ -262,11 +262,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             }
                         }
 
-                        mReplayedAllocationStats.CurrentUsage += allocationWithoutID->GetSize();
-                        mReplayedAllocationStats.PeakUsage =
-                            std::max(mReplayedAllocationStats.CurrentUsage,
-                                     mReplayedAllocationStats.PeakUsage);
-
                         mReplayedMemoryStats.PeakUsage =
                             std::max(resourceAllocator->GetInfo().UsedMemoryUsage,
                                      mReplayedMemoryStats.PeakUsage);
@@ -283,27 +278,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 }
             } else if (event["name"].asString() == "ResourceAllocation") {
                 switch (*event["ph"].asCString()) {
-                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
-                        const std::string& allocationID = event["id"].asString();
-                        if (capturedAllocationInfo.find(allocationID) !=
-                            capturedAllocationInfo.end()) {
-                            continue;
-                        }
-
-                        const Json::Value& snapshot = event["args"]["snapshot"];
-
-                        RESOURCE_ALLOCATION_INFO allocationDesc = {};
-                        allocationDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
-
-                        mCapturedAllocationStats.CurrentUsage += allocationDesc.SizeInBytes;
-                        mCapturedAllocationStats.PeakUsage =
-                            std::max(mCapturedAllocationStats.PeakUsage,
-                                     mCapturedAllocationStats.CurrentUsage);
-
-                        ASSERT_TRUE(
-                            capturedAllocationInfo.insert({allocationID, allocationDesc}).second);
-                    } break;
-
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (allocationWithoutID == nullptr) {
                             continue;
@@ -323,24 +297,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
-
-                        auto it = capturedAllocationInfo.find(allocationID);
-                        if (it == capturedAllocationInfo.end()) {
-                            continue;
-                        }
-
-                        const RESOURCE_ALLOCATION_INFO& allocationDesc = it->second;
-                        mCapturedAllocationStats.CurrentUsage -= allocationDesc.SizeInBytes;
-
-                        ASSERT_EQ(capturedAllocationInfo.erase(allocationID), 1u);
-
                         if (createdAllocationToID.find(allocationID) ==
                             createdAllocationToID.end()) {
                             continue;
                         }
-
-                        mReplayedAllocationStats.CurrentUsage -=
-                            createdAllocationToID[allocationID]->GetSize();
 
                         mPlatformTime->StartElapsedTime();
 
@@ -570,17 +530,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         }
 
         EXPECT_TRUE(createdAllocatorToID.empty());
-        EXPECT_TRUE(capturedAllocationInfo.empty());
         EXPECT_TRUE(capturedHeapDesc.empty());
     }
 
     CaptureReplayCallStats mReplayedAllocateStats;
     CaptureReplayCallStats mReplayedDeallocateStats;
 
-    CaptureReplayMemoryStats mReplayedAllocationStats;
     CaptureReplayMemoryStats mReplayedMemoryStats;
-
-    CaptureReplayMemoryStats mCapturedAllocationStats;
     CaptureReplayMemoryStats mCapturedMemoryStats;
 };
 
@@ -595,6 +551,9 @@ TEST_P(D3D12EventTraceReplay, Recapture) {
 TEST_P(D3D12EventTraceReplay, Replay) {
     TestEnviromentParams forceParams = {};
     RunSingleTest(forceParams);
+
+    LogCallStats("Allocation(s)", mReplayedAllocateStats);
+    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 }
 
 // Verify that playback of a captured trace does not exceed peak usage.
@@ -605,10 +564,6 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
     RunSingleTest(forceParams);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
-    EXPECT_LE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
-
-    LogCallStats("Allocation(s)", mReplayedAllocateStats);
-    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 }
 
 // Verify that playback with pre-fetching enabled will succeed.
@@ -629,12 +584,7 @@ TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     forceParams.IsSuballocationDisabled = true;
 
     RunSingleTest(forceParams);
-
-    LogCallStats("Allocation(s)", mReplayedAllocateStats);
-    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
-
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
-    EXPECT_GE(mReplayedAllocationStats.PeakUsage, mCapturedAllocationStats.PeakUsage);
 }
 
 TEST_P(D3D12EventTraceReplay, NeverAllocate) {
@@ -644,7 +594,6 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     RunSingleTest(forceParams);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, 0u);
-    EXPECT_GE(mReplayedAllocationStats.PeakUsage, 0u);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
