@@ -13,6 +13,9 @@
 # limitations under the License.
 import("//build_overrides/gpgmm.gni")
 
+# Enable the compilation for UWP
+gpgmm_is_winuwp = is_win && target_os == "winuwp"
+
 if (!defined(gpgmm_standalone)) {
   gpgmm_standalone = false
 }
@@ -53,4 +56,26 @@ if (!defined(gpgmm_vk_tools_dir)) {
 
 if (!defined(gpgmm_vk_validation_layers_dir)) {
   gpgmm_vk_validation_layers_dir = ""
+}
+
+if (!defined(gpgmm_enable_d3d12)) {
+  gpgmm_enable_d3d12 = is_win
+}
+
+if (!defined(gpgmm_enable_vk)) {
+  gpgmm_enable_vk = is_linux || is_chromeos || (is_win && !gpgmm_is_winuwp) ||
+                    is_fuchsia || is_android
+}
+
+# Use our built version of the Vulkan validation layers
+if (!defined(gpgmm_enable_vk_validation_layers)) {
+  gpgmm_enable_vk_validation_layers =
+      gpgmm_enable_vk && ((is_linux && !is_chromeos) || is_win || is_mac)
+}
+
+# Use our built version of the Vulkan loader on platforms where we can't
+# assume to have one present at the system level.
+if (!defined(gpgmm_enable_vk_loader)) {
+  gpgmm_enable_vk_loader =
+      gpgmm_enable_vk && (is_mac || (is_linux && !is_android))
 }

@@ -14,9 +14,6 @@
 
 import("//build/config/gclient_args.gni")
 
-# Enable the compilation for UWP
-gpgmm_is_winuwp = is_win && target_os == "winuwp"
-
 # Non-standalone builds should not checkout integrations used for testing.
 # Rather then require GN clients to modify DEPS to disable,
 # always disable them here by default or when undefined.
@@ -36,13 +33,6 @@ declare_args() {
   # Enables event tracing even in release builds.
   # Sets -dGPGMM_FORCE_TRACING
   gpgmm_force_tracing = false
-
-  # Enables the compilation of the DirectX 12 backend.
-  gpgmm_enable_d3d12 = is_win
-
-  # Enables the compilation of the Vulkan backend
-  gpgmm_enable_vk = is_linux || is_chromeos || (is_win && !gpgmm_is_winuwp) ||
-                    is_fuchsia || is_android
 
   # Enables compilation of Dawn's end2end tests.
   gpgmm_enable_dawn = checkout_dawn
@@ -69,19 +59,6 @@ declare_args() {
   # Enables checking of device leaks.
   # Sets -dGPGMM_ENABLE_DEVICE_CHECKS
   gpgmm_enable_device_checks = false
-}
-
-# Declare separately since both depend on |gpgmm_enable_vk| and GN does not allow
-# args to depend on another args in the same declare_args().
-declare_args() {
-  # Uses our built version of the Vulkan validation layers
-  gpgmm_enable_vk_validation_layers =
-      gpgmm_enable_vk && ((is_linux && !is_chromeos) || is_win || is_mac)
-
-  # Uses our built version of the Vulkan loader on platforms where we can't
-  # assume to have one present at the system level.
-  gpgmm_enable_vk_loader =
-      gpgmm_enable_vk && (is_mac || (is_linux && !is_android))
 
   # Configures Vulkan functions by statically importing them (ie. importing the Vulkan loader symbols).
   gpgmm_vk_static_functions = true
