@@ -9,8 +9,6 @@ var searchData=
   ['loadinstancefunctions_6',['LoadInstanceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a51437b023b7731e8a9f14c91ae94ae3c',1,'gpgmm::vk::VulkanFunctions']]],
   ['lockheap_7',['LockHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#acd4b2d67bd10d99318ed1fb6444f58ee',1,'gpgmm::d3d12::ResidencyManager']]],
   ['log_8',['Log',['../namespacegpgmm.html#a1fb5946092920615e922bd2f43bf901c',1,'gpgmm']]],
-  ['log2_9',['Log2',['../namespacegpgmm.html#aa35db08debd14874693955f6c3f1d70f',1,'gpgmm::Log2(uint64_t number)'],['../namespacegpgmm.html#a174a2ff303e21d378c0fbef65b177f87',1,'gpgmm::Log2(uint32_t number)']]],
-  ['logcallstats_10',['LogCallStats',['../class_capture_replay_test_with_params.html#a611de1caefc57ea91e989aef53950d22',1,'CaptureReplayTestWithParams']]],
-  ['logmemorystats_11',['LogMemoryStats',['../class_capture_replay_test_with_params.html#a346eed20ce1f203073bcf0732ff4ab2a',1,'CaptureReplayTestWithParams']]],
-  ['logmessage_12',['LogMessage',['../classgpgmm_1_1_log_message.html#ae45b2448eb905ffc5de5ea7a22bf01b6',1,'gpgmm::LogMessage::LogMessage(LogMessage &amp;&amp;other)=default'],['../classgpgmm_1_1_log_message.html#abf2515ee7d0c10add109283153b6f36d',1,'gpgmm::LogMessage::LogMessage(LogSeverity severity)']]]
+  ['log2_9',['Log2',['../namespacegpgmm.html#a174a2ff303e21d378c0fbef65b177f87',1,'gpgmm::Log2(uint32_t number)'],['../namespacegpgmm.html#aa35db08debd14874693955f6c3f1d70f',1,'gpgmm::Log2(uint64_t number)']]],
+  ['logmessage_10',['LogMessage',['../classgpgmm_1_1_log_message.html#abf2515ee7d0c10add109283153b6f36d',1,'gpgmm::LogMessage::LogMessage(LogSeverity severity)'],['../classgpgmm_1_1_log_message.html#ae45b2448eb905ffc5de5ea7a22bf01b6',1,'gpgmm::LogMessage::LogMessage(LogMessage &amp;&amp;other)=default']]]
 ];
