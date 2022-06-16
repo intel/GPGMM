@@ -244,13 +244,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
                         }
 
-                        mPlatformTime->StartElapsedTime();
-
                         HRESULT hr = resourceAllocator->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
                             clearValuePtr, &allocationWithoutID);
-
-                        const double elapsedTime = mPlatformTime->EndElapsedTime();
 
                         if (FAILED(hr)) {
                             if (envParams.IsNeverAllocate) {
@@ -266,9 +262,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             std::max(resourceAllocator->GetInfo().UsedMemoryUsage,
                                      mReplayedMemoryStats.PeakUsage);
 
-                        mReplayedAllocateStats.TotalCpuTime += elapsedTime;
-                        mReplayedAllocateStats.PeakCpuTime =
-                            std::max(elapsedTime, mReplayedAllocateStats.PeakCpuTime);
                         mReplayedAllocateStats.TotalNumOfCalls++;
 
                     } break;
@@ -302,17 +295,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        mPlatformTime->StartElapsedTime();
-
                         const bool didDeallocate = createdAllocationToID.erase(allocationID);
-
-                        const double elapsedTime = mPlatformTime->EndElapsedTime();
-
                         ASSERT_TRUE(didDeallocate || envParams.IsNeverAllocate);
 
-                        mReplayedDeallocateStats.TotalCpuTime += elapsedTime;
-                        mReplayedDeallocateStats.PeakCpuTime =
-                            std::max(elapsedTime, mReplayedDeallocateStats.PeakCpuTime);
                         mReplayedDeallocateStats.TotalNumOfCalls++;
 
                     } break;
@@ -540,8 +525,8 @@ TEST_P(D3D12EventTraceReplay, Replay) {
 
     RunSingleTest(forceParams);
 
-    LogCallStats("Allocation(s)", mReplayedAllocateStats);
-    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
+    EXPECT_EQ(mReplayedAllocateStats.TotalNumOfCalls, mReplayedAllocateStats.TotalNumOfCalls);
+    EXPECT_EQ(mReplayedDeallocateStats.TotalNumOfCalls, mReplayedDeallocateStats.TotalNumOfCalls);
 }
 
 // Verify that playback of a captured trace does not exceed peak usage.
@@ -551,7 +536,9 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
 
     RunSingleTest(forceParams);
 
-    gpgmm::InfoLog() << "GPU memory (peak): " << mReplayedMemoryStats.PeakUsage / 1e6 << " MB";
+    gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
+                     << mCapturedMemoryStats.PeakUsage / 1e6 << " vs "
+                     << mReplayedMemoryStats.PeakUsage / 1e6 << " MB";
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }
@@ -562,9 +549,6 @@ TEST_P(D3D12EventTraceReplay, AllowPrefetch) {
     forceParams.IsPrefetchAllowed = true;
 
     RunTestLoop(forceParams);
-
-    LogCallStats("Allocation(s)", mReplayedAllocateStats);
-    LogCallStats("Deallocation(s)", mReplayedDeallocateStats);
 }
 
 // Verify no heap re-use through sub-allocation will succeed.
@@ -578,6 +562,7 @@ TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }
 
+// Verify that playback with memory creation disabled will succeed.
 TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     TestEnviromentParams forceParams = {};
     forceParams.IsNeverAllocate = true;

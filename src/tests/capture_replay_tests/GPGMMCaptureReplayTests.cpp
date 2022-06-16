@@ -278,11 +278,3 @@ void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceP
         RunTest(GetParam(), envParams, i);
     }
 }
-
-void CaptureReplayTestWithParams::LogCallStats(const std::string& name,
-                                               const CaptureReplayCallStats& stats) const {
-    const double avgCpuTimePerCallInMs =
-        (stats.TotalCpuTime * 1e3) / ((stats.TotalNumOfCalls == 0) ? 1 : stats.TotalNumOfCalls);
-    gpgmm::InfoLog() << name << " per second: " << (1e3 / avgCpuTimePerCallInMs)
-                     << " (peak: " << (stats.PeakCpuTime * 1e3) << " ms)";
-}

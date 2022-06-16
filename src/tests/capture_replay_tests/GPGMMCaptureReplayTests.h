@@ -32,8 +32,6 @@ struct TraceFile {
 };
 
 struct CaptureReplayCallStats {
-    double TotalCpuTime = 0;
-    double PeakCpuTime = 0;
     uint64_t TotalNumOfCalls = 0;
 };
 
@@ -86,9 +84,6 @@ class GPGMMCaptureReplayTestEnvironment : public GPGMMTestEnvironment {
 class CaptureReplayTestWithParams : public testing::TestWithParam<TraceFile> {
   public:
     CaptureReplayTestWithParams();
-
-    void LogCallStats(const std::string& name, const CaptureReplayCallStats& stats) const;
-    void LogMemoryStats(const std::string& name, const CaptureReplayMemoryStats& stats) const;
 
     template <class ParamType>
     static std::string CustomPrintToStringParamName(
