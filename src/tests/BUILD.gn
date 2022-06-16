@@ -23,9 +23,8 @@ group("gpgmm_tests") {
   deps = [
     ":gpgmm_capture_replay_tests",
     ":gpgmm_end2end_tests",
+    ":gpgmm_perftests",
     ":gpgmm_unittests",
-
-    # TODO: ":gpgmm_perf_tests",
   ]
 }
 
@@ -296,4 +295,28 @@ test("gpgmm_capture_replay_tests") {
   if (is_chromeos) {
     libs += [ "gbm" ]
   }
+}
+
+###############################################################################
+# Performance tests
+###############################################################################
+
+test("gpgmm_perftests") {
+  configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
+
+  deps = [
+    "${gpgmm_root_dir}/src/gpgmm:gpgmm_sources",
+    "//third_party/google_benchmark:google_benchmark",
+  ]
+
+  # Benchmark.h emits clang "enumerator value is not representable" warning
+  # over the statement: "kInvert = 1U << 31U".
+  if (is_clang) {
+    cflags = [ "-Wno-microsoft-enum-value" ]
+  }
+
+  sources = [
+    "DummyMemoryAllocator.h",
+    "perftests/MemoryAllocatorPerfTests.cpp",
+  ]
 }

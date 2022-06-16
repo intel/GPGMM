@@ -103,6 +103,10 @@ deps = {
     'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@9059f5cad030ba11d37818847443a53918c327b1',
     'condition': 'gpgmm_standalone',
   },
+  'third_party/google_benchmark/src': {
+    'url': '{chromium_git}/external/github.com/google/benchmark.git@f730846b0a3c0dc0699978846fb14ffb2fad0bdc',
+    'condition': 'gpgmm_standalone',
+  },
 }
 
 hooks = [

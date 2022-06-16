@@ -15,6 +15,7 @@
 /third_party/vulkan*
 /third_party/webnn_native
 /third_party/libFuzzer
+/third_party/benchmark*
 /tools
 /out
 

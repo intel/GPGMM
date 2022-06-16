@@ -37,6 +37,15 @@ if (GPGMM_ENABLE_TESTS)
     GIT_TAG        9059f5cad030ba11d37818847443a53918c327b1
   )
   FetchContent_MakeAvailable(jsoncpp)
+
+	set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+  FetchContent_Declare(
+    benchmark
+    GIT_REPOSITORY https://github.com/google/benchmark.git
+    GIT_TAG        f730846b0a3c0dc0699978846fb14ffb2fad0bdc
+  )
+  FetchContent_MakeAvailable(benchmark)
+
 endif() # GPGMM_ENABLE_TESTS
 
 if (GPGMM_ENABLE_VK)
