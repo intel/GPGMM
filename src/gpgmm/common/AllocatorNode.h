@@ -21,24 +21,48 @@
 
 namespace gpgmm {
 
-    // Stores allocators as a doubly-linked list.
-    // A allocator becomes a linked node where allocations made between the parent and the next
-    // allocator form a one-way edge (ie. child sub-allocates parent's allocation). This results in
-    // trivial lifetime management and traversals.
+    /** \brief AllocatorNode stores one or more allocators in a intrusive LinkedList.
+
+    AllocatorNode can also be created with another AllocatorNode. AllocatorNode represents
+    a chain where allocations made between the first-order AllocatorNode (or parent)
+    and the next AllocatorNode (or child) form a one-way edge.
+    */
     template <typename T>
     class AllocatorNode : public LinkNode<T> {
       public:
+        /** \brief Construct a AllocatorNode.
+         */
         AllocatorNode() = default;
+
+        /** \brief Constructs a AllocatorNode using another AllocatorNode.
+
+        @param next Pointer of next node to add to chain.
+        */
         explicit AllocatorNode(std::unique_ptr<T> next);
+
+        /** \brief Destruct a AllocatorNode.
+
+        If the AllocatorNode was in a LinkedList, it will be removed.
+        If the AllocatorNode was connected, it will destroy them before itself.
+        */
         virtual ~AllocatorNode();
 
+        /** \brief Return the next AllocatorNode.
+
+        \return Pointer of next node in chain.
+        */
         T* GetNextInChain() const;
+
+        /** \brief Return the previous AllocatorNode.
+
+        \return Pointer of previous node in chain.
+        */
         T* GetParent() const;
 
       private:
-        T* InsertIntoChain(std::unique_ptr<T> next);
+        void InsertIntoChain(std::unique_ptr<T> next);
 
-        LinkedList<T> mNext;
+        AllocatorNode<T>* mNext = nullptr;
         T* mParent = nullptr;
     };
 
