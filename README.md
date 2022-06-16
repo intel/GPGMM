@@ -113,10 +113,18 @@ BUILD.gn
 
 ```gn
 source_set("proj") {
-  deps = [ "${gpgmm_dir}:gpgmm" ]
+  deps = [ "${gpgmm_dir}:src/gpgmm" ]
 }
 ```
+
 Create `build_overrides/gpgmm.gni` file in root directory.
+
+To build with a backend, add the corresponding argument from following table in ``build_overrides/gpgmm.gni`:
+
+| Backend | Build override argument |
+|---------|--------------|
+| DirectX 12 | `gpgmm_enable_d3d12=true` |
+| Vulkan | `gpgmm_enable_vk=true` |
 
 ### CMake
 
@@ -211,13 +219,6 @@ Get the source code as follows:
 Generate build files using `gn args out/Debug` or `gn args out/Release`.
 
 A text editor will appear asking build arguments, the most common argument is `is_debug=true/false`; otherwise `gn args out/Release --list` shows all the possible options.
-
-To build with a backend, please set the corresponding argument from following table.
-
-| Backend | Build argument |
-|---------|--------------|
-| DirectX 12 | `gpgmm_enable_d3d12=true` |
-| Vulkan | `gpgmm_enable_vk=true` |
 
 ### Build
 
