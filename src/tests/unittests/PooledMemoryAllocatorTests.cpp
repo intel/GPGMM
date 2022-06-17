@@ -42,10 +42,6 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
                                     std::make_unique<DummyMemoryAllocator>());
 
-    std::unique_ptr<MemoryAllocation> invalidAllocation =
-        allocator.TryAllocateMemory(CreateBasicRequest(0, kDefaultMemoryAlignment));
-    ASSERT_EQ(invalidAllocation, nullptr);
-
     std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
     ASSERT_NE(allocation, nullptr);

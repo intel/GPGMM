@@ -420,7 +420,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(request.SizeInBytes);
+        GPGMM_ASSERT_NONZERO(request);
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
 

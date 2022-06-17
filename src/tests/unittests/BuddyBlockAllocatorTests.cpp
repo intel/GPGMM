@@ -53,9 +53,6 @@ TEST(BuddyBlockAllocatorTests, SingleBlock) {
     // Check that we cannot allocate a oversized block.
     ASSERT_EQ(allocator.TryAllocateBlock(maxBlockSize * 2), nullptr);
 
-    // Check that we cannot allocate a zero sized block.
-    ASSERT_EQ(allocator.TryAllocateBlock(0u), nullptr);
-
     // Allocate the block.
     MemoryBlock* block = allocator.TryAllocateBlock(maxBlockSize);
     ASSERT_EQ(block->Offset, 0u);

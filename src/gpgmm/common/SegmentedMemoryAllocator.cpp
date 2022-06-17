@@ -133,7 +133,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(request.SizeInBytes);
+        GPGMM_ASSERT_NONZERO(request);
 
         GPGMM_INVALID_IF(request.Alignment != mMemoryAlignment, EventMessageId::AlignmentMismatch,
                          "Allocation alignment must match memory alignment (" +
