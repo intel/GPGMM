@@ -60,7 +60,7 @@ namespace gpgmm {
 #endif
 
         if (mSeverity >= GetEventMessageLevel()) {
-            EVENT_MESSAGE message{description, mMessageId};
+            EventMessageInfo message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
     }

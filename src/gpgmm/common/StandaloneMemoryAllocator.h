@@ -28,11 +28,11 @@ namespace gpgmm {
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
-            const MEMORY_ALLOCATION_REQUEST& request) override;
+            const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
         uint64_t GetMemoryAlignment() const override;
 
-        MEMORY_ALLOCATOR_INFO GetInfo() const override;
+        MemoryAllocatorInfo GetInfo() const override;
         const char* GetTypename() const override;
     };
 

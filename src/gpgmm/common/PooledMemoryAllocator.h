@@ -31,7 +31,7 @@ namespace gpgmm {
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
-            const MEMORY_ALLOCATION_REQUEST& request) override;
+            const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
         uint64_t GetMemorySize() const override;

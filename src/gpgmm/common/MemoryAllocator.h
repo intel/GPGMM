@@ -31,10 +31,10 @@
 
 namespace gpgmm {
 
-    /** \struct MEMORY_ALLOCATOR_INFO
+    /** \struct MemoryAllocatorInfo
     Information about the memory allocator.
     */
-    struct MEMORY_ALLOCATOR_INFO {
+    struct MemoryAllocatorInfo {
         /** \brief Number of used sub-allocated blocks within the same memory.
          */
         uint32_t UsedBlockCount;
@@ -71,7 +71,7 @@ namespace gpgmm {
          */
         uint64_t CacheSizeHits;
 
-        MEMORY_ALLOCATOR_INFO& operator+=(const MEMORY_ALLOCATOR_INFO& rhs) {
+        MemoryAllocatorInfo& operator+=(const MemoryAllocatorInfo& rhs) {
             UsedBlockCount += rhs.UsedBlockCount;
             UsedBlockUsage += rhs.UsedBlockUsage;
             FreeMemoryUsage += rhs.FreeMemoryUsage;
@@ -90,8 +90,17 @@ namespace gpgmm {
 
     class AllocateMemoryTask;
 
+    /** \brief MemoryAllocationEvent
+
+    Event used to notify caller when AllocateMemoryTask has completed.
+    */
     class MemoryAllocationEvent final : public Event {
       public:
+        /** \brief Construct a MemoryAllocationEvent.
+
+        @param event Pointer to Event, which gets signaled when memory gets allocated.
+        @param task Pointer to Task, which runs allocate memory.
+        */
         MemoryAllocationEvent(std::shared_ptr<Event> event,
                               std::shared_ptr<AllocateMemoryTask> task);
 
@@ -100,6 +109,10 @@ namespace gpgmm {
         bool IsSignaled() override;
         void Signal() override;
 
+        /** \brief Acquire the memory allocation.
+
+        \return Pointer to MemoryAllocation that was allocated.
+        */
         std::unique_ptr<MemoryAllocation> AcquireAllocation() const;
 
       private:
@@ -107,10 +120,10 @@ namespace gpgmm {
         std::shared_ptr<Event> mEvent;
     };
 
-    /** \struct MEMORY_ALLOCATION_REQUEST
+    /** \struct MemoryAllocationRequest
     Describes a request to allocate memory.
     */
-    struct MEMORY_ALLOCATION_REQUEST {
+    struct MemoryAllocationRequest {
         /** \brief Request the size, in bytes, of the allocation.
 
         The requested allocation size is the minimum size required to allocate.
@@ -151,7 +164,7 @@ namespace gpgmm {
         uint64_t AvailableForAllocation;
     };
 
-    /** \brief MemoryAllocator services a fixed or variable sized MEMORY_ALLOCATION_REQUEST.
+    /** \brief MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.
 
     Internally, MemoryAllocator sub-allocates existing memory objects into smaller chucks
     (called memory blocks) or allocates whole memory objects then decides which memory blocks
@@ -181,12 +194,12 @@ namespace gpgmm {
         requested alignment. If it cannot, return nullptr. The returned allocation is only valid for
         the lifetime of MemoryAllocator.
 
-        @param request A MEMORY_ALLOCATION_REQUEST to describes what to allocate.
+        @param request A MemoryAllocationRequest to describes what to allocate.
 
         \return A pointer to MemoryAllocation. If NULL, the request could not be full-filled.
         */
         virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(
-            const MEMORY_ALLOCATION_REQUEST& request);
+            const MemoryAllocationRequest& request);
 
         /** \brief Non-blocking version of TryAllocateMemory.
 
@@ -195,7 +208,7 @@ namespace gpgmm {
         \return A pointer to MemoryAllocationEvent. Must be non-null.
         */
         std::shared_ptr<MemoryAllocationEvent> TryAllocateMemoryAsync(
-            const MEMORY_ALLOCATION_REQUEST& request);
+            const MemoryAllocationRequest& request);
 
         /** \brief Free a memory allocation.
 
@@ -241,9 +254,9 @@ namespace gpgmm {
         Should be overridden when a child or block allocator is used to avoid
         over-counting.
 
-        \return A MEMORY_ALLOCATOR_INFO struct containing the current usage.
+        \return A MemoryAllocatorInfo struct containing the current usage.
         */
-        virtual MEMORY_ALLOCATOR_INFO GetInfo() const;
+        virtual MemoryAllocatorInfo GetInfo() const;
 
         /** \brief Identifies the allocator type.
 
@@ -284,7 +297,7 @@ namespace gpgmm {
                 nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
         }
 
-        MEMORY_ALLOCATOR_INFO mInfo = {};
+        MemoryAllocatorInfo mInfo = {};
 
         mutable std::mutex mMutex;
         std::shared_ptr<ThreadPool> mThreadPool;

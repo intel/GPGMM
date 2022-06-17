@@ -30,7 +30,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATOR_INFO& info) {
         return gpgmm::JSONSerializer::Serialize(info);
     }
 

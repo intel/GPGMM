@@ -23,8 +23,8 @@ static uint64_t kDefaultMemorySize = 128u;
 
 class MemoryPoolTests : public testing::Test {
   public:
-    MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size) {
-        MEMORY_ALLOCATION_REQUEST request = {};
+    MemoryAllocationRequest CreateBasicRequest(uint64_t size) {
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = size;
         request.Alignment = 1;
         return request;

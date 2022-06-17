@@ -24,16 +24,16 @@
 
 namespace gpgmm {
 
-    enum EVENT_MESSAGE_ID {
-        MESSAGE_ID_UNKNOWN,
-        MESSAGE_ID_SIZE_EXCEEDED,
-        MESSAGE_ID_ALIGNMENT_MISMATCH,
-        MESSAGE_ID_ALLOCATOR_FAILED,
-        MESSAGE_ID_PREFETCH_FAILED,
-        MESSAGE_ID_BUDGET_EXCEEDED
+    enum EventMessageId {
+        Unknown,
+        SizeExceeded,
+        AlignmentMismatch,
+        AllocatorFailed,
+        PrefetchFailed,
+        BudgetExceeded
     };
 
-    struct EVENT_MESSAGE {
+    struct EventMessageInfo {
         std::string Description;
         int ID;
     };
@@ -42,7 +42,7 @@ namespace gpgmm {
       public:
         EventMessage(const LogSeverity& level,
                      const char* name,
-                     int messageId = MESSAGE_ID_UNKNOWN);
+                     int messageId = EventMessageId::Unknown);
         ~EventMessage();
 
         EventMessage(EventMessage&& other) = default;
@@ -62,10 +62,10 @@ namespace gpgmm {
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage InfoEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage WarnEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
-    EventMessage ErrorEvent(const char* name, int messageId = MESSAGE_ID_UNKNOWN);
+    EventMessage DebugEvent(const char* name, int messageId = EventMessageId::Unknown);
+    EventMessage InfoEvent(const char* name, int messageId = EventMessageId::Unknown);
+    EventMessage WarnEvent(const char* name, int messageId = EventMessageId::Unknown);
+    EventMessage ErrorEvent(const char* name, int messageId = EventMessageId::Unknown);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);

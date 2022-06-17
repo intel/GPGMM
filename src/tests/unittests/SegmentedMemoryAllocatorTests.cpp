@@ -22,8 +22,8 @@ using namespace gpgmm;
 static constexpr uint64_t kDefaultMemorySize = 128u;
 static constexpr uint64_t kDefaultMemoryAlignment = 1u;
 
-MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size, uint64_t alignment) {
-    MEMORY_ALLOCATION_REQUEST request = {};
+MemoryAllocationRequest CreateBasicRequest(uint64_t size, uint64_t alignment) {
+    MemoryAllocationRequest request = {};
     request.SizeInBytes = size;
     request.Alignment = alignment;
     request.NeverAllocate = false;

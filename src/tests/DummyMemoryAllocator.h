@@ -30,7 +30,7 @@ namespace gpgmm {
         }
 
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
-            const MEMORY_ALLOCATION_REQUEST& request) override {
+            const MemoryAllocationRequest& request) override {
             TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.TryAllocateMemory");
 
             std::lock_guard<std::mutex> lock(mMutex);

@@ -69,7 +69,7 @@ namespace gpgmm {
         return !operator==(other);
     }
 
-    MEMORY_ALLOCATION_INFO MemoryAllocation::GetInfo() const {
+    MemoryAllocationInfo MemoryAllocation::GetInfo() const {
         return {GetSize(), GetAlignment()};
     }
 

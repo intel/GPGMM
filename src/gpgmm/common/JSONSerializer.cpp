@@ -28,22 +28,22 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_POOL_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const MemoryPoolInfo& info) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", info.SizeInBytes);
         return dict;
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const EVENT_MESSAGE& desc) {
+    JSONDict JSONSerializer::Serialize(const EventMessageInfo& info) {
         JSONDict dict;
-        dict.AddItem("Description", desc.Description);
-        dict.AddItem("ID", desc.ID);
+        dict.AddItem("Description", info.Description);
+        dict.AddItem("ID", info.ID);
         return dict;
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATOR_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const MemoryAllocatorInfo& info) {
         JSONDict dict;
         dict.AddItem("UsedBlockCount", info.UsedBlockCount);
         dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);
@@ -54,7 +54,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATION_REQUEST& desc) {
+    JSONDict JSONSerializer::Serialize(const MemoryAllocationRequest& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
@@ -66,7 +66,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MEMORY_ALLOCATION_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const MemoryAllocationInfo& info) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", info.SizeInBytes);
         dict.AddItem("Alignment", info.Alignment);

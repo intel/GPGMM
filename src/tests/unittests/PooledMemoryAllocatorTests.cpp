@@ -24,10 +24,10 @@ static constexpr uint64_t kDefaultMemoryAlignment = 1u;
 
 class PooledMemoryAllocatorTests : public testing::Test {
   public:
-    MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size,
-                                                 uint64_t alignment,
-                                                 bool neverAllocate = false) {
-        MEMORY_ALLOCATION_REQUEST request = {};
+    MemoryAllocationRequest CreateBasicRequest(uint64_t size,
+                                               uint64_t alignment,
+                                               bool neverAllocate = false) {
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = size;
         request.Alignment = alignment;
         request.NeverAllocate = neverAllocate;

@@ -143,12 +143,12 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, EventMessageId::SizeExceeded,
                          "Allocation size exceeded the block size (" +
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mBlockSize) + " bytes).");
@@ -156,7 +156,7 @@ namespace gpgmm {
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize),
                             request.AvailableForAllocation);
-        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, EventMessageId::SizeExceeded,
                          "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
                              " vs " + std::to_string(mMaxSlabSize) + " bytes).");
 
@@ -233,7 +233,7 @@ namespace gpgmm {
                             return pFreeSlab->SlabMemory->GetMemory();
                         }
 
-                        DebugEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
+                        DebugEvent(GetTypename(), EventMessageId::PrefetchFailed)
                             << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                             << prefetchedMemory->GetSize() << " bytes.";
 
@@ -243,7 +243,7 @@ namespace gpgmm {
                     }
 
                     // Create memory of specified slab size.
-                    MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
+                    MemoryAllocationRequest newSlabRequest = request;
                     newSlabRequest.SizeInBytes = slabSize;
                     newSlabRequest.Alignment = mSlabAlignment;
                     newSlabRequest.AlwaysPrefetch = false;
@@ -274,7 +274,7 @@ namespace gpgmm {
                             static_cast<double>(mInfo.PrefetchedMemoryMissesEliminated +
                                                 mInfo.PrefetchedMemoryMisses));
             if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-                WarnEvent(GetTypename(), MESSAGE_ID_PREFETCH_FAILED)
+                WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
                     << "Allow prefetch disabled, coverage went below threshold: ("
                     << currentCoverage * 100 << " vs " << kPrefetchCoverageWarnMinThreshold * 100
                     << "%";
@@ -311,7 +311,7 @@ namespace gpgmm {
             }
 
             if (nextSlabSize <= kSlabPrefetchMemorySizeThreshold) {
-                MEMORY_ALLOCATION_REQUEST newSlabRequest = request;
+                MemoryAllocationRequest newSlabRequest = request;
                 newSlabRequest.SizeInBytes = nextSlabSize;
                 newSlabRequest.Alignment = mSlabAlignment;
                 newSlabRequest.AlwaysPrefetch = false;
@@ -375,10 +375,10 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO SlabMemoryAllocator::GetInfo() const {
+    MemoryAllocatorInfo SlabMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        MEMORY_ALLOCATOR_INFO result = mInfo;
-        const MEMORY_ALLOCATOR_INFO& info = mMemoryAllocator->GetInfo();
+        MemoryAllocatorInfo result = mInfo;
+        const MemoryAllocatorInfo& info = mMemoryAllocator->GetInfo();
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
         result.FreeMemoryUsage = info.FreeMemoryUsage;
@@ -415,7 +415,7 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
@@ -469,12 +469,12 @@ namespace gpgmm {
         }
     }
 
-    MEMORY_ALLOCATOR_INFO SlabCacheAllocator::GetInfo() const {
+    MemoryAllocatorInfo SlabCacheAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MEMORY_ALLOCATOR_INFO result = {};
+        MemoryAllocatorInfo result = {};
         for (const auto& entry : mSizeCache) {
-            const MEMORY_ALLOCATOR_INFO& info = entry->GetValue().pSlabAllocator->GetInfo();
+            const MemoryAllocatorInfo& info = entry->GetValue().pSlabAllocator->GetInfo();
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedBlockUsage += info.UsedBlockUsage;
             result.PrefetchedMemoryMisses += info.PrefetchedMemoryMisses;
@@ -482,7 +482,7 @@ namespace gpgmm {
         }
 
         // Memory allocator is common across slab allocators.
-        const MEMORY_ALLOCATOR_INFO& info = GetNextInChain()->GetInfo();
+        const MemoryAllocatorInfo& info = GetNextInChain()->GetInfo();
         result.FreeMemoryUsage = info.FreeMemoryUsage;
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;

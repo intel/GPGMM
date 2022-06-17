@@ -23,10 +23,10 @@ namespace gpgmm {
 
     class MemoryAllocation;
 
-    /** \struct MEMORY_POOL_INFO
+    /** \struct MemoryPoolInfo
     Additional information about the memory pool.
     */
-    struct MEMORY_POOL_INFO {
+    struct MemoryPoolInfo {
         /** \brief Total size of the pool, in bytes.
          */
         uint64_t SizeInBytes;
@@ -88,9 +88,9 @@ namespace gpgmm {
 
         /** \brief Returns information about this memory pool.
 
-        \return A MEMORY_POOL_INFO struct containing the information.
+        \return A MemoryPoolInfo struct containing the information.
         */
-        MEMORY_POOL_INFO GetInfo() const;
+        MemoryPoolInfo GetInfo() const;
 
         /** \brief Returns the class name of this allocation.
 

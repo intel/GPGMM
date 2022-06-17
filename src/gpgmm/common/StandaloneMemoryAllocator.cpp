@@ -24,7 +24,7 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> StandaloneMemoryAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
@@ -52,9 +52,9 @@ namespace gpgmm {
         GetNextInChain()->DeallocateMemory(std::move(allocation));
     }
 
-    MEMORY_ALLOCATOR_INFO StandaloneMemoryAllocator::GetInfo() const {
+    MemoryAllocatorInfo StandaloneMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        MEMORY_ALLOCATOR_INFO result = mInfo;
+        MemoryAllocatorInfo result = mInfo;
         result += GetNextInChain()->GetInfo();
         return result;
     }

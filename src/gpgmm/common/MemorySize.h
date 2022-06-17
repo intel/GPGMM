@@ -17,19 +17,19 @@
 
 namespace gpgmm {
 
-    struct MEMORY_SIZE_INFO {
+    struct MemorySizeInfo {
         uint64_t SizeInBytes;
     };
 
     class MemorySize {
       public:
         static const size_t kPowerOfTwoClassSize;
-        static const MEMORY_SIZE_INFO kPowerOfTwoCacheSizes[];
+        static const MemorySizeInfo kPowerOfTwoCacheSizes[];
     };
 
     // clang-format off
     const size_t MemorySize::kPowerOfTwoClassSize = 27;
-    const MEMORY_SIZE_INFO MemorySize::kPowerOfTwoCacheSizes[MemorySize::kPowerOfTwoClassSize] = {
+    const MemorySizeInfo MemorySize::kPowerOfTwoCacheSizes[MemorySize::kPowerOfTwoClassSize] = {
       {1},
       {2},
       {4},

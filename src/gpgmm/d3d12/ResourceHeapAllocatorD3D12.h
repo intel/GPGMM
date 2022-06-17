@@ -35,7 +35,7 @@ namespace gpgmm::d3d12 {
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
-            const MEMORY_ALLOCATION_REQUEST& request) override;
+            const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         const char* GetTypename() const override;
