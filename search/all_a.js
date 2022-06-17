@@ -10,7 +10,7 @@ var searchData=
   ['knone_7',['kNone',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaab2c38b0fa4886a1d8fe0cd2bfbe0e07d',1,'gpgmm::Desc']]],
   ['knvidia_5fvkvendor_8',['kNvidia_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba4ec7c1db24b7d68e5e13b776554286a0',1,'gpgmm']]],
   ['kone_9',['kOne',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a823b43fdd917ccf755d892b43e66add8',1,'gpgmm']]],
-  ['kpoweroftwocachesizes_10',['kPowerOfTwoCacheSizes',['../classgpgmm_1_1_memory_size.html#a5ea28fe4f636926dc1d692613ef86923',1,'gpgmm::MemorySize']]],
+  ['kpoweroftwocachesizes_10',['kPowerOfTwoCacheSizes',['../classgpgmm_1_1_memory_size.html#a092e109c012fbf86aca66d9e391f7576',1,'gpgmm::MemorySize']]],
   ['kpoweroftwoclasssize_11',['kPowerOfTwoClassSize',['../classgpgmm_1_1_memory_size.html#a87d91cc4cf01e2772b6359a94d85f1c7',1,'gpgmm::MemorySize']]],
   ['kqualcomm_5fvkvendor_12',['kQualcomm_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba7f7e8040f9b0ca03f7d108e2ec6a89d6',1,'gpgmm']]],
   ['ksecond_13',['kSecond',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cdaaa186e75aa5599a9c08064cdd56fd235a',1,'gpgmm::Desc']]],

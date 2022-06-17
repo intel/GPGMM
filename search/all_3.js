@@ -32,7 +32,7 @@ var searchData=
   ['define_5foperators_5ffor_5fflags_29',['DEFINE_OPERATORS_FOR_FLAGS',['../_flags_8h.html#a54054e7fb2195df4be3a3bee7f07bb34',1,'Flags.h']]],
   ['deletethis_30',['DeleteThis',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a6b125e84fc9a47302e56d20808a60fc3',1,'gpgmm::d3d12::IUnknownImpl']]],
   ['desc_31',['Desc',['../structgpgmm_1_1_desc.html',1,'gpgmm']]],
-  ['description_32',['Description',['../structgpgmm_1_1_e_v_e_n_t___m_e_s_s_a_g_e.html#a10f34e7493d33325cb66f83f8e9d550a',1,'gpgmm::EVENT_MESSAGE']]],
+  ['description_32',['Description',['../structgpgmm_1_1_event_message_info.html#af5389abd31f35808bf75d223ac8ff59c',1,'gpgmm::EventMessageInfo']]],
   ['destroybuffer_33',['DestroyBuffer',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a5b38432f6894b225397bb4acfa31ad44',1,'gpgmm::vk::VulkanFunctions']]],
   ['destroyimage_34',['DestroyImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#ac75229aa0618a442f8e37ac3cfcd6f0f',1,'gpgmm::vk::VulkanFunctions']]],
   ['detach_35',['Detach',['../classgpgmm_1_1_scoped_ref.html#af3adac8c781999245303e89c551543ca',1,'gpgmm::ScopedRef']]],

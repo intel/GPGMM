@@ -14,7 +14,7 @@ var searchData=
   ['memorysegmentgroup_11',['MemorySegmentGroup',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc',1,'gpgmm::d3d12::HEAP_DESC']]],
   ['memoryusage_12',['MemoryUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html#a5da9b28df57ea9bdce1b76e1090d7198',1,'gpgmm::d3d12::RESIDENCY_INFO']]],
   ['method_13',['Method',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a8ab76e5fe780f00640a70c2fd27986c2',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]],
-  ['minfo_14',['mInfo',['../classgpgmm_1_1_memory_allocator.html#abb48e6e173b0bf1f9114eabd061c999b',1,'gpgmm::MemoryAllocator']]],
+  ['minfo_14',['mInfo',['../classgpgmm_1_1_memory_allocator.html#ac65c051373cb04ad999ad9affaa006ef',1,'gpgmm::MemoryAllocator']]],
   ['minloglevel_15',['MinLogLevel',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a4bfa70f54b3fd335ccd3fae33f7d4d2b',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['minmessagelevel_16',['MinMessageLevel',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a52f9ccb994d6dfb3629fa7f762bcde8e',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]],
   ['minstance_17',['mInstance',['../classgpgmm_1_1vk_1_1_v_k_test_base.html#adfaee1a330a8eef1e3b58391cfb9a1dc',1,'gpgmm::vk::VKTestBase']]],

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['name_0',['name',['../struct_trace_file.html#a86e9dc6e842f180b7a7b6e3ad5f4bd2c',1,'TraceFile']]],
-  ['neverallocate_1',['NeverAllocate',['../structgpgmm_1_1_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___r_e_q_u_e_s_t.html#a7d7b04df4ac858359500cccb4795981a',1,'gpgmm::MEMORY_ALLOCATION_REQUEST']]],
+  ['neverallocate_1',['NeverAllocate',['../structgpgmm_1_1_memory_allocation_request.html#a1df833f8fdeb428443df6f730b64a5b8',1,'gpgmm::MemoryAllocationRequest']]],
   ['next_2',['next',['../classgpgmm_1_1_link_node.html#af130013a33a0163a6dcf4515825a7ab8',1,'gpgmm::LinkNode']]],
   ['nextpoweroftwo_3',['NextPowerOfTwo',['../namespacegpgmm.html#a7105ddb398cb2ce2e5b8c5823cb12ec7',1,'gpgmm']]],
   ['noncopyable_4',['NonCopyable',['../classgpgmm_1_1_non_copyable.html',1,'gpgmm::NonCopyable'],['../classgpgmm_1_1_non_copyable.html#a588c58b8330a3d62608141c07a4132bf',1,'gpgmm::NonCopyable::NonCopyable()=default'],['../classgpgmm_1_1_non_copyable.html#a87e9480f0d92752ea967c83b79c064b8',1,'gpgmm::NonCopyable::NonCopyable(NonCopyable &amp;&amp;)=default']]],

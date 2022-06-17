@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['id_0',['ID',['../structgpgmm_1_1_e_v_e_n_t___m_e_s_s_a_g_e.html#a6ae96b9e697dab741fb04368a75efe17',1,'gpgmm::EVENT_MESSAGE']]],
+  ['id_0',['ID',['../structgpgmm_1_1_event_message_info.html#a494da1d16d5f0192f77b723f2de661f5',1,'gpgmm::EventMessageInfo']]],
   ['initialfencevalue_1',['InitialFenceValue',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
   ['initialresourcestate_2',['initialResourceState',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#ab4602b1a85f5c43af0465459e0bbb276',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
   ['instance_3',['instance',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#af157a51c98553d304fa921d6be34cec9',1,'gpgmm::vk::GpCreateAllocatorInfo']]],

@@ -28,7 +28,7 @@ var searchData=
   ['resource_5fallocation_5fdesc_25',['RESOURCE_ALLOCATION_DESC',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['resource_5fallocation_5finfo_26',['RESOURCE_ALLOCATION_INFO',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html',1,'gpgmm::d3d12']]],
   ['resource_5fallocator_5ffeature_5fsuballocation_5fsupport_27',['RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa1df19b2b5da4914587591550ecf8a30a',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5finfo_28',['RESOURCE_ALLOCATOR_INFO',['../namespacegpgmm_1_1d3d12.html#a6d7ae6593e6b94d510cc0c30b9b3510e',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5finfo_28',['RESOURCE_ALLOCATOR_INFO',['../namespacegpgmm_1_1d3d12.html#aab7198d09751d622d892ab644dd173ad',1,'gpgmm::d3d12']]],
   ['resourceallocation_29',['ResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html',1,'gpgmm::d3d12::ResourceAllocation'],['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a6760013a84a54ae4c7d1e9c836af73d2',1,'gpgmm::d3d12::ResourceAllocation::ResourceAllocation()']]],
   ['resourceallocationd3d12_2ecpp_30',['ResourceAllocationD3D12.cpp',['../_resource_allocation_d3_d12_8cpp.html',1,'']]],
   ['resourceallocationd3d12_2eh_31',['ResourceAllocationD3D12.h',['../_resource_allocation_d3_d12_8h.html',1,'']]],
