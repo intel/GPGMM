@@ -44,8 +44,6 @@ namespace gpgmm {
     }
 
     MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
-        GPGMM_CHECK_NONZERO(requestSize);
-
         GPGMM_INVALID_IF(requestSize > mBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Allocation size exceeded the block size (" + std::to_string(requestSize) +
                              " vs " + std::to_string(mBlockSize) + " bytes).");

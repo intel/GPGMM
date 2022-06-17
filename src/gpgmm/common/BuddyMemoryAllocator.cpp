@@ -42,10 +42,11 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
         const MEMORY_ALLOCATION_REQUEST& request) {
+        TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
+
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_CHECK_NONZERO(request.SizeInBytes);
-        TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
+        GPGMM_ASSERT_NONZERO(request);
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
         GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, MESSAGE_ID_SIZE_EXCEEDED,
