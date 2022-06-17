@@ -87,7 +87,7 @@ var searchData=
   ['gpgmm_5fassert_84',['GPGMM_ASSERT',['../_assert_8h.html#a1fca1a089c61625b53f8f69133cf8075',1,'Assert.h']]],
   ['gpgmm_5fassert_5fcallsite_5fhelper_85',['GPGMM_ASSERT_CALLSITE_HELPER',['../_assert_8h.html#ae5a05c4273d21c6ff18fdf21b62516f3',1,'Assert.h']]],
   ['gpgmm_5fassert_5floop_5fcondition_86',['GPGMM_ASSERT_LOOP_CONDITION',['../_assert_8h.html#ac73d8c5e0784a01ad5fb8f5118dcde5a',1,'Assert.h']]],
-  ['gpgmm_5fcheck_5fnonzero_87',['GPGMM_CHECK_NONZERO',['../_error_8h.html#a61853729d7e6250443a195e8ace7ecb8',1,'Error.h']]],
+  ['gpgmm_5fassert_5fnonzero_87',['GPGMM_ASSERT_NONZERO',['../_error_8h.html#a1f4ce4b8c7d28afc92f47d914ec8de72',1,'Error.h']]],
   ['gpgmm_5fd3d12_2eh_88',['gpgmm_d3d12.h',['../gpgmm__d3d12_8h.html',1,'']]],
   ['gpgmm_5fdebug_89',['GPGMM_DEBUG',['../_log_8h.html#af29b85ea8baf198c09ff431bf14b2a51',1,'Log.h']]],
   ['gpgmm_5fdynamic_5fget_5fdevice_5ffunc_90',['GPGMM_DYNAMIC_GET_DEVICE_FUNC',['../_functions_vk_8cpp.html#a012c43b992359e867ff62057ad79d94f',1,'FunctionsVk.cpp']]],
