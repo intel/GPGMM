@@ -30,9 +30,6 @@ TEST(SlabBlockAllocatorTests, SingleBlock) {
     // Check that we cannot allocate a oversized block.
     EXPECT_EQ(allocator.TryAllocateBlock(slabSize * 2), nullptr);
 
-    // Check that we cannot allocate a zero sized block.
-    EXPECT_EQ(allocator.TryAllocateBlock(0u), nullptr);
-
     // Allocate the block.
     MemoryBlock* block = allocator.TryAllocateBlock(blockSize);
     ASSERT_NE(block, nullptr);
