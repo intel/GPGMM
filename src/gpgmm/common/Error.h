@@ -15,11 +15,16 @@
 #ifndef GPGMM_COMMON_ERROR_H_
 #define GPGMM_COMMON_ERROR_H_
 
-#include "gpgmm/utils/Assert.h"
-
 namespace gpgmm {
 
-#define GPGMM_ASSERT_NONZERO(request) ASSERT(request.SizeInBytes == 0 || request.Alignment == 0)
+#define GPGMM_CHECK_NONZERO(size) \
+    {                             \
+        if (size == 0) {          \
+            return nullptr;       \
+        }                         \
+    }                             \
+    for (;;)                      \
+    break
 
 #define GPGMM_TRY_ASSIGN(expr, value) \
     {                                 \

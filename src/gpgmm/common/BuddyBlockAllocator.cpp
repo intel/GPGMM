@@ -145,6 +145,8 @@ namespace gpgmm {
     }
 
     MemoryBlock* BuddyBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
+        GPGMM_CHECK_NONZERO(requestSize);
+
         GPGMM_INVALID_IF(requestSize > mMaxBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
                          "Requested size exceeded max block size.");
 

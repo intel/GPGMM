@@ -28,9 +28,6 @@ namespace gpgmm {
         TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
-
-        GPGMM_ASSERT_NONZERO(request);
-
         std::unique_ptr<MemoryAllocation> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
 
