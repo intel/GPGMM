@@ -144,6 +144,26 @@ target_link_libraries(gpgmm_capture_replay_tests PRIVATE
      jsoncpp_static
 )
 
+###############################################################################
+# Perf tests
+###############################################################################
+
+add_executable(gpgmm_perftests)
+
+target_link_libraries(gpgmm_perftests PRIVATE
+   gpgmm_common_config
+)
+
+target_sources(gpgmm_perftests PRIVATE
+    "DummyMemoryAllocator.h"
+    "perftests/MemoryAllocatorPerfTests.cpp"
+)
+
+target_link_libraries(gpgmm_perftests PRIVATE
+   gpgmm
+   benchmark
+)
+
 ################################################################################
 # Run test executions by `make test` or `cmake --build . --target RUN_TESTS`
 # for Linux or Windows, respectively.

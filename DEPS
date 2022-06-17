@@ -134,6 +134,10 @@ deps = {
     'url': '{chromium_git}/chromium/llvm-project/compiler-rt/lib/fuzzer.git@debe7d2d1982e540fbd6bd78604bf001753f9e74',
     'condition': 'gpgmm_standalone',
   },
+  'third_party/google_benchmark/src': {
+    'url': '{chromium_git}/external/github.com/google/benchmark.git@f730846b0a3c0dc0699978846fb14ffb2fad0bdc',
+    'condition': 'gpgmm_standalone',
+  },
 }
 
 hooks = [
