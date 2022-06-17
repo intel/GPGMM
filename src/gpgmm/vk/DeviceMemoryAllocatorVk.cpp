@@ -32,7 +32,7 @@ namespace gpgmm::vk {
     }
 
     std::unique_ptr<MemoryAllocation> DeviceMemoryAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "DeviceMemoryAllocator.TryAllocateMemory");
 
         if (request.NeverAllocate) {
@@ -42,14 +42,14 @@ namespace gpgmm::vk {
         const uint64_t maxDeviceMemoryAllocationCount =
             mResourceAllocator->GetCaps()->GetMaxDeviceAllocationCount();
         if (mInfo.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
-            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", MESSAGE_ID_ALLOCATOR_FAILED)
+            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", EventMessageId::AllocatorFailed)
                 << "Device exceeded max number of device memory allocations (" +
                        std::to_string(mInfo.UsedMemoryCount) + " vs " +
                        std::to_string(maxDeviceMemoryAllocationCount) + ").";
             return {};
         }
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, EventMessageId::SizeExceeded,
                          "Request size exceeded the memory size (" +
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mMemorySize) + " bytes).");

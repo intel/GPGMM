@@ -25,8 +25,8 @@ static constexpr uint64_t kMemoryAlignment = 1;
 
 class MemoryAllocatorPerfTests : public benchmark::Fixture {
   public:
-    MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size, uint64_t alignment = 1) {
-        MEMORY_ALLOCATION_REQUEST request = {};
+    MemoryAllocationRequest CreateBasicRequest(uint64_t size, uint64_t alignment = 1) {
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = size;
         request.Alignment = alignment;
         request.NeverAllocate = false;
@@ -44,7 +44,7 @@ BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, SlabCache_Warm)(benchmark::State& s
 
     // Below is effectively equivelent to STL's reserve(size=1).
     {
-        MEMORY_ALLOCATION_REQUEST request = CreateBasicRequest(state.range(2));
+        MemoryAllocationRequest request = CreateBasicRequest(state.range(2));
         request.AlwaysCacheSize = true;
         request.NeverAllocate = true;
         allocator.TryAllocateMemory(request);

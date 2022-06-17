@@ -31,6 +31,9 @@ namespace gpgmm::d3d12 {
     class ResidencySet;
     struct RESIDENCY_DESC;
 
+    // Declare backend aliases.
+    using RESOURCE_ALLOCATOR_INFO = MemoryAllocatorInfo;
+
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
         const D3D12_RESOURCE_DESC& resourceDescriptor;
@@ -46,7 +49,7 @@ namespace gpgmm::d3d12 {
     class JSONSerializer final : public gpgmm::JSONSerializer {
       public:
         static JSONDict Serialize();
-        static JSONDict Serialize(const MEMORY_ALLOCATOR_INFO& info);
+        static JSONDict Serialize(const RESOURCE_ALLOCATOR_INFO& info);
         static JSONDict Serialize(const ALLOCATOR_DESC& desc);
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
         static JSONDict Serialize(const ALLOCATION_DESC& desc);

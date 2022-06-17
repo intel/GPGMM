@@ -41,14 +41,14 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         GPGMM_CHECK_NONZERO(request.SizeInBytes);
         TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
 
         // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, EventMessageId::SizeExceeded,
                          "Allocation size exceeded the memory size (" +
                              std::to_string(request.SizeInBytes) + " vs " +
                              std::to_string(mMemorySize) + " bytes).");
@@ -57,7 +57,7 @@ namespace gpgmm {
         const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
 
         // Allocation cannot exceed the memory size.
-        GPGMM_INVALID_IF(allocationSize > mMemorySize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(allocationSize > mMemorySize, EventMessageId::SizeExceeded,
                          "Allocation size exceeded the memory size (" +
                              std::to_string(allocationSize) + " vs " + std::to_string(mMemorySize) +
                              " bytes).");
@@ -73,7 +73,7 @@ namespace gpgmm {
 
                                  // No existing, allocate new memory for the block.
                                  if (memoryAllocation == nullptr) {
-                                     MEMORY_ALLOCATION_REQUEST newRequest = request;
+                                     MemoryAllocationRequest newRequest = request;
                                      newRequest.SizeInBytes = mMemorySize;
                                      newRequest.Alignment = mMemoryAlignment;
 
@@ -135,11 +135,11 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
-    MEMORY_ALLOCATOR_INFO BuddyMemoryAllocator::GetInfo() const {
+    MemoryAllocatorInfo BuddyMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MEMORY_ALLOCATOR_INFO result = mInfo;
-        const MEMORY_ALLOCATOR_INFO& memoryInfo = GetNextInChain()->GetInfo();
+        MemoryAllocatorInfo result = mInfo;
+        const MemoryAllocatorInfo& memoryInfo = GetNextInChain()->GetInfo();
         result.UsedMemoryCount = memoryInfo.UsedMemoryCount;
         result.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
         result.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;

@@ -46,12 +46,12 @@ namespace gpgmm {
     MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
         GPGMM_CHECK_NONZERO(requestSize);
 
-        GPGMM_INVALID_IF(requestSize > mBlockSize, MESSAGE_ID_SIZE_EXCEEDED,
+        GPGMM_INVALID_IF(requestSize > mBlockSize, EventMessageId::SizeExceeded,
                          "Allocation size exceeded the block size (" + std::to_string(requestSize) +
                              " vs " + std::to_string(mBlockSize) + " bytes).");
 
         // Offset must be equal to a multiple of |mBlockSize|.
-        GPGMM_INVALID_IF(!IsAligned(mBlockSize, alignment), MESSAGE_ID_ALIGNMENT_MISMATCH,
+        GPGMM_INVALID_IF(!IsAligned(mBlockSize, alignment), EventMessageId::AlignmentMismatch,
                          "Allocation alignment is not a multiple of the block size (" +
                              std::to_string(alignment) + " vs " + std::to_string(mBlockSize) +
                              " bytes).");

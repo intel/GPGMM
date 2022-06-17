@@ -222,7 +222,7 @@ namespace gpgmm::vk {
 
         MemoryAllocator* allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
 
-        MEMORY_ALLOCATION_REQUEST request = {};
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = requirements.size;
         request.Alignment = requirements.alignment;
         request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
@@ -231,7 +231,7 @@ namespace gpgmm::vk {
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);
         if (memoryAllocation == nullptr) {
-            InfoEvent("GpResourceAllocator.TryAllocateResource", MESSAGE_ID_ALLOCATOR_FAILED)
+            InfoEvent("GpResourceAllocator.TryAllocateResource", EventMessageId::AllocatorFailed)
                 << std::string(allocator->GetTypename()) +
                        " failed to allocate memory for resource.";
 

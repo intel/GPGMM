@@ -39,7 +39,7 @@ namespace gpgmm::d3d12 {
     }
 
     std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::Default, "BufferAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);

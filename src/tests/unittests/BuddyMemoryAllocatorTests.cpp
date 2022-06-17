@@ -30,8 +30,8 @@ static constexpr uint64_t kDefaultMemoryAlignment = 1u;
 
 class BuddyMemoryAllocatorTests : public testing::Test {
   public:
-    MEMORY_ALLOCATION_REQUEST CreateBasicRequest(uint64_t size, uint64_t alignment) {
-        MEMORY_ALLOCATION_REQUEST request = {};
+    MemoryAllocationRequest CreateBasicRequest(uint64_t size, uint64_t alignment) {
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = size;
         request.Alignment = alignment;
         request.NeverAllocate = false;

@@ -268,7 +268,7 @@ namespace gpgmm::d3d12 {
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
         HRESULT TryAllocateResource(MemoryAllocator* allocator,
-                                    const MEMORY_ALLOCATION_REQUEST& request,
+                                    const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
             // Do not attempt to allocate if the requested size already exceeds the fixed
             // memory size allowed by the allocator. Otherwise, both the memory and resource would
@@ -288,7 +288,7 @@ namespace gpgmm::d3d12 {
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    InfoEvent(allocator->GetTypename(), MESSAGE_ID_ALLOCATOR_FAILED)
+                    InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
                         << "Failed to allocate memory for request: " +
                                gpgmm::JSONSerializer::Serialize(request).ToString();
                 }
@@ -297,7 +297,7 @@ namespace gpgmm::d3d12 {
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent(allocator->GetTypename(), MESSAGE_ID_ALLOCATOR_FAILED)
+                InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
                     << "Failed to create resource using allocation: " +
                            gpgmm::JSONSerializer::Serialize(allocation->GetInfo()).ToString() +
                            " due to error: " + GetErrorMessage(hr);
@@ -457,7 +457,7 @@ namespace gpgmm::d3d12 {
                 // Temporary suppress log messages emitted from internal cache-miss requests.
                 ScopedLogLevel scopedLogLevel(LogSeverity::Info);
 
-                MEMORY_ALLOCATION_REQUEST cacheRequest = {};
+                MemoryAllocationRequest cacheRequest = {};
                 cacheRequest.NeverAllocate = true;
                 cacheRequest.AlwaysCacheSize = true;
                 cacheRequest.AlwaysPrefetch = false;
@@ -763,7 +763,7 @@ namespace gpgmm::d3d12 {
         //
         // Only the buffer size can be computed directly from the resource descriptor (width always
         // represents 1D coorinates, in bytes).
-        MEMORY_ALLOCATION_REQUEST request = {};
+        MemoryAllocationRequest request = {};
         request.SizeInBytes = (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
                                   ? newResourceDesc.Width
                                   : resourceInfo.SizeInBytes;
@@ -934,7 +934,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (!mIsAlwaysCommitted) {
-            InfoEvent(GetTypename(), MESSAGE_ID_UNKNOWN)
+            InfoEvent(GetTypename(), EventMessageId::Unknown)
                 << "Resource allocation could not be created from memory pool.";
         }
 

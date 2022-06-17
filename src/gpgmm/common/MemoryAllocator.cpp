@@ -21,7 +21,7 @@ namespace gpgmm {
 
     class AllocateMemoryTask : public VoidCallback {
       public:
-        AllocateMemoryTask(MemoryAllocator* allocator, const MEMORY_ALLOCATION_REQUEST& request)
+        AllocateMemoryTask(MemoryAllocator* allocator, const MemoryAllocationRequest& request)
             : mAllocator(allocator), mRequest(request) {
         }
 
@@ -36,7 +36,7 @@ namespace gpgmm {
 
       private:
         MemoryAllocator* const mAllocator;
-        const MEMORY_ALLOCATION_REQUEST mRequest;
+        const MemoryAllocationRequest mRequest;
 
         std::unique_ptr<MemoryAllocation> mAllocation;
     };
@@ -84,13 +84,13 @@ namespace gpgmm {
     }
 
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         ASSERT(false);
         return {};
     }
 
     std::shared_ptr<MemoryAllocationEvent> MemoryAllocator::TryAllocateMemoryAsync(
-        const MEMORY_ALLOCATION_REQUEST& request) {
+        const MemoryAllocationRequest& request) {
         std::shared_ptr<AllocateMemoryTask> task =
             std::make_shared<AllocateMemoryTask>(this, request);
         return std::make_shared<MemoryAllocationEvent>(ThreadPool::PostTask(mThreadPool, task),
@@ -113,7 +113,7 @@ namespace gpgmm {
         return kInvalidOffset;
     }
 
-    MEMORY_ALLOCATOR_INFO MemoryAllocator::GetInfo() const {
+    MemoryAllocatorInfo MemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         return mInfo;
     }

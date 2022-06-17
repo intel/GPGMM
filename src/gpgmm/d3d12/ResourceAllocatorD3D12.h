@@ -480,12 +480,12 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT,
     };
 
-    using RESOURCE_ALLOCATOR_INFO = MEMORY_ALLOCATOR_INFO;
+    using RESOURCE_ALLOCATOR_INFO = MemoryAllocatorInfo;
 
     /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
     ResourceAllocation.
 
-    Internally, ResourceAllocator creates a MEMORY_ALLOCATION_REQUEST, by determining the
+    Internally, ResourceAllocator creates a request, by determining the
     resource allocation requirements, then finds a MemoryAllocator able to service the request.
 
     If the first MemoryAllocator attempt fails, it will try a second MemoryAllocator, and so on.
@@ -494,7 +494,7 @@ namespace gpgmm::d3d12 {
     footprint.
 
     ResourceAllocator also uses ResidencyManager to determine available memory
-    (or budget left) when deciding MEMORY_ALLOCATION_REQUEST. This is because residency is managed
+    (or budget left) when creating the request. This is because residency is managed
     per heap and not per resource). A larger Heap could be ideal for allocation but only if there is
     budget. And similarly, a smaller Heap allows for finer grained residency but could increase
     overall memory usage for allocation.

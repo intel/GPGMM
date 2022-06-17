@@ -379,7 +379,7 @@ namespace gpgmm::d3d12 {
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
 
-            InfoEvent("GPU page-out", MESSAGE_ID_BUDGET_EXCEEDED)
+            InfoEvent("GPU page-out", EventMessageId::BudgetExceeded)
                 << "Number of allocations: " << objectsToEvict.size() << " (" << evictedSizeInBytes
                 << " bytes).";
         }
@@ -491,7 +491,7 @@ namespace gpgmm::d3d12 {
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
 
-        InfoEvent("GPU page-in", MESSAGE_ID_BUDGET_EXCEEDED)
+        InfoEvent("GPU page-in", EventMessageId::BudgetExceeded)
             << "Number of allocations: " << numberOfObjectsToMakeResident << " ("
             << sizeToMakeResident << " bytes).";
 

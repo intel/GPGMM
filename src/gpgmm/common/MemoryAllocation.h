@@ -57,10 +57,10 @@ namespace gpgmm {
     class MemoryBase;
     class MemoryAllocator;
 
-    /** \struct MEMORY_ALLOCATION_INFO
+    /** \struct MemoryAllocationInfo
     Additional information about the memory allocation.
     */
-    struct MEMORY_ALLOCATION_INFO {
+    struct MemoryAllocationInfo {
         /** \brief Allocated size, in bytes, of the memory allocation.
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
@@ -131,9 +131,9 @@ namespace gpgmm {
 
         /** \brief Get the information about this memory allocation.
 
-        \return A MEMORY_ALLOCATION_INFO struct containing the information.
+        \return A MemoryAllocationInfo struct containing the information.
         */
-        MEMORY_ALLOCATION_INFO GetInfo() const;
+        MemoryAllocationInfo GetInfo() const;
 
         /** \brief Get the memory assigned to this allocation.
 
