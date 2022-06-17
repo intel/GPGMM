@@ -30,7 +30,9 @@ namespace gpgmm {
       public:
         EventTraceWriter();
 
-        void SetConfiguration(const std::string& traceFile, const TraceEventPhase& ignoreMask);
+        void SetConfiguration(const std::string& traceFile,
+                              const TraceEventPhase& ignoreMask,
+                              bool flushOnDestruct);
 
         ~EventTraceWriter();
 
@@ -54,6 +56,7 @@ namespace gpgmm {
             mBufferPerThread;
 
         TraceEventPhase mIgnoreMask;
+        bool mFlushOnDestruct = true;
     };
 
 }  // namespace gpgmm
