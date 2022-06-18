@@ -106,12 +106,4 @@ namespace gpgmm {
         return ((n + m - 1) / m) * m;
     }
 
-    double SafeDivison(double a, double b) {
-        if (b == 0) {
-            return 0.;
-        } else {
-            return a / b;
-        }
-    }
-
 }  // namespace gpgmm

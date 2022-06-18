@@ -1122,24 +1122,20 @@ namespace gpgmm::d3d12 {
 
         GPGMM_TRACE_EVENT_METRIC(
             "GPU allocation utilization (%)",
-            SafeDivison(result.UsedBlockUsage,
-                        static_cast<double>(result.UsedMemoryUsage + result.FreeMemoryUsage)) *
+            SafeDivide(result.UsedBlockUsage, result.UsedMemoryUsage + result.FreeMemoryUsage) *
                 100);
 
         GPGMM_TRACE_EVENT_METRIC("GPU allocation free (MB)", result.FreeMemoryUsage / 1e6);
 
         GPGMM_TRACE_EVENT_METRIC(
             "GPU prefetch memory cache (%)",
-            SafeDivison(result.PrefetchedMemoryMissesEliminated,
-                        static_cast<double>(result.PrefetchedMemoryMisses +
-                                            result.PrefetchedMemoryMissesEliminated)) *
+            SafeDivide(result.PrefetchedMemoryMissesEliminated,
+                       result.PrefetchedMemoryMisses + result.PrefetchedMemoryMissesEliminated) *
                 100);
 
         GPGMM_TRACE_EVENT_METRIC(
             "GPU request cache (%)",
-            SafeDivison(result.CacheSizeHits,
-                        static_cast<double>(result.CacheSizeMisses + result.CacheSizeHits)) *
-                100);
+            SafeDivide(result.CacheSizeHits, result.CacheSizeMisses + result.CacheSizeHits) * 100);
 
         return result;
     }
