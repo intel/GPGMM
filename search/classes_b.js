@@ -18,6 +18,5 @@ var searchData=
   ['memorypoolinfo_15',['MemoryPoolInfo',['../structgpgmm_1_1_memory_pool_info.html',1,'gpgmm']]],
   ['memorypooltests_16',['MemoryPoolTests',['../class_memory_pool_tests.html',1,'']]],
   ['memorysegment_17',['MemorySegment',['../classgpgmm_1_1_memory_segment.html',1,'gpgmm']]],
-  ['memorysize_18',['MemorySize',['../classgpgmm_1_1_memory_size.html',1,'gpgmm']]],
-  ['memorysizeinfo_19',['MemorySizeInfo',['../structgpgmm_1_1_memory_size_info.html',1,'gpgmm']]]
+  ['memorysizeclass_18',['MemorySizeClass',['../classgpgmm_1_1_memory_size_class.html',1,'gpgmm']]]
 ];
