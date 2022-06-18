@@ -172,9 +172,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_size.html">MemorySize</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_size_info.html">MemorySizeInfo</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_size_class.html">MemorySizeClass</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_non_copyable.html">NonCopyable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,6 +187,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_ref.html">ScopedRef</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_segmented_memory_allocator.html">SegmentedMemoryAllocator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_size_class_info.html">SizeClassInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_slab_block_allocator.html">SlabBlockAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,8 +301,8 @@ Functions</h2></td></tr>
 <tr class="separator:a6ea3d78ed065b398f2e34f4dd8b2ae65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32892309d78ee85a15a988b5138ee547"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a32892309d78ee85a15a988b5138ee547">FindSegment</a> (<a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *start, <a class="el" href="classgpgmm_1_1_link_node.html">LinkNode</a>&lt; <a class="el" href="classgpgmm_1_1_memory_segment.html">MemorySegment</a> &gt; *end, uint64_t size)</td></tr>
 <tr class="separator:a32892309d78ee85a15a988b5138ee547"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a953a31654abacc0c3005368ec24abb23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a953a31654abacc0c3005368ec24abb23">StartupEventTrace</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask, bool flushOnDestruct)</td></tr>
-<tr class="separator:a953a31654abacc0c3005368ec24abb23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbbf691371390b91763764005a301e24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#afbbf691371390b91763764005a301e24">StartupEventTrace</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask)</td></tr>
+<tr class="separator:afbbf691371390b91763764005a301e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e06cd628d6c539216da169d2fd2d98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98">ShutdownEventTrace</a> ()</td></tr>
 <tr class="separator:a57e06cd628d6c539216da169d2fd2d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4e7758d833df0093cf8c892c9632aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa">IsEventTraceEnabled</a> ()</td></tr>
@@ -385,6 +385,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ab510d783411b05e000f2cb162dd369f9"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
 <tr class="memitem:ab510d783411b05e000f2cb162dd369f9"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ab510d783411b05e000f2cb162dd369f9">ToString</a> (T object, Args... args)</td></tr>
 <tr class="separator:ab510d783411b05e000f2cb162dd369f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac8b2e18c2e09050a40aa63d1dc4aa90"><td class="memTemplParams" colspan="2">template&lt;typename T , std::size_t N1, std::size_t N2&gt; </td></tr>
+<tr class="memitem:aac8b2e18c2e09050a40aa63d1dc4aa90"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N1+N2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#aac8b2e18c2e09050a40aa63d1dc4aa90">ConstexprConcat</a> (std::array&lt; T, N1 &gt; lhs, std::array&lt; T, N2 &gt; rhs)</td></tr>
+<tr class="separator:aac8b2e18c2e09050a40aa63d1dc4aa90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b104c351213cfa85a314afbf675477c"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a8b104c351213cfa85a314afbf675477c">TCharToWString</a> (const wchar_t *const str)</td></tr>
 <tr class="separator:a8b104c351213cfa85a314afbf675477c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e5e26659dd22ba6259716d7a06eefd0"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a0e5e26659dd22ba6259716d7a06eefd0">TCharToWString</a> (const char *const str)</td></tr>
@@ -629,6 +632,44 @@ template&lt;typename T &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aac8b2e18c2e09050a40aa63d1dc4aa90" name="aac8b2e18c2e09050a40aa63d1dc4aa90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac8b2e18c2e09050a40aa63d1dc4aa90">&#9670;&nbsp;</a></span>ConstexprConcat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N1, std::size_t N2&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::array&lt; T, N1+N2 &gt; gpgmm::ConstexprConcat </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; T, N1 &gt;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; T, N2 &gt;&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1443,8 +1484,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a953a31654abacc0c3005368ec24abb23" name="a953a31654abacc0c3005368ec24abb23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a953a31654abacc0c3005368ec24abb23">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
+<a id="afbbf691371390b91763764005a301e24" name="afbbf691371390b91763764005a301e24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbbf691371390b91763764005a301e24">&#9670;&nbsp;</a></span>StartupEventTrace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1459,13 +1500,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;&#160;</td>
-          <td class="paramname"><em>ignoreMask</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>flushOnDestruct</em>&#160;</td>
+          <td class="paramname"><em>ignoreMask</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
