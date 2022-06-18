@@ -33,13 +33,17 @@ namespace gpgmm {
     }
 
     void EventTraceWriter::SetConfiguration(const std::string& traceFile,
-                                            const TraceEventPhase& ignoreMask) {
+                                            const TraceEventPhase& ignoreMask,
+                                            bool flushOnDestruct) {
         mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
         mIgnoreMask = ignoreMask;
+        mFlushOnDestruct = flushOnDestruct;
     }
 
     EventTraceWriter::~EventTraceWriter() {
-        FlushQueuedEventsToDisk();
+        if (mFlushOnDestruct) {
+            FlushQueuedEventsToDisk();
+        }
     }
 
     void EventTraceWriter::EnqueueTraceEvent(char phase,

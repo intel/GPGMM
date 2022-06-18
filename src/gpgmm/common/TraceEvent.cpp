@@ -33,12 +33,14 @@ namespace gpgmm {
         return gEventTrace.get();
     }
 
-    void StartupEventTrace(const std::string& traceFile, const TraceEventPhase& ignoreMask) {
+    void StartupEventTrace(const std::string& traceFile,
+                           const TraceEventPhase& ignoreMask,
+                           bool flushOnDestruct) {
 #if defined(GPGMM_DISABLE_TRACING)
         gpgmm::WarningLog() << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
 #endif
 
-        GetInstance()->SetConfiguration(traceFile, ignoreMask);
+        GetInstance()->SetConfiguration(traceFile, ignoreMask, flushOnDestruct);
         TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
                               "GPGMM_MainThread");
     }

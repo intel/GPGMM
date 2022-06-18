@@ -343,8 +343,10 @@ namespace gpgmm::d3d12 {
         }
 
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
-            StartupEventTrace(descriptor.RecordOptions.TraceFile,
-                              static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0));
+            StartupEventTrace(
+                descriptor.RecordOptions.TraceFile,
+                static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0),
+                descriptor.RecordOptions.EventScope & ALLOCATOR_RECORD_SCOPE_PER_PROCESS);
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         }
