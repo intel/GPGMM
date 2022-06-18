@@ -52,8 +52,7 @@ namespace gpgmm {
         std::unique_ptr<PlatformTime> mPlatformTime;
         mutable std::mutex mMutex;
 
-        std::unordered_map<std::thread::id, std::unique_ptr<std::vector<TraceEvent>>>
-            mBufferPerThread;
+        std::unordered_map<std::thread::id, std::vector<TraceEvent>*> mBufferPerThread;
 
         TraceEventPhase mIgnoreMask;
         bool mFlushOnDestruct = true;

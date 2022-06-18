@@ -182,16 +182,15 @@ namespace gpgmm {
     }
 
     std::vector<TraceEvent>* EventTraceWriter::GetOrCreateBufferFromTLS() {
-        thread_local std::vector<TraceEvent>* pBufferInTLS = nullptr;
-        if (pBufferInTLS == nullptr) {
-            auto buffer = std::make_unique<std::vector<TraceEvent>>();
-            pBufferInTLS = buffer.get();
+        thread_local std::unique_ptr<std::vector<TraceEvent>> bufferInTLS;
+        if (bufferInTLS == nullptr) {
+            bufferInTLS.reset(new std::vector<TraceEvent>());
 
             std::lock_guard<std::mutex> mutex(mMutex);
-            mBufferPerThread[std::this_thread::get_id()] = std::move(buffer);
+            mBufferPerThread[std::this_thread::get_id()] = bufferInTLS.get();
         }
-        ASSERT(pBufferInTLS != nullptr);
-        return pBufferInTLS;
+        ASSERT(bufferInTLS != nullptr);
+        return bufferInTLS.get();
     }
 
     std::vector<TraceEvent> EventTraceWriter::MergeAndClearBuffers() const {
