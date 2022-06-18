@@ -58,7 +58,14 @@ namespace gpgmm {
     uint64_t RoundUp(uint64_t n, uint64_t m);
 
     // Evaluates a/b, avoiding division by zero.
-    double SafeDivison(double a, double b);
+    template <typename T>
+    double SafeDivide(T dividend, T divisor) {
+        if (divisor == 0) {
+            return 0.0;
+        } else {
+            return dividend / divisor;
+        }
+    }
 
 }  // namespace gpgmm
 

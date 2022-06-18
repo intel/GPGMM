@@ -201,7 +201,7 @@ namespace gpgmm {
                 }
             }
 
-            Slab* pNewFreeSlab = new Slab(SafeDivison(slabSize, mBlockSize), mBlockSize);
+            Slab* pNewFreeSlab = new Slab(SafeDivide(slabSize, mBlockSize), mBlockSize);
             pCache->FreeList.push_front(pNewFreeSlab);
             pFreeSlab = pNewFreeSlab;
         }
@@ -271,9 +271,8 @@ namespace gpgmm {
         if (allowSlabPrefetch &&
             mInfo.PrefetchedMemoryMissesEliminated < mInfo.PrefetchedMemoryMisses) {
             const double currentCoverage =
-                SafeDivison(mInfo.PrefetchedMemoryMissesEliminated,
-                            static_cast<double>(mInfo.PrefetchedMemoryMissesEliminated +
-                                                mInfo.PrefetchedMemoryMisses));
+                SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
+                           mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
             if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
                 WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
                     << "Allow prefetch disabled, coverage went below threshold: ("

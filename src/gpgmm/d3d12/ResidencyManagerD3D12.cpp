@@ -278,7 +278,7 @@ namespace gpgmm::d3d12 {
                 .c_str(),
             (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
                 ? 100
-                : SafeDivison(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
+                : SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
 
         // Reservations are optional.
         GPGMM_TRACE_EVENT_METRIC(
