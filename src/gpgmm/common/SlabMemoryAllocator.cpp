@@ -181,7 +181,8 @@ namespace gpgmm {
             // Get the next free slab.
             if (mLastUsedSlabSize > 0) {
                 uint64_t newSlabSize =
-                    std::min(ComputeSlabSize(request.SizeInBytes, slabSize * mSlabGrowthFactor,
+                    std::min(ComputeSlabSize(request.SizeInBytes,
+                                             static_cast<uint64_t>(slabSize * mSlabGrowthFactor),
                                              request.AvailableForAllocation),
                              mMaxSlabSize);
 
@@ -296,10 +297,11 @@ namespace gpgmm {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.
-            uint64_t nextSlabSize =
-                std::min(ComputeSlabSize(request.SizeInBytes, mLastUsedSlabSize * mSlabGrowthFactor,
-                                         request.AvailableForAllocation),
-                         mMaxSlabSize);
+            uint64_t nextSlabSize = std::min(
+                ComputeSlabSize(request.SizeInBytes,
+                                static_cast<uint64_t>(mLastUsedSlabSize * mSlabGrowthFactor),
+                                request.AvailableForAllocation),
+                mMaxSlabSize);
 
             // If under growth phase (and accounting that the current slab will soon become
             // full), reset the slab size back to the last size. Otherwise, the pre-fetch will
