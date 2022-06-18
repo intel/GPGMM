@@ -32,6 +32,7 @@ jobs:
         uses: "pascalgn/automerge-action@v0.15.3"
         env:
           MERGE_LABELS: "automerge,!work in progress,!wip,!in progress"
+          MERGE_REMOVE_LABELS: "automerge,work in progress,wip,in progress"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_METHOD: "squash"
           MERGE_DELETE_BRANCH: true
