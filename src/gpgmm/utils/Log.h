@@ -16,7 +16,7 @@
 #ifndef GPGMM_UTILS_LOG_H_
 #define GPGMM_UTILS_LOG_H_
 
-// Dawn targets shouldn't use iostream or printf directly for several reasons:
+// Targets shouldn't use iostream or printf directly for several reasons:
 //  - iostream adds static initializers which we want to avoid.
 //  - printf and iostream don't show up in logcat on Android so printf debugging doesn't work but
 //  log-message debugging does.

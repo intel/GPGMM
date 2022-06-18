@@ -45,20 +45,6 @@ if (gpgmm_enable_vk) {
 
 config("gpgmm_common_config") {
   configs = [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
-
-  # Suppress warnings that Metal isn't in the deployment target of Chrome:
-  # initialization of the Metal backend is behind a IsMetalSupported check so
-  # gpgmm won't call Metal functions on macOS 10.10.
-  # At the time this is written Chromium supports 10.10.0 and above, so if we
-  # aren't on 10.11 it means we are on 10.11 and above, and Metal is available.
-  # Skipping this check on 10.11 and above is important as it allows getting
-  # proper compilation warning when using 10.12 and above feature for example.
-  # TODO(crbug.com/1004024): Consider using API_AVAILABLE annotations on all
-  # metal code in gpgmm once crbug.com/1004024 is sorted out if Chromium still
-  # supports 10.10 then.
-  if (is_mac && mac_deployment_target == "10.10.0") {
-    cflags_objcc = [ "-Wno-unguarded-availability" ]
-  }
 }
 
 # Config that adds the @executable_path rpath if needed so the Vulkan loader are found.

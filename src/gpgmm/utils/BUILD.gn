@@ -16,9 +16,9 @@ import("../../../build_overrides/gpgmm_overrides_with_defaults.gni")
 
 import("//build_overrides/build.gni")
 
-# This GN file is discovered by all Chromium builds, but common doesn't support
-# all of Chromium's OSes so we explicitly make the target visible only on
-# systems we know Dawn is able to compile on.
+# This GN file is discovered by all GN builds, but utils doesn't support
+# all of OSes so we explicitly make the target visible only on
+# OSs we know utils supports.
 if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
   source_set("gpgmm_utils_sources") {
     sources = [

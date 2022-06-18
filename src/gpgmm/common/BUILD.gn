@@ -87,10 +87,10 @@ config("gpgmm_common_config") {
 
   cflags = []
 
-  # Enable more warnings that were found when using Dawn in other projects.
-  # Add them only when building in standalone because we control which clang
-  # version we use. Otherwise we risk breaking projects depending on Dawn when
-  # the use a different clang version.
+  # Enable more warnings then using GPGMM under third_party/gpgmm.
+  # Add them only when building in standalone because we control which compiler
+  # version we use. Otherwise we risk breaking projects depending on GPGMM when
+  # they use a different compiler version.
   if (gpgmm_standalone && is_clang) {
     cflags += [
       "-Wconditional-uninitialized",
@@ -135,8 +135,7 @@ config("gpgmm_common_config") {
   }
 
   if (!is_clang && is_win) {
-    # Dawn extends wgpu enums with internal enums.
-    # MSVC considers these invalid switch values. crbug.com/dawn/397.
+    # MSVC considers extended enums invalid switch values.
     cflags += [ "/wd4063" ]
     if (gpgmm_is_winuwp) {
       # /ZW makes sure we don't add calls that are forbidden in UWP.

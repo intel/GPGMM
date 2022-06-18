@@ -98,7 +98,7 @@ namespace gpgmm {
         // Keep track the head and tail (for faster insertion/removal).
         struct BlockList {
             BuddyBlock* head = nullptr;  // First free block in level.
-            // TODO(crbug.com/dawn/827): Track the tail.
+            // TODO: Track the tail.
         };
 
         BuddyBlock* mRoot = nullptr;  // Used to deallocate non-free blocks.
