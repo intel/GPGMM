@@ -163,7 +163,7 @@ namespace gpgmm::d3d12 {
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags, bool allowMSAA) {
             const D3D12_HEAP_FLAGS denyAllTexturesFlags =
                 D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
-            if ((heapFlags & denyAllTexturesFlags) == denyAllTexturesFlags) {
+            if (Flags(heapFlags).HasFlags(denyAllTexturesFlags)) {
                 return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
             }
 
@@ -751,6 +751,22 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
+        // Check memory requirements.
+        bool isAlwaysCommitted = mIsAlwaysCommitted;
+        D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
+        if (!Flags(heapFlags).HasFlags(allocationDescriptor.ExtraRequiredHeapFlags)) {
+            DebugEvent(GetTypename())
+                << "Required heap flags are incompatible with resource heap type ("
+                << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
+                << std::to_string(heapFlags) + ").";
+
+            heapFlags |= allocationDescriptor.ExtraRequiredHeapFlags;
+
+            // Fall-back to committed if resource heap is incompatible.
+            // TODO: Considering adding resource heap types.
+            isAlwaysCommitted = true;
+        }
+
         const bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
@@ -808,7 +824,7 @@ namespace gpgmm::d3d12 {
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             GetInitialResourceState(allocationDescriptor.HeapType) == initialResourceState &&
-            !mIsAlwaysCommitted && !neverSubAllocate) {
+            !isAlwaysCommitted && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             // GetResourceAllocationInfo() always rejects smaller alignments than 64KB.
@@ -852,7 +868,7 @@ namespace gpgmm::d3d12 {
         // Attempt to create a resource allocation by placing a resource in a sub-allocated
         // resource heap.
         // The time and space complexity of is determined by the sub-allocation algorithm used.
-        if (!mIsAlwaysCommitted && !neverSubAllocate) {
+        if (!isAlwaysCommitted && !neverSubAllocate) {
             if (isMSAA) {
                 allocator =
                     mMSAAResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
@@ -893,7 +909,7 @@ namespace gpgmm::d3d12 {
         // resource because a placed resource's heap will not be reallocated by the OS until Trim()
         // is called.
         // The time and space complexity is determined by the allocator type.
-        if (!mIsAlwaysCommitted) {
+        if (!isAlwaysCommitted) {
             if (isMSAA) {
                 allocator =
                     mMSAAResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
@@ -935,13 +951,10 @@ namespace gpgmm::d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        if (!mIsAlwaysCommitted) {
+        if (!isAlwaysCommitted) {
             InfoEvent(GetTypename(), EventMessageId::Unknown)
                 << "Resource allocation could not be created from memory pool.";
         }
-
-        const D3D12_HEAP_FLAGS& heapFlags =
-            GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
 
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;

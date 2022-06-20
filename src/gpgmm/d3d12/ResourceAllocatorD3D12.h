@@ -451,6 +451,19 @@ namespace gpgmm::d3d12 {
         */
         D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+        /** \brief Additional heap flags that the resource requires.
+
+        By default, GPGMM infers the required heap flags based on the required
+        fields in the D3D12_RESOURCE_DESC, ALLOCATOR_DESC and ALLOCATION_DESC.
+        But if additional heap flags are required, they can also be specified.
+
+        It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all
+        allocation methods are guarenteed to be supported.
+
+        Optional parameter.
+        */
+        D3D12_HEAP_FLAGS ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_NONE;
+
         /** \brief Associates a name with the given allocation.
 
         Optional parameter. By default, no name is associated.

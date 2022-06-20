@@ -258,6 +258,35 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             {}, CreateBasicBufferDesc(0), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_EQ(allocation, nullptr);
     }
+
+    // Creating a buffer with required but unsupported heap flag should always succeed.
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        allocationDesc.ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_SHARED;
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COMMON,
+            nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+
+        ComPtr<ID3D12Heap> heap;
+        ASSERT_FAILED(allocation->GetMemory()->As(&heap));
+    }
+
+    // Creating a buffer with required but invalid heap flag should always fail.
+    {
+        ALLOCATION_DESC allocationDescWithInvalidHeapFlags = {};
+        allocationDescWithInvalidHeapFlags.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        allocationDescWithInvalidHeapFlags.ExtraRequiredHeapFlags =
+            static_cast<D3D12_HEAP_FLAGS>(0xFF);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            allocationDescWithInvalidHeapFlags, CreateBasicBufferDesc(kDefaultBufferSize),
+            D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
