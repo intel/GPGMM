@@ -52,9 +52,9 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING
   gpgmm_enable_assert_on_warning = is_debug
 
-  # Enables warming of caches with common sizes.
-  # Sets -dGPGMM_ENABLE_SIZE_CACHE
-  gpgmm_enable_size_cache = true
+  # Enables warming of caches with common resource sizes.
+  # Sets -dGPGMM_DISABLE_SIZE_CACHE
+  gpgmm_disable_size_cache = false
 
   # Enables checking of device leaks.
   # Sets -dGPGMM_ENABLE_DEVICE_CHECKS

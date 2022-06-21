@@ -119,7 +119,7 @@ option_if_not_defined(GPGMM_FORCE_TRACING "Enables event tracing even in release
 option_if_not_defined(GPGMM_ENABLE_DEVICE_CHECKS "Enables checking of device leaks" OFF)
 option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_CHECKS "Enables checking of allocator leaks" ${ENABLE_ALLOCATOR_CHECKS})
 option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" ${ENABLE_ASSERT_ON_WARNING})
-option_if_not_defined(GPGMM_ENABLE_SIZE_CACHE "Enables warming of caches with common sizes" ON)
+option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with common resource sizes" OFF)
 
 # The Vulkan loader is an optional dependency.
 if (GPGMM_ENABLE_VK)
@@ -180,8 +180,8 @@ if(GPGMM_ENABLE_ASSERT_ON_WARNING)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERT_ON_WARNING")
 endif()
 
-if(GPGMM_ENABLE_SIZE_CACHE)
-  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_SIZE_CACHE")
+if(GPGMM_DISABLE_SIZE_CACHE)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_DISABLE_SIZE_CACHE")
 endif()
 
 if(WIN32)

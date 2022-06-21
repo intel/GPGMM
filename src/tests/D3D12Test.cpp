@@ -135,10 +135,10 @@ namespace gpgmm::d3d12 {
     }
 
     bool D3D12TestBase::IsSizeCacheEnabled() const {
-#if defined(GPGMM_ENABLE_SIZE_CACHE)
-        return true;
-#else
+#if defined(GPGMM_DISABLE_SIZE_CACHE)
         return false;
+#else
+        return true;
 #endif
     }
 

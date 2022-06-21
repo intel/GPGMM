@@ -18,7 +18,6 @@
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 #include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/EventMessage.h"
-#include "gpgmm/common/MemorySize.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
@@ -34,6 +33,7 @@
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
+#include "gpgmm/d3d12/ResourceSizeD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm::d3d12 {
@@ -454,7 +454,7 @@ namespace gpgmm::d3d12 {
             // increasing memory footprint. Since resources are always sized-aligned, the
             // cached size must be requested per alignment {4KB, 64KB, or 4MB}. To avoid unbounded
             // cache growth, a known set of pre-defined sizes initializes the allocators.
-#if defined(GPGMM_ENABLE_SIZE_CACHE)
+#if !defined(GPGMM_DISABLE_SIZE_CACHE)
             {
                 // Temporary suppress log messages emitted from internal cache-miss requests.
                 ScopedLogLevel scopedLogLevel(LogSeverity::Info);
@@ -465,36 +465,31 @@ namespace gpgmm::d3d12 {
                 cacheRequest.AlwaysPrefetch = false;
                 cacheRequest.AvailableForAllocation = kInvalidSize;
 
-                for (uint64_t i = 0; i < MemorySize::kPowerOfTwoClassSize; i++) {
+                for (const SizeClassInfo& sizeInfo : ResourceSize::GenerateAllClassSizes()) {
                     MemoryAllocator* allocator = nullptr;
-                    cacheRequest.SizeInBytes = MemorySize::kPowerOfTwoCacheSizes[i].SizeInBytes;
+                    cacheRequest.SizeInBytes = sizeInfo.SizeInBytes;
+                    cacheRequest.Alignment = sizeInfo.Alignment;
 
                     allocator = mSmallBufferAllocatorOfType[resourceHeapTypeIndex].get();
                     if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
-                        IsAligned(cacheRequest.SizeInBytes,
-                                  D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        cacheRequest.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+                        sizeInfo.Alignment == D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT) {
                         allocator->TryAllocateMemory(cacheRequest);
                     }
 
                     allocator = mResourceAllocatorOfType[resourceHeapTypeIndex].get();
                     if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
-                        IsAligned(cacheRequest.SizeInBytes,
-                                  D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        cacheRequest.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+                        sizeInfo.Alignment == D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT) {
                         allocator->TryAllocateMemory(cacheRequest);
                     }
 
                     allocator = mMSAAResourceAllocatorOfType[resourceHeapTypeIndex].get();
                     if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
-                        IsAligned(cacheRequest.SizeInBytes,
-                                  D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT)) {
-                        cacheRequest.Alignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
+                        sizeInfo.Alignment == D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT) {
                         allocator->TryAllocateMemory(cacheRequest);
                     }
                 }
             }
-#endif  // defined(GPGMM_ENABLE_SIZE_CACHE)
+#endif  // !defined(GPGMM_DISABLE_SIZE_CACHE)
         }
     }
 

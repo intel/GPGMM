@@ -1121,18 +1121,64 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
-    GPGMM_SKIP_TEST_IF(!IsSizeCacheEnabled());
+    // Since we cannot determine which resource sizes will be cached upon CreateAllocator, skip the
+    // test.
+    GPGMM_SKIP_TEST_IF(IsSizeCacheEnabled());
 
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
     ASSERT_NE(resourceAllocator, nullptr);
 
-    // Upon creating the resource allocator, min. buffer size-alignment is always cached.
-    {
-        ComPtr<ResourceAllocation> cachedAllocation;
+    // First request is always a cache miss.
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags |= ALLOCATION_FLAG_ALWAYS_CACHE_SIZE;
 
-        ALLOCATION_DESC smallResourceAllocDesc = {};
+    {
+        ComPtr<ResourceAllocation> allocation;
+
+        ALLOCATION_DESC smallResourceAllocDesc = allocationDesc;
+        smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+        smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+
+        EXPECT_SIZE_CACHE_MISS(resourceAllocator,
+                               resourceAllocator->CreateResource(
+                                   smallResourceAllocDesc,
+                                   CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT),
+                                   D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
+                  static_cast<uint64_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
+    }
+    {
+        ComPtr<ResourceAllocation> allocation;
+        EXPECT_SIZE_CACHE_MISS(
+            resourceAllocator,
+            resourceAllocator->CreateResource(
+                allocationDesc, CreateBasicBufferDesc(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
+                  static_cast<uint64_t>(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT));
+    }
+    {
+        ComPtr<ResourceAllocation> allocation;
+        EXPECT_SIZE_CACHE_MISS(
+            resourceAllocator,
+            resourceAllocator->CreateResource(
+                allocationDesc,
+                CreateBasicBufferDesc(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
+                  static_cast<uint64_t>(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT));
+    }
+
+    // Second request is always a cache hit.
+    {
+        ComPtr<ResourceAllocation> allocation;
+
+        ALLOCATION_DESC smallResourceAllocDesc = allocationDesc;
         smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
         smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
 
@@ -1140,135 +1186,32 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
                               resourceAllocator->CreateResource(
                                   smallResourceAllocDesc,
                                   CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT),
-                                  D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &cachedAllocation));
-        ASSERT_NE(cachedAllocation, nullptr);
-        EXPECT_EQ(cachedAllocation->GetSize(),
+                                  D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
                   static_cast<uint64_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT));
     }
     {
-        ComPtr<ResourceAllocation> cachedAllocation;
+        ComPtr<ResourceAllocation> allocation;
         EXPECT_SIZE_CACHE_HIT(
             resourceAllocator,
             resourceAllocator->CreateResource(
                 {}, CreateBasicBufferDesc(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &cachedAllocation));
-        ASSERT_NE(cachedAllocation, nullptr);
-        EXPECT_EQ(cachedAllocation->GetSize(),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
                   static_cast<uint64_t>(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT));
     }
     {
-        ComPtr<ResourceAllocation> cachedAllocation;
+        ComPtr<ResourceAllocation> allocation;
         EXPECT_SIZE_CACHE_HIT(
             resourceAllocator,
             resourceAllocator->CreateResource(
                 {}, CreateBasicBufferDesc(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &cachedAllocation));
-        ASSERT_NE(cachedAllocation, nullptr);
-        EXPECT_EQ(cachedAllocation->GetSize(),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetSize(),
                   static_cast<uint64_t>(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT));
-    }
-
-    // Verify misaligned allocations are uncached.
-    {
-        ComPtr<ResourceAllocation> uncachedAllocation;
-
-        ALLOCATION_DESC smallResourceAllocDesc = {};
-        smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-        smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
-
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                smallResourceAllocDesc,
-                CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &uncachedAllocation));
-
-        ASSERT_NE(uncachedAllocation, nullptr);
-        EXPECT_EQ(uncachedAllocation->GetSize(),
-                  static_cast<uint64_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT * 3));
-    }
-    {
-        ComPtr<ResourceAllocation> uncachedAllocation;
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                {}, CreateBasicBufferDesc(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &uncachedAllocation));
-
-        ASSERT_NE(uncachedAllocation, nullptr);
-        EXPECT_EQ(uncachedAllocation->GetSize(),
-                  static_cast<uint64_t>(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 3));
-    }
-    {
-        ComPtr<ResourceAllocation> uncachedAllocation;
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                {}, CreateBasicBufferDesc(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &uncachedAllocation));
-
-        ASSERT_NE(uncachedAllocation, nullptr);
-        EXPECT_EQ(uncachedAllocation->GetSize(),
-                  static_cast<uint64_t>(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT * 3));
-    }
-
-    // Verify requesting for cached always caches.
-    ALLOCATION_DESC allocationWithSizeCached = {};
-    allocationWithSizeCached.Flags = ALLOCATION_FLAG_ALWAYS_CACHE_SIZE;
-    {
-        ALLOCATION_DESC smallResourceAllocDesc = allocationWithSizeCached;
-        smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-        smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
-
-        ComPtr<ResourceAllocation> uncachedAllocation;
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                smallResourceAllocDesc,
-                CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &uncachedAllocation));
-
-        ComPtr<ResourceAllocation> cachedAllocation;
-        EXPECT_SIZE_CACHE_HIT(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                smallResourceAllocDesc,
-                CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &cachedAllocation));
-    }
-    {
-        ComPtr<ResourceAllocation> uncachedAllocation;
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                allocationWithSizeCached,
-                CreateBasicBufferDesc(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &uncachedAllocation));
-
-        ComPtr<ResourceAllocation> cachedAllocation;
-        EXPECT_SIZE_CACHE_HIT(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                allocationWithSizeCached,
-                CreateBasicBufferDesc(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &cachedAllocation));
-    }
-    {
-        ComPtr<ResourceAllocation> uncachedAllocation;
-        EXPECT_SIZE_CACHE_MISS(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                allocationWithSizeCached,
-                CreateBasicBufferDesc(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &uncachedAllocation));
-
-        ComPtr<ResourceAllocation> cachedAllocation;
-        EXPECT_SIZE_CACHE_HIT(
-            resourceAllocator,
-            resourceAllocator->CreateResource(
-                allocationWithSizeCached,
-                CreateBasicBufferDesc(D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT * 3),
-                D3D12_RESOURCE_STATE_COMMON, nullptr, &cachedAllocation));
     }
 }
 

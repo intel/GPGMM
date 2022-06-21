@@ -141,6 +141,7 @@ source_set("gpgmm_sources") {
       "d3d12/ResourceAllocatorD3D12.h",
       "d3d12/ResourceHeapAllocatorD3D12.cpp",
       "d3d12/ResourceHeapAllocatorD3D12.h",
+      "d3d12/ResourceSizeD3D12.h",
       "d3d12/UtilsD3D12.cpp",
       "d3d12/UtilsD3D12.h",
       "d3d12/d3d12_platform.h",

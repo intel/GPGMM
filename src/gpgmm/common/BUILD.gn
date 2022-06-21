@@ -73,8 +73,8 @@ config("gpgmm_common_config") {
     defines += [ "GPGMM_ENABLE_ASSERT_ON_WARNING" ]
   }
 
-  if (gpgmm_enable_size_cache) {
-    defines += [ "GPGMM_ENABLE_SIZE_CACHE" ]
+  if (gpgmm_disable_size_cache) {
+    defines += [ "GPGMM_DISABLE_SIZE_CACHE" ]
   }
 
   if (gpgmm_enable_device_checks) {
