@@ -46,7 +46,6 @@ endif()
 
 if (MSVC)
   target_compile_options(gpgmm PRIVATE
-    /wd4244
     /wd4702
     /wd4245
     /wd4275

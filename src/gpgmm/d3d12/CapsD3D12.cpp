@@ -16,7 +16,6 @@
 
 #include "gpgmm/d3d12/ErrorD3D12.h"
 
-#include <cmath>
 #include <memory>
 
 namespace gpgmm::d3d12 {
@@ -26,8 +25,12 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+        // Prevent possible overflow.
+        if (feature.MaxGPUVirtualAddressBitsPerResource == 0) {
+            return E_INVALIDARG;
+        }
 
-        *sizeOut = std::pow(2, feature.MaxGPUVirtualAddressBitsPerResource) - 1;
+        *sizeOut = (1 << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
         return S_OK;
     }
 
@@ -36,8 +39,12 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+        // Prevent possible overflow.
+        if (feature.MaxGPUVirtualAddressBitsPerResource == 0) {
+            return E_INVALIDARG;
+        }
 
-        *sizeOut = std::pow(2, feature.MaxGPUVirtualAddressBitsPerProcess) - 1;
+        *sizeOut = (1 << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
         return S_OK;
     }
 
