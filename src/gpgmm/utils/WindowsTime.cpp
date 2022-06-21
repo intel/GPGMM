@@ -29,7 +29,7 @@ namespace gpgmm {
             LARGE_INTEGER curTime;
             const bool success = QueryPerformanceCounter(&curTime);
             ASSERT(success);
-            return SafeDivide(curTime.QuadPart, GetFrequency());
+            return static_cast<double>(SafeDivide(curTime.QuadPart, GetFrequency()));
         }
 
         void StartElapsedTime() override {

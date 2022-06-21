@@ -270,9 +270,9 @@ namespace gpgmm {
         bool allowSlabPrefetch = mAllowSlabPrefetch;
         if (allowSlabPrefetch &&
             mInfo.PrefetchedMemoryMissesEliminated < mInfo.PrefetchedMemoryMisses) {
-            const double currentCoverage =
+            const double currentCoverage = static_cast<double>(
                 SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
-                           mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
+                           mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses));
             if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
                 WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
                     << "Allow prefetch disabled, coverage went below threshold: ("
