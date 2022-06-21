@@ -26,7 +26,7 @@
 using namespace gpgmm;
 
 static constexpr uint64_t kDefaultMemorySize = 128u;
-static constexpr uint64_t kDefaultMemoryAlignment = 1u;
+static constexpr uint64_t kDefaultMemoryAlignment = 128u;
 
 class BuddyMemoryAllocatorTests : public testing::Test {
   public:
@@ -156,8 +156,8 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
                                    std::make_unique<DummyMemoryAllocator>());
 
     // Allocate two 64 byte sub-allocations.
-    std::unique_ptr<MemoryAllocation> allocation1 = allocator.TryAllocateMemory(
-        CreateBasicRequest(kDefaultMemorySize / 2, kDefaultMemoryAlignment));
+    std::unique_ptr<MemoryAllocation> allocation1 =
+        allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize / 2, 1));
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -166,8 +166,8 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     // First sub-allocation creates first heap.
     ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
 
-    std::unique_ptr<MemoryAllocation> allocation2 = allocator.TryAllocateMemory(
-        CreateBasicRequest(kDefaultMemorySize / 2, kDefaultMemoryAlignment));
+    std::unique_ptr<MemoryAllocation> allocation2 =
+        allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize / 2, 1));
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation2->GetBlock()->Offset, kDefaultMemorySize / 2);
@@ -177,8 +177,8 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
-    std::unique_ptr<MemoryAllocation> allocation3 = allocator.TryAllocateMemory(
-        CreateBasicRequest(kDefaultMemorySize / 2, kDefaultMemoryAlignment));
+    std::unique_ptr<MemoryAllocation> allocation3 =
+        allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize / 2, 1));
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), kDefaultMemorySize / 2);
     ASSERT_EQ(allocation3->GetBlock()->Offset, kDefaultMemorySize);
@@ -220,7 +220,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     // Allocate two 64-byte allocations.
     std::unique_ptr<MemoryAllocation> allocation1 =
-        allocator.TryAllocateMemory(CreateBasicRequest(64, kDefaultMemoryAlignment));
+        allocator.TryAllocateMemory(CreateBasicRequest(64, 1));
     ASSERT_NE(allocation1, nullptr);
     ASSERT_EQ(allocation1->GetSize(), 64u);
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
@@ -228,7 +228,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
-        allocator.TryAllocateMemory(CreateBasicRequest(64, kDefaultMemoryAlignment));
+        allocator.TryAllocateMemory(CreateBasicRequest(64, 1));
     ASSERT_NE(allocation2, nullptr);
     ASSERT_EQ(allocation2->GetSize(), 64u);
     ASSERT_EQ(allocation2->GetBlock()->Offset, 64u);
@@ -240,7 +240,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
-        allocator.TryAllocateMemory(CreateBasicRequest(128, kDefaultMemoryAlignment));
+        allocator.TryAllocateMemory(CreateBasicRequest(128, 1));
     ASSERT_NE(allocation3, nullptr);
     ASSERT_EQ(allocation3->GetSize(), 128u);
     ASSERT_EQ(allocation3->GetBlock()->Offset, 128u);
@@ -252,7 +252,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
-        allocator.TryAllocateMemory(CreateBasicRequest(64, kDefaultMemoryAlignment));
+        allocator.TryAllocateMemory(CreateBasicRequest(64, 1));
     ASSERT_NE(allocation4, nullptr);
     ASSERT_EQ(allocation4->GetSize(), 64u);
     ASSERT_EQ(allocation4->GetBlock()->Offset, 256u);
@@ -264,7 +264,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
 
     // R5 size forms 64 byte hole after R4.
     std::unique_ptr<MemoryAllocation> allocation5 =
-        allocator.TryAllocateMemory(CreateBasicRequest(128, kDefaultMemoryAlignment));
+        allocator.TryAllocateMemory(CreateBasicRequest(128, 1));
     ASSERT_NE(allocation5, nullptr);
     ASSERT_EQ(allocation5->GetSize(), 128u);
     ASSERT_EQ(allocation5->GetBlock()->Offset, 384u);
@@ -470,7 +470,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     // Allocate |kNumOfAllocations|.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(CreateBasicRequest(4, kDefaultMemoryAlignment));
+            allocator.TryAllocateMemory(CreateBasicRequest(4, 1));
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -493,7 +493,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     // Allocate again reusing the same heaps.
     for (uint32_t i = 0; i < kNumOfAllocations; i++) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(CreateBasicRequest(4, kDefaultMemoryAlignment));
+            allocator.TryAllocateMemory(CreateBasicRequest(4, 1));
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);
@@ -532,7 +532,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
     // Allocate |kNumOfHeaps| worth.
     while (heaps.size() < kNumOfHeaps) {
         std::unique_ptr<MemoryAllocation> allocation =
-            allocator.TryAllocateMemory(CreateBasicRequest(4, kDefaultMemoryAlignment));
+            allocator.TryAllocateMemory(CreateBasicRequest(4, 1));
         ASSERT_NE(allocation, nullptr);
         ASSERT_EQ(allocation->GetSize(), 4u);
         ASSERT_EQ(allocation->GetMethod(), AllocationMethod::kSubAllocated);

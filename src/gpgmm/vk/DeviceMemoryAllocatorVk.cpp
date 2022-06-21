@@ -49,10 +49,7 @@ namespace gpgmm::vk {
             return {};
         }
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, EventMessageId::SizeExceeded,
-                         "Request size exceeded the memory size (" +
-                             std::to_string(request.SizeInBytes) + " vs " +
-                             std::to_string(mMemorySize) + " bytes).");
+        GPGMM_INVALID_IF(!ValidateRequest(request));
 
         VkMemoryAllocateInfo allocateInfo = {};
         allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -88,6 +85,10 @@ namespace gpgmm::vk {
         mInfo.UsedMemoryCount--;
 
         SafeRelease(allocation);
+    }
+
+    uint64_t DeviceMemoryAllocator::GetMemorySize() const {
+        return mMemorySize;
     }
 
 }  // namespace gpgmm::vk

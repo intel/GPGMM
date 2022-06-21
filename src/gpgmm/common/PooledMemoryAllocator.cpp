@@ -39,11 +39,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_ASSERT_NONZERO(request);
-
-        if (request.SizeInBytes != GetMemorySize()) {
-            return {};
-        }
+        GPGMM_INVALID_IF(!ValidateRequest(request));
 
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {

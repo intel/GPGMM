@@ -29,7 +29,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_ASSERT_NONZERO(request);
+        GPGMM_INVALID_IF(!ValidateRequest(request));
 
         std::unique_ptr<MemoryAllocation> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);

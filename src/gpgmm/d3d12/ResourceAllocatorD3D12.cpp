@@ -270,20 +270,6 @@ namespace gpgmm::d3d12 {
         HRESULT TryAllocateResource(MemoryAllocator* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
-            // Do not attempt to allocate if the requested size already exceeds the fixed
-            // memory size allowed by the allocator. Otherwise, both the memory and resource would
-            // be created, immediately released, then likely re-allocated all over again once
-            // TryAllocateResource returns.
-            if (allocator->GetMemorySize() != kInvalidSize &&
-                request.SizeInBytes > allocator->GetMemorySize()) {
-                return E_FAIL;
-            }
-
-            // Requested resource size should be already aligned with the fixed memory size required
-            // by the allocator.
-            ASSERT(allocator->GetMemorySize() == kInvalidSize ||
-                   allocator->GetMemorySize() % request.Alignment == 0);
-
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.

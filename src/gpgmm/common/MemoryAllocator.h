@@ -264,6 +264,14 @@ namespace gpgmm {
         */
         const char* GetTypename() const override;
 
+        /** \brief Checks if the request is valid.
+
+        @param request A MemoryAllocationRequest to check.
+
+        \return True if the request is valid. If non-valid, it cannot be allocated.
+        */
+        bool ValidateRequest(const MemoryAllocationRequest& request) const;
+
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
