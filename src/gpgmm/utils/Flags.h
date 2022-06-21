@@ -120,6 +120,11 @@ namespace gpgmm {
             return mValue;
         }
 
+        // Returns true if |this| has all |flags|.
+        bool HasFlags(const Flags& flags) const {
+            return (mValue & flags) == flags;
+        }
+
       private:
         ValueT mValue;
     };

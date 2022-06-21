@@ -59,6 +59,7 @@ namespace gpgmm {
             kFirst = 1,
             kSecond = 2,
             kThird = 3,
+            kFourth = 4,
         };
 
         using OptionFlags = Flags<Option>;
@@ -85,6 +86,15 @@ namespace gpgmm {
             ss << a;
             EXPECT_EQ(ss.str(), "3");
         }
+    }
+
+    TEST(FlagsTests, HasFlags) {
+        constexpr Desc::OptionFlags firstAndSecond = Desc::kFirst | Desc::kSecond;
+
+        EXPECT_TRUE(firstAndSecond.HasFlags(Desc::kSecond));
+        EXPECT_TRUE(firstAndSecond.HasFlags(Desc::kFirst));
+
+        EXPECT_FALSE(firstAndSecond.HasFlags(Desc::kFourth));
     }
 
 }  // namespace gpgmm
