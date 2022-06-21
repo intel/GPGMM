@@ -1,7 +1,7 @@
 var searchData=
 [
   ['safedelete_0',['SafeDelete',['../namespacegpgmm.html#afa52dbfdcf2a24cf11b0b856d2bf96cd',1,'gpgmm::SafeDelete(T *&amp;object)'],['../namespacegpgmm.html#af747c4ed6f66b148ad3c5019386b629c',1,'gpgmm::SafeDelete(T *&amp;&amp;object)']]],
-  ['safedivide_1',['SafeDivide',['../namespacegpgmm.html#abe26d337103eda2e82e6a79734b12abb',1,'gpgmm']]],
+  ['safedivide_1',['SafeDivide',['../namespacegpgmm.html#a32503d12ea8f7915876b601297a9ea03',1,'gpgmm']]],
   ['saferelease_2',['SafeRelease',['../namespacegpgmm.html#ae672fcac08b7abf6a2506389339d0adf',1,'gpgmm']]],
   ['scanforward_3',['ScanForward',['../namespacegpgmm.html#a92ce351d1625c4e547b088d675bacae3',1,'gpgmm']]],
   ['scopedloglevel_4',['ScopedLogLevel',['../classgpgmm_1_1_scoped_log_level.html#aea4063e42a6b9e872c86f5daf84f457c',1,'gpgmm::ScopedLogLevel']]],

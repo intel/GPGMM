@@ -84,9 +84,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aa720936c4215d487a3e391e144836691"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_TYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691">HeapType</a> = D3D12_HEAP_TYPE_DEFAULT</td></tr>
 <tr class="memdesc:aa720936c4215d487a3e391e144836691"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> type that the resource to be allocated requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691">More...</a><br /></td></tr>
 <tr class="separator:aa720936c4215d487a3e391e144836691"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">ExtraRequiredHeapFlags</a> = D3D12_HEAP_FLAG_NONE</td></tr>
-<tr class="memdesc:a08cf139c6ad730e0dae3df0526ce36bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional heap flags that the resource requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">More...</a><br /></td></tr>
-<tr class="separator:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa306a32673748802f822de9821c8c8b1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa306a32673748802f822de9821c8c8b1">DebugName</a></td></tr>
 <tr class="memdesc:aa306a32673748802f822de9821c8c8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associates a name with the given allocation.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa306a32673748802f822de9821c8c8b1">More...</a><br /></td></tr>
 <tr class="separator:aa306a32673748802f822de9821c8c8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,25 +103,6 @@ Public Attributes</h2></td></tr>
 
 <p>Associates a name with the given allocation. </p>
 <p >Optional parameter. By default, no name is associated. </p>
-
-</div>
-</div>
-<a id="a08cf139c6ad730e0dae3df0526ce36bd" name="a08cf139c6ad730e0dae3df0526ce36bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08cf139c6ad730e0dae3df0526ce36bd">&#9670;&nbsp;</a></span>ExtraRequiredHeapFlags</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">D3D12_HEAP_FLAGS gpgmm::d3d12::ALLOCATION_DESC::ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_NONE</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Additional heap flags that the resource requires. </p>
-<p >By default, GPGMM infers the required heap flags based on the required fields in the D3D12_RESOURCE_DESC, <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> and <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a>. But if additional heap flags are required, they can also be specified.</p>
-<p >It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all allocation methods are guarenteed to be supported.</p>
-<p >Optional parameter. </p>
 
 </div>
 </div>
