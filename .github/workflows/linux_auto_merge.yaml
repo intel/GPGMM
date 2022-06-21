@@ -1,26 +1,10 @@
 name: "Auto merge pull requests"
 
 on:
-  pull_request:
-    types:
-      - labeled
-      - unlabeled
-      - synchronize
-      - opened
-      - edited
-      - ready_for_review
-      - reopened
-      - unlocked
-
-  pull_request_review:
-    types:
-      - submitted
-
-  check_suite:
-    types:
-      - completed
-
-  status: {}
+  # Trigger when checks complete.
+  # This is manually triggered as final step of CI workflow.
+  repository_dispatch:
+    types: [checks-complete]
 
 jobs:
   automerge:
