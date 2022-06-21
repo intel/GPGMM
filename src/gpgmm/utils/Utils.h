@@ -65,6 +65,24 @@ namespace gpgmm {
         return ToString(object) + ToString(args...);
     }
 
+    template <typename T, typename A1, typename A2>
+    constexpr auto ConstexprConcat(A1 lhs, A2 rhs) {
+        std::array<T, lhs.size() + rhs.size()> sizeArray{};
+        size_t i = 0;
+
+        for (auto& item : lhs) {
+            sizeArray[i] = std::move(item);
+            ++i;
+        }
+
+        for (auto& item : rhs) {
+            sizeArray[i] = std::move(item);
+            ++i;
+        }
+
+        return sizeArray;
+    }
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_UTILS_UTILS_H_

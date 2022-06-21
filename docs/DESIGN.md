@@ -176,7 +176,7 @@ GPGMM detects and reports leaks at the allocation-level (vs Memory Object). Shou
 
 ### Caching requirements
 
-GPGMM conditionally caches for *known* requests sizes. The size-cache is predefined at compile-time and supports multiple *size classes* (ex. multiples of page or power-of-two). The size-cache can be disabled by not providing `GPGMM_ENABLE_SIZE_CACHE`.
+GPGMM caches for common requests sizes. The size-cache is predefined at compile-time and supports multiple *size classes* (ex. page-multiple or power-of-two). The size-cache can be disabled by providing `GPGMM_DISABLE_SIZE_CACHE`.
 
 ### Capacity planning
 
