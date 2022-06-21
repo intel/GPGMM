@@ -134,18 +134,80 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
     ASSERT_EQ(allocation, nullptr);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferMany) {
-    ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(
-        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
-    ASSERT_NE(resourceAllocator, nullptr);
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
-    for (auto& alloc : GenerateBufferAllocations()) {
-        ComPtr<ResourceAllocation> allocation;
-        EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
-                      {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
-                      D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
-                  alloc.succeeds);
+    // ALLOCATOR_ALGORITHM_SLAB
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_SLAB + ALLOCATOR_ALGORITHM_FIXED_POOL
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_FIXED_POOL;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // No sub-allocation algorithm.
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          {}, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
     }
 }
 
