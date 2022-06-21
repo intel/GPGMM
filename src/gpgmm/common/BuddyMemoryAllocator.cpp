@@ -46,22 +46,13 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_ASSERT_NONZERO(request);
-
-        // Check the unaligned size to avoid overflowing NextPowerOfTwo.
-        GPGMM_INVALID_IF(request.SizeInBytes > mMemorySize, EventMessageId::SizeExceeded,
-                         "Allocation size exceeded the memory size (" +
-                             std::to_string(request.SizeInBytes) + " vs " +
-                             std::to_string(mMemorySize) + " bytes).");
+        GPGMM_INVALID_IF(!ValidateRequest(request));
 
         // Round allocation size to nearest power-of-two.
         const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
 
-        // Allocation cannot exceed the memory size.
-        GPGMM_INVALID_IF(allocationSize > mMemorySize, EventMessageId::SizeExceeded,
-                         "Allocation size exceeded the memory size (" +
-                             std::to_string(allocationSize) + " vs " + std::to_string(mMemorySize) +
-                             " bytes).");
+        // Request cannot exceed memory size.
+        GPGMM_INVALID_IF(allocationSize > mMemorySize);
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;

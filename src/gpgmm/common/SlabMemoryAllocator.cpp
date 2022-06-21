@@ -148,17 +148,14 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize, EventMessageId::SizeExceeded,
-                         "Allocation size exceeded the block size (" +
-                             std::to_string(request.SizeInBytes) + " vs " +
-                             std::to_string(mBlockSize) + " bytes).");
+        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize);
 
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize),
                             request.AvailableForAllocation);
-        GPGMM_INVALID_IF(slabSize > mMaxSlabSize, EventMessageId::SizeExceeded,
-                         "Slab size exceeded the max slab size (" + std::to_string(slabSize) +
-                             " vs " + std::to_string(mMaxSlabSize) + " bytes).");
+
+        // Slab cannot exceed memory size.
+        GPGMM_INVALID_IF(slabSize > mMaxSlabSize);
 
         // Get or create the cache containing slabs of the slab size.
         SlabCache* pCache = GetOrCreateCache(slabSize);
@@ -421,7 +418,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_ASSERT_NONZERO(request);
+        GPGMM_INVALID_IF(!ValidateRequest(request));
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
 

@@ -19,8 +19,6 @@
 
 namespace gpgmm {
 
-#define GPGMM_ASSERT_NONZERO(request) ASSERT(request.SizeInBytes > 0 && request.Alignment > 0)
-
 #define GPGMM_TRY_ASSIGN(expr, value) \
     {                                 \
         auto result = expr;           \
@@ -32,12 +30,11 @@ namespace gpgmm {
     for (;;)                          \
     break
 
-#define GPGMM_INVALID_IF(expr, messageId, ...)               \
-    if (GPGMM_UNLIKELY(expr)) {                              \
-        DebugEvent(GetTypename(), messageId) << __VA_ARGS__; \
-        return {};                                           \
-    }                                                        \
-    for (;;)                                                 \
+#define GPGMM_INVALID_IF(expr)  \
+    if (GPGMM_UNLIKELY(expr)) { \
+        return {};              \
+    }                           \
+    for (;;)                    \
     break
 
 }  // namespace gpgmm

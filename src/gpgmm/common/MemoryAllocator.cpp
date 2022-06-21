@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/JSONSerializer.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm {
 
@@ -120,6 +121,39 @@ namespace gpgmm {
 
     const char* MemoryAllocator::GetTypename() const {
         return "MemoryAllocator";
+    }
+
+    bool MemoryAllocator::ValidateRequest(const MemoryAllocationRequest& request) const {
+        ASSERT(request.SizeInBytes > 0 && request.Alignment > 0);
+
+        // Check request size cannot overflow.
+        if (request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1)) {
+            DebugEvent(GetTypename(), EventMessageId::SizeExceeded)
+                << "Requested size will overflow:" + std::to_string(request.SizeInBytes)
+                << " bytes.";
+            return false;
+        }
+
+        // Check request size cannot overflow |this| memory allocator.
+        const uint64_t alignedSize = AlignTo(request.SizeInBytes, request.Alignment);
+        if (GetMemorySize() != kInvalidSize && alignedSize > GetMemorySize()) {
+            DebugEvent(GetTypename(), EventMessageId::SizeExceeded)
+                << "Requested size exceeds memory size (" + std::to_string(alignedSize) + " vs " +
+                       std::to_string(GetMemorySize()) + " bytes).";
+            return false;
+        }
+
+        // Check request size has compatible alignment with |this| memory allocator.
+        if (GetMemoryAlignment() != kInvalidSize &&
+            !IsAligned(GetMemoryAlignment(), request.Alignment)) {
+            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+                << "Requested alignment exceeds memory alignment (" +
+                       std::to_string(request.Alignment) + " vs " +
+                       std::to_string(GetMemoryAlignment()) + " bytes).";
+            return false;
+        }
+
+        return true;
     }
 
 }  // namespace gpgmm

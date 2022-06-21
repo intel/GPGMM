@@ -34,6 +34,8 @@ namespace gpgmm::vk {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
+        uint64_t GetMemorySize() const override;
+
       private:
         GpResourceAllocator mResourceAllocator;
         uint32_t mMemoryTypeIndex;
