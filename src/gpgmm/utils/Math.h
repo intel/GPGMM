@@ -59,9 +59,9 @@ namespace gpgmm {
 
     // Evaluates a/b, avoiding division by zero.
     template <typename T>
-    double SafeDivide(T dividend, T divisor) {
+    T SafeDivide(T dividend, T divisor) {
         if (divisor == 0) {
-            return 0.0;
+            return divisor;
         } else {
             return dividend / divisor;
         }
