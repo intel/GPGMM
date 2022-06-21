@@ -41,6 +41,10 @@ namespace gpgmm {
 
         GPGMM_ASSERT_NONZERO(request);
 
+        if (request.SizeInBytes != GetMemorySize()) {
+            return {};
+        }
+
         std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
         if (allocation == nullptr) {
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
