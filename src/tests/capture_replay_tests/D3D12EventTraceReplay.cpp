@@ -15,6 +15,7 @@
 
 #include "tests/capture_replay_tests/GPGMMCaptureReplayTests.h"
 
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEventPhase.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
@@ -537,8 +538,8 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
     RunSingleTest(forceParams);
 
     gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
-                     << mCapturedMemoryStats.PeakUsage / 1e6 << " vs "
-                     << mReplayedMemoryStats.PeakUsage / 1e6 << " MB";
+                     << GPGMM_BYTES_TO_MB(mCapturedMemoryStats.PeakUsage) << " vs "
+                     << GPGMM_BYTES_TO_MB(mReplayedMemoryStats.PeakUsage) << " MB";
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }

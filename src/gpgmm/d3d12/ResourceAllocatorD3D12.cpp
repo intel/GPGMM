@@ -1119,7 +1119,8 @@ namespace gpgmm::d3d12 {
             SafeDivide(result.UsedBlockUsage, result.UsedMemoryUsage + result.FreeMemoryUsage) *
                 100);
 
-        GPGMM_TRACE_EVENT_METRIC("GPU allocation free (MB)", result.FreeMemoryUsage / 1e6);
+        GPGMM_TRACE_EVENT_METRIC("GPU allocation free (MB)",
+                                 GPGMM_BYTES_TO_MB(result.FreeMemoryUsage));
 
         GPGMM_TRACE_EVENT_METRIC(
             "GPU allocation prefetch coverage (%)",
