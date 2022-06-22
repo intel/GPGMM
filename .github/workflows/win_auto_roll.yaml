@@ -51,8 +51,9 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
       with:
-        title: GPGMM Autoroller
+        title: Auto roll ${{ matrix.dep_path }}
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         branch: autoroller/roll
+        branch-suffix: short-commit-hash
         delete-branch: true
         labels: automerge
