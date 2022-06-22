@@ -61,10 +61,11 @@ namespace gpgmm {
           mAllowSlabPrefetch(allowSlabPrefetch),
           mSlabGrowthFactor(slabGrowthFactor),
           mMemoryAllocator(memoryAllocator) {
-        ASSERT(IsPowerOfTwo(mMaxSlabSize));
+        ASSERT(IsPowerOfTwo(mSlabAlignment));
         ASSERT(mMemoryAllocator != nullptr);
         ASSERT(mSlabGrowthFactor >= 1);
-        ASSERT(mSlabAlignment > 0);
+        ASSERT(IsAligned(mMaxSlabSize, mSlabAlignment));
+        ASSERT(IsAligned(mMinSlabSize, mSlabAlignment));
     }
 
     SlabMemoryAllocator::~SlabMemoryAllocator() {
