@@ -1,10 +1,14 @@
-name: 'Roll latest packages'
+name: 'Auto Roll DEPS'
 
 on:
   workflow_dispatch:
 
 jobs:
-  job:
+  deps:
+    strategy:
+      matrix:
+        dep_path: ["third_party/googletest" , "third_party/vulkan-deps"]
+
     runs-on: windows-2019
 
     steps:
@@ -37,47 +41,12 @@ jobs:
         copy scripts\standalone.gclient .gclient
         gclient sync
 
-    - name: Roll third_party/googletest
+    - name: Roll ${{ matrix.dep_path }}
       shell: cmd
       run: |
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/googletest
-
-    - name: Roll third_party/vulkan-deps
-      shell: cmd
-      run: |
-        set "PATH=%CD%\..\depot_tools;%PATH%"
-        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/vulkan-deps
-
-    - name: Roll third_party/catapult
-      shell: cmd
-      run: |
-        set "PATH=%CD%\..\depot_tools;%PATH%"
-        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/catapult
-
-    - name: Roll jsoncpp/source
-      shell: cmd
-      run: |
-        set "PATH=%CD%\..\depot_tools;%PATH%"
-        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/jsoncpp/source
-
-    - name: Roll third_party/libFuzzer/src
-      shell: cmd
-      run: |
-        set "PATH=%CD%\..\depot_tools;%PATH%"
-        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/libFuzzer/src
-
-    - name: Roll third_party/google_benchmark/src
-      shell: cmd
-      run: |
-        set "PATH=%CD%\..\depot_tools;%PATH%"
-        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep third_party/google_benchmark/src
+        roll-dep --no-logs ${{ matrix.dep_path }}
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
