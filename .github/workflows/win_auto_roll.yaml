@@ -46,7 +46,7 @@ jobs:
       run: |
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep --no-logs ${{ matrix.dep_path }}
+        roll-dep --no-log ${{ matrix.dep_path }}
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
