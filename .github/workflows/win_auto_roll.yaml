@@ -28,6 +28,9 @@ jobs:
         python-version: '3.x'
 
     - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0
 
     - name: Sync code for main branch
       shell: cmd
