@@ -105,12 +105,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab2d5625cffc43b7e91fda532009dc09e"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_info.html#ab2d5625cffc43b7e91fda532009dc09e">PrefetchedMemoryMissesEliminated</a></td></tr>
 <tr class="memdesc:ab2d5625cffc43b7e91fda532009dc09e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cache misses eliminated because of prefetching.  <a href="structgpgmm_1_1_memory_allocator_info.html#ab2d5625cffc43b7e91fda532009dc09e">More...</a><br /></td></tr>
 <tr class="separator:ab2d5625cffc43b7e91fda532009dc09e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21c0421776fc2d859c06c87565448662"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_info.html#a21c0421776fc2d859c06c87565448662">CacheSizeMisses</a></td></tr>
-<tr class="memdesc:a21c0421776fc2d859c06c87565448662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size was NOT cached.  <a href="structgpgmm_1_1_memory_allocator_info.html#a21c0421776fc2d859c06c87565448662">More...</a><br /></td></tr>
-<tr class="separator:a21c0421776fc2d859c06c87565448662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a933bc0dee25fc16bcfff3813613a2dec"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_info.html#a933bc0dee25fc16bcfff3813613a2dec">CacheSizeHits</a></td></tr>
-<tr class="memdesc:a933bc0dee25fc16bcfff3813613a2dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size was cached.  <a href="structgpgmm_1_1_memory_allocator_info.html#a933bc0dee25fc16bcfff3813613a2dec">More...</a><br /></td></tr>
-<tr class="separator:a933bc0dee25fc16bcfff3813613a2dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae351c7732c435c6ef443841804b9f256"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_info.html#ae351c7732c435c6ef443841804b9f256">SizeCacheMisses</a></td></tr>
+<tr class="memdesc:ae351c7732c435c6ef443841804b9f256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size was NOT cached.  <a href="structgpgmm_1_1_memory_allocator_info.html#ae351c7732c435c6ef443841804b9f256">More...</a><br /></td></tr>
+<tr class="separator:ae351c7732c435c6ef443841804b9f256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aef5e969779809748593998fd4ab7cd"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_info.html#a2aef5e969779809748593998fd4ab7cd">SizeCacheHits</a></td></tr>
+<tr class="memdesc:a2aef5e969779809748593998fd4ab7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested size was cached.  <a href="structgpgmm_1_1_memory_allocator_info.html#a2aef5e969779809748593998fd4ab7cd">More...</a><br /></td></tr>
+<tr class="separator:a2aef5e969779809748593998fd4ab7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Information about the memory allocator. </p>
@@ -142,38 +142,6 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a933bc0dee25fc16bcfff3813613a2dec" name="a933bc0dee25fc16bcfff3813613a2dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a933bc0dee25fc16bcfff3813613a2dec">&#9670;&nbsp;</a></span>CacheSizeHits</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t gpgmm::MemoryAllocatorInfo::CacheSizeHits</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Requested size was cached. </p>
-
-</div>
-</div>
-<a id="a21c0421776fc2d859c06c87565448662" name="a21c0421776fc2d859c06c87565448662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21c0421776fc2d859c06c87565448662">&#9670;&nbsp;</a></span>CacheSizeMisses</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t gpgmm::MemoryAllocatorInfo::CacheSizeMisses</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Requested size was NOT cached. </p>
-
-</div>
-</div>
 <a id="a9fe81d79524118892d0dd19abe1c7d04" name="a9fe81d79524118892d0dd19abe1c7d04"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9fe81d79524118892d0dd19abe1c7d04">&#9670;&nbsp;</a></span>FreeMemoryUsage</h2>
 
@@ -219,6 +187,38 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Cache misses eliminated because of prefetching. </p>
+
+</div>
+</div>
+<a id="a2aef5e969779809748593998fd4ab7cd" name="a2aef5e969779809748593998fd4ab7cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aef5e969779809748593998fd4ab7cd">&#9670;&nbsp;</a></span>SizeCacheHits</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MemoryAllocatorInfo::SizeCacheHits</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Requested size was cached. </p>
+
+</div>
+</div>
+<a id="ae351c7732c435c6ef443841804b9f256" name="ae351c7732c435c6ef443841804b9f256"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae351c7732c435c6ef443841804b9f256">&#9670;&nbsp;</a></span>SizeCacheMisses</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MemoryAllocatorInfo::SizeCacheMisses</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Requested size was NOT cached. </p>
 
 </div>
 </div>
