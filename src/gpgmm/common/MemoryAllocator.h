@@ -65,11 +65,11 @@ namespace gpgmm {
 
         /** \brief Requested size was NOT cached.
          */
-        uint64_t CacheSizeMisses;
+        uint64_t SizeCacheMisses;
 
         /** \brief Requested size was cached.
          */
-        uint64_t CacheSizeHits;
+        uint64_t SizeCacheHits;
 
         MemoryAllocatorInfo& operator+=(const MemoryAllocatorInfo& rhs) {
             UsedBlockCount += rhs.UsedBlockCount;
@@ -81,8 +81,8 @@ namespace gpgmm {
             PrefetchedMemoryMisses += rhs.PrefetchedMemoryMisses;
             PrefetchedMemoryMissesEliminated += rhs.PrefetchedMemoryMissesEliminated;
 
-            CacheSizeMisses += rhs.CacheSizeMisses;
-            CacheSizeHits += rhs.CacheSizeHits;
+            SizeCacheMisses += rhs.SizeCacheMisses;
+            SizeCacheHits += rhs.SizeCacheHits;
 
             return *this;
         }

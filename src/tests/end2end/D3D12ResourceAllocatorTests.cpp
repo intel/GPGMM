@@ -32,18 +32,18 @@ static constexpr uint64_t kDefaultBufferSize = 4ll * 1024ll * 1024ll;  // 4MB
 #define EXPECT_SIZE_CACHE_HIT(allocator, statement)              \
     do {                                                         \
         ASSERT_NE(allocator, nullptr);                           \
-        size_t countBefore = allocator->GetInfo().CacheSizeHits; \
+        size_t countBefore = allocator->GetInfo().SizeCacheHits; \
         EXPECT_SUCCEEDED(statement);                             \
-        size_t countAfter = allocator->GetInfo().CacheSizeHits;  \
+        size_t countAfter = allocator->GetInfo().SizeCacheHits;  \
         EXPECT_GT(countAfter, countBefore);                      \
     } while (0)
 
 #define EXPECT_SIZE_CACHE_MISS(allocator, statement)               \
     do {                                                           \
         ASSERT_NE(allocator, nullptr);                             \
-        size_t countBefore = allocator->GetInfo().CacheSizeMisses; \
+        size_t countBefore = allocator->GetInfo().SizeCacheMisses; \
         EXPECT_SUCCEEDED(statement);                               \
-        size_t countAfter = allocator->GetInfo().CacheSizeMisses;  \
+        size_t countAfter = allocator->GetInfo().SizeCacheMisses;  \
         EXPECT_GT(countAfter, countBefore);                        \
     } while (0)
 

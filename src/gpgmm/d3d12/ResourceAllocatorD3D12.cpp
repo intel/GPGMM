@@ -1129,7 +1129,7 @@ namespace gpgmm::d3d12 {
 
         GPGMM_TRACE_EVENT_METRIC(
             "GPU request cache (%)",
-            SafeDivide(result.CacheSizeHits, result.CacheSizeMisses + result.CacheSizeHits) * 100);
+            SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
         return result;
     }
