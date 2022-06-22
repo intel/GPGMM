@@ -7,7 +7,7 @@ jobs:
   deps:
     strategy:
       matrix:
-        dep_path: ["third_party/googletest" , "third_party/vulkan-deps"]
+        dep_path: ["third_party/googletest" , "third_party/vulkan-deps", "third_party/catapult", "third_party/jsoncpp/source", "third_party/libFuzzer/src", "third_party/google_benchmark/src"]
 
     runs-on: windows-2019
 
