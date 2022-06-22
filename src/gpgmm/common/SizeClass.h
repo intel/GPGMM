@@ -17,6 +17,15 @@
 
 #include <array>
 
+// Convert sizes, in bytes, to/from SI prefix.
+#define GPGMM_KB_TO_BYTES(bytes) ((bytes)*1024)
+#define GPGMM_MB_TO_BYTES(bytes) (GPGMM_KB_TO_BYTES(bytes) * 1024)
+#define GPGMM_GB_TO_BYTES(bytes) (GPGMM_MB_TO_BYTES(bytes) * 1024)
+
+#define GPGMM_BYTES_TO_KB(bytes) ((bytes) / 1024)
+#define GPGMM_BYTES_TO_MB(bytes) (GPGMM_BYTES_TO_KB(bytes) / 1024)
+#define GPGMM_BYTES_TO_GB(bytes) (GPGMM_BYTES_TO_MB(bytes) / 1024)
+
 namespace gpgmm {
 
     struct SizeClassInfo {

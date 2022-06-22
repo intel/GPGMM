@@ -16,6 +16,7 @@
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
@@ -29,7 +30,7 @@
 
 namespace gpgmm::d3d12 {
 
-    static constexpr uint32_t kDefaultEvictBatchSize = 50ll * 1024ll * 1024ll;  // 50MB
+    static constexpr uint32_t kDefaultEvictBatchSize = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
 
     // static
@@ -374,7 +375,8 @@ namespace gpgmm::d3d12 {
         }
 
         if (objectsToEvict.size() > 0) {
-            GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)", evictedSizeInBytes / 1e6);
+            GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)",
+                                     GPGMM_BYTES_TO_MB(evictedSizeInBytes));
 
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
@@ -468,8 +470,9 @@ namespace gpgmm::d3d12 {
                                         nonLocalHeapsToMakeResident.data()));
         }
 
-        GPGMM_TRACE_EVENT_METRIC("GPU memory page-in (MB)",
-                                 (localSizeToMakeResident + nonLocalSizeToMakeResident) / 1e6);
+        GPGMM_TRACE_EVENT_METRIC(
+            "GPU memory page-in (MB)",
+            GPGMM_BYTES_TO_MB(localSizeToMakeResident + nonLocalSizeToMakeResident));
 
         // Queue and command-lists may not be specified since they are not capturable for playback.
         if (commandLists != nullptr && queue != nullptr) {
