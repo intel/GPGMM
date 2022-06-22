@@ -38,7 +38,7 @@ namespace gpgmm {
 
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
         ASSERT(offset != kInvalidOffset);
-        return SafeDivide(offset, mMemorySize);
+        return static_cast<uint64_t>(SafeDivide(offset, mMemorySize));
     }
 
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(

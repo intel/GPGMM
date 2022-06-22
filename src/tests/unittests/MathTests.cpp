@@ -18,6 +18,13 @@
 
 using namespace gpgmm;
 
+TEST(MathTests, Basic) {
+    // a/b = c
+    EXPECT_EQ(SafeDivide(100, 0), 0.0);
+    EXPECT_EQ(SafeDivide(100, 10), 10);
+    EXPECT_EQ(SafeDivide(1.25, 2.0), 0.625);
+}
+
 TEST(MathTests, IsPowerOfTwo) {
     // Check if number is POT.
     EXPECT_FALSE(IsPowerOfTwo(0u));  // 2^0 = 0
