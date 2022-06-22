@@ -17,6 +17,7 @@
 #include "gpgmm/common/LIFOMemoryPool.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm {
 
@@ -26,7 +27,7 @@ namespace gpgmm {
         : MemoryAllocator(std::move(memoryAllocator)),
           mPool(new LIFOMemoryPool(memorySize)),
           mMemoryAlignment(memoryAlignment) {
-        ASSERT(mPool != nullptr);
+        ASSERT(IsAligned(memorySize, mMemoryAlignment));
     }
 
     PooledMemoryAllocator::~PooledMemoryAllocator() {

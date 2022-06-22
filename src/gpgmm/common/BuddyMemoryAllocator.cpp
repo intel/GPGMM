@@ -31,8 +31,9 @@ namespace gpgmm {
           mBuddyBlockAllocator(systemSize),
           mUsedPool(mMemorySize) {
         ASSERT(mMemorySize <= systemSize);
-        ASSERT(IsPowerOfTwo(mMemorySize));
+        ASSERT(IsPowerOfTwo(mMemoryAlignment));
         ASSERT(IsAligned(systemSize, mMemorySize));
+        ASSERT(IsAligned(mMemorySize, mMemoryAlignment));
     }
 
     uint64_t BuddyMemoryAllocator::GetMemoryIndex(uint64_t offset) const {
