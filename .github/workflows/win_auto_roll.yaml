@@ -42,13 +42,16 @@ jobs:
         gclient sync
 
     - name: Roll ${{ matrix.dep_path }}
+      id: roll_dep
       shell: cmd
+      continue-on-error: true
       run: |
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         roll-dep --no-log ${{ matrix.dep_path }}
 
     - name: Create Pull Request
+      if: steps.roll_dep.outcome == 'success'
       uses: peter-evans/create-pull-request@v4
       with:
         title: Auto roll ${{ matrix.dep_path }}
