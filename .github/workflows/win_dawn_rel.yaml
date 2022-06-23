@@ -122,15 +122,3 @@ jobs:
     - name: Regression check end2end tests
       run: |
         python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2end_tests.json ${{ github.workspace }}\..\test_end2end_tests.json
-
-    # Organization has automatic merging disabled.
-    # To re-enable, a custom "auto merge" workflow, linux_auto_merge.yaml is used.
-    # However, automerge always triggers before checks are completed or "all green".
-    # To workaround this issue, add a new trigger when the last job completes (this workflow).
-    # The final set in the last job should generate a repository_dispatch event, to trigger automerge.
-    # Note: REPO_ACCESS_TOKEN must be a PAT with `public_repo` (write-access) scope.
-    - name: Trigger automerge
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        event-type: checks-complete
