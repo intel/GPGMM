@@ -7,6 +7,17 @@ import("buildconfig.gni")
 if (enable_google_benchmarks) {
   config("benchmark_config") {
     include_dirs = [ "src/include" ]
+
+    cflags = []
+    if (is_clang) {
+      # benchmark/benchmark.h emits clang "enumerator value is not representable" warning
+      # over the statement: "kInvert = 1U << 31U".
+      cflags += [ "-Wno-microsoft-enum-value" ]
+
+      # benchmark/benchmark.cc emits clang "CSVReporter' is deprecated" warning over the
+      # statement "class BENCHMARK_DEPRECATED_MSG".
+      cflags += [ "-Wno-deprecated-declarations" ]
+    }
   }
 
   source_set("google_benchmark") {

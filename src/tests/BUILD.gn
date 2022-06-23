@@ -309,12 +309,6 @@ test("gpgmm_perftests") {
     "//third_party/google_benchmark:google_benchmark",
   ]
 
-  # Benchmark.h emits clang "enumerator value is not representable" warning
-  # over the statement: "kInvert = 1U << 31U".
-  if (is_clang) {
-    cflags = [ "-Wno-microsoft-enum-value" ]
-  }
-
   sources = [
     "DummyMemoryAllocator.h",
     "perftests/MemoryAllocatorPerfTests.cpp",
