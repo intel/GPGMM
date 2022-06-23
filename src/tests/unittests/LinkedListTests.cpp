@@ -81,3 +81,22 @@ TEST(LinkedListTests, Clear) {
     EXPECT_TRUE(list.empty());
     EXPECT_EQ(list.size(), 0u);
 }
+
+TEST(LinkedListTests, Move) {
+    LinkNode<FakeObject>* objectInFirstList = new FakeObject();
+
+    LinkedList<FakeObject> firstList;
+    firstList.push_back(objectInFirstList);
+    EXPECT_EQ(firstList.size(), 1u);
+    EXPECT_FALSE(firstList.empty());
+
+    EXPECT_EQ(firstList.head(), objectInFirstList);
+    EXPECT_EQ(firstList.tail(), objectInFirstList);
+
+    LinkedList<FakeObject> secondList(std::move(firstList));
+    EXPECT_EQ(secondList.size(), 1u);
+    EXPECT_FALSE(secondList.empty());
+
+    EXPECT_EQ(secondList.head(), objectInFirstList);
+    EXPECT_EQ(secondList.tail(), objectInFirstList);
+}

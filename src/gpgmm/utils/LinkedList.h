@@ -175,12 +175,16 @@ namespace gpgmm {
             // If any LinkNodes still exist in the LinkedList, there will be outstanding references
             // to root_ even after it has been freed. We should remove root_ from the list to
             // prevent any future access.
-            root_.RemoveFromList();
+            if (root_.IsInList()) {
+                root_.RemoveFromList();
+            }
         }
 
         // Using LinkedList in std::vector or STL container requires the move constructor to not
         // throw.
-        LinkedList(LinkedList&& other) noexcept : root_(std::move(other.root_)) {
+        LinkedList(LinkedList&& other) noexcept
+            : root_(std::move(other.root_)), size_(other.size_) {
+            other.size_ = 0;
         }
 
         // Appends |e| to the end of the linked list.
