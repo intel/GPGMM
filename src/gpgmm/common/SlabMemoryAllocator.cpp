@@ -103,8 +103,8 @@ namespace gpgmm {
         // Otherwise, creating a larger slab will page-out smaller slabs.
         if (availableForAllocation < slabSize) {
             const uint64_t slabSizeUnderBudget = FindNextFreeSlabOfSize(requestSize);
-            DebugEvent(GetTypename()) << "Unable to use slab size due to available memory: ("
-                                      << slabSizeUnderBudget << " vs " << slabSize << " bytes).";
+            DebugEvent(GetTypename()) << "Limiting slab size due to available memory: (" << slabSize
+                                      << " vs " << availableForAllocation << " bytes).";
             slabSize = slabSizeUnderBudget;
         }
 
