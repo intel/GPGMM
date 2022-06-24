@@ -136,8 +136,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetSize(),
               resourceHeaps.at(allocations.size() - 2)->GetSize());
 
-    // But when going over budget, should evict a previous resource heap with a new one of the same
-    // size.
+    // But when going over budget, should evict some other resource heap.
     {
         RESIDENCY_INFO beforeInfo = residencyManager->GetInfo();
 
@@ -149,7 +148,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
         EXPECT_TRUE(allocation->IsResident());
 
-        EXPECT_EQ(afterInfo.MemoryCount - beforeInfo.MemoryCount, 0u);
-        EXPECT_EQ(afterInfo.MemoryUsage - beforeInfo.MemoryUsage, 0u);
+        EXPECT_EQ(afterInfo.MemoryCount, beforeInfo.MemoryCount);
+        EXPECT_LE(afterInfo.MemoryUsage, beforeInfo.MemoryUsage);
     }
 }
