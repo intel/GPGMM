@@ -288,7 +288,7 @@ namespace gpgmm {
         //
         // TODO: Measure if the slab allocation time remaining exceeds the prefetch memory task
         // time before deciding to prefetch.
-        if ((request.AlwaysPrefetch || mAllowSlabPrefetch) && !request.NeverAllocate &&
+        if ((request.AlwaysPrefetch || allowSlabPrefetch) && !request.NeverAllocate &&
             mNextSlabAllocationEvent == nullptr &&
             pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
             pFreeSlab->GetBlockCount() >= kSlabPrefetchMinBlockCount) {
