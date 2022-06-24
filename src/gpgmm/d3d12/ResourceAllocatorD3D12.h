@@ -318,30 +318,6 @@ namespace gpgmm::d3d12 {
         */
         uint64_t MaxResourceHeapSize;
 
-        /** \brief Maximum video memory available to budget by the allocator, expressed as a
-        percentage.
-
-        Optional parameter. When 0 is specified, the API will automatically set the max video
-        memory budget to 95%, leaving 5% for the OS and other applications.
-        */
-        float MaxVideoMemoryBudget;
-
-        /** \brief Specify the budget, in bytes, for residency.
-
-       Allows a fixed budget to be artifically set for testing purposes.
-
-        Optional parameter. When 0 is specified, the API will not restrict the budget.
-        */
-        uint64_t Budget;
-
-        /** \brief Specifies the amount of resource heaps, in bytes, to evict from residency at
-        once, should there not be enough budget left.
-
-        Optional parameter. When 0 is specified, the API will automatically set the video memory
-        evict size to 50MB.
-        */
-        uint64_t EvictBatchSize;
-
         /** \brief Memory fragmentation limit, expressed as a percentage of the resource heap size,
         that is acceptable to be wasted due to fragmentation.
 
@@ -375,6 +351,13 @@ namespace gpgmm::d3d12 {
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
         double MemoryGrowthFactor;
+
+        /*
+        * \deprecated Access by creating a ResidencyManager directly, not through CreateAllocator.
+        Will be removed in a future version of GPGMM.
+        */
+        float MaxVideoMemoryBudget;
+        uint64_t Budget;
     };
 
     /** \enum ALLOCATION_FLAGS
@@ -514,22 +497,36 @@ namespace gpgmm::d3d12 {
     **/
     class GPGMM_EXPORT ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
-        /** \brief  Create allocator and optional residency manager used to create and manage video
-        memory for the App specified device and adapter.
+        /** \brief Create allocator with residency.
 
-        Residency manager only exists if this adapter at-least supports DXGI 1.4.
+        Residency requires at-least DXGI version 1.4.
 
-        @param descriptor A reference to ALLOCATOR_DESC structure that describes the allocator.
-        @param[out] resourceAllocatorOut Pointer to a memory block that recieves a pointer to the
+        @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
+        allocator.
+        @param[out] ppResourceAllocatorOut Pointer to a memory block that recieves a pointer to the
         resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
         create the allocator.
-        @param[out] residencyManagerOut Pointer to a memory block that recieves a pointer to the
+        @param[out] ppResidencyManagerOut Pointer to a memory block that recieves a pointer to the
         residency manager. If NULL is passed, the allocator will be created without using
-        residency for resources.
+        residency.
         */
-        static HRESULT CreateAllocator(const ALLOCATOR_DESC& descriptor,
-                                       ResourceAllocator** resourceAllocatorOut,
-                                       ResidencyManager** residencyManagerOut = nullptr);
+        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                       ResourceAllocator** ppResourceAllocatorOut,
+                                       ResidencyManager** ppResidencyManagerOut = nullptr);
+
+        /** \brief Create allocator using a specified residency manager.
+
+        @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
+        allocator.
+        @param pResidencyManager Pointer to a memory block that recieves a pointer to the
+        residency manager.
+        @param[out] ppResourceAllocatorOut Pointer to a memory block that recieves a pointer to the
+        resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
+        create the allocator.
+        */
+        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                       ResidencyManager* pResidencyManager,
+                                       ResourceAllocator** ppResourceAllocatorOut);
 
         ~ResourceAllocator() override;
 
@@ -549,16 +546,16 @@ namespace gpgmm::d3d12 {
         the resource.
         @param initialResourceState The initial state of the resource, a bitwise OR'd combination of
         D3D12_RESOURCE_STATES enumeration constants.
-        @param clearValue Specifies a D3D12_CLEAR_VALUE structure that describes the default value
+        @param pClearValue A pointer tp D3D12_CLEAR_VALUE structure that describes the default value
         for a clear color.
-        @param[out] resourceAllocationOut An optional pointer to a memory block that recieves the
+        @param[out] ppResourceAllocationOut An optional pointer to a memory block that recieves the
         required interface pointer to the created resource allocation object.
         */
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialResourceState,
-                               const D3D12_CLEAR_VALUE* clearValue,
-                               ResourceAllocation** resourceAllocationOut);
+                               const D3D12_CLEAR_VALUE* pClearValue,
+                               ResourceAllocation** ppResourceAllocationOut);
 
         /** \brief  Imports an existing D3D12 resource.
 
@@ -567,13 +564,13 @@ namespace gpgmm::d3d12 {
         Residency is not supported for imported resources.
 
         @param committedResource A COM managed pointer to a D3D12 committed resource.
-        @param[out] resourceAllocationOut Pointer to a memory block that recieves a pointer to the
+        @param[out] ppResourceAllocationOut Pointer to a memory block that recieves a pointer to the
         resource allocation. Pass NULL to test if resource allocation creation would succeed, but
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
         */
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
-                               ResourceAllocation** resourceAllocationOut);
+                               ResourceAllocation** ppResourceAllocationOut);
 
         /** \brief Recycle resource heaps held internally by GPGMM.
 
@@ -632,7 +629,7 @@ namespace gpgmm::d3d12 {
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
                                        D3D12_RESOURCE_STATES initialResourceState,
                                        const D3D12_CLEAR_VALUE* clearValue,
-                                       ResourceAllocation** resourceAllocationOut);
+                                       ResourceAllocation** ppResourceAllocationOut);
 
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
                           ComPtr<ResidencyManager> residencyManager,

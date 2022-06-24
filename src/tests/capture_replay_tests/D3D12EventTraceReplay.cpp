@@ -379,7 +379,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.MaxVideoMemoryBudget =
                                 snapshot["MaxVideoMemoryBudget"].asFloat();
                             allocatorDesc.Budget = snapshot["Budget"].asUInt64();
-                            allocatorDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                             allocatorDesc.MemoryFragmentationLimit =
                                 snapshot["MemoryFragmentationLimit"].asDouble();
                         } else if (envParams.AllocatorProfile ==

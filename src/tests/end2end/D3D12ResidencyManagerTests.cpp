@@ -44,6 +44,18 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
         return desc;
     }
+
+    RESIDENCY_DESC CreateBasicResidencyDesc(uint64_t budget = 0) const {
+        RESIDENCY_DESC desc = {};
+        desc.Budget = budget;
+
+        // Required
+        desc.IsUMA = mIsUMA;
+        desc.Adapter = mAdapter;
+        desc.Device = mDevice;
+
+        return desc;
+    }
 };
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
@@ -81,22 +93,51 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
-    ComPtr<ResidencyManager> residencyManager;
-    ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
-                                                        &resourceAllocator, &residencyManager));
-    ASSERT_NE(resourceAllocator, nullptr);
-    EXPECT_NE(residencyManager, nullptr);
+    // Create allocator with residency support, together.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
+                                                            &resourceAllocator, &residencyManager));
+        EXPECT_NE(resourceAllocator, nullptr);
+        EXPECT_NE(residencyManager, nullptr);
+    }
+
+    // Create allocator with residency, seperately.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(CreateBasicResidencyDesc(),
+                                                                  &residencyManager));
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+            CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
+        EXPECT_NE(resourceAllocator, nullptr);
+        EXPECT_NE(residencyManager, nullptr);
+    }
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_START();
+
+    // Create allocator with residency support, together.
     {
         ComPtr<ResidencyManager> residencyManager;
         ComPtr<ResourceAllocator> resourceAllocator;
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator,
                                            &residencyManager);
     }
+
+    // Create allocator with residency, seperately.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ResidencyManager::CreateResidencyManager(CreateBasicResidencyDesc(), &residencyManager);
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+                                           &resourceAllocator);
+    }
+
     GPGMM_TEST_MEMORY_LEAK_END();
 }
 
