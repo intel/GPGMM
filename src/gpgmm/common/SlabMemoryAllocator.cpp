@@ -271,22 +271,9 @@ namespace gpgmm {
         // the next slab size will be larger than the previous slab size.
         mLastUsedSlabSize = slabSize;
 
-        // Disable pre-fetching when coverage goes below threshold.
-        // TODO: Consider re-enabling when AlwaysCacheSize=true.
-        bool allowSlabPrefetch = mAllowSlabPrefetch;
-        if (allowSlabPrefetch &&
-            mInfo.PrefetchedMemoryMissesEliminated < mInfo.PrefetchedMemoryMisses) {
-            const double currentCoverage =
-                SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
-                           mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
-            if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-                WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
-                    << "Allow prefetch disabled, coverage went below threshold: ("
-                    << currentCoverage * 100 << " vs " << kPrefetchCoverageWarnMinThreshold * 100
-                    << "%";
-                allowSlabPrefetch = false;
-            }
-        }
+        // Disallow pre-fetching when coverage goes below threshold.
+        // TODO: Consider re-allowing when AlwaysCacheSize=true.
+        const bool allowSlabPrefetch = mAllowSlabPrefetch && IsPrefetchCoverageBelowThreshold();
 
         // Prefetch memory for future slab.
         //
@@ -397,6 +384,24 @@ namespace gpgmm {
 
     const char* SlabMemoryAllocator::GetTypename() const {
         return "SlabMemoryAllocator";
+    }
+
+    bool SlabMemoryAllocator::IsPrefetchCoverageBelowThreshold() const {
+        if (mInfo.PrefetchedMemoryMissesEliminated >= mInfo.PrefetchedMemoryMisses) {
+            return true;
+        }
+
+        const double currentCoverage =
+            SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
+                       mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
+        if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
+            WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
+                << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
+                << kPrefetchCoverageWarnMinThreshold * 100;
+            return false;
+        }
+
+        return true;
     }
 
     // SlabCacheAllocator
