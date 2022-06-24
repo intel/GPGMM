@@ -295,33 +295,65 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     // static
-    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& descriptor,
-                                               ResourceAllocator** resourceAllocatorOut,
-                                               ResidencyManager** residencyManagerOut) {
-        if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
+    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResourceAllocator** ppResourceAllocatorOut,
+                                               ResidencyManager** ppResidencyManagerOut) {
+        ComPtr<ResidencyManager> residencyManager;
+        if (ppResidencyManagerOut != nullptr) {
+            RESIDENCY_DESC residencyDesc = {};
+            residencyDesc.Device = allocatorDescriptor.Device;
+            residencyDesc.IsUMA = allocatorDescriptor.IsUMA;
+            residencyDesc.VideoMemoryBudget = allocatorDescriptor.MaxVideoMemoryBudget;
+            residencyDesc.Budget = allocatorDescriptor.Budget;
+            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+
+            ReturnIfFailed(
+                ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+        }
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ReturnIfFailed(
+            CreateAllocator(allocatorDescriptor, residencyManager.Get(), &resourceAllocator));
+
+        if (ppResourceAllocatorOut != nullptr) {
+            *ppResourceAllocatorOut = resourceAllocator.Detach();
+        }
+
+        if (ppResidencyManagerOut != nullptr) {
+            *ppResidencyManagerOut = residencyManager.Detach();
+        }
+
+        return S_OK;
+    }
+
+    // static
+    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResidencyManager* pResidencyManager,
+                                               ResourceAllocator** ppResourceAllocatorOut) {
+        if (allocatorDescriptor.Adapter == nullptr || allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(
-                Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &ptr));
+            ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device.Get(),
+                                            allocatorDescriptor.Adapter.Get(), &ptr));
             caps.reset(ptr);
         }
 
-        ALLOCATOR_DESC newDescriptor = descriptor;
-        newDescriptor.MemoryGrowthFactor = (descriptor.MemoryGrowthFactor >= 1.0)
-                                               ? descriptor.MemoryGrowthFactor
+        ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
+        newDescriptor.MemoryGrowthFactor = (allocatorDescriptor.MemoryGrowthFactor >= 1.0)
+                                               ? allocatorDescriptor.MemoryGrowthFactor
                                                : kDefaultMemoryGrowthFactor;
 
         newDescriptor.MaxResourceHeapSize =
-            (descriptor.MaxResourceHeapSize > 0)
-                ? std::min(descriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
+            (allocatorDescriptor.MaxResourceHeapSize > 0)
+                ? std::min(allocatorDescriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
                 : caps->GetMaxResourceHeapSize();
 
-        newDescriptor.MemoryFragmentationLimit = (descriptor.MemoryFragmentationLimit > 0)
-                                                     ? descriptor.MemoryFragmentationLimit
+        newDescriptor.MemoryFragmentationLimit = (allocatorDescriptor.MemoryFragmentationLimit > 0)
+                                                     ? allocatorDescriptor.MemoryFragmentationLimit
                                                      : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
@@ -330,9 +362,9 @@ namespace gpgmm::d3d12 {
 
         if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
             StartupEventTrace(
-                descriptor.RecordOptions.TraceFile,
+                allocatorDescriptor.RecordOptions.TraceFile,
                 static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0),
-                descriptor.RecordOptions.EventScope & ALLOCATOR_RECORD_SCOPE_PER_PROCESS);
+                allocatorDescriptor.RecordOptions.EventScope & ALLOCATOR_RECORD_SCOPE_PER_PROCESS);
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         }
@@ -350,33 +382,15 @@ namespace gpgmm::d3d12 {
         }
 #endif
 
-        ComPtr<ResidencyManager> residencyManager;
-        if (residencyManagerOut != nullptr) {
-            RESIDENCY_DESC residencyDesc = {};
-            residencyDesc.Device = newDescriptor.Device;
-            residencyDesc.IsUMA = newDescriptor.IsUMA;
-            residencyDesc.VideoMemoryBudget = newDescriptor.MaxVideoMemoryBudget;
-            residencyDesc.Budget = newDescriptor.Budget;
-            residencyDesc.EvictBatchSize = newDescriptor.EvictBatchSize;
-            ReturnIfFailed(newDescriptor.Adapter.As(&residencyDesc.Adapter));
-
-            ReturnIfFailed(
-                ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
-        }
-
-        if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !residencyManager) {
+        if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
             gpgmm::WarningLog() << "Residency must be specified and enabled to use "
                                    "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET.";
         }
 
-        if (resourceAllocatorOut != nullptr) {
-            *resourceAllocatorOut =
-                new ResourceAllocator(newDescriptor, residencyManager, std::move(caps));
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*resourceAllocatorOut, newDescriptor);
-        }
-
-        if (residencyManagerOut != nullptr) {
-            *residencyManagerOut = residencyManager.Detach();
+        if (ppResourceAllocatorOut != nullptr) {
+            *ppResourceAllocatorOut =
+                new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps));
+            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*ppResourceAllocatorOut, newDescriptor);
         }
 
         return S_OK;
@@ -670,31 +684,31 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialResourceState,
-                                              const D3D12_CLEAR_VALUE* clearValue,
-                                              ResourceAllocation** resourceAllocationOut) {
-        if (!resourceAllocationOut) {
+                                              const D3D12_CLEAR_VALUE* pClearValue,
+                                              ResourceAllocation** ppResourceAllocationOut) {
+        if (!ppResourceAllocationOut) {
             return E_POINTER;
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL(
             "ResourceAllocator.CreateResource",
             (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
-                                  clearValue}));
+                                  pClearValue}));
 
         std::lock_guard<std::mutex> lock(mMutex);
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
-                                              initialResourceState, clearValue,
-                                              resourceAllocationOut));
+                                              initialResourceState, pClearValue,
+                                              ppResourceAllocationOut));
 
         if (!allocationDescriptor.DebugName.empty()) {
-            (*resourceAllocationOut)->SetDebugName(allocationDescriptor.DebugName);
+            (*ppResourceAllocationOut)->SetDebugName(allocationDescriptor.DebugName);
         }
 
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
 #if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
-        mDebugAllocator->AddLiveAllocation(*resourceAllocationOut);
+        mDebugAllocator->AddLiveAllocation(*ppResourceAllocationOut);
 #endif
 
         // Update the current usage counters.
@@ -705,11 +719,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
-                                                      const D3D12_RESOURCE_DESC& resourceDescriptor,
-                                                      D3D12_RESOURCE_STATES initialResourceState,
-                                                      const D3D12_CLEAR_VALUE* clearValue,
-                                                      ResourceAllocation** resourceAllocationOut) {
+    HRESULT ResourceAllocator::CreateResourceInternal(
+        const ALLOCATION_DESC& allocationDescriptor,
+        const D3D12_RESOURCE_DESC& resourceDescriptor,
+        D3D12_RESOURCE_STATES initialResourceState,
+        const D3D12_CLEAR_VALUE* clearValue,
+        ResourceAllocation** ppResourceAllocationOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
@@ -838,7 +853,7 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.ResourceHeap = resourceHeap;
 
-                    *resourceAllocationOut = new ResourceAllocation{
+                    *ppResourceAllocationOut = new ResourceAllocation{
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
                         subAllocation.GetBlock(), std::move(committedResource)};
 
@@ -877,7 +892,7 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.ResourceHeap = resourceHeap;
 
-                    *resourceAllocationOut = new ResourceAllocation{
+                    *ppResourceAllocationOut = new ResourceAllocation{
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
                         subAllocation.GetBlock(), std::move(placedResource)};
 
@@ -916,7 +931,7 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.ResourceHeap = resourceHeap;
 
-                    *resourceAllocationOut = new ResourceAllocation{
+                    *ppResourceAllocationOut = new ResourceAllocation{
                         allocationDesc, mResidencyManager.Get(), allocation.GetAllocator(),
                         allocation.GetBlock(), std::move(placedResource)};
 
@@ -957,17 +972,17 @@ namespace gpgmm::d3d12 {
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.ResourceHeap = resourceHeap;
 
-        *resourceAllocationOut = new ResourceAllocation{
+        *ppResourceAllocationOut = new ResourceAllocation{
             allocationDesc, mResidencyManager.Get(), this, nullptr, std::move(committedResource)};
 
         return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
-                                              ResourceAllocation** resourceAllocationOut) {
+                                              ResourceAllocation** ppResourceAllocationOut) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (!resourceAllocationOut) {
+        if (!ppResourceAllocationOut) {
             return E_POINTER;
         }
 
@@ -1005,7 +1020,7 @@ namespace gpgmm::d3d12 {
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.ResourceHeap = resourceHeap;
 
-        *resourceAllocationOut =
+        *ppResourceAllocationOut =
             new ResourceAllocation{allocationDesc, nullptr, this, nullptr, std::move(resource)};
 
         return S_OK;
