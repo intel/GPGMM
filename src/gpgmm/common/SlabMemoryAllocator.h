@@ -70,6 +70,8 @@ namespace gpgmm {
 
         uint64_t FindNextFreeSlabOfSize(uint64_t requestSize) const;
 
+        bool IsPrefetchCoverageBelowThreshold() const;
+
         // Slab is a node in a doubly-linked list that contains a free-list of blocks
         // and a reference to underlying memory.
         struct Slab : public LinkNode<Slab>, public RefCounted {
