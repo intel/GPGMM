@@ -12,11 +12,10 @@ var searchData=
   ['flags_3c_20allocator_5fflags_20_3e_9',['Flags&lt; ALLOCATOR_FLAGS &gt;',['../classgpgmm_1_1_flags.html',1,'gpgmm']]],
   ['flags_3c_20allocator_5frecord_5fflags_20_3e_10',['Flags&lt; ALLOCATOR_RECORD_FLAGS &gt;',['../classgpgmm_1_1_flags.html',1,'gpgmm']]],
   ['flagstests_2ecpp_11',['FlagsTests.cpp',['../_flags_tests_8cpp.html',1,'']]],
-  ['flushandremovebufferentry_12',['FlushAndRemoveBufferEntry',['../classgpgmm_1_1_event_trace_writer.html#a99d7387699f1bb2ce3b1c6684ae2f2bb',1,'gpgmm::EventTraceWriter']]],
-  ['flushqueuedeventstodisk_13',['FlushQueuedEventsToDisk',['../classgpgmm_1_1_event_trace_writer.html#a2ac2d778219848435278df097bc8a77e',1,'gpgmm::EventTraceWriter']]],
-  ['freelinks_14',['FreeLinks',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html',1,'gpgmm::BuddyBlockAllocator::BuddyBlock']]],
-  ['freememory_15',['FreeMemory',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#aa46309475fde4a4f3b3888e606d74f41',1,'gpgmm::vk::VulkanFunctions']]],
-  ['freememoryusage_16',['FreeMemoryUsage',['../structgpgmm_1_1_memory_allocator_info.html#a9fe81d79524118892d0dd19abe1c7d04',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['functionsvk_2ecpp_17',['FunctionsVk.cpp',['../_functions_vk_8cpp.html',1,'']]],
-  ['functionsvk_2eh_18',['FunctionsVk.h',['../_functions_vk_8h.html',1,'']]]
+  ['flushqueuedeventstodisk_12',['FlushQueuedEventsToDisk',['../classgpgmm_1_1_event_trace_writer.html#a2ac2d778219848435278df097bc8a77e',1,'gpgmm::EventTraceWriter']]],
+  ['freelinks_13',['FreeLinks',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html',1,'gpgmm::BuddyBlockAllocator::BuddyBlock']]],
+  ['freememory_14',['FreeMemory',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#aa46309475fde4a4f3b3888e606d74f41',1,'gpgmm::vk::VulkanFunctions']]],
+  ['freememoryusage_15',['FreeMemoryUsage',['../structgpgmm_1_1_memory_allocator_info.html#a9fe81d79524118892d0dd19abe1c7d04',1,'gpgmm::MemoryAllocatorInfo']]],
+  ['functionsvk_2ecpp_16',['FunctionsVk.cpp',['../_functions_vk_8cpp.html',1,'']]],
+  ['functionsvk_2eh_17',['FunctionsVk.h',['../_functions_vk_8h.html',1,'']]]
 ];
