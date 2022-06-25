@@ -576,7 +576,11 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
 // Test must run last since the new trace will replace the old trace.
 TEST_P(D3D12EventTraceReplay, Recapture) {
     TestEnviromentParams forceParams = {};
+
     forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_CAPTURE;
+    RunSingleTest(forceParams);
+
+    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_NONE;
     RunSingleTest(forceParams);
 }
 
