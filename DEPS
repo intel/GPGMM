@@ -26,7 +26,7 @@ vars = {
   'generate_location_tags': False,
 
   # GN CIPD package version.
-  'gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
+  'gpgmm_gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
 }
 
 deps = {
@@ -62,7 +62,7 @@ deps = {
   'buildtools/linux64': {
     'packages': [{
       'package': 'gn/gn/linux-amd64',
-      'version': Var('gn_version'),
+      'version': Var('gpgmm_gn_version'),
     }],
     'dep_type': 'cipd',
     'condition': 'gpgmm_standalone and host_os == "linux"',
@@ -70,7 +70,7 @@ deps = {
   'buildtools/mac': {
     'packages': [{
       'package': 'gn/gn/mac-${{arch}}',
-      'version': Var('gn_version'),
+      'version': Var('gpgmm_gn_version'),
     }],
     'dep_type': 'cipd',
     'condition': 'gpgmm_standalone and host_os == "mac"',
@@ -78,7 +78,7 @@ deps = {
   'buildtools/win': {
     'packages': [{
       'package': 'gn/gn/windows-amd64',
-      'version': Var('gn_version'),
+      'version': Var('gpgmm_gn_version'),
     }],
     'dep_type': 'cipd',
     'condition': 'gpgmm_standalone and host_os == "win"',
