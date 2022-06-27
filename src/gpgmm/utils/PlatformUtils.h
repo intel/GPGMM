@@ -27,6 +27,7 @@ namespace gpgmm {
     bool SetEnvironmentVar(const char* variableName, const char* value);
     std::string GetExecutableDirectory();
     uint32_t GetPID();
+    void SetThreadName(const char* name);
 
 }  // namespace gpgmm
 

@@ -20,6 +20,12 @@
 #if defined(GPGMM_PLATFORM_WINDOWS)
 #    include <Windows.h>
 #    include <vector>
+
+// To avoid clashing with a potentially defined type, we use the GPGMM_ prefix.
+typedef HRESULT(WINAPI* GPGMM_SetThreadDescription)(HANDLE, PCWSTR);
+
+#    include "WindowsUtils.h"
+
 #elif defined(GPGMM_PLATFORM_LINUX)
 #    include <limits.h>
 #    include <unistd.h>
@@ -118,5 +124,19 @@ namespace gpgmm {
         size_t lastPathSepLoc = exePath.find_last_of(GetPathSeparator());
         return lastPathSepLoc != std::string::npos ? exePath.substr(0, lastPathSepLoc + 1) : "";
     }
+
+#if defined(GPGMM_PLATFORM_WINDOWS)
+    void SetThreadName(const char* name) {
+        static auto SetThreadDescriptionFn = reinterpret_cast<GPGMM_SetThreadDescription>(
+            GetProcAddress(GetModuleHandleA("Kernel32.dll"), "SetThreadDescription"));
+
+        // SetThreadDescription API was brought in version 1607 of Windows 10.
+        if (SetThreadDescriptionFn) {
+            SetThreadDescriptionFn(GetCurrentThread(), TCharToWString(name).c_str());
+        }
+    }
+#else
+#    error "Implement SetThreadName for your platform."
+#endif
 
 }  // namespace gpgmm

@@ -15,6 +15,7 @@
 #include "gpgmm/common/WorkerThread.h"
 
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/utils/PlatformUtils.h"
 
 #include <condition_variable>
 #include <functional>
@@ -57,11 +58,12 @@ namespace gpgmm {
         AsyncThreadPoolImpl() = default;
         ~AsyncThreadPoolImpl() override = default;
 
-        std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback) override {
+        std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback,
+                                            const char* name) override {
             std::shared_ptr<Event> event = std::make_shared<AsyncEventImpl>();
-            std::thread thread([callback, event]() {
-                TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
-                                      "GPGMM_ThreadPoolBackgroundWorker");
+            std::thread thread([callback, event, name]() {
+                SetThreadName(name);
+                TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name", name);
                 (*callback)();
                 event->Signal();
             });
@@ -85,8 +87,9 @@ namespace gpgmm {
 
     // static
     std::shared_ptr<Event> ThreadPool::PostTask(std::shared_ptr<ThreadPool> pool,
-                                                std::shared_ptr<VoidCallback> callback) {
-        std::shared_ptr<Event> event = pool->postTaskImpl(callback);
+                                                std::shared_ptr<VoidCallback> callback,
+                                                const char* name) {
+        std::shared_ptr<Event> event = pool->postTaskImpl(callback, name);
         if (event != nullptr) {
             event->SetThreadPool(pool);
         }

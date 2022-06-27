@@ -94,8 +94,8 @@ namespace gpgmm {
         const MemoryAllocationRequest& request) {
         std::shared_ptr<AllocateMemoryTask> task =
             std::make_shared<AllocateMemoryTask>(this, request);
-        return std::make_shared<MemoryAllocationEvent>(ThreadPool::PostTask(mThreadPool, task),
-                                                       task);
+        return std::make_shared<MemoryAllocationEvent>(
+            ThreadPool::PostTask(mThreadPool, task, "GPGMM_ThreadPrefetchWorker"), task);
     }
 
     uint64_t MemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

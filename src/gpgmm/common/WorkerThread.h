@@ -60,11 +60,13 @@ namespace gpgmm {
         static std::shared_ptr<ThreadPool> Create();
 
         static std::shared_ptr<Event> PostTask(std::shared_ptr<ThreadPool> pool,
-                                               std::shared_ptr<VoidCallback> callback);
+                                               std::shared_ptr<VoidCallback> callback,
+                                               const char* name);
 
       private:
         // Return event to wait on until the callback runs.
-        virtual std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback) = 0;
+        virtual std::shared_ptr<Event> postTaskImpl(std::shared_ptr<VoidCallback> callback,
+                                                    const char* name) = 0;
     };
 
 }  // namespace gpgmm
