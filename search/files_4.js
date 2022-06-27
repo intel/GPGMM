@@ -8,5 +8,6 @@ var searchData=
   ['eventmessage_2ecpp_5',['EventMessage.cpp',['../_event_message_8cpp.html',1,'']]],
   ['eventmessage_2eh_6',['EventMessage.h',['../_event_message_8h.html',1,'']]],
   ['eventtracewriter_2ecpp_7',['EventTraceWriter.cpp',['../_event_trace_writer_8cpp.html',1,'']]],
-  ['eventtracewriter_2eh_8',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]]
+  ['eventtracewriter_2eh_8',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
+  ['eventtracewritertests_2ecpp_9',['EventTraceWriterTests.cpp',['../_event_trace_writer_tests_8cpp.html',1,'']]]
 ];

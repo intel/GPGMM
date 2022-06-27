@@ -80,14 +80,18 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b34f87f224ac1ae0c21cdb00504499c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a5b34f87f224ac1ae0c21cdb00504499c">EventTraceWriter</a> ()</td></tr>
 <tr class="separator:a5b34f87f224ac1ae0c21cdb00504499c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e8f1e727279a507e4a3471c68657852"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a6e8f1e727279a507e4a3471c68657852">SetConfiguration</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask, bool flushOnDestruct)</td></tr>
-<tr class="separator:a6e8f1e727279a507e4a3471c68657852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd834ccebcf9f653ef49d9af2f8ad16a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#afd834ccebcf9f653ef49d9af2f8ad16a">~EventTraceWriter</a> ()</td></tr>
 <tr class="separator:afd834ccebcf9f653ef49d9af2f8ad16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e8f1e727279a507e4a3471c68657852"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a6e8f1e727279a507e4a3471c68657852">SetConfiguration</a> (const std::string &amp;traceFile, const <a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">TraceEventPhase</a> &amp;ignoreMask, bool flushOnDestruct)</td></tr>
+<tr class="separator:a6e8f1e727279a507e4a3471c68657852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe5129b0b3f506ef7944dccfb9d370e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#abe5129b0b3f506ef7944dccfb9d370e0">EnqueueTraceEvent</a> (char phase, <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">TraceEventCategory</a> category, const char *name, uint64_t id, uint32_t flags, const <a class="el" href="classgpgmm_1_1_j_s_o_n_dict.html">JSONDict</a> &amp;args)</td></tr>
 <tr class="separator:abe5129b0b3f506ef7944dccfb9d370e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ac2d778219848435278df097bc8a77e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a2ac2d778219848435278df097bc8a77e">FlushQueuedEventsToDisk</a> ()</td></tr>
 <tr class="separator:a2ac2d778219848435278df097bc8a77e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99d7387699f1bb2ce3b1c6684ae2f2bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a99d7387699f1bb2ce3b1c6684ae2f2bb">FlushAndRemoveBufferEntry</a> (std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt; *buffer)</td></tr>
+<tr class="separator:a99d7387699f1bb2ce3b1c6684ae2f2bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01f478de93dadc30958e98b7239d445c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event_trace_writer.html#a01f478de93dadc30958e98b7239d445c">GetQueuedEventsForTesting</a> () const</td></tr>
+<tr class="separator:a01f478de93dadc30958e98b7239d445c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5b34f87f224ac1ae0c21cdb00504499c" name="a5b34f87f224ac1ae0c21cdb00504499c"></a>
@@ -177,6 +181,24 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a99d7387699f1bb2ce3b1c6684ae2f2bb" name="a99d7387699f1bb2ce3b1c6684ae2f2bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99d7387699f1bb2ce3b1c6684ae2f2bb">&#9670;&nbsp;</a></span>FlushAndRemoveBufferEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gpgmm::EventTraceWriter::FlushAndRemoveBufferEntry </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt; *&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2ac2d778219848435278df097bc8a77e" name="a2ac2d778219848435278df097bc8a77e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ac2d778219848435278df097bc8a77e">&#9670;&nbsp;</a></span>FlushQueuedEventsToDisk()</h2>
 
@@ -188,6 +210,23 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a01f478de93dadc30958e98b7239d445c" name="a01f478de93dadc30958e98b7239d445c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01f478de93dadc30958e98b7239d445c">&#9670;&nbsp;</a></span>GetQueuedEventsForTesting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t gpgmm::EventTraceWriter::GetQueuedEventsForTesting </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
