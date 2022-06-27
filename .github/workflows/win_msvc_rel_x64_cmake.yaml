@@ -71,7 +71,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+        cmake . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGPGMM_FORCE_TRACING=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Build for main branch (with patch)
       shell: cmd

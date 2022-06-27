@@ -28,6 +28,26 @@
 
 namespace gpgmm {
 
+    // Trace buffer that flushes and unlinks itself from the cache once destroyed.
+    class ScopedTraceBufferInTLS {
+      public:
+        ScopedTraceBufferInTLS(EventTraceWriter* writer) : mWriter(writer) {
+            ASSERT(writer != nullptr);
+        }
+
+        ~ScopedTraceBufferInTLS() {
+            mWriter->FlushAndRemoveBufferEntry(GetBuffer());
+        }
+
+        std::vector<TraceEvent>* GetBuffer() {
+            return &mBuffer;
+        }
+
+      private:
+        EventTraceWriter* mWriter = nullptr;
+        std::vector<TraceEvent> mBuffer;
+    };
+
     EventTraceWriter::EventTraceWriter()
         : mTraceFile(kDefaultTraceFile), mPlatformTime(CreatePlatformTime()) {
     }
@@ -182,25 +202,46 @@ namespace gpgmm {
     }
 
     std::vector<TraceEvent>* EventTraceWriter::GetOrCreateBufferFromTLS() {
-        thread_local std::unique_ptr<std::vector<TraceEvent>> bufferInTLS;
+        thread_local std::unique_ptr<ScopedTraceBufferInTLS> bufferInTLS;
         if (bufferInTLS == nullptr) {
-            bufferInTLS.reset(new std::vector<TraceEvent>());
+            bufferInTLS.reset(new ScopedTraceBufferInTLS(this));
 
             std::lock_guard<std::mutex> mutex(mMutex);
             mBufferPerThread[std::this_thread::get_id()] = bufferInTLS.get();
         }
         ASSERT(bufferInTLS != nullptr);
-        return bufferInTLS.get();
+        return bufferInTLS->GetBuffer();
     }
 
-    std::vector<TraceEvent> EventTraceWriter::MergeAndClearBuffers() const {
+    void EventTraceWriter::FlushAndRemoveBufferEntry(std::vector<TraceEvent>* buffer) {
+        std::lock_guard<std::mutex> mutex(mMutex);
+        const size_t removed = mBufferPerThread.erase(std::this_thread::get_id());
+        ASSERT(removed == 1);
+        mUnmergedBuffer.insert(mUnmergedBuffer.end(), buffer->begin(), buffer->end());
+    }
+
+    std::vector<TraceEvent> EventTraceWriter::MergeAndClearBuffers() {
         std::vector<TraceEvent> mergedBuffer;
+
+        mergedBuffer.insert(mergedBuffer.end(), mUnmergedBuffer.begin(), mUnmergedBuffer.end());
+        mUnmergedBuffer.clear();
+
         for (auto& bufferOfThread : mBufferPerThread) {
-            mergedBuffer.insert(mergedBuffer.end(), bufferOfThread.second->begin(),
-                                bufferOfThread.second->end());
-            bufferOfThread.second->clear();
+            std::vector<TraceEvent>* bufferToMerge = bufferOfThread.second->GetBuffer();
+            mergedBuffer.insert(mergedBuffer.end(), bufferToMerge->begin(), bufferToMerge->end());
+            bufferToMerge->clear();
         }
         return mergedBuffer;
+    }
+
+    size_t EventTraceWriter::GetQueuedEventsForTesting() const {
+        std::lock_guard<std::mutex> mutex(mMutex);
+        size_t numOfEvents = 0;
+        numOfEvents += mUnmergedBuffer.size();
+        for (auto& bufferOfThread : mBufferPerThread) {
+            numOfEvents += bufferOfThread.second->GetBuffer()->size();
+        }
+        return numOfEvents;
     }
 
 }  // namespace gpgmm

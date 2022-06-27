@@ -39,7 +39,8 @@
 #ifdef GPGMM_DISABLE_TRACING
 
 #define TRACE_EVENT0(category_group, name) TRACE_EMPTY
-#define TRACE_EVENT_INSTANT0(category_group, name, scope, args) TRACE_EMPTY
+#define TRACE_EVENT_INSTANT0(category_group, name) TRACE_EMPTY
+#define TRACE_EVENT_INSTANT1(category_group, name, args) TRACE_EMPTY
 #define TRACE_COUNTER1(category_group, name, value) TRACE_EMPTY
 #define TRACE_EVENT_METADATA1(category_group, name, arg1_name, arg1_value) TRACE_EMPTY
 
@@ -66,6 +67,9 @@ const uint64_t kNoId = 0;
 #define TRACE_COUNTER1(category_group, name, value)                                                           \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_COUNTER, category_group, name, TRACE_EVENT_FLAG_NONE, "value", \
                              static_cast<int>(value))
+
+#define TRACE_EVENT_INSTANT0(category_group, name) \
+    INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, TRACE_EVENT_FLAG_NONE)
 
 #define TRACE_EVENT_INSTANT1(category_group, name, args) \
     INTERNAL_TRACE_EVENT_ADD(TRACE_EVENT_PHASE_INSTANT, category_group, name, TRACE_EVENT_FLAG_NONE, args)
@@ -178,6 +182,8 @@ namespace gpgmm {
     void ShutdownEventTrace();
 
     bool IsEventTraceEnabled();
+
+    size_t GetQueuedEventsForTesting();
 
     class TraceEventID {
       public:

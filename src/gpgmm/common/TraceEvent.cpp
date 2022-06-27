@@ -54,6 +54,13 @@ namespace gpgmm {
         return gEventTrace != nullptr;
     }
 
+    size_t GetQueuedEventsForTesting() {
+        if (!IsEventTraceEnabled()) {
+            return 0;
+        }
+        return GetInstance()->GetQueuedEventsForTesting();
+    }
+
     TraceEvent::TraceEvent(char phase,
                            TraceEventCategory category,
                            const std::string& name,

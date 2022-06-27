@@ -25,16 +25,16 @@
 namespace gpgmm {
 
     class PlatformTime;
+    class ScopedTraceBufferInTLS;
 
     class EventTraceWriter {
       public:
         EventTraceWriter();
+        ~EventTraceWriter();
 
         void SetConfiguration(const std::string& traceFile,
                               const TraceEventPhase& ignoreMask,
                               bool flushOnDestruct);
-
-        ~EventTraceWriter();
 
         void EnqueueTraceEvent(char phase,
                                TraceEventCategory category,
@@ -42,20 +42,27 @@ namespace gpgmm {
                                uint64_t id,
                                uint32_t flags,
                                const JSONDict& args);
+
         void FlushQueuedEventsToDisk();
+
+        void FlushAndRemoveBufferEntry(std::vector<TraceEvent>* buffer);
+
+        size_t GetQueuedEventsForTesting() const;
 
       private:
         std::vector<TraceEvent>* GetOrCreateBufferFromTLS();
-        std::vector<TraceEvent> MergeAndClearBuffers() const;
+        std::vector<TraceEvent> MergeAndClearBuffers();
 
         std::string mTraceFile;
         std::unique_ptr<PlatformTime> mPlatformTime;
-        mutable std::mutex mMutex;
-
-        std::unordered_map<std::thread::id, std::vector<TraceEvent>*> mBufferPerThread;
 
         TraceEventPhase mIgnoreMask;
         bool mFlushOnDestruct = true;
+
+        mutable std::mutex mMutex;
+
+        std::unordered_map<std::thread::id, ScopedTraceBufferInTLS*> mBufferPerThread;
+        std::vector<TraceEvent> mUnmergedBuffer;
     };
 
 }  // namespace gpgmm
