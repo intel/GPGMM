@@ -7,7 +7,13 @@ jobs:
   deps:
     strategy:
       matrix:
-        dep_path: ["third_party/googletest" , "third_party/vulkan-deps", "third_party/catapult", "third_party/jsoncpp/source", "third_party/libFuzzer/src", "third_party/google_benchmark/src"]
+        dep_path:
+          - "third_party/googletest"
+          - "third_party/vulkan-deps"
+          - "third_party/catapult"
+          - "third_party/jsoncpp/source"
+          - "third_party/libFuzzer/src"
+          - "third_party/google_benchmark/src"
 
     runs-on: windows-2019
 
@@ -54,7 +60,7 @@ jobs:
       if: steps.roll_dep.outcome == 'success'
       uses: peter-evans/create-pull-request@v4
       with:
-        title: Auto roll ${{ matrix.dep_path }}
+        title: Roll ${{ matrix.dep_path }}
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         branch: autoroller/roll
         branch-suffix: short-commit-hash
