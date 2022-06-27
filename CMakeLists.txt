@@ -93,14 +93,6 @@ if (APPLE OR (UNIX AND NOT ANDROID))
 	endif()
 endif()
 
-set(ENABLE_ALLOCATOR_CHECKS OFF)
-set(ENABLE_ASSERT_ON_WARNING OFF)
-
-if($<CONFIG:Debug>)
-  set(ENABLE_ALLOCATOR_CHECKS ON)
-  set(ENABLE_ASSERT_ON_WARNING ON)
-endif()
-
 option_if_not_defined(GPGMM_STANDALONE "When building from GPGMM's repository" ON)
 
 option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
@@ -117,8 +109,8 @@ set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "D
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
 option_if_not_defined(GPGMM_FORCE_TRACING "Enables event tracing even in release builds" OFF)
 option_if_not_defined(GPGMM_ENABLE_DEVICE_CHECKS "Enables checking of device leaks" OFF)
-option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_CHECKS "Enables checking of allocator leaks" ${ENABLE_ALLOCATOR_CHECKS})
-option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" ${ENABLE_ASSERT_ON_WARNING})
+option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_CHECKS "Enables checking of allocator leaks" OFF)
+option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" OFF)
 option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with common resource sizes" OFF)
 
 # The Vulkan loader is an optional dependency.
@@ -151,9 +143,12 @@ add_library(gpgmm_common_config INTERFACE)
 target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
 
 # Compile definitions for the common config
-if (GPGMM_ALWAYS_ASSERT OR $<CONFIG:Debug>)
-    # TODO: rename definition
+if (GPGMM_ALWAYS_ASSERT)
     target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
+else()
+		target_compile_definitions(gpgmm_common_config INTERFACE
+			$<CONFIG:Debug>:GPGMM_ENABLE_ASSERTS
+		)
 endif()
 
 if(GPGMM_ENABLE_D3D12)
@@ -164,8 +159,10 @@ if(GPGMM_ENABLE_VK)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_VK")
 endif()
 
-if(NOT $<CONFIG:Debug> AND NOT GPGMM_FORCE_TRACING)
-  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_DISABLE_TRACING")
+if(NOT GPGMM_FORCE_TRACING)
+  target_compile_definitions(gpgmm_common_config INTERFACE
+		$<$<NOT:$<CONFIG:Debug>>:GPGMM_DISABLE_TRACING
+	)
 endif()
 
 if(GPGMM_ENABLE_DEVICE_CHECKS)
@@ -174,10 +171,18 @@ endif()
 
 if(GPGMM_ENABLE_ALLOCATOR_CHECKS)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_CHECKS")
+else()
+  target_compile_definitions(gpgmm_common_config INTERFACE
+		$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_CHECKS
+	)
 endif()
 
 if(GPGMM_ENABLE_ASSERT_ON_WARNING)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERT_ON_WARNING")
+else()
+  target_compile_definitions(gpgmm_common_config INTERFACE
+		$<CONFIG:Debug>:GPGMM_ENABLE_ASSERT_ON_WARNING
+	)
 endif()
 
 if(GPGMM_DISABLE_SIZE_CACHE)
