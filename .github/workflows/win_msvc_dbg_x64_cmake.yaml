@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  job:
+  win_msvc_dbg_x64_cmake:
 
     runs-on: windows-2019
 

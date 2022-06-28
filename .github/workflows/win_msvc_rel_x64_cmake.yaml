@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  job:
+  win_msvc_rel_x64_cmake:
 
     runs-on: windows-2019
 
