@@ -107,6 +107,7 @@ test("gpgmm_unittests") {
     "unittests/BuddyBlockAllocatorTests.cpp",
     "unittests/BuddyMemoryAllocatorTests.cpp",
     "unittests/ConditionalMemoryAllocatorTests.cpp",
+    "unittests/EventTraceWriterTests.cpp",
     "unittests/FlagsTests.cpp",
     "unittests/LinkedListTests.cpp",
     "unittests/MathTests.cpp",
