@@ -146,9 +146,9 @@ target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
 if (GPGMM_ALWAYS_ASSERT)
     target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
 else()
-		target_compile_definitions(gpgmm_common_config INTERFACE
-			$<CONFIG:Debug>:GPGMM_ENABLE_ASSERTS
-		)
+  target_compile_definitions(gpgmm_common_config INTERFACE
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_ASSERTS>
+  )
 endif()
 
 if(GPGMM_ENABLE_D3D12)
@@ -161,8 +161,8 @@ endif()
 
 if(NOT GPGMM_FORCE_TRACING)
   target_compile_definitions(gpgmm_common_config INTERFACE
-		$<$<NOT:$<CONFIG:Debug>>:GPGMM_DISABLE_TRACING
-	)
+    $<$<NOT:$<CONFIG:Debug>>:GPGMM_DISABLE_TRACING>
+  )
 endif()
 
 if(GPGMM_ENABLE_DEVICE_CHECKS)
@@ -173,16 +173,16 @@ if(GPGMM_ENABLE_ALLOCATOR_CHECKS)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_CHECKS")
 else()
   target_compile_definitions(gpgmm_common_config INTERFACE
-		$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_CHECKS
-	)
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_CHECKS>
+  )
 endif()
 
 if(GPGMM_ENABLE_ASSERT_ON_WARNING)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERT_ON_WARNING")
 else()
   target_compile_definitions(gpgmm_common_config INTERFACE
-		$<CONFIG:Debug>:GPGMM_ENABLE_ASSERT_ON_WARNING
-	)
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_ASSERT_ON_WARNING>
+  )
 endif()
 
 if(GPGMM_DISABLE_SIZE_CACHE)
