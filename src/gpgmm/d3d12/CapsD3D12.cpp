@@ -15,6 +15,7 @@
 #include "gpgmm/d3d12/CapsD3D12.h"
 
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/utils/Limits.h"
 
 #include <memory>
 
@@ -25,12 +26,13 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
-        // Prevent possible overflow.
-        if (feature.MaxGPUVirtualAddressBitsPerResource == 0) {
-            return E_INVALIDARG;
+        // Check for overflow.
+        if (feature.MaxGPUVirtualAddressBitsPerResource == 0 ||
+            feature.MaxGPUVirtualAddressBitsPerResource > GetNumOfBits<uint64_t>()) {
+            return E_FAIL;
         }
 
-        *sizeOut = (1 << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
+        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
         return S_OK;
     }
 
@@ -39,12 +41,13 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
-        // Prevent possible overflow.
-        if (feature.MaxGPUVirtualAddressBitsPerResource == 0) {
-            return E_INVALIDARG;
+        // Check for overflow.
+        if (feature.MaxGPUVirtualAddressBitsPerResource == 0 ||
+            feature.MaxGPUVirtualAddressBitsPerResource > GetNumOfBits<uint64_t>()) {
+            return E_FAIL;
         }
 
-        *sizeOut = (1 << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
+        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
         return S_OK;
     }
 
