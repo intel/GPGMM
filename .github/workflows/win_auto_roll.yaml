@@ -57,6 +57,7 @@ jobs:
         roll-dep --no-log ${{ matrix.dep_path }}
 
     - name: Create Pull Request
+      id: cpr
       if: steps.roll_dep.outcome == 'success'
       uses: peter-evans/create-pull-request@v4
       with:
@@ -65,4 +66,11 @@ jobs:
         branch: autoroller/roll
         branch-suffix: short-commit-hash
         delete-branch: true
-        labels: automerge
+
+    - name: Enable Pull Request Automerge
+      if: steps.cpr.outputs.pull-request-operation == 'created'
+      uses: peter-evans/enable-pull-request-automerge@v2
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+        merge-method: squash
