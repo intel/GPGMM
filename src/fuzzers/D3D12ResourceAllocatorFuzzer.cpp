@@ -22,6 +22,12 @@ namespace {
 
     ComPtr<gpgmm::d3d12::ResourceAllocator> gResourceAllocator;
 
+    uint64_t UInt8ToUInt64(const uint8_t* src) {
+        uint64_t dst;
+        memcpy(&dst, src, sizeof(uint64_t));
+        return dst;
+    }
+
 }  // namespace
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
@@ -90,7 +96,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     D3D12_RESOURCE_DESC resourceDesc = {};
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
     resourceDesc.Alignment = 0;
-    resourceDesc.Width = static_cast<uint64_t>(data[0]);
+    resourceDesc.Width = UInt8ToUInt64(data);
     resourceDesc.Height = 1;
     resourceDesc.DepthOrArraySize = 1;
     resourceDesc.MipLevels = 1;
