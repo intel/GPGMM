@@ -752,7 +752,7 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!Flags(heapFlags).HasFlags(allocationDescriptor.ExtraRequiredHeapFlags)) {
             DebugEvent(GetTypename())
-                << "Required heap flags are incompatible with resource heap type ("
+                << "Dummy test Required heap flags are incompatible with resource heap type ("
                 << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
                 << std::to_string(heapFlags) + ").";
 
