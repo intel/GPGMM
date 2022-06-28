@@ -1,7 +1,7 @@
-[![win_clang_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)
-[![win_clang_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)
-[![win_msvc_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml)
-[![win_msvc_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml)
+| Build Config | Build Status |
+---------------|--------------|
+| GN/Clang     | [![win_clang_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)[![win_clang_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)[![win_msvc_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml)[![win_msvc_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml) |
+| CMake/MSVC   | [![win_msvc_dbg_x64_cmake](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64_cmake.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64_cmake.yaml)[![win_msvc_rel_x64_cmake](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64_cmake.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64_cmake.yaml)  |
 
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/intel/gpgmm.svg)](http://isitmaintained.com/project/intel/gpgmm "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/intel/gpgmm.svg)](http://isitmaintained.com/project/intel/gpgmm "Percentage of issues still open")
 
