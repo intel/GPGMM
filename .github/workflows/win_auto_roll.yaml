@@ -5,16 +5,6 @@ on:
 
 jobs:
   deps:
-    strategy:
-      matrix:
-        dep_path:
-          - "third_party/googletest"
-          - "third_party/vulkan-deps"
-          - "third_party/catapult"
-          - "third_party/jsoncpp/source"
-          - "third_party/libFuzzer/src"
-          - "third_party/google_benchmark/src"
-
     runs-on: windows-2019
 
     steps:
@@ -47,21 +37,59 @@ jobs:
         copy scripts\standalone.gclient .gclient
         gclient sync
 
-    - name: Roll ${{ matrix.dep_path }}
-      id: roll_dep
+    - name: Roll third_party/googletest
       shell: cmd
       continue-on-error: true
       run: |
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
-        roll-dep --no-log ${{ matrix.dep_path }}
+        roll-dep --no-log --ignore-dirty-tree third_party/googletest
+
+    - name: Roll third_party/vulkan-deps
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree third_party/vulkan-deps
+
+    - name: Roll third_party/catapult
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree third_party/catapult
+
+    - name: Roll third_party/jsoncpp/source
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree third_party/jsoncpp/source
+
+    - name: Roll third_party/libFuzzer/src
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree third_party/libFuzzer/src
+
+    - name: Roll third_party/google_benchmark/src
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree third_party/google_benchmark/src
 
     - name: Create Pull Request
       id: cpr
-      if: steps.roll_dep.outcome == 'success'
       uses: peter-evans/create-pull-request@v4
       with:
-        title: Roll ${{ matrix.dep_path }}
+        title: Roll third_party DEPS
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         branch: autoroller/roll
         branch-suffix: short-commit-hash
@@ -73,4 +101,4 @@ jobs:
       with:
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-        merge-method: squash
+        merge-method: rebase
