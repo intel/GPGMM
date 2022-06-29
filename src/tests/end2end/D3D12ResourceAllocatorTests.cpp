@@ -851,8 +851,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
 
     EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, bufferSize + bufferSize / 2);
 
-    // Release the pooled resource heaps.
-    poolAllocator->ReleaseMemory();
+    EXPECT_EQ(poolAllocator->ReleaseMemory(), bufferSize + bufferSize / 2);
 
     EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, 0u);
 
