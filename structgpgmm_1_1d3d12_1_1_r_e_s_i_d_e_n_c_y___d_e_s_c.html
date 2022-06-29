@@ -100,7 +100,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a6e773d9b18c48091bb224aba4980b603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial fence value to use when managing heaps for residency.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603">More...</a><br /></td></tr>
 <tr class="separator:a6e773d9b18c48091bb224aba4980b603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac071e175de962c0c146e0081d3f35f48"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48">UpdateBudgetByPolling</a></td></tr>
-<tr class="memdesc:ac071e175de962c0c146e0081d3f35f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables video memory budget updates by OS notifications.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48">More...</a><br /></td></tr>
+<tr class="memdesc:ac071e175de962c0c146e0081d3f35f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables video memory budget updates from OS notifications.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48">More...</a><br /></td></tr>
 <tr class="separator:ac071e175de962c0c146e0081d3f35f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -223,8 +223,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Disables video memory budget updates by OS notifications. </p>
-<p >Instead will implicitly poll (or query) for updates where needed (ex. eviction). Alternatively, the application can manually update the budget by calling UpdateVideoMemorySegments.</p>
+<p>Disables video memory budget updates from OS notifications. </p>
+<p >Used for polling video memory for budget updates when event based budget changes are not updating frequently enough or otherwise disabled by the OS.</p>
 <p >Optional parameter. Polling is disabled by default. </p>
 
 </div>
