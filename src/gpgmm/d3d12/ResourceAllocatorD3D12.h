@@ -587,7 +587,7 @@ namespace gpgmm::d3d12 {
         bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
         total up to the amount.
         */
-        uint64_t ReleaseMemory(uint64_t bytesToTrim = kInvalidSize) override;
+        uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
 
         /** \brief  Return the current allocator usage.
 
