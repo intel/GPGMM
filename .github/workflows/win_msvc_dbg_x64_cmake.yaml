@@ -5,13 +5,13 @@ on:
     paths:
       - 'src/**'
       - '**/CMakeLists.txt'
-      - '**/*_cmake.yml'
+      - '**/*_cmake.yaml'
 
   pull_request:
     paths:
       - 'src/**'
       - '**/CMakeLists.txt'
-      - '**/*_cmake.yml'
+      - '**/*_cmake.yaml'
 
 jobs:
 
