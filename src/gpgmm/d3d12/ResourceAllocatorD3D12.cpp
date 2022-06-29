@@ -646,34 +646,35 @@ namespace gpgmm::d3d12 {
             bytesReleased +=
                 mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
-                return bytesReleased;
+                break;
             }
 
             bytesReleased +=
                 mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
-                return bytesReleased;
+                break;
             }
 
             bytesReleased +=
                 mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
-                return bytesReleased;
+                break;
             }
 
             bytesReleased += mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(
                 bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
-                return bytesReleased;
+                break;
             }
 
             bytesReleased +=
                 mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
-                return bytesReleased;
+                break;
             }
         }
 
+        // Update allocation metrics.
         if (bytesReleased > 0) {
             GetInfoInternal();
         }
