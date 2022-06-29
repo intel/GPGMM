@@ -572,20 +572,22 @@ namespace gpgmm::d3d12 {
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                ResourceAllocation** ppResourceAllocationOut);
 
-        /** \brief Recycle resource heaps held internally by GPGMM.
+        /** \brief Return free memory back to the OS.
 
         When pooling is enabled, the allocator will retain resource heaps in order to speed-up
         subsequent resource allocation requests. These resource allocations count against the
         app's memory usage and in general, will lead to increased memory usage by the overall
-        system. Apps should call Trim() when going idle for a period of time since there is a
-        brief performance hit when the internal resource heaps get reallocated by the OS.
+        system. Apps should call ReleaseMemory() when going idle for a period of time since there is
+        a brief performance hit when the internal resource heaps get reallocated by the OS.
 
-        @param bytesToTrim Optional. Amount of memory, in bytes, to trim. If UINT64_MAX, all memory
-        is freed.
+        @param bytesToRelease Amount of memory to release, in bytes. A kInvalidSize means ALL memory
+        will be released.
 
-        \return Amount of memory, in bytes, trimmed.
+        \return Amount of memory, in bytes, released. The released size might be smaller then
+        bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
+        total up to the amount.
         */
-        uint64_t Trim(uint64_t bytesToTrim = kInvalidSize);
+        uint64_t ReleaseMemory(uint64_t bytesToTrim = kInvalidSize) override;
 
         /** \brief  Return the current allocator usage.
 

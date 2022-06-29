@@ -634,51 +634,51 @@ namespace gpgmm::d3d12 {
         return "ResourceAllocator";
     }
 
-    uint64_t ResourceAllocator::Trim(uint64_t bytesToTrim) {
+    uint64_t ResourceAllocator::ReleaseMemory(uint64_t bytesToRelease) {
         std::lock_guard<std::mutex> lock(mMutex);
-        uint64_t bytesTrimmed = 0;
+        uint64_t bytesReleased = 0;
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
             // Trim in order of largest-to-smallest heap alignment. This is because trimming larger
             // heaps will more likely exceed the amount of bytes needed then smaller ones. But if
             // this causes over-trimming, then smaller heaps would be better.
             // TODO: Consider adding controls to change policy.
-            bytesTrimmed +=
-                mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
-            if (bytesTrimmed >= bytesToTrim) {
-                return bytesTrimmed;
+            bytesReleased +=
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
+            if (bytesReleased >= bytesToRelease) {
+                return bytesReleased;
             }
 
-            bytesTrimmed +=
-                mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
-            if (bytesTrimmed >= bytesToTrim) {
-                return bytesTrimmed;
+            bytesReleased +=
+                mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
+            if (bytesReleased >= bytesToRelease) {
+                return bytesReleased;
             }
 
-            bytesTrimmed +=
-                mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
-            if (bytesTrimmed >= bytesToTrim) {
-                return bytesTrimmed;
+            bytesReleased +=
+                mResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
+            if (bytesReleased >= bytesToRelease) {
+                return bytesReleased;
             }
 
-            bytesTrimmed +=
-                mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
-            if (bytesTrimmed >= bytesToTrim) {
-                return bytesTrimmed;
+            bytesReleased += mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(
+                bytesToRelease);
+            if (bytesReleased >= bytesToRelease) {
+                return bytesReleased;
             }
 
-            bytesTrimmed +=
-                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToTrim);
-            if (bytesTrimmed >= bytesToTrim) {
-                return bytesTrimmed;
+            bytesReleased +=
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
+            if (bytesReleased >= bytesToRelease) {
+                return bytesReleased;
             }
         }
 
-        if (bytesTrimmed > 0) {
+        if (bytesReleased > 0) {
             GetInfoInternal();
         }
 
-        return bytesTrimmed;
+        return bytesReleased;
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -902,9 +902,9 @@ namespace gpgmm::d3d12 {
 
         // Attempt to create a resource allocation by placing a single resource fully contained
         // in a resource heap. This strategy is slightly better then creating a committed
-        // resource because a placed resource's heap will not be reallocated by the OS until Trim()
-        // is called.
-        // The time and space complexity is determined by the allocator type.
+        // resource because a placed resource's heap will not be reallocated by the OS until
+        // ReleaseMemory() is called. The time and space complexity is determined by the allocator
+        // type.
         if (!isAlwaysCommitted) {
             if (isMSAA) {
                 allocator =
