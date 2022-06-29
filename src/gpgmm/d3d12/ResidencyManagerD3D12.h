@@ -23,6 +23,10 @@
 #include <memory>
 #include <mutex>
 
+namespace gpgmm {
+    class ThreadPool;
+}  // namespace gpgmm
+
 namespace gpgmm::d3d12 {
 
     class Fence;
@@ -88,6 +92,15 @@ namespace gpgmm::d3d12 {
         Optional parameter. Zero by default.
         */
         uint64_t InitialFenceValue;
+
+        /** \brief Disables video memory budget updates from OS notifications.
+
+        Used for polling video memory for budget updates when event based budget
+        changes are not updating frequently enough or otherwise disabled by the OS.
+
+        Optional parameter. Polling is disabled by default.
+        */
+        bool UpdateBudgetByPolling;
     };
 
     /** \struct RESIDENCY_INFO
@@ -102,6 +115,8 @@ namespace gpgmm::d3d12 {
          */
         uint64_t MemoryCount = 0;
     };
+
+    class BudgetUpdateEvent;
 
     /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
 
@@ -200,6 +215,10 @@ namespace gpgmm::d3d12 {
         DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
+        /** \brief Manually update the video memory budgets.
+         */
+        HRESULT UpdateVideoMemorySegments();
+
         /** \brief  Return the current residency manager usage.
 
         \return A RESIDENCY_INFO struct.
@@ -234,8 +253,12 @@ namespace gpgmm::d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const;
 
-        // Query and set the video memory limits for all segments.
-        HRESULT UpdateVideoMemorySegments();
+        HRESULT UpdateVideoMemorySegmentsInternal();
+
+        HRESULT StartBudgetNotificationUpdates();
+        void StopBudgetNotificationUpdates();
+
+        bool IsBudgetNotificationUpdatesDisabled() const;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
@@ -247,11 +270,15 @@ namespace gpgmm::d3d12 {
         const bool mIsBudgetRestricted;
         const uint64_t mEvictBatchSize;
         const bool mIsUMA;
+        const bool mIsBudgetChangeEventsDisabled;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
 
         std::mutex mMutex;
+
+        std::shared_ptr<ThreadPool> mThreadPool;
+        std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
     };
 
 }  // namespace gpgmm::d3d12

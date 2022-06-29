@@ -30,7 +30,8 @@ namespace gpgmm {
         AlignmentMismatch,
         AllocatorFailed,
         PrefetchFailed,
-        BudgetExceeded
+        BudgetExceeded,
+        BudgetUpdate,
     };
 
     struct EventMessageInfo {

@@ -1,4 +1,4 @@
-From f2724b093745556795b76ad7214b694f3f93ed37 Mon Sep 17 00:00:00 2001
+From e41eefd8175a3cd7125699987d452dbfac72fb44 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -495,7 +495,7 @@ index 9747b41c0..50db56dbd 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 90ddc3041..c82b3fb90 100644
+index 90ddc3041..8545685aa 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -130,8 +130,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
@@ -514,32 +514,32 @@ index 90ddc3041..c82b3fb90 100644
 +        static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +    allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
 +
-+    gpgmm::d3d12::ResidencyManager** residencyManager = nullptr;
-+    if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
-+        allocatorDesc.MaxVideoMemoryBudget = 0.95;  // Use up to 95%.
-+        residencyManager = mResidencyManager.GetAddressOf();
-+    }
++    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
++    residencyDesc.Adapter = adapter->GetHardwareAdapter();
++    residencyDesc.Device = mD3d12Device;
 +
-+    if (residencyManager != nullptr &&
-+        IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
-+        allocatorDesc.Budget = 100000000;  // 100MB
++    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
++        residencyDesc.UpdateBudgetByPolling = true;
++        residencyDesc.Budget = 100000000;  // 100MB
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +    }
 +
++    if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
++        residencyDesc.VideoMemoryBudget = 0.95;  // Use up to 95%
++        DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResidencyManager::CreateResidencyManager(
++                                  residencyDesc, &mResidencyManager),
++                              "D3D12 create residency manager"));
++    }
++
 +    if (IsToggleEnabled(Toggle::DumpResourceAllocator)) {
 +        allocatorDesc.RecordOptions.Flags |= gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
-+        allocatorDesc.RecordOptions.MinMessageLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 +        allocatorDesc.RecordOptions.EventScope = gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_PER_INSTANCE;
 +        allocatorDesc.RecordOptions.TraceFile = "dawn_resource_allocator_dump.json";
 +    }
 +
-+    if (IsToggleEnabled(Toggle::RecordDetailedTimingInTraceEvents)) {
-+        allocatorDesc.RecordOptions.UseDetailedTimingEvents = true;
-+    }
-+
 +    DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResourceAllocator::CreateAllocator(
-+                              allocatorDesc, &mResourceAllocator, residencyManager),
++                              allocatorDesc, mResidencyManager.Get(), &mResourceAllocator),
 +                          "D3D12 create resource allocator"));
  
      // ShaderVisibleDescriptorAllocators use the ResidencyManager and must be initialized after.
