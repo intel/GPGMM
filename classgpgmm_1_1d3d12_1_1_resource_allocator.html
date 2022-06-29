@@ -105,9 +105,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d407c024e4c07f5137b00afe050eefb"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb">CreateResource</a> (ComPtr&lt; ID3D12Resource &gt; committedResource, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> **ppResourceAllocationOut)</td></tr>
 <tr class="memdesc:a1d407c024e4c07f5137b00afe050eefb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb">More...</a><br /></td></tr>
 <tr class="separator:a1d407c024e4c07f5137b00afe050eefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac999b311270e333753de21558f957204"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204">Trim</a> (uint64_t bytesToTrim=kInvalidSize)</td></tr>
-<tr class="memdesc:ac999b311270e333753de21558f957204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recycle resource heaps held internally by GPGMM.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204">More...</a><br /></td></tr>
-<tr class="separator:ac999b311270e333753de21558f957204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf6c43a5273f6a71a581d436dc7f852"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#adbf6c43a5273f6a71a581d436dc7f852">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize) override</td></tr>
+<tr class="memdesc:adbf6c43a5273f6a71a581d436dc7f852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#adbf6c43a5273f6a71a581d436dc7f852">More...</a><br /></td></tr>
+<tr class="separator:adbf6c43a5273f6a71a581d436dc7f852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6326a2e0f9e34d2cde4234c04379434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#aab7198d09751d622d892ab644dd173ad">RESOURCE_ALLOCATOR_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">GetInfo</a> () const override</td></tr>
 <tr class="memdesc:ad6326a2e0f9e34d2cde4234c04379434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current allocator usage.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">More...</a><br /></td></tr>
 <tr class="separator:ad6326a2e0f9e34d2cde4234c04379434"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -599,31 +599,41 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ac999b311270e333753de21558f957204" name="ac999b311270e333753de21558f957204"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac999b311270e333753de21558f957204">&#9670;&nbsp;</a></span>Trim()</h2>
+<a id="adbf6c43a5273f6a71a581d436dc7f852" name="adbf6c43a5273f6a71a581d436dc7f852"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbf6c43a5273f6a71a581d436dc7f852">&#9670;&nbsp;</a></span>ReleaseMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t gpgmm::d3d12::ResourceAllocator::Trim </td>
+          <td class="memname">uint64_t gpgmm::d3d12::ResourceAllocator::ReleaseMemory </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>bytesToTrim</em> = <code>kInvalidSize</code></td><td>)</td>
+          <td class="paramname"><em>bytesToRelease</em> = <code>kInvalidSize</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Recycle resource heaps held internally by GPGMM. </p>
-<p >When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ac999b311270e333753de21558f957204" title="Recycle resource heaps held internally by GPGMM.">Trim()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
+<p>Return free memory back to the OS. </p>
+<p >When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#adbf6c43a5273f6a71a581d436dc7f852" title="Return free memory back to the OS.">ReleaseMemory()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">bytesToTrim</td><td>Optional. Amount of memory, in bytes, to trim. If UINT64_MAX, all memory is freed.</td></tr>
+    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A kInvalidSize means ALL memory will be released.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, trimmed. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, released. The released size might be smaller then bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly total up to the amount. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
