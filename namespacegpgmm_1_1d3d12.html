@@ -88,6 +88,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_backend_trait.html">BackendTrait</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html">BudgetUpdateEvent</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_task.html">BudgetUpdateTask</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_buffer_allocator.html">BufferAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_caps.html">Caps</a></td></tr>
@@ -159,6 +163,10 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:ac488a94e78aa907de4fa03a73c31811e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac488a94e78aa907de4fa03a73c31811e">RESIDENCY_UPDATE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ac488a94e78aa907de4fa03a73c31811ea3c6e04e719a409ac7d8bc2d715bcac7f">RESIDENCY_UPDATE_AUTOMATIC</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ac488a94e78aa907de4fa03a73c31811ea5179f1455acf3e39620ba8f22e7dc17a">RESIDENCY_UPDATE_POLLING</a> = 0x1
+ }</td></tr>
+<tr class="separator:ac488a94e78aa907de4fa03a73c31811e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
@@ -522,6 +530,28 @@ through the GPU/driver instead of explicitly through GPGMM.
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931" name="af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931"></a>ALLOCATOR_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple allocators). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6" name="af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6"></a>ALLOCATOR_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per allocator object. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ac488a94e78aa907de4fa03a73c31811e" name="ac488a94e78aa907de4fa03a73c31811e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac488a94e78aa907de4fa03a73c31811e">&#9670;&nbsp;</a></span>RESIDENCY_UPDATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#ac488a94e78aa907de4fa03a73c31811e">gpgmm::d3d12::RESIDENCY_UPDATE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Configures the method used to refresh the video memory budget. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac488a94e78aa907de4fa03a73c31811ea3c6e04e719a409ac7d8bc2d715bcac7f" name="ac488a94e78aa907de4fa03a73c31811ea3c6e04e719a409ac7d8bc2d715bcac7f"></a>RESIDENCY_UPDATE_AUTOMATIC&#160;</td><td class="fielddoc"><p >Updates video budgets automatically using OS notifications. </p>
+<pre class="fragment">If automatic updates are not supported or working, polling will be used instead.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="ac488a94e78aa907de4fa03a73c31811ea5179f1455acf3e39620ba8f22e7dc17a" name="ac488a94e78aa907de4fa03a73c31811ea5179f1455acf3e39620ba8f22e7dc17a"></a>RESIDENCY_UPDATE_POLLING&#160;</td><td class="fielddoc"><p >Updates video budgets by polling. </p>
 </td></tr>
 </table>
 

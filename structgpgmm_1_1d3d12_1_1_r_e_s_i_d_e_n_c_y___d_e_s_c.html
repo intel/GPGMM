@@ -99,6 +99,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6e773d9b18c48091bb224aba4980b603"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603">InitialFenceValue</a></td></tr>
 <tr class="memdesc:a6e773d9b18c48091bb224aba4980b603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial fence value to use when managing heaps for residency.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603">More...</a><br /></td></tr>
 <tr class="separator:a6e773d9b18c48091bb224aba4980b603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac071e175de962c0c146e0081d3f35f48"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48">UpdateBudgetByPolling</a></td></tr>
+<tr class="memdesc:ac071e175de962c0c146e0081d3f35f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables video memory budget updates by OS notifications.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48">More...</a><br /></td></tr>
+<tr class="separator:ac071e175de962c0c146e0081d3f35f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Specify parameters when creating a residency manager. </p>
@@ -205,6 +208,24 @@ Public Attributes</h2></td></tr>
 <p>Specifies if unified memory architecture (UMA) support is enabled. </p>
 <p >Used to determine if residency manager must manage local and non-local segments seperately or not.</p>
 <p >Required parameter. Use CheckFeatureSupport to determine if supported. </p>
+
+</div>
+</div>
+<a id="ac071e175de962c0c146e0081d3f35f48" name="ac071e175de962c0c146e0081d3f35f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac071e175de962c0c146e0081d3f35f48">&#9670;&nbsp;</a></span>UpdateBudgetByPolling</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::RESIDENCY_DESC::UpdateBudgetByPolling</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disables video memory budget updates by OS notifications. </p>
+<p >Instead will implicitly poll (or query) for updates where needed (ex. eviction). Alternatively, the application can manually update the budget by calling UpdateVideoMemorySegments.</p>
+<p >Optional parameter. Polling is disabled by default. </p>
 
 </div>
 </div>
