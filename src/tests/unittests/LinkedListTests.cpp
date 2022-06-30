@@ -41,15 +41,14 @@ TEST_F(LinkedListTests, Insert) {
     LinkNode<FakeObject>* end = new FakeObject();
 
     LinkedList<FakeObject> list;
-    list.push_front(middle);
-    list.push_front(start);
-    list.push_back(end);
+    start->InsertAfter(list.tail());
+    middle->InsertAfter(list.tail());
+    end->InsertAfter(list.tail());
 
     EXPECT_EQ(list.head(), start);
     EXPECT_EQ(list.tail(), end);
 
     EXPECT_FALSE(list.empty());
-    EXPECT_EQ(list.size(), 3u);
 }
 
 TEST_F(LinkedListTests, Remove) {
@@ -58,16 +57,15 @@ TEST_F(LinkedListTests, Remove) {
     LinkNode<FakeObject>* end = new FakeObject();
 
     LinkedList<FakeObject> list;
-    list.push_back(start);
-    list.push_back(middle);
-    list.push_back(end);
+    start->InsertAfter(list.tail());
+    middle->InsertAfter(list.tail());
+    end->InsertAfter(list.tail());
 
-    list.remove(middle);
-    list.remove(start);
-    list.remove(end);
+    start->RemoveFromList();
+    middle->RemoveFromList();
+    end->RemoveFromList();
 
     EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.size(), 0u);
 }
 
 TEST_F(LinkedListTests, Clear) {
@@ -76,31 +74,26 @@ TEST_F(LinkedListTests, Clear) {
     LinkNode<FakeObject>* third = new FakeObject();
 
     LinkedList<FakeObject> list;
-    list.push_back(first);
-    list.push_back(second);
-    list.push_back(third);
-
-    EXPECT_EQ(list.size(), 3u);
+    first->InsertAfter(list.tail());
+    second->InsertAfter(list.tail());
+    third->InsertAfter(list.tail());
 
     list.clear();
 
     EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.size(), 0u);
 }
 
 TEST_F(LinkedListTests, Move) {
     LinkNode<FakeObject>* objectInFirstList = new FakeObject();
 
     LinkedList<FakeObject> firstList;
-    firstList.push_back(objectInFirstList);
-    EXPECT_EQ(firstList.size(), 1u);
+    objectInFirstList->InsertAfter(firstList.tail());
     EXPECT_FALSE(firstList.empty());
 
     EXPECT_EQ(firstList.head(), objectInFirstList);
     EXPECT_EQ(firstList.tail(), objectInFirstList);
 
     LinkedList<FakeObject> secondList(std::move(firstList));
-    EXPECT_EQ(secondList.size(), 1u);
     EXPECT_FALSE(secondList.empty());
 
     EXPECT_EQ(secondList.head(), objectInFirstList);
@@ -108,10 +101,14 @@ TEST_F(LinkedListTests, Move) {
 }
 
 TEST_F(LinkedListTests, Iterator) {
+    LinkNode<FakeObject>* first = new FakeObject(1);
+    LinkNode<FakeObject>* second = new FakeObject(2);
+    LinkNode<FakeObject>* third = new FakeObject(3);
+
     LinkedList<FakeObject> list;
-    list.push_back(new FakeObject(1));
-    list.push_back(new FakeObject(2));
-    list.push_back(new FakeObject(3));
+    first->InsertAfter(list.tail());
+    second->InsertAfter(list.tail());
+    third->InsertAfter(list.tail());
 
     // Iterate through the whole range.
     size_t index = 0;
@@ -119,22 +116,42 @@ TEST_F(LinkedListTests, Iterator) {
         EXPECT_EQ(node.value()->mId, ++index);
     }
 
-    EXPECT_EQ(index, list.size());
-
     // Iterate through the whole range again (but using const).
     index = 0;
     for (const auto& node : list) {
         EXPECT_EQ(node.value()->mId, ++index);
     }
 
-    // Iterate through the whole range but remove the first.
+    // Iterate through the whole range but have the first remove itself.
     index = 0;
     for (auto& node : list) {
         if (node.value()->mId == 1) {
-            list.remove(node.value());
+            node.RemoveFromList();
         }
         EXPECT_EQ(node.value()->mId, ++index);
     }
+}
 
-    EXPECT_EQ(index, list.size() + 1);
+TEST_F(LinkedListTests, ListWithSize) {
+    LinkNode<FakeObject>* first = new FakeObject(1);
+    LinkNode<FakeObject>* second = new FakeObject(2);
+    LinkNode<FakeObject>* third = new FakeObject(3);
+
+    SizedLinkedList<FakeObject> list;
+    list.push_front(first);
+    list.push_front(second);
+    list.push_front(third);
+
+    EXPECT_EQ(list.size(), 3u);
+
+    list.pop_front();
+    EXPECT_EQ(list.head(), second);
+    EXPECT_EQ(list.size(), 2u);
+
+    list.remove(second);
+    EXPECT_EQ(list.head(), first);
+    EXPECT_EQ(list.size(), 1u);
+
+    list.clear();
+    EXPECT_EQ(list.size(), 0u);
 }

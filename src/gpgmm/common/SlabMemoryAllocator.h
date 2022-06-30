@@ -112,10 +112,10 @@ namespace gpgmm {
 
         // Group of one or more slabs of the same size.
         struct SlabCache {
-            LinkedList<Slab> FreeList;  // Slabs that contain partial or empty
-                                        // slabs or some free blocks.
-            LinkedList<Slab> FullList;  // Slabs that are full or all blocks
-                                        // are marked as used.
+            SizedLinkedList<Slab> FreeList;  // Slabs that contain partial or empty
+                                             // slabs or some free blocks.
+            SizedLinkedList<Slab> FullList;  // Slabs that are full or all blocks
+                                             // are marked as used.
         };
 
         SlabCache* GetOrCreateCache(uint64_t slabSize);

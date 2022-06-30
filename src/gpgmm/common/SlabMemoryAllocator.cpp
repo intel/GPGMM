@@ -318,6 +318,13 @@ namespace gpgmm {
             }
         }
 
+        // If the slab is now full, move it to the full-list so it does not remain the free-list
+        // where de-allocate could mistakenly remove it from the wrong list.
+        if (pFreeSlab->IsFull()) {
+            pCache->FreeList.remove(pFreeSlab);
+            pCache->FullList.push_front(pFreeSlab);
+        }
+
         // Wrap the block in the containing slab. Since the slab's block could reside in another
         // allocated block, the slab's allocation offset must be made relative to slab's underlying
         // memory and not the slab.
@@ -347,12 +354,9 @@ namespace gpgmm {
         Slab* slab = blockInSlab->pSlab;
         ASSERT(slab != nullptr);
 
-        MemoryBase* slabMemory = subAllocation->GetMemory();
-        ASSERT(slabMemory != nullptr);
-
         // Splice the slab from the full-list to free-list.
         if (slab->IsFull()) {
-            SlabCache* cache = GetOrCreateCache(slabMemory->GetSize());
+            SlabCache* cache = GetOrCreateCache(slab->SlabMemory->GetSize());
             cache->FullList.remove(slab);
             cache->FreeList.push_front(slab);
         }
@@ -363,6 +367,9 @@ namespace gpgmm {
         MemoryBlock* block = blockInSlab->pBlock;
         slab->Allocator.DeallocateBlock(block);
         SafeDelete(blockInSlab);
+
+        MemoryBase* slabMemory = subAllocation->GetMemory();
+        ASSERT(slabMemory != nullptr);
 
         slabMemory->Unref();
 
@@ -448,7 +455,7 @@ namespace gpgmm {
                 blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment, mSlabFragmentationLimit,
                 mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
             entry->GetValue().pSlabAllocator = slabAllocator;
-            mSlabAllocators.push_back(slabAllocator);
+            slabAllocator->InsertAfter(mSlabAllocators.tail());
         }
 
         ASSERT(slabAllocator != nullptr);
