@@ -129,11 +129,11 @@ namespace gpgmm::d3d12 {
 
         /** \brief Scopes events per process (or multiple allocators).
          */
-        ALLOCATOR_RECORD_SCOPE_PER_PROCESS = 0x0,
+        ALLOCATOR_RECORD_SCOPE_PER_PROCESS = 0x1,
 
         /** \brief Scopes events per allocator object.
          */
-        ALLOCATOR_RECORD_SCOPE_PER_INSTANCE = 0x1,
+        ALLOCATOR_RECORD_SCOPE_PER_INSTANCE = 0x2,
     };
 
     using ALLOCATOR_RECORD_SCOPE_TYPE = Flags<ALLOCATOR_RECORD_SCOPE>;

@@ -275,8 +275,7 @@ namespace gpgmm::d3d12 {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
                     InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
-                        << "Failed to allocate memory for request: " +
-                               gpgmm::JSONSerializer::Serialize(request).ToString();
+                        << "Failed to allocate memory for request";
                 }
                 return E_FAIL;
             }
@@ -284,9 +283,7 @@ namespace gpgmm::d3d12 {
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
                 InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
-                    << "Failed to create resource using allocation: " +
-                           gpgmm::JSONSerializer::Serialize(allocation->GetInfo()).ToString() +
-                           " due to error: " + GetErrorMessage(hr);
+                    << "Failed to create resource using allocation: " + GetErrorMessage(hr);
                 allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;
