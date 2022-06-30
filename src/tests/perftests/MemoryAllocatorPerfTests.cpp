@@ -15,9 +15,12 @@
 #include <benchmark/benchmark.h>
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
+#include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/common/StandaloneMemoryAllocator.h"
 #include "tests/DummyMemoryAllocator.h"
+
+#include <vector>
 
 using namespace gpgmm;
 
@@ -37,7 +40,43 @@ class MemoryAllocatorPerfTests : public benchmark::Fixture {
     }
 };
 
-BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, SlabCache_Warm)(benchmark::State& state) {
+// Tests allocates memory of a single size then frees it all.
+class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
+  public:
+    void SingleStep(benchmark::State& state,
+                    MemoryAllocator* allocator,
+                    const MemoryAllocationRequest& request) const {
+        std::vector<std::unique_ptr<MemoryAllocation>> allocations;
+        for (int i = 0; i < state.range(3); i++) {
+            auto allocation = allocator->TryAllocateMemory(request);
+            if (allocation == nullptr) {
+                state.SkipWithError("Unable to allocate. Skipping.");
+                return;
+            }
+            allocations.push_back(std::move(allocation));
+        }
+
+        for (auto& allocation : allocations) {
+            allocator->DeallocateMemory(std::move(allocation));
+        }
+    }
+
+    static void GenerateParams(benchmark::internal::Benchmark* benchmark) {
+        static constexpr uint64_t kMaxMemorySize = (1ull << 34);  // ~16GB
+        static constexpr uint64_t kMinMemorySize = (1ull << 22);  // 4MB
+        static constexpr uint64_t kNumOfAllocations = 10u;
+
+        benchmark->ArgNames({"min", "max", "size", "count"});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, /*256B*/ 256, kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, /*64KB*/ 64 * 1024, kNumOfAllocations});
+        benchmark->Args(
+            {kMinMemorySize, kMaxMemorySize, /*4MB*/ 4 * 1024 * 1024, kNumOfAllocations});
+        benchmark->Args(
+            {kMinMemorySize, kMaxMemorySize, /*64MB*/ 64 * 1024 * 1024, kNumOfAllocations});
+    }
+};
+
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::State& state) {
     SlabCacheAllocator allocator(
         state.range(1), state.range(0), kMemoryAlignment, kMemoryAlignment, /*allowPrefetch*/ false,
         /*kNoSlabGrowthFactor*/ 1, std::make_unique<DummyMemoryAllocator>());
@@ -51,32 +90,22 @@ BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, SlabCache_Warm)(benchmark::State& s
     }
 
     for (auto _ : state) {
-        auto alloc = allocator.TryAllocateMemory(CreateBasicRequest(state.range(2)));
-        if (alloc == nullptr) {
-            state.SkipWithError("Unable to allocate. Skipping.");
-            break;
-        }
-        allocator.DeallocateMemory(std::move(alloc));
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
     }
 }
 
-BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, SlabCache_Cold)(benchmark::State& state) {
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Cold)(benchmark::State& state) {
     SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
                                  /*slabFragmentationLimit*/ 1, /*allowPrefetch*/ false,
                                  /*kNoSlabGrowthFactor*/ 1,
                                  std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
-        auto alloc = allocator.TryAllocateMemory(CreateBasicRequest(state.range(2)));
-        if (alloc == nullptr) {
-            state.SkipWithError("Unable to allocate. Skipping.");
-            break;
-        }
-        allocator.DeallocateMemory(std::move(alloc));
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
     }
 }
 
-BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, Slab)(benchmark::State& state) {
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Slab)(benchmark::State& state) {
     std::unique_ptr<DummyMemoryAllocator> memoryAllocator =
         std::make_unique<DummyMemoryAllocator>();
     SlabMemoryAllocator allocator(state.range(2), state.range(1), state.range(0), kMemoryAlignment,
@@ -84,59 +113,48 @@ BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, Slab)(benchmark::State& state) {
                                   /*slabGrowthFactor*/ 1, memoryAllocator.get());
 
     for (auto _ : state) {
-        auto alloc = allocator.TryAllocateMemory(CreateBasicRequest(state.range(2)));
-        if (alloc == nullptr) {
-            state.SkipWithError("Unable to allocate. Skipping.");
-            break;
-        }
-        allocator.DeallocateMemory(std::move(alloc));
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
     }
 }
 
-BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, BuddySystem)(benchmark::State& state) {
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, BuddySystem)(benchmark::State& state) {
     BuddyMemoryAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
                                    std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
-        auto alloc = allocator.TryAllocateMemory(CreateBasicRequest(state.range(2)));
-        if (alloc == nullptr) {
-            state.SkipWithError("Unable to allocate. Skipping.");
-            break;
-        }
-        allocator.DeallocateMemory(std::move(alloc));
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
     }
 }
 
-BENCHMARK_DEFINE_F(MemoryAllocatorPerfTests, Standalone)(benchmark::State& state) {
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Standalone)(benchmark::State& state) {
     StandaloneMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
-        auto alloc = allocator.TryAllocateMemory(CreateBasicRequest(state.range(2)));
-        if (alloc == nullptr) {
-            state.SkipWithError("Unable to allocate. Skipping.");
-            break;
-        }
-        allocator.DeallocateMemory(std::move(alloc));
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
     }
 }
 
-static void GenerateParams(benchmark::internal::Benchmark* benchmark) {
-    static constexpr uint64_t kMaxMemorySize = (1ull << 34);  // ~16GB
-    static constexpr uint64_t kMinMemorySize = (1ull << 22);  // 4MB
+BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SegmentedPool)(benchmark::State& state) {
+    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(), kMemoryAlignment);
 
-    benchmark->ArgNames({"min", "max", "size"});
-    benchmark->Args({kMinMemorySize, kMaxMemorySize, /*256B*/ 256});
-    benchmark->Args({kMinMemorySize, kMaxMemorySize, /*64KB*/ 64 * 1024});
-    benchmark->Args({kMinMemorySize, kMaxMemorySize, /*4MB*/ 4 * 1024 * 1024});
-    benchmark->Args({kMinMemorySize, kMaxMemorySize, /*64MB*/ 64 * 1024 * 1024});
+    for (auto _ : state) {
+        SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
+    }
 }
 
 // Register each as benchmark
-BENCHMARK_REGISTER_F(MemoryAllocatorPerfTests, SlabCache_Warm)->Apply(GenerateParams);
-BENCHMARK_REGISTER_F(MemoryAllocatorPerfTests, SlabCache_Cold)->Apply(GenerateParams);
-BENCHMARK_REGISTER_F(MemoryAllocatorPerfTests, Slab)->Apply(GenerateParams);
-BENCHMARK_REGISTER_F(MemoryAllocatorPerfTests, BuddySystem)->Apply(GenerateParams);
-BENCHMARK_REGISTER_F(MemoryAllocatorPerfTests, Standalone)->Apply(GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, SlabCache_Warm)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, SlabCache_Cold)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, Slab)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, BuddySystem)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, Standalone)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
+BENCHMARK_REGISTER_F(SingleSizeAllocationPerfTests, SegmentedPool)
+    ->Apply(SingleSizeAllocationPerfTests::GenerateParams);
 
 // Run the benchmarks
 BENCHMARK_MAIN();
