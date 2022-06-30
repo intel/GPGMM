@@ -1142,7 +1142,7 @@ namespace gpgmm::d3d12 {
                 100);
 
         GPGMM_TRACE_EVENT_METRIC(
-            "GPU allocation size cache (%)",
+            "GPU allocation size cache hits (%)",
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
         return result;
