@@ -113,16 +113,16 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
-    'url': '{chromium_git}/external/github.com/google/googletest@9406a60c7839052e4944ea4dbc8344762a89f9bd',
+    'url': '{chromium_git}/external/github.com/google/googletest@d9335595b4cd73c8450c18e4dbf1ee0801c23c2e',
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@4e6188c825198c3e1f06edfec3dba8253ec30853',
+    'url': '{chromium_git}/vulkan-deps@76c2f42ea652c94949f16a78ad10ac8dfc33605b',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@322e254469b63cf03425e9422c08cc68ee5c7364',
+    'url': '{chromium_git}/catapult.git@bd235b08d6397cbdad59130a9e84e44eb2121058',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
