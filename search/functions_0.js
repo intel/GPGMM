@@ -12,9 +12,10 @@ var searchData=
   ['allocatememorytask_9',['AllocateMemoryTask',['../classgpgmm_1_1_allocate_memory_task.html#a5e49224968ae25b0547f1879245d09a2',1,'gpgmm::AllocateMemoryTask']]],
   ['allocatorbase_10',['AllocatorBase',['../classgpgmm_1_1_allocator_base.html#ae4b400b35adb6119cc634fb6771e0e5e',1,'gpgmm::AllocatorBase']]],
   ['allocatornode_11',['AllocatorNode',['../classgpgmm_1_1_allocator_node.html#a3a8b2208e459a4d8d4097eddb8192352',1,'gpgmm::AllocatorNode::AllocatorNode()=default'],['../classgpgmm_1_1_allocator_node.html#a8f264d1a2274e923b6174d6859411976',1,'gpgmm::AllocatorNode::AllocatorNode(std::unique_ptr&lt; T &gt; next)']]],
-  ['as_12',['As',['../classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294',1,'gpgmm::d3d12::Heap']]],
-  ['assertvulkanfunctionsarevalid_13',['AssertVulkanFunctionsAreValid',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a645ab6f67c5c155e047c1e4ae447b1d8',1,'gpgmm::vk::VulkanFunctions']]],
-  ['asynceventimpl_14',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html#a67410e9654d985c1a6afe57735eaf565',1,'gpgmm::AsyncEventImpl']]],
-  ['asyncthreadpoolimpl_15',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a59a2ce8555af55ff8b234cbd7f647bc1',1,'gpgmm::AsyncThreadPoolImpl']]],
-  ['attach_16',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]]
+  ['apply_12',['Apply',['../_memory_allocator_perf_tests_8cpp.html#a0ebc53d042a52e051ffd75100a9f16d6',1,'MemoryAllocatorPerfTests.cpp']]],
+  ['as_13',['As',['../classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294',1,'gpgmm::d3d12::Heap']]],
+  ['assertvulkanfunctionsarevalid_14',['AssertVulkanFunctionsAreValid',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a645ab6f67c5c155e047c1e4ae447b1d8',1,'gpgmm::vk::VulkanFunctions']]],
+  ['asynceventimpl_15',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html#a67410e9654d985c1a6afe57735eaf565',1,'gpgmm::AsyncEventImpl']]],
+  ['asyncthreadpoolimpl_16',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a59a2ce8555af55ff8b234cbd7f647bc1',1,'gpgmm::AsyncThreadPoolImpl']]],
+  ['attach_17',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]]
 ];

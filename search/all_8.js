@@ -39,7 +39,7 @@ var searchData=
   ['ispoweroftwo_36',['IsPowerOfTwo',['../namespacegpgmm.html#a22f4ed65b0d5c5e29e1da78861690e97',1,'gpgmm']]],
   ['isprefetchallowed_37',['IsPrefetchAllowed',['../struct_test_enviroment_params.html#a8fa6eff56d0e9a85c143415ac28afbe1',1,'TestEnviromentParams']]],
   ['isresidencylocked_38',['IsResidencyLocked',['../classgpgmm_1_1d3d12_1_1_heap.html#aed0eb3bbb56c2a860fdacef508406372',1,'gpgmm::d3d12::Heap']]],
-  ['isresident_39',['IsResident',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d',1,'gpgmm::d3d12::ResourceAllocation::IsResident()'],['../classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9',1,'gpgmm::d3d12::Heap::IsResident()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a55c283d1377387927a69877f8dea317e',1,'gpgmm::d3d12::HEAP_INFO::IsResident()']]],
+  ['isresident_39',['IsResident',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a55c283d1377387927a69877f8dea317e',1,'gpgmm::d3d12::HEAP_INFO::IsResident()'],['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d',1,'gpgmm::d3d12::ResourceAllocation::IsResident()'],['../classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9',1,'gpgmm::d3d12::Heap::IsResident()']]],
   ['isresourceaccessalwayscoherent_40',['IsResourceAccessAlwaysCoherent',['../classgpgmm_1_1d3d12_1_1_caps.html#a73684718c83dd3f8b8e501260a4d7a37',1,'gpgmm::d3d12::Caps::IsResourceAccessAlwaysCoherent()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___f_e_a_t_u_r_e___d_a_t_a___s_u_b_a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html#ab61fe8f056000e8678b64dba72b1c992',1,'gpgmm::d3d12::ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT::IsResourceAccessAlwaysCoherent()']]],
   ['issamecapsrequired_41',['IsSameCapsRequired',['../struct_test_enviroment_params.html#a415b7adbe22fb3be53520d1b383dac5c',1,'TestEnviromentParams']]],
   ['issignaled_42',['IsSignaled',['../classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b',1,'gpgmm::Event::IsSignaled()'],['../classgpgmm_1_1_async_event_impl.html#a9ba548598ab1aeb5f6de4acc6db18703',1,'gpgmm::AsyncEventImpl::IsSignaled()'],['../classgpgmm_1_1_memory_allocation_event.html#a4395f539e1239d4c908fa8146b1244a0',1,'gpgmm::MemoryAllocationEvent::IsSignaled()']]],
@@ -48,9 +48,8 @@ var searchData=
   ['istilezerosized_45',['IsTileZeroSized',['../namespacegpgmm_1_1d3d12.html#a51824ea1b5cd8fff68c5d24a45b56605',1,'gpgmm::d3d12']]],
   ['isuma_46',['IsUMA',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a4e7b3117499d159df1b341134e0fc40d',1,'gpgmm::d3d12::ALLOCATOR_DESC::IsUMA()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2f8e943fbe0d0ac61cb28acb1f58ccd7',1,'gpgmm::d3d12::RESIDENCY_DESC::IsUMA()']]],
   ['iterations_47',['Iterations',['../struct_test_enviroment_params.html#ae4c7578c761300b96a59c74429ac3d8c',1,'TestEnviromentParams']]],
-  ['iterator_48',['iterator',['../classgpgmm_1_1_linked_list.html#a9b5691d71ec84ca3e14f71516693f8e1',1,'gpgmm::LinkedList::iterator()'],['../classgpgmm_1_1_memory_cache.html#ab2cb058db5534f2e3de9b52d1ff8559d',1,'gpgmm::MemoryCache::iterator()']]],
-  ['iterator_5fcategory_49',['iterator_category',['../classgpgmm_1_1_linked_list_iterator.html#a23a7041964a4fdc7e7b3b402ced22fd8',1,'gpgmm::LinkedListIterator']]],
-  ['iunknownimpl_50',['IUnknownImpl',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html',1,'gpgmm::d3d12::IUnknownImpl'],['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae',1,'gpgmm::d3d12::IUnknownImpl::IUnknownImpl()']]],
-  ['iunknownimpld3d12_2ecpp_51',['IUnknownImplD3D12.cpp',['../_i_unknown_impl_d3_d12_8cpp.html',1,'']]],
-  ['iunknownimpld3d12_2eh_52',['IUnknownImplD3D12.h',['../_i_unknown_impl_d3_d12_8h.html',1,'']]]
+  ['iterator_48',['iterator',['../classgpgmm_1_1_memory_cache.html#ab2cb058db5534f2e3de9b52d1ff8559d',1,'gpgmm::MemoryCache']]],
+  ['iunknownimpl_49',['IUnknownImpl',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html',1,'gpgmm::d3d12::IUnknownImpl'],['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae',1,'gpgmm::d3d12::IUnknownImpl::IUnknownImpl()']]],
+  ['iunknownimpld3d12_2ecpp_50',['IUnknownImplD3D12.cpp',['../_i_unknown_impl_d3_d12_8cpp.html',1,'']]],
+  ['iunknownimpld3d12_2eh_51',['IUnknownImplD3D12.h',['../_i_unknown_impl_d3_d12_8h.html',1,'']]]
 ];

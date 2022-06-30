@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['fakeobject_0',['FakeObject',['../struct_fake_object.html',1,'FakeObject'],['../class_linked_list_tests_1_1_fake_object.html',1,'LinkedListTests::FakeObject']]],
+  ['fakeobject_0',['FakeObject',['../class_fake_object.html',1,'']]],
   ['fence_1',['Fence',['../classgpgmm_1_1d3d12_1_1_fence.html',1,'gpgmm::d3d12']]],
   ['flags_2',['Flags',['../classgpgmm_1_1_flags.html',1,'gpgmm']]],
   ['flags_3c_20allocation_5fflags_20_3e_3',['Flags&lt; ALLOCATION_FLAGS &gt;',['../classgpgmm_1_1_flags.html',1,'gpgmm']]],

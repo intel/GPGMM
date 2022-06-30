@@ -15,7 +15,7 @@ var searchData=
   ['_7eevent_12',['~Event',['../classgpgmm_1_1_event.html#ab0b9eddd1a10a2101a820481fd84f46d',1,'gpgmm::Event']]],
   ['_7eeventmessage_13',['~EventMessage',['../classgpgmm_1_1_event_message.html#a53dadd21da83499e63e7bde82c703d3d',1,'gpgmm::EventMessage']]],
   ['_7eeventtracewriter_14',['~EventTraceWriter',['../classgpgmm_1_1_event_trace_writer.html#afd834ccebcf9f653ef49d9af2f8ad16a',1,'gpgmm::EventTraceWriter']]],
-  ['_7efakeobject_15',['~FakeObject',['../class_linked_list_tests_1_1_fake_object.html#a45378068b5803030a21457ac8640f120',1,'LinkedListTests::FakeObject']]],
+  ['_7efakeobject_15',['~FakeObject',['../class_fake_object.html#a59682013cbcf25512c598f4d52f5e94f',1,'FakeObject']]],
   ['_7efence_16',['~Fence',['../classgpgmm_1_1d3d12_1_1_fence.html#a846a0a5346ff52c1af5ca2d706d71659',1,'gpgmm::d3d12::Fence']]],
   ['_7egpgmmcapturereplaytestenvironment_17',['~GPGMMCaptureReplayTestEnvironment',['../class_g_p_g_m_m_capture_replay_test_environment.html#a03abc7b7a8e1bae716d940ca2697e3e3',1,'GPGMMCaptureReplayTestEnvironment']]],
   ['_7egpgmmtestbase_18',['~GPGMMTestBase',['../class_g_p_g_m_m_test_base.html#a1b26ec1ed2c7d82b9f44af81b7125861',1,'GPGMMTestBase']]],
