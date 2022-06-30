@@ -27,7 +27,6 @@ namespace gpgmm {
         }
 
         void operator()() override {
-            DebugLog() << "AllocateMemoryTask: " << JSONSerializer::Serialize(mRequest).ToString();
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
