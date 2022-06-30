@@ -19,17 +19,23 @@
 using namespace gpgmm;
 
 // Tests functional additions made to LinkedList.h.
-
-class FakeObject final : public LinkNode<FakeObject> {
+class LinkedListTests : public testing::Test {
   public:
-    virtual ~FakeObject() {
-        if (IsInList()) {
-            RemoveFromList();
+    class FakeObject final : public LinkNode<FakeObject> {
+      public:
+        FakeObject(size_t id = 0) : mId(id) {
         }
-    }
+
+        virtual ~FakeObject() {
+            if (IsInList()) {
+                RemoveFromList();
+            }
+        }
+        size_t mId = 0;
+    };
 };
 
-TEST(LinkedListTests, Insert) {
+TEST_F(LinkedListTests, Insert) {
     LinkNode<FakeObject>* start = new FakeObject();
     LinkNode<FakeObject>* middle = new FakeObject();
     LinkNode<FakeObject>* end = new FakeObject();
@@ -46,7 +52,7 @@ TEST(LinkedListTests, Insert) {
     EXPECT_EQ(list.size(), 3u);
 }
 
-TEST(LinkedListTests, Remove) {
+TEST_F(LinkedListTests, Remove) {
     LinkNode<FakeObject>* start = new FakeObject();
     LinkNode<FakeObject>* middle = new FakeObject();
     LinkNode<FakeObject>* end = new FakeObject();
@@ -64,7 +70,7 @@ TEST(LinkedListTests, Remove) {
     EXPECT_EQ(list.size(), 0u);
 }
 
-TEST(LinkedListTests, Clear) {
+TEST_F(LinkedListTests, Clear) {
     LinkNode<FakeObject>* first = new FakeObject();
     LinkNode<FakeObject>* second = new FakeObject();
     LinkNode<FakeObject>* third = new FakeObject();
@@ -82,7 +88,7 @@ TEST(LinkedListTests, Clear) {
     EXPECT_EQ(list.size(), 0u);
 }
 
-TEST(LinkedListTests, Move) {
+TEST_F(LinkedListTests, Move) {
     LinkNode<FakeObject>* objectInFirstList = new FakeObject();
 
     LinkedList<FakeObject> firstList;
@@ -99,4 +105,36 @@ TEST(LinkedListTests, Move) {
 
     EXPECT_EQ(secondList.head(), objectInFirstList);
     EXPECT_EQ(secondList.tail(), objectInFirstList);
+}
+
+TEST_F(LinkedListTests, Iterator) {
+    LinkedList<FakeObject> list;
+    list.push_back(new FakeObject(1));
+    list.push_back(new FakeObject(2));
+    list.push_back(new FakeObject(3));
+
+    // Iterate through the whole range.
+    size_t index = 0;
+    for (auto& node : list) {
+        EXPECT_EQ(node.value()->mId, ++index);
+    }
+
+    EXPECT_EQ(index, list.size());
+
+    // Iterate through the whole range again (but using const).
+    index = 0;
+    for (const auto& node : list) {
+        EXPECT_EQ(node.value()->mId, ++index);
+    }
+
+    // Iterate through the whole range but remove the first.
+    index = 0;
+    for (auto& node : list) {
+        if (node.value()->mId == 1) {
+            list.remove(node.value());
+        }
+        EXPECT_EQ(node.value()->mId, ++index);
+    }
+
+    EXPECT_EQ(index, list.size() + 1);
 }

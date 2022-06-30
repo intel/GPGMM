@@ -85,15 +85,7 @@ namespace gpgmm {
     }
 
     SegmentedMemoryAllocator::~SegmentedMemoryAllocator() {
-        auto curr = mFreeSegments.head();
-        while (curr != mFreeSegments.end()) {
-            auto next = curr->next();
-            ASSERT(curr != nullptr);
-            SafeDelete(curr->value());
-            curr = next;
-        }
-
-        ASSERT(mFreeSegments.empty());
+        mFreeSegments.clear();
     }
 
     MemorySegment* SegmentedMemoryAllocator::GetOrCreateFreeSegment(uint64_t memorySize) {
@@ -182,8 +174,8 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
 
         uint64_t totalBytesReleased = 0;
-        for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
-            MemorySegment* segment = node->value();
+        for (auto& node : mFreeSegments) {
+            MemorySegment* segment = node.value();
             ASSERT(segment != nullptr);
             const uint64_t bytesReleasedPerSegment = segment->ReleasePool(bytesToRelease);
             bytesToRelease -= bytesReleasedPerSegment;
@@ -204,12 +196,7 @@ namespace gpgmm {
 
     uint64_t SegmentedMemoryAllocator::GetSegmentSizeForTesting() const {
         std::lock_guard<std::mutex> lock(mMutex);
-
-        uint64_t count = 0;
-        for (auto node = mFreeSegments.head(); node != mFreeSegments.end(); node = node->next()) {
-            count += 1;
-        }
-        return count;
+        return std::distance(mFreeSegments.begin(), mFreeSegments.end());
     }
 
     const char* SegmentedMemoryAllocator::GetTypename() const {
