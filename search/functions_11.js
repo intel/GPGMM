@@ -28,7 +28,7 @@ var searchData=
   ['shutdowneventtrace_25',['ShutdownEventTrace',['../namespacegpgmm.html#a57e06cd628d6c539216da169d2fd2d98',1,'gpgmm']]],
   ['signal_26',['Signal',['../classgpgmm_1_1d3d12_1_1_fence.html#a191325987019c75e5d0d5ea07f975506',1,'gpgmm::d3d12::Fence::Signal()'],['../classgpgmm_1_1_memory_allocation_event.html#a902d8c29242f04f4f58eb5c3bb3af95a',1,'gpgmm::MemoryAllocationEvent::Signal()'],['../classgpgmm_1_1_async_event_impl.html#af037ff4dea70caccd5df13d29f120184',1,'gpgmm::AsyncEventImpl::Signal()'],['../classgpgmm_1_1_event.html#aa25c487548844ac3857418ee54f1bf5d',1,'gpgmm::Event::Signal()']]],
   ['singlestep_27',['SingleStep',['../class_single_size_allocation_perf_tests.html#aecd4c24960aa3b14ca0ddb502f466c60',1,'SingleSizeAllocationPerfTests']]],
-  ['size_28',['size',['../classgpgmm_1_1_sized_linked_list.html#a3a78c66290af58c5f0c581ff4addb07d',1,'gpgmm::SizedLinkedList']]],
+  ['size_28',['size',['../classgpgmm_1_1_linked_list.html#ad82b39061ee44538739197509652d7fe',1,'gpgmm::LinkedList']]],
   ['slabblockallocator_29',['SlabBlockAllocator',['../classgpgmm_1_1_slab_block_allocator.html#a99f4324ae8931f373d68e821f06e946e',1,'gpgmm::SlabBlockAllocator']]],
   ['slabcacheallocator_30',['SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html#a45f8a9c6e199a2d368e5fc85bd266590',1,'gpgmm::SlabCacheAllocator']]],
   ['slabmemoryallocator_31',['SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html#a9a9e87f42400b95aa7c28d2a618d25e4',1,'gpgmm::SlabMemoryAllocator']]],
