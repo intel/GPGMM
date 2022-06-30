@@ -527,15 +527,13 @@ namespace gpgmm::d3d12 {
 
     RESIDENCY_INFO ResidencyManager::GetInfo() const {
         RESIDENCY_INFO info = {};
-        for (auto curr = mLocalVideoMemorySegment.cache.head();
-             curr != mLocalVideoMemorySegment.cache.end(); curr = curr->next()) {
-            info.MemoryUsage += curr->value()->GetSize();
+        for (const auto& node : mLocalVideoMemorySegment.cache) {
+            info.MemoryUsage += node.value()->GetSize();
             info.MemoryCount++;
         }
 
-        for (auto curr = mNonLocalVideoMemorySegment.cache.head();
-             curr != mNonLocalVideoMemorySegment.cache.end(); curr = curr->next()) {
-            info.MemoryUsage += curr->value()->GetSize();
+        for (const auto& node : mNonLocalVideoMemorySegment.cache) {
+            info.MemoryUsage += node.value()->GetSize();
             info.MemoryCount++;
         }
 

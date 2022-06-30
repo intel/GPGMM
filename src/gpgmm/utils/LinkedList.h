@@ -162,9 +162,54 @@ namespace gpgmm {
         LinkNode<T>* next_;
     };
 
+    template <typename LinkNodeT>
+    class LinkedListIterator {
+      public:
+        // Properties required to use iterator with STL (ex. std::distance).
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = LinkNodeT;
+        using pointer = LinkNodeT*;
+        using reference = LinkNodeT&;
+
+        LinkedListIterator(LinkNodeT* nodePtr) : mCurrent(nodePtr), mNext(nodePtr->next()) {
+        }
+
+        LinkNodeT& operator*() const {
+            return *mCurrent;
+        }
+
+        LinkNodeT* operator->() {
+            return mCurrent;
+        }
+
+        LinkedListIterator& operator++() {
+            // Keep ahead by one so if the current node is removed from the list, the iterator can
+            // still advance to the next node in the list.
+            mCurrent = mNext;
+            mNext = mNext->next();
+            return *this;
+        }
+
+        friend bool operator==(const LinkedListIterator& a, const LinkedListIterator& b) {
+            return a.mCurrent == b.mCurrent;
+        }
+
+        friend bool operator!=(const LinkedListIterator& a, const LinkedListIterator& b) {
+            return a.mCurrent != b.mCurrent;
+        }
+
+      private:
+        LinkNodeT* mCurrent;
+        LinkNodeT* mNext;
+    };
+
     template <typename T>
     class LinkedList {
       public:
+        using iterator = LinkedListIterator<LinkNode<T>>;
+        using const_iterator = LinkedListIterator<LinkNode<T> const>;
+
         // The "root" node is self-referential, and forms the basis of a circular
         // list (root_.next() will point back to the start of the list,
         // and root_->previous() wraps around to the end of the list).
@@ -218,10 +263,6 @@ namespace gpgmm {
             return root_.previous();
         }
 
-        const LinkNode<T>* end() const {
-            return &root_;
-        }
-
         bool empty() const {
             return head() == end();
         }
@@ -230,11 +271,8 @@ namespace gpgmm {
         // ~T must check if IsInList and call RemoveFromList to unlink itself or clear
         // will ASSERT to indicate programmer error.
         void clear() {
-            auto curr = head();
-            while (curr != end()) {
-                auto next = curr->next();
-                SafeDelete(curr->value());
-                curr = next;
+            for (auto& curr : *this) {
+                SafeDelete(curr.value());
             }
             ASSERT(empty());
             size_ = 0;
@@ -242,6 +280,22 @@ namespace gpgmm {
 
         size_t size() const {
             return size_;
+        }
+
+        iterator begin() {
+            return iterator(head());
+        }
+
+        iterator end() {
+            return iterator(&root_);
+        }
+
+        const_iterator begin() const {
+            return const_iterator(head());
+        }
+
+        const_iterator end() const {
+            return const_iterator(&root_);
         }
 
       private:
