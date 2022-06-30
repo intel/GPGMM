@@ -20,7 +20,7 @@ var searchData=
   ['pooledmemoryallocator_2eh_17',['PooledMemoryAllocator.h',['../_pooled_memory_allocator_8h.html',1,'']]],
   ['pooledmemoryallocatortests_18',['PooledMemoryAllocatorTests',['../class_pooled_memory_allocator_tests.html',1,'']]],
   ['pooledmemoryallocatortests_2ecpp_19',['PooledMemoryAllocatorTests.cpp',['../_pooled_memory_allocator_tests_8cpp.html',1,'']]],
-  ['pop_5ffront_20',['pop_front',['../classgpgmm_1_1_linked_list.html#a49070dd72e19aec5ba04df080e85470a',1,'gpgmm::LinkedList']]],
+  ['pop_5ffront_20',['pop_front',['../classgpgmm_1_1_sized_linked_list.html#af7978f7f91c0c8072c17ca82f0cfa4a4',1,'gpgmm::SizedLinkedList']]],
   ['posttask_21',['PostTask',['../classgpgmm_1_1_thread_pool.html#a08f5e46ff3a03c377560bd36abf9a2ae',1,'gpgmm::ThreadPool']]],
   ['posttaskimpl_22',['postTaskImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a6d28c04e94cd832c0b1a468195f92b59',1,'gpgmm::AsyncThreadPoolImpl']]],
   ['pprev_23',['pPrev',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
@@ -30,7 +30,7 @@ var searchData=
   ['prefetchfailed_27',['PrefetchFailed',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a33dff3e1f50e77b6f9aaf0747fbfcc53',1,'gpgmm']]],
   ['previous_28',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
   ['prevpoweroftwo_29',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
-  ['push_5fback_30',['push_back',['../classgpgmm_1_1_linked_list.html#aec30ce08cab34f488b56851597607998',1,'gpgmm::LinkedList']]],
-  ['push_5ffront_31',['push_front',['../classgpgmm_1_1_linked_list.html#a81a985f8595b06abc48979258ca20cb1',1,'gpgmm::LinkedList']]],
+  ['push_5fback_30',['push_back',['../classgpgmm_1_1_sized_linked_list.html#a6f3af4e9449f0d721b55430d8b9afb11',1,'gpgmm::SizedLinkedList']]],
+  ['push_5ffront_31',['push_front',['../classgpgmm_1_1_sized_linked_list.html#a99d894e47fc4d5412ee34a54e2382bcb',1,'gpgmm::SizedLinkedList']]],
   ['pvulkanfunctions_32',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];

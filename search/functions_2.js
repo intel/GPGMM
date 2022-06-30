@@ -4,7 +4,7 @@ var searchData=
   ['cbegin_1',['cbegin',['../classgpgmm_1_1_memory_cache.html#ac5b29a97e8e34128f382e9a682d407a8',1,'gpgmm::MemoryCache']]],
   ['cend_2',['cend',['../classgpgmm_1_1_memory_cache.html#a0311edd185b1421b7bd3a5b765675d95',1,'gpgmm::MemoryCache']]],
   ['checkfeaturesupport_3',['CheckFeatureSupport',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a87ebd9a344d5893af36f7bd3eb0fff09',1,'gpgmm::d3d12::ResourceAllocator']]],
-  ['clear_4',['clear',['../classgpgmm_1_1_memory_cache.html#a692a96aa4f5b20a7120c927a85d34ca8',1,'gpgmm::MemoryCache::clear()'],['../classgpgmm_1_1_linked_list.html#a61b95042595ec1b3e0d801274b5615c2',1,'gpgmm::LinkedList::clear()']]],
+  ['clear_4',['clear',['../classgpgmm_1_1_memory_cache.html#a692a96aa4f5b20a7120c927a85d34ca8',1,'gpgmm::MemoryCache::clear()'],['../classgpgmm_1_1_linked_list.html#a61b95042595ec1b3e0d801274b5615c2',1,'gpgmm::LinkedList::clear()'],['../classgpgmm_1_1_sized_linked_list.html#a72d1ba84fb9c65918e4f1c5c6cdf3938',1,'gpgmm::SizedLinkedList::clear()']]],
   ['computetotalnumoffreeblocksfortesting_5',['ComputeTotalNumOfFreeBlocksForTesting',['../classgpgmm_1_1_buddy_block_allocator.html#a18f51a35eb230a4a749ca50ee3d9205b',1,'gpgmm::BuddyBlockAllocator::ComputeTotalNumOfFreeBlocksForTesting()'],['../class_dummy_buddy_block_allocator.html#a28ffded6f5017899f17b36a2b6d2fcee',1,'DummyBuddyBlockAllocator::ComputeTotalNumOfFreeBlocksForTesting()']]],
   ['conditionalmemoryallocator_6',['ConditionalMemoryAllocator',['../classgpgmm_1_1_conditional_memory_allocator.html#a2f7acb963283b4db7ab185d638987f06',1,'gpgmm::ConditionalMemoryAllocator']]],
   ['constexprconcat_7',['ConstexprConcat',['../namespacegpgmm.html#a60714c669dd0a2c73d28c45694ec7a47',1,'gpgmm']]],
