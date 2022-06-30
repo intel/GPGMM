@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iterator_0',['iterator',['../classgpgmm_1_1_memory_cache.html#ab2cb058db5534f2e3de9b52d1ff8559d',1,'gpgmm::MemoryCache']]]
+  ['enum_5ftype_0',['enum_type',['../classgpgmm_1_1_flags.html#ae2278a230d44ac552d2ee24acb4d731d',1,'gpgmm::Flags']]]
 ];
