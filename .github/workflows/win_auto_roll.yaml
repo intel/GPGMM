@@ -3,6 +3,10 @@ name: 'Auto Roll DEPS'
 on:
   workflow_dispatch:
 
+  schedule:
+    # Every Monday at 8pm UTC (8am PST)
+    - cron: "0 3 * * 1"
+
 jobs:
   deps:
     runs-on: windows-2019
