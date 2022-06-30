@@ -227,32 +227,7 @@ namespace gpgmm {
 
         // Using LinkedList in std::vector or STL container requires the move constructor to not
         // throw.
-        LinkedList(LinkedList&& other) noexcept
-            : root_(std::move(other.root_)), size_(other.size_) {
-            other.size_ = 0;
-        }
-
-        // Appends |e| to the end of the linked list.
-        void push_back(LinkNode<T>* e) {
-            e->InsertBefore(&root_);
-            size_++;
-        }
-
-        // Prepend |e| to the start of the linked list.
-        void push_front(LinkNode<T>* e) {
-            e->InsertBefore(head());
-            size_++;
-        }
-
-        // Removes the first node in the linked list.
-        void pop_front() {
-            remove(head());
-        }
-
-        // Removes |e| from the linked list, decreasing the size by 1.
-        void remove(LinkNode<T>* e) {
-            e->RemoveFromList();
-            size_--;
+        LinkedList(LinkedList&& other) noexcept : root_(std::move(other.root_)) {
         }
 
         LinkNode<T>* head() const {
@@ -275,11 +250,6 @@ namespace gpgmm {
                 SafeDelete(curr.value());
             }
             ASSERT(empty());
-            size_ = 0;
-        }
-
-        size_t size() const {
-            return size_;
         }
 
         iterator begin() {
@@ -300,6 +270,48 @@ namespace gpgmm {
 
       private:
         LinkNode<T> root_;
+    };
+
+    // SizedLinkedList is like LinkedList but also keeps track of the number of nodes in the
+    // list. Random insertion is not supported, only deletion. To insert, push from start or end
+    // of the list.
+    template <typename T>
+    class SizedLinkedList : public LinkedList<T> {
+      public:
+        // Appends |e| to the end of the linked list.
+        void push_back(LinkNode<T>* e) {
+            e->InsertBefore(LinkedList<T>::end());
+            size_++;
+        }
+
+        // Prepend |e| to the start of the linked list.
+        void push_front(LinkNode<T>* e) {
+            e->InsertBefore(LinkedList<T>::head());
+            size_++;
+        }
+
+        // Removes the first node in the linked list.
+        void pop_front() {
+            remove(LinkedList<T>::head());
+        }
+
+        // Removes |e| from the linked list, decreasing the size by 1.
+        void remove(LinkNode<T>* e) {
+            ASSERT(size_ > 0);
+            e->RemoveFromList();
+            size_--;
+        }
+
+        size_t size() const {
+            return size_;
+        }
+
+        void clear() {
+            LinkedList<T>::clear();
+            size_ = 0;
+        }
+
+      private:
         size_t size_ = 0;
     };
 

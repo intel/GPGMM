@@ -96,7 +96,7 @@ namespace gpgmm {
         if (existingFreeSegment == mFreeSegments.end()) {
             ASSERT(mFreeSegments.empty());
             MemorySegment* newFreeSegment = new MemorySegment{memorySize};
-            mFreeSegments.push_back(newFreeSegment);
+            newFreeSegment->InsertAfter(mFreeSegments.tail());
             return newFreeSegment;
         }
 

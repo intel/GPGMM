@@ -189,7 +189,7 @@ namespace gpgmm::d3d12 {
         LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegmentGroup());
         ASSERT(cache != nullptr);
 
-        cache->push_back(heap);
+        heap->InsertAfter(cache->tail());
 
         ASSERT(heap->IsInList());
 
