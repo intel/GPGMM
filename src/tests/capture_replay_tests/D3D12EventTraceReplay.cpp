@@ -321,6 +321,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         RESIDENCY_DESC residencyDesc = {};
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
+                        residencyDesc.VideoMemoryBudget = snapshot["VideoMemoryBudget"].asFloat();
                         residencyDesc.Budget = snapshot["Budget"].asUInt64();
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
@@ -376,11 +377,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 snapshot["PreferredResourceHeapSize"].asUInt64();
                             allocatorDesc.MaxResourceHeapSize =
                                 snapshot["MaxResourceHeapSize"].asUInt64();
-                            allocatorDesc.MaxVideoMemoryBudget =
-                                snapshot["MaxVideoMemoryBudget"].asFloat();
-                            allocatorDesc.Budget = snapshot["Budget"].asUInt64();
                             allocatorDesc.MemoryFragmentationLimit =
                                 snapshot["MemoryFragmentationLimit"].asDouble();
+                            allocatorDesc.MemoryGrowthFactor =
+                                snapshot["MemoryGrowthFactor"].asDouble();
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Any amount of (internal) fragmentation is acceptable.
