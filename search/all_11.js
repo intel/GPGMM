@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['recordoptions_0',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a8989e06119f2b7e8a52f7bf062356012',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['recordoptions_0',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a315f4eb31901ec275f927904ec8c58f2',1,'gpgmm::d3d12::RESIDENCY_DESC::RecordOptions()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3a83aa65ac3cb38e5ed6d94f6df12de2',1,'gpgmm::d3d12::ALLOCATOR_DESC::RecordOptions()']]],
   ['ref_1',['Ref',['../classgpgmm_1_1_ref_counted.html#a741556aed00abb35fb7aa4120a6fe4b9',1,'gpgmm::RefCounted']]],
   ['refcount_2ecpp_2',['RefCount.cpp',['../_ref_count_8cpp.html',1,'']]],
   ['refcount_2eh_3',['RefCount.h',['../_ref_count_8h.html',1,'']]],
-  ['refcounted_4',['RefCounted',['../classgpgmm_1_1_ref_counted.html',1,'gpgmm::RefCounted'],['../classgpgmm_1_1_ref_counted.html#a74c5590632f44dce1a6409f1ddeb5eca',1,'gpgmm::RefCounted::RefCounted()=delete'],['../classgpgmm_1_1_ref_counted.html#ae98ccadde40b5b3d25bf84c9034ac1a3',1,'gpgmm::RefCounted::RefCounted(int_fast32_t initialCount)']]],
+  ['refcounted_4',['RefCounted',['../classgpgmm_1_1_ref_counted.html',1,'gpgmm::RefCounted'],['../classgpgmm_1_1_ref_counted.html#ae98ccadde40b5b3d25bf84c9034ac1a3',1,'gpgmm::RefCounted::RefCounted(int_fast32_t initialCount)'],['../classgpgmm_1_1_ref_counted.html#a74c5590632f44dce1a6409f1ddeb5eca',1,'gpgmm::RefCounted::RefCounted()=delete']]],
   ['refcounttests_2ecpp_5',['RefCountTests.cpp',['../_ref_count_tests_8cpp.html',1,'']]],
   ['reference_6',['reference',['../classgpgmm_1_1_linked_list_iterator.html#a2f682ca69e890ec3a32769d91888f2fb',1,'gpgmm::LinkedListIterator']]],
   ['release_7',['Release',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a5e2c505fb4cf4e354835f847a4946ee5',1,'gpgmm::d3d12::IUnknownImpl']]],
@@ -13,7 +13,7 @@ var searchData=
   ['remove_10',['remove',['../classgpgmm_1_1_sized_linked_list.html#ad4581568f96ee0b880c4ba35237d19fa',1,'gpgmm::SizedLinkedList']]],
   ['removefromlist_11',['RemoveFromList',['../classgpgmm_1_1_link_node.html#a8667b9465c7550e7f3a8e45d2aec110d',1,'gpgmm::LinkNode']]],
   ['reportliveallocations_12',['ReportLiveAllocations',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#af1a905dbe86a3da70a92396c0deb092e',1,'gpgmm::d3d12::DebugResourceAllocator']]],
-  ['reportmemoryleaks_13',['ReportMemoryLeaks',['../classgpgmm_1_1_debug_platform.html#a719619e15304d5cf3fa74c9334938e57',1,'gpgmm::DebugPlatform::ReportMemoryLeaks()'],['../classgpgmm_1_1_windows_debug_platform.html#aad6eacbd1961f6057eedf0f5459c6c3a',1,'gpgmm::WindowsDebugPlatform::ReportMemoryLeaks()']]],
+  ['reportmemoryleaks_13',['ReportMemoryLeaks',['../classgpgmm_1_1_windows_debug_platform.html#aad6eacbd1961f6057eedf0f5459c6c3a',1,'gpgmm::WindowsDebugPlatform::ReportMemoryLeaks()'],['../classgpgmm_1_1_debug_platform.html#a719619e15304d5cf3fa74c9334938e57',1,'gpgmm::DebugPlatform::ReportMemoryLeaks()']]],
   ['requestsizeinbytes_14',['RequestSizeInBytes',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a6349c2d4d91032e648e5712c2476ad77',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]],
   ['requiredpropertyflags_15',['requiredPropertyFlags',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html#ab9451843785b4203a40d23cea9fbeee9',1,'gpgmm::vk::GpResourceAllocationCreateInfo']]],
   ['reset_16',['Reset',['../classgpgmm_1_1d3d12_1_1_residency_set.html#a9665c21bb3548db1593a64c6ec33f60e',1,'gpgmm::d3d12::ResidencySet']]],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/gpgmm/d3d12/ResidencyManagerD3D12.h File Reference</title>
+<title>GPGMM: src/gpgmm/d3d12/EventRecordD3D12.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,25 +69,18 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">ResidencyManagerD3D12.h File Reference</div></div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
+  <div class="headertitle"><div class="title">EventRecordD3D12.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_event_record_d3_d12_8h.html">gpgmm/d3d12/EventRecordD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_linked_list_8h.html">gpgmm/utils/LinkedList.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
-<code>#include &lt;memory&gt;</code><br />
-<code>#include &lt;mutex&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="d3d12__platform_8h.html">gpgmm/d3d12/d3d12_platform.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_flags_8h.html">gpgmm/utils/Flags.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">gpgmm::d3d12::RESIDENCY_DESC</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">gpgmm::d3d12::RESIDENCY_INFO</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">gpgmm::d3d12::ResidencyManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html">gpgmm::d3d12::EVENT_RECORD_OPTIONS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -96,6 +89,30 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a65e449bb3e644a55e833e5d6ba685d67"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a65e449bb3e644a55e833e5d6ba685d67">gpgmm::d3d12::EVENT_RECORD_FLAGS_TYPE</a> = Flags&lt; EVENT_RECORD_FLAGS &gt;</td></tr>
+<tr class="separator:a65e449bb3e644a55e833e5d6ba685d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b">gpgmm::d3d12::EVENT_RECORD_FLAGS</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba910403bd626518aacc41a8ffb54dc34b">gpgmm::d3d12::EVENT_RECORD_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba293f09f69d9f9b13f5048972e57651b5">gpgmm::d3d12::EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba4451b8acc017f7c049709b8ce058347d">gpgmm::d3d12::EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1a1f55c80e8c930949911097f3fd1519">gpgmm::d3d12::EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba5953585d1378f23825964434e4b6c49c">gpgmm::d3d12::EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baad24450796adb0c726ebc90b11745b59">gpgmm::d3d12::EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba730a5ea8249a36065778ece4350991a8">gpgmm::d3d12::EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
+<br />
+ }</td></tr>
+<tr class="separator:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">gpgmm::d3d12::EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236">gpgmm::d3d12::EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540">gpgmm::d3d12::EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 0x2
+ }</td></tr>
+<tr class="separator:a50666648c6ef0535d4b9afed754af8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
