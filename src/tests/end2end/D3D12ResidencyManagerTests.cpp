@@ -68,6 +68,14 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         residencyDesc.Adapter = mAdapter;
         residencyDesc.Device = mDevice;
 
+        residencyDesc.MinLogLevel = GetDefaultLogLevel();
+
+        if (IsDumpAllEventsEnabled()) {
+            residencyDesc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
+            residencyDesc.RecordOptions.MinMessageLevel = residencyDesc.MinLogLevel;
+            residencyDesc.RecordOptions.UseDetailedTimingEvents = true;
+        }
+
         return residencyDesc;
     }
 

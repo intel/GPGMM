@@ -71,16 +71,12 @@ namespace gpgmm::d3d12 {
             desc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
         }
 
-#if defined(NDEBUG)
-        desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
-#else
-        desc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
-        desc.RecordOptions.UseDetailedTimingEvents = true;
-#endif
+        desc.MinLogLevel = GetDefaultLogLevel();
 
-        if (IsDumpResourceAllocatorEnabled()) {
-            desc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_ALL_EVENTS;
+        if (IsDumpAllEventsEnabled()) {
+            desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
             desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
+            desc.RecordOptions.UseDetailedTimingEvents = true;
         }
 
         return desc;
@@ -139,6 +135,14 @@ namespace gpgmm::d3d12 {
         return false;
 #else
         return true;
+#endif
+    }
+
+    D3D12_MESSAGE_SEVERITY D3D12TestBase::GetDefaultLogLevel() const {
+#if defined(NDEBUG)
+        return D3D12_MESSAGE_SEVERITY_WARNING;
+#else
+        return D3D12_MESSAGE_SEVERITY_MESSAGE;
 #endif
     }
 

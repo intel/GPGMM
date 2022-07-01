@@ -82,7 +82,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const ALLOCATOR_RECORD_OPTIONS& desc) {
+    JSONDict JSONSerializer::Serialize(const EVENT_RECORD_OPTIONS& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MinMessageLevel", desc.MinMessageLevel);

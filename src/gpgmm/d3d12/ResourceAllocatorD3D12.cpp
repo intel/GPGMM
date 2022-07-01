@@ -142,23 +142,6 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity) {
-            switch (messageSeverity) {
-                case D3D12_MESSAGE_SEVERITY_CORRUPTION:
-                case D3D12_MESSAGE_SEVERITY_ERROR:
-                    return LogSeverity::Error;
-                case D3D12_MESSAGE_SEVERITY_WARNING:
-                    return LogSeverity::Warning;
-                case D3D12_MESSAGE_SEVERITY_INFO:
-                    return LogSeverity::Info;
-                case D3D12_MESSAGE_SEVERITY_MESSAGE:
-                    return LogSeverity::Debug;
-                default:
-                    UNREACHABLE();
-                    return LogSeverity::Debug;
-            }
-        }
-
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags, bool allowMSAA) {
             const D3D12_HEAP_FLAGS denyAllTexturesFlags =
@@ -300,6 +283,8 @@ namespace gpgmm::d3d12 {
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
             residencyDesc.IsUMA = allocatorDescriptor.IsUMA;
+            residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
+            residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
             ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
 
             ReturnIfFailed(
@@ -355,16 +340,20 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (newDescriptor.RecordOptions.Flags != ALLOCATOR_RECORD_FLAG_NONE) {
+        if (!IsEventTraceEnabled() && newDescriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
             StartupEventTrace(
                 allocatorDescriptor.RecordOptions.TraceFile,
                 static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0),
-                allocatorDescriptor.RecordOptions.EventScope & ALLOCATOR_RECORD_SCOPE_PER_PROCESS);
+                allocatorDescriptor.RecordOptions.EventScope & EVENT_RECORD_SCOPE_PER_PROCESS);
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         }
 
-        SetLogMessageLevel(GetLogSeverity(newDescriptor.MinLogLevel));
+        // Do not override the default min. log level specified by the residency manager.
+        // Only if this allocator is without residency, does the min. log level have affect.
+        if (pResidencyManager == nullptr) {
+            SetLogMessageLevel(GetLogSeverity(newDescriptor.MinLogLevel));
+        }
 
 #if defined(GPGMM_ENABLE_DEVICE_CHECKS)
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
@@ -403,7 +392,7 @@ namespace gpgmm::d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mShutdownEventTrace(descriptor.RecordOptions.EventScope &
-                              ALLOCATOR_RECORD_SCOPE_PER_INSTANCE),
+                              EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
