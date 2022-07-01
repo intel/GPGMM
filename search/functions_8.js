@@ -16,7 +16,7 @@ var searchData=
   ['isblockcompressionformat_13',['IsBlockCompressionFormat',['../namespacegpgmm_1_1d3d12.html#a8bc0035030f56ef1558acabd9daa3022',1,'gpgmm::d3d12']]],
   ['iscreateheapnotresidentsupported_14',['IsCreateHeapNotResidentSupported',['../classgpgmm_1_1d3d12_1_1_caps.html#ac8606ea39fe989fb437104485e0f4c17',1,'gpgmm::d3d12::Caps']]],
   ['isdepthformat_15',['IsDepthFormat',['../namespacegpgmm_1_1d3d12.html#a19e0ecbc81b189ae3fc0db4162ad5733',1,'gpgmm::d3d12']]],
-  ['isdumpresourceallocatorenabled_16',['IsDumpResourceAllocatorEnabled',['../class_g_p_g_m_m_test_base.html#a6218387c0f497517d1d168f5e5025819',1,'GPGMMTestBase::IsDumpResourceAllocatorEnabled()'],['../class_g_p_g_m_m_test_environment.html#a4cd502b7b9e076e607bccb89e410e6e7',1,'GPGMMTestEnvironment::IsDumpResourceAllocatorEnabled()']]],
+  ['isdumpalleventsenabled_16',['IsDumpAllEventsEnabled',['../class_g_p_g_m_m_test_base.html#a27336236bf9c7b792874082b55aba7eb',1,'GPGMMTestBase::IsDumpAllEventsEnabled()'],['../class_g_p_g_m_m_test_environment.html#af6c08e20a2cf66b1bf7b0928e97278d3',1,'GPGMMTestEnvironment::IsDumpAllEventsEnabled()']]],
   ['isempty_17',['IsEmpty',['../classgpgmm_1_1_j_s_o_n_array.html#a121342978df474257f428013ef09d409',1,'gpgmm::JSONArray::IsEmpty()'],['../classgpgmm_1_1_j_s_o_n_dict.html#af00e2d22bafd105f59e9a392fe8d82cd',1,'gpgmm::JSONDict::IsEmpty()']]],
   ['iseventtraceenabled_18',['IsEventTraceEnabled',['../namespacegpgmm.html#a7a4e7758d833df0093cf8c892c9632aa',1,'gpgmm']]],
   ['isinlist_19',['IsInList',['../classgpgmm_1_1_link_node.html#a52b5ec22c4fda10c969dd0d47d295aa9',1,'gpgmm::LinkNode']]],
