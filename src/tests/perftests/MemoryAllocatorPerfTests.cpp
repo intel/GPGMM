@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/common/StandaloneMemoryAllocator.h"
 #include "tests/DummyMemoryAllocator.h"
@@ -62,17 +63,17 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
     }
 
     static void GenerateParams(benchmark::internal::Benchmark* benchmark) {
-        static constexpr uint64_t kMaxMemorySize = (1ull << 34);  // ~16GB
-        static constexpr uint64_t kMinMemorySize = (1ull << 22);  // 4MB
-        static constexpr uint64_t kNumOfAllocations = 10u;
+        static const uint64_t kMaxMemorySize = GPGMM_GB_TO_BYTES(16);
+        static const uint64_t kMinMemorySize = GPGMM_MB_TO_BYTES(4);
+        static const uint64_t kNumOfAllocations = 10u;
 
         benchmark->ArgNames({"min", "max", "size", "count"});
         benchmark->Args({kMinMemorySize, kMaxMemorySize, /*256B*/ 256, kNumOfAllocations});
-        benchmark->Args({kMinMemorySize, kMaxMemorySize, /*64KB*/ 64 * 1024, kNumOfAllocations});
-        benchmark->Args(
-            {kMinMemorySize, kMaxMemorySize, /*4MB*/ 4 * 1024 * 1024, kNumOfAllocations});
-        benchmark->Args(
-            {kMinMemorySize, kMaxMemorySize, /*64MB*/ 64 * 1024 * 1024, kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, GPGMM_KB_TO_BYTES(8), kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, GPGMM_KB_TO_BYTES(64), kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, GPGMM_MB_TO_BYTES(2), kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, GPGMM_MB_TO_BYTES(4), kNumOfAllocations});
+        benchmark->Args({kMinMemorySize, kMaxMemorySize, GPGMM_MB_TO_BYTES(64), kNumOfAllocations});
     }
 };
 
