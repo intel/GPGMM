@@ -165,20 +165,8 @@ namespace gpgmm {
         SlabCache* pCache = GetOrCreateCache(slabSize);
         ASSERT(pCache != nullptr);
 
-        // Check free-list since HEAD must always exist (linked-list is self-referential).
-        auto* pFreeHead = pCache->FreeList.head();
-        Slab* pFreeSlab = pFreeHead->value();
-
-        // Splice the full slab from the free-list to the full-list.
-        if (!pCache->FreeList.empty() && pFreeSlab->IsFull()) {
-            pCache->FreeList.pop_front();
-            pCache->FullList.push_front(pFreeHead);
-            pFreeSlab = pCache->FreeList.head()->value();
-            pFreeHead = nullptr;
-        }
-
         // Push a new free slab at free-list HEAD.
-        if (pCache->FreeList.empty() || pFreeSlab->IsFull()) {
+        if (pCache->FreeList.empty()) {
             // Get the next free slab.
             if (mLastUsedSlabSize > 0) {
                 uint64_t newSlabSize = ComputeSlabSize(
@@ -196,7 +184,7 @@ namespace gpgmm {
                 // fully used. For example, assuming 2x growth, 2x2MB slabs need to be fully used
                 // before creating a 4MB one. If not, half of the growth (or 2MB) could be wasted.
                 const uint64_t numOfSlabsInNewSlabSize = newSlabSize / slabSize;
-                if (pCache->FullList.size() + pFreeSlab->IsFull() < numOfSlabsInNewSlabSize) {
+                if (pCache->FullList.size() < numOfSlabsInNewSlabSize) {
                     newSlabSize = slabSize;
                 }
 
@@ -206,12 +194,11 @@ namespace gpgmm {
                 }
             }
 
-            Slab* pNewFreeSlab =
-                new Slab(static_cast<uint64_t>(SafeDivide(slabSize, mBlockSize)), mBlockSize);
-            pCache->FreeList.push_front(pNewFreeSlab);
-            pFreeSlab = pNewFreeSlab;
+            pCache->FreeList.push_front(
+                new Slab(static_cast<uint64_t>(SafeDivide(slabSize, mBlockSize)), mBlockSize));
         }
 
+        Slab* pFreeSlab = pCache->FreeList.head()->value();
         ASSERT(pFreeSlab != nullptr);
         ASSERT(!pFreeSlab->IsFull());
 
@@ -313,8 +300,7 @@ namespace gpgmm {
                 newSlabRequest.Alignment = mSlabAlignment;
                 newSlabRequest.AlwaysPrefetch = false;
 
-                GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemoryAsync(newSlabRequest),
-                                 mNextSlabAllocationEvent);
+                mNextSlabAllocationEvent = mMemoryAllocator->TryAllocateMemoryAsync(newSlabRequest);
             }
         }
 
