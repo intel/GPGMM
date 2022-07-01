@@ -137,14 +137,14 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                                 \</div>
-<div class="line">        auto result = expr;           \</div>
-<div class="line">        if (result == <span class="keyword">nullptr</span>) {      \</div>
-<div class="line">            return <span class="keyword">nullptr</span>;           \</div>
-<div class="line">        }                             \</div>
-<div class="line">        value = std::move(result);    \</div>
-<div class="line">    }                                 \</div>
-<div class="line">    for (;;)                          \</div>
+<b>Value:</b><div class="fragment"><div class="line">    {                                            \</div>
+<div class="line">        auto result = expr;                      \</div>
+<div class="line">        if (<a class="code hl_define" href="_compiler_8h.html#a340f9dce5de45b8d0224407c14caf9d8">GPGMM_UNLIKELY</a>(result == <span class="keyword">nullptr</span>)) { \</div>
+<div class="line">            return {};                           \</div>
+<div class="line">        }                                        \</div>
+<div class="line">        value = std::move(result);               \</div>
+<div class="line">    }                                            \</div>
+<div class="line">    for (;;)                                     \</div>
 <div class="line">    break</div>
 </div><!-- fragment -->
 </div>
