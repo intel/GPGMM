@@ -18,6 +18,7 @@
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/common/WorkerThread.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -32,6 +33,115 @@ namespace gpgmm::d3d12 {
 
     static constexpr uint32_t kDefaultEvictBatchSize = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
+
+    // Creates a long-lived task to recieve and process OS budget change events.
+    class BudgetUpdateTask : public VoidCallback {
+      public:
+        BudgetUpdateTask(ResidencyManager* const residencyManager, ComPtr<IDXGIAdapter3> adapter)
+            : mResidencyManager(residencyManager),
+              mAdapter(std::move(adapter)),
+              mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
+              mUnregisterAndExitEvent(CreateEventW(NULL, FALSE, FALSE, NULL)) {
+            ASSERT(mResidencyManager != nullptr);
+            ASSERT(mAdapter != nullptr);
+            mLastError = mAdapter->RegisterVideoMemoryBudgetChangeNotificationEvent(
+                mBudgetNotificationUpdateEvent, &mCookie);
+        }
+
+        void operator()() override {
+            HRESULT hr = GetLastError();
+            bool isExiting = false;
+            while (!isExiting && SUCCEEDED(hr)) {
+                // Wait on two events: one to unblock for OS budget changes, and another to unblock
+                // for shutdown.
+                HANDLE hWaitEvents[2] = {mBudgetNotificationUpdateEvent, mUnregisterAndExitEvent};
+                const DWORD waitedEvent =
+                    WaitForMultipleObjects(2, hWaitEvents, /*bWaitAll*/ false, INFINITE);
+                switch (waitedEvent) {
+                    // mBudgetNotificationUpdateEvent
+                    case (WAIT_OBJECT_0 + 0): {
+                        hr = mResidencyManager->UpdateVideoMemorySegments();
+                        if (SUCCEEDED(hr)) {
+                            gpgmm::InfoEvent("ResidencyManager", EventMessageId::BudgetUpdate)
+                                << "Updated video budget from OS notification.";
+                        }
+                        break;
+                    }
+                    // mUnregisterAndExitEvent
+                    case (WAIT_OBJECT_0 + 1): {
+                        isExiting = true;
+                        break;
+                    }
+                    default: {
+                        UNREACHABLE();
+                        break;
+                    }
+                }
+            }
+
+            SetLastError(hr);
+        }
+
+        HRESULT GetLastError() const {
+            std::lock_guard<std::mutex> lock(mMutex);
+            return mLastError;
+        }
+
+        // Shutdown the event loop.
+        bool UnregisterAndExit() {
+            mAdapter->UnregisterVideoMemoryBudgetChangeNotification(mCookie);
+            return SetEvent(mUnregisterAndExitEvent);
+        }
+
+      private:
+        void SetLastError(HRESULT hr) {
+            std::lock_guard<std::mutex> lock(mMutex);
+            mLastError = hr;
+        }
+
+        ResidencyManager* const mResidencyManager;
+        ComPtr<IDXGIAdapter3> mAdapter;
+
+        HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;
+        HANDLE mUnregisterAndExitEvent = INVALID_HANDLE_VALUE;
+
+        DWORD mCookie = 0;  // Used to unregister from notifications.
+
+        mutable std::mutex mMutex;  // Protect access between threads for members below.
+        HRESULT mLastError = S_OK;
+    };
+
+    class BudgetUpdateEvent final : public Event {
+      public:
+        BudgetUpdateEvent(std::shared_ptr<Event> event, std::shared_ptr<BudgetUpdateTask> task)
+            : mTask(task), mEvent(event) {
+        }
+
+        // Event overrides
+        void Wait() override {
+            mEvent->Wait();
+        }
+
+        bool IsSignaled() override {
+            return mEvent->IsSignaled();
+        }
+
+        void Signal() override {
+            return mEvent->Signal();
+        }
+
+        bool UnregisterAndExit() {
+            return mTask->UnregisterAndExit();
+        }
+
+        bool GetLastError() const {
+            return mTask->GetLastError();
+        }
+
+      private:
+        std::shared_ptr<BudgetUpdateTask> mTask;
+        std::shared_ptr<Event> mEvent;
+    };
 
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
@@ -53,6 +163,11 @@ namespace gpgmm::d3d12 {
 
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, std::move(residencyFence)));
+
+        // Require automatic video memory budget updates.
+        if (!descriptor.UpdateBudgetByPolling) {
+            ReturnIfFailed(residencyManager->StartBudgetNotificationUpdates());
+        }
 
         // Set the initial video memory limits per segment.
         ReturnIfFailed(residencyManager->UpdateVideoMemorySegments());
@@ -94,7 +209,9 @@ namespace gpgmm::d3d12 {
           mIsBudgetRestricted(descriptor.Budget > 0),
           mEvictBatchSize(descriptor.EvictBatchSize == 0 ? kDefaultEvictBatchSize
                                                          : descriptor.EvictBatchSize),
-          mIsUMA(descriptor.IsUMA) {
+          mIsUMA(descriptor.IsUMA),
+          mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
+          mThreadPool(ThreadPool::Create()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -104,6 +221,7 @@ namespace gpgmm::d3d12 {
 
     ResidencyManager::~ResidencyManager() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+        StopBudgetNotificationUpdates();
     }
 
     const char* ResidencyManager::GetTypename() const {
@@ -293,6 +411,11 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyManager::UpdateVideoMemorySegments() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return UpdateVideoMemorySegmentsInternal();
+    }
+
+    HRESULT ResidencyManager::UpdateVideoMemorySegmentsInternal() {
         DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
             GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
 
@@ -320,7 +443,10 @@ namespace gpgmm::d3d12 {
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemoryInfo(memorySegmentGroup);
-        ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
+
+        if (IsBudgetNotificationUpdatesDisabled()) {
+            ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
+        }
 
         const uint64_t currentUsageAfterEvict =
             evictSizeInBytes + videoMemorySegmentInfo->CurrentUsage;
@@ -403,17 +529,13 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
+        if (count == 0) {
+            return E_INVALIDARG;
+        }
+
         // TODO: support multiple command lists.
         if (count > 1) {
             return E_NOTIMPL;
-        }
-
-        // Keep video memory segments up-to-date. This must always happen because tests may
-        // want to execute a no-op to get the current budget and usage.
-        ReturnIfFailed(UpdateVideoMemorySegments());
-
-        if (count == 0) {
-            return S_OK;
         }
 
         ResidencySet* residencySet = residencySets[0];
@@ -480,6 +602,13 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(mFence->Signal(queue));
         }
 
+        // Keep video memory segments up-to-date. This must always happen because if the budget
+        // never changes (ie. not manually updated or through budget change events), the
+        // residency manager wouldn't know what to page in or out.
+        if (IsBudgetNotificationUpdatesDisabled()) {
+            ReturnIfFailed(UpdateVideoMemorySegmentsInternal());
+        }
+
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
                                       (EXECUTE_COMMAND_LISTS_DESC{residencySets, count}));
 
@@ -538,6 +667,38 @@ namespace gpgmm::d3d12 {
         }
 
         return info;
+    }
+
+    // Starts updating video memory budget from OS notifications.
+    // Return True if successfully registered or False if error.
+    HRESULT ResidencyManager::StartBudgetNotificationUpdates() {
+        if (mBudgetNotificationUpdateEvent == nullptr) {
+            std::shared_ptr<BudgetUpdateTask> task =
+                std::make_shared<BudgetUpdateTask>(this, mAdapter);
+            mBudgetNotificationUpdateEvent = std::make_shared<BudgetUpdateEvent>(
+                ThreadPool::PostTask(mThreadPool, task, "GPGMM_ThreadBudgetChangeWorker"), task);
+        }
+
+        ASSERT(mBudgetNotificationUpdateEvent != nullptr);
+        return mBudgetNotificationUpdateEvent->GetLastError();
+    }
+
+    bool ResidencyManager::IsBudgetNotificationUpdatesDisabled() const {
+        return mIsBudgetChangeEventsDisabled ||
+               (mBudgetNotificationUpdateEvent != nullptr &&
+                FAILED(mBudgetNotificationUpdateEvent->GetLastError()));
+    }
+
+    void ResidencyManager::StopBudgetNotificationUpdates() {
+        if (mBudgetNotificationUpdateEvent == nullptr) {
+            return;
+        }
+
+        const bool success = mBudgetNotificationUpdateEvent->UnregisterAndExit();
+        ASSERT(success);
+
+        mBudgetNotificationUpdateEvent->Wait();
+        mBudgetNotificationUpdateEvent = nullptr;
     }
 
 }  // namespace gpgmm::d3d12
