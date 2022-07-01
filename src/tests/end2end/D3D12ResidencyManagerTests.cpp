@@ -45,9 +45,15 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         // Require MakeResident/Evict occur near CreateResource, for debugging purposes.
         desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 
+        // Disable memory growth so older heap being paged out are the same size as newer heaps
+        // being paged-in, and the test expectation based on these sizes is easy to determine.
+        desc.MemoryGrowthFactor = 1.0;
+
         return desc;
     }
 
+    // Configures residency manager for testing residency in a controlled and predictable
+    // fashion.
     RESIDENCY_DESC CreateBasicResidencyDesc(uint64_t budget) const {
         RESIDENCY_DESC residencyDesc = {};
 
@@ -165,6 +171,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
 // Keeps allocating until it goes over the limited |kDefaultBudget| size budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+    residencyDesc.UpdateBudgetByPolling = true;
 
     ComPtr<ResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
@@ -173,14 +180,21 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(GPGMM_MB_TO_BYTES(1));
+
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
     while (!IsOverBudget(residencyManager.Get())) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
         allocations.push_back(std::move(allocation));
         ASSERT_SUCCEEDED(residencyManager->UpdateVideoMemorySegments());
+    }
+
+    // All allocations should be created resident.
+    for (auto& allocation : allocations) {
+        EXPECT_TRUE(allocation->IsResident());
     }
 }
 
@@ -197,23 +211,32 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetUsingBudgetNotifications) {
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(GPGMM_MB_TO_BYTES(1));
+
     // Keep allocating until we reach the budget.
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
     while (!IsOverBudget(residencyManager.Get())) {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(
-            resourceAllocator->CreateResource({}, CreateBasicBufferDesc(GPGMM_MB_TO_BYTES(1)),
-                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         allocations.push_back(std::move(allocation));
+    }
+
+    // All allocations should be created resident.
+    for (auto& allocation : allocations) {
+        EXPECT_TRUE(allocation->IsResident());
     }
 }
 
-// Keeps allocating until it goes over budget.
-TEST_F(D3D12ResidencyManagerTests, OverBudgetAndNoGrowth) {
+// Keeps allocating heaps of increasing size until it goes over budget.
+TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<ResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.MemoryGrowthFactor = 2;
 
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
@@ -222,15 +245,27 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAndNoGrowth) {
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
     std::vector<Heap*> resourceHeaps = {};
 
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(GPGMM_MB_TO_BYTES(1));
+
     while (!IsOverBudget(residencyManager.Get())) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
         resourceHeaps.push_back(allocation->GetMemory());
         allocations.push_back(std::move(allocation));
 
         ASSERT_SUCCEEDED(residencyManager->UpdateVideoMemorySegments());
+    }
+
+    // All allocations should be created resident.
+    for (auto& allocation : allocations) {
+        EXPECT_TRUE(allocation->IsResident());
+    }
+
+    // Check growth occured
+    for (size_t heapIndex = 1; heapIndex < resourceHeaps.size(); heapIndex++) {
+        EXPECT_LE(resourceHeaps[heapIndex - 1]->GetSize(), resourceHeaps[heapIndex]->GetSize());
     }
 
     // With no budget left, the last resource heap size should not increase.
