@@ -76,7 +76,6 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_memory_allocator_8h.html">gpgmm/common/MemoryAllocator.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_event_record_d3_d12_8h.html">gpgmm/d3d12/EventRecordD3D12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_flags_8h.html">gpgmm/utils/Flags.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
@@ -86,6 +85,8 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html">gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">gpgmm::d3d12::ALLOCATOR_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">gpgmm::d3d12::ALLOCATION_DESC</a></td></tr>
@@ -107,6 +108,10 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:addd8571a3cf9c1c8893f16f664612090"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#addd8571a3cf9c1c8893f16f664612090">gpgmm::d3d12::ALLOCATOR_FLAGS_TYPE</a> = Flags&lt; ALLOCATOR_FLAGS &gt;</td></tr>
 <tr class="separator:addd8571a3cf9c1c8893f16f664612090"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ab05c28f34f8023a5de8a2037daa4e5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8ab05c28f34f8023a5de8a2037daa4e5">gpgmm::d3d12::ALLOCATOR_RECORD_FLAGS_TYPE</a> = Flags&lt; ALLOCATOR_RECORD_FLAGS &gt;</td></tr>
+<tr class="separator:a8ab05c28f34f8023a5de8a2037daa4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab52ecb8f9358cd8afc4a5a30cfb9d93f">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_TYPE</a> = Flags&lt; ALLOCATOR_RECORD_SCOPE &gt;</td></tr>
+<tr class="separator:ab52ecb8f9358cd8afc4a5a30cfb9d93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb6716a7aa24ebf09a7c61136b46b217"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb6716a7aa24ebf09a7c61136b46b217">gpgmm::d3d12::ALLOCATOR_ALGORITHM_TYPE</a> = Flags&lt; ALLOCATOR_ALGORITHM &gt;</td></tr>
 <tr class="separator:adb6716a7aa24ebf09a7c61136b46b217"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a978095e9c5b00f02cf77e0a74e89d0fc">gpgmm::d3d12::ALLOCATION_FLAGS_TYPE</a> = Flags&lt; <a class="el" href="struct_a_l_l_o_c_a_t_i_o_n___f_l_a_g_s.html">ALLOCATION_FLAGS</a> &gt;</td></tr>
@@ -124,6 +129,22 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e37df42bebf066b8cec7189b305682c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682c">gpgmm::d3d12::ALLOCATOR_RECORD_FLAGS</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cacec97dc761ae4adba1c34b1be267fa99">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682cae351b5dc93864e1d9a90dd3066b9d466">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_API_OBJECTS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca6975a0a8935d655b191292289d17a8f2">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_API_CALLS</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca412cfa80241baa9e2cc62bdc9612ae95">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_API_TIMINGS</a> = 0x4
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca3738202ef7d628a1a5876f7819d8b310">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_COUNTERS</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca44bdb8854dfef08baf1ce7054822142f">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_CAPTURE</a> = 0x3
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e37df42bebf066b8cec7189b305682ca7bf18b396b7bd3767b8e0ecebd95bea4">gpgmm::d3d12::ALLOCATOR_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
+<br />
+ }</td></tr>
+<tr class="separator:a2e37df42bebf066b8cec7189b305682c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af588c6de3c0eb44ef046610a1caee5a8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a6f5f86d8801008f725a7984050769931">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_PER_PROCESS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#af588c6de3c0eb44ef046610a1caee5a8a1506f41630ece905cca5bccdac847fc6">gpgmm::d3d12::ALLOCATOR_RECORD_SCOPE_PER_INSTANCE</a> = 0x2
+ }</td></tr>
+<tr class="separator:af588c6de3c0eb44ef046610a1caee5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SLAB</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">gpgmm::d3d12::ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x1
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">gpgmm::d3d12::ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x2

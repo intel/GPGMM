@@ -13,7 +13,7 @@ var searchData=
   ['updatevideomemorysegments_10',['UpdateVideoMemorySegments',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a6e75d0e53352b915a43de66b9ffd5237',1,'gpgmm::d3d12::ResidencyManager']]],
   ['usedblockcount_11',['UsedBlockCount',['../structgpgmm_1_1_memory_allocator_info.html#afd06e9f1ba23dff9b1aaeb662a5febc0',1,'gpgmm::MemoryAllocatorInfo']]],
   ['usedblockusage_12',['UsedBlockUsage',['../structgpgmm_1_1_memory_allocator_info.html#aa5974ff23bcde1201ddecf7172de9d20',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['usedetailedtimingevents_13',['UseDetailedTimingEvents',['../structgpgmm_1_1d3d12_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html#afca8d6a4bec59c65a8b0cb233dcab0c9',1,'gpgmm::d3d12::EVENT_RECORD_OPTIONS']]],
+  ['usedetailedtimingevents_13',['UseDetailedTimingEvents',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a8407f808d092f3e62ba522900fbbe62a',1,'gpgmm::d3d12::ALLOCATOR_RECORD_OPTIONS']]],
   ['usedmemorycount_14',['UsedMemoryCount',['../structgpgmm_1_1_memory_allocator_info.html#a73f9b120dda3cd970fd0d39cf74f8503',1,'gpgmm::MemoryAllocatorInfo']]],
   ['usedmemoryusage_15',['UsedMemoryUsage',['../structgpgmm_1_1_memory_allocator_info.html#aa0594e53ecb5584efea2da8ee5bcd228',1,'gpgmm::MemoryAllocatorInfo']]],
   ['utils_2ecpp_16',['Utils.cpp',['../_utils_8cpp.html',1,'']]],
