@@ -5,5 +5,7 @@ var searchData=
   ['benchmark_5fmain_2',['BENCHMARK_MAIN',['../_memory_allocator_perf_tests_8cpp.html#a5851750faa9cfec10f7cad1f3b89697e',1,'MemoryAllocatorPerfTests.cpp']]],
   ['buddyblockallocator_3',['BuddyBlockAllocator',['../classgpgmm_1_1_buddy_block_allocator.html#a7546c244311f2f227599279125ba3da1',1,'gpgmm::BuddyBlockAllocator']]],
   ['buddymemoryallocator_4',['BuddyMemoryAllocator',['../classgpgmm_1_1_buddy_memory_allocator.html#ad422be1ee9807d4e8a9831b832445516',1,'gpgmm::BuddyMemoryAllocator']]],
-  ['bufferallocator_5',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8408d710774e6aa669afd36eb01e38b7',1,'gpgmm::d3d12::BufferAllocator']]]
+  ['budgetupdateevent_5',['BudgetUpdateEvent',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#acc872e8d6fec237abf11b51121028be6',1,'gpgmm::d3d12::BudgetUpdateEvent']]],
+  ['budgetupdatetask_6',['BudgetUpdateTask',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#aea174d566448ec90abb0976a0cfce11d',1,'gpgmm::d3d12::BudgetUpdateTask']]],
+  ['bufferallocator_7',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a8408d710774e6aa669afd36eb01e38b7',1,'gpgmm::d3d12::BufferAllocator']]]
 ];
