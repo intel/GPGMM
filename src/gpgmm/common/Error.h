@@ -19,15 +19,15 @@
 
 namespace gpgmm {
 
-#define GPGMM_TRY_ASSIGN(expr, value) \
-    {                                 \
-        auto result = expr;           \
-        if (result == nullptr) {      \
-            return nullptr;           \
-        }                             \
-        value = std::move(result);    \
-    }                                 \
-    for (;;)                          \
+#define GPGMM_TRY_ASSIGN(expr, value)            \
+    {                                            \
+        auto result = expr;                      \
+        if (GPGMM_UNLIKELY(result == nullptr)) { \
+            return {};                           \
+        }                                        \
+        value = std::move(result);               \
+    }                                            \
+    for (;;)                                     \
     break
 
 #define GPGMM_INVALID_IF(expr)  \
