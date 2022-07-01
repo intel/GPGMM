@@ -47,6 +47,19 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Debug perf tests",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "gpgmm_perftests",
+      "args": [
+        "--benchmark_filter="
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/out/Debug",
+      "environment": [],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug WebNN end2end tests",
       "type": "cppvsdbg",
       "request": "launch",
