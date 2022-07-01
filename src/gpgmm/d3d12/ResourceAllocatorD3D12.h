@@ -351,13 +351,6 @@ namespace gpgmm::d3d12 {
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
         double MemoryGrowthFactor;
-
-        /*
-        * \deprecated Access by creating a ResidencyManager directly, not through CreateAllocator.
-        Will be removed in a future version of GPGMM.
-        */
-        float MaxVideoMemoryBudget;
-        uint64_t Budget;
     };
 
     /** \enum ALLOCATION_FLAGS

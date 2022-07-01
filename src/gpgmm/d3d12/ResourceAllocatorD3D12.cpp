@@ -300,8 +300,6 @@ namespace gpgmm::d3d12 {
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
             residencyDesc.IsUMA = allocatorDescriptor.IsUMA;
-            residencyDesc.VideoMemoryBudget = allocatorDescriptor.MaxVideoMemoryBudget;
-            residencyDesc.Budget = allocatorDescriptor.Budget;
             ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
 
             ReturnIfFailed(
