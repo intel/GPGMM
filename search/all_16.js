@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['wait_0',['Wait',['../classgpgmm_1_1_event.html#a2e9d6fac62e85956e99c69735faf8725',1,'gpgmm::Event::Wait()'],['../classgpgmm_1_1_async_event_impl.html#acb5fc8871e847abbe6c88eeb972c8edc',1,'gpgmm::AsyncEventImpl::Wait()'],['../classgpgmm_1_1_memory_allocation_event.html#aa02ea1c7db4704d3c26d48528edc4f96',1,'gpgmm::MemoryAllocationEvent::Wait()']]],
+  ['wait_0',['Wait',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#af9d99f32101ea56fb2ed32947fee9a27',1,'gpgmm::d3d12::BudgetUpdateEvent::Wait()'],['../classgpgmm_1_1_event.html#a2e9d6fac62e85956e99c69735faf8725',1,'gpgmm::Event::Wait()'],['../classgpgmm_1_1_async_event_impl.html#acb5fc8871e847abbe6c88eeb972c8edc',1,'gpgmm::AsyncEventImpl::Wait()'],['../classgpgmm_1_1_memory_allocation_event.html#aa02ea1c7db4704d3c26d48528edc4f96',1,'gpgmm::MemoryAllocationEvent::Wait()']]],
   ['waitfor_1',['WaitFor',['../classgpgmm_1_1d3d12_1_1_fence.html#a1adcdae2029b716a5fd77c1f4e6bdfa3',1,'gpgmm::d3d12::Fence']]],
   ['warnevent_2',['WarnEvent',['../namespacegpgmm.html#aea958111e401705339ddcc41d50c099e',1,'gpgmm']]],
   ['warning_3',['Warning',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa0eaadb4fcb48a0a0ed7bc9868be9fbaa',1,'gpgmm']]],
