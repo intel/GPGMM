@@ -19,6 +19,23 @@
 
 namespace gpgmm::d3d12 {
 
+    LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity) {
+        switch (messageSeverity) {
+            case D3D12_MESSAGE_SEVERITY_CORRUPTION:
+            case D3D12_MESSAGE_SEVERITY_ERROR:
+                return LogSeverity::Error;
+            case D3D12_MESSAGE_SEVERITY_WARNING:
+                return LogSeverity::Warning;
+            case D3D12_MESSAGE_SEVERITY_INFO:
+                return LogSeverity::Info;
+            case D3D12_MESSAGE_SEVERITY_MESSAGE:
+                return LogSeverity::Debug;
+            default:
+                UNREACHABLE();
+                return LogSeverity::Debug;
+        }
+    }
+
     DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                              bool isUMA,
                                                              D3D12_HEAP_TYPE heapType) {

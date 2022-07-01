@@ -23,7 +23,7 @@ namespace gpgmm::d3d12 {
     // Forward declare backend types.
     struct ALLOCATION_DESC;
     struct ALLOCATOR_DESC;
-    struct ALLOCATOR_RECORD_OPTIONS;
+    struct EVENT_RECORD_OPTIONS;
     struct HEAP_DESC;
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_DESC;
@@ -62,7 +62,7 @@ namespace gpgmm::d3d12 {
         static JSONDict Serialize(const RESIDENCY_DESC& desc);
 
       private:
-        static JSONDict Serialize(const ALLOCATOR_RECORD_OPTIONS& desc);
+        static JSONDict Serialize(const EVENT_RECORD_OPTIONS& desc);
         static JSONDict Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue);
         static JSONDict Serialize(const FLOAT rgba[4]);
         static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);

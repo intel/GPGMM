@@ -24,6 +24,7 @@
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Math.h"
 
 #include <algorithm>
@@ -32,7 +33,7 @@
 namespace gpgmm::d3d12 {
 
     static constexpr uint32_t kDefaultEvictBatchSize = GPGMM_MB_TO_BYTES(50);
-    static constexpr float kDefaultVideoMemoryBudget = 0.95f;               // 95%
+    static constexpr float kDefaultVideoMemoryBudget = 0.95f;  // 95%
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -161,6 +162,16 @@ namespace gpgmm::d3d12 {
                 << "Video memory budget was ignored since a budget was already specified.";
         }
 
+        if (descriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
+            StartupEventTrace(descriptor.RecordOptions.TraceFile,
+                              static_cast<TraceEventPhase>(~descriptor.RecordOptions.Flags | 0),
+                              descriptor.RecordOptions.EventScope & EVENT_RECORD_SCOPE_PER_PROCESS);
+
+            SetEventMessageLevel(GetLogSeverity(descriptor.RecordOptions.MinMessageLevel));
+        }
+
+        SetLogMessageLevel(GetLogSeverity(descriptor.MinLogLevel));
+
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, std::move(residencyFence)));
 
@@ -211,6 +222,8 @@ namespace gpgmm::d3d12 {
                                                          : descriptor.EvictBatchSize),
           mIsUMA(descriptor.IsUMA),
           mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
+          mShutdownEventTrace(descriptor.RecordOptions.EventScope &
+                              EVENT_RECORD_SCOPE_PER_INSTANCE),
           mThreadPool(ThreadPool::Create()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -222,6 +235,10 @@ namespace gpgmm::d3d12 {
     ResidencyManager::~ResidencyManager() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
         StopBudgetNotificationUpdates();
+
+        if (mShutdownEventTrace) {
+            ShutdownEventTrace();
+        }
     }
 
     const char* ResidencyManager::GetTypename() const {

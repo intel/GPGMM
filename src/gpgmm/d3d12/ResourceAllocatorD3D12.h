@@ -17,6 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/d3d12/EventRecordD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/Flags.h"
 #include "include/gpgmm_export.h"
@@ -81,104 +82,6 @@ namespace gpgmm::d3d12 {
 
     using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
     DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_FLAGS_TYPE)
-
-    /** \enum ALLOCATOR_RECORD_FLAGS
-    Represents different event categories to record.
-    */
-    enum ALLOCATOR_RECORD_FLAGS {
-
-        /** \brief Record nothing.
-         */
-        ALLOCATOR_RECORD_FLAG_NONE = 0x0,
-
-        /** \brief Record lifetimes of API objects created by GPGMM.
-         */
-        ALLOCATOR_RECORD_FLAG_API_OBJECTS = 0x1,
-
-        /** \brief Record API calls made to GPGMM.
-         */
-        ALLOCATOR_RECORD_FLAG_API_CALLS = 0x2,
-
-        /** \brief Record duration of GPGMM API calls.
-         */
-        ALLOCATOR_RECORD_FLAG_API_TIMINGS = 0x4,
-
-        /** \brief Record metrics made to GPGMM API calls.
-         */
-        ALLOCATOR_RECORD_FLAG_COUNTERS = 0x8,
-
-        /** \brief Record events required for playback.
-
-         Bitwise OR'd combination of ALLOCATOR_RECORD_FLAG_API_OBJECTS and
-         ALLOCATOR_RECORD_FLAG_API_CALLS.
-         */
-        ALLOCATOR_RECORD_FLAG_CAPTURE = 0x3,
-
-        /** \brief Record everything.
-         */
-        ALLOCATOR_RECORD_FLAG_ALL_EVENTS = 0xFF,
-    };
-
-    using ALLOCATOR_RECORD_FLAGS_TYPE = Flags<ALLOCATOR_RECORD_FLAGS>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_FLAGS_TYPE)
-
-    /** \enum ALLOCATOR_RECORD_SCOPE
-    Represents recording scopes to limit event recording.
-    */
-    enum ALLOCATOR_RECORD_SCOPE {
-
-        /** \brief Scopes events per process (or multiple allocators).
-         */
-        ALLOCATOR_RECORD_SCOPE_PER_PROCESS = 0x1,
-
-        /** \brief Scopes events per allocator object.
-         */
-        ALLOCATOR_RECORD_SCOPE_PER_INSTANCE = 0x2,
-    };
-
-    using ALLOCATOR_RECORD_SCOPE_TYPE = Flags<ALLOCATOR_RECORD_SCOPE>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_RECORD_SCOPE_TYPE)
-
-    /** \struct ALLOCATOR_RECORD_OPTIONS
-    Represents additional controls for recording.
-    */
-    struct ALLOCATOR_RECORD_OPTIONS {
-        /** \brief Flags used to decide what to record.
-
-        Optional parameter. By default, nothing is recorded.
-        */
-        ALLOCATOR_RECORD_FLAGS_TYPE Flags = ALLOCATOR_RECORD_FLAG_NONE;
-
-        /** \brief Minimum severity level to record messages.
-
-        Messages with lower severity will be ignored.
-
-        Optional parameter. By default, the minimum severity level is WARN.
-        */
-        D3D12_MESSAGE_SEVERITY MinMessageLevel = D3D12_MESSAGE_SEVERITY_WARNING;
-
-        /** \brief Specifies the scope of the events.
-
-        Optional parameter. By default, recording is per process.
-        */
-        ALLOCATOR_RECORD_SCOPE EventScope = ALLOCATOR_RECORD_SCOPE_PER_PROCESS;
-
-        /** \brief Record detailed timing events.
-
-        Records detailed trace events when a resource allocation is created. Details include the
-        current usage by the allocator.
-
-        Optional parameter. By default, detailed timing events will only be recorded when the App
-        calls GetInfo() directly.
-        */
-        bool UseDetailedTimingEvents = false;
-
-        /** \brief Path to trace file.
-
-        Optional parameter. By default, a trace file is created for you.
-        */
-        std::string TraceFile;
-    };
 
     /** \enum ALLOCATOR_ALGORITHM
     Specify the algorithms used for allocation.
@@ -260,7 +163,7 @@ namespace gpgmm::d3d12 {
 
         For example, what events to record, and where to record them.
         */
-        ALLOCATOR_RECORD_OPTIONS RecordOptions;
+        EVENT_RECORD_OPTIONS RecordOptions;
 
         /** \brief Specifies if unified memory architecture (UMA) support is enabled.
 

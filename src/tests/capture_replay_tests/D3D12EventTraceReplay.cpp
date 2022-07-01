@@ -393,9 +393,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         if (envParams.CaptureEventMask != 0) {
                             allocatorDesc.RecordOptions.Flags |=
-                                static_cast<ALLOCATOR_RECORD_FLAGS_TYPE>(
-                                    envParams.CaptureEventMask);
-                            allocatorDesc.RecordOptions.Flags |= ALLOCATOR_RECORD_FLAG_CAPTURE;
+                                static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
+                            allocatorDesc.RecordOptions.Flags |= EVENT_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(envParams.LogLevel);
@@ -404,7 +403,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             // events will be captured instead of overwritten per iteration.
                             if (envParams.Iterations == 1) {
                                 allocatorDesc.RecordOptions.EventScope =
-                                    ALLOCATOR_RECORD_SCOPE_PER_INSTANCE;
+                                    EVENT_RECORD_SCOPE_PER_INSTANCE;
                             }
                         }
 
@@ -577,10 +576,10 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
 TEST_P(D3D12EventTraceReplay, Recapture) {
     TestEnviromentParams forceParams = {};
 
-    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_CAPTURE;
+    forceParams.CaptureEventMask = EVENT_RECORD_FLAG_CAPTURE;
     RunSingleTest(forceParams);
 
-    forceParams.CaptureEventMask = ALLOCATOR_RECORD_FLAG_NONE;
+    forceParams.CaptureEventMask = EVENT_RECORD_FLAG_NONE;
     RunSingleTest(forceParams);
 }
 

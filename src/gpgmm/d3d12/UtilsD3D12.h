@@ -16,10 +16,13 @@
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 
+#include "gpgmm/utils/Log.h"
+
 #include <string>
 
 namespace gpgmm::d3d12 {
 
+    LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity);
     DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
                                                              bool isUMA,
                                                              D3D12_HEAP_TYPE heapType);

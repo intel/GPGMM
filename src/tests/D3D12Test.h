@@ -52,6 +52,8 @@ namespace gpgmm::d3d12 {
 
         bool IsSizeCacheEnabled() const;
 
+        D3D12_MESSAGE_SEVERITY GetDefaultLogLevel() const;
+
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;

@@ -36,8 +36,8 @@ gpgmm::DebugPlatform* GPGMMTestBase::GetDebugPlatform() {
     return mDebugPlatform.get();
 }
 
-bool GPGMMTestBase::IsDumpResourceAllocatorEnabled() const {
-    return gTestEnv->IsDumpResourceAllocatorEnabled();
+bool GPGMMTestBase::IsDumpAllEventsEnabled() const {
+    return gTestEnv->IsDumpAllEventsEnabled();
 }
 
 // static
@@ -97,7 +97,7 @@ void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {
 GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         if (strcmp("--dump", argv[i]) == 0) {
-            mIsDumpResourceAllocatorEnabled = true;
+            mIsDumpAllEventsEnabled = true;
             continue;
         }
 
@@ -117,6 +117,6 @@ void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
 void GPGMMTestEnvironment::SetUp() {
 }
 
-bool GPGMMTestEnvironment::IsDumpResourceAllocatorEnabled() const {
-    return mIsDumpResourceAllocatorEnabled;
+bool GPGMMTestEnvironment::IsDumpAllEventsEnabled() const {
+    return mIsDumpAllEventsEnabled;
 }

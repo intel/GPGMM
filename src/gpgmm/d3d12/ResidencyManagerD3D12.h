@@ -16,6 +16,7 @@
 #ifndef GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
+#include "gpgmm/d3d12/EventRecordD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "include/gpgmm_export.h"
@@ -58,6 +59,22 @@ namespace gpgmm::d3d12 {
         Required parameter. Use CheckFeatureSupport to determine if supported.
         */
         bool IsUMA;
+
+        /** \brief Minimum severity level to log messages to console.
+
+        Messages with lower severity will be ignored.
+
+        Optional parameter. By default, will log only corruption messages.
+        */
+        D3D12_MESSAGE_SEVERITY MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
+
+        /** \brief Specifies recording options.
+
+        For example, what events to record, and where to record them.
+
+        Optional parameter. By default, no options are specified for recording.
+        */
+        EVENT_RECORD_OPTIONS RecordOptions;
 
         /** \brief Total budget of video memory, expressed as a percentage.
 
@@ -271,6 +288,7 @@ namespace gpgmm::d3d12 {
         const uint64_t mEvictBatchSize;
         const bool mIsUMA;
         const bool mIsBudgetChangeEventsDisabled;
+        const bool mShutdownEventTrace;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
