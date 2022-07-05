@@ -50,7 +50,7 @@ var searchData=
   ['returnifsucceeded_47',['ReturnIfSucceeded',['../_error_d3_d12_8h.html#ab0bbab06bb383b99d6e1f6e36ec36e67',1,'ErrorD3D12.h']]],
   ['returnifsuccess_48',['ReturnIfSuccess',['../_error_vk_8h.html#acb98e909ecd45877bd881546b067b580',1,'ErrorVk.h']]],
   ['returntopool_49',['ReturnToPool',['../classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7',1,'gpgmm::MemoryPool::ReturnToPool()'],['../classgpgmm_1_1_l_i_f_o_memory_pool.html#ac1c7f6f17939dd4e06ecf51d896e6bcf',1,'gpgmm::LIFOMemoryPool::ReturnToPool()'],['../classgpgmm_1_1_indexed_memory_pool.html#a5a89cde3f5d7df9463434236c1d3cd2b',1,'gpgmm::IndexedMemoryPool::ReturnToPool()']]],
-  ['roundup_50',['RoundUp',['../namespacegpgmm.html#ac037d0ab70003a877c52f2f9903a44a4',1,'gpgmm']]],
+  ['roundup_50',['RoundUp',['../namespacegpgmm.html#a46ca514fe8b903d6c42010074de2d57e',1,'gpgmm']]],
   ['runsingletest_51',['RunSingleTest',['../class_capture_replay_test_with_params.html#a47923c53c7df83231c5adb2fab79b104',1,'CaptureReplayTestWithParams']]],
   ['runtest_52',['RunTest',['../class_capture_replay_test_with_params.html#a0c7771188c0abcb849617277faf2b591',1,'CaptureReplayTestWithParams::RunTest()'],['../class_d3_d12_event_trace_replay.html#a3decfa57946032b0ad2d4ffeeaf0c768',1,'D3D12EventTraceReplay::RunTest()']]],
   ['runtestloop_53',['RunTestLoop',['../class_capture_replay_test_with_params.html#a9a8a9d2eadeb5e0849c2e2ec662784df',1,'CaptureReplayTestWithParams']]]

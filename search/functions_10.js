@@ -14,7 +14,7 @@ var searchData=
   ['resourceallocation_11',['ResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a6760013a84a54ae4c7d1e9c836af73d2',1,'gpgmm::d3d12::ResourceAllocation']]],
   ['resourceheapallocator_12',['ResourceHeapAllocator',['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a34c0bb4d3b031af57c973517a6ac5aa1',1,'gpgmm::d3d12::ResourceHeapAllocator']]],
   ['returntopool_13',['ReturnToPool',['../classgpgmm_1_1_indexed_memory_pool.html#a5a89cde3f5d7df9463434236c1d3cd2b',1,'gpgmm::IndexedMemoryPool::ReturnToPool()'],['../classgpgmm_1_1_l_i_f_o_memory_pool.html#ac1c7f6f17939dd4e06ecf51d896e6bcf',1,'gpgmm::LIFOMemoryPool::ReturnToPool()'],['../classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7',1,'gpgmm::MemoryPool::ReturnToPool()']]],
-  ['roundup_14',['RoundUp',['../namespacegpgmm.html#ac037d0ab70003a877c52f2f9903a44a4',1,'gpgmm']]],
+  ['roundup_14',['RoundUp',['../namespacegpgmm.html#a46ca514fe8b903d6c42010074de2d57e',1,'gpgmm']]],
   ['runsingletest_15',['RunSingleTest',['../class_capture_replay_test_with_params.html#a47923c53c7df83231c5adb2fab79b104',1,'CaptureReplayTestWithParams']]],
   ['runtest_16',['RunTest',['../class_d3_d12_event_trace_replay.html#a3decfa57946032b0ad2d4ffeeaf0c768',1,'D3D12EventTraceReplay::RunTest()'],['../class_capture_replay_test_with_params.html#a0c7771188c0abcb849617277faf2b591',1,'CaptureReplayTestWithParams::RunTest(const TraceFile &amp;traceFile, const TestEnviromentParams &amp;envParams, uint64_t iterationIndex)=0']]],
   ['runtestloop_17',['RunTestLoop',['../class_capture_replay_test_with_params.html#a9a8a9d2eadeb5e0849c2e2ec662784df',1,'CaptureReplayTestWithParams']]]
