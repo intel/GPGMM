@@ -43,11 +43,12 @@ var searchData=
   ['_7escopedref_40',['~ScopedRef',['../classgpgmm_1_1_scoped_ref.html#afe1df726f97f37b841fefde44ecbac98',1,'gpgmm::ScopedRef']]],
   ['_7escopedtracebufferintls_41',['~ScopedTraceBufferInTLS',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a7eccf8cd2c24fbd3586990ab2f92215e',1,'gpgmm::ScopedTraceBufferInTLS']]],
   ['_7esegmentedmemoryallocator_42',['~SegmentedMemoryAllocator',['../classgpgmm_1_1_segmented_memory_allocator.html#a9661bfe635cd26335eb6934fdeb9c281',1,'gpgmm::SegmentedMemoryAllocator']]],
-  ['_7eslabblockallocator_43',['~SlabBlockAllocator',['../classgpgmm_1_1_slab_block_allocator.html#ae40f0981078ef450dd2c6880e937a69c',1,'gpgmm::SlabBlockAllocator']]],
-  ['_7eslabcacheallocator_44',['~SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html#a2c5e83febbd039a887490449b9c9dff5',1,'gpgmm::SlabCacheAllocator']]],
-  ['_7eslabmemoryallocator_45',['~SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html#aad2484cbfa701c9958697eb2b385f686',1,'gpgmm::SlabMemoryAllocator']]],
-  ['_7etestiunknownimplsubclass_46',['~TestIUnknownImplSubClass',['../class_test_i_unknown_impl_sub_class.html#ad539e1c63ba9f28b92c3d8f9536d00f2',1,'TestIUnknownImplSubClass']]],
-  ['_7etestmemoryallocator_47',['~TestMemoryAllocator',['../class_test_memory_allocator.html#aba6e606ee5dd59c3990588c8630e1e6a',1,'TestMemoryAllocator']]],
-  ['_7ethreadpool_48',['~ThreadPool',['../classgpgmm_1_1_thread_pool.html#a04357356d2c678abd4c1ee336547563b',1,'gpgmm::ThreadPool']]],
-  ['_7evoidcallback_49',['~VoidCallback',['../classgpgmm_1_1_void_callback.html#a1f36f4f9eeb7691d400eca3feb2b5e30',1,'gpgmm::VoidCallback']]]
+  ['_7eslab_43',['~Slab',['../structgpgmm_1_1_slab.html#a27ada5d1d0759560f74159e8e9795bb4',1,'gpgmm::Slab']]],
+  ['_7eslabblockallocator_44',['~SlabBlockAllocator',['../classgpgmm_1_1_slab_block_allocator.html#ae40f0981078ef450dd2c6880e937a69c',1,'gpgmm::SlabBlockAllocator']]],
+  ['_7eslabcacheallocator_45',['~SlabCacheAllocator',['../classgpgmm_1_1_slab_cache_allocator.html#a2c5e83febbd039a887490449b9c9dff5',1,'gpgmm::SlabCacheAllocator']]],
+  ['_7eslabmemoryallocator_46',['~SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html#aad2484cbfa701c9958697eb2b385f686',1,'gpgmm::SlabMemoryAllocator']]],
+  ['_7etestiunknownimplsubclass_47',['~TestIUnknownImplSubClass',['../class_test_i_unknown_impl_sub_class.html#ad539e1c63ba9f28b92c3d8f9536d00f2',1,'TestIUnknownImplSubClass']]],
+  ['_7etestmemoryallocator_48',['~TestMemoryAllocator',['../class_test_memory_allocator.html#aba6e606ee5dd59c3990588c8630e1e6a',1,'TestMemoryAllocator']]],
+  ['_7ethreadpool_49',['~ThreadPool',['../classgpgmm_1_1_thread_pool.html#a04357356d2c678abd4c1ee336547563b',1,'gpgmm::ThreadPool']]],
+  ['_7evoidcallback_50',['~VoidCallback',['../classgpgmm_1_1_void_callback.html#a1f36f4f9eeb7691d400eca3feb2b5e30',1,'gpgmm::VoidCallback']]]
 ];

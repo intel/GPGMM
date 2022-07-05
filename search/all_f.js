@@ -12,7 +12,7 @@ var searchData=
   ['platformutils_2ecpp_9',['PlatformUtils.cpp',['../_platform_utils_8cpp.html',1,'']]],
   ['platformutils_2eh_10',['PlatformUtils.h',['../_platform_utils_8h.html',1,'']]],
   ['pleft_11',['pLeft',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html#ad876112812f84b6d8aba69006c060e0c',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::SplitLink']]],
-  ['pnext_12',['pNext',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks']]],
+  ['pnext_12',['pNext',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5',1,'gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks::pNext()'],['../structgpgmm_1_1_slab_block.html#a0c2d9dba6d6d3e5378755134ac48153c',1,'gpgmm::SlabBlock::pNext()']]],
   ['pointer_13',['pointer',['../classgpgmm_1_1_linked_list_iterator.html#adc54310b3b4fd0889474be7887f9b5e7',1,'gpgmm::LinkedListIterator']]],
   ['poolalgorithm_14',['PoolAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3ee6242ed4122b527e73a2bec2539c7c',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['pooledmemoryallocator_15',['PooledMemoryAllocator',['../classgpgmm_1_1_pooled_memory_allocator.html',1,'gpgmm::PooledMemoryAllocator'],['../classgpgmm_1_1_pooled_memory_allocator.html#abd8cd54251575173c48d9d2feddeb5a0',1,'gpgmm::PooledMemoryAllocator::PooledMemoryAllocator()']]],
@@ -30,7 +30,8 @@ var searchData=
   ['prefetchfailed_27',['PrefetchFailed',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a33dff3e1f50e77b6f9aaf0747fbfcc53',1,'gpgmm']]],
   ['previous_28',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
   ['prevpoweroftwo_29',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
-  ['push_5fback_30',['push_back',['../classgpgmm_1_1_sized_linked_list.html#a6f3af4e9449f0d721b55430d8b9afb11',1,'gpgmm::SizedLinkedList']]],
-  ['push_5ffront_31',['push_front',['../classgpgmm_1_1_sized_linked_list.html#a99d894e47fc4d5412ee34a54e2382bcb',1,'gpgmm::SizedLinkedList']]],
-  ['pvulkanfunctions_32',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
+  ['pslab_30',['pSlab',['../structgpgmm_1_1_slab_block.html#a63c6d8723ab9d18f188b50573f6d5296',1,'gpgmm::SlabBlock']]],
+  ['push_5fback_31',['push_back',['../classgpgmm_1_1_sized_linked_list.html#a6f3af4e9449f0d721b55430d8b9afb11',1,'gpgmm::SizedLinkedList']]],
+  ['push_5ffront_32',['push_front',['../classgpgmm_1_1_sized_linked_list.html#a99d894e47fc4d5412ee34a54e2382bcb',1,'gpgmm::SizedLinkedList']]],
+  ['pvulkanfunctions_33',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];

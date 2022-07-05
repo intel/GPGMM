@@ -71,6 +71,7 @@ $(function() {
 <li>alignment&#160;:&#160;<a class="el" href="struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html#ac185e6fde2f54c98d2ef500635b61c34">MEMORY_ALLOCATION_EXPECT</a></li>
 <li>AllocateMemory&#160;:&#160;<a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a8f18e9843ad3e5f3e1d0344b1858e70c">gpgmm::vk::VulkanFunctions</a></li>
 <li>allocationDescriptor&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#a4f6838340fa519320a572273fe5aa120">gpgmm::d3d12::CREATE_RESOURCE_DESC</a></li>
+<li>Allocator&#160;:&#160;<a class="el" href="structgpgmm_1_1_slab.html#acb30e0ab697ebcad8565d913a2741b41">gpgmm::Slab</a></li>
 <li>AllocatorProfile&#160;:&#160;<a class="el" href="struct_test_enviroment_params.html#ab0555104413aaf29072dad44bfa569c1">TestEnviromentParams</a></li>
 <li>AlwaysCacheSize&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocation_request.html#ab4f0785ab41e752e8d74fe68053ceac4">gpgmm::MemoryAllocationRequest</a></li>
 <li>AlwaysPrefetch&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocation_request.html#a38304c038543221202a535fd528746d8">gpgmm::MemoryAllocationRequest</a></li>
@@ -215,12 +216,13 @@ $(function() {
 <li>PeakUsage&#160;:&#160;<a class="el" href="struct_capture_replay_memory_stats.html#a8b3e9ff58d4db82928050ea8b0b9d37c">CaptureReplayMemoryStats</a></li>
 <li>physicalDevice&#160;:&#160;<a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a1df1001b59a3a4d322d2f3fc8cf6ccac">gpgmm::vk::GpCreateAllocatorInfo</a></li>
 <li>pLeft&#160;:&#160;<a class="el" href="structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html#ad876112812f84b6d8aba69006c060e0c">gpgmm::BuddyBlockAllocator::BuddyBlock::SplitLink</a></li>
-<li>pNext&#160;:&#160;<a class="el" href="structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5">gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks</a></li>
+<li>pNext&#160;:&#160;<a class="el" href="structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#a9e3f26392454de22e5dc3fbff042d9a5">gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks</a>, <a class="el" href="structgpgmm_1_1_slab_block.html#a0c2d9dba6d6d3e5378755134ac48153c">gpgmm::SlabBlock</a></li>
 <li>PoolAlgorithm&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3ee6242ed4122b527e73a2bec2539c7c">gpgmm::d3d12::ALLOCATOR_DESC</a></li>
 <li>pPrev&#160;:&#160;<a class="el" href="structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html#ade8510d65a228eb34e90250de896be4b">gpgmm::BuddyBlockAllocator::BuddyBlock::FreeLinks</a></li>
 <li>PreferredResourceHeapSize&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5">gpgmm::d3d12::ALLOCATOR_DESC</a></li>
 <li>PrefetchedMemoryMisses&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocator_info.html#a72c067d8e6c578976152bb7aeb292c97">gpgmm::MemoryAllocatorInfo</a></li>
 <li>PrefetchedMemoryMissesEliminated&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocator_info.html#ab2d5625cffc43b7e91fda532009dc09e">gpgmm::MemoryAllocatorInfo</a></li>
+<li>pSlab&#160;:&#160;<a class="el" href="structgpgmm_1_1_slab_block.html#a63c6d8723ab9d18f188b50573f6d5296">gpgmm::SlabBlock</a></li>
 <li>pVulkanFunctions&#160;:&#160;<a class="el" href="structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a54e197f08b9e7a0cb044f3cb4947731b">gpgmm::vk::GpCreateAllocatorInfo</a></li>
 </ul>
 
@@ -242,6 +244,7 @@ $(function() {
 <li>SizeCacheHits&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocator_info.html#a2aef5e969779809748593998fd4ab7cd">gpgmm::MemoryAllocatorInfo</a></li>
 <li>SizeCacheMisses&#160;:&#160;<a class="el" href="structgpgmm_1_1_memory_allocator_info.html#ae351c7732c435c6ef443841804b9f256">gpgmm::MemoryAllocatorInfo</a></li>
 <li>SizeInBytes&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f">gpgmm::d3d12::HEAP_DESC</a>, <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a69a8397e54b68d7e4d816b4a3743f480">gpgmm::d3d12::RESOURCE_ALLOCATION_INFO</a>, <a class="el" href="structgpgmm_1_1_memory_allocation_info.html#a2c01cf20959119481b0816086bed85c3">gpgmm::MemoryAllocationInfo</a>, <a class="el" href="structgpgmm_1_1_memory_allocation_request.html#a449006352d06e77f137428f7b0368996">gpgmm::MemoryAllocationRequest</a>, <a class="el" href="structgpgmm_1_1_memory_pool_info.html#a0a57abbe63ae6e41bc85bb2c730d1a77">gpgmm::MemoryPoolInfo</a>, <a class="el" href="structgpgmm_1_1_size_class_info.html#a6adb79599a341c616acae39ae8bac4bd">gpgmm::SizeClassInfo</a></li>
+<li>SlabMemory&#160;:&#160;<a class="el" href="structgpgmm_1_1_slab.html#a73d25461373e3a5de3d2d99e3e2d5208">gpgmm::Slab</a></li>
 <li>SubAllocatedRefs&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a0cfb0c43e9b95e846417cdcbb9e211d1">gpgmm::d3d12::HEAP_INFO</a></li>
 <li>SubAllocationAlgorithm&#160;:&#160;<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd">gpgmm::d3d12::ALLOCATOR_DESC</a></li>
 <li>succeeds&#160;:&#160;<a class="el" href="struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html#aa33793d4b6abad648dd5638b07a543c9">MEMORY_ALLOCATION_EXPECT</a></li>
