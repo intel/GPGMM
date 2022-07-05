@@ -1,17 +1,10 @@
 name: win_msvc_rel_x64_cmake
 
 on:
+  # This is a required workflow specified in branch enforcement
+  # and must run unconditionally to allow merges.
   push:
-    paths:
-      - 'src/**'
-      - '**/CMakeLists.txt'
-      - '**/*_cmake.yaml'
-
   pull_request:
-    paths:
-      - 'src/**'
-      - '**/CMakeLists.txt'
-      - '**/*_cmake.yaml'
 
 jobs:
 
