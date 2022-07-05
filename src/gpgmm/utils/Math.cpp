@@ -99,11 +99,11 @@ namespace gpgmm {
         return number % multiple == 0;
     }
 
-    uint64_t RoundUp(uint64_t n, uint64_t m) {
-        ASSERT(m > 0);
-        ASSERT(n > 0);
-        ASSERT(m <= std::numeric_limits<uint64_t>::max() - n);
-        return ((n + m - 1) / m) * m;
+    uint64_t RoundUp(uint64_t number, uint64_t multiple) {
+        ASSERT(multiple > 0);
+        ASSERT(number > 0);
+        ASSERT(multiple <= std::numeric_limits<uint64_t>::max() - number);
+        return ((number + multiple - 1) / multiple) * multiple;
     }
 
 }  // namespace gpgmm

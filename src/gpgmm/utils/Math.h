@@ -35,27 +35,19 @@ namespace gpgmm {
     uint64_t NextPowerOfTwo(uint64_t number);
     bool IsAligned(uint64_t number, size_t multiple);
 
-    template <typename T>
-    T AlignToPowerOfTwo(T number, size_t alignment) {
-        ASSERT(number <= std::numeric_limits<T>::max() - (alignment - 1));
-        ASSERT(IsPowerOfTwo(alignment));
-        ASSERT(alignment != 0);
-        const T& alignmentT = static_cast<T>(alignment);
-        return (number + (alignmentT - 1)) & ~(alignmentT - 1);
-    }
-
-    template <typename T>
-    T AlignTo(T number, size_t multiple) {
-        if (IsPowerOfTwo(multiple)) {
-            return AlignToPowerOfTwo(number, multiple);
-        }
-        ASSERT(number <= std::numeric_limits<T>::max() - (multiple - 1));
+    // Aligns number to the nearest power-of-two multiple.
+    // Compatible with 32-bit or 64-bit numbers.
+    template <typename T1, typename T2>
+    auto AlignTo(T1 number, T2 multiple) {
+        ASSERT(number <= std::numeric_limits<T1>::max() - (multiple - 1));
+        ASSERT(IsPowerOfTwo(multiple));
         ASSERT(multiple != 0);
-        const T& multipleT = static_cast<T>(multiple);
-        return ((number + multipleT - 1) / multipleT) * multipleT;
+        // Use of bitwise not (~) must be avoided since a 64-bit multiple would be always ~'d to a
+        // 32-bit range.
+        return (number + (multiple - 1)) - ((number + (multiple - 1)) & (multiple - 1));
     }
 
-    uint64_t RoundUp(uint64_t n, uint64_t m);
+    uint64_t RoundUp(uint64_t number, uint64_t multiple);
 
     // Evaluates a/b, avoiding division by zero.
     template <typename T>

@@ -49,7 +49,7 @@ namespace gpgmm::d3d12 {
 
          Always zero when the resource is placed in a heap or created with it's own heap.
         */
-        uint64_t OffsetFromResource;
+        size_t OffsetFromResource;
 
         /** \brief Method to describe how the allocation was created.
 

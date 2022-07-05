@@ -68,14 +68,9 @@ TEST(MathTests, AlignTo) {
     EXPECT_EQ(AlignTo(10u, 16), 16u);
     EXPECT_EQ(AlignTo(16u, 16u), 16u);
 
-    // Align NPOT number with NPOT multiple.
-    EXPECT_EQ(AlignTo(10u, 14), 14u);
-    EXPECT_EQ(AlignTo(10u, 10u), 10u);
-
     // Align UINT32_MAX to POT multiple.
-    ASSERT_EQ(AlignTo(static_cast<uint64_t>(0xFFFFFFFF), 4), 0x100000000u);
-    ASSERT_EQ(AlignTo(static_cast<uint64_t>(0xFFFFFFFF), 7), 0x100000000u + 3u);
+    ASSERT_EQ(AlignTo(static_cast<uint64_t>(0xFFFFFFFF), 4ull), 0x100000000u);
 
     // Align UINT64_MAX to POT multiple.
-    ASSERT_EQ(AlignTo(static_cast<uint64_t>(0xFFFFFFFFFFFFFFFF), 1), 0xFFFFFFFFFFFFFFFFull);
+    ASSERT_EQ(AlignTo(static_cast<uint64_t>(0xFFFFFFFFFFFFFFFF), 1ull), 0xFFFFFFFFFFFFFFFFull);
 }

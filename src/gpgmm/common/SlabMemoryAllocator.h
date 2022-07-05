@@ -130,7 +130,7 @@ namespace gpgmm {
             explicit SlabAllocatorCacheEntry(uint64_t blockSize) : mBlockSize(blockSize) {
             }
 
-            size_t GetKey() const {
+            uint64_t GetKey() const {
                 return mBlockSize;
             }
 
