@@ -144,7 +144,7 @@ target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
 
 # Compile definitions for the common config
 if (GPGMM_ALWAYS_ASSERT)
-    target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERTS")
 else()
   target_compile_definitions(gpgmm_common_config INTERFACE
     $<$<CONFIG:Debug>:GPGMM_ENABLE_ASSERTS>
@@ -212,4 +212,8 @@ endif()
 # ###############################################################################
 # Install GPGMM
 # ###############################################################################
-install(TARGETS gpgmm DESTINATION lib)
+install(TARGETS gpgmm 
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
