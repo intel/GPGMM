@@ -19,6 +19,15 @@
 
 namespace gpgmm {
 
+    struct Slab;
+
+    // SlabBlock keeps a reference back to the slab to avoid creating a copy of the block with the
+    // slab being allocated from.
+    struct SlabBlock : public MemoryBlock {
+        SlabBlock* pNext = nullptr;
+        Slab* pSlab = nullptr;
+    };
+
     // SlabBlockAllocator uses the slab allocation technique to satisfy an
     // a block-allocation request. A slab consists of contiguious memory carved up into
     // fixed-size blocks (also called "pages" or "chunks"). The slab allocator
@@ -40,10 +49,6 @@ namespace gpgmm {
         const char* GetTypename() const override;
 
       private:
-        struct SlabBlock : public MemoryBlock {
-            SlabBlock* pNext = nullptr;
-        };
-
         struct BlockList {
             SlabBlock* pHead = nullptr;  // First free block in slab.
         };

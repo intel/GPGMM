@@ -42,6 +42,36 @@ namespace gpgmm {
     // emitted.
     constexpr static double kPrefetchCoverageWarnMinThreshold = 0.50;
 
+    // Slab is a node in a doubly-linked list that contains a free-list of blocks
+    // and a reference to underlying memory.
+    struct Slab : public LinkNode<Slab>, public RefCounted {
+        Slab(uint64_t blockCount, uint64_t blockSize)
+            : RefCounted(0), Allocator(blockCount, blockSize) {
+        }
+
+        ~Slab() {
+            if (IsInList()) {
+                RemoveFromList();
+            }
+        }
+
+        uint64_t GetBlockCount() const {
+            return Allocator.GetBlockCount();
+        }
+
+        bool IsFull() const {
+            return static_cast<uint32_t>(GetRefCount()) == Allocator.GetBlockCount();
+        }
+
+        double GetUsedPercent() const {
+            return static_cast<uint32_t>(GetRefCount()) /
+                   static_cast<double>(Allocator.GetBlockCount());
+        }
+
+        SlabBlockAllocator Allocator;
+        std::unique_ptr<MemoryAllocation> SlabMemory;
+    };
+
     // SlabMemoryAllocator
 
     SlabMemoryAllocator::SlabMemoryAllocator(uint64_t blockSize,
@@ -311,22 +341,20 @@ namespace gpgmm {
             pCache->FullList.push_front(pFreeSlab);
         }
 
-        // Wrap the block in the containing slab. Since the slab's block could reside in another
-        // allocated block, the slab's allocation offset must be made relative to slab's underlying
-        // memory and not the slab.
-        BlockInSlab* blockInSlab = new BlockInSlab();
-        blockInSlab->pBlock = subAllocation->GetBlock();
+        // Assign the containing slab to the block so DeallocateMemory() knows how to release it.
+        SlabBlock* blockInSlab = static_cast<SlabBlock*>(subAllocation->GetBlock());
         blockInSlab->pSlab = pFreeSlab;
-        blockInSlab->Size = subAllocation->GetBlock()->Size;
-        blockInSlab->Offset =
-            pFreeSlab->SlabMemory->GetOffset() + subAllocation->GetBlock()->Offset;
+
+        // Since the slab's block could reside in another allocated block, the allocation
+        // offset must be made relative to the slab's underlying memory and not the slab itself.
+        const uint64_t offsetFromMemory = pFreeSlab->SlabMemory->GetOffset() + blockInSlab->Offset;
 
         mInfo.UsedBlockCount++;
         mInfo.UsedBlockUsage += blockInSlab->Size;
 
-        return std::make_unique<MemoryAllocation>(
-            this, subAllocation->GetMemory(), blockInSlab->Offset, AllocationMethod::kSubAllocated,
-            blockInSlab, request.SizeInBytes);
+        return std::make_unique<MemoryAllocation>(this, subAllocation->GetMemory(),
+                                                  offsetFromMemory, AllocationMethod::kSubAllocated,
+                                                  blockInSlab, request.SizeInBytes);
     }
 
     void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
@@ -334,7 +362,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        const BlockInSlab* blockInSlab = static_cast<BlockInSlab*>(subAllocation->GetBlock());
+        SlabBlock* blockInSlab = static_cast<SlabBlock*>(subAllocation->GetBlock());
         ASSERT(blockInSlab != nullptr);
 
         Slab* slab = blockInSlab->pSlab;
@@ -350,9 +378,7 @@ namespace gpgmm {
         mInfo.UsedBlockCount--;
         mInfo.UsedBlockUsage -= blockInSlab->Size;
 
-        MemoryBlock* block = blockInSlab->pBlock;
-        slab->Allocator.DeallocateBlock(block);
-        SafeDelete(blockInSlab);
+        slab->Allocator.DeallocateBlock(blockInSlab);
 
         MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);

@@ -72,44 +72,6 @@ namespace gpgmm {
 
         bool IsPrefetchCoverageBelowThreshold() const;
 
-        // Slab is a node in a doubly-linked list that contains a free-list of blocks
-        // and a reference to underlying memory.
-        struct Slab : public LinkNode<Slab>, public RefCounted {
-            Slab(uint64_t blockCount, uint64_t blockSize)
-                : RefCounted(0), Allocator(blockCount, blockSize) {
-            }
-
-            ~Slab() {
-                ASSERT(SlabMemory == nullptr);
-                if (IsInList()) {
-                    RemoveFromList();
-                }
-            }
-
-            uint64_t GetBlockCount() const {
-                return Allocator.GetBlockCount();
-            }
-
-            bool IsFull() const {
-                return static_cast<uint32_t>(GetRefCount()) == Allocator.GetBlockCount();
-            }
-
-            double GetUsedPercent() const {
-                return static_cast<uint32_t>(GetRefCount()) /
-                       static_cast<double>(Allocator.GetBlockCount());
-            }
-
-            SlabBlockAllocator Allocator;
-            std::unique_ptr<MemoryAllocation> SlabMemory;
-        };
-
-        // Stores a reference back to the slab containing the block so DeallocateMemory
-        // knows which slab (and block allocator) to use.
-        struct BlockInSlab : public MemoryBlock {
-            MemoryBlock* pBlock = nullptr;
-            Slab* pSlab = nullptr;
-        };
-
         // Group of one or more slabs of the same size.
         struct SlabCache {
             SizedLinkedList<Slab> FreeList;  // Slabs that contain partial or empty
