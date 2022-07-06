@@ -30,7 +30,7 @@ class EventTraceWriterTests : public testing::Test {
     }
 
     void TearDown() override {
-        ShutdownEventTrace();
+        FlushEventTraceToDisk();
     }
 };
 
