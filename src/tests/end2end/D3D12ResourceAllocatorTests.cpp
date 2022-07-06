@@ -349,6 +349,18 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             allocationDescWithInvalidHeapFlags, CreateBasicBufferDesc(kDefaultBufferSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
     }
+
+    // Creating a buffer with a name should be always specified.
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.DebugName = "Buffer";
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COMMON,
+            nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_EQ(allocation->GetDebugName(), allocationDesc.DebugName);
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {

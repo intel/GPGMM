@@ -41,6 +41,28 @@ namespace gpgmm::d3d12 {
 
     }  // namespace
 
+    // static
+    HRESULT ResourceAllocation::CreateResourceAllocation(
+        const RESOURCE_ALLOCATION_DESC& descriptor,
+        ResidencyManager* residencyManager,
+        MemoryAllocator* allocator,
+        MemoryBlock* block,
+        ComPtr<ID3D12Resource> resource,
+        ResourceAllocation** ppResourceAllocationOut) {
+        std::unique_ptr<ResourceAllocation> resourceAllocation(new ResourceAllocation(
+            descriptor, residencyManager, allocator, block, std::move(resource)));
+
+        if (!descriptor.DebugName.empty()) {
+            ReturnIfFailed(resourceAllocation->SetDebugName(descriptor.DebugName));
+        }
+
+        if (ppResourceAllocationOut != nullptr) {
+            *ppResourceAllocationOut = resourceAllocation.release();
+        }
+
+        return S_OK;
+    }
+
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                                            ResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
@@ -145,7 +167,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment(), GetDebugName()};
+        return {GetSize(), GetAlignment()};
     }
 
     const char* ResourceAllocation::GetTypename() const {
