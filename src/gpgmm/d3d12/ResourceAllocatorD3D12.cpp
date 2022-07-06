@@ -685,10 +685,6 @@ namespace gpgmm::d3d12 {
                                               initialResourceState, pClearValue,
                                               ppResourceAllocationOut));
 
-        if (!allocationDescriptor.DebugName.empty()) {
-            (*ppResourceAllocationOut)->SetDebugName(allocationDescriptor.DebugName);
-        }
-
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
@@ -837,10 +833,12 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Method = AllocationMethod::kSubAllocatedWithin;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.ResourceHeap = resourceHeap;
+                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation{
+                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(), std::move(committedResource)};
+                        subAllocation.GetBlock(), std::move(committedResource),
+                        ppResourceAllocationOut));
 
                     return S_OK;
                 }));
@@ -876,10 +874,12 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Method = subAllocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.ResourceHeap = resourceHeap;
+                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation{
+                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(), std::move(placedResource)};
+                        subAllocation.GetBlock(), std::move(placedResource),
+                        ppResourceAllocationOut));
 
                     return S_OK;
                 }));
@@ -915,10 +915,11 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Method = allocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.ResourceHeap = resourceHeap;
+                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation{
+                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), allocation.GetAllocator(),
-                        allocation.GetBlock(), std::move(placedResource)};
+                        allocation.GetBlock(), std::move(placedResource), ppResourceAllocationOut));
 
                     return S_OK;
                 }));
@@ -956,9 +957,11 @@ namespace gpgmm::d3d12 {
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.ResourceHeap = resourceHeap;
+        allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-        *ppResourceAllocationOut = new ResourceAllocation{
-            allocationDesc, mResidencyManager.Get(), this, nullptr, std::move(committedResource)};
+        ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
+            allocationDesc, mResidencyManager.Get(), this, nullptr, std::move(committedResource),
+            ppResourceAllocationOut));
 
         return S_OK;
     }
@@ -1005,8 +1008,8 @@ namespace gpgmm::d3d12 {
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.ResourceHeap = resourceHeap;
 
-        *ppResourceAllocationOut =
-            new ResourceAllocation{allocationDesc, nullptr, this, nullptr, std::move(resource)};
+        ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
+            allocationDesc, nullptr, this, nullptr, std::move(resource), ppResourceAllocationOut));
 
         return S_OK;
     }

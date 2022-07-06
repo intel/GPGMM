@@ -62,6 +62,10 @@ namespace gpgmm::d3d12 {
         Must be valid for the duration of the resource allocation.
         */
         Heap* ResourceHeap;
+
+        /** \brief Debug name associated with the resource allocation.
+         */
+        std::string DebugName;
     };
 
     /** \struct RESOURCE_ALLOCATION_INFO
@@ -79,10 +83,6 @@ namespace gpgmm::d3d12 {
         Must be non-zero.
         */
         uint64_t Alignment;
-
-        /** \brief Debug name associated with the resource allocation.
-         */
-        std::string DebugName;
     };
 
     /** \brief ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.
@@ -108,12 +108,15 @@ namespace gpgmm::d3d12 {
         resource.
         @param block A pointer to MemoryBlock which describes the region in Heap being allocated.
         @param resource A pointer to the ID3D12Resource used for the allocation.
+        @param[out] ppResourceAllocationOut Pointer to a resource allocation that recieves a pointer
+        to the resource allocation.
         */
-        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                           ResidencyManager* residencyManager,
-                           MemoryAllocator* allocator,
-                           MemoryBlock* block,
-                           ComPtr<ID3D12Resource> resource);
+        static HRESULT CreateResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
+                                                ResidencyManager* residencyManager,
+                                                MemoryAllocator* allocator,
+                                                MemoryBlock* block,
+                                                ComPtr<ID3D12Resource> resource,
+                                                ResourceAllocation** ppResourceAllocationOut);
 
         ~ResourceAllocation() override;
 
@@ -195,6 +198,12 @@ namespace gpgmm::d3d12 {
         Heap* GetMemory() const;
 
       private:
+        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
+                           ResidencyManager* residencyManager,
+                           MemoryAllocator* allocator,
+                           MemoryBlock* block,
+                           ComPtr<ID3D12Resource> resource);
+
         // Only DebugResourceAllocator may inject itself to ensure |this| cannot leak.
         friend DebugResourceAllocator;
         void SetDebugAllocator(MemoryAllocator* allocator);

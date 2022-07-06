@@ -173,6 +173,9 @@ namespace gpgmm::d3d12 {
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
         dict.AddItem("ResourceHeap", gpgmm::JSONSerializer::Serialize(desc.ResourceHeap));
+        if (!desc.DebugName.empty()) {
+            dict.AddItem("DebugName", desc.DebugName);
+        }
         return dict;
     }
 
@@ -181,11 +184,6 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("SizeInBytes", info.SizeInBytes);
         dict.AddItem("Alignment", info.Alignment);
-
-        if (!info.DebugName.empty()) {
-            dict.AddItem("DebugName", info.DebugName);
-        }
-
         return dict;
     }
 
