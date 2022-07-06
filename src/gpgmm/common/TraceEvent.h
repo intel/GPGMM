@@ -179,7 +179,7 @@ namespace gpgmm {
                            const TraceEventPhase& ignoreMask,
                            bool flushOnDestruct);
 
-    void ShutdownEventTrace();
+    void FlushEventTraceToDisk();
 
     bool IsEventTraceEnabled();
 

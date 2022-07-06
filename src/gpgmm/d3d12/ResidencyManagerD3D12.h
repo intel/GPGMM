@@ -288,7 +288,7 @@ namespace gpgmm::d3d12 {
         const uint64_t mEvictBatchSize;
         const bool mIsUMA;
         const bool mIsBudgetChangeEventsDisabled;
-        const bool mShutdownEventTrace;
+        const bool mFlushEventBuffersOnDestruct;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;

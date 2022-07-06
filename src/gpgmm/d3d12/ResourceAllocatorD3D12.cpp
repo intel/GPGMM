@@ -340,13 +340,17 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (!IsEventTraceEnabled() && newDescriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
+        if (pResidencyManager == nullptr &&
+            newDescriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
             StartupEventTrace(
                 allocatorDescriptor.RecordOptions.TraceFile,
                 static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0),
                 allocatorDescriptor.RecordOptions.EventScope & EVENT_RECORD_SCOPE_PER_PROCESS);
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
+        } else {
+            // Do not override the event scope from a event trace already enabled.
+            newDescriptor.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;
         }
 
         // Do not override the default min. log level specified by the residency manager.
@@ -391,8 +395,8 @@ namespace gpgmm::d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
-          mShutdownEventTrace(descriptor.RecordOptions.EventScope &
-                              EVENT_RECORD_SCOPE_PER_INSTANCE),
+          mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
+                                       EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -609,8 +613,10 @@ namespace gpgmm::d3d12 {
 #if defined(GPGMM_ENABLE_DEVICE_CHECKS)
         ReportLiveDeviceObjects(mDevice);
 #endif
-        if (mShutdownEventTrace) {
-            ShutdownEventTrace();
+        mResidencyManager = nullptr;
+
+        if (mFlushEventBuffersOnDestruct) {
+            FlushEventTraceToDisk();
         }
     }
 

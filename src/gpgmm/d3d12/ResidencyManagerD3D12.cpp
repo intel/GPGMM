@@ -222,8 +222,8 @@ namespace gpgmm::d3d12 {
                                                          : descriptor.EvictBatchSize),
           mIsUMA(descriptor.IsUMA),
           mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
-          mShutdownEventTrace(descriptor.RecordOptions.EventScope &
-                              EVENT_RECORD_SCOPE_PER_INSTANCE),
+          mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
+                                       EVENT_RECORD_SCOPE_PER_INSTANCE),
           mThreadPool(ThreadPool::Create()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -236,8 +236,8 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
         StopBudgetNotificationUpdates();
 
-        if (mShutdownEventTrace) {
-            ShutdownEventTrace();
+        if (mFlushEventBuffersOnDestruct) {
+            FlushEventTraceToDisk();
         }
     }
 

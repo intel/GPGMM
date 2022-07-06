@@ -37,7 +37,8 @@ namespace gpgmm {
                            const TraceEventPhase& ignoreMask,
                            bool flushOnDestruct) {
 #if defined(GPGMM_DISABLE_TRACING)
-        gpgmm::WarningLog() << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
+        gpgmm::WarningLog()
+            << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
 #endif
 
         GetInstance()->SetConfiguration(traceFile, ignoreMask, flushOnDestruct);
@@ -45,7 +46,10 @@ namespace gpgmm {
                               "GPGMM_MainThread");
     }
 
-    void ShutdownEventTrace() {
+    void FlushEventTraceToDisk() {
+        if (!IsEventTraceEnabled()) {
+            return;
+        }
         GetInstance()->FlushQueuedEventsToDisk();
     }
 

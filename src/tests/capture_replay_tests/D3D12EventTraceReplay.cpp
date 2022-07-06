@@ -326,6 +326,21 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
 
+                        if (envParams.CaptureEventMask != 0) {
+                            residencyDesc.RecordOptions.Flags |=
+                                static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
+                            residencyDesc.RecordOptions.TraceFile = traceFile.path;
+                            residencyDesc.RecordOptions.MinMessageLevel =
+                                GetMessageSeverity(envParams.LogLevel);
+
+                            // Keep recording across multiple playback iterations to ensure all
+                            // events will be captured instead of overwritten per iteration.
+                            if (envParams.Iterations == 1) {
+                                residencyDesc.RecordOptions.EventScope =
+                                    EVENT_RECORD_SCOPE_PER_INSTANCE;
+                            }
+                        }
+
                         ComPtr<ResidencyManager> residencyManager;
                         ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
                             residencyDesc, &residencyManager));
@@ -394,7 +409,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         if (envParams.CaptureEventMask != 0) {
                             allocatorDesc.RecordOptions.Flags |=
                                 static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
-                            allocatorDesc.RecordOptions.Flags |= EVENT_RECORD_FLAG_CAPTURE;
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(envParams.LogLevel);
@@ -440,7 +454,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ComPtr<ResourceAllocator> resourceAllocator;
                         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
-                            allocatorDesc, &resourceAllocator, &residencyManager));
+                            allocatorDesc, residencyManager.Get(), &resourceAllocator));
 
                         ASSERT_TRUE(
                             createdAllocatorToID.insert({allocatorID, std::move(resourceAllocator)})
@@ -577,9 +591,6 @@ TEST_P(D3D12EventTraceReplay, Recapture) {
     TestEnviromentParams forceParams = {};
 
     forceParams.CaptureEventMask = EVENT_RECORD_FLAG_CAPTURE;
-    RunSingleTest(forceParams);
-
-    forceParams.CaptureEventMask = EVENT_RECORD_FLAG_NONE;
     RunSingleTest(forceParams);
 }
 
