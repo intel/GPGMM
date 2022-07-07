@@ -152,6 +152,9 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a65e449bb3e644a55e833e5d6ba685d67"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a65e449bb3e644a55e833e5d6ba685d67">EVENT_RECORD_FLAGS_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b">EVENT_RECORD_FLAGS</a> &gt;</td></tr>
 <tr class="separator:a65e449bb3e644a55e833e5d6ba685d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8c9e657d16843e8b6f296ad94af852"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> = std::function&lt; HRESULT(ID3D12Pageable **ppPageableOut)&gt;</td></tr>
+<tr class="memdesc:a2e8c9e657d16843e8b6f296ad94af852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <a href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">More...</a><br /></td></tr>
+<tr class="separator:a2e8c9e657d16843e8b6f296ad94af852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab7198d09751d622d892ab644dd173ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aab7198d09751d622d892ab644dd173ad">RESOURCE_ALLOCATOR_INFO</a> = <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a></td></tr>
 <tr class="separator:aab7198d09751d622d892ab644dd173ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addd8571a3cf9c1c8893f16f664612090"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#addd8571a3cf9c1c8893f16f664612090">ALLOCATOR_FLAGS_TYPE</a> = <a class="el" href="classgpgmm_1_1_flags.html">Flags</a>&lt; <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> &gt;</td></tr>
@@ -287,6 +290,29 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a2e8c9e657d16843e8b6f296ad94af852" name="a2e8c9e657d16843e8b6f296ad94af852"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e8c9e657d16843e8b6f296ad94af852">&#9670;&nbsp;</a></span>CreateHeapFn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">gpgmm::d3d12::CreateHeapFn</a> = typedef std::function&lt;HRESULT(ID3D12Pageable** ppPageableOut)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback function used to create a ID3D12Pageable. </p>
+<p >For example, to create a ID3D12Heap:</p>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> callback = [heapDesc](ID3D12Pageable** ppPageableOut) -&gt; HRESULT {</div>
+<div class="line">    ComPtr&lt;ID3D12Heap&gt; heap;</div>
+<div class="line">    <a class="code hl_define" href="_error_d3_d12_8h.html#a36603177b79030d08b6cdf80b10ff658">ReturnIfFailed</a>(mDevice-&gt;CreateHeap(&amp;heapDesc, IID_PPV_ARGS(&amp;heap)));</div>
+<div class="line">    *ppPageableOut = heap.Detach();</div>
+<div class="line">};</div>
+<div class="ttc" id="a_error_d3_d12_8h_html_a36603177b79030d08b6cdf80b10ff658"><div class="ttname"><a href="_error_d3_d12_8h.html#a36603177b79030d08b6cdf80b10ff658">ReturnIfFailed</a></div><div class="ttdeci">#define ReturnIfFailed(expr)</div><div class="ttdef"><b>Definition:</b> ErrorD3D12.h:24</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="a65e449bb3e644a55e833e5d6ba685d67" name="a65e449bb3e644a55e833e5d6ba685d67"></a>

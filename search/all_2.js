@@ -48,12 +48,13 @@ var searchData=
   ['createcaps_45',['CreateCaps',['../classgpgmm_1_1vk_1_1_caps.html#a1948995bba0e258a97dbd2c03fefbc95',1,'gpgmm::vk::Caps::CreateCaps()'],['../classgpgmm_1_1d3d12_1_1_caps.html#a1f77591d7c207c34e6ebaf5eab47d2b4',1,'gpgmm::d3d12::Caps::CreateCaps()']]],
   ['createdebugplatform_46',['CreateDebugPlatform',['../namespacegpgmm.html#adf7b61be10aea8494c9bd770204533f2',1,'gpgmm']]],
   ['createfence_47',['CreateFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a7498b68435b1394e1f13e6ef9270d00f',1,'gpgmm::d3d12::Fence']]],
-  ['createheap_48',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ae1594e54cc091e7334c8f58774fc8181',1,'gpgmm::d3d12::Heap']]],
-  ['createimage_49',['CreateImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#accd6e6be635aa1a7b447a4316bd046bd',1,'gpgmm::vk::VulkanFunctions']]],
-  ['createplatformtime_50',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
-  ['createresidencymanager_51',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507',1,'gpgmm::d3d12::ResidencyManager']]],
-  ['createresource_52',['CreateResource',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1e9f2be39db54e1c922ff89d1fe07944',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, ResourceAllocation **ppResourceAllocationOut)'],['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(ComPtr&lt; ID3D12Resource &gt; committedResource, ResourceAllocation **ppResourceAllocationOut)']]],
-  ['createresourceallocation_53',['CreateResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#affee19a3d124b4cd3abc16354a3b0739',1,'gpgmm::d3d12::ResourceAllocation']]],
-  ['currentusage_54',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]],
-  ['customprinttostringparamname_55',['CustomPrintToStringParamName',['../class_capture_replay_test_with_params.html#afd1e165cf078b426625ea0a89333e011',1,'CaptureReplayTestWithParams']]]
+  ['createheap_48',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ab54baa0a0678da3113c55641ce9a1ded',1,'gpgmm::d3d12::Heap']]],
+  ['createheapfn_49',['CreateHeapFn',['../namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852',1,'gpgmm::d3d12']]],
+  ['createimage_50',['CreateImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#accd6e6be635aa1a7b447a4316bd046bd',1,'gpgmm::vk::VulkanFunctions']]],
+  ['createplatformtime_51',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
+  ['createresidencymanager_52',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['createresource_53',['CreateResource',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1e9f2be39db54e1c922ff89d1fe07944',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, ResourceAllocation **ppResourceAllocationOut)'],['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(ComPtr&lt; ID3D12Resource &gt; committedResource, ResourceAllocation **ppResourceAllocationOut)']]],
+  ['createresourceallocation_54',['CreateResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#affee19a3d124b4cd3abc16354a3b0739',1,'gpgmm::d3d12::ResourceAllocation']]],
+  ['currentusage_55',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]],
+  ['customprinttostringparamname_56',['CustomPrintToStringParamName',['../class_capture_replay_test_with_params.html#afd1e165cf078b426625ea0a89333e011',1,'CaptureReplayTestWithParams']]]
 ];

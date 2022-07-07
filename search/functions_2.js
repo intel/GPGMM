@@ -19,7 +19,7 @@ var searchData=
   ['createcaps_16',['CreateCaps',['../classgpgmm_1_1d3d12_1_1_caps.html#a1f77591d7c207c34e6ebaf5eab47d2b4',1,'gpgmm::d3d12::Caps::CreateCaps()'],['../classgpgmm_1_1vk_1_1_caps.html#a1948995bba0e258a97dbd2c03fefbc95',1,'gpgmm::vk::Caps::CreateCaps()']]],
   ['createdebugplatform_17',['CreateDebugPlatform',['../namespacegpgmm.html#adf7b61be10aea8494c9bd770204533f2',1,'gpgmm']]],
   ['createfence_18',['CreateFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a7498b68435b1394e1f13e6ef9270d00f',1,'gpgmm::d3d12::Fence']]],
-  ['createheap_19',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ae1594e54cc091e7334c8f58774fc8181',1,'gpgmm::d3d12::Heap']]],
+  ['createheap_19',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ab54baa0a0678da3113c55641ce9a1ded',1,'gpgmm::d3d12::Heap']]],
   ['createplatformtime_20',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
   ['createresidencymanager_21',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507',1,'gpgmm::d3d12::ResidencyManager']]],
   ['createresource_22',['CreateResource',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(ComPtr&lt; ID3D12Resource &gt; committedResource, ResourceAllocation **ppResourceAllocationOut)'],['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1e9f2be39db54e1c922ff89d1fe07944',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, ResourceAllocation **ppResourceAllocationOut)']]],

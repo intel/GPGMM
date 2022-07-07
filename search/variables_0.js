@@ -8,6 +8,7 @@ var searchData=
   ['allocator_5',['Allocator',['../structgpgmm_1_1_slab.html#acb30e0ab697ebcad8565d913a2741b41',1,'gpgmm::Slab']]],
   ['allocatorprofile_6',['AllocatorProfile',['../struct_test_enviroment_params.html#ab0555104413aaf29072dad44bfa569c1',1,'TestEnviromentParams']]],
   ['alwayscachesize_7',['AlwaysCacheSize',['../structgpgmm_1_1_memory_allocation_request.html#ab4f0785ab41e752e8d74fe68053ceac4',1,'gpgmm::MemoryAllocationRequest']]],
-  ['alwaysprefetch_8',['AlwaysPrefetch',['../structgpgmm_1_1_memory_allocation_request.html#a38304c038543221202a535fd528746d8',1,'gpgmm::MemoryAllocationRequest']]],
-  ['availableforallocation_9',['AvailableForAllocation',['../structgpgmm_1_1_memory_allocation_request.html#a22e1a4b8bae082ed7c4663940bfbc85a',1,'gpgmm::MemoryAllocationRequest']]]
+  ['alwaysinbudget_8',['AlwaysInBudget',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a117ebd4dea43e2f599cf69120e9988c3',1,'gpgmm::d3d12::HEAP_DESC']]],
+  ['alwaysprefetch_9',['AlwaysPrefetch',['../structgpgmm_1_1_memory_allocation_request.html#a38304c038543221202a535fd528746d8',1,'gpgmm::MemoryAllocationRequest']]],
+  ['availableforallocation_10',['AvailableForAllocation',['../structgpgmm_1_1_memory_allocation_request.html#a22e1a4b8bae082ed7c4663940bfbc85a',1,'gpgmm::MemoryAllocationRequest']]]
 ];
