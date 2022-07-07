@@ -113,7 +113,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RANGE* newReadRangePtr = readRange;
         if (newReadRangePtr != nullptr && mOffsetFromResource > 0) {
             ASSERT(subresource == 0);
-            newReadRange = GetResourceRange(readRange, mOffsetFromResource);
+            newReadRange = GetResourceRange(readRange, static_cast<size_t>(mOffsetFromResource));
             newReadRangePtr = &newReadRange;
         }
 
@@ -140,7 +140,8 @@ namespace gpgmm::d3d12 {
         const D3D12_RANGE* newWrittenRangePtr = writtenRange;
         if (newWrittenRangePtr != nullptr && mOffsetFromResource > 0) {
             ASSERT(subresource == 0);
-            newWrittenRange = GetResourceRange(newWrittenRangePtr, mOffsetFromResource);
+            newWrittenRange =
+                GetResourceRange(newWrittenRangePtr, static_cast<size_t>(mOffsetFromResource));
             newWrittenRangePtr = &newWrittenRange;
         }
 
@@ -162,7 +163,7 @@ namespace gpgmm::d3d12 {
         return mResource->GetGPUVirtualAddress() + mOffsetFromResource;
     }
 
-    size_t ResourceAllocation::GetOffsetFromResource() const {
+    uint64_t ResourceAllocation::GetOffsetFromResource() const {
         return mOffsetFromResource;
     }
 

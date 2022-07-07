@@ -49,7 +49,7 @@ namespace gpgmm::d3d12 {
 
          Always zero when the resource is placed in a heap or created with it's own heap.
         */
-        size_t OffsetFromResource;
+        uint64_t OffsetFromResource;
 
         /** \brief Method to describe how the allocation was created.
 
@@ -177,7 +177,7 @@ namespace gpgmm::d3d12 {
 
         \return A offset, in bytes, of the start of this allocation in the resource.
         */
-        size_t GetOffsetFromResource() const;
+        uint64_t GetOffsetFromResource() const;
 
         /** \brief Returns information about this resource allocation.
 
@@ -215,7 +215,7 @@ namespace gpgmm::d3d12 {
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
 
-        const size_t mOffsetFromResource;
+        const uint64_t mOffsetFromResource;
     };
 
 }  // namespace gpgmm::d3d12
