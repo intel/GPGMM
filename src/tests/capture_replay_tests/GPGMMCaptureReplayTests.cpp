@@ -111,6 +111,11 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
+        if (strcmp("--disable-allocation-playback", argv[i]) == 0) {
+            mParams.IsAllocationPlaybackDisabled = true;
+            continue;
+        }
+
         constexpr const char kLogLevel[] = "--log-level";
         arglen = sizeof(kLogLevel) - 1;
         if (strncmp(argv[i], kLogLevel, arglen) == 0) {
@@ -170,7 +175,9 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --capture-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
-                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Profile to apply.\n";
+                << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Profile to apply.\n"
+                << " --disable-allocation-playback: Disable allocation playback for testing "
+                   "budgets.\n";
             continue;
         }
     }
@@ -195,8 +202,10 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
                      << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
-                     << "Same caps required: " << (mParams.IsSameCapsRequired ? "true" : "false")
-                     << "\n";
+                     << "Must use same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
+                     << "\n"
+                     << "No Allocations: "
+                     << (mParams.IsAllocationPlaybackDisabled ? "true" : "false") << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"

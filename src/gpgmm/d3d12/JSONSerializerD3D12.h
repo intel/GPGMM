@@ -41,6 +41,11 @@ namespace gpgmm::d3d12 {
         const D3D12_CLEAR_VALUE* clearValue;
     };
 
+    struct CREATE_HEAP_DESC {
+        const HEAP_DESC& HeapDescriptor;
+        ID3D12Pageable* Pageable;
+    };
+
     struct EXECUTE_COMMAND_LISTS_DESC {
         ResidencySet* const* ResidencySets;
         uint32_t Count;
@@ -54,7 +59,7 @@ namespace gpgmm::d3d12 {
         static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
         static JSONDict Serialize(const ALLOCATION_DESC& desc);
         static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
-        static JSONDict Serialize(const HEAP_DESC& desc);
+        static JSONDict Serialize(const CREATE_HEAP_DESC& desc);
         static JSONDict Serialize(const HEAP_INFO& info);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_DESC& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& info);

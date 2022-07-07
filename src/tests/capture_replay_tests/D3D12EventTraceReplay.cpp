@@ -129,15 +129,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         ASSERT_TRUE(reader.parse(traceFileStream, root, false));
 
-        std::unordered_map<std::string, RESOURCE_ALLOCATION_INFO> capturedAllocationInfo;
-        std::unordered_map<std::string, HEAP_DESC> capturedHeapDesc;
-
         ComPtr<ResourceAllocation> allocationWithoutID;
+        std::unique_ptr<Heap> heapWithoutID;
 
         std::unordered_map<std::string, ComPtr<ResourceAllocator>> createdAllocatorToID;
         std::unordered_map<std::string, ComPtr<ResidencyManager>> createdResidencyManagerToID;
         std::unordered_map<std::string, ComPtr<ResourceAllocation>> createdAllocationToID;
-        std::unordered_map<std::string, Heap*> createdHeapToID;
+        std::unordered_map<std::string, std::unique_ptr<Heap>> createdHeapToID;
 
         std::string currentAllocatorID;
         std::string currentResidencyID;
@@ -171,7 +169,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 if (createdHeapToID.find(heapId) == createdHeapToID.end()) {
                                     break;
                                 }
-                                set.Insert(createdHeapToID[heapId]);
+                                set.Insert(createdHeapToID[heapId].get());
                             }
                             residencySetPtrs.push_back(&set);
                             currentResidencySets.push_back(std::move(set));
@@ -201,6 +199,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     case TRACE_EVENT_PHASE_INSTANT: {
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
+
+                        if (envParams.IsAllocationPlaybackDisabled) {
+                            continue;
+                        }
 
                         // TODO: Consider encoding type instead of checking fields.
                         if (IsErrorEvent(args)) {
@@ -263,8 +265,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             std::max(resourceAllocator->GetInfo().UsedMemoryUsage,
                                      mReplayedMemoryStats.PeakUsage);
 
-                        mReplayedAllocateStats.TotalNumOfCalls++;
-
                     } break;
 
                     default:
@@ -283,9 +283,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             createdAllocationToID.insert({allocationID, allocationWithoutID})
                                 .second);
 
-                        std::string heapID = ToString(allocationWithoutID->GetMemory());
-                        createdHeapToID.insert({heapID, allocationWithoutID->GetMemory()});
-
                         ASSERT_TRUE(allocationWithoutID.Reset() == 1);
                     } break;
 
@@ -298,8 +295,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         const bool didDeallocate = createdAllocationToID.erase(allocationID);
                         ASSERT_TRUE(didDeallocate || envParams.IsNeverAllocate);
-
-                        mReplayedDeallocateStats.TotalNumOfCalls++;
 
                     } break;
 
@@ -340,6 +335,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                     EVENT_RECORD_SCOPE_PER_INSTANCE;
                             }
                         }
+
+                        residencyDesc.MinLogLevel = GetMessageSeverity(envParams.LogLevel);
 
                         ComPtr<ResidencyManager> residencyManager;
                         ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
@@ -481,37 +478,87 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "Heap") {
+            } else if (event["name"].asString() == "Heap.CreateHeap") {
                 switch (*event["ph"].asCString()) {
-                    case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
-                        const std::string& heapID = event["id"].asString();
-                        if (capturedHeapDesc.find(heapID) != capturedHeapDesc.end()) {
+                    case TRACE_EVENT_PHASE_INSTANT: {
+                        const Json::Value& args = event["args"];
+                        ASSERT_FALSE(args.empty());
+
+                        // Only ID3D12Resource or ID3D12Heaps can be created.
+                        if (args["Heap"].empty()) {
                             continue;
                         }
 
-                        const Json::Value& snapshot = event["args"]["snapshot"];
+                        HEAP_DESC resourceHeapDesc = {};
+                        resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
+                        resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
+                        resourceHeapDesc.MemorySegmentGroup =
+                            static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
+                                args["MemorySegmentGroup"].asInt());
+                        resourceHeapDesc.IsExternal = args["IsExternal"].asBool();
 
-                        HEAP_DESC heapDesc = {};
-                        heapDesc.SizeInBytes = snapshot["SizeInBytes"].asUInt64();
+                        D3D12_HEAP_DESC d3d12HeapDesc = {};
+                        d3d12HeapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+                        d3d12HeapDesc.Alignment = resourceHeapDesc.Alignment;
+                        d3d12HeapDesc.Flags =
+                            static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
 
-                        mCapturedMemoryStats.CurrentUsage += heapDesc.SizeInBytes;
+                        D3D12_HEAP_PROPERTIES heapProperties = {};
+                        heapProperties.Type = static_cast<D3D12_HEAP_TYPE>(
+                            args["Heap"]["Properties"]["Type"].asInt());
+                        d3d12HeapDesc.Properties = heapProperties;
+
+                        ComPtr<ID3D12Heap> heap;
+                        ASSERT_SUCCEEDED(mDevice->CreateHeap(&d3d12HeapDesc, IID_PPV_ARGS(&heap)));
+
+                        ResidencyManager* residencyManager =
+                            createdResidencyManagerToID[currentResidencyID].Get();
+                        ASSERT_NE(residencyManager, nullptr);
+
+                        Heap* resourceHeap = nullptr;
+                        ASSERT_SUCCEEDED(Heap::CreateHeap(resourceHeapDesc, residencyManager,
+                                                          std::move(heap), &resourceHeap));
+
+                        heapWithoutID.reset(resourceHeap);
+
+                        mCapturedMemoryStats.CurrentUsage += resourceHeapDesc.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
                             mCapturedMemoryStats.PeakUsage, mCapturedMemoryStats.CurrentUsage);
 
-                        ASSERT_TRUE(capturedHeapDesc.insert({heapID, heapDesc}).second);
+                    } break;
+
+                    default:
+                        break;
+                }
+            } else if (event["name"].asString() == "Heap") {
+                switch (*event["ph"].asCString()) {
+                    case TRACE_EVENT_PHASE_CREATE_OBJECT: {
+                        if (heapWithoutID == nullptr) {
+                            continue;
+                        }
+
+                        ASSERT_TRUE(heapWithoutID != nullptr);
+                        const std::string& heapID = event["id"].asString();
+                        ASSERT_TRUE(
+                            createdHeapToID
+                                .insert({heapID, std::unique_ptr<Heap>(heapWithoutID.release())})
+                                .second);
+
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        auto it = capturedHeapDesc.find(heapID);
-                        if (it == capturedHeapDesc.end()) {
+                        auto it = createdHeapToID.find(heapID);
+                        if (it == createdHeapToID.end()) {
                             continue;
                         }
 
-                        HEAP_DESC heapDesc = it->second;
-                        mCapturedMemoryStats.CurrentUsage -= heapDesc.SizeInBytes;
+                        Heap* heap = it->second.get();
+                        ASSERT_NE(heap, nullptr);
 
-                        ASSERT_EQ(capturedHeapDesc.erase(heapID), 1u);
+                        mCapturedMemoryStats.CurrentUsage -= heap->GetSize();
+
+                        ASSERT_EQ(createdHeapToID.erase(heapID), 1u);
 
                     } break;
 
@@ -521,12 +568,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             }
         }
 
-        EXPECT_TRUE(createdAllocatorToID.empty());
-        EXPECT_TRUE(capturedHeapDesc.empty());
+        if (mReplayedMemoryStats.PeakUsage > 0) {
+            gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
+                             << GPGMM_BYTES_TO_MB(mCapturedMemoryStats.PeakUsage) << " vs "
+                             << GPGMM_BYTES_TO_MB(mReplayedMemoryStats.PeakUsage) << " MB";
+        }
     }
-
-    CaptureReplayCallStats mReplayedAllocateStats;
-    CaptureReplayCallStats mReplayedDeallocateStats;
 
     CaptureReplayMemoryStats mReplayedMemoryStats;
     CaptureReplayMemoryStats mCapturedMemoryStats;
@@ -537,9 +584,6 @@ TEST_P(D3D12EventTraceReplay, Replay) {
     TestEnviromentParams forceParams = {};
 
     RunSingleTest(forceParams);
-
-    EXPECT_EQ(mReplayedAllocateStats.TotalNumOfCalls, mReplayedAllocateStats.TotalNumOfCalls);
-    EXPECT_EQ(mReplayedDeallocateStats.TotalNumOfCalls, mReplayedDeallocateStats.TotalNumOfCalls);
 }
 
 // Verify that playback of a captured trace does not exceed peak usage.
@@ -548,10 +592,6 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
     forceParams.IsSameCapsRequired = true;
 
     RunSingleTest(forceParams);
-
-    gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
-                     << GPGMM_BYTES_TO_MB(mCapturedMemoryStats.PeakUsage) << " vs "
-                     << GPGMM_BYTES_TO_MB(mReplayedMemoryStats.PeakUsage) << " MB";
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }

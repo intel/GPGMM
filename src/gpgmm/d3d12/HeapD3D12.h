@@ -73,10 +73,6 @@ namespace gpgmm::d3d12 {
         */
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
 
-        /** \brief Pageable is ComPtr to the parent interface of ID3D12Resource or ID3D12Heap.
-         */
-        ComPtr<ID3D12Pageable> Pageable;
-
         /** \brief Specifies to leave the heap unmanaged by GPGMM.
 
         External heaps are not supported for residency.
@@ -106,11 +102,13 @@ namespace gpgmm::d3d12 {
 
         @param descriptor A reference to HEAP_DESC structure that describes the heap.
         @param residencyManager A pointer to the ResidencyManager used to manage this heap.
+        @param pageable  A pointer to the parent interface of ID3D12Resource or ID3D12Heap.
         @param[out] heapOut Pointer to a memory block that recieves a pointer to the
         heap.
         */
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   ResidencyManager* const residencyManager,
+                                  ComPtr<ID3D12Pageable> pageable,
                                   Heap** heapOut);
 
         // TODO: Make private.
