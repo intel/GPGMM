@@ -146,7 +146,7 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
-                                                     ResidencyManager** residencyManagerOut) {
+                                                     ResidencyManager** ppResidencyManagerOut) {
         // Residency manager needs it's own fence to know when heaps are no longer being used by the
         // GPU.
         std::unique_ptr<Fence> residencyFence;
@@ -203,7 +203,7 @@ namespace gpgmm::d3d12 {
         if (residencyManager != nullptr) {
             GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
 
-            *residencyManagerOut = residencyManager.release();
+            *ppResidencyManagerOut = residencyManager.release();
         }
 
         return S_OK;

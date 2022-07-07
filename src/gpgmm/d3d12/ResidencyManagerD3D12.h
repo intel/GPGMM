@@ -151,13 +151,13 @@ namespace gpgmm::d3d12 {
 
         @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
         manager.
-        @param[out] residencyManagerOut Pointer to a memory block that recieves a pointer to the
-        residency Manager. Pass NULL to test if residency Manager creation would succeed, but not
-        actually create the residency Manager. If NULL is passed and residency Manager creating
+        @param[out] ppResidencyManagerOut Pointer to a memory block that recieves a pointer to the
+        residency manager. Pass NULL to test if residency Manager creation would succeed, but not
+        actually create the residency Manager. If NULL is passed and residency manager creating
         would succeed, S_FALSE is returned.
         */
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
-                                              ResidencyManager** residencyManagerOut);
+                                              ResidencyManager** ppResidencyManagerOut);
 
         ~ResidencyManager() override;
 
