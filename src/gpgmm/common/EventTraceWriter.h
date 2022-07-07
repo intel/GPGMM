@@ -32,11 +32,10 @@ namespace gpgmm {
         EventTraceWriter();
         ~EventTraceWriter();
 
-        void SetConfiguration(const std::string& traceFile,
-                              const TraceEventPhase& ignoreMask,
-                              bool flushOnDestruct);
+        void SetConfiguration(const std::string& traceFile, const TraceEventPhase& ignoreMask);
 
-        void EnqueueTraceEvent(char phase,
+        void EnqueueTraceEvent(std::shared_ptr<EventTraceWriter> writer,
+                               char phase,
                                TraceEventCategory category,
                                const char* name,
                                uint64_t id,
@@ -50,14 +49,13 @@ namespace gpgmm {
         size_t GetQueuedEventsForTesting() const;
 
       private:
-        std::vector<TraceEvent>* GetOrCreateBufferFromTLS();
+        ScopedTraceBufferInTLS* GetOrCreateBufferFromTLS(std::shared_ptr<EventTraceWriter> writer);
         std::vector<TraceEvent> MergeAndClearBuffers();
 
         std::string mTraceFile;
-        std::unique_ptr<PlatformTime> mPlatformTime;
-
         TraceEventPhase mIgnoreMask;
-        bool mFlushOnDestruct = true;
+
+        std::unique_ptr<PlatformTime> mPlatformTime;
 
         mutable std::mutex mMutex;
 
