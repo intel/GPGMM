@@ -5,7 +5,7 @@ var searchData=
   ['end2endtestsmain_2ecpp_2',['End2EndTestsMain.cpp',['../_end2_end_tests_main_8cpp.html',1,'']]],
   ['endelapsedtime_3',['EndElapsedTime',['../classgpgmm_1_1_windows_time.html#a43efe1821064c19969745130f691201f',1,'gpgmm::WindowsTime::EndElapsedTime()'],['../classgpgmm_1_1_platform_time.html#abeb9c84a8f7c52149cb2f4c60b06033e',1,'gpgmm::PlatformTime::EndElapsedTime()']]],
   ['endmemorycheck_4',['EndMemoryCheck',['../classgpgmm_1_1_debug_platform.html#a5f7216c35f2329f607987d73ba9c9a8d',1,'gpgmm::DebugPlatform::EndMemoryCheck()'],['../classgpgmm_1_1_windows_debug_platform.html#abe3f2c8d78b539caacabf9e69f831346',1,'gpgmm::WindowsDebugPlatform::EndMemoryCheck()']]],
-  ['enqueuetraceevent_5',['EnqueueTraceEvent',['../classgpgmm_1_1_event_trace_writer.html#abe5129b0b3f506ef7944dccfb9d370e0',1,'gpgmm::EventTraceWriter']]],
+  ['enqueuetraceevent_5',['EnqueueTraceEvent',['../classgpgmm_1_1_event_trace_writer.html#a8519ae4cf10499656fc19486386f8bc3',1,'gpgmm::EventTraceWriter']]],
   ['enum_5ftype_6',['enum_type',['../classgpgmm_1_1_flags.html#ae2278a230d44ac552d2ee24acb4d731d',1,'gpgmm::Flags']]],
   ['error_7',['Error',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa902b0d55fddef6f8d651fe1035b7d4bd',1,'gpgmm']]],
   ['error_2eh_8',['Error.h',['../_error_8h.html',1,'']]],
