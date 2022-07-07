@@ -31,20 +31,36 @@ namespace gpgmm {
     // Trace buffer that flushes and unlinks itself from the cache once destroyed.
     class ScopedTraceBufferInTLS {
       public:
-        ScopedTraceBufferInTLS(EventTraceWriter* writer) : mWriter(writer) {
-            ASSERT(writer != nullptr);
+        ScopedTraceBufferInTLS(std::shared_ptr<EventTraceWriter> writer)
+            : mWriter(std::move(writer)) {
+            ASSERT(mWriter != nullptr);
         }
 
         ~ScopedTraceBufferInTLS() {
-            mWriter->FlushAndRemoveBufferEntry(GetBuffer());
+            mWriter->FlushAndRemoveBufferEntry(&mBuffer);
         }
 
-        std::vector<TraceEvent>* GetBuffer() {
-            return &mBuffer;
+        void AddEvent(const TraceEvent& event) {
+            std::unique_lock<std::mutex> lock(mMutex);
+            mBuffer.push_back(event);
+        }
+
+        std::vector<TraceEvent> GetAndClearBuffer() {
+            std::unique_lock<std::mutex> lock(mMutex);
+            std::vector<TraceEvent> tmp = mBuffer;
+            mBuffer.clear();
+            return tmp;
+        }
+
+        size_t GetBufferSize() const {
+            std::unique_lock<std::mutex> lock(mMutex);
+            return mBuffer.size();
         }
 
       private:
-        EventTraceWriter* mWriter = nullptr;
+        std::shared_ptr<EventTraceWriter> mWriter;
+
+        mutable std::mutex mMutex;  // Protect access for members below.
         std::vector<TraceEvent> mBuffer;
     };
 
@@ -53,20 +69,17 @@ namespace gpgmm {
     }
 
     void EventTraceWriter::SetConfiguration(const std::string& traceFile,
-                                            const TraceEventPhase& ignoreMask,
-                                            bool flushOnDestruct) {
+                                            const TraceEventPhase& ignoreMask) {
         mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
         mIgnoreMask = ignoreMask;
-        mFlushOnDestruct = flushOnDestruct;
     }
 
     EventTraceWriter::~EventTraceWriter() {
-        if (mFlushOnDestruct) {
-            FlushQueuedEventsToDisk();
-        }
+        FlushQueuedEventsToDisk();
     }
 
-    void EventTraceWriter::EnqueueTraceEvent(char phase,
+    void EventTraceWriter::EnqueueTraceEvent(std::shared_ptr<EventTraceWriter> writer,
+                                             char phase,
                                              TraceEventCategory category,
                                              const char* name,
                                              uint64_t id,
@@ -75,8 +88,8 @@ namespace gpgmm {
         const double timestampInSeconds = mPlatformTime->GetRelativeTime();
         const uint32_t threadID = std::stoi(ToString(std::this_thread::get_id()));
         if (timestampInSeconds != 0) {
-            GetOrCreateBufferFromTLS()->push_back(
-                {phase, category, name, id, threadID, timestampInSeconds, flags, args});
+            GetOrCreateBufferFromTLS(std::move(writer))
+                ->AddEvent({phase, category, name, id, threadID, timestampInSeconds, flags, args});
         }
     }
 
@@ -201,16 +214,17 @@ namespace gpgmm {
         DebugLog() << "Flushed " << mergedBuffer.size() << " events to disk.";
     }
 
-    std::vector<TraceEvent>* EventTraceWriter::GetOrCreateBufferFromTLS() {
+    ScopedTraceBufferInTLS* EventTraceWriter::GetOrCreateBufferFromTLS(
+        std::shared_ptr<EventTraceWriter> writer) {
         thread_local std::unique_ptr<ScopedTraceBufferInTLS> bufferInTLS;
         if (bufferInTLS == nullptr) {
-            bufferInTLS.reset(new ScopedTraceBufferInTLS(this));
+            bufferInTLS.reset(new ScopedTraceBufferInTLS(std::move(writer)));
 
             std::lock_guard<std::mutex> mutex(mMutex);
             mBufferPerThread[std::this_thread::get_id()] = bufferInTLS.get();
         }
         ASSERT(bufferInTLS != nullptr);
-        return bufferInTLS->GetBuffer();
+        return bufferInTLS.get();
     }
 
     void EventTraceWriter::FlushAndRemoveBufferEntry(std::vector<TraceEvent>* buffer) {
@@ -227,9 +241,9 @@ namespace gpgmm {
         mUnmergedBuffer.clear();
 
         for (auto& bufferOfThread : mBufferPerThread) {
-            std::vector<TraceEvent>* bufferToMerge = bufferOfThread.second->GetBuffer();
-            mergedBuffer.insert(mergedBuffer.end(), bufferToMerge->begin(), bufferToMerge->end());
-            bufferToMerge->clear();
+            std::vector<TraceEvent> bufferToMerge = bufferOfThread.second->GetAndClearBuffer();
+            mergedBuffer.insert(mergedBuffer.end(), bufferToMerge.begin(), bufferToMerge.end());
+            bufferToMerge.clear();
         }
         return mergedBuffer;
     }
@@ -239,7 +253,7 @@ namespace gpgmm {
         size_t numOfEvents = 0;
         numOfEvents += mUnmergedBuffer.size();
         for (auto& bufferOfThread : mBufferPerThread) {
-            numOfEvents += bufferOfThread.second->GetBuffer()->size();
+            numOfEvents += bufferOfThread.second->GetBufferSize();
         }
         return numOfEvents;
     }

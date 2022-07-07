@@ -176,8 +176,7 @@ namespace gpgmm {
     class PlatformTime;
 
     void StartupEventTrace(const std::string& traceFile,
-                           const TraceEventPhase& ignoreMask,
-                           bool flushOnDestruct);
+                           const TraceEventPhase& ignoreMask);
 
     void FlushEventTraceToDisk();
 

@@ -22,26 +22,24 @@
 
 namespace gpgmm {
 
-    static std::unique_ptr<EventTraceWriter> gEventTrace;
+    static std::shared_ptr<EventTraceWriter> gEventTrace;
     static std::mutex mMutex;
 
     static EventTraceWriter* GetInstance() {
         std::lock_guard<std::mutex> lock(mMutex);
         if (gEventTrace == nullptr) {
-            gEventTrace = std::make_unique<EventTraceWriter>();
+            gEventTrace = std::make_shared<EventTraceWriter>();
         }
         return gEventTrace.get();
     }
 
-    void StartupEventTrace(const std::string& traceFile,
-                           const TraceEventPhase& ignoreMask,
-                           bool flushOnDestruct) {
+    void StartupEventTrace(const std::string& traceFile, const TraceEventPhase& ignoreMask) {
 #if defined(GPGMM_DISABLE_TRACING)
         gpgmm::WarningLog()
             << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
 #endif
 
-        GetInstance()->SetConfiguration(traceFile, ignoreMask, flushOnDestruct);
+        GetInstance()->SetConfiguration(traceFile, ignoreMask);
         TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
                               "GPGMM_MainThread");
     }
@@ -90,7 +88,7 @@ namespace gpgmm {
                                     uint32_t flags,
                                     const JSONDict& args) {
         if (IsEventTraceEnabled()) {
-            GetInstance()->EnqueueTraceEvent(phase, category, name, id, flags, args);
+            GetInstance()->EnqueueTraceEvent(gEventTrace, phase, category, name, id, flags, args);
         }
     }
 }  // namespace gpgmm

@@ -26,7 +26,7 @@ using namespace gpgmm;
 class EventTraceWriterTests : public testing::Test {
   public:
     void SetUp() override {
-        StartupEventTrace(kDummyTrace, TraceEventPhase::None, /*flushOnDestruct*/ true);
+        StartupEventTrace(kDummyTrace, TraceEventPhase::None);
     }
 
     void TearDown() override {
