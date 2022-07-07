@@ -82,8 +82,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7eccf8cd2c24fbd3586990ab2f92215e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce54d30010a00708d5110f98522150d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a0ce54d30010a00708d5110f98522150d">AddEvent</a> (<a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> event)</td></tr>
 <tr class="separator:a0ce54d30010a00708d5110f98522150d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a912a007b838cc69f3eb381ff369e3326"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a912a007b838cc69f3eb381ff369e3326">AcquireBuffer</a> ()</td></tr>
-<tr class="separator:a912a007b838cc69f3eb381ff369e3326"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f67600ac2e28b422b17869fc2604e85"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a0f67600ac2e28b422b17869fc2604e85">GetAndFlushBuffer</a> ()</td></tr>
+<tr class="separator:a0f67600ac2e28b422b17869fc2604e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a290f37af232497e1a1c53c587bbac836"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a290f37af232497e1a1c53c587bbac836">GetBufferSize</a> () const</td></tr>
 <tr class="separator:a290f37af232497e1a1c53c587bbac836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580b21b3f32ddfcd183f931f734944e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a580b21b3f32ddfcd183f931f734944e6">Disconnect</a> ()</td></tr>
@@ -142,31 +142,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a912a007b838cc69f3eb381ff369e3326" name="a912a007b838cc69f3eb381ff369e3326"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a912a007b838cc69f3eb381ff369e3326">&#9670;&nbsp;</a></span>AcquireBuffer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt; gpgmm::ScopedTraceBufferInTLS::AcquireBuffer </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a0ce54d30010a00708d5110f98522150d" name="a0ce54d30010a00708d5110f98522150d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ce54d30010a00708d5110f98522150d">&#9670;&nbsp;</a></span>AddEvent()</h2>
 
@@ -204,6 +179,31 @@ Public Member Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void gpgmm::ScopedTraceBufferInTLS::Disconnect </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f67600ac2e28b422b17869fc2604e85" name="a0f67600ac2e28b422b17869fc2604e85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f67600ac2e28b422b17869fc2604e85">&#9670;&nbsp;</a></span>GetAndFlushBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classgpgmm_1_1_trace_event.html">TraceEvent</a> &gt; gpgmm::ScopedTraceBufferInTLS::GetAndFlushBuffer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
