@@ -9,7 +9,7 @@ var searchData=
   ['getabsolutetime_6',['GetAbsoluteTime',['../classgpgmm_1_1_platform_time.html#adc24e3ff7e3e4e35f9b94327a57765c8',1,'gpgmm::PlatformTime::GetAbsoluteTime()'],['../classgpgmm_1_1_windows_time.html#a06f27dc4c7ca60fbe2e16dfc287f6413',1,'gpgmm::WindowsTime::GetAbsoluteTime()']]],
   ['getalignment_7',['GetAlignment',['../classgpgmm_1_1_memory_base.html#aabc8d1742deec70f6da4e7eaec968e92',1,'gpgmm::MemoryBase::GetAlignment()'],['../classgpgmm_1_1_memory_allocation.html#afd5df4f26c555e8f6ef20a3b1f01efad',1,'gpgmm::MemoryAllocation::GetAlignment() const']]],
   ['getallocator_8',['GetAllocator',['../classgpgmm_1_1_memory_allocation.html#a274bbaab428e2d65b8715952c535ebce',1,'gpgmm::MemoryAllocation']]],
-  ['getandflushbuffer_9',['GetAndFlushBuffer',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a0f67600ac2e28b422b17869fc2604e85',1,'gpgmm::ScopedTraceBufferInTLS']]],
+  ['getandclearbuffer_9',['GetAndClearBuffer',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a5da3b1134c30a1234f426322ae319dbd',1,'gpgmm::ScopedTraceBufferInTLS']]],
   ['getblock_10',['GetBlock',['../classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7',1,'gpgmm::MemoryAllocation']]],
   ['getblockcount_11',['GetBlockCount',['../classgpgmm_1_1_slab_block_allocator.html#a280c186fc2dd569cdca9a9c1a4009455',1,'gpgmm::SlabBlockAllocator::GetBlockCount()'],['../structgpgmm_1_1_slab.html#a3d846aeba3940d22b81ba2b6e5e8c131',1,'gpgmm::Slab::GetBlockCount()']]],
   ['getbuffermemoryrequirements_12',['GetBufferMemoryRequirements',['../structgpgmm_1_1vk_1_1_gp_resource_allocator___t.html#a82f56566ea9dd60c7688dd53122aed05',1,'gpgmm::vk::GpResourceAllocator_T']]],
