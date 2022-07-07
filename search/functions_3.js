@@ -7,11 +7,10 @@ var searchData=
   ['debugobject_4',['DebugObject',['../classgpgmm_1_1d3d12_1_1_debug_object.html#a8449be7c4d5c5066ce430c702301bc5c',1,'gpgmm::d3d12::DebugObject::DebugObject(const DebugObject &amp;)=default'],['../classgpgmm_1_1d3d12_1_1_debug_object.html#ad9396e69d3375db03ec419a4f9776871',1,'gpgmm::d3d12::DebugObject::DebugObject()=default']]],
   ['debugresourceallocator_5',['DebugResourceAllocator',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#a7b9f233a6fafd6019cb042833e8074e8',1,'gpgmm::d3d12::DebugResourceAllocator']]],
   ['deletethis_6',['DeleteThis',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a6b125e84fc9a47302e56d20808a60fc3',1,'gpgmm::d3d12::IUnknownImpl']]],
-  ['detach_7',['Detach',['../classgpgmm_1_1_scoped_ref.html#af3adac8c781999245303e89c551543ca',1,'gpgmm::ScopedRef']]],
+  ['detach_7',['Detach',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a62208db58c39fc48033b5d1c7d67deb5',1,'gpgmm::ScopedTraceBufferInTLS::Detach()'],['../classgpgmm_1_1_scoped_ref.html#af3adac8c781999245303e89c551543ca',1,'gpgmm::ScopedRef::Detach()']]],
   ['devicememory_8',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html#ad6c975e96d1ee9bd7e9b423cabe49d9a',1,'gpgmm::vk::DeviceMemory']]],
   ['devicememoryallocator_9',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html#a0a1aee5a816433c29c7f25b0b9f4cc5b',1,'gpgmm::vk::DeviceMemoryAllocator']]],
-  ['disconnect_10',['Disconnect',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a580b21b3f32ddfcd183f931f734944e6',1,'gpgmm::ScopedTraceBufferInTLS']]],
-  ['dummybuddyblockallocator_11',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html#a07e8442b77c5f5771dc05926ffacacf8',1,'DummyBuddyBlockAllocator']]],
-  ['dummymemoryallocator_12',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html#a4110b0faa02b9ab391c8f2fec7aa716c',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator()=default'],['../classgpgmm_1_1_dummy_memory_allocator.html#a6a7370bf1c499323f770ab83c230efdb',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator(std::unique_ptr&lt; MemoryAllocator &gt; next)']]],
-  ['dummyobject_13',['DummyObject',['../class_dummy_object.html#a5992397d47e12ecef2fed6671fe5f1d2',1,'DummyObject']]]
+  ['dummybuddyblockallocator_10',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html#a07e8442b77c5f5771dc05926ffacacf8',1,'DummyBuddyBlockAllocator']]],
+  ['dummymemoryallocator_11',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html#a4110b0faa02b9ab391c8f2fec7aa716c',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator()=default'],['../classgpgmm_1_1_dummy_memory_allocator.html#a6a7370bf1c499323f770ab83c230efdb',1,'gpgmm::DummyMemoryAllocator::DummyMemoryAllocator(std::unique_ptr&lt; MemoryAllocator &gt; next)']]],
+  ['dummyobject_12',['DummyObject',['../class_dummy_object.html#a5992397d47e12ecef2fed6671fe5f1d2',1,'DummyObject']]]
 ];
