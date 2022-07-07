@@ -23,6 +23,7 @@
 #include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
 
+#include <functional>  // for std::function
 #include <memory>
 
 namespace gpgmm::d3d12 {
@@ -68,10 +69,15 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief MemorySegmentGroup is the video memory segment the heap resides (local or
-        non-local).
+        /** \brief Specifies the type of heap.
+
+        When resident, heaps reside in a particular video segment.
         */
-        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+        D3D12_HEAP_TYPE HeapType;
+
+        /** \brief Requires the heap to be created in budget.
+         */
+        bool AlwaysInBudget;
 
         /** \brief Specifies to leave the heap unmanaged by GPGMM.
 
@@ -83,6 +89,20 @@ namespace gpgmm::d3d12 {
          */
         std::string DebugName;
     };
+
+    /** \brief Callback function used to create a ID3D12Pageable.
+
+    For example, to create a ID3D12Heap:
+
+    \code
+    auto callback = [heapDesc](ID3D12Pageable** ppPageableOut) -> HRESULT {
+        ComPtr<ID3D12Heap> heap;
+        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
+        *ppPageableOut = heap.Detach();
+    };
+    \endcode
+    */
+    using CreateHeapFn = std::function<HRESULT(ID3D12Pageable** ppPageableOut)>;
 
     /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
     heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.
@@ -102,13 +122,13 @@ namespace gpgmm::d3d12 {
 
         @param descriptor A reference to HEAP_DESC structure that describes the heap.
         @param residencyManager A pointer to the ResidencyManager used to manage this heap.
-        @param pageable  A pointer to the parent interface of ID3D12Resource or ID3D12Heap.
+        @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
         @param[out] heapOut Pointer to a memory block that recieves a pointer to the
         heap.
         */
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   ResidencyManager* const residencyManager,
-                                  ComPtr<ID3D12Pageable> pageable,
+                                  CreateHeapFn&& createHeapFn,
                                   Heap** heapOut);
 
         // TODO: Make private.

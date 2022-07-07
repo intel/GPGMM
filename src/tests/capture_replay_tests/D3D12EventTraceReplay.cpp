@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEventPhase.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformTime.h"
@@ -316,6 +317,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         RESIDENCY_DESC residencyDesc = {};
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
+                        residencyDesc.IsUMA = mIsUMA;
                         residencyDesc.VideoMemoryBudget = snapshot["VideoMemoryBudget"].asFloat();
                         residencyDesc.Budget = snapshot["Budget"].asUInt64();
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
@@ -492,32 +494,36 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         HEAP_DESC resourceHeapDesc = {};
                         resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
                         resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
-                        resourceHeapDesc.MemorySegmentGroup =
-                            static_cast<DXGI_MEMORY_SEGMENT_GROUP>(
-                                args["MemorySegmentGroup"].asInt());
                         resourceHeapDesc.IsExternal = args["IsExternal"].asBool();
-
-                        D3D12_HEAP_DESC d3d12HeapDesc = {};
-                        d3d12HeapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
-                        d3d12HeapDesc.Alignment = resourceHeapDesc.Alignment;
-                        d3d12HeapDesc.Flags =
-                            static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
+                        resourceHeapDesc.HeapType = static_cast<D3D12_HEAP_TYPE>(
+                            args["Heap"]["Properties"]["Type"].asInt());
 
                         D3D12_HEAP_PROPERTIES heapProperties = {};
-                        heapProperties.Type = static_cast<D3D12_HEAP_TYPE>(
-                            args["Heap"]["Properties"]["Type"].asInt());
-                        d3d12HeapDesc.Properties = heapProperties;
+                        heapProperties.Type = resourceHeapDesc.HeapType;
 
-                        ComPtr<ID3D12Heap> heap;
-                        ASSERT_SUCCEEDED(mDevice->CreateHeap(&d3d12HeapDesc, IID_PPV_ARGS(&heap)));
+                        D3D12_HEAP_DESC heapDesc = {};
+                        heapDesc.Properties = heapProperties;
+                        heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+                        heapDesc.Alignment = resourceHeapDesc.Alignment;
+                        heapDesc.Flags =
+                            static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
 
                         ResidencyManager* residencyManager =
                             createdResidencyManagerToID[currentResidencyID].Get();
                         ASSERT_NE(residencyManager, nullptr);
 
                         Heap* resourceHeap = nullptr;
-                        ASSERT_SUCCEEDED(Heap::CreateHeap(resourceHeapDesc, residencyManager,
-                                                          std::move(heap), &resourceHeap));
+                        ASSERT_SUCCEEDED(Heap::CreateHeap(
+                            resourceHeapDesc, residencyManager,
+                            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+                                ComPtr<ID3D12Heap> heap;
+                                ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
+
+                                *ppPageableOut = heap.Detach();
+
+                                return S_OK;
+                            },
+                            &resourceHeap));
 
                         heapWithoutID.reset(resourceHeap);
 

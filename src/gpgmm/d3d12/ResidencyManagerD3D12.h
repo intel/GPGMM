@@ -242,6 +242,8 @@ namespace gpgmm::d3d12 {
         */
         RESIDENCY_INFO GetInfo() const;
 
+        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
+
       private:
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 

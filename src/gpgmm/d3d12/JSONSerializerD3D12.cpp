@@ -136,8 +136,6 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const CREATE_HEAP_DESC& desc) {
         JSONDict dict;
-        dict.AddItem("MemorySegmentGroup", desc.HeapDescriptor.MemorySegmentGroup);
-
         if (!desc.HeapDescriptor.DebugName.empty()) {
             dict.AddItem("DebugName", desc.HeapDescriptor.DebugName);
         }
