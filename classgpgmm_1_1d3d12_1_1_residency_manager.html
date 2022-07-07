@@ -151,9 +151,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a81388d2ec697cabc7bae3f129c1b1eba"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a81388d2ec697cabc7bae3f129c1b1eba">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **residencyManagerOut)</td></tr>
-<tr class="memdesc:a81388d2ec697cabc7bae3f129c1b1eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a81388d2ec697cabc7bae3f129c1b1eba">More...</a><br /></td></tr>
-<tr class="separator:a81388d2ec697cabc7bae3f129c1b1eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb4d0384c58741a33865fdcb83eb507"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memdesc:addb4d0384c58741a33865fdcb83eb507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507">More...</a><br /></td></tr>
+<tr class="separator:addb4d0384c58741a33865fdcb83eb507"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache. </p>
@@ -186,8 +186,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a81388d2ec697cabc7bae3f129c1b1eba" name="a81388d2ec697cabc7bae3f129c1b1eba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81388d2ec697cabc7bae3f129c1b1eba">&#9670;&nbsp;</a></span>CreateResidencyManager()</h2>
+<a id="addb4d0384c58741a33865fdcb83eb507" name="addb4d0384c58741a33865fdcb83eb507"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addb4d0384c58741a33865fdcb83eb507">&#9670;&nbsp;</a></span>CreateResidencyManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -205,7 +205,7 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **&#160;</td>
-          <td class="paramname"><em>residencyManagerOut</em>&#160;</td>
+          <td class="paramname"><em>ppResidencyManagerOut</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -224,7 +224,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> structure that describes the residency manager. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">residencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency Manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency Manager creating would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
 </dl>
