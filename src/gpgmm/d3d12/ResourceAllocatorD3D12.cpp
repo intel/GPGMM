@@ -990,7 +990,6 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.Pageable = resource;
         resourceHeapDesc.MemorySegmentGroup =
             GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type);
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
@@ -998,8 +997,8 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.IsExternal = true;
 
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(
-            Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr, &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr, resource,
+                                        &resourceHeap));
 
         mInfo.UsedMemoryUsage += resourceInfo.SizeInBytes;
         mInfo.UsedMemoryCount++;
@@ -1079,7 +1078,6 @@ namespace gpgmm::d3d12 {
             IID_PPV_ARGS(&committedResource)));
 
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.Pageable = committedResource;
         resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.IsExternal = false;
@@ -1088,7 +1086,8 @@ namespace gpgmm::d3d12 {
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(), &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
+                                        committedResource, &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
             *commitedResourceOut = committedResource.Detach();

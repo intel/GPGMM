@@ -134,19 +134,32 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const HEAP_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const CREATE_HEAP_DESC& desc) {
         JSONDict dict;
-        dict.AddItem("SizeInBytes", desc.SizeInBytes);
-        dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
+        dict.AddItem("MemorySegmentGroup", desc.HeapDescriptor.MemorySegmentGroup);
+
+        if (!desc.HeapDescriptor.DebugName.empty()) {
+            dict.AddItem("DebugName", desc.HeapDescriptor.DebugName);
+        }
 
         ComPtr<ID3D12Heap> heap;
         if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
             dict.AddItem("Heap", Serialize(heap->GetDesc()));
+            return dict;
         }
 
-        if (!desc.DebugName.empty()) {
-            dict.AddItem("DebugName", desc.DebugName);
+        ComPtr<ID3D12Resource> committedResource;
+        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&committedResource)))) {
+            JSONDict heapDict;
+            D3D12_HEAP_PROPERTIES heapProperties = {};
+            D3D12_HEAP_FLAGS heapFlags = {};
+            if (SUCCEEDED(committedResource->GetHeapProperties(&heapProperties, &heapFlags))) {
+                heapDict.AddItem("Properties", Serialize(heapProperties));
+                heapDict.AddItem("Flags", heapFlags);
+                heapDict.AddItem("SizeInBytes", desc.HeapDescriptor.SizeInBytes);
+                heapDict.AddItem("Alignment", desc.HeapDescriptor.Alignment);
+                dict.AddItem("Heap", heapDict);
+            }
         }
 
         return dict;

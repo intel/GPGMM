@@ -86,7 +86,6 @@ namespace gpgmm::d3d12 {
         }
 
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.Pageable = std::move(heap);
         resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = heapSize;
         resourceHeapDesc.IsExternal = false;
@@ -94,7 +93,8 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.Alignment = heapDesc.Alignment;
 
         Heap* resourceHeap = nullptr;
-        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, &resourceHeap))) {
+        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, std::move(heap),
+                                    &resourceHeap))) {
             return {};
         }
 

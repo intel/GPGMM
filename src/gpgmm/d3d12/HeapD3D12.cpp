@@ -26,14 +26,18 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              ResidencyManager* const residencyManager,
+                             ComPtr<ID3D12Pageable> pageable,
                              Heap** heapOut) {
-        if (!descriptor.Pageable) {
+        if (!pageable) {
             return E_POINTER;
         }
 
-        std::unique_ptr<Heap> heap(new Heap(std::move(descriptor.Pageable),
-                                            descriptor.MemorySegmentGroup, descriptor.SizeInBytes,
-                                            descriptor.Alignment, descriptor.IsExternal));
+        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
+                                      (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
+
+        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor.MemorySegmentGroup,
+                                            descriptor.SizeInBytes, descriptor.Alignment,
+                                            descriptor.IsExternal));
 
         if (residencyManager != nullptr) {
             ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
@@ -41,7 +45,6 @@ namespace gpgmm::d3d12 {
 
         if (!descriptor.IsExternal) {
             ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
         }
 
         if (heapOut != nullptr) {

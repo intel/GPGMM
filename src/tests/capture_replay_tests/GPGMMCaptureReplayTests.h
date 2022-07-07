@@ -31,10 +31,6 @@ struct TraceFile {
     std::string path;
 };
 
-struct CaptureReplayCallStats {
-    uint64_t TotalNumOfCalls = 0;
-};
-
 struct CaptureReplayMemoryStats {
     uint64_t PeakUsage = 0;
     uint64_t CurrentUsage = 0;
@@ -56,6 +52,7 @@ struct TestEnviromentParams {
     bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;
     bool IsPrefetchAllowed = false;
+    bool IsAllocationPlaybackDisabled = false;  // Disables creation of new allocations.
 
     AllocatorProfile AllocatorProfile =
         AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.
