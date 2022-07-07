@@ -185,9 +185,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:afc93ec742774c95c85ac59e66885ef57"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#afc93ec742774c95c85ac59e66885ef57">CreateHeap</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *const residencyManager, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> **heapOut)</td></tr>
-<tr class="memdesc:afc93ec742774c95c85ac59e66885ef57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#afc93ec742774c95c85ac59e66885ef57">More...</a><br /></td></tr>
-<tr class="separator:afc93ec742774c95c85ac59e66885ef57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1594e54cc091e7334c8f58774fc8181"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ae1594e54cc091e7334c8f58774fc8181">CreateHeap</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *const residencyManager, ComPtr&lt; ID3D12Pageable &gt; pageable, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> **heapOut)</td></tr>
+<tr class="memdesc:ae1594e54cc091e7334c8f58774fc8181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#ae1594e54cc091e7334c8f58774fc8181">More...</a><br /></td></tr>
+<tr class="separator:ae1594e54cc091e7334c8f58774fc8181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -313,8 +313,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="afc93ec742774c95c85ac59e66885ef57" name="afc93ec742774c95c85ac59e66885ef57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc93ec742774c95c85ac59e66885ef57">&#9670;&nbsp;</a></span>CreateHeap()</h2>
+<a id="ae1594e54cc091e7334c8f58774fc8181" name="ae1594e54cc091e7334c8f58774fc8181"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1594e54cc091e7334c8f58774fc8181">&#9670;&nbsp;</a></span>CreateHeap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -333,6 +333,12 @@ template&lt;typename T &gt; </div>
           <td></td>
           <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *const&#160;</td>
           <td class="paramname"><em>residencyManager</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ComPtr&lt; ID3D12Pageable &gt;&#160;</td>
+          <td class="paramname"><em>pageable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -359,6 +365,7 @@ template&lt;typename T &gt; </div>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> structure that describes the heap. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">residencyManager</td><td>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> used to manage this heap. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pageable</td><td>A pointer to the parent interface of ID3D12Resource or ID3D12Heap. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">heapOut</td><td>Pointer to a memory block that recieves a pointer to the heap. </td></tr>
   </table>
   </dd>

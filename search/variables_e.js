@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['pageable_0',['Pageable',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a305f79b50a18071f33ab41acac911477',1,'gpgmm::d3d12::HEAP_DESC']]],
+  ['pageable_0',['Pageable',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___h_e_a_p___d_e_s_c.html#a64d802da743636c14db3e3585b21c220',1,'gpgmm::d3d12::CREATE_HEAP_DESC']]],
   ['path_1',['path',['../struct_trace_file.html#af31c4705878768456d2519d7aa4470f5',1,'TraceFile']]],
   ['peakusage_2',['PeakUsage',['../struct_capture_replay_memory_stats.html#a8b3e9ff58d4db82928050ea8b0b9d37c',1,'CaptureReplayMemoryStats']]],
   ['physicaldevice_3',['physicalDevice',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a1df1001b59a3a4d322d2f3fc8cf6ccac',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
