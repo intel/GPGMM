@@ -153,9 +153,6 @@ namespace gpgmm::d3d12 {
         */
         ID3D12Resource* GetResource() const;
 
-        // Tracks the resource allocation memory for residency.
-        HRESULT UpdateResidency(ResidencySet* residencySet) const;
-
         /** \brief Check if the resource allocation was made resident or not.
 
         \return True if resident, else, false.
