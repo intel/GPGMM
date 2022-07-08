@@ -29,22 +29,22 @@ static constexpr uint64_t kDefaultBufferSize = 4ll * 1024ll * 1024ll;  // 4MB
 
 #define GPGMM_GET_VAR_NAME(x) (#x)
 
-#define EXPECT_SIZE_CACHE_HIT(allocator, statement)              \
-    do {                                                         \
-        ASSERT_NE(allocator, nullptr);                           \
-        size_t countBefore = allocator->GetInfo().SizeCacheHits; \
-        EXPECT_SUCCEEDED(statement);                             \
-        size_t countAfter = allocator->GetInfo().SizeCacheHits;  \
-        EXPECT_GT(countAfter, countBefore);                      \
-    } while (0)
-
-#define EXPECT_SIZE_CACHE_MISS(allocator, statement)               \
+#define EXPECT_SIZE_CACHE_HIT(allocator, statement)                \
     do {                                                           \
         ASSERT_NE(allocator, nullptr);                             \
-        size_t countBefore = allocator->GetInfo().SizeCacheMisses; \
+        uint64_t countBefore = allocator->GetInfo().SizeCacheHits; \
         EXPECT_SUCCEEDED(statement);                               \
-        size_t countAfter = allocator->GetInfo().SizeCacheMisses;  \
+        uint64_t countAfter = allocator->GetInfo().SizeCacheHits;  \
         EXPECT_GT(countAfter, countBefore);                        \
+    } while (0)
+
+#define EXPECT_SIZE_CACHE_MISS(allocator, statement)                 \
+    do {                                                             \
+        ASSERT_NE(allocator, nullptr);                               \
+        uint64_t countBefore = allocator->GetInfo().SizeCacheMisses; \
+        EXPECT_SUCCEEDED(statement);                                 \
+        uint64_t countAfter = allocator->GetInfo().SizeCacheMisses;  \
+        EXPECT_GT(countAfter, countBefore);                          \
     } while (0)
 
 class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test {
@@ -674,19 +674,19 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     ASSERT_FAILED(smallBufferC->Map(/*subresource*/ 1));
 
     // Fill small buffer C with value 0xCC.
-    std::vector<uint8_t> dataCC(smallBufferC->GetSize(), 0xCC);
+    std::vector<uint8_t> dataCC(static_cast<const size_t>(smallBufferC->GetSize()), 0xCC);
     void* mappedBufferC = nullptr;
     ASSERT_SUCCEEDED(smallBufferC->Map(0, nullptr, &mappedBufferC));
     memcpy(mappedBufferC, dataCC.data(), dataCC.size());
 
     // Fill small buffer A with value 0xAA.
-    std::vector<uint8_t> dataAA(smallBufferA->GetSize(), 0xAA);
+    std::vector<uint8_t> dataAA(static_cast<const size_t>(smallBufferA->GetSize()), 0xAA);
     void* mappedBufferA = nullptr;
     ASSERT_SUCCEEDED(smallBufferA->Map(0, nullptr, &mappedBufferA));
     memcpy(mappedBufferA, dataAA.data(), dataAA.size());
 
     // Fill small buffer B with value 0xBB.
-    std::vector<uint8_t> dataBB(smallBufferB->GetSize(), 0xBB);
+    std::vector<uint8_t> dataBB(static_cast<const size_t>(smallBufferB->GetSize()), 0xBB);
     void* mappedBufferB = nullptr;
     ASSERT_SUCCEEDED(smallBufferB->Map(0, nullptr, &mappedBufferB));
     memcpy(mappedBufferB, dataBB.data(), dataBB.size());
@@ -1246,7 +1246,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
         EXPECT_SIZE_CACHE_MISS(resourceAllocator,
                                resourceAllocator->CreateResource(
                                    smallResourceAllocDesc,
-                                   CreateBasicBufferDesc(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT),
+                                   CreateBasicBufferDesc(static_cast<uint64_t>(
+                                       D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)),
                                    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(),
