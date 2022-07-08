@@ -54,9 +54,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
         }
 
-        if (!descriptor.IsExternal) {
-            ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
-        }
+        ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
 
         if (heapOut != nullptr) {
             *heapOut = heap.release();
