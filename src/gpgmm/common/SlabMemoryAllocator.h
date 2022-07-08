@@ -68,7 +68,7 @@ namespace gpgmm {
                                  uint64_t baseSlabSize,
                                  uint64_t availableForAllocation) const;
 
-        uint64_t FindNextFreeSlabOfSize(uint64_t requestSize) const;
+        uint64_t FindNextFreeSlabOfSize(uint64_t slabSize) const;
 
         bool IsPrefetchCoverageBelowThreshold() const;
 
