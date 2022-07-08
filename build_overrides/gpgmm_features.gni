@@ -45,8 +45,8 @@ declare_args() {
   gpgmm_shared_library = false
 
   # Enables checking of allocator leaks.
-  # Sets -dGPGMM_ENABLE_ALLOCATOR_CHECKS
-  gpgmm_enable_allocator_checks = is_debug
+  # Sets -dGPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS
+  gpgmm_enable_allocator_leak_checks = is_debug
 
   # Enables ASSERT on severity functionality.
   # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING
@@ -57,8 +57,12 @@ declare_args() {
   gpgmm_disable_size_cache = false
 
   # Enables checking of device leaks.
-  # Sets -dGPGMM_ENABLE_DEVICE_CHECKS
-  gpgmm_enable_device_checks = false
+  # Sets -dGPGMM_ENABLE_DEVICE_LEAK_CHECKS
+  gpgmm_enable_device_leak_checks = false
+
+  # Enables checking of memory leaks.
+  # Sets -dGPGMM_ENABLE_MEMORY_LEAK_CHECKS
+  gpgmm_enable_memory_leak_checks = is_debug
 
   # Configures Vulkan functions by statically importing them (ie. importing the Vulkan loader symbols).
   gpgmm_vk_static_functions = true

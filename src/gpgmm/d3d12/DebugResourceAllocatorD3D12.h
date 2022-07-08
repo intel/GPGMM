@@ -27,7 +27,7 @@ namespace gpgmm::d3d12 {
     A "live" allocation means the allocation was created (allocated) but not released
     (de-allocated).
 
-    Use `gpgmm_enable_allocator_checks = true` to always report for leaks.
+    Use `gpgmm_enable_allocator_leak_checks = true` to always report for leaks.
     */
     class DebugResourceAllocator final : public MemoryAllocator {
       public:

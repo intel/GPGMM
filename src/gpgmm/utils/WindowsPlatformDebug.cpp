@@ -58,7 +58,9 @@ namespace gpgmm {
             // Perform automatic leak checking at program exit through a call to _CrtDumpMemoryLeaks
             // and generate an error report if the application failed to free all the memory it
             // allocated.
+#ifdef GPGMM_ENABLE_MEMORY_LEAK_CHECKS
             _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
         }
 
       private:
