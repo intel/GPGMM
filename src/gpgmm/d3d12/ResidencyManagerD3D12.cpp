@@ -717,4 +717,19 @@ namespace gpgmm::d3d12 {
         mBudgetNotificationUpdateEvent = nullptr;
     }
 
+    DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetPreferredMemorySegmentGroup(
+        D3D12_HEAP_TYPE heapType) const {
+        if (mIsUMA) {
+            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        }
+
+        D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
+
+        if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
+            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        }
+
+        return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
+    }
+
 }  // namespace gpgmm::d3d12

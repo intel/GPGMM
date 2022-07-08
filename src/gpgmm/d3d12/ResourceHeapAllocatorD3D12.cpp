@@ -29,13 +29,11 @@ namespace gpgmm::d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_TYPE heapType,
-                                                 D3D12_HEAP_FLAGS heapFlags,
-                                                 bool isUMA)
+                                                 D3D12_HEAP_FLAGS heapFlags)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapType(heapType),
-          mHeapFlags(heapFlags),
-          mIsUMA(isUMA) {
+          mHeapFlags(heapFlags) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -59,42 +57,34 @@ namespace gpgmm::d3d12 {
                        " bytes).";
         }
 
-        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
-            GetPreferredMemorySegmentGroup(mDevice, mIsUMA, mHeapType);
-
-        // CreateHeap will implicitly make the created heap resident unless
-        // D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is set. Otherwise, CreateHeap could return
-        // out-of-memory when overcommitted if Evict() is not called first.
-        if (!(mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) && mResidencyManager != nullptr) {
-            mResidencyManager->Evict(heapSize, memorySegmentGroup);
-        }
-
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        heapProperties.Type = mHeapType;
-
-        D3D12_HEAP_DESC heapDesc = {};
-        heapDesc.Properties = heapProperties;
-        heapDesc.SizeInBytes = heapSize;
-        heapDesc.Alignment = request.Alignment;
-        heapDesc.Flags = mHeapFlags;
-
-        ComPtr<ID3D12Heap> heap;
-        HRESULT hr = mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap));
-        if (FAILED(hr)) {
-            InfoEvent(GetTypename()) << " failed to create heap: " << GetErrorMessage(hr);
-            return {};
-        }
-
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = heapSize;
         resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap";
-        resourceHeapDesc.Alignment = heapDesc.Alignment;
+        resourceHeapDesc.Alignment = request.Alignment;
+        resourceHeapDesc.HeapType = mHeapType;
 
         Heap* resourceHeap = nullptr;
-        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager, std::move(heap),
-                                    &resourceHeap))) {
+        if (FAILED(Heap::CreateHeap(
+                resourceHeapDesc, mResidencyManager,
+                [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+                    D3D12_HEAP_PROPERTIES heapProperties = {};
+                    heapProperties.Type = resourceHeapDesc.HeapType;
+
+                    D3D12_HEAP_DESC heapDesc = {};
+                    heapDesc.Properties = heapProperties;
+                    heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+                    heapDesc.Alignment = resourceHeapDesc.Alignment;
+                    heapDesc.Flags = mHeapFlags;
+
+                    ComPtr<ID3D12Heap> heap;
+                    ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
+
+                    *ppPageableOut = heap.Detach();
+
+                    return S_OK;
+                },
+                &resourceHeap))) {
             return {};
         }
 

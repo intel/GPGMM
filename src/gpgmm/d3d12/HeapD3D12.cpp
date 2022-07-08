@@ -26,16 +26,27 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              ResidencyManager* const residencyManager,
-                             ComPtr<ID3D12Pageable> pageable,
+                             CreateHeapFn&& createHeapFn,
                              Heap** heapOut) {
-        if (!pageable) {
-            return E_POINTER;
+        DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup = {};
+        if (residencyManager != nullptr) {
+            memorySegmentGroup =
+                residencyManager->GetPreferredMemorySegmentGroup(descriptor.HeapType);
+
+            // Ensure enough free memory exists before allocating to avoid an out-of-memory error
+            // when over budget.
+            if (descriptor.AlwaysInBudget) {
+                ReturnIfFailed(residencyManager->Evict(descriptor.SizeInBytes, memorySegmentGroup));
+            }
         }
+
+        ComPtr<ID3D12Pageable> pageable;
+        ReturnIfFailed(createHeapFn(&pageable));
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
 
-        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor.MemorySegmentGroup,
+        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), memorySegmentGroup,
                                             descriptor.SizeInBytes, descriptor.Alignment,
                                             descriptor.IsExternal));
 

@@ -520,7 +520,7 @@ namespace gpgmm::d3d12 {
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapType, heapFlags, mIsUMA);
+                                                    heapType, heapFlags);
 
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             switch (descriptor.PoolAlgorithm) {
@@ -775,9 +775,10 @@ namespace gpgmm::d3d12 {
 
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
+            const DXGI_MEMORY_SEGMENT_GROUP segment =
+                mResidencyManager->GetPreferredMemorySegmentGroup(allocationDescriptor.HeapType);
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
-                mResidencyManager->GetVideoMemoryInfo(GetPreferredMemorySegmentGroup(
-                    mDevice.Get(), mIsUMA, allocationDescriptor.HeapType));
+                mResidencyManager->GetVideoMemoryInfo(segment);
 
             // If over-budget, only free memory is left available.
             // TODO: Consider optimizing GetInfoInternal().
@@ -990,15 +991,23 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.MemorySegmentGroup =
-            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapProperties.Type);
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
         resourceHeapDesc.IsExternal = true;
+        resourceHeapDesc.HeapType = heapProperties.Type;
 
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr, resource,
-                                        &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(
+            resourceHeapDesc, /*residencyManager*/ nullptr,
+            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+                ComPtr<ID3D12Pageable> pageable;
+                resource.As(&pageable);
+
+                *ppPageableOut = pageable.Detach();
+
+                return S_OK;
+            },
+            &resourceHeap));
 
         mInfo.UsedMemoryUsage += resourceInfo.SizeInBytes;
         mInfo.UsedMemoryCount++;
@@ -1054,40 +1063,39 @@ namespace gpgmm::d3d12 {
         Heap** resourceHeapOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateCommittedResource");
 
-        // CreateCommittedResource will implicitly make the created resource resident. We must
-        // ensure enough free memory exists before allocating to avoid an out-of-memory error when
-        // overcommitted.
-        const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup =
-            GetPreferredMemorySegmentGroup(mDevice.Get(), mIsUMA, heapType);
-
-        if (!(heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) && mResidencyManager != nullptr) {
-            ReturnIfFailed(mResidencyManager->Evict(info.SizeInBytes, memorySegmentGroup));
-        }
-
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        heapProperties.Type = heapType;
-
-        // Resource heap flags must be inferred by the resource descriptor and cannot be explicitly
-        // provided to CreateCommittedResource.
-        heapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
-                       D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
-
-        ComPtr<ID3D12Resource> committedResource;
-        ReturnIfFailed(mDevice->CreateCommittedResource(
-            &heapProperties, heapFlags, resourceDescriptor, initialResourceState, clearValue,
-            IID_PPV_ARGS(&committedResource)));
-
         HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.MemorySegmentGroup = memorySegmentGroup;
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
+        resourceHeapDesc.AlwaysInBudget = !(heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT);
+        resourceHeapDesc.HeapType = heapType;
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
-                                        committedResource, &resourceHeap));
+        ComPtr<ID3D12Resource> committedResource;
+
+        ReturnIfFailed(Heap::CreateHeap(
+            resourceHeapDesc, mResidencyManager.Get(),
+            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+                // Resource heap flags must be inferred by the resource descriptor and cannot be
+                // explicitly provided to CreateCommittedResource.
+                heapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
+                               D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
+
+                D3D12_HEAP_PROPERTIES heapProperties = {};
+                heapProperties.Type = heapType;
+
+                ReturnIfFailed(mDevice->CreateCommittedResource(
+                    &heapProperties, heapFlags, resourceDescriptor, initialResourceState,
+                    clearValue, IID_PPV_ARGS(&committedResource)));
+
+                ComPtr<ID3D12Pageable> pageable;
+                ReturnIfFailed(committedResource.As(&pageable));
+                *ppPageableOut = pageable.Detach();
+                return S_OK;
+            },
+            &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
             *commitedResourceOut = committedResource.Detach();
