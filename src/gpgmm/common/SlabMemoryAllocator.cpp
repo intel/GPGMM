@@ -44,9 +44,8 @@ namespace gpgmm {
 
     // Slab is a node in a doubly-linked list that contains a free-list of blocks
     // and a reference to underlying memory.
-    struct Slab : public LinkNode<Slab>, public RefCounted {
-        Slab(uint64_t blockCount, uint64_t blockSize)
-            : RefCounted(0), Allocator(blockCount, blockSize) {
+    struct Slab : public LinkNode<Slab> {
+        Slab(uint64_t blockCount, uint64_t blockSize) : Allocator(blockCount, blockSize) {
         }
 
         ~Slab() {
@@ -60,15 +59,19 @@ namespace gpgmm {
         }
 
         bool IsFull() const {
-            return static_cast<uint32_t>(GetRefCount()) == Allocator.GetBlockCount();
+            return AllocatedBlocks == Allocator.GetBlockCount();
+        }
+
+        bool IsEmpty() const {
+            return AllocatedBlocks == 0;
         }
 
         double GetUsedPercent() const {
-            return static_cast<uint32_t>(GetRefCount()) /
-                   static_cast<double>(Allocator.GetBlockCount());
+            return SafeDivide(AllocatedBlocks, Allocator.GetBlockCount());
         }
 
         SlabBlockAllocator Allocator;
+        uint64_t AllocatedBlocks = 0;
         std::unique_ptr<MemoryAllocation> Allocation;
     };
 
@@ -278,10 +281,10 @@ namespace gpgmm {
                 }),
             subAllocation);
 
-        // Slab must be referenced seperately from the underlying memory because slab memory could
-        // be already allocated by another allocator. Only once the final allocation on the slab is
-        // deallocated, does the slab memory be released.
-        pFreeSlab->Ref();
+        // Slab is referenced seperately from its underlying memory because the memory used by the
+        // slab could be already allocated by another allocator. Only once the last block on the
+        // slab is deallocated, does the slab release its memory.
+        pFreeSlab->AllocatedBlocks++;
 
         // Remember the last allocated slab size so if a subsequent allocation requests a new slab,
         // the next slab size will be larger than the previous slab size.
@@ -377,14 +380,14 @@ namespace gpgmm {
         mInfo.UsedBlockUsage -= blockInSlab->Size;
 
         slab->Allocator.DeallocateBlock(blockInSlab);
+        slab->AllocatedBlocks--;
 
         MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);
 
         slabMemory->Unref();
 
-        // If the slab will be empty, release the underlying memory.
-        if (slab->Unref()) {
+        if (slab->IsEmpty()) {
             mMemoryAllocator->DeallocateMemory(std::move(slab->Allocation));
         }
     }
