@@ -200,9 +200,9 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        if (residencyManager != nullptr) {
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
 
+        if (ppResidencyManagerOut != nullptr) {
             *ppResidencyManagerOut = residencyManager.release();
         }
 

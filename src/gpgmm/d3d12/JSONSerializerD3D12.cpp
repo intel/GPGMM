@@ -136,9 +136,6 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const CREATE_HEAP_DESC& desc) {
         JSONDict dict;
-        if (!desc.HeapDescriptor.DebugName.empty()) {
-            dict.AddItem("DebugName", desc.HeapDescriptor.DebugName);
-        }
 
         ComPtr<ID3D12Heap> heap;
         if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
@@ -160,6 +157,18 @@ namespace gpgmm::d3d12 {
             }
         }
 
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const HEAP_DESC& desc) {
+        JSONDict dict;
+        dict.AddItem("SizeInBytes", desc.SizeInBytes);
+        dict.AddItem("Alignment", desc.Alignment);
+        dict.AddItem("HeapType", desc.HeapType);
+        dict.AddItem("AlwaysInBudget", desc.AlwaysInBudget);
+        dict.AddItem("IsExternal", desc.IsExternal);
+        dict.AddItem("DebugName", desc.DebugName);
         return dict;
     }
 
