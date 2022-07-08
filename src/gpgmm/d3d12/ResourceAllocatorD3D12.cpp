@@ -373,10 +373,11 @@ namespace gpgmm::d3d12 {
                                    "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET.";
         }
 
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*ppResourceAllocatorOut, newDescriptor);
+
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut =
                 new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps));
-            GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*ppResourceAllocatorOut, newDescriptor);
         }
 
         return S_OK;

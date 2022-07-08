@@ -55,6 +55,7 @@ namespace gpgmm::d3d12 {
         }
 
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
         if (heapOut != nullptr) {
             *heapOut = heap.release();
