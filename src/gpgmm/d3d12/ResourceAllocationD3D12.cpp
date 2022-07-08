@@ -148,10 +148,6 @@ namespace gpgmm::d3d12 {
         mResource->Unmap(subresource, newWrittenRangePtr);
     }
 
-    HRESULT ResourceAllocation::UpdateResidency(ResidencySet* residencySet) const {
-        return residencySet->Insert(GetMemory());
-    }
-
     bool ResourceAllocation::IsResident() const {
         const Heap* resourceHeap = GetMemory();
         ASSERT(resourceHeap != nullptr);
