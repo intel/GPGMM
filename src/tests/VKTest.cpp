@@ -64,7 +64,7 @@ namespace gpgmm::vk {
             mPhysicalDevice = physicalDevices[0];
         }
 
-        ASSERT_NE(mPhysicalDevice, VK_NULL_HANDLE);
+        ASSERT_FALSE(mPhysicalDevice == VK_NULL_HANDLE);
 
         // Setup a single (universal) queue.
         uint32_t queueFamilyIndex = 0;
