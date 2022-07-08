@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
                     case (WAIT_OBJECT_0 + 0): {
                         hr = mResidencyManager->UpdateVideoMemorySegments();
                         if (SUCCEEDED(hr)) {
-                            gpgmm::InfoEvent("ResidencyManager", EventMessageId::BudgetUpdate)
+                            gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
                                 << "Updated video budget from OS notification.";
                         }
                         break;
@@ -403,6 +403,17 @@ namespace gpgmm::d3d12 {
             pVideoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
                 mVideoMemoryBudget);
+        }
+
+        if (pVideoMemoryInfo->Budget > 0 &&
+            pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
+            WarnEvent("ResidencyManager", EventMessageId::BudgetExceeded)
+                << "GPU "
+                << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "dedicated"
+                                                                                : "shared")
+                << " memory usage exceeds budget: "
+                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
+                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget) << " MBs.";
         }
 
         // Not all segments could be used.
