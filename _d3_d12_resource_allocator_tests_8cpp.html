@@ -176,12 +176,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                         \</div>
-<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                           \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                           \</div>
+<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                             \</div>
 <div class="line">        uint64_t countBefore = allocator-&gt;GetInfo().SizeCacheHits; \</div>
-<div class="line">        EXPECT_SUCCEEDED(statement);                             \</div>
+<div class="line">        EXPECT_SUCCEEDED(statement);                               \</div>
 <div class="line">        uint64_t countAfter = allocator-&gt;GetInfo().SizeCacheHits;  \</div>
-<div class="line">        EXPECT_GT(countAfter, countBefore);                      \</div>
+<div class="line">        EXPECT_GT(countAfter, countBefore);                        \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
@@ -211,12 +211,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                           \</div>
-<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                             \</div>
+<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                               \</div>
 <div class="line">        uint64_t countBefore = allocator-&gt;GetInfo().SizeCacheMisses; \</div>
-<div class="line">        EXPECT_SUCCEEDED(statement);                               \</div>
+<div class="line">        EXPECT_SUCCEEDED(statement);                                 \</div>
 <div class="line">        uint64_t countAfter = allocator-&gt;GetInfo().SizeCacheMisses;  \</div>
-<div class="line">        EXPECT_GT(countAfter, countBefore);                        \</div>
+<div class="line">        EXPECT_GT(countAfter, countBefore);                          \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
