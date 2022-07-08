@@ -357,14 +357,14 @@ namespace gpgmm::d3d12 {
             SetLogMessageLevel(GetLogSeverity(newDescriptor.MinLogLevel));
         }
 
-#if defined(GPGMM_ENABLE_DEVICE_CHECKS)
+#if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
         if (SUCCEEDED(newDescriptor.Device.As(&leakMessageQueue))) {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
-            gpgmm::WarningLog()
-                << "Debug layer must be installed and enabled to use GPGMM_ENABLE_DEVICE_CHECKS.";
+            gpgmm::WarningLog() << "Debug layer must be installed and enabled to use "
+                                   "GPGMM_ENABLE_DEVICE_LEAK_CHECKS.";
         }
 #endif
 
@@ -398,7 +398,7 @@ namespace gpgmm::d3d12 {
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
-#if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
+#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         mDebugAllocator = std::make_unique<DebugResourceAllocator>();
 #endif
 
@@ -604,11 +604,11 @@ namespace gpgmm::d3d12 {
         mResourceAllocatorOfType = {};
         mResourceHeapAllocatorOfType = {};
 
-#if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
+#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         mDebugAllocator->ReportLiveAllocations();
 #endif
 
-#if defined(GPGMM_ENABLE_DEVICE_CHECKS)
+#if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
         ReportLiveDeviceObjects(mDevice);
 #endif
         mResidencyManager = nullptr;
@@ -692,7 +692,7 @@ namespace gpgmm::d3d12 {
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
-#if defined(GPGMM_ENABLE_ALLOCATOR_CHECKS)
+#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         mDebugAllocator->AddLiveAllocation(*ppResourceAllocationOut);
 #endif
 

@@ -168,7 +168,7 @@ Instead, GPGMM *prevents* out-of-memory events by maximizing re-use through opti
 
 ### Robust leak detection
 
-GPGMM detects and reports leaks at the allocation-level (vs Memory Object). Should resources persist on the device (externally created), for example, between allocators, they will NOT be falsely reported as leaks, even when imported into GPGMM. This is enabled by  `GPGMM_ENABLE_ALLOCATOR_CHECKS`.
+GPGMM detects and reports leaks at the allocation-level (vs Memory Object). Should resources persist on the device (externally created), for example, between allocators, they will NOT be falsely reported as leaks, even when imported into GPGMM. This is enabled by  `GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS`.
 
 ### **Data definition, schema design and Persistence requirements**
 

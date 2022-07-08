@@ -108,10 +108,11 @@ set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "D
 
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
 option_if_not_defined(GPGMM_FORCE_TRACING "Enables event tracing even in release builds" OFF)
-option_if_not_defined(GPGMM_ENABLE_DEVICE_CHECKS "Enables checking of device leaks" OFF)
-option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_CHECKS "Enables checking of allocator leaks" OFF)
+option_if_not_defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS "Enables checking of device leaks" OFF)
+option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS "Enables checking of allocator leaks" OFF)
 option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" OFF)
 option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with common resource sizes" OFF)
+option_if_not_defined(GPGMM_ENABLE_MEMORY_LEAK_CHECKS "Enables memory leak detection." OFF)
 
 # The Vulkan loader is an optional dependency.
 if (GPGMM_ENABLE_VK)
@@ -165,15 +166,15 @@ if(NOT GPGMM_FORCE_TRACING)
   )
 endif()
 
-if(GPGMM_ENABLE_DEVICE_CHECKS)
-  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_DEVICE_CHECKS")
+if(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_DEVICE_LEAK_CHECKS")
 endif()
 
-if(GPGMM_ENABLE_ALLOCATOR_CHECKS)
-  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_CHECKS")
+if(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS")
 else()
   target_compile_definitions(gpgmm_common_config INTERFACE
-    $<$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_CHECKS>
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS>
   )
 endif()
 
@@ -187,6 +188,14 @@ endif()
 
 if(GPGMM_DISABLE_SIZE_CACHE)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_DISABLE_SIZE_CACHE")
+endif()
+
+if(GPGMM_ENABLE_MEMORY_LEAK_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_MEMORY_LEAK_CHECKS")
+else()
+  target_compile_definitions(gpgmm_common_config INTERFACE
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_MEMORY_LEAK_CHECKS>
+  )
 endif()
 
 if(WIN32)
