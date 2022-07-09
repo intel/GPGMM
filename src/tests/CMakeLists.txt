@@ -102,7 +102,7 @@ target_link_libraries(gpgmm_end2end_tests PRIVATE
 add_executable(gpgmm_capture_replay_tests)
 
 set(TRACE_INDEX_FILE_NAME "traces.json")
-set(TRACE_INPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/capture_replay_tests/traces")
+set(TRACE_INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/capture_replay_tests/traces")
 set(TRACE_INDEX_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${TRACE_INDEX_FILE_NAME}")
 
 add_custom_command(
