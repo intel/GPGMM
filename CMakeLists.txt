@@ -178,14 +178,6 @@ else()
   )
 endif()
 
-if(GPGMM_ENABLE_ASSERT_ON_WARNING)
-  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ASSERT_ON_WARNING")
-else()
-  target_compile_definitions(gpgmm_common_config INTERFACE
-    $<$<CONFIG:Debug>:GPGMM_ENABLE_ASSERT_ON_WARNING>
-  )
-endif()
-
 if(GPGMM_DISABLE_SIZE_CACHE)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_DISABLE_SIZE_CACHE")
 endif()
