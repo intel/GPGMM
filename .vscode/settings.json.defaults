@@ -123,5 +123,10 @@
     ".github/workflows/win_clang_rel_x64.yaml"
   ],
   "github-actions.workflows.pinned.refresh.enabled": true,
-  "github-actions.workflows.pinned.refresh.interval": 65
+  "github-actions.workflows.pinned.refresh.interval": 65,
+
+  // Allow GPGMM internal tests to build.
+  "cmake.configureArgs": [
+    "-DBUILD_SHARED_LIBS:BOOL=FALSE"
+  ]
 }
