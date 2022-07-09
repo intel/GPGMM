@@ -181,7 +181,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_NE(residencyManager, nullptr);
 
                         ASSERT_SUCCEEDED(residencyManager->ExecuteCommandLists(
-                            nullptr, nullptr, residencySetPtrs.data(), residencySetPtrs.size()));
+                            nullptr, nullptr, residencySetPtrs.data(),
+                            static_cast<uint32_t>(residencySetPtrs.size())));
 
                         // Prepare for the next frame.
                         for (auto& set : currentResidencySets) {

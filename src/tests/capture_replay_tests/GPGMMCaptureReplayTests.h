@@ -46,7 +46,7 @@ enum class AllocatorProfile {
 struct TestEnviromentParams {
     uint64_t Iterations = 1;                                 // Number of test iterations to run.
     gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
-    uint64_t CaptureEventMask = 0;
+    int CaptureEventMask = 0;
 
     bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
     bool IsSuballocationDisabled = false;
