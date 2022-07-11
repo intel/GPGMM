@@ -59,13 +59,6 @@ namespace gpgmm::d3d12 {
     void DebugResourceAllocator::AddLiveAllocation(ResourceAllocation* allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (allocation->GetSize() > allocation->GetRequestSize()) {
-            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
-                << "Resource allocation is larger then the requested size (" +
-                       std::to_string(allocation->GetSize()) + " vs " +
-                       std::to_string(allocation->GetRequestSize()) + " bytes).";
-        }
-
         mLiveAllocations.GetOrCreate(
             ResourceAllocationEntry(allocation, allocation->GetAllocator()), true);
 

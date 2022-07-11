@@ -128,7 +128,7 @@ namespace gpgmm {
         // Check request size cannot overflow.
         if (request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1)) {
             DebugEvent(GetTypename(), EventMessageId::SizeExceeded)
-                << "Requested size will overflow:" + std::to_string(request.SizeInBytes)
+                << "Requested size rejected due to overflow: " + std::to_string(request.SizeInBytes)
                 << " bytes.";
             return false;
         }

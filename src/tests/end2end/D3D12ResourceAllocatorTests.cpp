@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
@@ -240,9 +241,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
     ASSERT_NE(resourceAllocator, nullptr);
 
-    // Creating a resource without allocation should always fail.
+    // Creating a resource without allocation should still succeed.
     {
-        ASSERT_FAILED(
+        ASSERT_SUCCEEDED(
             resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
     }
@@ -415,10 +416,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferImported) {
     ComPtr<ResourceAllocation> externalAllocation;
     ASSERT_FAILED(resourceAllocator->CreateResource(nullptr, &externalAllocation));
     ASSERT_EQ(externalAllocation, nullptr);
-
-    // Importing a buffer without returning the allocation should always fail.
-    ASSERT_FAILED(resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
-                                                    D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 
     // Importing a buffer should always succeed.
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
@@ -1150,12 +1147,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY;
 
+    constexpr uint32_t kMinBufferSize = GPGMM_KB_TO_BYTES(64);
+
     std::set<ComPtr<ResourceAllocation>> allocs = {};
     for (uint64_t i = 0; i < kNumOfBuffers; i++) {
         ComPtr<ResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(1),
-                                                           D3D12_RESOURCE_STATE_COMMON, nullptr,
-                                                           &allocation));
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(kMinBufferSize),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         allocs.insert(allocation);
     }
@@ -1200,7 +1199,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
     allocationDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
     allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
-    constexpr uint32_t kSubAllocationSize = 4u;
+    constexpr uint32_t kSmallBufferSize = 256u;
 
     constexpr uint32_t kThreadCount = 64u;
     std::vector<std::thread> threads(kThreadCount);
@@ -1208,7 +1207,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
         threads[threadIdx] = std::thread([&]() {
             ComPtr<ResourceAllocation> allocation;
             ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-                allocationDesc, CreateBasicBufferDesc(kSubAllocationSize),
+                allocationDesc, CreateBasicBufferDesc(kSmallBufferSize),
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
             ASSERT_NE(allocation, nullptr);
             EXPECT_EQ(allocation->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
