@@ -1017,6 +1017,26 @@ TEST_F(SlabCacheAllocatorTests, SlabPrefetch) {
     }
 }
 
+TEST_F(SlabCacheAllocatorTests, CachedMemory) {
+    constexpr uint64_t kBlockSize = 32;
+    constexpr uint64_t kMaxSlabSize = 512;
+
+    SlabCacheAllocator allocator(
+        kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
+        /*prefetchSlab*/ true, kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+
+    // Re-requesting same size from cached memory should always succeed.
+    MemoryAllocationRequest request = CreateBasicRequest(kBlockSize, 1);
+    request.AlwaysCacheSize = true;
+
+    std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(request);
+    ASSERT_NE(allocation, nullptr);
+    allocator.DeallocateMemory(std::move(allocation));
+
+    request.AvailableForAllocation = 0;
+    EXPECT_EQ(allocator.TryAllocateMemory(request), nullptr);
+}
+
 // Verify creating more slabs than memory available fails.
 TEST_F(SlabCacheAllocatorTests, OutOfMemory) {
     SlabCacheAllocator allocator(kDefaultSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
