@@ -161,7 +161,7 @@ namespace gpgmm {
             Slab* freeSlab = cache->FreeList.head()->value();
             ASSERT(freeSlab != nullptr);
 
-            if (freeSlab->Allocation->GetSize() >= slabSize) {
+            if (freeSlab->Allocation && freeSlab->Allocation->GetSize() >= slabSize) {
                 return freeSlab->Allocation->GetSize();
             }
         }
