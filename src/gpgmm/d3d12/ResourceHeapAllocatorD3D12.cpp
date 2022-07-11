@@ -62,6 +62,7 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
+        resourceHeapDesc.AlwaysInBudget = !(mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT);
         resourceHeapDesc.HeapType = mHeapType;
 
         Heap* resourceHeap = nullptr;
