@@ -190,19 +190,45 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(GPGMM_MB_TO_BYTES(1));
 
-    std::vector<ComPtr<ResourceAllocation>> allocations = {};
+    // Keep allocating until we reach the budget.
+    std::vector<ComPtr<ResourceAllocation>> allocationsBelowBudget = {};
     while (!IsOverBudget(residencyManager.Get())) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        allocationsBelowBudget.push_back(std::move(allocation));
 
-        allocations.push_back(std::move(allocation));
+        // Prevent the first created resources from being evicted once over budget.
         ASSERT_SUCCEEDED(residencyManager->UpdateVideoMemorySegments());
     }
 
-    // All allocations should be created resident.
-    for (auto& allocation : allocations) {
+    // Created allocations below the budget should be resident.
+    for (auto& allocation : allocationsBelowBudget) {
         EXPECT_TRUE(allocation->IsResident());
+    }
+
+    // Keep allocating |kMemoryOverBudget| over the budget.
+    constexpr uint64_t kMemoryOverBudget = GPGMM_MB_TO_BYTES(10);
+
+    // Allocating the same amount over budget, where older allocations will be evicted.
+    std::vector<ComPtr<ResourceAllocation>> allocationsAboveBudget = {};
+    const uint64_t currentMemoryUsage = resourceAllocator->GetInfo().UsedMemoryUsage;
+
+    while (currentMemoryUsage + kMemoryOverBudget > resourceAllocator->GetInfo().UsedMemoryUsage) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        allocationsAboveBudget.push_back(std::move(allocation));
+    }
+
+    // Created allocations above the budget should be resident.
+    for (auto& allocation : allocationsAboveBudget) {
+        EXPECT_TRUE(allocation->IsResident());
+    }
+
+    // Created allocations below the budget should NOT be resident.
+    for (auto& allocation : allocationsBelowBudget) {
+        EXPECT_FALSE(allocation->IsResident());
     }
 }
 
@@ -263,10 +289,11 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
         resourceHeaps.push_back(allocation->GetMemory());
         allocations.push_back(std::move(allocation));
 
+        // Prevent the first created resources from being evicted once over budget.
         ASSERT_SUCCEEDED(residencyManager->UpdateVideoMemorySegments());
     }
 
-    // All allocations should be created resident.
+    // Created allocations above the budget should be resident.
     for (auto& allocation : allocations) {
         EXPECT_TRUE(allocation->IsResident());
     }
