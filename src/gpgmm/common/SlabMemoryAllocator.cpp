@@ -250,23 +250,27 @@ namespace gpgmm {
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
-                        auto prefetchedMemory = mNextSlabAllocationEvent->AcquireAllocation();
+                        std::unique_ptr<MemoryAllocation> prefetchedSlabAllocation =
+                            mNextSlabAllocationEvent->AcquireAllocation();
                         mNextSlabAllocationEvent.reset();
 
                         // Assign pre-fetched memory to the slab.
-                        if (prefetchedMemory->GetSize() == slabSize) {
-                            pFreeSlab->Allocation = std::move(prefetchedMemory);
+                        if (prefetchedSlabAllocation != nullptr &&
+                            prefetchedSlabAllocation->GetSize() == slabSize) {
+                            pFreeSlab->Allocation = std::move(prefetchedSlabAllocation);
                             mInfo.PrefetchedMemoryMissesEliminated++;
                             return pFreeSlab->Allocation->GetMemory();
                         }
 
-                        DebugEvent(GetTypename(), EventMessageId::PrefetchFailed)
-                            << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
-                            << prefetchedMemory->GetSize() << " bytes.";
+                        if (prefetchedSlabAllocation != nullptr) {
+                            DebugEvent(GetTypename(), EventMessageId::PrefetchFailed)
+                                << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
+                                << prefetchedSlabAllocation->GetSize() << " bytes.";
+                        }
 
                         mInfo.PrefetchedMemoryMisses++;
 
-                        mMemoryAllocator->DeallocateMemory(std::move(prefetchedMemory));
+                        mMemoryAllocator->DeallocateMemory(std::move(prefetchedSlabAllocation));
                     }
 
                     // Create memory of specified slab size.
