@@ -26,12 +26,6 @@
 
 using namespace gpgmm;
 
-static constexpr uint64_t kDefaultSlabSize = 128u;
-static constexpr uint64_t kDefaultSlabAlignment = 1u;
-static constexpr double kDefaultSlabFragmentationLimit = 0.125;
-static constexpr double kNoSlabGrowthFactor = 1.0;
-static constexpr bool kNoSlabPrefetchAllowed = false;
-
 class SlabMemoryAllocatorTests : public testing::Test {
   public:
     MemoryAllocationRequest CreateBasicRequest(uint64_t size,
@@ -46,6 +40,13 @@ class SlabMemoryAllocatorTests : public testing::Test {
         request.AvailableForAllocation = kInvalidSize;
         return request;
     }
+
+    static constexpr uint64_t kDefaultSlabSize = 128u;
+    static constexpr uint64_t kDefaultSlabAlignment = 1u;
+    static constexpr double kDefaultSlabFragmentationLimit = 0.125;
+    static constexpr double kNoSlabGrowthFactor = 1.0;
+    static constexpr bool kNoSlabPrefetchAllowed = false;
+    static constexpr bool kSlabPrefetchAllowed = true;
 };
 
 // Verify allocation in a single slab.
@@ -1000,33 +1001,32 @@ TEST_F(SlabCacheAllocatorTests, SlabPrefetch) {
     constexpr uint64_t kBlockSize = 32;
     constexpr uint64_t kMaxSlabSize = 512;
 
-    SlabCacheAllocator allocator(
-        kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-        /*prefetchSlab*/ true, kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+    SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                 kDefaultSlabFragmentationLimit, kSlabPrefetchAllowed,
+                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
 
     constexpr uint64_t kNumOfSlabs = 10u;
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
     for (size_t i = 0; i < kNumOfSlabs * (kDefaultSlabSize / kBlockSize); i++) {
         allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1)));
-        allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 2, 1)));
-        allocations.push_back(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 3, 1)));
     }
+
+    // All but the first slab should be successfully prefetched.
+    EXPECT_EQ(allocator.GetInfo().PrefetchedMemoryMissesEliminated, kNumOfSlabs - 1);
 
     for (auto& allocation : allocations) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 }
 
-TEST_F(SlabCacheAllocatorTests, CachedMemory) {
-    constexpr uint64_t kBlockSize = 32;
+TEST_F(SlabCacheAllocatorTests, AlwaysCache) {
     constexpr uint64_t kMaxSlabSize = 512;
+    SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                 kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
+                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
 
-    SlabCacheAllocator allocator(
-        kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-        /*prefetchSlab*/ true, kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
-
-    // Re-requesting same size from cached memory should always succeed.
-    MemoryAllocationRequest request = CreateBasicRequest(kBlockSize, 1);
+    // Re-requesting same size from cached allocation should always succeed.
+    MemoryAllocationRequest request = CreateBasicRequest(32, 1);
     request.AlwaysCacheSize = true;
 
     std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(request);
