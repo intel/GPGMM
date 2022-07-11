@@ -676,30 +676,39 @@ namespace gpgmm::d3d12 {
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* pClearValue,
                                               ResourceAllocation** ppResourceAllocationOut) {
-        if (!ppResourceAllocationOut) {
-            return E_POINTER;
-        }
-
         GPGMM_TRACE_EVENT_OBJECT_CALL(
             "ResourceAllocator.CreateResource",
             (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
                                   pClearValue}));
 
         std::lock_guard<std::mutex> lock(mMutex);
+        ComPtr<ResourceAllocation> allocation;
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
-                                              initialResourceState, pClearValue,
-                                              ppResourceAllocationOut));
+                                              initialResourceState, pClearValue, &allocation));
 
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
 #if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
-        mDebugAllocator->AddLiveAllocation(*ppResourceAllocationOut);
+        mDebugAllocator->AddLiveAllocation(allocation.Get());
 #endif
 
         // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
             GetInfoInternal();
+        }
+
+#if defined(GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS)
+        if (allocation->GetSize() > allocation->GetRequestSize()) {
+            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+                << "Resource allocation is larger then the requested size (" +
+                       std::to_string(allocation->GetSize()) + " vs " +
+                       std::to_string(allocation->GetRequestSize()) + " bytes).";
+        }
+#endif
+
+        if (ppResourceAllocationOut != nullptr) {
+            *ppResourceAllocationOut = allocation.Detach();
         }
 
         return S_OK;

@@ -113,6 +113,7 @@ option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS "Enables checking of al
 option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" OFF)
 option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with common resource sizes" OFF)
 option_if_not_defined(GPGMM_ENABLE_MEMORY_LEAK_CHECKS "Enables memory leak detection." OFF)
+option_if_not_defined(gpgmm_enable_resource_memory_align_checks "Enables checking of resource alignment." OFF)
 
 # The Vulkan loader is an optional dependency.
 if (GPGMM_ENABLE_VK)
@@ -190,6 +191,14 @@ else()
   )
 endif()
 
+if(GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS)
+  target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS")
+else()
+  target_compile_definitions(gpgmm_common_config INTERFACE
+    $<$<CONFIG:Debug>:GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS>
+  )
+endif()
+
 if(WIN32)
   target_compile_definitions(gpgmm_common_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
 endif()
@@ -213,7 +222,7 @@ endif()
 # ###############################################################################
 # Install GPGMM
 # ###############################################################################
-install(TARGETS gpgmm 
+install(TARGETS gpgmm
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
