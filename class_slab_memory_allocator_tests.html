@@ -65,6 +65,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="class_slab_memory_allocator_tests-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SlabMemoryAllocatorTests Class Reference</div></div>
 </div><!--header-->
@@ -83,6 +84,21 @@ Inheritance diagram for SlabMemoryAllocatorTests:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6542c0987623f433ef3f7a2061dce60c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_allocation_request.html">MemoryAllocationRequest</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a6542c0987623f433ef3f7a2061dce60c">CreateBasicRequest</a> (uint64_t size, uint64_t alignment, bool neverAllocate=false)</td></tr>
 <tr class="separator:a6542c0987623f433ef3f7a2061dce60c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a9069ec8812918147061db34327e62671"><td class="memItemLeft" align="right" valign="top">static constexpr uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a9069ec8812918147061db34327e62671">kDefaultSlabSize</a> = 128u</td></tr>
+<tr class="separator:a9069ec8812918147061db34327e62671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5330f5901a385316e8bb7f5ac580dbc4"><td class="memItemLeft" align="right" valign="top">static constexpr uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a5330f5901a385316e8bb7f5ac580dbc4">kDefaultSlabAlignment</a> = 1u</td></tr>
+<tr class="separator:a5330f5901a385316e8bb7f5ac580dbc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab572a70b5c1b8974245977b46cc88a12"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#ab572a70b5c1b8974245977b46cc88a12">kDefaultSlabFragmentationLimit</a> = 0.125</td></tr>
+<tr class="separator:ab572a70b5c1b8974245977b46cc88a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13f9f42e2038bf85d17566910affab7c"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a13f9f42e2038bf85d17566910affab7c">kNoSlabGrowthFactor</a> = 1.0</td></tr>
+<tr class="separator:a13f9f42e2038bf85d17566910affab7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a259efa8f05d587d83222b68c700a53e1"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a259efa8f05d587d83222b68c700a53e1">kNoSlabPrefetchAllowed</a> = false</td></tr>
+<tr class="separator:a259efa8f05d587d83222b68c700a53e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01b6a6c3b5180a4e2c6a132bb5af0bcb"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slab_memory_allocator_tests.html#a01b6a6c3b5180a4e2c6a132bb5af0bcb">kSlabPrefetchAllowed</a> = true</td></tr>
+<tr class="separator:a01b6a6c3b5180a4e2c6a132bb5af0bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6542c0987623f433ef3f7a2061dce60c" name="a6542c0987623f433ef3f7a2061dce60c"></a>
@@ -121,6 +137,139 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5330f5901a385316e8bb7f5ac580dbc4" name="a5330f5901a385316e8bb7f5ac580dbc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5330f5901a385316e8bb7f5ac580dbc4">&#9670;&nbsp;</a></span>kDefaultSlabAlignment</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr uint64_t SlabMemoryAllocatorTests::kDefaultSlabAlignment = 1u</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab572a70b5c1b8974245977b46cc88a12" name="ab572a70b5c1b8974245977b46cc88a12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab572a70b5c1b8974245977b46cc88a12">&#9670;&nbsp;</a></span>kDefaultSlabFragmentationLimit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double SlabMemoryAllocatorTests::kDefaultSlabFragmentationLimit = 0.125</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9069ec8812918147061db34327e62671" name="a9069ec8812918147061db34327e62671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9069ec8812918147061db34327e62671">&#9670;&nbsp;</a></span>kDefaultSlabSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr uint64_t SlabMemoryAllocatorTests::kDefaultSlabSize = 128u</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a13f9f42e2038bf85d17566910affab7c" name="a13f9f42e2038bf85d17566910affab7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13f9f42e2038bf85d17566910affab7c">&#9670;&nbsp;</a></span>kNoSlabGrowthFactor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double SlabMemoryAllocatorTests::kNoSlabGrowthFactor = 1.0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a259efa8f05d587d83222b68c700a53e1" name="a259efa8f05d587d83222b68c700a53e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a259efa8f05d587d83222b68c700a53e1">&#9670;&nbsp;</a></span>kNoSlabPrefetchAllowed</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool SlabMemoryAllocatorTests::kNoSlabPrefetchAllowed = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a01b6a6c3b5180a4e2c6a132bb5af0bcb" name="a01b6a6c3b5180a4e2c6a132bb5af0bcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01b6a6c3b5180a4e2c6a132bb5af0bcb">&#9670;&nbsp;</a></span>kSlabPrefetchAllowed</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool SlabMemoryAllocatorTests::kSlabPrefetchAllowed = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
