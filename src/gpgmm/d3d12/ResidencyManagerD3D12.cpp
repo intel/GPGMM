@@ -405,13 +405,13 @@ namespace gpgmm::d3d12 {
                 mVideoMemoryBudget);
         }
 
+        // Ignore when no budget was specified.
         if (pVideoMemoryInfo->Budget > 0 &&
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
             WarnEvent("ResidencyManager", EventMessageId::BudgetExceeded)
-                << "GPU "
-                << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "dedicated"
-                                                                                : "shared")
-                << " memory usage exceeds budget: "
+                << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
+                                                                                : "Shared")
+                << " GPU memory exceeds budget: "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget) << " MBs.";
         }
@@ -432,7 +432,7 @@ namespace gpgmm::d3d12 {
                                                                                  : "Shared",
                      " GPU memory reserved (MB)")
                 .c_str(),
-            pVideoMemoryInfo->CurrentReservation / 1e6);
+            GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentReservation));
 
         return S_OK;
     }
