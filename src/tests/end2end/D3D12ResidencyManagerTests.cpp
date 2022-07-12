@@ -179,7 +179,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
 // Keeps allocating until it goes over the limited |kDefaultBudget| size budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
-    residencyDesc.UpdateBudgetByPolling = true;
 
     ComPtr<ResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));

@@ -64,7 +64,7 @@ namespace gpgmm::d3d12 {
                         hr = mResidencyManager->UpdateVideoMemorySegments();
                         if (SUCCEEDED(hr)) {
                             gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
-                                << "Updated video budget from OS notification.";
+                                << "Updated GPU budget from OS notification.";
                         }
                         break;
                     }
