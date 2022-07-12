@@ -25,19 +25,27 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
-                             ResidencyManager* const residencyManager,
+                             ResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
-                             Heap** heapOut) {
+                             Heap** ppHeapOut) {
+        // Always use the memory segment specified.
         DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup = {};
-        if (residencyManager != nullptr) {
-            memorySegmentGroup =
-                residencyManager->GetPreferredMemorySegmentGroup(descriptor.HeapType);
+        if (descriptor.MemorySegment == RESIDENCY_SEGMENT_LOCAL) {
+            memorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        } else if (descriptor.MemorySegment == RESIDENCY_SEGMENT_NON_LOCAL) {
+            memorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
+        }
 
-            // Ensure enough free memory exists before allocating to avoid an out-of-memory error
-            // when over budget.
-            if (descriptor.AlwaysInBudget) {
-                ReturnIfFailed(residencyManager->Evict(descriptor.SizeInBytes, memorySegmentGroup));
-            }
+        // Else, infer the memory segment using the heap type.
+        if (pResidencyManager != nullptr && descriptor.MemorySegment == RESIDENCY_SEGMENT_UNKNOWN) {
+            memorySegmentGroup =
+                pResidencyManager->GetPreferredMemorySegmentGroup(descriptor.HeapType);
+        }
+
+        // Ensure enough free memory exists before allocating to avoid an out-of-memory error
+        // when over budget.
+        if (pResidencyManager != nullptr && descriptor.AlwaysInBudget) {
+            ReturnIfFailed(pResidencyManager->Evict(descriptor.SizeInBytes, memorySegmentGroup));
         }
 
         ComPtr<ID3D12Pageable> pageable;
@@ -50,15 +58,15 @@ namespace gpgmm::d3d12 {
                                             descriptor.SizeInBytes, descriptor.Alignment,
                                             descriptor.IsExternal));
 
-        if (residencyManager != nullptr) {
-            ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
+        if (pResidencyManager != nullptr) {
+            ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
         }
 
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
-        if (heapOut != nullptr) {
-            *heapOut = heap.release();
+        if (ppHeapOut != nullptr) {
+            *ppHeapOut = heap.release();
         }
 
         return S_OK;
