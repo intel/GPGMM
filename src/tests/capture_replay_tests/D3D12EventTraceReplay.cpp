@@ -324,6 +324,16 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
 
+                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
+                            residencyDesc.IsUMA != snapshot["IsUMA"].asBool() &&
+                            iterationIndex == 0) {
+                            gpgmm::WarningLog()
+                                << "Capture device does not match playback device (IsUMA: " +
+                                       std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
+                                       std::to_string(residencyDesc.IsUMA) + ").";
+                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
+                        }
+
                         if (envParams.CaptureEventMask != 0) {
                             residencyDesc.RecordOptions.Flags |=
                                 static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
@@ -422,16 +432,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         allocatorDesc.MinLogLevel = GetMessageSeverity(envParams.LogLevel);
-
-                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.IsUMA != snapshot["IsUMA"].asBool() &&
-                            iterationIndex == 0) {
-                            gpgmm::WarningLog()
-                                << "Capture device does not match playback device (IsUMA: " +
-                                       std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
-                                       std::to_string(allocatorDesc.IsUMA) + ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
-                        }
 
                         if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.ResourceHeapTier !=

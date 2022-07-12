@@ -39,7 +39,6 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
-        dict.AddItem("IsUMA", desc.IsUMA);
         dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
         dict.AddItem("PreferredResourceHeapSize", desc.PreferredResourceHeapSize);
         dict.AddItem("MaxResourceHeapSize", desc.MaxResourceHeapSize);

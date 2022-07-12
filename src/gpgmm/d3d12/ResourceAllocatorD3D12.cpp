@@ -389,7 +389,6 @@ namespace gpgmm::d3d12 {
         : mDevice(std::move(descriptor.Device)),
           mResidencyManager(std::move(residencyManager)),
           mCaps(std::move(caps)),
-          mIsUMA(descriptor.IsUMA),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
