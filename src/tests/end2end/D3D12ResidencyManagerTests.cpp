@@ -92,6 +92,39 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 };
 
+TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
+    ComPtr<ResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
+        CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+
+    constexpr uint64_t kHeapSize = GPGMM_MB_TO_BYTES(10);
+
+    auto createResourceHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+        D3D12_HEAP_DESC heapDesc = {};
+        heapDesc.Properties = heapProperties;
+        heapDesc.SizeInBytes = kHeapSize;
+
+        ComPtr<ID3D12Heap> heap;
+        if (FAILED(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)))) {
+            return E_FAIL;
+        }
+        *ppPageableOut = heap.Detach();
+        return S_OK;
+    };
+
+    HEAP_DESC resourceHeapDesc = {};
+    resourceHeapDesc.SizeInBytes = kHeapSize;
+    resourceHeapDesc.DebugName = "Resource heap";
+    resourceHeapDesc.AlwaysInBudget = true;
+    resourceHeapDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+    ASSERT_SUCCEEDED(
+        Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createResourceHeapFn, nullptr));
+}
+
 TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),

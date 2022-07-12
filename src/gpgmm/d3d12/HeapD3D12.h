@@ -32,6 +32,18 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
+    /** \enum RESIDENCY_SEGMENT
+    Specifies which type of segment the heap belongs to.
+
+    RESIDENCY_SEGMENT is equivelent to DXGI_MEMORY_SEGMENT_GROUP but also has
+    RESIDENCY_SEGMENT_UNKNOWN.
+    */
+    enum RESIDENCY_SEGMENT {
+        RESIDENCY_SEGMENT_UNKNOWN,
+        RESIDENCY_SEGMENT_LOCAL,
+        RESIDENCY_SEGMENT_NON_LOCAL,
+    };
+
     /** \struct HEAP_INFO
     Additional information about the heap.
     */
@@ -85,6 +97,12 @@ namespace gpgmm::d3d12 {
         */
         bool IsExternal;
 
+        /** \brief Specifies the memory segment to use for residency.
+
+        Allows any heap to specify a segment which does not have a attributed heap type.
+        */
+        RESIDENCY_SEGMENT MemorySegment;
+
         /** \brief Debug name associated with the heap.
          */
         std::string DebugName;
@@ -121,15 +139,15 @@ namespace gpgmm::d3d12 {
         implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
 
         @param descriptor A reference to HEAP_DESC structure that describes the heap.
-        @param residencyManager A pointer to the ResidencyManager used to manage this heap.
+        @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
         @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
-        @param[out] heapOut Pointer to a memory block that recieves a pointer to the
+        @param[out] ppHeapOut Pointer to a memory block that recieves a pointer to the
         heap.
         */
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                                  ResidencyManager* const residencyManager,
+                                  ResidencyManager* const pResidencyManager,
                                   CreateHeapFn&& createHeapFn,
-                                  Heap** heapOut);
+                                  Heap** ppHeapOut);
 
         // TODO: Make private.
         Heap(ComPtr<ID3D12Pageable> pageable,
