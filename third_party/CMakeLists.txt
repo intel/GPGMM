@@ -54,7 +54,7 @@ if (GPGMM_ENABLE_VK)
   FetchContent_Declare(
     vulkan-headers
     GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
-    GIT_TAG        76f00ef6cbb1886eb1162d1fa39bee8b51e22ee8
+    GIT_TAG 9f73b931f402f23554a60015924e7e35c7047487
   )
   FetchContent_MakeAvailable(vulkan-headers)
 
@@ -62,7 +62,7 @@ if (GPGMM_ENABLE_VK)
     FetchContent_Declare(
       vulkan-loader
       GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
-      GIT_TAG        f503824ff8cbecfe39fb96ac89cbe959355dc311
+      GIT_TAG 9a45e5a4ab79b81e27e1417ca65d53ecfe57ba37
     )
     FetchContent_MakeAvailable(vulkan-loader)
   endif() # GPGMM_ENABLE_VK_LOADER
