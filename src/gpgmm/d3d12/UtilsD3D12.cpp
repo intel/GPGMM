@@ -36,22 +36,6 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(ID3D12Device* device,
-                                                             bool isUMA,
-                                                             D3D12_HEAP_TYPE heapType) {
-        if (isUMA) {
-            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-        }
-
-        D3D12_HEAP_PROPERTIES heapProperties = device->GetCustomHeapProperties(0, heapType);
-
-        if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
-            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-        }
-
-        return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
-    }
-
     bool IsDepthFormat(DXGI_FORMAT format) {
         // Depth formats in order of appearance.
         // https://docs.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format
