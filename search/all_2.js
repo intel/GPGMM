@@ -48,7 +48,7 @@ var searchData=
   ['createcaps_45',['CreateCaps',['../classgpgmm_1_1vk_1_1_caps.html#a1948995bba0e258a97dbd2c03fefbc95',1,'gpgmm::vk::Caps::CreateCaps()'],['../classgpgmm_1_1d3d12_1_1_caps.html#a1f77591d7c207c34e6ebaf5eab47d2b4',1,'gpgmm::d3d12::Caps::CreateCaps()']]],
   ['createdebugplatform_46',['CreateDebugPlatform',['../namespacegpgmm.html#adf7b61be10aea8494c9bd770204533f2',1,'gpgmm']]],
   ['createfence_47',['CreateFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a7498b68435b1394e1f13e6ef9270d00f',1,'gpgmm::d3d12::Fence']]],
-  ['createheap_48',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ab54baa0a0678da3113c55641ce9a1ded',1,'gpgmm::d3d12::Heap']]],
+  ['createheap_48',['CreateHeap',['../classgpgmm_1_1d3d12_1_1_heap.html#ac48ca7817ca425a6611e935c73353e47',1,'gpgmm::d3d12::Heap']]],
   ['createheapfn_49',['CreateHeapFn',['../namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852',1,'gpgmm::d3d12']]],
   ['createimage_50',['CreateImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#accd6e6be635aa1a7b447a4316bd046bd',1,'gpgmm::vk::VulkanFunctions']]],
   ['createplatformtime_51',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
