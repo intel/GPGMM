@@ -581,7 +581,6 @@ namespace gpgmm::d3d12 {
 
         std::unique_ptr<Caps> mCaps;
 
-        const bool mIsUMA;
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
