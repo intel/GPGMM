@@ -33,6 +33,7 @@ namespace gpgmm::d3d12 {
     class Fence;
     class Heap;
     class ResidencySet;
+    class ResourceAllocator;
 
     /** \struct RESIDENCY_DESC
      Specify parameters when creating a residency manager.
@@ -242,9 +243,10 @@ namespace gpgmm::d3d12 {
         */
         RESIDENCY_INFO GetInfo() const;
 
-        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
-
       private:
+        friend Heap;
+        friend ResourceAllocator;
+
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 
         HRESULT EvictInternal(uint64_t evictSizeInBytes,
@@ -266,6 +268,8 @@ namespace gpgmm::d3d12 {
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
+
+        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
 
         LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
