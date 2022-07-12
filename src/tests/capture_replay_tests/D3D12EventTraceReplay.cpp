@@ -128,7 +128,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         Json::Value root;
         Json::Reader reader;
-        ASSERT_TRUE(reader.parse(traceFileStream, root, false));
+        GPGMM_SKIP_TEST_IF(!reader.parse(traceFileStream, root, false));
 
         ComPtr<ResourceAllocation> allocationWithoutID;
         std::unique_ptr<Heap> heapWithoutID;
