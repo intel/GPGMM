@@ -59,6 +59,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
                              &mBuddyBlockAllocator, allocationSize, request.Alignment,
+                             request.NeverAllocate,
                              [&](const auto& block) -> MemoryBase* {
                                  const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
                                  std::unique_ptr<MemoryAllocation> memoryAllocation =
