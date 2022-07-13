@@ -35,6 +35,10 @@ CTestTestfile.cmake
 # Files and directories added by Doxygen build
 html
 
+# Ignore dumped trace files, not for capture.
+*.json
+!src/tests/capture_replay_tests/traces/*.json
+
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 
 ### Emacs ###
