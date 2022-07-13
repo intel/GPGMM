@@ -1,4 +1,4 @@
-From 25b98595af5e7bcc4cc46d964be139601d3a4a70 Mon Sep 17 00:00:00 2001
+From 94b1c6f30ff9d23f3c8734cffc8430765d5b6c39 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -495,7 +495,7 @@ index 9747b41c0..50db56dbd 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 90ddc3041..8d94ead35 100644
+index 90ddc3041..62b8f28e1 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -130,8 +130,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
@@ -509,7 +509,6 @@ index 90ddc3041..8d94ead35 100644
 +    gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
 +    allocatorDesc.Adapter = adapter->GetHardwareAdapter();
 +    allocatorDesc.Device = mD3d12Device;
-+    allocatorDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +    allocatorDesc.ResourceHeapTier =
 +        static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +    allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
@@ -517,6 +516,7 @@ index 90ddc3041..8d94ead35 100644
 +    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
 +    residencyDesc.Adapter = adapter->GetHardwareAdapter();
 +    residencyDesc.Device = mD3d12Device;
++    residencyDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +        residencyDesc.UpdateBudgetByPolling = true;

@@ -278,11 +278,20 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
                                                ResourceAllocator** ppResourceAllocatorOut,
                                                ResidencyManager** ppResidencyManagerOut) {
+        if (allocatorDescriptor.Device == nullptr || allocatorDescriptor.Adapter == nullptr) {
+            return E_INVALIDARG;
+        }
+
         ComPtr<ResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
-            residencyDesc.IsUMA = allocatorDescriptor.IsUMA;
+
+            D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
+            ReturnIfFailed(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE,
+                                                                     &arch, sizeof(arch)));
+            residencyDesc.IsUMA = arch.UMA;
+
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
             ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
