@@ -192,9 +192,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:ada0231a93cc87396262c241c5e6b8fe0"><td class="memTemplParams" colspan="2">template&lt;typename GetOrCreateMemoryFn &gt; </td></tr>
-<tr class="memitem:ada0231a93cc87396262c241c5e6b8fe0"><td class="memTemplItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ada0231a93cc87396262c241c5e6b8fe0">TrySubAllocateMemory</a> (<a class="el" href="classgpgmm_1_1_block_allocator.html">BlockAllocator</a> *allocator, uint64_t requestSize, uint64_t alignment, GetOrCreateMemoryFn &amp;&amp;GetOrCreateMemory)</td></tr>
-<tr class="separator:ada0231a93cc87396262c241c5e6b8fe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf0d2f91af75adf7c0f71d7685349e87"><td class="memTemplParams" colspan="2">template&lt;typename GetOrCreateMemoryFn &gt; </td></tr>
+<tr class="memitem:abf0d2f91af75adf7c0f71d7685349e87"><td class="memTemplItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#abf0d2f91af75adf7c0f71d7685349e87">TrySubAllocateMemory</a> (<a class="el" href="classgpgmm_1_1_block_allocator.html">BlockAllocator</a> *allocator, uint64_t requestSize, uint64_t alignment, bool neverAllocate, GetOrCreateMemoryFn &amp;&amp;GetOrCreateMemory)</td></tr>
+<tr class="separator:abf0d2f91af75adf7c0f71d7685349e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -560,8 +560,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ada0231a93cc87396262c241c5e6b8fe0" name="ada0231a93cc87396262c241c5e6b8fe0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada0231a93cc87396262c241c5e6b8fe0">&#9670;&nbsp;</a></span>TrySubAllocateMemory()</h2>
+<a id="abf0d2f91af75adf7c0f71d7685349e87" name="abf0d2f91af75adf7c0f71d7685349e87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf0d2f91af75adf7c0f71d7685349e87">&#9670;&nbsp;</a></span>TrySubAllocateMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -588,6 +588,12 @@ template&lt;typename GetOrCreateMemoryFn &gt; </div>
           <td></td>
           <td class="paramtype">uint64_t&#160;</td>
           <td class="paramname"><em>alignment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>neverAllocate</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
