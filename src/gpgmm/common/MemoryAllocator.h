@@ -281,16 +281,20 @@ namespace gpgmm {
             BlockAllocator* allocator,
             uint64_t requestSize,
             uint64_t alignment,
+            bool neverAllocate,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
             MemoryBlock* block = nullptr;
             GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(requestSize, alignment), block);
 
             MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {
-                DebugLog() << std::string(allocator->GetTypename()) +
-                                  " failed to sub-allocate memory range = ["
-                           << std::to_string(block->Offset) << ", "
-                           << std::to_string(block->Offset + block->Size) << ").";
+                // NeverAllocate always fails, so suppress it.
+                if (!neverAllocate) {
+                    DebugLog() << std::string(allocator->GetTypename()) +
+                                      " failed to sub-allocate memory range = ["
+                               << std::to_string(block->Offset) << ", "
+                               << std::to_string(block->Offset + block->Size) << ").";
+                }
                 allocator->DeallocateBlock(block);
                 return nullptr;
             }

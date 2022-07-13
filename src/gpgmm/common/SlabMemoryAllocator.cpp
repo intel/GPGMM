@@ -238,7 +238,7 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> subAllocation;
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
-                &pFreeSlab->Allocator, mBlockSize, request.Alignment,
+                &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
                 [&](const auto& block) -> MemoryBase* {
                     // Re-use memory from the free slab.
                     if (pFreeSlab->Allocation != nullptr) {
