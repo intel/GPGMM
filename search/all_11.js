@@ -4,7 +4,7 @@ var searchData=
   ['ref_1',['Ref',['../classgpgmm_1_1_ref_counted.html#a741556aed00abb35fb7aa4120a6fe4b9',1,'gpgmm::RefCounted']]],
   ['refcount_2ecpp_2',['RefCount.cpp',['../_ref_count_8cpp.html',1,'']]],
   ['refcount_2eh_3',['RefCount.h',['../_ref_count_8h.html',1,'']]],
-  ['refcounted_4',['RefCounted',['../classgpgmm_1_1_ref_counted.html',1,'gpgmm::RefCounted'],['../classgpgmm_1_1_ref_counted.html#a74c5590632f44dce1a6409f1ddeb5eca',1,'gpgmm::RefCounted::RefCounted()=delete'],['../classgpgmm_1_1_ref_counted.html#ae98ccadde40b5b3d25bf84c9034ac1a3',1,'gpgmm::RefCounted::RefCounted(int_fast32_t initialCount)']]],
+  ['refcounted_4',['RefCounted',['../classgpgmm_1_1_ref_counted.html',1,'gpgmm::RefCounted'],['../classgpgmm_1_1_ref_counted.html#a74c5590632f44dce1a6409f1ddeb5eca',1,'gpgmm::RefCounted::RefCounted()=delete'],['../classgpgmm_1_1_ref_counted.html#aceb6670a538db0b2ac2fbc55a28c68c0',1,'gpgmm::RefCounted::RefCounted(uint_fast32_t initialCount)']]],
   ['refcounttests_2ecpp_5',['RefCountTests.cpp',['../_ref_count_tests_8cpp.html',1,'']]],
   ['reference_6',['reference',['../classgpgmm_1_1_linked_list_iterator.html#a2f682ca69e890ec3a32769d91888f2fb',1,'gpgmm::LinkedListIterator']]],
   ['release_7',['Release',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a5e2c505fb4cf4e354835f847a4946ee5',1,'gpgmm::d3d12::IUnknownImpl']]],
