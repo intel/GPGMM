@@ -23,12 +23,13 @@ var searchData=
   ['isinlist_20',['IsInList',['../classgpgmm_1_1_link_node.html#a52b5ec22c4fda10c969dd0d47d295aa9',1,'gpgmm::LinkNode']]],
   ['isinresidencylrucache_21',['IsInResidencyLRUCache',['../classgpgmm_1_1d3d12_1_1_heap.html#a66f53435585765b9e80613996684156a',1,'gpgmm::d3d12::Heap']]],
   ['ismultiplanarformat_22',['IsMultiPlanarFormat',['../namespacegpgmm_1_1d3d12.html#a79b7731bfb3a6a5b41e17347b61e2b7e',1,'gpgmm::d3d12']]],
-  ['ispoweroftwo_23',['IsPowerOfTwo',['../namespacegpgmm.html#a22f4ed65b0d5c5e29e1da78861690e97',1,'gpgmm']]],
-  ['isresidencylocked_24',['IsResidencyLocked',['../classgpgmm_1_1d3d12_1_1_heap.html#aed0eb3bbb56c2a860fdacef508406372',1,'gpgmm::d3d12::Heap']]],
-  ['isresident_25',['IsResident',['../classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9',1,'gpgmm::d3d12::Heap::IsResident()'],['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d',1,'gpgmm::d3d12::ResourceAllocation::IsResident()']]],
-  ['isresourceaccessalwayscoherent_26',['IsResourceAccessAlwaysCoherent',['../classgpgmm_1_1d3d12_1_1_caps.html#a73684718c83dd3f8b8e501260a4d7a37',1,'gpgmm::d3d12::Caps']]],
-  ['issignaled_27',['IsSignaled',['../classgpgmm_1_1_memory_allocation_event.html#a4395f539e1239d4c908fa8146b1244a0',1,'gpgmm::MemoryAllocationEvent::IsSignaled()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#a51c6e31effa9e09e8a9d071965f46408',1,'gpgmm::d3d12::BudgetUpdateEvent::IsSignaled()'],['../classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b',1,'gpgmm::Event::IsSignaled()'],['../classgpgmm_1_1_async_event_impl.html#a9ba548598ab1aeb5f6de4acc6db18703',1,'gpgmm::AsyncEventImpl::IsSignaled()']]],
-  ['issizecacheenabled_28',['IsSizeCacheEnabled',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#ac666cdaeb422a3a85542eb0507a44101',1,'gpgmm::d3d12::D3D12TestBase']]],
-  ['istilezerosized_29',['IsTileZeroSized',['../namespacegpgmm_1_1d3d12.html#a51824ea1b5cd8fff68c5d24a45b56605',1,'gpgmm::d3d12']]],
-  ['iunknownimpl_30',['IUnknownImpl',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae',1,'gpgmm::d3d12::IUnknownImpl']]]
+  ['isoverbudget_23',['IsOverBudget',['../class_d3_d12_residency_manager_tests.html#aa6938e965cfa5947b53f47c9032017e8',1,'D3D12ResidencyManagerTests']]],
+  ['ispoweroftwo_24',['IsPowerOfTwo',['../namespacegpgmm.html#a22f4ed65b0d5c5e29e1da78861690e97',1,'gpgmm']]],
+  ['isresidencylocked_25',['IsResidencyLocked',['../classgpgmm_1_1d3d12_1_1_heap.html#aed0eb3bbb56c2a860fdacef508406372',1,'gpgmm::d3d12::Heap']]],
+  ['isresident_26',['IsResident',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d',1,'gpgmm::d3d12::ResourceAllocation::IsResident()'],['../classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9',1,'gpgmm::d3d12::Heap::IsResident()']]],
+  ['isresourceaccessalwayscoherent_27',['IsResourceAccessAlwaysCoherent',['../classgpgmm_1_1d3d12_1_1_caps.html#a73684718c83dd3f8b8e501260a4d7a37',1,'gpgmm::d3d12::Caps']]],
+  ['issignaled_28',['IsSignaled',['../classgpgmm_1_1_memory_allocation_event.html#a4395f539e1239d4c908fa8146b1244a0',1,'gpgmm::MemoryAllocationEvent::IsSignaled()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#a51c6e31effa9e09e8a9d071965f46408',1,'gpgmm::d3d12::BudgetUpdateEvent::IsSignaled()'],['../classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b',1,'gpgmm::Event::IsSignaled()'],['../classgpgmm_1_1_async_event_impl.html#a9ba548598ab1aeb5f6de4acc6db18703',1,'gpgmm::AsyncEventImpl::IsSignaled()']]],
+  ['issizecacheenabled_29',['IsSizeCacheEnabled',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#ac666cdaeb422a3a85542eb0507a44101',1,'gpgmm::d3d12::D3D12TestBase']]],
+  ['istilezerosized_30',['IsTileZeroSized',['../namespacegpgmm_1_1d3d12.html#a51824ea1b5cd8fff68c5d24a45b56605',1,'gpgmm::d3d12']]],
+  ['iunknownimpl_31',['IUnknownImpl',['../classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae',1,'gpgmm::d3d12::IUnknownImpl']]]
 ];
