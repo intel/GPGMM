@@ -99,14 +99,14 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     constexpr uint64_t kHeapSize = GPGMM_MB_TO_BYTES(10);
 
-    auto createResourceHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+    D3D12_HEAP_PROPERTIES heapProperties = {};
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-        D3D12_HEAP_DESC heapDesc = {};
-        heapDesc.Properties = heapProperties;
-        heapDesc.SizeInBytes = kHeapSize;
+    D3D12_HEAP_DESC heapDesc = {};
+    heapDesc.Properties = heapProperties;
+    heapDesc.SizeInBytes = kHeapSize;
 
+    auto createHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
         ComPtr<ID3D12Heap> heap;
         if (FAILED(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)))) {
             return E_FAIL;
@@ -117,12 +117,20 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
-    resourceHeapDesc.DebugName = "Resource heap";
-    resourceHeapDesc.AlwaysInBudget = true;
     resourceHeapDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     ASSERT_SUCCEEDED(
-        Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createResourceHeapFn, nullptr));
+        Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, nullptr));
+
+    ComPtr<Heap> resourceHeap;
+    ASSERT_SUCCEEDED(
+        Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, &resourceHeap));
+    ASSERT_NE(resourceHeap, nullptr);
+
+    ComPtr<ID3D12Heap> heap;
+    resourceHeap->As(&heap);
+
+    EXPECT_NE(heap, nullptr);
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {

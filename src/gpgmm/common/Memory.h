@@ -26,7 +26,7 @@ namespace gpgmm {
 
     When memory is sub-allocated, it will have a non-zero refcount.
     */
-    class MemoryBase : public RefCounted, public NonCopyable {
+    class MemoryBase : public NonCopyable {
       public:
         /** \brief Constructs a memory object of the specified size and alignment.
 
@@ -60,7 +60,17 @@ namespace gpgmm {
         */
         void SetPool(MemoryPool* pool);
 
+        /** \brief Increments the sub-allocation reference count on the heap.
+         */
+        void AddSubAllocationRef();
+
+        /** \brief Decrements the sub-allocation reference count on the heap.
+         */
+        bool RemoveSubAllocationRef();
+
       private:
+        RefCounted mSubAllocationRefs;
+
         const uint64_t mSize;
         const uint64_t mAlignment;
 

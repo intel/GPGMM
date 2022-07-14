@@ -18,6 +18,7 @@
 
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
+#include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/RefCount.h"
@@ -130,7 +131,10 @@ namespace gpgmm::d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    class GPGMM_EXPORT Heap : public MemoryBase, public DebugObject, public LinkNode<Heap> {
+    class GPGMM_EXPORT Heap : public MemoryBase,
+                              public DebugObject,
+                              public IUnknownImpl,
+                              public LinkNode<Heap> {
       public:
         /** \brief  Create a heap managed by GPGMM.
 

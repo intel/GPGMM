@@ -20,12 +20,12 @@
 namespace gpgmm {
 
     MemoryBase::MemoryBase(uint64_t size, uint64_t alignment)
-        : RefCounted(0), mSize(size), mAlignment(alignment) {
+        : mSubAllocationRefs(0), mSize(size), mAlignment(alignment) {
         ASSERT(mSize != kInvalidSize);
     }
 
     MemoryBase::~MemoryBase() {
-        ASSERT(GetRefCount() == 0);
+        ASSERT(mSubAllocationRefs.GetRefCount() == 0);
     }
 
     uint64_t MemoryBase::GetSize() const {
@@ -43,6 +43,14 @@ namespace gpgmm {
     void MemoryBase::SetPool(MemoryPool* pool) {
         ASSERT(pool != nullptr);
         mPool = pool;
+    }
+
+    void MemoryBase::AddSubAllocationRef() {
+        mSubAllocationRefs.Ref();
+    }
+
+    bool MemoryBase::RemoveSubAllocationRef() {
+        return mSubAllocationRefs.Unref();
     }
 
 }  // namespace gpgmm

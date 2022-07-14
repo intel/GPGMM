@@ -389,7 +389,7 @@ namespace gpgmm {
         MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);
 
-        slabMemory->Unref();
+        slabMemory->RemoveSubAllocationRef();
 
         if (slab->IsEmpty()) {
             mMemoryAllocator->DeallocateMemory(std::move(slab->Allocation));
