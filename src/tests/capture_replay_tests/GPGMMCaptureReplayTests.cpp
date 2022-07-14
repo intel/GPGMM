@@ -30,22 +30,6 @@ namespace {
 
     GPGMMCaptureReplayTestEnvironment* gTestEnv = nullptr;
 
-    std::string LogSeverityToString(const gpgmm::LogSeverity& severity) {
-        switch (severity) {
-            case gpgmm::LogSeverity::Debug:
-                return "DEBUG";
-            case gpgmm::LogSeverity::Info:
-                return "INFO";
-            case gpgmm::LogSeverity::Warning:
-                return "WARN";
-            case gpgmm::LogSeverity::Error:
-                return "ERROR";
-            default:
-                UNREACHABLE();
-                return "";
-        }
-    }
-
     std::string AllocatorProfileToString(const AllocatorProfile& profile) {
         switch (profile) {
             case AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE:
@@ -116,29 +100,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        constexpr const char kLogLevel[] = "--log-level";
-        arglen = sizeof(kLogLevel) - 1;
-        if (strncmp(argv[i], kLogLevel, arglen) == 0) {
-            const char* level = argv[i] + arglen;
-            if (level[0] != '\0') {
-                if (strcmp(level, "=DEBUG") == 0) {
-                    mParams.LogLevel = gpgmm::LogSeverity::Debug;
-                } else if (strcmp(level, "=INFO") == 0) {
-                    mParams.LogLevel = gpgmm::LogSeverity::Info;
-                } else if (strcmp(level, "=WARN") == 0) {
-                    mParams.LogLevel = gpgmm::LogSeverity::Warning;
-                } else if (strcmp(level, "=ERROR") == 0) {
-                    mParams.LogLevel = gpgmm::LogSeverity::Error;
-                } else {
-                    gpgmm::ErrorLog() << "Invalid log message level " << level << ".\n";
-                    UNREACHABLE();
-                }
-            } else {
-                mParams.LogLevel = gpgmm::LogSeverity::Warning;
-            }
-            continue;
-        }
-
         constexpr const char kPlaybackFile[] = "--playback-file=";
         arglen = sizeof(kPlaybackFile) - 1;
         if (strncmp(argv[i], kPlaybackFile, arglen) == 0) {
@@ -170,8 +131,6 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << "Playback options:"
                 << " [--iterations=X]\n"
                 << " --iterations: Number of times to run playback.\n"
-                << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                   "level for log messages.\n"
                 << " --capture-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
@@ -201,7 +160,6 @@ void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
                      << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Log level: " << LogSeverityToString(mParams.LogLevel) << "\n"
                      << "Must use same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
                      << "\n"
                      << "No Allocations: "

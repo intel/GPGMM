@@ -17,8 +17,6 @@
 
 #include "tests/GPGMMTest.h"
 
-#include "gpgmm/utils/Log.h"
-
 #include <regex>
 #include <string>
 
@@ -44,8 +42,7 @@ enum class AllocatorProfile {
 };
 
 struct TestEnviromentParams {
-    uint64_t Iterations = 1;                                 // Number of test iterations to run.
-    gpgmm::LogSeverity LogLevel = gpgmm::LogSeverity::Info;  // Level of logging.
+    uint64_t Iterations = 1;  // Number of test iterations to run.
     int CaptureEventMask = 0;
 
     bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.

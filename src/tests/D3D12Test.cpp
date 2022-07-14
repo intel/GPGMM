@@ -18,6 +18,22 @@
 
 namespace gpgmm::d3d12 {
 
+    D3D12_MESSAGE_SEVERITY GetMessageSeverity(LogSeverity logSeverity) {
+        switch (logSeverity) {
+            case LogSeverity::Error:
+                return D3D12_MESSAGE_SEVERITY_ERROR;
+            case LogSeverity::Warning:
+                return D3D12_MESSAGE_SEVERITY_WARNING;
+            case LogSeverity::Info:
+                return D3D12_MESSAGE_SEVERITY_INFO;
+            case LogSeverity::Debug:
+                return D3D12_MESSAGE_SEVERITY_MESSAGE;
+            default:
+                UNREACHABLE();
+                return {};
+        }
+    }
+
     void D3D12TestBase::SetUp() {
         GPGMMTestBase::SetUp();
 
@@ -71,7 +87,7 @@ namespace gpgmm::d3d12 {
             desc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
         }
 
-        desc.MinLogLevel = GetDefaultLogLevel();
+        desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpAllEventsEnabled()) {
             desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
@@ -135,14 +151,6 @@ namespace gpgmm::d3d12 {
         return false;
 #else
         return true;
-#endif
-    }
-
-    D3D12_MESSAGE_SEVERITY D3D12TestBase::GetDefaultLogLevel() const {
-#if defined(NDEBUG)
-        return D3D12_MESSAGE_SEVERITY_WARNING;
-#else
-        return D3D12_MESSAGE_SEVERITY_MESSAGE;
 #endif
     }
 
