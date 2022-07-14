@@ -90,8 +90,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aa2528780bd0e819c20851bd4e4187fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad341372316426f6268d44e4348cca80f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d12_residency_manager_tests.html#ad341372316426f6268d44e4348cca80f">CreateBasicResidencyDesc</a> (uint64_t budget) const</td></tr>
 <tr class="separator:ad341372316426f6268d44e4348cca80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d3d765648122aea1e9eb0a5cbc98639"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d12_residency_manager_tests.html#a0d3d765648122aea1e9eb0a5cbc98639">GetBudgetLeft</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup)</td></tr>
-<tr class="separator:a0d3d765648122aea1e9eb0a5cbc98639"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6938e965cfa5947b53f47c9032017e8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d12_residency_manager_tests.html#aa6938e965cfa5947b53f47c9032017e8">IsOverBudget</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager) const</td></tr>
+<tr class="separator:aa6938e965cfa5947b53f47c9032017e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_class_g_p_g_m_m_test_base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_g_p_g_m_m_test_base')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_g_p_g_m_m_test_base.html">GPGMMTestBase</a></td></tr>
 <tr class="memitem:a1b26ec1ed2c7d82b9f44af81b7125861 inherit pro_methods_class_g_p_g_m_m_test_base"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_p_g_m_m_test_base.html#a1b26ec1ed2c7d82b9f44af81b7125861">~GPGMMTestBase</a> ()</td></tr>
 <tr class="separator:a1b26ec1ed2c7d82b9f44af81b7125861 inherit pro_methods_class_g_p_g_m_m_test_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,8 +189,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0d3d765648122aea1e9eb0a5cbc98639" name="a0d3d765648122aea1e9eb0a5cbc98639"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d3d765648122aea1e9eb0a5cbc98639">&#9670;&nbsp;</a></span>GetBudgetLeft()</h2>
+<a id="aa6938e965cfa5947b53f47c9032017e8" name="aa6938e965cfa5947b53f47c9032017e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6938e965cfa5947b53f47c9032017e8">&#9670;&nbsp;</a></span>IsOverBudget()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -199,21 +199,11 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t D3D12ResidencyManagerTests::GetBudgetLeft </td>
+          <td class="memname">bool D3D12ResidencyManagerTests::IsOverBudget </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *&#160;</td>
-          <td class="paramname"><em>residencyManager</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>memorySegmentGroup</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="paramname"><em>residencyManager</em></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
