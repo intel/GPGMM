@@ -60,7 +60,7 @@ var searchData=
   ['getpool_57',['GetPool',['../classgpgmm_1_1_memory_base.html#ac8f67749db930deaf60a1969521375b6',1,'gpgmm::MemoryBase']]],
   ['getpoolsize_58',['GetPoolSize',['../classgpgmm_1_1_l_i_f_o_memory_pool.html#a6dfb0ccb485b96c4ba2c5105bf9c9b3d',1,'gpgmm::LIFOMemoryPool::GetPoolSize()'],['../classgpgmm_1_1_indexed_memory_pool.html#a17122e1d2856db6baee752c3ceb48948',1,'gpgmm::IndexedMemoryPool::GetPoolSize()'],['../classgpgmm_1_1_memory_pool.html#a7814ef9db6cfc2169b539e32afbd7586',1,'gpgmm::MemoryPool::GetPoolSize()']]],
   ['getqueuedeventsfortesting_59',['GetQueuedEventsForTesting',['../classgpgmm_1_1_event_trace_writer.html#a01f478de93dadc30958e98b7239d445c',1,'gpgmm::EventTraceWriter::GetQueuedEventsForTesting()'],['../namespacegpgmm.html#a466ea58f8bbdf5923bc402f490596aa5',1,'gpgmm::GetQueuedEventsForTesting()']]],
-  ['getrefcount_60',['GetRefCount',['../classgpgmm_1_1_ref_counted.html#ad0574a850e761d5b87651a9cc78ad99b',1,'gpgmm::RefCounted']]],
+  ['getrefcount_60',['GetRefCount',['../classgpgmm_1_1_ref_counted.html#a619371d57635964315158bdabbdaf8cf',1,'gpgmm::RefCounted']]],
   ['getrelativetime_61',['GetRelativeTime',['../classgpgmm_1_1_platform_time.html#a8f554276c3a911fd2c00a618ec045545',1,'gpgmm::PlatformTime']]],
   ['getrequestsize_62',['GetRequestSize',['../classgpgmm_1_1_memory_allocation.html#a3ff19ab6fee6e47ace4f6e8639d6270a',1,'gpgmm::MemoryAllocation']]],
   ['getresource_63',['GetResource',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f',1,'gpgmm::d3d12::ResourceAllocation']]],
