@@ -40,6 +40,10 @@ bool GPGMMTestBase::IsDumpAllEventsEnabled() const {
     return gTestEnv->IsDumpAllEventsEnabled();
 }
 
+gpgmm::LogSeverity GPGMMTestBase::GetLogLevel() const {
+    return gTestEnv->GetLogLevel();
+}
+
 // static
 std::vector<MEMORY_ALLOCATION_EXPECT> GPGMMTestBase::GenerateTestAllocations(uint64_t alignment) {
     return {
@@ -101,9 +105,34 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             continue;
         }
 
+        constexpr const char kLogLevel[] = "--log-level";
+        size_t arglen = sizeof(kLogLevel) - 1;
+        if (strncmp(argv[i], kLogLevel, arglen) == 0) {
+            const char* level = argv[i] + arglen;
+            if (level[0] != '\0') {
+                if (strcmp(level, "=DEBUG") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Debug;
+                } else if (strcmp(level, "=INFO") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Info;
+                } else if (strcmp(level, "=WARN") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Warning;
+                } else if (strcmp(level, "=ERROR") == 0) {
+                    mLogLevel = gpgmm::LogSeverity::Error;
+                } else {
+                    gpgmm::ErrorLog() << "Invalid log message level " << level << ".\n";
+                    UNREACHABLE();
+                }
+            } else {
+                mLogLevel = gpgmm::LogSeverity::Warning;
+            }
+            continue;
+        }
+
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Global options:\n"
-                             << " --dump: Record all events to disk.\n";
+                             << " --dump: Record all events to disk.\n"
+                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
+                                "level for log messages.\n";
             continue;
         }
     }
@@ -119,4 +148,8 @@ void GPGMMTestEnvironment::SetUp() {
 
 bool GPGMMTestEnvironment::IsDumpAllEventsEnabled() const {
     return mIsDumpAllEventsEnabled;
+}
+
+gpgmm::LogSeverity GPGMMTestEnvironment::GetLogLevel() const {
+    return mLogLevel;
 }

@@ -93,22 +93,6 @@ namespace {
         return (args.isMember("Description") && args.isMember("ID"));
     }
 
-    D3D12_MESSAGE_SEVERITY GetMessageSeverity(gpgmm::LogSeverity logSeverity) {
-        switch (logSeverity) {
-            case gpgmm::LogSeverity::Error:
-                return D3D12_MESSAGE_SEVERITY_ERROR;
-            case gpgmm::LogSeverity::Warning:
-                return D3D12_MESSAGE_SEVERITY_WARNING;
-            case gpgmm::LogSeverity::Info:
-                return D3D12_MESSAGE_SEVERITY_INFO;
-            case gpgmm::LogSeverity::Debug:
-                return D3D12_MESSAGE_SEVERITY_MESSAGE;
-            default:
-                UNREACHABLE();
-                return D3D12_MESSAGE_SEVERITY_MESSAGE;
-        }
-    }
-
 }  // namespace
 
 class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
@@ -324,7 +308,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
 
-                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
+                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
                             residencyDesc.IsUMA != snapshot["IsUMA"].asBool() &&
                             iterationIndex == 0) {
                             gpgmm::WarningLog()
@@ -339,7 +323,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
                             residencyDesc.RecordOptions.TraceFile = traceFile.path;
                             residencyDesc.RecordOptions.MinMessageLevel =
-                                GetMessageSeverity(envParams.LogLevel);
+                                GetMessageSeverity(GetLogLevel());
 
                             // Keep recording across multiple playback iterations to ensure all
                             // events will be captured instead of overwritten per iteration.
@@ -349,7 +333,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             }
                         }
 
-                        residencyDesc.MinLogLevel = GetMessageSeverity(envParams.LogLevel);
+                        residencyDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
                         ComPtr<ResidencyManager> residencyManager;
                         ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
@@ -421,7 +405,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 static_cast<EVENT_RECORD_FLAGS_TYPE>(envParams.CaptureEventMask);
                             allocatorDesc.RecordOptions.TraceFile = traceFile.path;
                             allocatorDesc.RecordOptions.MinMessageLevel =
-                                GetMessageSeverity(envParams.LogLevel);
+                                GetMessageSeverity(GetLogLevel());
 
                             // Keep recording across multiple playback iterations to ensure all
                             // events will be captured instead of overwritten per iteration.
@@ -431,9 +415,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             }
                         }
 
-                        allocatorDesc.MinLogLevel = GetMessageSeverity(envParams.LogLevel);
+                        allocatorDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
-                        if (envParams.LogLevel <= gpgmm::LogSeverity::Warning &&
+                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
                             allocatorDesc.ResourceHeapTier !=
                                 snapshot["ResourceHeapTier"].asInt() &&
                             iterationIndex == 0) {
