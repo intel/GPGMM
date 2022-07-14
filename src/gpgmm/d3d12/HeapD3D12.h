@@ -57,7 +57,7 @@ namespace gpgmm::d3d12 {
 
         A count of 0 means the entire heap is being used.
         */
-        int SubAllocatedRefs;
+        uint64_t SubAllocatedRefs;
 
         /** \brief The pool this heap is assigned to.
 

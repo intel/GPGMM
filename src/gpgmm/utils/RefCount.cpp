@@ -16,7 +16,7 @@
 
 namespace gpgmm {
 
-    RefCounted::RefCounted(int_fast32_t initialCount) : mRef(initialCount) {
+    RefCounted::RefCounted(uint_fast32_t initialCount) : mRef(initialCount) {
     }
 
     void RefCounted::Ref() {
@@ -30,7 +30,7 @@ namespace gpgmm {
         return false;
     }
 
-    int_fast32_t RefCounted::GetRefCount() const {
+    uint_fast32_t RefCounted::GetRefCount() const {
         return mRef.load(std::memory_order_acquire);
     }
 
