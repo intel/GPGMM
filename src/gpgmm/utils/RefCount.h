@@ -31,7 +31,7 @@ namespace gpgmm {
         // what is being referenced (count vs object).
         RefCounted() = delete;
 
-        explicit RefCounted(int_fast32_t initialCount);
+        explicit RefCounted(uint_fast32_t initialCount);
 
         // Increments ref by one.
         void Ref();
@@ -41,7 +41,7 @@ namespace gpgmm {
         bool Unref();
 
         // Get the ref count.
-        int_fast32_t GetRefCount() const;
+        uint_fast32_t GetRefCount() const;
 
         // Returns true if calling Unref() will reach a zero refcount.
         bool HasOneRef() const;
@@ -49,7 +49,7 @@ namespace gpgmm {
       private:
         friend ScopedRef<RefCounted>;
 
-        mutable std::atomic_int_fast32_t mRef;
+        mutable std::atomic_uint_fast32_t mRef;
     };
 
     // RAII style wrapper around RefCounted based objects.
