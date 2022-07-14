@@ -114,7 +114,7 @@ namespace gpgmm {
         MemoryBase* memory = memoryAllocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        if (memory->Unref()) {
+        if (memory->RemoveSubAllocationRef()) {
             GetNextInChain()->DeallocateMemory(std::move(memoryAllocation));
         } else {
             mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);

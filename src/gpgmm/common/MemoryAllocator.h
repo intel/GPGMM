@@ -300,7 +300,7 @@ namespace gpgmm {
             }
 
             ASSERT(memory != nullptr);
-            memory->Ref();
+            memory->AddSubAllocationRef();
 
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the

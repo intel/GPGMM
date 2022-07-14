@@ -7,7 +7,7 @@
 
 # GPGMM
 
-GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applications or middleware libraries that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded Video Memory Manager (VidMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
+GPGMM is a General-Purpose GPU Memory Management C++ library used by GPU applications or middleware runtimes that rely on low-level graphics and compute APIs (D3D12 or Vulkan) for "explicit" memory management. GPGMM is a fast, multi-threaded, full-fledged GPU Memory Manager (GMM) implementation that replaces what older "implicit" graphics and compute APIs (D3D11 or OpenGL) had accomplished through the GPU driver.
 
 * [API Documentation](https://intel.github.io/GPGMM/)
 * [Changelog](https://github.com/intel/GPGMM/releases)
@@ -64,12 +64,21 @@ set.Reset();
 Residency also works for non-resources too:
 
 ```cpp
-// Wraps a ID3D12DescriptorHeap, ID3D12QueryHeap, etc.
-class HeapWrapper : public gpgmm::d3d12::Heap {};
+gpgmm::d3d12::HEAP_DESC shaderVisibleHeap = {};
+shaderVisibleHeap.SizeInBytes = kHeapSize;
+shaderVisibleHeap.MemorySegment = gpgmm::d3d12::RESIDENCY_SEGMENT_LOCAL;
 
-HeapWrapper heap;
-residency->InsertHeap(&heap);
-residency->LockHeap(heap) // Pin it (eg. shader-visible)
+ComPtr<gpgmm::d3d12::Heap> descriptorHeap;
+gpgmm::d3d12::Heap::CreateHeap(shaderVisibleHeap, residencyManager,
+  [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+      ComPtr<ID3D12DescriptorHeap> heap;
+      mDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heap));
+      *ppPageableOut = heap.Detach();
+      return S_OK;
+}, &descriptorHeap);
+
+// Shader-visible heaps should be locked or always resident.
+residency->LockHeap(descriptorHeap.get());
 ```
 
 To clean-up, simply call `Release()` once the is GPU is finished.
