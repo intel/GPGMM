@@ -38,8 +38,7 @@ namespace gpgmm::d3d12 {
 
         // Else, infer the memory segment using the heap type.
         if (pResidencyManager != nullptr && descriptor.MemorySegment == RESIDENCY_SEGMENT_UNKNOWN) {
-            memorySegmentGroup =
-                pResidencyManager->GetPreferredMemorySegmentGroup(descriptor.HeapType);
+            memorySegmentGroup = pResidencyManager->GetMemorySegmentGroup(descriptor.HeapType);
         }
 
         // Ensure enough free memory exists before allocating to avoid an out-of-memory error

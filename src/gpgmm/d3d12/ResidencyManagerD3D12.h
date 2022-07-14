@@ -127,11 +127,11 @@ namespace gpgmm::d3d12 {
     struct RESIDENCY_INFO {
         /** \brief Amount of memory, in bytes, being made resident.
          */
-        uint64_t MemoryUsage = 0;
+        uint64_t ResidentMemoryUsage = 0;
 
         /** \brief Number of heaps currently being made resident.
          */
-        uint64_t MemoryCount = 0;
+        uint64_t ResidentMemoryCount = 0;
     };
 
     class BudgetUpdateEvent;
@@ -243,6 +243,16 @@ namespace gpgmm::d3d12 {
         */
         RESIDENCY_INFO GetInfo() const;
 
+        /** \brief Divugles the memory segment used for the specified heap type.
+
+        @param heapType A D3D12_HEAP_TYPE-typed value that specifies the heap to get the memory
+        segment for.
+
+        \return A DXGI_MEMORY_SEGMENT_GROUP that provides the memory segment for the specified heap
+        type.
+        */
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
+
       private:
         friend Heap;
         friend ResourceAllocator;
@@ -268,8 +278,6 @@ namespace gpgmm::d3d12 {
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
-
-        DXGI_MEMORY_SEGMENT_GROUP GetPreferredMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
 
         LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 

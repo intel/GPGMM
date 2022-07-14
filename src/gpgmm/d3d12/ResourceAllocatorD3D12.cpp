@@ -794,7 +794,7 @@ namespace gpgmm::d3d12 {
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
             const DXGI_MEMORY_SEGMENT_GROUP segment =
-                mResidencyManager->GetPreferredMemorySegmentGroup(allocationDescriptor.HeapType);
+                mResidencyManager->GetMemorySegmentGroup(allocationDescriptor.HeapType);
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(segment);
 

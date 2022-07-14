@@ -264,8 +264,8 @@ namespace gpgmm::d3d12 {
             heap->RemoveFromList();
 
             // Untracked heaps are not attributed toward residency usage.
-            mInfo.MemoryCount++;
-            mInfo.MemoryUsage += heap->GetSize();
+            mInfo.ResidentMemoryCount++;
+            mInfo.ResidentMemoryUsage += heap->GetSize();
         }
 
         heap->AddResidencyLockRef();
@@ -302,8 +302,8 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(InsertHeapInternal(heap));
 
         // Heaps tracked for residency are always attributed in residency usage.
-        mInfo.MemoryCount--;
-        mInfo.MemoryUsage -= heap->GetSize();
+        mInfo.ResidentMemoryCount--;
+        mInfo.ResidentMemoryUsage -= heap->GetSize();
 
         return S_OK;
     }
@@ -692,13 +692,13 @@ namespace gpgmm::d3d12 {
     RESIDENCY_INFO ResidencyManager::GetInfo() const {
         RESIDENCY_INFO info = mInfo;
         for (const auto& node : mLocalVideoMemorySegment.cache) {
-            info.MemoryUsage += node.value()->GetSize();
-            info.MemoryCount++;
+            info.ResidentMemoryUsage += node.value()->GetSize();
+            info.ResidentMemoryCount++;
         }
 
         for (const auto& node : mNonLocalVideoMemorySegment.cache) {
-            info.MemoryUsage += node.value()->GetSize();
-            info.MemoryCount++;
+            info.ResidentMemoryUsage += node.value()->GetSize();
+            info.ResidentMemoryCount++;
         }
 
         return info;
@@ -736,7 +736,7 @@ namespace gpgmm::d3d12 {
         mBudgetNotificationUpdateEvent = nullptr;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetPreferredMemorySegmentGroup(
+    DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetMemorySegmentGroup(
         D3D12_HEAP_TYPE heapType) const {
         if (mIsUMA) {
             return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
