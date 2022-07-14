@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['name_0',['name',['../struct_trace_file.html#a86e9dc6e842f180b7a7b6e3ad5f4bd2c',1,'TraceFile']]],
-  ['neverallocate_1',['NeverAllocate',['../structgpgmm_1_1_memory_allocation_request.html#a1df833f8fdeb428443df6f730b64a5b8',1,'gpgmm::MemoryAllocationRequest']]],
-  ['numofhits_2',['NumOfHits',['../structgpgmm_1_1_cache_stats.html#a81aa18f541e3b8cc43806234a969b689',1,'gpgmm::CacheStats']]],
-  ['numofmisses_3',['NumOfMisses',['../structgpgmm_1_1_cache_stats.html#a9331f38d59d151a56f6a70542d2c4a93',1,'gpgmm::CacheStats']]]
+  ['offset_0',['Offset',['../structgpgmm_1_1_memory_block.html#a7912870ebc9457c28358322b9d481c7d',1,'gpgmm::MemoryBlock']]],
+  ['offsetfromresource_1',['OffsetFromResource',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#ace6b9d28bc36b509250b558e9c20ce84',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]]
 ];

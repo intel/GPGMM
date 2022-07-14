@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['updatebudgetbypolling_0',['UpdateBudgetByPolling',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['usedblockcount_1',['UsedBlockCount',['../structgpgmm_1_1_memory_allocator_info.html#afd06e9f1ba23dff9b1aaeb662a5febc0',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['usedblockusage_2',['UsedBlockUsage',['../structgpgmm_1_1_memory_allocator_info.html#aa5974ff23bcde1201ddecf7172de9d20',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['usedetailedtimingevents_3',['UseDetailedTimingEvents',['../structgpgmm_1_1d3d12_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html#afca8d6a4bec59c65a8b0cb233dcab0c9',1,'gpgmm::d3d12::EVENT_RECORD_OPTIONS']]],
-  ['usedmemorycount_4',['UsedMemoryCount',['../structgpgmm_1_1_memory_allocator_info.html#a73f9b120dda3cd970fd0d39cf74f8503',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['usedmemoryusage_5',['UsedMemoryUsage',['../structgpgmm_1_1_memory_allocator_info.html#aa0594e53ecb5584efea2da8ee5bcd228',1,'gpgmm::MemoryAllocatorInfo']]]
+  ['videomemorybudget_0',['VideoMemoryBudget',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2968f221adfd367a56db90b17b457594',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
+  ['vulkanapiversion_1',['vulkanApiVersion',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a87944635e273d90ec24a2b2646653ce8',1,'gpgmm::vk::GpCreateAllocatorInfo']]]
 ];

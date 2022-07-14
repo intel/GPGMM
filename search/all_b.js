@@ -32,7 +32,6 @@ var searchData=
   ['log_2ecpp_29',['Log.cpp',['../_log_8cpp.html',1,'']]],
   ['log_2eh_30',['Log.h',['../_log_8h.html',1,'']]],
   ['log2_31',['Log2',['../namespacegpgmm.html#a174a2ff303e21d378c0fbef65b177f87',1,'gpgmm::Log2(uint32_t number)'],['../namespacegpgmm.html#aa35db08debd14874693955f6c3f1d70f',1,'gpgmm::Log2(uint64_t number)']]],
-  ['loglevel_32',['LogLevel',['../struct_test_enviroment_params.html#a9a3f30c2ac76256de67787f6d0557cbb',1,'TestEnviromentParams']]],
-  ['logmessage_33',['LogMessage',['../classgpgmm_1_1_log_message.html',1,'gpgmm::LogMessage'],['../classgpgmm_1_1_log_message.html#abf2515ee7d0c10add109283153b6f36d',1,'gpgmm::LogMessage::LogMessage(LogSeverity severity)'],['../classgpgmm_1_1_log_message.html#ae45b2448eb905ffc5de5ea7a22bf01b6',1,'gpgmm::LogMessage::LogMessage(LogMessage &amp;&amp;other)=default']]],
-  ['logseverity_34',['LogSeverity',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf',1,'gpgmm']]]
+  ['logmessage_32',['LogMessage',['../classgpgmm_1_1_log_message.html',1,'gpgmm::LogMessage'],['../classgpgmm_1_1_log_message.html#ae45b2448eb905ffc5de5ea7a22bf01b6',1,'gpgmm::LogMessage::LogMessage(LogMessage &amp;&amp;other)=default'],['../classgpgmm_1_1_log_message.html#abf2515ee7d0c10add109283153b6f36d',1,'gpgmm::LogMessage::LogMessage(LogSeverity severity)']]],
+  ['logseverity_33',['LogSeverity',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf',1,'gpgmm']]]
 ];
