@@ -213,7 +213,6 @@ namespace gpgmm::d3d12 {
                                        std::unique_ptr<Fence> fence)
         : mDevice(descriptor.Device),
           mAdapter(descriptor.Adapter),
-          mFence(std::move(fence)),
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
           mIsBudgetRestricted(descriptor.Budget > 0),
@@ -223,6 +222,7 @@ namespace gpgmm::d3d12 {
           mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
+          mFence(std::move(fence)),
           mThreadPool(ThreadPool::Create()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
@@ -262,6 +262,10 @@ namespace gpgmm::d3d12 {
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
         if (heap->IsInResidencyLRUCache()) {
             heap->RemoveFromList();
+
+            // Untracked heaps are not attributed toward residency usage.
+            mInfo.MemoryCount++;
+            mInfo.MemoryUsage += heap->GetSize();
         }
 
         heap->AddResidencyLockRef();
@@ -296,6 +300,10 @@ namespace gpgmm::d3d12 {
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
         ReturnIfFailed(InsertHeapInternal(heap));
+
+        // Heaps tracked for residency are always attributed in residency usage.
+        mInfo.MemoryCount--;
+        mInfo.MemoryUsage -= heap->GetSize();
 
         return S_OK;
     }
@@ -682,7 +690,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_INFO ResidencyManager::GetInfo() const {
-        RESIDENCY_INFO info = {};
+        RESIDENCY_INFO info = mInfo;
         for (const auto& node : mLocalVideoMemorySegment.cache) {
             info.MemoryUsage += node.value()->GetSize();
             info.MemoryCount++;

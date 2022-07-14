@@ -127,10 +127,25 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
 
+    EXPECT_EQ(residencyManager->GetInfo().MemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().MemoryCount, 1u);
+
     ComPtr<ID3D12Heap> heap;
     resourceHeap->As(&heap);
 
     EXPECT_NE(heap, nullptr);
+
+    ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
+
+    EXPECT_EQ(residencyManager->GetInfo().MemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().MemoryCount, 1u);
+
+    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
+
+    EXPECT_EQ(residencyManager->GetInfo().MemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().MemoryCount, 1u);
+
+    ASSERT_FAILED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
