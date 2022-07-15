@@ -287,8 +287,6 @@ namespace gpgmm::d3d12 {
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device3> mDevice3;
 
-        std::unique_ptr<Fence> mFence;
-
         const float mVideoMemoryBudget;
         const bool mIsBudgetRestricted;
         const uint64_t mEvictBatchSize;
@@ -296,10 +294,13 @@ namespace gpgmm::d3d12 {
         const bool mIsBudgetChangeEventsDisabled;
         const bool mFlushEventBuffersOnDestruct;
 
+        std::mutex mMutex;
+
+        std::unique_ptr<Fence> mFence;
+
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
-
-        std::mutex mMutex;
+        RESIDENCY_INFO mInfo = {};
 
         std::shared_ptr<ThreadPool> mThreadPool;
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
