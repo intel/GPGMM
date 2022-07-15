@@ -114,7 +114,9 @@ gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 
 It is recommended to use the built-in GN or CMake build targets. Otherwise, a shared library can be used for other build systems.
 
-## Target-based builds
+## Source based builds
+
+Allows GPGMM to be added as a source-package dependency to an existing build system.
 
 ### GN
 
@@ -174,7 +176,19 @@ Then add:
 target_link_libraries(proj PRIVATE gpgmm)
 ```
 
-## Shared library
+## Linked-library builds
+
+Allows GPGMM to be built as a library-binary then linked as build-dependency.
+
+### vcpkg (package manager)
+
+First [install vcpkg] then run `install gpgmm`.
+
+[install vcpkg]: https://github.com/microsoft/vcpkg#quick-start-windows
+
+```
+vcpkg install gpgmm
+```
 
 ### GN
 
@@ -188,11 +202,13 @@ cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug .
 cmake --build . --config Debug
 ```
 
-Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
-1. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
-2. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src` and `gpgmm\src\include` to **Additional Include Directories**.
-3. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
-4. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
+### Visual Studio configuration
+
+1. Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
+2. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
+3. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src` and `gpgmm\src\include` to **Additional Include Directories**.
+4. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
+5. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 
 # Build and Run
 
