@@ -101,12 +101,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad39f477d3dd55f7d15c24eecadb07e73"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ad39f477d3dd55f7d15c24eecadb07e73">UnlockHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *heap)</td></tr>
 <tr class="memdesc:ad39f477d3dd55f7d15c24eecadb07e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ad39f477d3dd55f7d15c24eecadb07e73">More...</a><br /></td></tr>
 <tr class="separator:ad39f477d3dd55f7d15c24eecadb07e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ec4639b59f22df4eef133e93dd73fe9"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a7ec4639b59f22df4eef133e93dd73fe9">InsertHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *heap)</td></tr>
-<tr class="memdesc:a7ec4639b59f22df4eef133e93dd73fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add or insert the specify heap.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a7ec4639b59f22df4eef133e93dd73fe9">More...</a><br /></td></tr>
-<tr class="separator:a7ec4639b59f22df4eef133e93dd73fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5dc4f4b070eb246d079e6701b7ab6cc4"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4">Evict</a> (uint64_t evictSizeInBytes, const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup)</td></tr>
-<tr class="memdesc:a5dc4f4b070eb246d079e6701b7ab6cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evict memory per segment.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5dc4f4b070eb246d079e6701b7ab6cc4">More...</a><br /></td></tr>
-<tr class="separator:a5dc4f4b070eb246d079e6701b7ab6cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab889d80e34d4ebca85727887ac42f982"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982">ExecuteCommandLists</a> (ID3D12CommandQueue *queue, ID3D12CommandList *const *commandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> *const *residencySets, uint32_t count)</td></tr>
 <tr class="memdesc:ab889d80e34d4ebca85727887ac42f982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab889d80e34d4ebca85727887ac42f982">More...</a><br /></td></tr>
 <tr class="separator:ab889d80e34d4ebca85727887ac42f982"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,44 +222,6 @@ Static Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> structure that describes the residency manager. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a5dc4f4b070eb246d079e6701b7ab6cc4" name="a5dc4f4b070eb246d079e6701b7ab6cc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5dc4f4b070eb246d079e6701b7ab6cc4">&#9670;&nbsp;</a></span>Evict()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::Evict </td>
-          <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>evictSizeInBytes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>memorySegmentGroup</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Evict memory per segment. </p>
-<p >Evicts until the budget is under the specified size.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">evictSizeInBytes</td><td>Target size, in bytes, to be under budget. </td></tr>
-    <tr><td class="paramname">memorySegmentGroup</td><td>Memory segment to evict from. </td></tr>
   </table>
   </dd>
 </dl>
@@ -395,33 +351,6 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to DXGI_QUERY_VIDEO_MEMORY_INFO struct of the video memory segment info. </dd></dl>
-
-</div>
-</div>
-<a id="a7ec4639b59f22df4eef133e93dd73fe9" name="a7ec4639b59f22df4eef133e93dd73fe9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ec4639b59f22df4eef133e93dd73fe9">&#9670;&nbsp;</a></span>InsertHeap()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::InsertHeap </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td>
-          <td class="paramname"><em>heap</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Add or insert the specify heap. </p>
-<p >Inserting a heap means to have it managed by this residency manager.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">heap</td><td>A pointer to the heap being managed. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
