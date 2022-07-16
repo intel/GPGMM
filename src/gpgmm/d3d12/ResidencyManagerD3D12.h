@@ -178,24 +178,6 @@ namespace gpgmm::d3d12 {
         */
         HRESULT UnlockHeap(Heap* heap);
 
-        /** \brief  Add or insert the specify heap.
-
-        Inserting a heap means to have it managed by this residency manager.
-
-        @param heap A pointer to the heap being managed.
-        */
-        HRESULT InsertHeap(Heap* heap);
-
-        /** \brief  Evict memory per segment.
-
-        Evicts until the budget is under the specified size.
-
-        @param evictSizeInBytes Target size, in bytes, to be under budget.
-        @param memorySegmentGroup Memory segment to evict from.
-        */
-        HRESULT Evict(uint64_t evictSizeInBytes,
-                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
-
         /** \brief  Execute command lists using residency managed heaps.
 
         Submits an array of command lists and residency sets for the specified command queue.
@@ -259,9 +241,14 @@ namespace gpgmm::d3d12 {
 
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 
+        HRESULT Evict(uint64_t evictSizeInBytes,
+                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+
         HRESULT EvictInternal(uint64_t evictSizeInBytes,
                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                               uint64_t* evictedSizeInBytesOut = nullptr);
+
+        HRESULT InsertHeap(Heap* heap);
 
         HRESULT InsertHeapInternal(Heap* heap);
 
