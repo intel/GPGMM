@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Created alignment of the heap, in bytes.
 
-        Must be non-zero
+        Must be non-zero.
         */
         uint64_t Alignment;
 
@@ -131,10 +131,10 @@ namespace gpgmm::d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    class GPGMM_EXPORT Heap : public MemoryBase,
-                              public DebugObject,
-                              public IUnknownImpl,
-                              public LinkNode<Heap> {
+    class GPGMM_EXPORT Heap final : public MemoryBase,
+                                    public DebugObject,
+                                    public IUnknownImpl,
+                                    public LinkNode<Heap> {
       public:
         /** \brief  Create a heap managed by GPGMM.
 
@@ -152,13 +152,6 @@ namespace gpgmm::d3d12 {
                                   ResidencyManager* const pResidencyManager,
                                   CreateHeapFn&& createHeapFn,
                                   Heap** ppHeapOut);
-
-        // TODO: Make private.
-        Heap(ComPtr<ID3D12Pageable> pageable,
-             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-             uint64_t size,
-             uint64_t alignment = kInvalidSize,
-             bool isExternal = false);
 
         ~Heap() override;
 
@@ -198,6 +191,12 @@ namespace gpgmm::d3d12 {
       private:
         friend ResidencyManager;
         friend ResourceAllocator;
+
+        Heap(ComPtr<ID3D12Pageable> pageable,
+             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+             uint64_t size,
+             uint64_t alignment,
+             bool isExternal);
 
         HRESULT SetDebugNameImpl(const std::string& name) override;
         const char* GetTypename() const;
