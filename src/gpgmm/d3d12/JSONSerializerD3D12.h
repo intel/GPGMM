@@ -75,7 +75,6 @@ namespace gpgmm::d3d12 {
         static JSONDict Serialize(const DXGI_SAMPLE_DESC& desc);
         static JSONDict Serialize(const D3D12_HEAP_DESC& desc);
         static JSONDict Serialize(const D3D12_HEAP_PROPERTIES& desc);
-        static JSONDict Serialize(const ResidencySet& residencySet);
     };
 
 }  // namespace gpgmm::d3d12

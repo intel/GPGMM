@@ -233,24 +233,22 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         JSONArray residencySets;
         for (uint64_t i = 0; i < desc.Count; i++) {
-            residencySets.AddItem(Serialize(*desc.ResidencySets[i]));
+            JSONDict residencySetDict;
+            JSONArray heapArray;
+            for (const auto& heap : *desc.ResidencySets[i]) {
+                heapArray.AddItem(gpgmm::JSONSerializer::Serialize(heap));
+            }
+            if (!heapArray.IsEmpty()) {
+                residencySetDict.AddItem("Heaps", heapArray);
+            }
+
+            residencySets.AddItem(residencySetDict);
         }
+
         if (!residencySets.IsEmpty()) {
             dict.AddItem("ResidencySets", residencySets);
         }
-        return dict;
-    }
 
-    // static
-    JSONDict JSONSerializer::Serialize(const ResidencySet& residencySet) {
-        JSONDict dict;
-        JSONArray heaps;
-        for (const auto& heap : residencySet) {
-            heaps.AddItem(gpgmm::JSONSerializer::Serialize(heap));
-        }
-        if (!heaps.IsEmpty()) {
-            dict.AddItem("Heaps", heaps);
-        }
         return dict;
     }
 
