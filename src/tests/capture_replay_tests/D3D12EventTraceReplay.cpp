@@ -299,24 +299,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
                         ASSERT_FALSE(snapshot.empty());
 
+                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
+                            mIsUMA != snapshot["IsUMA"].asBool() && iterationIndex == 0) {
+                            gpgmm::WarningLog()
+                                << "Capture device does not match playback device (IsUMA: " +
+                                       std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
+                                       std::to_string(mIsUMA) + ").";
+                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
+                        }
+
                         RESIDENCY_DESC residencyDesc = {};
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
-                        residencyDesc.IsUMA = mIsUMA;
+                        residencyDesc.IsUMA = snapshot["IsUMA"].asBool();
                         residencyDesc.VideoMemoryBudget = snapshot["VideoMemoryBudget"].asFloat();
                         residencyDesc.Budget = snapshot["Budget"].asUInt64();
                         residencyDesc.EvictBatchSize = snapshot["EvictBatchSize"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
-
-                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
-                            residencyDesc.IsUMA != snapshot["IsUMA"].asBool() &&
-                            iterationIndex == 0) {
-                            gpgmm::WarningLog()
-                                << "Capture device does not match playback device (IsUMA: " +
-                                       std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
-                                       std::to_string(residencyDesc.IsUMA) + ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
-                        }
 
                         if (envParams.CaptureEventMask != 0) {
                             residencyDesc.RecordOptions.Flags |=

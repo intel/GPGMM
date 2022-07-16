@@ -257,7 +257,7 @@ namespace gpgmm::d3d12 {
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
+                    DebugEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
                         << "Failed to allocate memory for request";
                 }
                 return E_FAIL;
