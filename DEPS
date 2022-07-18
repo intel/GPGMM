@@ -122,7 +122,7 @@ deps = {
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@1dee059cfe3ff27f6e12795142099f14afaff00e',
+    'url': '{chromium_git}/catapult.git@1240e973d53fe4ad1679620896992d5115fa08ad',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
