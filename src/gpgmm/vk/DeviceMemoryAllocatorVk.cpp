@@ -24,11 +24,8 @@
 namespace gpgmm::vk {
 
     DeviceMemoryAllocator::DeviceMemoryAllocator(GpResourceAllocator resourceAllocator,
-                                                 uint32_t memoryTypeIndex,
-                                                 VkDeviceSize memorySize)
-        : mResourceAllocator(resourceAllocator),
-          mMemoryTypeIndex(memoryTypeIndex),
-          mMemorySize(memorySize) {
+                                                 uint32_t memoryTypeIndex)
+        : mResourceAllocator(resourceAllocator), mMemoryTypeIndex(memoryTypeIndex) {
     }
 
     std::unique_ptr<MemoryAllocation> DeviceMemoryAllocator::TryAllocateMemory(
@@ -86,9 +83,4 @@ namespace gpgmm::vk {
 
         SafeRelease(allocation);
     }
-
-    uint64_t DeviceMemoryAllocator::GetMemorySize() const {
-        return mMemorySize;
-    }
-
 }  // namespace gpgmm::vk

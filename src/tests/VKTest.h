@@ -24,14 +24,14 @@
 
 namespace gpgmm::vk {
 
-    struct GpCreateAllocatorInfo;
+    struct GpAllocatorCreateInfo;
 
     class VKTestBase : public GPGMMTestBase {
       public:
         void SetUp();
         void TearDown();
 
-        GpCreateAllocatorInfo CreateBasicAllocatorInfo() const;
+        GpAllocatorCreateInfo CreateBasicAllocatorInfo() const;
 
       protected:
         VkDevice mDevice = VK_NULL_HANDLE;

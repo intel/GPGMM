@@ -24,9 +24,7 @@ namespace gpgmm::vk {
 
     class DeviceMemoryAllocator final : public MemoryAllocator {
       public:
-        DeviceMemoryAllocator(GpResourceAllocator resourceAllocator,
-                              uint32_t memoryTypeIndex,
-                              VkDeviceSize memorySize);
+        DeviceMemoryAllocator(GpResourceAllocator resourceAllocator, uint32_t memoryTypeIndex);
         ~DeviceMemoryAllocator() override = default;
 
         // MemoryAllocator interface
@@ -34,12 +32,9 @@ namespace gpgmm::vk {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        uint64_t GetMemorySize() const override;
-
       private:
         GpResourceAllocator mResourceAllocator;
         uint32_t mMemoryTypeIndex;
-        VkDeviceSize mMemorySize;
     };
 
 }  // namespace gpgmm::vk
