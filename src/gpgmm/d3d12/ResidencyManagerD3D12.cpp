@@ -254,7 +254,7 @@ namespace gpgmm::d3d12 {
 
         if (!heap->IsResident()) {
             ComPtr<ID3D12Pageable> pageable;
-            ReturnIfFailed(heap->As(&pageable));
+            ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
             ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
                                         pageable.GetAddressOf()));
         }
@@ -530,7 +530,7 @@ namespace gpgmm::d3d12 {
             evictedSizeInBytes += heap->GetSize();
 
             ComPtr<ID3D12Pageable> pageable;
-            ReturnIfFailed(heap->As(&pageable));
+            ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
             objectsToEvict.push_back(pageable.Get());
         }
@@ -592,7 +592,7 @@ namespace gpgmm::d3d12 {
                 heap->RemoveFromList();
             } else {
                 ComPtr<ID3D12Pageable> pageable;
-                ReturnIfFailed(heap->As(&pageable));
+                ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
                 if (heap->GetMemorySegmentGroup() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
                     localSizeToMakeResident += heap->GetSize();

@@ -848,19 +848,18 @@ namespace gpgmm::d3d12 {
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
                     Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
-                    ReturnIfFailed(resourceHeap->As(&committedResource));
+                    ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.RequestSizeInBytes = resourceDescriptor.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
                     allocationDesc.Method = AllocationMethod::kSubAllocatedWithin;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
-                    allocationDesc.ResourceHeap = resourceHeap;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(), std::move(committedResource),
+                        resourceHeap, subAllocation.GetBlock(), std::move(committedResource),
                         ppResourceAllocationOut));
 
                     return S_OK;
@@ -896,12 +895,11 @@ namespace gpgmm::d3d12 {
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
                     allocationDesc.Method = subAllocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
-                    allocationDesc.ResourceHeap = resourceHeap;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        subAllocation.GetBlock(), std::move(placedResource),
+                        resourceHeap, subAllocation.GetBlock(), std::move(placedResource),
                         ppResourceAllocationOut));
 
                     return S_OK;
@@ -937,12 +935,12 @@ namespace gpgmm::d3d12 {
                     allocationDesc.HeapOffset = allocation.GetOffset();
                     allocationDesc.Method = allocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
-                    allocationDesc.ResourceHeap = resourceHeap;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), allocation.GetAllocator(),
-                        allocation.GetBlock(), std::move(placedResource), ppResourceAllocationOut));
+                        resourceHeap, allocation.GetBlock(), std::move(placedResource),
+                        ppResourceAllocationOut));
 
                     return S_OK;
                 }));
@@ -979,12 +977,11 @@ namespace gpgmm::d3d12 {
         allocationDesc.RequestSizeInBytes = request.SizeInBytes;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
-        allocationDesc.ResourceHeap = resourceHeap;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
 
         ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
-            allocationDesc, mResidencyManager.Get(), this, nullptr, std::move(committedResource),
-            ppResourceAllocationOut));
+            allocationDesc, mResidencyManager.Get(), this, resourceHeap, nullptr,
+            std::move(committedResource), ppResourceAllocationOut));
 
         return S_OK;
     }
@@ -1036,10 +1033,10 @@ namespace gpgmm::d3d12 {
         allocationDesc.RequestSizeInBytes = resourceInfo.SizeInBytes;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
-        allocationDesc.ResourceHeap = resourceHeap;
 
         ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
-            allocationDesc, nullptr, this, nullptr, std::move(resource), ppResourceAllocationOut));
+            allocationDesc, nullptr, this, resourceHeap, nullptr, std::move(resource),
+            ppResourceAllocationOut));
 
         return S_OK;
     }
@@ -1057,7 +1054,7 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12Resource> placedResource;
         {
             ComPtr<ID3D12Heap> heap;
-            ReturnIfFailed(resourceHeap->As(&heap));
+            ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)));
 
             ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
             ReturnIfFailed(mDevice->CreatePlacedResource(

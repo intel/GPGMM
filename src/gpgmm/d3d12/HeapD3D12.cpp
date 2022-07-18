@@ -146,4 +146,8 @@ namespace gpgmm::d3d12 {
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {
         return SetDebugObjectName(mPageable.Get(), name);
     }
+
+    HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {
+        return mPageable->QueryInterface(riid, ppvObject);
+    }
 }  // namespace gpgmm::d3d12
