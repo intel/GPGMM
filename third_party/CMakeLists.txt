@@ -20,11 +20,18 @@ include(FetchContent)
 
 set(FETCHCONTENT_BASE_DIR "${GPGMM_THIRD_PARTY_DIR}")
 
+# Current revision of source-package.
+set(GPGMM_GOOGLETEST_REVISION 6b74da4757a549563d7c37c8fae3e704662a043b)
+set(GPGMM_JSONCPP_REVISION 9059f5cad030ba11d37818847443a53918c327b1)
+set(GPGMM_BENCHMARK_REVISION f730846b0a3c0dc0699978846fb14ffb2fad0bdc)
+set(GPGMM_VULKAN_HEADERS_REVISION 9f73b931f402f23554a60015924e7e35c7047487)
+set(GPGMM_VULKAN_LOADER_REVISION 9a45e5a4ab79b81e27e1417ca65d53ecfe57ba37)
+
 if (GPGMM_ENABLE_TESTS)
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        6b74da4757a549563d7c37c8fae3e704662a043b
+    GIT_TAG        ${GPGMM_GOOGLETEST_REVISION}
   )
 
 	# For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -36,7 +43,7 @@ if (GPGMM_ENABLE_TESTS)
   FetchContent_Declare(
     jsoncpp
     GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
-    GIT_TAG        9059f5cad030ba11d37818847443a53918c327b1
+    GIT_TAG        ${GPGMM_JSONCPP_REVISION}
   )
   FetchContent_MakeAvailable(jsoncpp)
 
@@ -44,7 +51,7 @@ if (GPGMM_ENABLE_TESTS)
   FetchContent_Declare(
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG        f730846b0a3c0dc0699978846fb14ffb2fad0bdc
+    GIT_TAG        ${GPGMM_BENCHMARK_REVISION}
   )
   FetchContent_MakeAvailable(benchmark)
 
@@ -54,7 +61,7 @@ if (GPGMM_ENABLE_VK)
   FetchContent_Declare(
     vulkan-headers
     GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
-    GIT_TAG 9f73b931f402f23554a60015924e7e35c7047487
+    GIT_TAG ${GPGMM_VULKAN_HEADERS_REVISION}
   )
   FetchContent_MakeAvailable(vulkan-headers)
 
@@ -62,7 +69,7 @@ if (GPGMM_ENABLE_VK)
     FetchContent_Declare(
       vulkan-loader
       GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
-      GIT_TAG 9a45e5a4ab79b81e27e1417ca65d53ecfe57ba37
+      GIT_TAG ${GPGMM_VULKAN_LOADER_REVISION}
     )
     FetchContent_MakeAvailable(vulkan-loader)
   endif() # GPGMM_ENABLE_VK_LOADER
