@@ -113,20 +113,20 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
-    'url': '{chromium_git}/external/github.com/google/googletest@4556086674e4dfae2aa5f042d9e7844fc5ef9b89',
+    'url': '{chromium_git}/external/github.com/google/googletest@bea621c3c39d8a7f71f07bd543c3a58bfa684f92',
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@2cd215e4b5c574fff36984ff90eea3bef53a1025',
+    'url': '{chromium_git}/vulkan-deps@b22fee44bf09c6368d72be0dd43d6deef9f1e7f2',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@1dee059cfe3ff27f6e12795142099f14afaff00e',
+    'url': '{chromium_git}/catapult.git@1240e973d53fe4ad1679620896992d5115fa08ad',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
-    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@42e892d96e47b1f6e29844cc705e148ec4856448',
+    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@8190e061bc2d95da37479a638aa2c9e483e58ec6',
     'condition': 'gpgmm_standalone',
   },
   # Fuzzing
