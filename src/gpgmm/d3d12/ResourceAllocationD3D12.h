@@ -57,12 +57,6 @@ namespace gpgmm::d3d12 {
         */
         AllocationMethod Method;
 
-        /** \brief Pointer to underlying Heap used for the resource allocation.
-
-        Must be valid for the duration of the resource allocation.
-        */
-        Heap* ResourceHeap;
-
         /** \brief Debug name associated with the resource allocation.
          */
         std::string DebugName;
@@ -102,19 +96,21 @@ namespace gpgmm::d3d12 {
         /** \brief Constructs a resource allocation using memory containing one or more resources.
 
         @param desc A RESOURCE_ALLOCATION_DESC describing the resource allocation.
-        @param residencyManager A pointer to ResidencyManager which manages residency for the
+        @param pResidencyManager A pointer to ResidencyManager which manages residency for the
         resource allocation.
-        @param allocator A pointer to MemoryAllocator which created the resourceHeap for the
+        @param pAllocator A pointer to MemoryAllocator which created the resourceHeap for the
         resource.
-        @param block A pointer to MemoryBlock which describes the region in Heap being allocated.
+        @param pResourceHeap A pointer to the Heap used for the resource allocation.
+        @param pBlock A pointer to MemoryBlock which describes the region in Heap being allocated.
         @param resource A pointer to the ID3D12Resource used for the allocation.
         @param[out] ppResourceAllocationOut Pointer to a resource allocation that recieves a pointer
         to the resource allocation.
         */
         static HRESULT CreateResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                                                ResidencyManager* residencyManager,
-                                                MemoryAllocator* allocator,
-                                                MemoryBlock* block,
+                                                ResidencyManager* pResidencyManager,
+                                                MemoryAllocator* pAllocator,
+                                                Heap* pResourceHeap,
+                                                MemoryBlock* pBlock,
                                                 ComPtr<ID3D12Resource> resource,
                                                 ResourceAllocation** ppResourceAllocationOut);
 
@@ -198,6 +194,7 @@ namespace gpgmm::d3d12 {
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
+                           Heap* resourceHeap,
                            MemoryBlock* block,
                            ComPtr<ID3D12Resource> resource);
 

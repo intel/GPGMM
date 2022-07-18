@@ -127,7 +127,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
 
     ComPtr<ID3D12Heap> heap;
-    resourceHeap->As(&heap);
+    resourceHeap.As(&heap);
 
     EXPECT_NE(heap, nullptr);
 

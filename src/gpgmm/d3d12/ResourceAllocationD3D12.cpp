@@ -44,13 +44,14 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT ResourceAllocation::CreateResourceAllocation(
         const RESOURCE_ALLOCATION_DESC& descriptor,
-        ResidencyManager* residencyManager,
-        MemoryAllocator* allocator,
-        MemoryBlock* block,
+        ResidencyManager* pResidencyManager,
+        MemoryAllocator* pAllocator,
+        Heap* pResourceHeap,
+        MemoryBlock* pBlock,
         ComPtr<ID3D12Resource> resource,
         ResourceAllocation** ppResourceAllocationOut) {
         std::unique_ptr<ResourceAllocation> resourceAllocation(new ResourceAllocation(
-            descriptor, residencyManager, allocator, block, std::move(resource)));
+            descriptor, pResidencyManager, pAllocator, pResourceHeap, pBlock, std::move(resource)));
 
         if (!descriptor.DebugName.empty()) {
             ReturnIfFailed(resourceAllocation->SetDebugName(descriptor.DebugName));
@@ -66,10 +67,11 @@ namespace gpgmm::d3d12 {
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                                            ResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
+                                           Heap* resourceHeap,
                                            MemoryBlock* block,
                                            ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator,
-                           desc.ResourceHeap,
+                           resourceHeap,
                            desc.HeapOffset,
                            desc.Method,
                            block,
@@ -77,7 +79,7 @@ namespace gpgmm::d3d12 {
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
-        ASSERT(desc.ResourceHeap != nullptr);
+        ASSERT(resourceHeap != nullptr);
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 

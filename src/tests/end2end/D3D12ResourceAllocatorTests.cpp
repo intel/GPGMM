@@ -334,8 +334,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
 
-        ComPtr<ID3D12Heap> heap;
-        ASSERT_FAILED(allocation->GetMemory()->As(&heap));
+        ComPtr<Heap> heap = allocation->GetMemory();
+        ASSERT_NE(heap, nullptr);
+
+        ComPtr<ID3D12Heap> d3dHeap;
+        ASSERT_FAILED(heap.As(&d3dHeap));
     }
 
     // Creating a buffer with required but invalid heap flag should always fail.
@@ -464,11 +467,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     EXPECT_EQ(allocation->GetSize(), kDefaultBufferSize);
 
     // Commmitted resources cannot be backed by a D3D12 heap.
-    Heap* resourceHeap = allocation->GetMemory();
+    ComPtr<Heap> resourceHeap = allocation->GetMemory();
     ASSERT_NE(resourceHeap, nullptr);
 
     ComPtr<ID3D12Heap> heap;
-    ASSERT_FAILED(resourceHeap->As(&heap));
+    ASSERT_FAILED(resourceHeap.As(&heap));
 
     // Commited resources must use all the memory allocated.
     EXPECT_EQ(resourceAllocator->GetInfo().UsedMemoryUsage, kDefaultBufferSize);
