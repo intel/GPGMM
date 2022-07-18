@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gpgmm_0',['GPGMM',['../index.html',1,'']]]
+  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]]
 ];
