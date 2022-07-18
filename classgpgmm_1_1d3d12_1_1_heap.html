@@ -102,8 +102,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3e13c4360d9aca83cb4a607466534294"><td class="memTemplItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294">As</a> (Microsoft::WRL::Details::ComPtrRef&lt; ComPtr&lt; T &gt; &gt; ptr) const</td></tr>
 <tr class="memdesc:a3e13c4360d9aca83cb4a607466534294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a ComPtr object that represents the interface specified.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294">More...</a><br /></td></tr>
 <tr class="separator:a3e13c4360d9aca83cb4a607466534294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1b1594072689b83f07c1a68774b9183"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ad1b1594072689b83f07c1a68774b9183">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
-<tr class="separator:ad1b1594072689b83f07c1a68774b9183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">IsResident</a> () const</td></tr>
 <tr class="memdesc:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the heap is resident or not.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">More...</a><br /></td></tr>
 <tr class="separator:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,9 +280,8 @@ template&lt;typename T &gt; </div>
 <p>Returns a ComPtr object that represents the interface specified. </p>
 <p >For example, to get a ID3D12Heap:</p>
 <div class="fragment"><div class="line">ComPtr&lt;ID3D12Heap&gt; heap;</div>
-<div class="line">HRESULT hr = resourceHeap.As(&amp;heap);</div>
-</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Error HRESULT if the specified interface was not represented by the heap.</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>Use ComPtr&lt;<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294" title="Returns a ComPtr object that represents the interface specified.">Heap::As</a> instead of <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294" title="Returns a ComPtr object that represents the interface specified.">Heap::As</a>. </dd></dl>
+<div class="line">HRESULT hr = resourceHeap-&gt;As(&amp;heap);</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Error HRESULT if the specified interface was not represented by the heap. </dd></dl>
 
 </div>
 </div>
@@ -419,42 +416,6 @@ template&lt;typename T &gt; </div>
 
 <p>Determine if the heap is resident or not. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the heap is resident, false if not. </dd></dl>
-
-</div>
-</div>
-<a id="ad1b1594072689b83f07c1a68774b9183" name="ad1b1594072689b83f07c1a68774b9183"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1b1594072689b83f07c1a68774b9183">&#9670;&nbsp;</a></span>QueryInterface()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT STDMETHODCALLTYPE gpgmm::d3d12::Heap::QueryInterface </td>
-          <td>(</td>
-          <td class="paramtype">REFIID&#160;</td>
-          <td class="paramname"><em>riid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>ppvObject</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

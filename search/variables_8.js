@@ -3,7 +3,7 @@ var searchData=
   ['id_0',['ID',['../structgpgmm_1_1_event_message_info.html#a494da1d16d5f0192f77b723f2de661f5',1,'gpgmm::EventMessageInfo']]],
   ['initialfencevalue_1',['InitialFenceValue',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
   ['initialresourcestate_2',['initialResourceState',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#ab4602b1a85f5c43af0465459e0bbb276',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
-  ['instance_3',['instance',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#af157a51c98553d304fa921d6be34cec9',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
+  ['instance_3',['instance',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a5d40707ce6865b7b4f8498b46a3fe7f3',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['isallocationplaybackdisabled_4',['IsAllocationPlaybackDisabled',['../struct_test_enviroment_params.html#a48e65cd2e80202120c95a4eee879fc3b',1,'TestEnviromentParams']]],
   ['isexternal_5',['IsExternal',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a7c5aeaef7bc547187b49a6b56444127e',1,'gpgmm::d3d12::HEAP_DESC']]],
   ['isneverallocate_6',['IsNeverAllocate',['../struct_test_enviroment_params.html#a77965554f9ee8835d96a173b1203f380',1,'TestEnviromentParams']]],

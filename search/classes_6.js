@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['gpcreateallocatorinfo_0',['GpCreateAllocatorInfo',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html',1,'gpgmm::vk']]],
+  ['gpallocatorcreateinfo_0',['GpAllocatorCreateInfo',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html',1,'gpgmm::vk']]],
   ['gpgmmcapturereplaytestenvironment_1',['GPGMMCaptureReplayTestEnvironment',['../class_g_p_g_m_m_capture_replay_test_environment.html',1,'']]],
   ['gpgmmtestbase_2',['GPGMMTestBase',['../class_g_p_g_m_m_test_base.html',1,'']]],
   ['gpgmmtestenvironment_3',['GPGMMTestEnvironment',['../class_g_p_g_m_m_test_environment.html',1,'']]],
