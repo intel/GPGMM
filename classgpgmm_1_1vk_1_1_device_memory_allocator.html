@@ -91,8 +91,8 @@ Inheritance diagram for gpgmm::vk::DeviceMemoryAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adf25841bda512ead719038da10a588a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#adf25841bda512ead719038da10a588a7">DeviceMemoryAllocator</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> resourceAllocator, uint32_t memoryTypeIndex)</td></tr>
-<tr class="separator:adf25841bda512ead719038da10a588a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a1aee5a816433c29c7f25b0b9f4cc5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#a0a1aee5a816433c29c7f25b0b9f4cc5b">DeviceMemoryAllocator</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> resourceAllocator, uint32_t memoryTypeIndex, VkDeviceSize memorySize)</td></tr>
+<tr class="separator:a0a1aee5a816433c29c7f25b0b9f4cc5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac0b46f4169f5817711f1bd5f7545b3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#aac0b46f4169f5817711f1bd5f7545b3a">~DeviceMemoryAllocator</a> () override=default</td></tr>
 <tr class="separator:aac0b46f4169f5817711f1bd5f7545b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6cd3e5104ab576fa96b806dcf772bab"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#af6cd3e5104ab576fa96b806dcf772bab">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_memory_allocation_request.html">MemoryAllocationRequest</a> &amp;request) override</td></tr>
@@ -101,6 +101,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9c62446335ee7e18546e3e4526c0214c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#a9c62446335ee7e18546e3e4526c0214c">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation) override</td></tr>
 <tr class="memdesc:a9c62446335ee7e18546e3e4526c0214c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a memory allocation.  <a href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#a9c62446335ee7e18546e3e4526c0214c">More...</a><br /></td></tr>
 <tr class="separator:a9c62446335ee7e18546e3e4526c0214c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d9bc64a6a729cbf127d03a2f562279b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#a1d9bc64a6a729cbf127d03a2f562279b">GetMemorySize</a> () const override</td></tr>
+<tr class="memdesc:a1d9bc64a6a729cbf127d03a2f562279b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory sized of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>.  <a href="classgpgmm_1_1vk_1_1_device_memory_allocator.html#a1d9bc64a6a729cbf127d03a2f562279b">More...</a><br /></td></tr>
+<tr class="separator:a1d9bc64a6a729cbf127d03a2f562279b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_allocator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_allocator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_allocator.html">gpgmm::MemoryAllocator</a></td></tr>
 <tr class="memitem:a546a30ca32c0f4a542ee22539d0076ff inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a546a30ca32c0f4a542ee22539d0076ff">MemoryAllocator</a> ()</td></tr>
 <tr class="memdesc:a546a30ca32c0f4a542ee22539d0076ff inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a standalone <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_memory_allocator.html#a546a30ca32c0f4a542ee22539d0076ff">More...</a><br /></td></tr>
@@ -208,8 +211,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="adf25841bda512ead719038da10a588a7" name="adf25841bda512ead719038da10a588a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf25841bda512ead719038da10a588a7">&#9670;&nbsp;</a></span>DeviceMemoryAllocator()</h2>
+<a id="a0a1aee5a816433c29c7f25b0b9f4cc5b" name="a0a1aee5a816433c29c7f25b0b9f4cc5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a1aee5a816433c29c7f25b0b9f4cc5b">&#9670;&nbsp;</a></span>DeviceMemoryAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,7 +227,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>memoryTypeIndex</em>&#160;</td>
+          <td class="paramname"><em>memoryTypeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VkDeviceSize&#160;</td>
+          <td class="paramname"><em>memorySize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -296,6 +305,37 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">gpgmm::MemoryAllocator</a>.</p>
+
+</div>
+</div>
+<a id="a1d9bc64a6a729cbf127d03a2f562279b" name="a1d9bc64a6a729cbf127d03a2f562279b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d9bc64a6a729cbf127d03a2f562279b">&#9670;&nbsp;</a></span>GetMemorySize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::vk::DeviceMemoryAllocator::GetMemorySize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the fixed-memory sized of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>. </p>
+<p >If this allocator only allocates memory blocks using the same size, this value is guarenteed to valid. Otherwise, kInvalidSize is returned to denote any memory size could be created by |this| allocator.</p>
+<dl class="section return"><dt>Returns</dt><dd>Size of memory, in bytes. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
