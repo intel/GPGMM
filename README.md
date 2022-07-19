@@ -88,7 +88,7 @@ To clean-up, simply call `Release()` once the is GPU is finished.
 ```cpp
 #include <gpgmm_vk.h>
 
-gpgmm::vk::GpCreateAllocatorInfo allocatorInfo = {};
+gpgmm::vk::GpAllocatorCreateInfo allocatorInfo = {};
 
 gpgmm::vk::GpResourceAllocator resourceAllocator;
 gpgmm::vk::gpCreateResourceAllocator(allocatorInfo, &resourceAllocator)

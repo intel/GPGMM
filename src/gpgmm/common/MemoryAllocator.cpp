@@ -110,7 +110,7 @@ namespace gpgmm {
     }
 
     uint64_t MemoryAllocator::GetMemoryAlignment() const {
-        return kInvalidOffset;
+        return kNoRequiredAlignment;
     }
 
     MemoryAllocatorInfo MemoryAllocator::GetInfo() const {
@@ -143,8 +143,9 @@ namespace gpgmm {
         }
 
         // Check request size has compatible alignment with |this| memory allocator.
-        if (GetMemoryAlignment() != kInvalidSize &&
-            !IsAligned(GetMemoryAlignment(), request.Alignment)) {
+        // Alignment value of 1 means no alignment required.
+        if (GetMemoryAlignment() == 0 ||
+            (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment))) {
             DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
                 << "Requested alignment exceeds memory alignment (" +
                        std::to_string(request.Alignment) + " vs " +

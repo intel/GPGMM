@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "gpgmm/common/SizeClass.h"
 #include "tests/VKTest.h"
 
 #include <gpgmm_vk.h>
 
 using namespace gpgmm::vk;
 
-static constexpr uint64_t kDefaultBufferSize = 4ll * 1024ll * 1024ll;  // 4MB
+static constexpr uint64_t kDefaultBufferSize = GPGMM_MB_TO_BYTES(4);
 
 class VKResourceAllocatorTests : public VKTestBase, public ::testing::Test {
   protected:

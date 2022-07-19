@@ -21,6 +21,7 @@
 
 namespace gpgmm {
 
+    static constexpr uint64_t kNoRequiredAlignment = 1u;
     static constexpr uint64_t kInvalidOffset = std::numeric_limits<uint64_t>::max();
     static constexpr uint64_t kInvalidSize = std::numeric_limits<uint64_t>::max();
     static constexpr uint64_t kInvalidIndex = std::numeric_limits<uint64_t>::max();

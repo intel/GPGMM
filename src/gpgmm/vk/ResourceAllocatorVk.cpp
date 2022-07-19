@@ -15,6 +15,8 @@
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/PooledMemoryAllocator.h"
+#include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/vk/BackendVk.h"
 #include "gpgmm/vk/CapsVk.h"
 #include "gpgmm/vk/DeviceMemoryAllocatorVk.h"
@@ -23,7 +25,7 @@
 
 namespace gpgmm::vk {
 
-    VkResult gpCreateResourceAllocator(const GpCreateAllocatorInfo& info,
+    VkResult gpCreateResourceAllocator(const GpAllocatorCreateInfo& info,
                                        GpResourceAllocator* allocatorOut) {
         return GpResourceAllocator_T::CreateAllocator(info, allocatorOut);
     }
@@ -109,7 +111,7 @@ namespace gpgmm::vk {
     // GpResourceAllocator_T
 
     // static
-    VkResult GpResourceAllocator_T::CreateAllocator(const GpCreateAllocatorInfo& info,
+    VkResult GpResourceAllocator_T::CreateAllocator(const GpAllocatorCreateInfo& info,
                                                     GpResourceAllocator* allocatorOut) {
         VulkanFunctions vulkanFunctions = {};
         {
@@ -125,7 +127,7 @@ namespace gpgmm::vk {
             }
 
 #ifndef NDEBUG
-            vulkanFunctions.AssertVulkanFunctionsAreValid();
+            AssertVulkanFunctionsExist(vulkanFunctions);
 #endif
         }
 
@@ -144,7 +146,7 @@ namespace gpgmm::vk {
         return VK_SUCCESS;
     }
 
-    GpResourceAllocator_T::GpResourceAllocator_T(const GpCreateAllocatorInfo& info,
+    GpResourceAllocator_T::GpResourceAllocator_T(const GpAllocatorCreateInfo& info,
                                                  const VulkanFunctions& vulkanFunctions,
                                                  std::unique_ptr<Caps> caps)
         : mDevice(info.device), mVulkanFunctions(vulkanFunctions), mCaps(std::move(caps)) {
@@ -160,9 +162,8 @@ namespace gpgmm::vk {
 
             for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < mMemoryTypes.size();
                  memoryTypeIndex++) {
-                mDeviceAllocatorsPerType.emplace_back(std::make_unique<DeviceMemoryAllocator>(
-                    this, memoryTypeIndex,
-                    memoryHeaps[mMemoryTypes[memoryTypeIndex].heapIndex].size));
+                mDeviceAllocatorsPerType.emplace_back(
+                    CreateDeviceMemoryAllocator(info, memoryTypeIndex, kNoRequiredAlignment));
             }
         }
     }
@@ -225,9 +226,10 @@ namespace gpgmm::vk {
         MemoryAllocationRequest request = {};
         request.SizeInBytes = requirements.size;
         request.Alignment = requirements.alignment;
-        request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY);
         request.AlwaysCacheSize = false;
-        request.AlwaysPrefetch = (allocationInfo.flags & GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
+        request.AlwaysPrefetch =
+            (allocationInfo.flags & GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY);
 
         std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);
         if (memoryAllocation == nullptr) {
@@ -261,4 +263,33 @@ namespace gpgmm::vk {
     Caps* GpResourceAllocator_T::GetCaps() const {
         return mCaps.get();
     }
+
+    std::unique_ptr<MemoryAllocator> GpResourceAllocator_T::CreateDeviceMemoryAllocator(
+        const GpAllocatorCreateInfo& info,
+        uint64_t memoryTypeIndex,
+        uint64_t memoryAlignment) {
+        std::unique_ptr<MemoryAllocator> deviceMemoryAllocator =
+            std::make_unique<DeviceMemoryAllocator>(this, memoryTypeIndex);
+
+        if (!(info.flags & GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND)) {
+            switch (info.poolAlgorithm) {
+                case GP_ALLOCATOR_ALGORITHM_FIXED_POOL: {
+                    return std::make_unique<PooledMemoryAllocator>(
+                        info.preferredDeviceMemorySize, memoryAlignment,
+                        std::move(deviceMemoryAllocator));
+                }
+                case GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
+                    return std::make_unique<SegmentedMemoryAllocator>(
+                        std::move(deviceMemoryAllocator), memoryAlignment);
+                }
+                default: {
+                    UNREACHABLE();
+                    return {};
+                }
+            }
+        }
+
+        return deviceMemoryAllocator;
+    }
+
 }  // namespace gpgmm::vk

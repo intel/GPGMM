@@ -83,18 +83,18 @@ namespace gpgmm::vk {
         DestroyImage = vkFunctions->DestroyImage;
     }
 
-    void VulkanFunctions::AssertVulkanFunctionsAreValid() {
-        ASSERT(GetPhysicalDeviceMemoryProperties != nullptr);
-        ASSERT(GetPhysicalDeviceProperties != nullptr);
-        ASSERT(AllocateMemory != nullptr);
-        ASSERT(FreeMemory != nullptr);
-        ASSERT(BindBufferMemory != nullptr);
-        ASSERT(GetBufferMemoryRequirements != nullptr);
-        ASSERT(GetImageMemoryRequirements != nullptr);
-        ASSERT(CreateBuffer != nullptr);
-        ASSERT(DestroyBuffer != nullptr);
-        ASSERT(CreateImage != nullptr);
-        ASSERT(DestroyImage != nullptr);
+    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions) {
+        ASSERT(vkFunctions.GetPhysicalDeviceMemoryProperties != nullptr);
+        ASSERT(vkFunctions.GetPhysicalDeviceProperties != nullptr);
+        ASSERT(vkFunctions.AllocateMemory != nullptr);
+        ASSERT(vkFunctions.FreeMemory != nullptr);
+        ASSERT(vkFunctions.BindBufferMemory != nullptr);
+        ASSERT(vkFunctions.GetBufferMemoryRequirements != nullptr);
+        ASSERT(vkFunctions.GetImageMemoryRequirements != nullptr);
+        ASSERT(vkFunctions.CreateBuffer != nullptr);
+        ASSERT(vkFunctions.DestroyBuffer != nullptr);
+        ASSERT(vkFunctions.CreateImage != nullptr);
+        ASSERT(vkFunctions.DestroyImage != nullptr);
     }
 
 }  // namespace gpgmm::vk

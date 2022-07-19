@@ -38,10 +38,71 @@ namespace gpgmm::vk {
     */
     VK_DEFINE_HANDLE(GpResourceAllocation)
 
-    /** \struct GpCreateAllocatorInfo
-    \brief Specifies how allocators should be created.
+    /** \enum GpAllocatorCreateFlags
+    \brief Configures how allocators should be created.
     */
-    struct GpCreateAllocatorInfo {
+    enum GpAllocatorCreateFlags {
+        /** \brief Disables all allocator flags.
+         */
+        GP_ALLOCATOR_CREATE_NONE = 0x0,
+
+        /** \brief Tell GPGMM to allocate exactly what is needed, and to de-allocate
+        memory immediately once no longer needed (instead of re-using it).
+
+        This is very slow and not recommended for general use but may be useful for running with the
+        minimal possible GPU memory footprint or debugging OOM failures.
+        */
+        GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND = 0x8,
+    };
+
+    /** \enum GpAllocatorAlgorithm
+    Specify the algorithms used for allocation.
+    */
+    enum GpAllocatorAlgorithm {
+        /** \brief Use the slab allocation mechanism.
+
+        Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
+
+        Slab allocation does not suffer from internal fragmentation but could externally fragment
+        when many unique request sizes are used.
+        */
+        GP_ALLOCATOR_ALGORITHM_SLAB = 0x0,
+
+        /** \brief Use the buddy system mechanism.
+
+        Buddy system allocate/deallocates in O(Log2) time using O(1) space.
+
+        Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
+        does not suffer from external fragmentation as much since the device memory size does not
+        change.
+
+        It is recommend to specify a preferredDeviceMemorySize large enough such that multiple
+        requests can fit within the specified preferredDeviceMemorySize but not too large where
+        creating the larger device memory becomes a bigger bottleneck.
+        */
+        GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x1,
+
+        /** \brief Recycles device memory of a size being specified.
+
+        Fixed pools allocate/deallocate in O(1) time using O(N) space.
+
+        Fixed-size pool limits recycling to device memorys equal to
+        preferredDeviceMemorySize. A preferredDeviceMemorySize of zero is effectively
+        equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+        */
+        GP_ALLOCATOR_ALGORITHM_FIXED_POOL = 0x2,
+
+        /** \brief Recycles device memory of any size using multiple pools.
+
+        Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
+        */
+        GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x3,
+    };
+
+    /** \struct GpAllocatorCreateInfo
+    \brief Used to create allocator.
+    */
+    struct GpAllocatorCreateInfo {
         /** \brief Function pointer to Vulkan functions.
 
          There are 3 ways to specify Vulkan functions.
@@ -69,15 +130,41 @@ namespace gpgmm::vk {
         /** \brief Vulkan version return by VK_MAKE_VERSION.
          */
         uint32_t vulkanApiVersion;
+
+        /** \brief Flags used to configure allocator.
+         */
+        GpAllocatorCreateFlags flags;
+
+        /** \brief Specifies the algorithm to use for device memory pooling.
+
+        Used to evaluate how allocation implementations perform with various algorithms that
+        sub-divide device memorys.
+
+        Optional parameter. By default, the slab allocator is used.
+        */
+        GpAllocatorAlgorithm poolAlgorithm = GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+
+        /** \brief Specifies the preferred size of device memory.
+
+        The preferred size of the device memory is the minimum memory size to sub-allocate from.
+        A larger device memory consumes more memory but could be faster for sub-allocation.
+
+        Optional parameter. When 0 is specified, the API will automatically set the preferred
+        device memory size to be a multiple of minimum device memory size allowed by Vulkan.
+        */
+        uint64_t preferredDeviceMemorySize;
     };
 
+    /** \enum GpResourceAllocationCreateFlags
+    Additional controls that modify allocations.
+    */
     enum GpResourceAllocationCreateFlags {
 
         /** \brief Disables all allocation flags.
 
         Enabled by default.
         */
-        GP_ALLOCATION_FLAG_NONE = 0x0,
+        GP_ALLOCATION_CREATE_NONE = 0x0,
 
         /** \brief  Disallow creating new device memory when creating a resource.
 
@@ -85,13 +172,13 @@ namespace gpgmm::vk {
         must use existing device memory or error. Effectively disables creating
         standalone allocations whose memory cannot be reused.
         */
-        GP_ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
+        GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY = 0x1,
 
         /** \brief Disallow creating multiple resource allocations from the same device memory.
 
         The created resource will always be allocated with it's own device memory.
         */
-        GP_ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
+        GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
         /** \brief Prefetch memory for the next resource allocation.
 
@@ -101,7 +188,7 @@ namespace gpgmm::vk {
         allocating for large contiguous allocations. Should not be used with
         ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
         */
-        GP_ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY = 0x8,
+        GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY = 0x8,
     };
 
     /** \struct GpResourceAllocationCreateInfo
@@ -120,13 +207,13 @@ namespace gpgmm::vk {
     /** \brief  Create allocator used to create and manage video memory for the App specified device
     and instance.
 
-    @param info A reference to GpCreateAllocatorInfo structure that describes the allocator.
+    @param info A reference to GpAllocatorCreateInfo structure that describes the allocator.
     @param[out] allocatorOut Pointer to a memory block that recieves a pointer to the
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator. If NULL is passed and allocator creating would succeed, VK_INCOMPLETE is
     returned.
     */
-    GPGMM_EXPORT VkResult gpCreateResourceAllocator(const GpCreateAllocatorInfo& info,
+    GPGMM_EXPORT VkResult gpCreateResourceAllocator(const GpAllocatorCreateInfo& info,
                                                     GpResourceAllocator* allocatorOut);
 
     /** \brief  Destroy allocator.
@@ -169,7 +256,7 @@ namespace gpgmm::vk {
     class Caps;
     struct GpResourceAllocator_T {
       public:
-        static VkResult CreateAllocator(const GpCreateAllocatorInfo& info,
+        static VkResult CreateAllocator(const GpAllocatorCreateInfo& info,
                                         GpResourceAllocator* allocatorOut);
 
         VkResult TryAllocateMemory(const VkMemoryRequirements& requirements,
@@ -185,13 +272,18 @@ namespace gpgmm::vk {
         Caps* GetCaps() const;
 
       private:
-        GpResourceAllocator_T(const GpCreateAllocatorInfo& info,
+        GpResourceAllocator_T(const GpAllocatorCreateInfo& info,
                               const VulkanFunctions& vulkanFunctions,
                               std::unique_ptr<Caps> caps);
 
         VkResult FindMemoryTypeIndex(uint32_t memoryTypeBits,
                                      const GpResourceAllocationCreateInfo& allocationInfo,
                                      uint32_t* memoryTypeIndexOut);
+
+        std::unique_ptr<MemoryAllocator> CreateDeviceMemoryAllocator(
+            const GpAllocatorCreateInfo& info,
+            uint64_t memoryTypeIndex,
+            uint64_t memoryAlignment);
 
         VkDevice mDevice;
         VulkanFunctions mVulkanFunctions;

@@ -131,8 +131,8 @@ namespace gpgmm::vk {
         }
     }
 
-    GpCreateAllocatorInfo VKTestBase::CreateBasicAllocatorInfo() const {
-        GpCreateAllocatorInfo allocatorInfo = {};
+    GpAllocatorCreateInfo VKTestBase::CreateBasicAllocatorInfo() const {
+        GpAllocatorCreateInfo allocatorInfo = {};
         allocatorInfo.device = mDevice;
         allocatorInfo.instance = mInstance;
         allocatorInfo.physicalDevice = mPhysicalDevice;

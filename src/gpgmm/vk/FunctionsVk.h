@@ -25,11 +25,8 @@ namespace gpgmm::vk {
         // Used to statically set functions from a static library (Vulkan loader).
         void ImportDeviceFunctions();
 
-        // Used to import functions pre-specified by user.
+        // Used to import pre-loaded functions set by the user.
         void ImportDeviceFunctions(const VulkanFunctions* vkFunctions);
-
-        // ASSERTs if any Vulkan function is left unset.
-        void AssertVulkanFunctionsAreValid();
 
         // Order is important: instance must be loaded before device.
         PFN_vkGetInstanceProcAddr GetInstanceProcAddr = nullptr;
@@ -49,5 +46,8 @@ namespace gpgmm::vk {
         PFN_vkCreateImage CreateImage = nullptr;
         PFN_vkDestroyImage DestroyImage = nullptr;
     };
+
+    // ASSERTs if any Vulkan function is left unset.
+    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions);
 
 }  // namespace gpgmm::vk
