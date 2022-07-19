@@ -11,6 +11,6 @@ var searchData=
   ['vktest_2eh_8',['VKTest.h',['../_v_k_test_8h.html',1,'']]],
   ['vktestbase_9',['VKTestBase',['../classgpgmm_1_1vk_1_1_v_k_test_base.html',1,'gpgmm::vk']]],
   ['voidcallback_10',['VoidCallback',['../classgpgmm_1_1_void_callback.html',1,'gpgmm']]],
-  ['vulkanapiversion_11',['vulkanApiVersion',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#a87944635e273d90ec24a2b2646653ce8',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
+  ['vulkanapiversion_11',['vulkanApiVersion',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aad966715473066760a61bc34f1b8ad72',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['vulkanfunctions_12',['VulkanFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html',1,'gpgmm::vk']]]
 ];
