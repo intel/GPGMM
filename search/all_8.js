@@ -16,7 +16,7 @@ var searchData=
   ['insert_13',['Insert',['../classgpgmm_1_1d3d12_1_1_residency_set.html#a93367e45e0a98bcc750702d7d309fcf9',1,'gpgmm::d3d12::ResidencySet']]],
   ['insertafter_14',['InsertAfter',['../classgpgmm_1_1_link_node.html#ad73ec5a8e94076e40874938812cc9c9f',1,'gpgmm::LinkNode']]],
   ['insertbefore_15',['InsertBefore',['../classgpgmm_1_1_link_node.html#a46be6fc55e00ae4ae06d048e0449045e',1,'gpgmm::LinkNode']]],
-  ['instance_16',['instance',['../structgpgmm_1_1vk_1_1_gp_create_allocator_info.html#af157a51c98553d304fa921d6be34cec9',1,'gpgmm::vk::GpCreateAllocatorInfo']]],
+  ['instance_16',['instance',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a5d40707ce6865b7b4f8498b46a3fe7f3',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['instant_17',['Instant',['../namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c',1,'gpgmm']]],
   ['internal_5ftrace_5fevent_5fadd_18',['INTERNAL_TRACE_EVENT_ADD',['../_trace_event_8h.html#a595bad3bf70a95af9da1ef5f9d183888',1,'TraceEvent.h']]],
   ['internal_5ftrace_5fevent_5fadd_5fscoped_19',['INTERNAL_TRACE_EVENT_ADD_SCOPED',['../_trace_event_8h.html#a61fdaf2ad5c3573460690f9072fffe1e',1,'TraceEvent.h']]],
