@@ -57,3 +57,38 @@ TEST_F(VKResourceAllocatorTests, CreateBuffer) {
     gpDestroyBuffer(resourceAllocator, buffer, allocation);
     gpDestroyResourceAllocator(resourceAllocator);
 }
+
+TEST_F(VKResourceAllocatorTests, CreateBufferManyDeallocateAtEnd) {
+    GpResourceAllocator resourceAllocator;
+    ASSERT_SUCCESS(gpCreateResourceAllocator(CreateBasicAllocatorInfo(), &resourceAllocator));
+
+    VkBufferCreateInfo bufferInfo = {};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+
+    GpResourceAllocationCreateInfo allocationInfo = {};
+
+    // TODO: Figure this value out
+    constexpr uint64_t kBufferMemoryAlignment = GPGMM_KB_TO_BYTES(64);
+
+    std::set<std::tuple<VkBuffer, GpResourceAllocation>> allocs = {};
+    for (auto& alloc : GPGMMTestBase::GenerateTestAllocations(kBufferMemoryAlignment)) {
+        VkBuffer buffer;
+        GpResourceAllocation allocation = VK_NULL_HANDLE;
+        bufferInfo.size = alloc.size;
+        EXPECT_EQ(gpCreateBuffer(resourceAllocator, &bufferInfo, &buffer, &allocationInfo,
+                                 &allocation) == VK_SUCCESS,
+                  alloc.succeeds);
+        if (allocation == VK_NULL_HANDLE) {
+            continue;
+        }
+
+        ASSERT_NE(allocation, VK_NULL_HANDLE);
+        EXPECT_TRUE(allocs.insert(std::make_tuple(buffer, allocation)).second);
+    }
+
+    for (auto& alloc : allocs) {
+        gpDestroyBuffer(resourceAllocator, std::get<0>(alloc), std::get<1>(alloc));
+    }
+
+    gpDestroyResourceAllocator(resourceAllocator);
+}

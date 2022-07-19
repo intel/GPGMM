@@ -46,6 +46,12 @@ namespace gpgmm::vk {
          */
         GP_ALLOCATOR_CREATE_NONE = 0x0,
 
+        /** \brief Disables pre-fetching of GPU memory.
+
+        Should be only used for debugging and testing purposes.
+        */
+        GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH = 0x4,
+
         /** \brief Tell GPGMM to allocate exactly what is needed, and to de-allocate
         memory immediately once no longer needed (instead of re-using it).
 
@@ -135,6 +141,15 @@ namespace gpgmm::vk {
          */
         GpAllocatorCreateFlags flags;
 
+        /** \brief Specifies the algorithm to use for sub-allocation.
+
+        Used to evaluate how allocation implementations perform with various algorithms that
+        sub-divide devie memory.
+
+        Optional parameter. By default, the slab allocator is used.
+        */
+        GpAllocatorAlgorithm SubAllocationAlgorithm = GP_ALLOCATOR_ALGORITHM_SLAB;
+
         /** \brief Specifies the algorithm to use for device memory pooling.
 
         Used to evaluate how allocation implementations perform with various algorithms that
@@ -153,6 +168,40 @@ namespace gpgmm::vk {
         device memory size to be a multiple of minimum device memory size allowed by Vulkan.
         */
         uint64_t preferredDeviceMemorySize;
+
+        /** \brief Memory fragmentation limit, expressed as a percentage of the device memory size,
+        that is acceptable to be wasted due to fragmentation.
+
+        Fragmentation occurs when the allocation is larger then the resource size.
+        This occurs when the type of resource (buffer or texture) and allocator have different
+        alignment requirements. For example, a 192KB resource may need to allocate 256KB of
+        allocated space, which is equivalent to a fragmentation limit of 33%.
+
+        When |preferredDeviceMemorySize| is non-zero, the MemoryFragmentationLimit could be
+        exceeded. Also, the MemoryFragmentationLimit should never be zero, as some fragmentation
+        can occur.
+
+        Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
+        device memory size.
+        */
+        double MemoryFragmentationLimit;
+
+        /** \brief Memory growth factor, expressed as a multipler of the device memory size
+        that will monotonically increase.
+
+        A factor value of 1.0 specifies no growth, where the device memory size is always determined
+        by other limits or constraints. If no factor gets specified (or a value less than 1 is
+        specified), GPGMM will allocate a device memory size with enough space to fit exactly one
+        resource.
+
+        Memory growth avoids the need to specify |preferredDeviceMemorySize|, which
+        especially helps in situations where the resource size cannot be predicated (eg.
+        user-defined), by allowing the device memory size to gradually increase in size
+        per demand to achieve a balance of memory usage and performance.
+
+        Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
+        */
+        double MemoryGrowthFactor;
     };
 
     /** \enum GpResourceAllocationCreateFlags
@@ -285,10 +334,16 @@ namespace gpgmm::vk {
             uint64_t memoryTypeIndex,
             uint64_t memoryAlignment);
 
+        std::unique_ptr<MemoryAllocator> CreateResourceSubAllocator(
+            const GpAllocatorCreateInfo& info,
+            uint64_t memoryTypeIndex,
+            uint64_t memoryAlignment);
+
         VkDevice mDevice;
         VulkanFunctions mVulkanFunctions;
         std::unique_ptr<Caps> mCaps;
 
+        std::vector<std::unique_ptr<MemoryAllocator>> mResourceAllocatorsPerType;
         std::vector<std::unique_ptr<MemoryAllocator>> mDeviceAllocatorsPerType;
         std::vector<VkMemoryType> mMemoryTypes;
     };
