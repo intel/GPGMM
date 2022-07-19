@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/tests/end2end/VKResourceAllocatorTests.cpp File Reference</title>
+<title>GPGMM: src/fuzzers/D3D12Fuzzer.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,49 +63,62 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d93a1d4020dea85bb71b237545b5e722.html">tests</a></li><li class="navelem"><a class="el" href="dir_a5cf1464ecdcd928c8a058d58ae086a8.html">end2end</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_db220239bdf4fcd57dc6e1da30a6dba8.html">fuzzers</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">VKResourceAllocatorTests.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">D3D12Fuzzer.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_v_k_test_8h.html">tests/VKTest.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="gpgmm__vk_8h.html">gpgmm_vk.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_d3_d12_fuzzer_8h.html">D3D12Fuzzer.h</a>&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4dcfbda61355db4e5f57f4cbc1e69b12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_v_k_resource_allocator_tests_8cpp.html#a4dcfbda61355db4e5f57f4cbc1e69b12">TEST_F</a> (<a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>, CreateAllocator)</td></tr>
-<tr class="separator:a4dcfbda61355db4e5f57f4cbc1e69b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab922d8a6bcbc0a0375da83dfa8914135"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_v_k_resource_allocator_tests_8cpp.html#ab922d8a6bcbc0a0375da83dfa8914135">TEST_F</a> (<a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>, CreateBuffer)</td></tr>
-<tr class="separator:ab922d8a6bcbc0a0375da83dfa8914135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3f7e7fa42bda7a10ab10021334695c"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_fuzzer_8cpp.html#acf3f7e7fa42bda7a10ab10021334695c">UInt8ToUInt64</a> (const uint8_t *src)</td></tr>
+<tr class="separator:acf3f7e7fa42bda7a10ab10021334695c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a27010c5cd17c540846114950f91ab7"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_fuzzer_8cpp.html#a6a27010c5cd17c540846114950f91ab7">CreateAllocatorDesc</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">gpgmm::d3d12::ALLOCATOR_DESC</a> *allocatorDesc)</td></tr>
+<tr class="separator:a6a27010c5cd17c540846114950f91ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2735bc436a3c041a7cea9697e3cc388"><td class="memItemLeft" align="right" valign="top">D3D12_RESOURCE_DESC&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_fuzzer_8cpp.html#af2735bc436a3c041a7cea9697e3cc388">CreateBufferDesc</a> (uint64_t width, uint64_t alignment)</td></tr>
+<tr class="separator:af2735bc436a3c041a7cea9697e3cc388"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a4dcfbda61355db4e5f57f4cbc1e69b12" name="a4dcfbda61355db4e5f57f4cbc1e69b12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dcfbda61355db4e5f57f4cbc1e69b12">&#9670;&nbsp;</a></span>TEST_F() <span class="overload">[1/2]</span></h2>
+<a id="a6a27010c5cd17c540846114950f91ab7" name="a6a27010c5cd17c540846114950f91ab7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a27010c5cd17c540846114950f91ab7">&#9670;&nbsp;</a></span>CreateAllocatorDesc()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TEST_F </td>
+          <td class="memname">HRESULT CreateAllocatorDesc </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>&#160;</td>
-          <td class="paramname">, </td>
+          <td class="paramtype"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">gpgmm::d3d12::ALLOCATOR_DESC</a> *&#160;</td>
+          <td class="paramname"><em>allocatorDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2735bc436a3c041a7cea9697e3cc388" name="af2735bc436a3c041a7cea9697e3cc388"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2735bc436a3c041a7cea9697e3cc388">&#9670;&nbsp;</a></span>CreateBufferDesc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">D3D12_RESOURCE_DESC CreateBufferDesc </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CreateAllocator&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>alignment</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -117,28 +130,18 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab922d8a6bcbc0a0375da83dfa8914135" name="ab922d8a6bcbc0a0375da83dfa8914135"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab922d8a6bcbc0a0375da83dfa8914135">&#9670;&nbsp;</a></span>TEST_F() <span class="overload">[2/2]</span></h2>
+<a id="acf3f7e7fa42bda7a10ab10021334695c" name="acf3f7e7fa42bda7a10ab10021334695c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf3f7e7fa42bda7a10ab10021334695c">&#9670;&nbsp;</a></span>UInt8ToUInt64()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TEST_F </td>
+          <td class="memname">uint64_t UInt8ToUInt64 </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">CreateBuffer&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/tests/end2end/VKResourceAllocatorTests.cpp File Reference</title>
+<title>GPGMM: src/fuzzers/D3D12ResidencyManagerFuzzer.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,49 +63,46 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d93a1d4020dea85bb71b237545b5e722.html">tests</a></li><li class="navelem"><a class="el" href="dir_a5cf1464ecdcd928c8a058d58ae086a8.html">end2end</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_db220239bdf4fcd57dc6e1da30a6dba8.html">fuzzers</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">VKResourceAllocatorTests.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">D3D12ResidencyManagerFuzzer.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_v_k_test_8h.html">tests/VKTest.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="gpgmm__vk_8h.html">gpgmm_vk.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;testing/libfuzzer/libfuzzer_exports.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_d3_d12_fuzzer_8h.html">D3D12Fuzzer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_size_class_8h.html">gpgmm/common/SizeClass.h</a>&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4dcfbda61355db4e5f57f4cbc1e69b12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_v_k_resource_allocator_tests_8cpp.html#a4dcfbda61355db4e5f57f4cbc1e69b12">TEST_F</a> (<a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>, CreateAllocator)</td></tr>
-<tr class="separator:a4dcfbda61355db4e5f57f4cbc1e69b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab922d8a6bcbc0a0375da83dfa8914135"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_v_k_resource_allocator_tests_8cpp.html#ab922d8a6bcbc0a0375da83dfa8914135">TEST_F</a> (<a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>, CreateBuffer)</td></tr>
-<tr class="separator:ab922d8a6bcbc0a0375da83dfa8914135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa30889313cc057073351a87b2590b886"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_residency_manager_fuzzer_8cpp.html#aa30889313cc057073351a87b2590b886">LLVMFuzzerInitialize</a> (int *argc, char ***argv)</td></tr>
+<tr class="separator:aa30889313cc057073351a87b2590b886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ce7c16e9840492202299da2b451e60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_residency_manager_fuzzer_8cpp.html#a91ce7c16e9840492202299da2b451e60">LLVMFuzzerTestOneInput</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="separator:a91ce7c16e9840492202299da2b451e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a4dcfbda61355db4e5f57f4cbc1e69b12" name="a4dcfbda61355db4e5f57f4cbc1e69b12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dcfbda61355db4e5f57f4cbc1e69b12">&#9670;&nbsp;</a></span>TEST_F() <span class="overload">[1/2]</span></h2>
+<a id="aa30889313cc057073351a87b2590b886" name="aa30889313cc057073351a87b2590b886"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa30889313cc057073351a87b2590b886">&#9670;&nbsp;</a></span>LLVMFuzzerInitialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TEST_F </td>
+          <td class="memname">int LLVMFuzzerInitialize </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>&#160;</td>
-          <td class="paramname">, </td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CreateAllocator&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">char ***&#160;</td>
+          <td class="paramname"><em>argv</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -117,23 +114,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab922d8a6bcbc0a0375da83dfa8914135" name="ab922d8a6bcbc0a0375da83dfa8914135"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab922d8a6bcbc0a0375da83dfa8914135">&#9670;&nbsp;</a></span>TEST_F() <span class="overload">[2/2]</span></h2>
+<a id="a91ce7c16e9840492202299da2b451e60" name="a91ce7c16e9840492202299da2b451e60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ce7c16e9840492202299da2b451e60">&#9670;&nbsp;</a></span>LLVMFuzzerTestOneInput()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TEST_F </td>
+          <td class="memname">int LLVMFuzzerTestOneInput </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_v_k_resource_allocator_tests.html">VKResourceAllocatorTests</a>&#160;</td>
-          <td class="paramname">, </td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CreateBuffer&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
