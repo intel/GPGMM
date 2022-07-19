@@ -176,3 +176,9 @@ jobs:
       run: |
         cd test
         out\Fuzzer\gpgmm_d3d12_resource_allocator_fuzzer.exe -max_total_time=120
+
+    - name: Run gpgmm_d3d12_residency_manager_fuzzer (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Fuzzer\gpgmm_d3d12_residency_manager_fuzzer.exe -max_total_time=60
