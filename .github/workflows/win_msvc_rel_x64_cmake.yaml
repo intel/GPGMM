@@ -76,16 +76,16 @@ jobs:
       shell: cmd
       run: |
         cd test
-        Release\gpgmm_end2end_tests.exe 2>&1
+        bin\Release\gpgmm_end2end_tests.exe 2>&1
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |
         cd test
-        Release\gpgmm_unittests.exe
+        bin\Release\gpgmm_unittests.exe
 
     - name: Run gpgmm_capture_replay_tests (with patch)
       shell: cmd
       run: |
         cd test
-        Release\gpgmm_capture_replay_tests.exe
+        bin\Release\gpgmm_capture_replay_tests.exe
