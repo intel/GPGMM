@@ -75,6 +75,8 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_resource_allocator_vk_8h.html">gpgmm/vk/ResourceAllocatorVk.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_event_message_8h.html">gpgmm/common/EventMessage.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_pooled_memory_allocator_8h.html">gpgmm/common/PooledMemoryAllocator.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_segmented_memory_allocator_8h.html">gpgmm/common/SegmentedMemoryAllocator.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_backend_vk_8h.html">gpgmm/vk/BackendVk.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_caps_vk_8h.html">gpgmm/vk/CapsVk.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_device_memory_allocator_vk_8h.html">gpgmm/vk/DeviceMemoryAllocatorVk.h</a>&quot;</code><br />
@@ -90,9 +92,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a32223c7610abfb8cd874c60c8c0758f7"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a32223c7610abfb8cd874c60c8c0758f7">gpgmm::vk::gpCreateResourceAllocator</a> (const GpCreateAllocatorInfo &amp;info, <a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *allocatorOut)</td></tr>
-<tr class="memdesc:a32223c7610abfb8cd874c60c8c0758f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create allocator used to create and manage video memory for the App specified device and instance.  <a href="namespacegpgmm_1_1vk.html#a32223c7610abfb8cd874c60c8c0758f7">More...</a><br /></td></tr>
-<tr class="separator:a32223c7610abfb8cd874c60c8c0758f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714d3c0ca5f86caa30020a08646ceb65"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">gpgmm::vk::gpCreateResourceAllocator</a> (const GpAllocatorCreateInfo &amp;info, <a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *allocatorOut)</td></tr>
+<tr class="memdesc:a714d3c0ca5f86caa30020a08646ceb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create allocator used to create and manage video memory for the App specified device and instance.  <a href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">More...</a><br /></td></tr>
+<tr class="separator:a714d3c0ca5f86caa30020a08646ceb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc98f4568b4de02bbd65f32c6adc7006"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">gpgmm::vk::gpDestroyResourceAllocator</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator)</td></tr>
 <tr class="memdesc:acc98f4568b4de02bbd65f32c6adc7006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy allocator.  <a href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">More...</a><br /></td></tr>
 <tr class="separator:acc98f4568b4de02bbd65f32c6adc7006"><td class="memSeparator" colspan="2">&#160;</td></tr>
