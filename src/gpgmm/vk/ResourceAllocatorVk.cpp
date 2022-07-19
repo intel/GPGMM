@@ -14,9 +14,13 @@
 
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
+#include "gpgmm/common/BuddyMemoryAllocator.h"
+#include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
+#include "gpgmm/common/SizeClass.h"
+#include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/vk/BackendVk.h"
 #include "gpgmm/vk/CapsVk.h"
 #include "gpgmm/vk/DeviceMemoryAllocatorVk.h"
@@ -57,6 +61,9 @@ namespace gpgmm::vk {
 
         VkMemoryRequirements requirements = {};
         allocator->GetBufferMemoryRequirements(buffer, &requirements);
+        if (requirements.size == 0) {
+            return VK_INCOMPLETE;
+        }
 
         // Create memory for the buffer.
         GpResourceAllocation allocation = VK_NULL_HANDLE;
@@ -164,6 +171,9 @@ namespace gpgmm::vk {
                  memoryTypeIndex++) {
                 mDeviceAllocatorsPerType.emplace_back(
                     CreateDeviceMemoryAllocator(info, memoryTypeIndex, kNoRequiredAlignment));
+
+                mResourceAllocatorsPerType.emplace_back(
+                    CreateResourceSubAllocator(info, memoryTypeIndex, kNoRequiredAlignment));
             }
         }
     }
@@ -213,27 +223,38 @@ namespace gpgmm::vk {
         mVulkanFunctions.GetBufferMemoryRequirements(mDevice, buffer, requirementsOut);
     }
 
-    VkResult GpResourceAllocator_T::TryAllocateMemory(
-        const VkMemoryRequirements& requirements,
-        const GpResourceAllocationCreateInfo& allocationInfo,
-        GpResourceAllocation* allocationOut) {
+    VkResult GpResourceAllocator_T::TryAllocateMemory(const VkMemoryRequirements& requirements,
+                                                      const GpResourceAllocationCreateInfo& info,
+                                                      GpResourceAllocation* allocationOut) {
         uint32_t memoryTypeIndex;
-        ReturnIfFailed(
-            FindMemoryTypeIndex(requirements.memoryTypeBits, allocationInfo, &memoryTypeIndex));
+        ReturnIfFailed(FindMemoryTypeIndex(requirements.memoryTypeBits, info, &memoryTypeIndex));
 
-        MemoryAllocator* allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
+        const bool neverSubAllocate = info.flags & GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY;
 
         MemoryAllocationRequest request = {};
         request.SizeInBytes = requirements.size;
         request.Alignment = requirements.alignment;
-        request.NeverAllocate = (allocationInfo.flags & GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY);
+        request.NeverAllocate = (info.flags & GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY);
         request.AlwaysCacheSize = false;
-        request.AlwaysPrefetch =
-            (allocationInfo.flags & GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY);
+        request.AlwaysPrefetch = (info.flags & GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY);
+        request.AvailableForAllocation = kInvalidSize;
 
-        std::unique_ptr<MemoryAllocation> memoryAllocation = allocator->TryAllocateMemory(request);
+        // Attempt to allocate using the most effective allocator.
+        MemoryAllocator* allocator = nullptr;
+
+        std::unique_ptr<MemoryAllocation> memoryAllocation;
+        if (!neverSubAllocate) {
+            allocator = mResourceAllocatorsPerType[memoryTypeIndex].get();
+            memoryAllocation = allocator->TryAllocateMemory(request);
+        }
+
         if (memoryAllocation == nullptr) {
-            InfoEvent("GpResourceAllocator.TryAllocateResource", EventMessageId::AllocatorFailed)
+            allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
+            memoryAllocation = allocator->TryAllocateMemory(request);
+        }
+
+        if (memoryAllocation == nullptr) {
+            ErrorEvent("GpResourceAllocator.TryAllocateResource", EventMessageId::AllocatorFailed)
                 << std::string(allocator->GetTypename()) +
                        " failed to allocate memory for resource.";
 
@@ -290,6 +311,45 @@ namespace gpgmm::vk {
         }
 
         return deviceMemoryAllocator;
+    }
+
+    std::unique_ptr<MemoryAllocator> GpResourceAllocator_T::CreateResourceSubAllocator(
+        const GpAllocatorCreateInfo& info,
+        uint64_t memoryTypeIndex,
+        uint64_t memoryAlignment) {
+        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
+            CreateDeviceMemoryAllocator(info, memoryTypeIndex, memoryAlignment);
+
+        // TODO: Figure out how to specify this using Vulkan API.
+        static constexpr uint64_t kMaxDeviceMemorySize = GPGMM_GB_TO_BYTES(32);
+
+        const uint64_t memoryGrowthFactor =
+            (info.MemoryGrowthFactor >= 1.0) ? info.MemoryGrowthFactor : kDefaultMemoryGrowthFactor;
+
+        switch (info.SubAllocationAlgorithm) {
+            case GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
+                return std::make_unique<BuddyMemoryAllocator>(
+                    /*systemSize*/ kMaxDeviceMemorySize,
+                    /*memorySize*/ std::max(memoryAlignment, info.preferredDeviceMemorySize),
+                    /*memoryAlignment*/ memoryAlignment,
+                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
+            }
+            case GP_ALLOCATOR_ALGORITHM_SLAB: {
+                return std::make_unique<SlabCacheAllocator>(
+                    /*maxSlabSize*/ kMaxDeviceMemorySize,
+                    /*minSlabSize*/ std::max(memoryAlignment, info.preferredDeviceMemorySize),
+                    /*slabAlignment*/ memoryAlignment,
+                    /*slabFragmentationLimit*/ info.MemoryFragmentationLimit,
+                    /*allowSlabPrefetch*/
+                    !(info.flags & GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH),
+                    /*slabGrowthFactor*/ memoryGrowthFactor,
+                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
+            }
+            default: {
+                UNREACHABLE();
+                return {};
+            }
+        }
     }
 
 }  // namespace gpgmm::vk
