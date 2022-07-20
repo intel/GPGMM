@@ -1,4 +1,4 @@
-name: win_clang_dbg_x64
+name: Windows x64 GN/Clang (Debug)
 
 on:
   # This is a required workflow specified in branch enforcement

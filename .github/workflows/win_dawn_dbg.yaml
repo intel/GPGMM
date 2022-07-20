@@ -1,4 +1,4 @@
-name: win_dawn_dbg
+name: Windows WebGPU/Dawn (Debug)
 
 on:
   workflow_dispatch:

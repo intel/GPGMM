@@ -1,4 +1,4 @@
-name: win_msvc_dbg_x64_cmake
+name: Windows x64 CMake/MSVC (Debug)
 
 on:
   # This is a required workflow specified in branch enforcement

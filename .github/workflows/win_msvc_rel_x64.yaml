@@ -1,4 +1,4 @@
-name: win_msvc_rel_x64
+name: Windows x64 GN/MSVC (Release)
 
 on:
   # This is a required workflow specified in branch enforcement

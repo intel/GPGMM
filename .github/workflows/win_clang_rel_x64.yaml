@@ -1,4 +1,4 @@
-name: win_clang_rel_x64
+name: Windows x64 GN/Clang (Release)
 
 on:
   # This is a required workflow specified in branch enforcement

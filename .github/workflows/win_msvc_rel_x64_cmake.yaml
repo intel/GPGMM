@@ -1,4 +1,4 @@
-name: win_msvc_rel_x64_cmake
+name: Windows x64 CMake/MSVC (Release)
 
 on:
   # This is a required workflow specified in branch enforcement

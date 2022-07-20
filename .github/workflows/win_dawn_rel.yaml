@@ -1,4 +1,4 @@
-name: win_dawn_rel
+name: Windows WebGPU/Dawn (Release)
 
 on:
   push:
