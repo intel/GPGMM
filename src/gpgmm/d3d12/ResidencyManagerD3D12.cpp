@@ -463,10 +463,17 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
-                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+    HRESULT ResidencyManager::EnsureCreatedHeapResident(
+        uint64_t heapSize,
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return EvictInternal(evictSizeInBytes, memorySegmentGroup);
+        uint64_t evictedSizeInBytes = heapSize;
+        ReturnIfFailed(EvictInternal(heapSize, memorySegmentGroup, &evictedSizeInBytes));
+        if (evictedSizeInBytes < heapSize) {
+            gpgmm::DebugLog() << "Not enough budget left to create heap resident.";
+            return E_FAIL;
+        }
+        return S_OK;
     }
 
     // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
@@ -483,6 +490,13 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
         }
 
+        // If the OS-provided video memory budget is zero, a budget has not been provided
+        // and evict should be ignored in order to proceed until a non-zero budget can be provided.
+        if (videoMemorySegmentInfo->Budget == 0) {
+            gpgmm::DebugLog() << "Attempted to evict with non-zero budget.";
+            return S_OK;
+        }
+
         const uint64_t currentUsageAfterEvict =
             evictSizeInBytes + videoMemorySegmentInfo->CurrentUsage;
 
@@ -497,6 +511,12 @@ namespace gpgmm::d3d12 {
         std::vector<ID3D12Pageable*> objectsToEvict;
         const uint64_t sizeNeededToBeUnderBudget =
             currentUsageAfterEvict - videoMemorySegmentInfo->Budget;
+
+        // No need to attempt to evict when the budget left is exactly the size needed.
+        if (sizeNeededToBeUnderBudget == 0) {
+            return S_OK;
+        }
+
         uint64_t evictedSizeInBytes = 0;
         while (evictedSizeInBytes < sizeNeededToBeUnderBudget) {
             // If the cache is empty, allow execution to continue. Note that fully

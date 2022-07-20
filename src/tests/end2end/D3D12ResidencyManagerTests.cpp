@@ -228,6 +228,21 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_END();
 }
 
+TEST_F(D3D12ResidencyManagerTests, OverBudgetFail) {
+    ComPtr<ResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
+        CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+        CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
+
+    // Attempting to create a resource over the budget should always fail.
+    ASSERT_FAILED(resourceAllocator->CreateResource(
+        {}, CreateBasicBufferDesc(kDefaultBudget + GPGMM_MB_TO_BYTES(1)),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+}
+
 // Keeps allocating until it goes over the limited |kDefaultBudget| size budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);

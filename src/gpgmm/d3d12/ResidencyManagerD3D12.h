@@ -241,8 +241,8 @@ namespace gpgmm::d3d12 {
 
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
 
-        HRESULT Evict(uint64_t evictSizeInBytes,
-                      const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        HRESULT EnsureCreatedHeapResident(uint64_t evictSizeInBytes,
+                                          const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         HRESULT EvictInternal(uint64_t evictSizeInBytes,
                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
