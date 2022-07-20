@@ -61,19 +61,11 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     allocatorDesc.Adapter = dxgiAdapter;
 
     // Populate the options.
-    D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-    if (FAILED(d3dDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)))) {
-        return 0;
-    }
-
-    allocatorDesc.IsUMA = arch.UMA;
-
     D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
     if (FAILED(d3dDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options,
                                               sizeof(options)))) {
         return 0;
     }
-
     allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
 
     if (FAILED(

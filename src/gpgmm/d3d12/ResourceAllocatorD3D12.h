@@ -165,14 +165,6 @@ namespace gpgmm::d3d12 {
         */
         EVENT_RECORD_OPTIONS RecordOptions;
 
-        /** \brief Specifies if unified memory architecture (UMA) support is enabled.
-
-        Used to determine if resource heaps can exist in shared memory.
-
-        Required parameter. Use CheckFeatureSupport to determine if supported.
-        */
-        bool IsUMA;
-
         /** \brief Specifies the adapter's tier of resource heap support.
 
         Used to determine if resource categories (texture and buffers) can co-exist in the

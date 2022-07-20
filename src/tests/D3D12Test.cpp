@@ -78,7 +78,6 @@ namespace gpgmm::d3d12 {
         // Required parameters.
         desc.Adapter = mAdapter;
         desc.Device = mDevice;
-        desc.IsUMA = mIsUMA;
         desc.ResourceHeapTier = mResourceHeapTier;
 
         // Pre-fetching is enabled by default. However for testing purposes, pre-fetching changes

@@ -31,7 +31,6 @@ allocatorDesc.Device = Device;
 allocatorDesc.Adapter = Adapter;
 
 // Use CheckFeatureSupport
-allocatorDesc.IsUMA = true;
 allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
 
 ComPtr<gpgmm::d3d12::ResidencyManager> residency; // Optional
