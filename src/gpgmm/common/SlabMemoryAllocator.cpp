@@ -450,7 +450,6 @@ namespace gpgmm {
 
     SlabCacheAllocator::~SlabCacheAllocator() {
         mSizeCache.clear();
-        mSlabAllocators.clear();
     }
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
@@ -466,13 +465,12 @@ namespace gpgmm {
         // Create a slab allocator for the new entry.
         auto entry =
             mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(blockSize), request.AlwaysCacheSize);
-        SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
+        SlabMemoryAllocator* slabAllocator = entry->GetValue().SlabAllocator.get();
         if (slabAllocator == nullptr) {
-            slabAllocator = new SlabMemoryAllocator(
+            entry->GetValue().SlabAllocator = std::make_unique<SlabMemoryAllocator>(
                 blockSize, mMaxSlabSize, mMinSlabSize, mSlabAlignment, mSlabFragmentationLimit,
                 mAllowSlabPrefetch, mSlabGrowthFactor, GetNextInChain());
-            entry->GetValue().pSlabAllocator = slabAllocator;
-            slabAllocator->InsertAfter(mSlabAllocators.tail());
+            slabAllocator = entry->GetValue().SlabAllocator.get();
         }
 
         ASSERT(slabAllocator != nullptr);
@@ -495,7 +493,7 @@ namespace gpgmm {
 
         auto entry =
             mSizeCache.GetOrCreate(SlabAllocatorCacheEntry(subAllocation->GetSize()), false);
-        SlabMemoryAllocator* slabAllocator = entry->GetValue().pSlabAllocator;
+        SlabMemoryAllocator* slabAllocator = entry->GetValue().SlabAllocator.get();
         ASSERT(slabAllocator != nullptr);
 
         slabAllocator->DeallocateMemory(std::move(subAllocation));
@@ -503,9 +501,6 @@ namespace gpgmm {
         // If this is the last sub-allocation, remove the cached allocator.
         // Once |entry| goes out of scope, it will unlink itself from the cache.
         entry->Unref();
-        if (entry->HasOneRef()) {
-            SafeDelete(slabAllocator);
-        }
     }
 
     MemoryAllocatorInfo SlabCacheAllocator::GetInfo() const {
@@ -513,7 +508,7 @@ namespace gpgmm {
 
         MemoryAllocatorInfo result = {};
         for (const auto& entry : mSizeCache) {
-            const MemoryAllocatorInfo& info = entry->GetValue().pSlabAllocator->GetInfo();
+            const MemoryAllocatorInfo& info = entry->GetValue().SlabAllocator->GetInfo();
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedBlockUsage += info.UsedBlockUsage;
             result.PrefetchedMemoryMisses += info.PrefetchedMemoryMisses;
