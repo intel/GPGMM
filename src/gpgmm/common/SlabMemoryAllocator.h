@@ -134,7 +134,7 @@ namespace gpgmm {
                 return mBlockSize;
             }
 
-            SlabMemoryAllocator* pSlabAllocator = nullptr;
+            std::unique_ptr<SlabMemoryAllocator> SlabAllocator;
 
           private:
             const uint64_t mBlockSize;
@@ -148,7 +148,6 @@ namespace gpgmm {
         const bool mAllowSlabPrefetch;
         const double mSlabGrowthFactor;
 
-        LinkedList<MemoryAllocator> mSlabAllocators;
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;
     };
 
