@@ -177,6 +177,7 @@ namespace gpgmm::d3d12 {
         // Require automatic video memory budget updates.
         if (!descriptor.UpdateBudgetByPolling) {
             ReturnIfFailed(residencyManager->StartBudgetNotificationUpdates());
+            gpgmm::DebugLog() << "OS event based budget updates enabled.";
         }
 
         // Set the initial video memory limits per segment.
