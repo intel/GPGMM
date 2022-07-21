@@ -112,13 +112,22 @@ if (GPGMM_ENABLE_VK)
     )
 
     if (GPGMM_ENABLE_VK_LOADER)
-      target_link_libraries(gpgmm PRIVATE
-        Vulkan::Vulkan
-      )
+      if (GPGMM_ENABLE_VK_USE_SDK)
+        target_link_libraries(gpgmm PRIVATE
+          ${GPGMM_VK_LIBRARIES_DIR}
+        )
+      else()
+        target_link_libraries(gpgmm PRIVATE
+          Vulkan::Vulkan
+        )
+      endif()
     endif()
 
-    target_link_libraries(gpgmm PUBLIC Vulkan-Headers)
-    target_include_directories(gpgmm PRIVATE ${GPGMM_VK_TOOLS_DIR})
+    if (GPGMM_ENABLE_VK_USE_SDK)
+      target_include_directories(gpgmm PUBLIC ${GPGMM_VK_INCLUDE_DIR})
+    else()
+      target_link_libraries(gpgmm PUBLIC Vulkan-Headers)
+    endif()
 
 endif()
 

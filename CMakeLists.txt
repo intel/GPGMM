@@ -96,11 +96,11 @@ option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backen
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
 option_if_not_defined(GPGMM_ENABLE_VK_STATIC_FUNCTIONS "Links Vulkan functions by statically importing them" ON)
 option_if_not_defined(GPGMM_ENABLE_VK_LOADER "Enables compilation of Vulkan loader" ${ENABLE_VK_LOADER})
+option_if_not_defined(GPGMM_ENABLE_VK_USE_SDK "Enable compilation of the Vulkan backend by using the installed Vulkan SDK." OFF)
 
 set_if_not_defined(GPGMM_THIRD_PARTY_DIR "${GPGMM_SOURCE_DIR}/third_party" "Directory in which to find third-party dependencies.")
 set_if_not_defined(GPGMM_VK_DEPS_DIR "${GPGMM_THIRD_PARTY_DIR}/vulkan-deps" "Directory in which to find vulkan-deps")
 set_if_not_defined(GPGMM_VK_HEADERS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-headers/src" "Directory in which to find Vulkan-Headers")
-set_if_not_defined(GPGMM_VK_TOOLS_DIR "${GPGMM_VK_DEPS_DIR}/vulkan-tools/src" "Directory in which to find Vulkan-Tools")
 
 option_if_not_defined(GPGMM_ALWAYS_ASSERT "Enable assertions on all build types" OFF)
 option_if_not_defined(GPGMM_FORCE_TRACING "Enables event tracing even in release builds" OFF)
