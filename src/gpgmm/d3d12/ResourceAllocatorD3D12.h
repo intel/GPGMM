@@ -576,7 +576,6 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysInBudget;
-        const uint64_t mMaxResourceHeapSize;
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
 

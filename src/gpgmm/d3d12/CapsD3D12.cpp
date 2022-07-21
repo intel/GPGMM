@@ -42,12 +42,12 @@ namespace gpgmm::d3d12 {
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
         // Check for overflow.
-        if (feature.MaxGPUVirtualAddressBitsPerResource == 0 ||
-            feature.MaxGPUVirtualAddressBitsPerResource > GetNumOfBits<uint64_t>()) {
+        if (feature.MaxGPUVirtualAddressBitsPerProcess == 0 ||
+            feature.MaxGPUVirtualAddressBitsPerProcess > GetNumOfBits<uint64_t>()) {
             return E_FAIL;
         }
 
-        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
+        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerProcess - 1)) - 1;
         return S_OK;
     }
 
