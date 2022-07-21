@@ -401,7 +401,6 @@ namespace gpgmm::d3d12 {
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
-          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
@@ -496,17 +495,18 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
             CreateResourceHeapAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
+        const uint64_t maxResourceHeapSize = mCaps->GetMaxResourceHeapSize();
         switch (descriptor.SubAllocationAlgorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
                 return std::make_unique<BuddyMemoryAllocator>(
-                    /*systemSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                    /*systemSize*/ PrevPowerOfTwo(maxResourceHeapSize),
                     /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
                     /*memoryAlignment*/ heapAlignment,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
             case ALLOCATOR_ALGORITHM_SLAB: {
                 return std::make_unique<SlabCacheAllocator>(
-                    /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
+                    /*maxSlabSize*/ PrevPowerOfTwo(maxResourceHeapSize),
                     /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
                     /*slabAlignment*/ heapAlignment,
                     /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
@@ -735,11 +735,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
-        if (resourceInfo.SizeInBytes == kInvalidSize) {
-            return E_OUTOFMEMORY;
-        }
-
-        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
+        if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
             return E_OUTOFMEMORY;
         }
 
@@ -789,7 +785,7 @@ namespace gpgmm::d3d12 {
         request.AlwaysPrefetch =
             (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
         request.AlwaysCacheSize = (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
-        request.AvailableForAllocation = mMaxResourceHeapSize;
+        request.AvailableForAllocation = mCaps->GetMaxResourceHeapSize();
 
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
