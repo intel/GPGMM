@@ -42,6 +42,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "PlatformUtils.h",
       "RefCount.cpp",
       "RefCount.h",
+      "StableList.h",
       "Utils.cpp",
       "Utils.h",
     ]

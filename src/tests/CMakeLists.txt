@@ -38,6 +38,7 @@ target_sources(gpgmm_unittests PRIVATE
   "unittests/SegmentedMemoryAllocatorTests.cpp"
   "unittests/SlabBlockAllocatorTests.cpp"
   "unittests/SlabMemoryAllocatorTests.cpp"
+  "unittests/StableListTests.cpp"
   "unittests/UtilsTest.cpp"
   "UnittestsMain.cpp"
 )
