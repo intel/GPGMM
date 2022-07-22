@@ -58,19 +58,32 @@ if (GPGMM_ENABLE_TESTS)
 endif() # GPGMM_ENABLE_TESTS
 
 if (GPGMM_ENABLE_VK)
-  FetchContent_Declare(
-    vulkan-headers
-    GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
-    GIT_TAG ${GPGMM_VULKAN_HEADERS_REVISION}
-  )
-  FetchContent_MakeAvailable(vulkan-headers)
+	if (GPGMM_ENABLE_VK_USE_SDK)
+		message(INFO "Using installed Vulkan SDK")
+		find_package(Vulkan REQUIRED)
 
-  if (GPGMM_ENABLE_VK_LOADER)
-    FetchContent_Declare(
-      vulkan-loader
-      GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
-      GIT_TAG ${GPGMM_VULKAN_LOADER_REVISION}
-    )
-    FetchContent_MakeAvailable(vulkan-loader)
-  endif() # GPGMM_ENABLE_VK_LOADER
+    set(GPGMM_VK_INCLUDE_DIR ${Vulkan_INCLUDE_DIRS} CACHE STRING "" FORCE)
+		set(GPGMM_VK_LIBRARIES_DIR ${Vulkan_LIBRARIES} CACHE STRING "" FORCE)
+    message(INFO "Using Vulkan include directory: ${GPGMM_VK_INCLUDE_DIR}")
+    message(INFO "Using Vulkan library directory: ${GPGMM_VK_LIBRARIES_DIR}")
+
+	else()
+		FetchContent_Declare(
+			vulkan-headers
+			GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
+			GIT_TAG ${GPGMM_VULKAN_HEADERS_REVISION}
+		)
+		FetchContent_MakeAvailable(vulkan-headers)
+
+		if (GPGMM_ENABLE_VK_LOADER)
+			FetchContent_Declare(
+				vulkan-loader
+				GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
+				GIT_TAG ${GPGMM_VULKAN_LOADER_REVISION}
+			)
+			FetchContent_MakeAvailable(vulkan-loader)
+
+		endif() # GPGMM_ENABLE_VK_LOADER
+	endif() # GPGMM_ENABLE_VK_USE_SDK
+
 endif() # GPGMM_ENABLE_VK
