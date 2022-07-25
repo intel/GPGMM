@@ -26,6 +26,7 @@ target_sources(gpgmm_unittests PRIVATE
   "DummyMemoryAllocator.h"
   "unittests/BuddyBlockAllocatorTests.cpp"
   "unittests/ConditionalMemoryAllocatorTests.cpp"
+  "unittests/ContiguousLinkNodeAllocatorTests.cpp"
   "unittests/EventTraceWriterTests.cpp"
   "unittests/FlagsTests.cpp"
   "unittests/LinkedListTests.cpp"

@@ -25,6 +25,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_fuchsia || is_android) {
       "Assert.cpp",
       "Assert.h",
       "Compiler.h",
+      "ContiguousLinkNodeAllocator.h",
       "Flags.h",
       "JSONEncoder.cpp",
       "JSONEncoder.h",
