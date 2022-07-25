@@ -68,6 +68,8 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     }
     allocatorDesc.ResourceHeapTier = options.ResourceHeapTier;
 
+    allocatorDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
+
     if (FAILED(
             gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &gResourceAllocator))) {
         return 0;

@@ -99,6 +99,7 @@ namespace gpgmm {
         ASSERT(mSlabGrowthFactor >= 1);
         ASSERT(IsAligned(mMaxSlabSize, mSlabAlignment));
         ASSERT(IsAligned(mMinSlabSize, mSlabAlignment));
+        ASSERT(blockSize <= mMaxSlabSize);
     }
 
     SlabMemoryAllocator::~SlabMemoryAllocator() {
@@ -461,6 +462,7 @@ namespace gpgmm {
         GPGMM_INVALID_IF(!ValidateRequest(request));
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
+        GPGMM_INVALID_IF(blockSize > mMaxSlabSize);
 
         // Create a slab allocator for the new entry.
         auto entry =
