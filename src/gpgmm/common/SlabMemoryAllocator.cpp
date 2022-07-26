@@ -462,7 +462,9 @@ namespace gpgmm {
         GPGMM_INVALID_IF(!ValidateRequest(request));
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
-        GPGMM_INVALID_IF(blockSize > mMaxSlabSize);
+        if (blockSize > mMaxSlabSize){
+            abort();
+        }
 
         // Create a slab allocator for the new entry.
         auto entry =
