@@ -25,7 +25,26 @@ import("//testing/libfuzzer/fuzzer_test.gni")
 
 if (is_win) {
   fuzzer_test("gpgmm_d3d12_resource_allocator_fuzzer") {
-    sources = [ "D3D12ResourceAllocatorFuzzer.cpp" ]
+    sources = [
+      "D3D12Fuzzer.cpp",
+      "D3D12Fuzzer.h",
+      "D3D12ResourceAllocatorFuzzer.cpp",
+    ]
+
+    deps = [ "${gpgmm_root_dir}:gpgmm" ]
+
+    libs = [
+      "d3d12.lib",
+      "dxgi.lib",
+    ]
+  }
+
+  fuzzer_test("gpgmm_d3d12_residency_manager_fuzzer") {
+    sources = [
+      "D3D12Fuzzer.cpp",
+      "D3D12Fuzzer.h",
+      "D3D12ResidencyManagerFuzzer.cpp",
+    ]
 
     deps = [ "${gpgmm_root_dir}:gpgmm" ]
 
@@ -41,6 +60,9 @@ group("fuzzers") {
   deps = []
 
   if (is_win) {
-    deps += [ ":gpgmm_d3d12_resource_allocator_fuzzer" ]
+    deps += [
+      ":gpgmm_d3d12_residency_manager_fuzzer",
+      ":gpgmm_d3d12_resource_allocator_fuzzer",
+    ]
   }
 }
