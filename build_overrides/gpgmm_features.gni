@@ -30,6 +30,10 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_ASSERTS
   gpgmm_always_assert = false
 
+  # Enable GPGMM for fuzzing in standalone builds.
+  # Sets -dGPGMM_USE_FUZZING_ENGINE
+  gpgmm_use_fuzzing_engine = false
+
   # Enables event tracing even in release builds.
   # Sets -dGPGMM_FORCE_TRACING
   gpgmm_force_tracing = false

@@ -684,6 +684,17 @@ TEST_F(SlabMemoryAllocatorTests, SlabGrowthLimit) {
 
 class SlabCacheAllocatorTests : public SlabMemoryAllocatorTests {};
 
+// Attempting to allocate a block greater then the slab should always fail.
+TEST_F(SlabCacheAllocatorTests, SlabOversized) {
+    constexpr uint64_t kMaxSlabSize = 256;
+    constexpr uint64_t kMinSlabSize = 16;
+    SlabCacheAllocator allocator(kMaxSlabSize, kMinSlabSize, kDefaultSlabAlignment,
+                                 kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
+                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+
+    EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kMaxSlabSize + 1, 1)), nullptr);
+}
+
 TEST_F(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
     constexpr uint64_t kMaxSlabSize = 256;
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
