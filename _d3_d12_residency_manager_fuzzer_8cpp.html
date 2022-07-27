@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/fuzzers/D3D12ResourceAllocatorFuzzer.cpp File Reference</title>
+<title>GPGMM: src/fuzzers/D3D12ResidencyManagerFuzzer.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,18 +69,19 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">D3D12ResourceAllocatorFuzzer.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">D3D12ResidencyManagerFuzzer.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
+<div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;testing/libfuzzer/libfuzzer_exports.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d3_d12_fuzzer_8h.html">D3D12Fuzzer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_size_class_8h.html">gpgmm/common/SizeClass.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa30889313cc057073351a87b2590b886"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_fuzzer_8cpp.html#aa30889313cc057073351a87b2590b886">LLVMFuzzerInitialize</a> (int *argc, char ***argv)</td></tr>
+<tr class="memitem:aa30889313cc057073351a87b2590b886"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_residency_manager_fuzzer_8cpp.html#aa30889313cc057073351a87b2590b886">LLVMFuzzerInitialize</a> (int *argc, char ***argv)</td></tr>
 <tr class="separator:aa30889313cc057073351a87b2590b886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91ce7c16e9840492202299da2b451e60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_fuzzer_8cpp.html#a91ce7c16e9840492202299da2b451e60">LLVMFuzzerTestOneInput</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="memitem:a91ce7c16e9840492202299da2b451e60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_residency_manager_fuzzer_8cpp.html#a91ce7c16e9840492202299da2b451e60">LLVMFuzzerTestOneInput</a> (const uint8_t *data, size_t size)</td></tr>
 <tr class="separator:a91ce7c16e9840492202299da2b451e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
