@@ -1,4 +1,4 @@
-name: "Doxygen Builder"
+name: "Publish API Documentation"
 
 on:
   push:
