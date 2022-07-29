@@ -250,7 +250,8 @@ namespace gpgmm::d3d12 {
         // If the memory allocation was successful, the resource will be created using it.
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
-        HRESULT TryAllocateResource(MemoryAllocator* allocator,
+        HRESULT TryAllocateResource(ID3D12Device* device,
+                                    MemoryAllocator* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
             std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
@@ -266,7 +267,8 @@ namespace gpgmm::d3d12 {
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
                 InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
-                    << "Failed to create resource using allocation: " + GetErrorMessage(hr);
+                    << "Failed to create resource using allocation: " +
+                           GetDeviceErrorMessage(device, hr);
                 allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;
@@ -838,8 +840,8 @@ namespace gpgmm::d3d12 {
             // CreateResource().
             request.AlwaysPrefetch = false;
 
-            ReturnIfSucceeded(
-                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            ReturnIfSucceeded(TryAllocateResource(
+                mDevice.Get(), allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -875,8 +877,8 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = resourceInfo.Alignment;
 
-            ReturnIfSucceeded(
-                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            ReturnIfSucceeded(TryAllocateResource(
+                mDevice.Get(), allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -918,8 +920,8 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = allocator->GetMemoryAlignment();
 
-            ReturnIfSucceeded(
-                TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
+            ReturnIfSucceeded(TryAllocateResource(
+                mDevice.Get(), allocator, request, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = ToBackend(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
@@ -951,8 +953,8 @@ namespace gpgmm::d3d12 {
         }
 
         if (!isAlwaysCommitted) {
-            InfoEvent(GetTypename(), EventMessageId::Unknown)
-                << "Resource allocation could not be created from memory pool.";
+            InfoEvent(GetTypename(), EventMessageId::AllocatorFailed)
+                << "Unable to allocate by using a heap, falling back to a committed resource.";
         }
 
         ComPtr<ID3D12Resource> committedResource;

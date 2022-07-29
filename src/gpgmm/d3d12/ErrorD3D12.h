@@ -41,7 +41,7 @@ namespace gpgmm::d3d12 {
     for (;;)                               \
     break
 
-    std::string GetErrorMessage(HRESULT error);
+    std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
 
 }  // namespace gpgmm::d3d12
 

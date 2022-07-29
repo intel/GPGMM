@@ -14,6 +14,7 @@
 
 #include "gpgmm/d3d12/ErrorD3D12.h"
 
+#include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
 #include <comdef.h>
@@ -28,6 +29,49 @@ namespace gpgmm::d3d12 {
         ss << WCharToUTF8(wstring.c_str()) << " (0x" << std::hex << std::uppercase
            << std::setfill('0') << std::setw(8) << error << ")";
         return ss.str();
+    }
+
+    std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error) {
+        if (error == DXGI_ERROR_DEVICE_REMOVED) {
+            if (device == nullptr) {
+                return "Device was not found but removed " + GetErrorMessage(error);
+            }
+
+            HRESULT removedReason = device->GetDeviceRemovedReason();
+            std::string removedReasonStr;
+            switch (error) {
+                case DXGI_ERROR_DEVICE_HUNG: {
+                    removedReasonStr = "HUNG";
+                    break;
+                }
+                case DXGI_ERROR_DEVICE_REMOVED: {
+                    removedReasonStr = "REMOVED";
+                    break;
+                }
+                case DXGI_ERROR_DEVICE_RESET: {
+                    removedReasonStr = "RESET";
+                    break;
+                }
+                case DXGI_ERROR_DRIVER_INTERNAL_ERROR: {
+                    removedReasonStr = "INTERNAL_ERROR";
+                    break;
+                }
+                case DXGI_ERROR_INVALID_CALL: {
+                    removedReasonStr = "INVALID_CALL";
+                    break;
+                }
+                case S_OK: {
+                    removedReasonStr = "S_OK";
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            return "Device was removed: " + removedReasonStr + " " + GetErrorMessage(removedReason);
+        }
+
+        return GetErrorMessage(error);
     }
 
 }  // namespace gpgmm::d3d12
