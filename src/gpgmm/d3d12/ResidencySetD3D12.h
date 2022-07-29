@@ -48,15 +48,15 @@ namespace gpgmm::d3d12 {
 
         /** \brief  Insert heap into this residency set.
 
-        @param heap A pointer to Heap about to be inserted.
+        @param pHeap A pointer to Heap about to be inserted.
 
-        \return S_OK if heap was inserted or S_FALSE if heap already exists, else error.
+        \return S_OK if heap was inserted or S_FALSE if heap was already inserted, else error.
         */
-        HRESULT Insert(Heap* heap);
+        HRESULT Insert(Heap* pHeap);
 
         /** \brief  Reset this residency set.
 
-        Removes all heaps in the set so the set can be re-used.
+        Removes all heaps from the set so the set can be re-used.
         */
         HRESULT Reset();
 

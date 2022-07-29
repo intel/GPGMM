@@ -26,11 +26,11 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    HRESULT ResidencySet::Insert(Heap* heap) {
-        if (heap == nullptr) {
+    HRESULT ResidencySet::Insert(Heap* pHeap) {
+        if (pHeap == nullptr) {
             return E_INVALIDARG;
         }
-        if (mSet.insert(heap).second) {
+        if (mSet.insert(pHeap).second) {
             return S_OK;
         }
         return S_FALSE;
