@@ -179,13 +179,22 @@ jobs:
         out\Fuzzer\gpgmm_d3d12_resource_allocator_fuzzer.exe -max_total_time=120 -timeout=10
 
     # Workaround libFuzzer never exiting when max_total_time by using -runs instead.
-    # Step timeout may need to be increased to not expire before the process exits.
-    - name: Run gpgmm_d3d12_residency_manager_fuzzer (with patch)
-      timeout-minutes: 5
-      shell: cmd
-      run: |
-        cd test
-        out\Fuzzer\gpgmm_d3d12_residency_manager_fuzzer.exe -runs=20000 -timeout=10
+    # Timeout may need to be increased to not expire before the process exits.
+    - uses: nick-fields/retry@v2
+      id: d3d12_residency_manager_fuzzer
+      with:
+        timeout_minutes: 1
+        max_attempts: 3
+        retry_on: timeout
+        shell: cmd
+        command: |
+          cd test
+          out\Fuzzer\gpgmm_d3d12_residency_manager_fuzzer.exe -runs=20000
+
+    - uses: nick-fields/assert-action@v1
+      with:
+        expected: 0
+        actual: ${{ steps.d3d12_residency_manager_fuzzer.outputs.exit_code }}
 
     - uses: actions/upload-artifact@v3
       with:
