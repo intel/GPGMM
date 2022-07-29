@@ -105,8 +105,15 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             continue;
         }
 
+        constexpr const char kDebugMode[] = "--debug";
+        size_t arglen = sizeof(kDebugMode) - 1;
+        if (strncmp(argv[i], kDebugMode, arglen) == 0) {
+            mLogLevel = gpgmm::LogSeverity::Debug;
+            continue;
+        }
+
         constexpr const char kLogLevel[] = "--log-level";
-        size_t arglen = sizeof(kLogLevel) - 1;
+        arglen = sizeof(kLogLevel) - 1;
         if (strncmp(argv[i], kLogLevel, arglen) == 0) {
             const char* level = argv[i] + arglen;
             if (level[0] != '\0') {
@@ -119,7 +126,7 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
                 } else if (strcmp(level, "=ERROR") == 0) {
                     mLogLevel = gpgmm::LogSeverity::Error;
                 } else {
-                    gpgmm::ErrorLog() << "Invalid log message level " << level << ".\n";
+                    gpgmm::ErrorLog() << "Invalid log level " << level << ".\n";
                     UNREACHABLE();
                 }
             } else {
@@ -131,6 +138,7 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
         if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
             gpgmm::InfoLog() << "Global options:\n"
                              << " --dump: Record all events to disk.\n"
+                             << " --debug: Shortcut for --log-level=DEBUG.\n"
                              << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
                                 "level for log messages.\n";
             continue;
