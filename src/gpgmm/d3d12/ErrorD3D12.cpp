@@ -68,7 +68,7 @@ namespace gpgmm::d3d12 {
                     break;
             }
 
-            return "Device was removed: " + removedReasonStr + " " + GetErrorMessage(removedReason);
+            return "Device reason: " + removedReasonStr + " " + GetErrorMessage(removedReason);
         }
 
         return GetErrorMessage(error);
