@@ -106,8 +106,6 @@ namespace gpgmm {
 
         // Event overrides
         void Wait() override;
-        bool IsSignaled() override;
-        void Signal() override;
 
         /** \brief Acquire the memory allocation.
 
@@ -116,6 +114,9 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> AcquireAllocation() const;
 
       private:
+        void Signal() override;
+        bool IsSignaled() override;
+
         std::shared_ptr<AllocateMemoryTask> mTask;
         std::shared_ptr<Event> mEvent;
     };

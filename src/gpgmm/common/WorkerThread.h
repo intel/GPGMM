@@ -31,21 +31,37 @@ namespace gpgmm {
 
     class ThreadPool;
 
-    // An event that we can wait on, useful for joining worker threads.
+    /** \brief An event that we can wait on.
+
+    Used for waiting for results or joining worker threads.
+    */
     class Event : public NonCopyable {
       public:
         Event() = default;
         virtual ~Event() = default;
 
-        // Blocks calling thread indefinitely until |this| event is signaled.
+        /** \brief Wait for the event to complete.
+
+        Wait blocks the calling thread indefinitely until the event gets signaled.
+        */
         virtual void Wait() = 0;
 
-        // Checks if |this| event was signaled.
+        /** \brief Check if event was signaled.
+
+        Event will be in signaled state once the event is completed.
+        */
         virtual bool IsSignaled() = 0;
 
-        // Signals the event is ready. If ready, wait() will not block.
+        /** \brief Signals the event is ready.
+
+        If ready, wait() will not block.
+        */
         virtual void Signal() = 0;
 
+        /** \brief Associates a thread pool with this event.
+
+        @param pool Shared pointer to the thread pool this event belongs with.
+        */
         void SetThreadPool(std::shared_ptr<ThreadPool> pool);
 
       private:
