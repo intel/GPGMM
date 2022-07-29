@@ -28,7 +28,7 @@ namespace gpgmm::d3d12 {
     struct HEAP_INFO;
     struct RESOURCE_ALLOCATION_DESC;
     struct RESOURCE_ALLOCATION_INFO;
-    class ResidencySet;
+    class ResidencyList;
     struct RESIDENCY_DESC;
 
     // Declare backend aliases.
@@ -47,7 +47,7 @@ namespace gpgmm::d3d12 {
     };
 
     struct EXECUTE_COMMAND_LISTS_DESC {
-        ResidencySet* const* ResidencySets;
+        ResidencyList* const* ResidencyLists;
         uint32_t Count;
     };
 

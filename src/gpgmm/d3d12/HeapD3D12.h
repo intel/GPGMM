@@ -29,7 +29,7 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResidencySet;
+    class ResidencyList;
     class ResidencyManager;
     class ResourceAllocator;
 

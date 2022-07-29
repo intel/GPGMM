@@ -16,8 +16,8 @@
 
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
-#include "gpgmm/d3d12/ResidencySetD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
@@ -230,22 +230,22 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc) {
         JSONDict dict;
-        JSONArray residencySets;
+        JSONArray residencyLists;
         for (uint64_t i = 0; i < desc.Count; i++) {
-            JSONDict residencySetDict;
+            JSONDict residencyListDict;
             JSONArray heapArray;
-            for (const auto& heap : *desc.ResidencySets[i]) {
+            for (const auto& heap : *desc.ResidencyLists[i]) {
                 heapArray.AddItem(gpgmm::JSONSerializer::Serialize(heap));
             }
             if (!heapArray.IsEmpty()) {
-                residencySetDict.AddItem("Heaps", heapArray);
+                residencyListDict.AddItem("Heaps", heapArray);
             }
 
-            residencySets.AddItem(residencySetDict);
+            residencyLists.AddItem(residencyListDict);
         }
 
-        if (!residencySets.IsEmpty()) {
-            dict.AddItem("ResidencySets", residencySets);
+        if (!residencyLists.IsEmpty()) {
+            dict.AddItem("ResidencyLists", residencyLists);
         }
 
         return dict;

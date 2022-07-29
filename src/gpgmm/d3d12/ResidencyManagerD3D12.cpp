@@ -23,7 +23,7 @@
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
-#include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Math.h"
 
@@ -565,12 +565,36 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
+    /** \brief  Execute command lists using residency managed heaps.
+    *
+    /deprecated use ResidencyList instead of ResidencySet
+    */
+    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+                                                  ID3D12CommandList* const* ppCommandLists,
+                                                  ResidencySet* const* ppResidencySets,
+                                                  uint32_t count) {
+        ResidencyList residencyList;
+
+        // TODO: support multiple command lists.
+        if (count > 1) {
+            return E_NOTIMPL;
+        }
+
+        for (Heap* heap : *ppResidencySets[0]) {
+            residencyList.Add(heap);
+        }
+
+        ResidencyList* residencyListPtr = &residencyList;
+
+        return ExecuteCommandLists(pQueue, ppCommandLists, &residencyListPtr, count);
+    }
+
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
     HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                                   ID3D12CommandList* const* ppCommandLists,
-                                                  ResidencySet* const* ppResidencySets,
+                                                  ResidencyList* const* ppResidencyLists,
                                                   uint32_t count) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
 
@@ -585,16 +609,22 @@ namespace gpgmm::d3d12 {
             return E_NOTIMPL;
         }
 
-        ResidencySet* residencySet = ppResidencySets[0];
+        ResidencyList* residencyList = ppResidencyLists[0];
 
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
         std::vector<ID3D12Pageable*> nonLocalHeapsToMakeResident;
         uint64_t localSizeToMakeResident = 0;
         uint64_t nonLocalSizeToMakeResident = 0;
 
-        for (Heap* heap : *residencySet) {
+        for (Heap* heap : *residencyList) {
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
+                continue;
+            }
+
+            // ResidencyList can contain duplicates. We can skip them by checking if the heap's last
+            // used fence is the same as the current one.
+            if (heap->GetLastUsedFenceValue() == mFence->GetCurrentFence()) {
                 continue;
             }
 
@@ -657,7 +687,7 @@ namespace gpgmm::d3d12 {
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
-                                      (EXECUTE_COMMAND_LISTS_DESC{ppResidencySets, count}));
+                                      (EXECUTE_COMMAND_LISTS_DESC{ppResidencyLists, count}));
 
         return S_OK;
     }

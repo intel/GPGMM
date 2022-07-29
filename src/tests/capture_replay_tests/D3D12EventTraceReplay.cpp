@@ -125,7 +125,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         std::string currentAllocatorID;
         std::string currentResidencyID;
 
-        std::vector<ResidencySet> currentResidencySets;
+        std::vector<ResidencyList> currentResidencyLists;
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
@@ -145,19 +145,19 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        // Create ResidencySets.
-                        std::vector<ResidencySet*> residencySetPtrs;
-                        for (auto& setJson : args["ResidencySets"]) {
-                            ResidencySet set = {};
+                        // Create ResidencyLists.
+                        std::vector<ResidencyList*> residencyListPtrs;
+                        for (auto& setJson : args["ResidencyLists"]) {
+                            ResidencyList list = {};
                             for (auto heap : setJson["Heaps"]) {
                                 const std::string heapId = heap["id_ref"].asString();
                                 if (createdHeapToID.find(heapId) == createdHeapToID.end()) {
                                     break;
                                 }
-                                set.Insert(createdHeapToID[heapId].get());
+                                list.Add(createdHeapToID[heapId].get());
                             }
-                            residencySetPtrs.push_back(&set);
-                            currentResidencySets.push_back(std::move(set));
+                            residencyListPtrs.push_back(&list);
+                            currentResidencyLists.push_back(std::move(list));
                         }
 
                         ResidencyManager* residencyManager =
@@ -165,11 +165,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_NE(residencyManager, nullptr);
 
                         ASSERT_SUCCEEDED(residencyManager->ExecuteCommandLists(
-                            nullptr, nullptr, residencySetPtrs.data(),
-                            static_cast<uint32_t>(residencySetPtrs.size())));
+                            nullptr, nullptr, residencyListPtrs.data(),
+                            static_cast<uint32_t>(residencyListPtrs.size())));
 
                         // Prepare for the next frame.
-                        for (auto& set : currentResidencySets) {
+                        for (auto& set : currentResidencyLists) {
                             set.Reset();
                         }
 

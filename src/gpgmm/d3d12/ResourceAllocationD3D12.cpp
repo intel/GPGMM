@@ -21,8 +21,8 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
+#include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
-#include "gpgmm/d3d12/ResidencySetD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include <utility>

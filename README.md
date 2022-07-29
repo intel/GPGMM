@@ -51,10 +51,10 @@ GPUs do not support page-faulting, so it's up the GPU application to avoid using
 physical GPU memory. GPGMM integrates residency into the resource allocators to simplify and optimize allocation:
 
 ```cpp
-gpgmm::d3d12::ResidencySet set;
+gpgmm::d3d12::ResidencyList list;
 set.Insert(allocation->GetMemory());
 
-residency->ExecuteCommandList(&queue, &commandList, &set, 1);
+residency->ExecuteCommandList(&queue, &commandList, &list, 1);
 
 // Prepare for next frame.
 set.Reset();
