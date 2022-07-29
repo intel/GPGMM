@@ -91,8 +91,8 @@ Inheritance diagram for gpgmm::d3d12::ResourceHeapAllocator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abc72cd04f7ce2e9eff30c56d82ddc500"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#abc72cd04f7ce2e9eff30c56d82ddc500">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags)</td></tr>
-<tr class="separator:abc72cd04f7ce2e9eff30c56d82ddc500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d334953ca8e52721d4c13db043d3947"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a1d334953ca8e52721d4c13db043d3947">ResourceHeapAllocator</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> *residencyManager, ID3D12Device *device, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, bool alwaysInBudget)</td></tr>
+<tr class="separator:a1d334953ca8e52721d4c13db043d3947"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae42895cb0fe11663b8870abf1157f91c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#ae42895cb0fe11663b8870abf1157f91c">~ResourceHeapAllocator</a> () override=default</td></tr>
 <tr class="separator:ae42895cb0fe11663b8870abf1157f91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4863a0d73c02859fe8710d698e8db59a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a4863a0d73c02859fe8710d698e8db59a">TryAllocateMemory</a> (const <a class="el" href="structgpgmm_1_1_memory_allocation_request.html">MemoryAllocationRequest</a> &amp;request) override</td></tr>
@@ -211,8 +211,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a062a71010a9ea3332e0d160bcd6e4ee6 inherit pro_attribs_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abc72cd04f7ce2e9eff30c56d82ddc500" name="abc72cd04f7ce2e9eff30c56d82ddc500"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc72cd04f7ce2e9eff30c56d82ddc500">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
+<a id="a1d334953ca8e52721d4c13db043d3947" name="a1d334953ca8e52721d4c13db043d3947"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d334953ca8e52721d4c13db043d3947">&#9670;&nbsp;</a></span>ResourceHeapAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,7 +239,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">D3D12_HEAP_FLAGS&#160;</td>
-          <td class="paramname"><em>heapFlags</em>&#160;</td>
+          <td class="paramname"><em>heapFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>alwaysInBudget</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
