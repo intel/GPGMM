@@ -29,11 +29,13 @@ namespace gpgmm::d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_TYPE heapType,
-                                                 D3D12_HEAP_FLAGS heapFlags)
+                                                 D3D12_HEAP_FLAGS heapFlags,
+                                                 bool alwaysInBudget)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapType(heapType),
-          mHeapFlags(heapFlags) {
+          mHeapFlags(heapFlags),
+          mAlwaysInBudget(alwaysInBudget) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -59,10 +61,9 @@ namespace gpgmm::d3d12 {
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = heapSize;
-        resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
-        resourceHeapDesc.AlwaysInBudget = !(mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT);
+        resourceHeapDesc.AlwaysInBudget = mAlwaysInBudget;
         resourceHeapDesc.HeapType = mHeapType;
 
         Heap* resourceHeap = nullptr;

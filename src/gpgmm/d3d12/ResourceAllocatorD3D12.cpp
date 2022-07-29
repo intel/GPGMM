@@ -338,6 +338,14 @@ namespace gpgmm::d3d12 {
                                                ? allocatorDescriptor.MemoryGrowthFactor
                                                : kDefaultMemoryGrowthFactor;
 
+        // ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
+        // call ID3D12Device::MakeResident, requiring resource heaps to be "created in budget".
+        // But this can be disabled if D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is supported.
+        if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET) &&
+            !caps->IsCreateHeapNotResidentSupported()) {
+            newDescriptor.Flags |= ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
+        }
+
         newDescriptor.MaxResourceHeapSize =
             (allocatorDescriptor.MaxResourceHeapSize > 0)
                 ? std::min(allocatorDescriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
@@ -531,7 +539,7 @@ namespace gpgmm::d3d12 {
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapType, heapFlags);
+                                                    heapType, heapFlags, mIsAlwaysInBudget);
 
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             switch (descriptor.PoolAlgorithm) {
@@ -1078,10 +1086,9 @@ namespace gpgmm::d3d12 {
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
-        resourceHeapDesc.IsExternal = false;
         resourceHeapDesc.DebugName = "Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
-        resourceHeapDesc.AlwaysInBudget = !(heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT);
+        resourceHeapDesc.AlwaysInBudget = mIsAlwaysInBudget;
         resourceHeapDesc.HeapType = heapType;
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
@@ -1216,13 +1223,6 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        // By default, ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
-        // call MakeResident(). This can be disabled when residency exists and resources are not
-        // required to be "created in budget".
-        if (!mCaps->IsCreateHeapNotResidentSupported()) {
-            return false;
-        }
-
         return mResidencyManager != nullptr && !mIsAlwaysInBudget;
     }
 
