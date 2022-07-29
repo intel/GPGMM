@@ -166,30 +166,30 @@ namespace gpgmm::d3d12 {
 
         Locking a heap means the residency manager will never evict it when over budget.
 
-        @param heap A pointer to the heap being locked.
+        @param pHeap A pointer to the heap being locked.
         */
-        HRESULT LockHeap(Heap* heap);
+        HRESULT LockHeap(Heap* pHeap);
 
         /** \brief  Unlocks the specified heap.
 
         Unlocking a heap allows the residency manager will evict it when over budget.
 
-        @param heap A pointer to the heap being unlocked.
+        @param pHeap A pointer to the heap being unlocked.
         */
-        HRESULT UnlockHeap(Heap* heap);
+        HRESULT UnlockHeap(Heap* pHeap);
 
         /** \brief  Execute command lists using residency managed heaps.
 
         Submits an array of command lists and residency sets for the specified command queue.
 
-        @param queue The command queue to submit to.
-        @param commandLists The array of ID3D12CommandList command lists to be executed.
-        @param residencySets The array of ResidencySet residency sets to make resident.
+        @param pQueue The command queue to submit to.
+        @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
+        @param ppResidencySets The array of ResidencySet residency sets to make resident.
         @param count The size of commandLists and residencySets arrays.
         */
-        HRESULT ExecuteCommandLists(ID3D12CommandQueue* queue,
-                                    ID3D12CommandList* const* commandLists,
-                                    ResidencySet* const* residencySets,
+        HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+                                    ID3D12CommandList* const* ppCommandLists,
+                                    ResidencySet* const* ppResidencySets,
                                     uint32_t count);
 
         /** \brief  Sets video memory reservation.
@@ -198,13 +198,13 @@ namespace gpgmm::d3d12 {
         operation safely.
 
         @param memorySegmentGroup Memory segment to reserve.
-        @param reservation Amount of memory to reserve, in bytes.
-        @param[out] reservationOut the amount of memory reserved, which may be less then the
+        @param availableForReservation Amount of memory to reserve, in bytes.
+        @param[out] pCurrentReservationOut the amount of memory reserved, which may be less then the
         |reservation| when under video memory pressure.
         */
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                          uint64_t reservation,
-                                          uint64_t* reservationOut = nullptr);
+                                          uint64_t availableForReservation,
+                                          uint64_t* pCurrentReservationOut = nullptr);
 
         /** \brief  Get the current budget and memory usage.
 

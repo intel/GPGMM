@@ -246,72 +246,72 @@ namespace gpgmm::d3d12 {
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
-    HRESULT ResidencyManager::LockHeap(Heap* heap) {
+    HRESULT ResidencyManager::LockHeap(Heap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (heap == nullptr) {
+        if (pHeap == nullptr) {
             return E_INVALIDARG;
         }
 
-        if (!heap->IsResident()) {
+        if (!pHeap->IsResident()) {
             ComPtr<ID3D12Pageable> pageable;
-            ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
-            ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
+            ReturnIfFailed(pHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
+            ReturnIfFailed(MakeResident(pHeap->GetMemorySegmentGroup(), pHeap->GetSize(), 1,
                                         pageable.GetAddressOf()));
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
-        if (heap->IsInResidencyLRUCache()) {
-            heap->RemoveFromList();
+        if (pHeap->IsInResidencyLRUCache()) {
+            pHeap->RemoveFromList();
 
             // Untracked heaps are not attributed toward residency usage.
             mInfo.ResidentMemoryCount++;
-            mInfo.ResidentMemoryUsage += heap->GetSize();
+            mInfo.ResidentMemoryUsage += pHeap->GetSize();
         }
 
-        heap->AddResidencyLockRef();
+        pHeap->AddResidencyLockRef();
 
         return S_OK;
     }
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    HRESULT ResidencyManager::UnlockHeap(Heap* heap) {
+    HRESULT ResidencyManager::UnlockHeap(Heap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (heap == nullptr) {
+        if (pHeap == nullptr) {
             return E_INVALIDARG;
         }
 
-        if (!heap->IsResidencyLocked()) {
+        if (!pHeap->IsResidencyLocked()) {
             return E_FAIL;
         }
 
-        if (heap->IsInResidencyLRUCache()) {
+        if (pHeap->IsInResidencyLRUCache()) {
             return E_FAIL;
         }
 
-        heap->ReleaseResidencyLock();
+        pHeap->ReleaseResidencyLock();
 
         // If another lock still exists on the heap, nothing further should be done.
-        if (heap->IsResidencyLocked()) {
+        if (pHeap->IsResidencyLocked()) {
             return S_OK;
         }
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        ReturnIfFailed(InsertHeapInternal(heap));
+        ReturnIfFailed(InsertHeapInternal(pHeap));
 
         // Heaps tracked for residency are always attributed in residency usage.
         mInfo.ResidentMemoryCount--;
-        mInfo.ResidentMemoryUsage -= heap->GetSize();
+        mInfo.ResidentMemoryUsage -= pHeap->GetSize();
 
         return S_OK;
     }
 
-    HRESULT ResidencyManager::InsertHeap(Heap* heap) {
+    HRESULT ResidencyManager::InsertHeap(Heap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return InsertHeapInternal(heap);
+        return InsertHeapInternal(pHeap);
     }
 
     // Inserts a heap at the bottom of the LRU. The passed heap must be resident or scheduled to
@@ -370,8 +370,8 @@ namespace gpgmm::d3d12 {
     // under video memory pressure.
     HRESULT ResidencyManager::SetVideoMemoryReservation(
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-        uint64_t reservation,
-        uint64_t* reservationOut) {
+        uint64_t availableForReservation,
+        uint64_t* pCurrentReservationOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.SetVideoMemoryReservation");
 
         std::lock_guard<std::mutex> lock(mMutex);
@@ -379,11 +379,13 @@ namespace gpgmm::d3d12 {
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
             GetVideoMemoryInfo(memorySegmentGroup);
 
-        videoMemorySegmentInfo->AvailableForReservation = reservation;
+        videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
 
         ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
 
-        *reservationOut = videoMemorySegmentInfo->CurrentReservation;
+        if (pCurrentReservationOut != nullptr){
+          *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
+        }
 
         return S_OK;
     }
@@ -557,9 +559,9 @@ namespace gpgmm::d3d12 {
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
-    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* queue,
-                                                  ID3D12CommandList* const* commandLists,
-                                                  ResidencySet* const* residencySets,
+    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+                                                  ID3D12CommandList* const* ppCommandLists,
+                                                  ResidencySet* const* ppResidencySets,
                                                   uint32_t count) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.ExecuteCommandLists");
 
@@ -574,7 +576,7 @@ namespace gpgmm::d3d12 {
             return E_NOTIMPL;
         }
 
-        ResidencySet* residencySet = residencySets[0];
+        ResidencySet* residencySet = ppResidencySets[0];
 
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
         std::vector<ID3D12Pageable*> nonLocalHeapsToMakeResident;
@@ -633,9 +635,9 @@ namespace gpgmm::d3d12 {
             GPGMM_BYTES_TO_MB(localSizeToMakeResident + nonLocalSizeToMakeResident));
 
         // Queue and command-lists may not be specified since they are not capturable for playback.
-        if (commandLists != nullptr && queue != nullptr) {
-            queue->ExecuteCommandLists(count, commandLists);
-            ReturnIfFailed(mFence->Signal(queue));
+        if (ppCommandLists != nullptr && pQueue != nullptr) {
+            pQueue->ExecuteCommandLists(count, ppCommandLists);
+            ReturnIfFailed(mFence->Signal(pQueue));
         }
 
         // Keep video memory segments up-to-date. This must always happen because if the budget
@@ -646,7 +648,7 @@ namespace gpgmm::d3d12 {
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
-                                      (EXECUTE_COMMAND_LISTS_DESC{residencySets, count}));
+                                      (EXECUTE_COMMAND_LISTS_DESC{ppResidencySets, count}));
 
         return S_OK;
     }
