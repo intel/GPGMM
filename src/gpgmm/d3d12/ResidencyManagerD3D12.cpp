@@ -383,8 +383,8 @@ namespace gpgmm::d3d12 {
 
         ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
 
-        if (pCurrentReservationOut != nullptr){
-          *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
+        if (pCurrentReservationOut != nullptr) {
+            *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
         }
 
         return S_OK;
@@ -466,17 +466,19 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::Evict(uint64_t evictSizeInBytes,
-                                    const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+    HRESULT ResidencyManager::EnsureInBudget(uint64_t bytesInBudget,
+                                             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return EvictInternal(evictSizeInBytes, memorySegmentGroup);
+        uint64_t bytesEvicted = bytesInBudget;
+        ReturnIfFailed(EvictInternal(bytesInBudget, memorySegmentGroup, &bytesEvicted));
+        return (bytesEvicted >= bytesInBudget) ? S_OK : E_FAIL;
     }
 
     // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
     // bytes evicted.
-    HRESULT ResidencyManager::EvictInternal(uint64_t evictSizeInBytes,
+    HRESULT ResidencyManager::EvictInternal(uint64_t bytesToEvict,
                                             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                            uint64_t* evictedSizeInBytesOut) {
+                                            uint64_t* bytesEvictedOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
@@ -486,11 +488,12 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
         }
 
-        const uint64_t currentUsageAfterEvict =
-            evictSizeInBytes + videoMemorySegmentInfo->CurrentUsage;
+        const uint64_t currentUsageAfterEvict = bytesToEvict + videoMemorySegmentInfo->CurrentUsage;
 
-        // Return if we will remain under budget after evict.
-        if (currentUsageAfterEvict < videoMemorySegmentInfo->Budget) {
+        // Return if we will remain under budget after evict or there is no budget to evict from.
+        // The latter happens if the first budget change event hasn't happened yet.
+        if (videoMemorySegmentInfo->Budget == 0 ||
+            currentUsageAfterEvict < videoMemorySegmentInfo->Budget) {
             return S_OK;
         }
 
@@ -498,10 +501,16 @@ namespace gpgmm::d3d12 {
         // memory to make the new object resident while also staying within budget. If there isn't
         // enough memory, we should evict until there is.
         std::vector<ID3D12Pageable*> objectsToEvict;
-        const uint64_t sizeNeededToBeUnderBudget =
+        const uint64_t bytesNeededToBeUnderBudget =
             currentUsageAfterEvict - videoMemorySegmentInfo->Budget;
-        uint64_t evictedSizeInBytes = 0;
-        while (evictedSizeInBytes < sizeNeededToBeUnderBudget) {
+
+        // Return if nothing needs to be evicted to stay within budget.
+        if (bytesNeededToBeUnderBudget == 0) {
+            return S_OK;
+        }
+
+        uint64_t bytesEvicted = 0;
+        while (bytesEvicted < bytesNeededToBeUnderBudget) {
             // If the cache is empty, allow execution to continue. Note that fully
             // emptying the cache is undesirable, because it can mean either 1) the cache is not
             // accurately accounting for GPU allocations, or 2) an external component is
@@ -530,7 +539,7 @@ namespace gpgmm::d3d12 {
 
             heap->RemoveFromList();
 
-            evictedSizeInBytes += heap->GetSize();
+            bytesEvicted += heap->GetSize();
 
             ComPtr<ID3D12Pageable> pageable;
             ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
@@ -539,20 +548,20 @@ namespace gpgmm::d3d12 {
         }
 
         if (objectsToEvict.size() > 0) {
-            GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)",
-                                     GPGMM_BYTES_TO_MB(evictedSizeInBytes));
+            GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)", GPGMM_BYTES_TO_MB(bytesEvicted));
 
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
 
             DebugEvent("GPU page-out", EventMessageId::BudgetExceeded)
-                << "Number of allocations: " << objectsToEvict.size() << " (" << evictedSizeInBytes
+                << "Number of allocations: " << objectsToEvict.size() << " (" << bytesEvicted
                 << " bytes).";
         }
 
-        if (evictedSizeInBytesOut != nullptr) {
-            *evictedSizeInBytesOut = evictedSizeInBytes;
+        if (bytesEvictedOut != nullptr) {
+            *bytesEvictedOut = bytesEvicted;
         }
+
         return S_OK;
     }
 

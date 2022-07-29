@@ -44,7 +44,8 @@ namespace gpgmm::d3d12 {
         // Ensure enough free memory exists before allocating to avoid an out-of-memory error
         // when over budget.
         if (pResidencyManager != nullptr && descriptor.AlwaysInBudget) {
-            ReturnIfFailed(pResidencyManager->Evict(descriptor.SizeInBytes, memorySegmentGroup));
+            ReturnIfFailed(
+                pResidencyManager->EnsureInBudget(descriptor.SizeInBytes, memorySegmentGroup));
         }
 
         ComPtr<ID3D12Pageable> pageable;
