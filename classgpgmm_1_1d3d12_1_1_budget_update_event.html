@@ -79,7 +79,7 @@ Inheritance diagram for gpgmm::d3d12::BudgetUpdateEvent:</div>
  <div class="center">
   <img src="classgpgmm_1_1d3d12_1_1_budget_update_event.png" usemap="#gpgmm::d3d12::BudgetUpdateEvent_map" alt=""/>
   <map id="gpgmm::d3d12::BudgetUpdateEvent_map" name="gpgmm::d3d12::BudgetUpdateEvent_map">
-<area href="classgpgmm_1_1_event.html" alt="gpgmm::Event" shape="rect" coords="0,56,208,80"/>
+<area href="classgpgmm_1_1_event.html" title="An event that we can wait on." alt="gpgmm::Event" shape="rect" coords="0,56,208,80"/>
 <area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="0,0,208,24"/>
   </map>
 </div></div>
@@ -89,10 +89,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acc872e8d6fec237abf11b51121028be6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#acc872e8d6fec237abf11b51121028be6">BudgetUpdateEvent</a> (std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_event.html">Event</a> &gt; event, std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_task.html">BudgetUpdateTask</a> &gt; task)</td></tr>
 <tr class="separator:acc872e8d6fec237abf11b51121028be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9d99f32101ea56fb2ed32947fee9a27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#af9d99f32101ea56fb2ed32947fee9a27">Wait</a> () override</td></tr>
+<tr class="memdesc:af9d99f32101ea56fb2ed32947fee9a27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the event to complete.  <a href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#af9d99f32101ea56fb2ed32947fee9a27">More...</a><br /></td></tr>
 <tr class="separator:af9d99f32101ea56fb2ed32947fee9a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51c6e31effa9e09e8a9d071965f46408"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#a51c6e31effa9e09e8a9d071965f46408">IsSignaled</a> () override</td></tr>
+<tr class="memdesc:a51c6e31effa9e09e8a9d071965f46408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if event was signaled.  <a href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#a51c6e31effa9e09e8a9d071965f46408">More...</a><br /></td></tr>
 <tr class="separator:a51c6e31effa9e09e8a9d071965f46408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a1d0a7f5e6d46e23e4eaf25d2f988a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#a0a1d0a7f5e6d46e23e4eaf25d2f988a3">Signal</a> () override</td></tr>
+<tr class="memdesc:a0a1d0a7f5e6d46e23e4eaf25d2f988a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signals the event is ready.  <a href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#a0a1d0a7f5e6d46e23e4eaf25d2f988a3">More...</a><br /></td></tr>
 <tr class="separator:a0a1d0a7f5e6d46e23e4eaf25d2f988a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96670ad9ba7b6c15cbacb07043e4777d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_budget_update_event.html#a96670ad9ba7b6c15cbacb07043e4777d">UnregisterAndExit</a> ()</td></tr>
 <tr class="separator:a96670ad9ba7b6c15cbacb07043e4777d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,12 +107,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab0b9eddd1a10a2101a820481fd84f46d inherit pub_methods_classgpgmm_1_1_event"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event.html#ab0b9eddd1a10a2101a820481fd84f46d">~Event</a> ()=default</td></tr>
 <tr class="separator:ab0b9eddd1a10a2101a820481fd84f46d inherit pub_methods_classgpgmm_1_1_event"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e9d6fac62e85956e99c69735faf8725 inherit pub_methods_classgpgmm_1_1_event"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event.html#a2e9d6fac62e85956e99c69735faf8725">Wait</a> ()=0</td></tr>
+<tr class="memdesc:a2e9d6fac62e85956e99c69735faf8725 inherit pub_methods_classgpgmm_1_1_event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the event to complete.  <a href="classgpgmm_1_1_event.html#a2e9d6fac62e85956e99c69735faf8725">More...</a><br /></td></tr>
 <tr class="separator:a2e9d6fac62e85956e99c69735faf8725 inherit pub_methods_classgpgmm_1_1_event"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e8ff60c75b462266681c7f75c9fa71b inherit pub_methods_classgpgmm_1_1_event"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b">IsSignaled</a> ()=0</td></tr>
+<tr class="memdesc:a1e8ff60c75b462266681c7f75c9fa71b inherit pub_methods_classgpgmm_1_1_event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if event was signaled.  <a href="classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b">More...</a><br /></td></tr>
 <tr class="separator:a1e8ff60c75b462266681c7f75c9fa71b inherit pub_methods_classgpgmm_1_1_event"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa25c487548844ac3857418ee54f1bf5d inherit pub_methods_classgpgmm_1_1_event"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event.html#aa25c487548844ac3857418ee54f1bf5d">Signal</a> ()=0</td></tr>
+<tr class="memdesc:aa25c487548844ac3857418ee54f1bf5d inherit pub_methods_classgpgmm_1_1_event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signals the event is ready.  <a href="classgpgmm_1_1_event.html#aa25c487548844ac3857418ee54f1bf5d">More...</a><br /></td></tr>
 <tr class="separator:aa25c487548844ac3857418ee54f1bf5d inherit pub_methods_classgpgmm_1_1_event"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3df243cba085254def7ea9bb8360980 inherit pub_methods_classgpgmm_1_1_event"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_event.html#ac3df243cba085254def7ea9bb8360980">SetThreadPool</a> (std::shared_ptr&lt; <a class="el" href="classgpgmm_1_1_thread_pool.html">ThreadPool</a> &gt; pool)</td></tr>
+<tr class="memdesc:ac3df243cba085254def7ea9bb8360980 inherit pub_methods_classgpgmm_1_1_event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associates a thread pool with this event.  <a href="classgpgmm_1_1_event.html#ac3df243cba085254def7ea9bb8360980">More...</a><br /></td></tr>
 <tr class="separator:ac3df243cba085254def7ea9bb8360980 inherit pub_methods_classgpgmm_1_1_event"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
@@ -210,6 +217,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Check if event was signaled. </p>
+<p ><a class="el" href="classgpgmm_1_1_event.html" title="An event that we can wait on.">Event</a> will be in signaled state once the event is completed. </p>
+
 <p>Implements <a class="el" href="classgpgmm_1_1_event.html#a1e8ff60c75b462266681c7f75c9fa71b">gpgmm::Event</a>.</p>
 
 </div>
@@ -236,6 +246,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Signals the event is ready. </p>
+<p >If ready, wait() will not block. </p>
 
 <p>Implements <a class="el" href="classgpgmm_1_1_event.html#aa25c487548844ac3857418ee54f1bf5d">gpgmm::Event</a>.</p>
 
@@ -288,6 +301,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Wait for the event to complete. </p>
+<p >Wait blocks the calling thread indefinitely until the event gets signaled. </p>
 
 <p>Implements <a class="el" href="classgpgmm_1_1_event.html#a2e9d6fac62e85956e99c69735faf8725">gpgmm::Event</a>.</p>
 
