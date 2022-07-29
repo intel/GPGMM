@@ -96,9 +96,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a39f516f14518434213601063387b43ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4bca17d2c2e465c938c90b24f76dd2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#af4bca17d2c2e465c938c90b24f76dd2a">operator=</a> (const <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> &amp;)=default</td></tr>
 <tr class="separator:af4bca17d2c2e465c938c90b24f76dd2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93367e45e0a98bcc750702d7d309fcf9"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#a93367e45e0a98bcc750702d7d309fcf9">Insert</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *heap)</td></tr>
-<tr class="memdesc:a93367e45e0a98bcc750702d7d309fcf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert heap into this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#a93367e45e0a98bcc750702d7d309fcf9">More...</a><br /></td></tr>
-<tr class="separator:a93367e45e0a98bcc750702d7d309fcf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af74282f1c9b10a4a0f48d9ccfaa72aaa"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#af74282f1c9b10a4a0f48d9ccfaa72aaa">Insert</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *pHeap)</td></tr>
+<tr class="memdesc:af74282f1c9b10a4a0f48d9ccfaa72aaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert heap into this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#af74282f1c9b10a4a0f48d9ccfaa72aaa">More...</a><br /></td></tr>
+<tr class="separator:af74282f1c9b10a4a0f48d9ccfaa72aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9665c21bb3548db1593a64c6ec33f60e"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html#a9665c21bb3548db1593a64c6ec33f60e">Reset</a> ()</td></tr>
 <tr class="memdesc:a9665c21bb3548db1593a64c6ec33f60e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_set.html#a9665c21bb3548db1593a64c6ec33f60e">More...</a><br /></td></tr>
 <tr class="separator:a9665c21bb3548db1593a64c6ec33f60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,8 +224,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a93367e45e0a98bcc750702d7d309fcf9" name="a93367e45e0a98bcc750702d7d309fcf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93367e45e0a98bcc750702d7d309fcf9">&#9670;&nbsp;</a></span>Insert()</h2>
+<a id="af74282f1c9b10a4a0f48d9ccfaa72aaa" name="af74282f1c9b10a4a0f48d9ccfaa72aaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af74282f1c9b10a4a0f48d9ccfaa72aaa">&#9670;&nbsp;</a></span>Insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -234,7 +234,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">HRESULT gpgmm::d3d12::ResidencySet::Insert </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td>
-          <td class="paramname"><em>heap</em></td><td>)</td>
+          <td class="paramname"><em>pHeap</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -243,11 +243,11 @@ Public Member Functions</h2></td></tr>
 <p>Insert heap into this residency set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">heap</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> about to be inserted.</td></tr>
+    <tr><td class="paramname">pHeap</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> about to be inserted.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>S_OK if heap was inserted or S_FALSE if heap already exists, else error. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>S_OK if heap was inserted or S_FALSE if heap was already inserted, else error. </dd></dl>
 
 </div>
 </div>
@@ -293,7 +293,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reset this residency set. </p>
-<p >Removes all heaps in the set so the set can be re-used. </p>
+<p >Removes all heaps from the set so the set can be re-used. </p>
 
 </div>
 </div>
