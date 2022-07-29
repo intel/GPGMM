@@ -4,7 +4,7 @@ var searchData=
   ['underlyingtype_1',['UnderlyingType',['../classgpgmm_1_1d3d12_1_1_residency_set.html#aa9ec54fe066278aa184581434d5a451d',1,'gpgmm::d3d12::ResidencySet']]],
   ['unittestsmain_2ecpp_2',['UnittestsMain.cpp',['../_unittests_main_8cpp.html',1,'']]],
   ['unknown_3',['Unknown',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a0663c56bfef2396a756ef856a940bff0',1,'gpgmm']]],
-  ['unlockheap_4',['UnlockHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#ad39f477d3dd55f7d15c24eecadb07e73',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['unlockheap_4',['UnlockHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668',1,'gpgmm::d3d12::ResidencyManager']]],
   ['unmap_5',['Unmap',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#aacb13e9781e92486cd62b08b39adf645',1,'gpgmm::d3d12::ResourceAllocation']]],
   ['unreachable_6',['UNREACHABLE',['../_assert_8h.html#a3af99897b60119951af8961dbd52dd3f',1,'Assert.h']]],
   ['unref_7',['Unref',['../classgpgmm_1_1_ref_counted.html#a850338d6a459a388bbbcd974a470831c',1,'gpgmm::RefCounted']]],
