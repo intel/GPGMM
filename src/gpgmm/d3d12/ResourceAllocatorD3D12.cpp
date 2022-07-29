@@ -442,12 +442,10 @@ namespace gpgmm::d3d12 {
                 CreateResourceSubAllocator(descriptor, heapFlags, heapType, msaaHeapAlignment);
 
             mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                std::make_unique<StandaloneMemoryAllocator>(
-                    CreateResourceHeapAllocator(descriptor, heapFlags, heapType, heapAlignment));
+                CreateResourceHeapAllocator(descriptor, heapFlags, heapType, heapAlignment);
 
             mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                std::make_unique<StandaloneMemoryAllocator>(CreateResourceHeapAllocator(
-                    descriptor, heapFlags, heapType, msaaHeapAlignment));
+                CreateResourceHeapAllocator(descriptor, heapFlags, heapType, msaaHeapAlignment);
 
             // Resource specific allocators.
             mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
