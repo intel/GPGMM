@@ -37,14 +37,15 @@ namespace gpgmm::vk {
         PFN_vkGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties = nullptr;
         PFN_vkAllocateMemory AllocateMemory = nullptr;
         PFN_vkBindBufferMemory BindBufferMemory = nullptr;
+        PFN_vkBindImageMemory BindImageMemory = nullptr;
         PFN_vkFreeMemory FreeMemory = nullptr;
         PFN_vkMapMemory MapMemory = nullptr;
         PFN_vkGetBufferMemoryRequirements GetBufferMemoryRequirements = nullptr;
         PFN_vkGetImageMemoryRequirements GetImageMemoryRequirements = nullptr;
         PFN_vkCreateBuffer CreateBuffer = nullptr;
-        PFN_vkDestroyBuffer DestroyBuffer = nullptr;
         PFN_vkCreateImage CreateImage = nullptr;
         PFN_vkDestroyImage DestroyImage = nullptr;
+        PFN_vkDestroyBuffer DestroyBuffer = nullptr;
     };
 
     // ASSERTs if any Vulkan function is left unset.

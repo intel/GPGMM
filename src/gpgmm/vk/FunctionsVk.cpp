@@ -45,11 +45,12 @@ namespace gpgmm::vk {
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(AllocateMemory);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(FreeMemory);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(BindBufferMemory);
+        GPGMM_DYNAMIC_GET_DEVICE_FUNC(BindImageMemory);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(GetBufferMemoryRequirements);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(GetImageMemoryRequirements);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(CreateBuffer);
-        GPGMM_DYNAMIC_GET_DEVICE_FUNC(DestroyBuffer);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(CreateImage);
+        GPGMM_DYNAMIC_GET_DEVICE_FUNC(DestroyBuffer);
         GPGMM_DYNAMIC_GET_DEVICE_FUNC(DestroyImage);
         // TODO
     }
@@ -60,11 +61,12 @@ namespace gpgmm::vk {
         GPGMM_STATIC_GET_FUNC(AllocateMemory);
         GPGMM_STATIC_GET_FUNC(FreeMemory);
         GPGMM_STATIC_GET_FUNC(BindBufferMemory);
+        GPGMM_STATIC_GET_FUNC(BindImageMemory);
         GPGMM_STATIC_GET_FUNC(GetBufferMemoryRequirements);
         GPGMM_STATIC_GET_FUNC(GetImageMemoryRequirements);
         GPGMM_STATIC_GET_FUNC(CreateBuffer);
-        GPGMM_STATIC_GET_FUNC(DestroyBuffer);
         GPGMM_STATIC_GET_FUNC(CreateImage);
+        GPGMM_STATIC_GET_FUNC(DestroyBuffer);
         GPGMM_STATIC_GET_FUNC(DestroyImage);
         // TODO
     }
@@ -75,11 +77,12 @@ namespace gpgmm::vk {
         AllocateMemory = vkFunctions->AllocateMemory;
         FreeMemory = vkFunctions->FreeMemory;
         BindBufferMemory = vkFunctions->BindBufferMemory;
+        BindImageMemory = vkFunctions->BindImageMemory;
         GetBufferMemoryRequirements = vkFunctions->GetBufferMemoryRequirements;
         GetImageMemoryRequirements = vkFunctions->GetImageMemoryRequirements;
         CreateBuffer = vkFunctions->CreateBuffer;
-        DestroyBuffer = vkFunctions->DestroyBuffer;
         CreateImage = vkFunctions->CreateImage;
+        DestroyBuffer = vkFunctions->DestroyBuffer;
         DestroyImage = vkFunctions->DestroyImage;
     }
 
@@ -89,11 +92,12 @@ namespace gpgmm::vk {
         ASSERT(vkFunctions.AllocateMemory != nullptr);
         ASSERT(vkFunctions.FreeMemory != nullptr);
         ASSERT(vkFunctions.BindBufferMemory != nullptr);
+        ASSERT(vkFunctions.BindImageMemory != nullptr);
         ASSERT(vkFunctions.GetBufferMemoryRequirements != nullptr);
         ASSERT(vkFunctions.GetImageMemoryRequirements != nullptr);
         ASSERT(vkFunctions.CreateBuffer != nullptr);
-        ASSERT(vkFunctions.DestroyBuffer != nullptr);
         ASSERT(vkFunctions.CreateImage != nullptr);
+        ASSERT(vkFunctions.DestroyBuffer != nullptr);
         ASSERT(vkFunctions.DestroyImage != nullptr);
     }
 
