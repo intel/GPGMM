@@ -14,7 +14,6 @@
 
 #include "gpgmm/common/JSONSerializer.h"
 
-#include "gpgmm/common/Allocator.h"
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryPool.h"

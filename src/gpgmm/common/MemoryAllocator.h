@@ -172,7 +172,7 @@ namespace gpgmm {
     or objects to cache. Since cached memory objects count against the application's memory
     usage, freeing this cache periodically by calling ReleaseMemory() is highly recommended.
     */
-    class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
+    class MemoryAllocator : public AllocatorNode<MemoryAllocator>, public NonCopyable {
       public:
         /** \brief Constructs a standalone MemoryAllocator.
 
@@ -263,7 +263,7 @@ namespace gpgmm {
 
         The type is used for profiling and debugging purposes only.
         */
-        const char* GetTypename() const override;
+        virtual const char* GetTypename() const;
 
         /** \brief Checks if the request is valid.
 
