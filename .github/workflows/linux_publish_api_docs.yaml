@@ -1,4 +1,4 @@
-name: "Publish API Documentation"
+name: "Build and Publish API Documentation"
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
 
 jobs:
 
-  build:
+  build_and_publish_api_docs:
 
     runs-on: ubuntu-latest
 
