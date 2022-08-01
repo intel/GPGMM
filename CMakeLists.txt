@@ -94,7 +94,7 @@ option_if_not_defined(GPGMM_STANDALONE "When building from GPGMM's repository" O
 option_if_not_defined(GPGMM_ENABLE_TESTS "Enables compilation of tests" ON)
 option_if_not_defined(GPGMM_ENABLE_D3D12 "Enable compilation of the D3D12 backend" ${ENABLE_D3D12})
 option_if_not_defined(GPGMM_ENABLE_VK "Enable compilation of the Vulkan backend" ${ENABLE_VK})
-option_if_not_defined(GPGMM_ENABLE_VK_STATIC_FUNCTIONS "Links Vulkan functions by statically importing them" ON)
+option_if_not_defined(GPGMM_ENABLE_VK_STATIC_FUNCTIONS "Links Vulkan functions by statically importing them" OFF)
 option_if_not_defined(GPGMM_ENABLE_VK_LOADER "Enables compilation of Vulkan loader" ${ENABLE_VK_LOADER})
 option_if_not_defined(GPGMM_ENABLE_VK_USE_SDK "Enable compilation of the Vulkan backend by using the installed Vulkan SDK." OFF)
 
@@ -111,15 +111,19 @@ option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with c
 option_if_not_defined(GPGMM_ENABLE_MEMORY_LEAK_CHECKS "Enables memory leak detection." OFF)
 option_if_not_defined(gpgmm_enable_resource_memory_align_checks "Enables checking of resource alignment." OFF)
 
-# The Vulkan loader is an optional dependency.
-if(GPGMM_ENABLE_VK)
-  if(GPGMM_ENABLE_VK_STATIC_FUNCTIONS OR GPGMM_ENABLE_VK_LOADER)
-    set(GPGMM_ENABLE_VK_LOADER ON)
+if(GPGMM_ENABLE_TESTS)
+  # Vulkan tests require static linking.
+  if (GPGMM_ENABLE_VK)
+    set(GPGMM_ENABLE_VK_STATIC_FUNCTIONS ON)
   endif()
+  enable_testing()
 endif()
 
-if(GPGMM_ENABLE_TESTS)
-  enable_testing()
+# Use the Vulkan loader if the SDK isn't available.
+if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS)
+  if (NOT ${GPGMM_ENABLE_VK_USE_SDK})
+    set(GPGMM_ENABLE_VK_LOADER ON)
+  endif()
 endif()
 
 # ###############################################################################

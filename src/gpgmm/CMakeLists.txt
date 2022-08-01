@@ -111,7 +111,8 @@ if (GPGMM_ENABLE_VK)
         "vk/vk_platform.h"
     )
 
-    if (GPGMM_ENABLE_VK_LOADER)
+    # Only link to Vulkan if static linking is used
+    if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS)
       if (GPGMM_ENABLE_VK_USE_SDK)
         target_link_libraries(gpgmm PRIVATE
           ${GPGMM_VK_LIBRARIES_DIR}
