@@ -139,6 +139,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a87035ca264fc0e367910c896fb73045c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">gpDestroyBuffer</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, VkBuffer buffer, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> allocation)</td></tr>
 <tr class="memdesc:a87035ca264fc0e367910c896fb73045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy buffer allocation.  <a href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">More...</a><br /></td></tr>
 <tr class="separator:a87035ca264fc0e367910c896fb73045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a">gpCreateImage</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, const VkImageCreateInfo *pImageCreateInfo, VkImage *pImage, const <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> *pAllocationCreateInfo, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *allocationOut)</td></tr>
+<tr class="memdesc:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a image allocation.  <a href="namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a">More...</a><br /></td></tr>
+<tr class="separator:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5">gpDestroyImage</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, VkImage image, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> allocation)</td></tr>
+<tr class="memdesc:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy image allocation.  <a href="namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5">More...</a><br /></td></tr>
+<tr class="separator:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a59e276245b71c30952b1e8b14c65787e" name="a59e276245b71c30952b1e8b14c65787e"></a>
@@ -323,6 +329,64 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 
 </div>
 </div>
+<a id="a98b4ef536593f6e7d4d1fe0248c5528a" name="a98b4ef536593f6e7d4d1fe0248c5528a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98b4ef536593f6e7d4d1fe0248c5528a">&#9670;&nbsp;</a></span>gpCreateImage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> VkResult gpgmm::vk::gpCreateImage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a>&#160;</td>
+          <td class="paramname"><em>allocator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const VkImageCreateInfo *&#160;</td>
+          <td class="paramname"><em>pImageCreateInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VkImage *&#160;</td>
+          <td class="paramname"><em>pImage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> *&#160;</td>
+          <td class="paramname"><em>pAllocationCreateInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *&#160;</td>
+          <td class="paramname"><em>allocationOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a image allocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the image and allocation. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pImageCreateInfo</td><td>A pointer to a VkImageCreateInfo that describes the image to create. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pImage</td><td>A pointer to a VkImage that will be created using the allocation. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pAllocationCreateInfo</td><td>A pointer to a <a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">GpResourceAllocationCreateInfo</a> that describes the allocation. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">allocationOut</td><td>A pointer to <a class="el" href="struct_gp_resource_allocation.html" title="Opaque handle to a resource allocation object.">GpResourceAllocation</a> that represents the image allocation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a714d3c0ca5f86caa30020a08646ceb65" name="a714d3c0ca5f86caa30020a08646ceb65"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a714d3c0ca5f86caa30020a08646ceb65">&#9670;&nbsp;</a></span>gpCreateResourceAllocator()</h2>
 
@@ -397,6 +461,50 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
   <table class="params">
     <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the buffer and allocation. </td></tr>
     <tr><td class="paramname">buffer</td><td>A VkBuffer that was also created by the allocator. </td></tr>
+    <tr><td class="paramname">allocation</td><td>A <a class="el" href="struct_gp_resource_allocation.html" title="Opaque handle to a resource allocation object.">GpResourceAllocation</a> that was created by the allocator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8e0bd9e3e29e8f43ca886e2d7baf1ff5" name="a8e0bd9e3e29e8f43ca886e2d7baf1ff5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e0bd9e3e29e8f43ca886e2d7baf1ff5">&#9670;&nbsp;</a></span>gpDestroyImage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> void gpgmm::vk::gpDestroyImage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a>&#160;</td>
+          <td class="paramname"><em>allocator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VkImage&#160;</td>
+          <td class="paramname"><em>image</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a>&#160;</td>
+          <td class="paramname"><em>allocation</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy image allocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">allocator</td><td>A <a class="el" href="struct_gp_resource_allocator.html" title="Opaque handle to a allocator object.">GpResourceAllocator</a> used to create the image and allocation. </td></tr>
+    <tr><td class="paramname">image</td><td>A VkImage that was also created by the allocator. </td></tr>
     <tr><td class="paramname">allocation</td><td>A <a class="el" href="struct_gp_resource_allocation.html" title="Opaque handle to a resource allocation object.">GpResourceAllocation</a> that was created by the allocator. </td></tr>
   </table>
   </dd>
