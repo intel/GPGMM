@@ -16,7 +16,5 @@ var searchData=
   ['slabmemoryallocator_13',['SlabMemoryAllocator',['../classgpgmm_1_1_slab_memory_allocator.html',1,'gpgmm']]],
   ['slabmemoryallocatortests_14',['SlabMemoryAllocatorTests',['../class_slab_memory_allocator_tests.html',1,'']]],
   ['splitlink_15',['SplitLink',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_split_link.html',1,'gpgmm::BuddyBlockAllocator::BuddyBlock']]],
-  ['stablelist_16',['StableList',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
-  ['stablelist_3c_20t_2c_20chunksize_20_3e_17',['StableList&lt; T, ChunkSize &gt;',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
-  ['standalonememoryallocator_18',['StandaloneMemoryAllocator',['../classgpgmm_1_1_standalone_memory_allocator.html',1,'gpgmm']]]
+  ['standalonememoryallocator_16',['StandaloneMemoryAllocator',['../classgpgmm_1_1_standalone_memory_allocator.html',1,'gpgmm']]]
 ];
