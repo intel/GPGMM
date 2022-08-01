@@ -34,6 +34,7 @@ target_sources(gpgmm_utils PRIVATE
   "PlatformUtils.h"
   "RefCount.cpp"
   "RefCount.h"
+  "StableList.h"
   "Utils.cpp"
   "Utils.h"
 )
