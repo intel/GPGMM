@@ -58,6 +58,35 @@ TEST_F(VKResourceAllocatorTests, CreateBuffer) {
     gpDestroyResourceAllocator(resourceAllocator);
 }
 
+TEST_F(VKResourceAllocatorTests, CreateImage) {
+    GpResourceAllocator resourceAllocator;
+    ASSERT_SUCCESS(gpCreateResourceAllocator(CreateBasicAllocatorInfo(), &resourceAllocator));
+
+    VkImageCreateInfo imageInfo = {};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.extent.width = 1;
+    imageInfo.extent.height = 1;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.flags = 0;
+
+    GpResourceAllocationCreateInfo allocationInfo = {};
+
+    VkImage image;
+    GpResourceAllocation allocation;
+    ASSERT_SUCCESS(
+        gpCreateImage(resourceAllocator, &imageInfo, &image, &allocationInfo, &allocation));
+
+    gpDestroyImage(resourceAllocator, image, allocation);
+    gpDestroyResourceAllocator(resourceAllocator);
+}
+
 TEST_F(VKResourceAllocatorTests, CreateBufferManyDeallocateAtEnd) {
     GpResourceAllocator resourceAllocator;
     ASSERT_SUCCESS(gpCreateResourceAllocator(CreateBasicAllocatorInfo(), &resourceAllocator));

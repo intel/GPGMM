@@ -109,6 +109,74 @@ namespace gpgmm::vk {
         allocator->DeallocateMemory(allocation);
     }
 
+    VkResult gpCreateImage(GpResourceAllocator allocator,
+                           const VkImageCreateInfo* pImageCreateInfo,
+                           VkImage* imageOut,
+                           const GpResourceAllocationCreateInfo* pAllocationCreateInfo,
+                           GpResourceAllocation* allocationOut) {
+        *allocationOut = VK_NULL_HANDLE;
+        *imageOut = VK_NULL_HANDLE;
+
+        if (allocator == VK_NULL_HANDLE) {
+            return VK_INCOMPLETE;
+        }
+
+        // Create the image.
+        VkImage image = VK_NULL_HANDLE;
+        ReturnIfFailed(
+            allocator->GetFunctions().CreateImage(allocator->GetDevice(), pImageCreateInfo,
+                                                  /*allocationCallbacks*/ nullptr, &image));
+
+        VkMemoryRequirements requirements = {};
+        allocator->GetImageMemoryRequirements(image, &requirements);
+        if (requirements.size == 0) {
+            return VK_INCOMPLETE;
+        }
+
+        // Create memory for the image.
+        GpResourceAllocation allocation = VK_NULL_HANDLE;
+        VkResult result =
+            allocator->TryAllocateMemory(requirements, *pAllocationCreateInfo, &allocation);
+        if (result != VK_SUCCESS) {
+            allocator->GetFunctions().DestroyImage(allocator->GetDevice(), image,
+                                                   /*allocationCallbacks*/ nullptr);
+            return result;
+        }
+
+        // Associate memory with the buffer.
+        result = allocator->GetFunctions().BindImageMemory(
+            allocator->GetDevice(), image, ToBackend(allocation->GetMemory())->GetDeviceMemory(),
+            allocation->GetOffset());
+        if (result != VK_SUCCESS) {
+            allocator->GetFunctions().DestroyImage(allocator->GetDevice(), image,
+                                                   /*allocationCallbacks*/ nullptr);
+            allocator->DeallocateMemory(allocation);
+            return result;
+        }
+
+        *allocationOut = allocation;
+        *imageOut = image;
+
+        return VK_SUCCESS;
+    }
+
+    void gpDestroyImage(GpResourceAllocator allocator,
+                        VkImage image,
+                        GpResourceAllocation allocation) {
+        if (allocator == VK_NULL_HANDLE || image == VK_NULL_HANDLE) {
+            return;
+        }
+
+        allocator->GetFunctions().DestroyImage(allocator->GetDevice(), image,
+                                               /*allocationCallbacks*/ nullptr);
+
+        if (allocation == VK_NULL_HANDLE) {
+            return;
+        }
+
+        allocator->DeallocateMemory(allocation);
+    }
+
     // GpResourceAllocation_T
 
     GpResourceAllocation_T::GpResourceAllocation_T(const MemoryAllocation& allocation)
@@ -146,8 +214,17 @@ namespace gpgmm::vk {
             caps.reset(ptr);
         }
 
+        GpAllocatorCreateInfo newInfo = info;
+        newInfo.MemoryGrowthFactor = (newInfo.MemoryGrowthFactor >= 1.0)
+                                         ? newInfo.MemoryGrowthFactor
+                                         : kDefaultMemoryGrowthFactor;
+
+        newInfo.MemoryFragmentationLimit = (newInfo.MemoryFragmentationLimit > 0)
+                                               ? newInfo.MemoryFragmentationLimit
+                                               : kDefaultFragmentationLimit;
+
         if (allocatorOut != VK_NULL_HANDLE) {
-            *allocatorOut = new GpResourceAllocator_T(info, vulkanFunctions, std::move(caps));
+            *allocatorOut = new GpResourceAllocator_T(newInfo, vulkanFunctions, std::move(caps));
         }
 
         return VK_SUCCESS;
@@ -221,6 +298,11 @@ namespace gpgmm::vk {
     void GpResourceAllocator_T::GetBufferMemoryRequirements(VkBuffer buffer,
                                                             VkMemoryRequirements* requirementsOut) {
         mVulkanFunctions.GetBufferMemoryRequirements(mDevice, buffer, requirementsOut);
+    }
+
+    void GpResourceAllocator_T::GetImageMemoryRequirements(VkImage image,
+                                                           VkMemoryRequirements* requirementsOut) {
+        mVulkanFunctions.GetImageMemoryRequirements(mDevice, image, requirementsOut);
     }
 
     VkResult GpResourceAllocator_T::TryAllocateMemory(const VkMemoryRequirements& requirements,

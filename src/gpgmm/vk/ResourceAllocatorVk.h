@@ -298,6 +298,32 @@ namespace gpgmm::vk {
                                       VkBuffer buffer,
                                       GpResourceAllocation allocation);
 
+    /** \brief  Create a image allocation.
+
+    @param allocator A GpResourceAllocator used to create the image and allocation.
+    @param pImageCreateInfo A pointer to a VkImageCreateInfo that describes the image to create.
+    @param pImage A pointer to a VkImage that will be created using the allocation.
+    @param pAllocationCreateInfo A pointer to a GpResourceAllocationCreateInfo that describes the
+    allocation.
+    @param[out] allocationOut A pointer to GpResourceAllocation that represents the image
+    allocation.
+    */
+    GPGMM_EXPORT VkResult gpCreateImage(GpResourceAllocator allocator,
+                                        const VkImageCreateInfo* pImageCreateInfo,
+                                        VkImage* pImage,
+                                        const GpResourceAllocationCreateInfo* pAllocationCreateInfo,
+                                        GpResourceAllocation* allocationOut);
+
+    /** \brief  Destroy image allocation.
+
+    @param allocator A GpResourceAllocator used to create the image and allocation.
+    @param image A VkImage that was also created by the allocator.
+    @param allocation A GpResourceAllocation that was created by the allocator.
+    */
+    GPGMM_EXPORT void gpDestroyImage(GpResourceAllocator allocator,
+                                     VkImage image,
+                                     GpResourceAllocation allocation);
+
     struct GpResourceAllocation_T final : public MemoryAllocation {
         GpResourceAllocation_T(const MemoryAllocation& allocation);
     };
@@ -315,6 +341,7 @@ namespace gpgmm::vk {
         void DeallocateMemory(GpResourceAllocation allocation);
 
         void GetBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* requirementsOut);
+        void GetImageMemoryRequirements(VkImage image, VkMemoryRequirements* requirementsOut);
 
         VkDevice GetDevice() const;
         VulkanFunctions GetFunctions() const;
