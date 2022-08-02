@@ -28,7 +28,7 @@ namespace gpgmm::d3d12 {
     class DebugResourceAllocator;
     class Heap;
     class ResidencyManager;
-    class ResidencySet;
+    class ResidencyList;
 
     /** \struct RESOURCE_ALLOCATION_DESC
     Describes a resource allocation.

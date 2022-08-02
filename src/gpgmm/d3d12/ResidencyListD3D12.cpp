@@ -12,11 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/d3d12/ResidencySetD3D12.h"
+#include "gpgmm/d3d12/ResidencyListD3D12.h"
 
 #include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm::d3d12 {
+
+    ResidencyList::ResidencyList() {
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+    }
+
+    ResidencyList::~ResidencyList() {
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+    }
+
+    HRESULT ResidencyList::Add(Heap* pHeap) {
+        if (pHeap == nullptr) {
+            return E_INVALIDARG;
+        }
+
+        mList.push_back(pHeap);
+        return S_OK;
+    }
+
+    HRESULT ResidencyList::Reset() {
+        mList.clear();
+        return S_OK;
+    }
+
+    ResidencyList::UnderlyingType::const_iterator ResidencyList::begin() const {
+        return mList.begin();
+    }
+
+    ResidencyList::UnderlyingType::const_iterator ResidencyList::end() const {
+        return mList.end();
+    }
+
+    const char* ResidencyList::GetTypename() const {
+        return "ResidencyList";
+    }
 
     ResidencySet::ResidencySet() {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);

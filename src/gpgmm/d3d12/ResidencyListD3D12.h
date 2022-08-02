@@ -12,17 +12,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_RESIDENCYSETD3D12_H_
-#define GPGMM_D3D12_RESIDENCYSETD3D12_H_
+#ifndef GPGMM_D3D12_RESIDENCYLISTD3D12_H_
+#define GPGMM_D3D12_RESIDENCYLISTD3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "include/gpgmm_export.h"
 
 #include <set>
+#include <vector>
 
 namespace gpgmm::d3d12 {
 
     class Heap;
+
+    /** \brief Represents a list of heaps which will be "made resident" when executing a
+    command-list.
+
+    A residency set helps track heaps for residency which will be referenced together by a
+    command-list. The application uses a ResidencyList by inserting heaps, by calling
+    ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is
+    called, the list can be reset or cleared for the next frame.
+
+    Without a ResidencyList, the application would need to manually ResidencyManager::LockHeap and
+    ResidencyManager::UnlockHeap each heap before and after ResidencyManager::ExecuteCommandLists,
+    respectively.
+    */
+    class GPGMM_EXPORT ResidencyList final {
+      public:
+        /** \brief  Create a residency list or collection of heaps to manage together for residency.
+         */
+        ResidencyList();
+        ~ResidencyList();
+
+        ResidencyList(const ResidencyList&) = default;
+        ResidencyList& operator=(const ResidencyList&) = default;
+
+        /** \brief  Adds a heap to the residency list.
+
+        @param pHeap A pointer to Heap about to be added.
+
+        \return S_OK if heap was added, else error.
+        */
+        HRESULT Add(Heap* pHeap);
+
+        /** \brief  Reset this residency set.
+
+        Removes all heaps from the set so the set can be re-used.
+        */
+        HRESULT Reset();
+
+        using UnderlyingType = std::vector<Heap*>;
+
+        UnderlyingType::const_iterator begin() const;
+        UnderlyingType::const_iterator end() const;
+
+      private:
+        const char* GetTypename() const;
+
+        UnderlyingType mList;
+    };
 
     /** \brief Represents a set of heaps which will be "made resident" when executing a
     command-list.
@@ -35,6 +83,8 @@ namespace gpgmm::d3d12 {
     Without a ResidencySet, the application would need to manually ResidencyManager::LockHeap and
     ResidencyManager::UnlockHeap each heap before and after ResidencyManager::ExecuteCommandLists,
     respectively.
+
+    \deprecated Use ResidencyList instead of ResidencySet.
     */
     class GPGMM_EXPORT ResidencySet final {
       public:

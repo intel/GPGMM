@@ -144,7 +144,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     ASSERT_FAILED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
 }
 
-TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
+TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
                                                         &resourceAllocator, nullptr));
@@ -155,26 +155,24 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencySet) {
 
     // Inserting a non-existant heap should always fail
     {
-        ResidencySet set;
+        ResidencyList list;
         Heap* invalid = nullptr;
-        ASSERT_FAILED(set.Insert(invalid));
+        ASSERT_FAILED(list.Add(invalid));
     }
 
     // Inserting from a valid allocation should always succeed.
     {
-        ResidencySet set;
-        ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
-        ASSERT_SUCCEEDED(set.Insert(allocation->GetMemory()));
+        ResidencyList list;
+        ASSERT_SUCCEEDED(list.Add(allocation->GetMemory()));
+        ASSERT_SUCCEEDED(list.Add(allocation->GetMemory()));
     }
 
     // Re-inserting allocation between two sets should always succeed.
     {
-        ResidencySet setA;
-        ASSERT_SUCCEEDED(setA.Insert(allocation->GetMemory()));
-        ResidencySet setB(setA);
-        EXPECT_EQ(setA.Insert(allocation->GetMemory()), S_FALSE);
-        ResidencySet setC;
-        EXPECT_EQ(setC.Insert(allocation->GetMemory()), S_OK);
+        ResidencyList listA;
+        ASSERT_SUCCEEDED(listA.Add(allocation->GetMemory()));
+        ResidencyList listB(listA);
+        EXPECT_EQ(listB.Add(allocation->GetMemory()), S_OK);
     }
 }
 

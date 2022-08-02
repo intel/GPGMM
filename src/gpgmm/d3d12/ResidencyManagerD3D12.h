@@ -32,6 +32,7 @@ namespace gpgmm::d3d12 {
 
     class Fence;
     class Heap;
+    class ResidencyList;
     class ResidencySet;
     class ResourceAllocator;
 
@@ -140,7 +141,7 @@ namespace gpgmm::d3d12 {
 
     A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
     resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a
-    ResidencySet upon calling ResidencyManager::ExecuteCommandLists or through a
+    ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a
     operation that always requires the Heap to be resident (eg. Map, Unmap).
 
     Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
@@ -180,12 +181,28 @@ namespace gpgmm::d3d12 {
 
         /** \brief  Execute command lists using residency managed heaps.
 
+        Submits an array of command lists and residency lists for the specified command queue.
+
+        @param pQueue The command queue to submit to.
+        @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
+        @param ppResidencyLists The array of ResidencyList residency lists to make resident.
+        @param count The size of commandLists and residencyLists arrays.
+        */
+        HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+                                    ID3D12CommandList* const* ppCommandLists,
+                                    ResidencyList* const* ppResidencyLists,
+                                    uint32_t count);
+
+        /** \brief  Execute command lists using residency managed heaps.
+
         Submits an array of command lists and residency sets for the specified command queue.
 
         @param pQueue The command queue to submit to.
         @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
         @param ppResidencySets The array of ResidencySet residency sets to make resident.
-        @param count The size of commandLists and residencySets arrays.
+        @param count The size of commandLists and residencyLists arrays.
+
+        /deprecated Use ResidencyList instead of ResidencySet.
         */
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
