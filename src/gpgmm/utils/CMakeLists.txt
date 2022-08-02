@@ -17,6 +17,7 @@ target_sources(gpgmm_utils PRIVATE
   "Assert.cpp"
   "Assert.h"
   "Compiler.h"
+  "ContiguousLinkNodeAllocator.h"
   "Flags.h"
   "JSONEncoder.cpp"
   "JSONEncoder.h"
