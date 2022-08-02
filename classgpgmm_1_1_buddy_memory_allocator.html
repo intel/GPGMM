@@ -82,9 +82,10 @@ Inheritance diagram for gpgmm::BuddyMemoryAllocator:</div>
   <img src="classgpgmm_1_1_buddy_memory_allocator.png" usemap="#gpgmm::BuddyMemoryAllocator_map" alt=""/>
   <map id="gpgmm::BuddyMemoryAllocator_map" name="gpgmm::BuddyMemoryAllocator_map">
 <area href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest." alt="gpgmm::MemoryAllocator" shape="rect" coords="134,112,393,136"/>
-<area href="classgpgmm_1_1_allocator_node.html" alt="gpgmm::AllocatorNode&lt; MemoryAllocator &gt;" shape="rect" coords="0,56,259,80"/>
-<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="269,56,528,80"/>
-<area href="classgpgmm_1_1_link_node.html" alt="gpgmm::LinkNode&lt; MemoryAllocator &gt;" shape="rect" coords="0,0,259,24"/>
+<area href="classgpgmm_1_1_allocator_base.html" alt="gpgmm::AllocatorBase" shape="rect" coords="0,56,259,80"/>
+<area href="classgpgmm_1_1_allocator_node.html" alt="gpgmm::AllocatorNode&lt; MemoryAllocator &gt;" shape="rect" coords="269,56,528,80"/>
+<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="0,0,259,24"/>
+<area href="classgpgmm_1_1_link_node.html" alt="gpgmm::LinkNode&lt; MemoryAllocator &gt;" shape="rect" coords="269,0,528,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -108,7 +109,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9bd85610feb47a8ccdacf37d381fc984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get memory allocator usage.  <a href="classgpgmm_1_1_buddy_memory_allocator.html#a9bd85610feb47a8ccdacf37d381fc984">More...</a><br /></td></tr>
 <tr class="separator:a9bd85610feb47a8ccdacf37d381fc984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5a438a6499e0dfd946c1f0ba56a0dc2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_buddy_memory_allocator.html#ac5a438a6499e0dfd946c1f0ba56a0dc2">GetTypename</a> () const override</td></tr>
-<tr class="memdesc:ac5a438a6499e0dfd946c1f0ba56a0dc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies the allocator type.  <a href="classgpgmm_1_1_buddy_memory_allocator.html#ac5a438a6499e0dfd946c1f0ba56a0dc2">More...</a><br /></td></tr>
 <tr class="separator:ac5a438a6499e0dfd946c1f0ba56a0dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_allocator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_allocator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_allocator.html">gpgmm::MemoryAllocator</a></td></tr>
 <tr class="memitem:a546a30ca32c0f4a542ee22539d0076ff inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a546a30ca32c0f4a542ee22539d0076ff">MemoryAllocator</a> ()</td></tr>
@@ -140,12 +140,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a958890b007ce62aa9ab7152555b109a7 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a958890b007ce62aa9ab7152555b109a7">GetInfo</a> () const</td></tr>
 <tr class="memdesc:a958890b007ce62aa9ab7152555b109a7 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get memory allocator usage.  <a href="classgpgmm_1_1_memory_allocator.html#a958890b007ce62aa9ab7152555b109a7">More...</a><br /></td></tr>
 <tr class="separator:a958890b007ce62aa9ab7152555b109a7 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af09f100675bde602d15bba95e7d3226c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#af09f100675bde602d15bba95e7d3226c">GetTypename</a> () const</td></tr>
-<tr class="memdesc:af09f100675bde602d15bba95e7d3226c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies the allocator type.  <a href="classgpgmm_1_1_memory_allocator.html#af09f100675bde602d15bba95e7d3226c">More...</a><br /></td></tr>
-<tr class="separator:af09f100675bde602d15bba95e7d3226c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0979d8f6eac2fe544394e09e33d11335 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a0979d8f6eac2fe544394e09e33d11335">GetTypename</a> () const override</td></tr>
+<tr class="memdesc:a0979d8f6eac2fe544394e09e33d11335 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies the allocator type.  <a href="classgpgmm_1_1_memory_allocator.html#a0979d8f6eac2fe544394e09e33d11335">More...</a><br /></td></tr>
+<tr class="separator:a0979d8f6eac2fe544394e09e33d11335 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a530611a84164ed2ee7434790dc1d1fec inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a530611a84164ed2ee7434790dc1d1fec">ValidateRequest</a> (const <a class="el" href="structgpgmm_1_1_memory_allocation_request.html">MemoryAllocationRequest</a> &amp;request) const</td></tr>
 <tr class="memdesc:a530611a84164ed2ee7434790dc1d1fec inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the request is valid.  <a href="classgpgmm_1_1_memory_allocator.html#a530611a84164ed2ee7434790dc1d1fec">More...</a><br /></td></tr>
 <tr class="separator:a530611a84164ed2ee7434790dc1d1fec inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classgpgmm_1_1_allocator_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_allocator_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_allocator_base.html">gpgmm::AllocatorBase</a></td></tr>
+<tr class="memitem:ae4b400b35adb6119cc634fb6771e0e5e inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#ae4b400b35adb6119cc634fb6771e0e5e">AllocatorBase</a> ()=default</td></tr>
+<tr class="separator:ae4b400b35adb6119cc634fb6771e0e5e inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a620e5f1017d4a2f92a8684d5e71f5415 inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#a620e5f1017d4a2f92a8684d5e71f5415">~AllocatorBase</a> ()=default</td></tr>
+<tr class="separator:a620e5f1017d4a2f92a8684d5e71f5415 inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac58e8d4ec1e859b3f8182b7752d67c17 inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#ac58e8d4ec1e859b3f8182b7752d67c17">GetTypename</a> () const</td></tr>
+<tr class="separator:ac58e8d4ec1e859b3f8182b7752d67c17 inherit pub_methods_classgpgmm_1_1_allocator_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_allocator_node"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_allocator_node')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_allocator_node.html">gpgmm::AllocatorNode&lt; MemoryAllocator &gt;</a></td></tr>
 <tr class="memitem:a3a8b2208e459a4d8d4097eddb8192352 inherit pub_methods_classgpgmm_1_1_allocator_node"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_node.html#a3a8b2208e459a4d8d4097eddb8192352">AllocatorNode</a> ()=default</td></tr>
 <tr class="memdesc:a3a8b2208e459a4d8d4097eddb8192352 inherit pub_methods_classgpgmm_1_1_allocator_node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a AllocatorNode.  <a href="classgpgmm_1_1_allocator_node.html#a3a8b2208e459a4d8d4097eddb8192352">More...</a><br /></td></tr>
@@ -404,10 +411,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Identifies the allocator type. </p>
-<p >The type is used for profiling and debugging purposes only. </p>
-
-<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#af09f100675bde602d15bba95e7d3226c">gpgmm::MemoryAllocator</a>.</p>
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_allocator_base.html#ac58e8d4ec1e859b3f8182b7752d67c17">gpgmm::AllocatorBase</a>.</p>
 
 </div>
 </div>
