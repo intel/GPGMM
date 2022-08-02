@@ -1320,6 +1320,61 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
     }
 }
 
+// Verify two buffers, with and without padding, allocate the correct size.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPadding) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    constexpr uint64_t kBufferSize = GPGMM_MB_TO_BYTES(1);
+
+    ALLOCATION_DESC allocationDesc = {};
+    ComPtr<ResourceAllocation> allocationWithoutPadding;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr, &allocationWithoutPadding));
+
+    allocationDesc.RequireResourceHeapPadding = 63;
+    ComPtr<ResourceAllocation> allocationWithPadding;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr, &allocationWithPadding));
+
+    EXPECT_GE(allocationWithPadding->GetSize() - allocationWithoutPadding->GetSize(),
+              allocationDesc.RequireResourceHeapPadding);
+
+    // Padded resources are only supported for standalone allocations.
+    EXPECT_EQ(allocationWithPadding->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+}
+
+// Verify two textures, with and without padding, allocate the correct size.
+TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    ALLOCATION_DESC allocationDesc = {};
+
+    ComPtr<ResourceAllocation> allocationWithoutPadding;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocationWithoutPadding));
+
+    allocationDesc.RequireResourceHeapPadding = 63;
+    ComPtr<ResourceAllocation> allocationWithPadding;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocationWithPadding));
+
+    EXPECT_GE(allocationWithPadding->GetSize() - allocationWithoutPadding->GetSize(),
+              allocationDesc.RequireResourceHeapPadding);
+
+    // Padded resources are only supported for standalone allocations.
+    EXPECT_EQ(allocationWithPadding->GetMethod(), gpgmm::AllocationMethod::kStandalone);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CheckFeatureSupport) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(

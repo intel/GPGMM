@@ -770,10 +770,12 @@ namespace gpgmm::d3d12 {
             isAlwaysCommitted = true;
         }
 
-        const bool neverSubAllocate =
+        bool neverSubAllocate =
             allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 
         const bool isMSAA = resourceDescriptor.SampleDesc.Count > 1;
+
+        const bool requiresPadding = allocationDescriptor.RequireResourceHeapPadding > 0;
 
         // Attempt to allocate using the most effective allocator.;
         MemoryAllocator* allocator = nullptr;
@@ -794,6 +796,16 @@ namespace gpgmm::d3d12 {
             (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
         request.AlwaysCacheSize = (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
         request.AvailableForAllocation = mCaps->GetMaxResourceHeapSize();
+
+        // Apply extra padding to the resource heap size, if specified.
+        // Padding can only be applied to standalone non-committed resources.
+        if (GPGMM_UNLIKELY(requiresPadding)) {
+            request.SizeInBytes += allocationDescriptor.RequireResourceHeapPadding;
+            if (!neverSubAllocate) {
+                DebugLog() << "Sub-allocation disabled when padding is requested.";
+                neverSubAllocate = true;
+            }
+        }
 
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
@@ -956,6 +968,12 @@ namespace gpgmm::d3d12 {
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
             return E_OUTOFMEMORY;
+        }
+
+        // Committed resources cannot specify resource heap size.
+        if (GPGMM_UNLIKELY(requiresPadding)) {
+            ErrorLog() << "A padding was specified but no resource allocator could be used.";
+            return E_FAIL;
         }
 
         if (!isAlwaysCommitted) {

@@ -335,6 +335,18 @@ namespace gpgmm::d3d12 {
         */
         D3D12_HEAP_FLAGS ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_NONE;
 
+        /** \brief Require additional bytes to be appended to the resource allocation.
+
+        Resource heap size is guarenteed to increase by at-least this number of bytes.
+        Specifying a padding will disable committed resources and sub-allocated
+        heaps.
+
+        Used to workaround driver bugs related to the heap size being insufficent for the resource.
+
+        Optional parameter. No extra padding is applied by default.
+        */
+        uint64_t RequireResourceHeapPadding = 0;
+
         /** \brief Associates a name with the given allocation.
 
         Optional parameter. By default, no name is associated.
