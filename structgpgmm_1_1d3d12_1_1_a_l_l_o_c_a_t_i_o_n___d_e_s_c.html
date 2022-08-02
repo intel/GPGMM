@@ -87,6 +87,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">ExtraRequiredHeapFlags</a> = D3D12_HEAP_FLAG_NONE</td></tr>
 <tr class="memdesc:a08cf139c6ad730e0dae3df0526ce36bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional heap flags that the resource requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">More...</a><br /></td></tr>
 <tr class="separator:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed41cef6134f5552d5581f75d526683c"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aed41cef6134f5552d5581f75d526683c">RequireResourceHeapPadding</a> = 0</td></tr>
+<tr class="memdesc:aed41cef6134f5552d5581f75d526683c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Require additional bytes to be appended to the resource allocation.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aed41cef6134f5552d5581f75d526683c">More...</a><br /></td></tr>
+<tr class="separator:aed41cef6134f5552d5581f75d526683c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa306a32673748802f822de9821c8c8b1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa306a32673748802f822de9821c8c8b1">DebugName</a></td></tr>
 <tr class="memdesc:aa306a32673748802f822de9821c8c8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associates a name with the given allocation.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa306a32673748802f822de9821c8c8b1">More...</a><br /></td></tr>
 <tr class="separator:aa306a32673748802f822de9821c8c8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +162,25 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> type that the resource to be allocated requires. </p>
 <p >Required parameter. GPGMM always initializes to D3D12_HEAP_TYPE_DEFAULT. </p>
+
+</div>
+</div>
+<a id="aed41cef6134f5552d5581f75d526683c" name="aed41cef6134f5552d5581f75d526683c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed41cef6134f5552d5581f75d526683c">&#9670;&nbsp;</a></span>RequireResourceHeapPadding</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::d3d12::ALLOCATION_DESC::RequireResourceHeapPadding = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Require additional bytes to be appended to the resource allocation. </p>
+<p >Resource heap size is guarenteed to increase by at-least this number of bytes. Specifying a padding will disable committed resources and sub-allocated heaps.</p>
+<p >Used to workaround driver bugs related to the heap size being insufficent for the resource.</p>
+<p >Optional parameter. No extra padding is applied by default. </p>
 
 </div>
 </div>
