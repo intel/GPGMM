@@ -1,4 +1,4 @@
-From 0698833a19cab41fd2f28dceb03fd6db37ba3571 Mon Sep 17 00:00:00 2001
+From be80c6e52d951647f7f501ad665ab6506acae698 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -190,7 +190,7 @@ index 341db798f..9e760e05b 100644
      VulkanUseD32S8,
      VulkanUseS8,
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
-index 0488fce6a..a8de308eb 100644
+index 0488fce6a..6b0dd1627 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn/native/d3d12/BufferD3D12.cpp
 @@ -153,9 +153,15 @@ MaybeError Buffer::Initialize(bool mappedAtCreation) {
@@ -231,7 +231,7 @@ index 0488fce6a..a8de308eb 100644
      // Track the underlying heap to ensure residency.
 -    Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -    commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
-+    commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
++    commandContext->GetResidencyList()->Add(mResourceAllocation->GetMemory());
  
      // Return the resource barrier.
      return TransitionUsageAndGetResourceBarrier(commandContext, barrier, newUsage);
@@ -381,14 +381,14 @@ index 77c7ba3ca..ac1fb0abf 100644
                                                uploadHandle.startOffset, size);
                  break;
 diff --git a/src/dawn/native/d3d12/CommandRecordingContext.cpp b/src/dawn/native/d3d12/CommandRecordingContext.cpp
-index d4fa04d52..7a81b26f4 100644
+index d4fa04d52..a1bcaacda 100644
 --- a/src/dawn/native/d3d12/CommandRecordingContext.cpp
 +++ b/src/dawn/native/d3d12/CommandRecordingContext.cpp
 @@ -45,6 +45,7 @@ MaybeError CommandRecordingContext::Open(ID3D12Device* d3d12Device,
                                          "D3D12 resetting command list");
          if (error.IsError()) {
              mD3d12CommandList.Reset();
-+            mResidencySet.Reset();
++            mResidencyList.Reset();
              DAWN_TRY(std::move(error));
          }
      } else {
@@ -406,10 +406,10 @@ index d4fa04d52..7a81b26f4 100644
  
          ID3D12CommandList* d3d12CommandList = GetCommandList();
 -        device->GetCommandQueue()->ExecuteCommandLists(1, &d3d12CommandList);
-+        gpgmm::d3d12::ResidencySet* residencySet = GetResidencySet();
++        gpgmm::d3d12::ResidencyList* residencyList = GetResidencyList();
 +        DAWN_TRY(
 +            CheckHRESULT(device->GetResidencyManager()->ExecuteCommandLists(
-+                             device->GetCommandQueue().Get(), &d3d12CommandList, &residencySet, 1),
++                             device->GetCommandQueue().Get(), &d3d12CommandList, &residencyList, 1),
 +                         "D3D12 execute command list"));
  
          for (Texture* texture : mSharedTextures) {
@@ -419,7 +419,7 @@ index d4fa04d52..7a81b26f4 100644
          mSharedTextures.clear();
          mHeapsPendingUsage.clear();
 +
-+        mResidencySet.Reset();
++        mResidencyList.Reset();
      }
      return {};
  }
@@ -431,13 +431,13 @@ index d4fa04d52..7a81b26f4 100644
 -        heap->SetLastUsage(serial);
 -        mHeapsPendingUsage.push_back(heap);
 -    }
-+gpgmm::d3d12::ResidencySet* CommandRecordingContext::GetResidencySet() {
-+    return &mResidencySet;
++gpgmm::d3d12::ResidencyList* CommandRecordingContext::GetResidencyList() {
++    return &mResidencyList;
  }
  
  ID3D12GraphicsCommandList* CommandRecordingContext::GetCommandList() const {
 diff --git a/src/dawn/native/d3d12/CommandRecordingContext.h b/src/dawn/native/d3d12/CommandRecordingContext.h
-index 80b6204e1..f1a840f33 100644
+index 80b6204e1..2a23de23a 100644
 --- a/src/dawn/native/d3d12/CommandRecordingContext.h
 +++ b/src/dawn/native/d3d12/CommandRecordingContext.h
 @@ -22,6 +22,8 @@
@@ -454,7 +454,7 @@ index 80b6204e1..f1a840f33 100644
      MaybeError ExecuteCommandList(Device* device);
  
 -    void TrackHeapUsage(Heap* heap, ExecutionSerial serial);
-+    gpgmm::d3d12::ResidencySet* GetResidencySet();
++    gpgmm::d3d12::ResidencyList* GetResidencyList();
  
      void AddToTempBuffers(Ref<Buffer> tempBuffer);
  
@@ -462,7 +462,7 @@ index 80b6204e1..f1a840f33 100644
      bool mIsOpen = false;
      std::set<Texture*> mSharedTextures;
      std::vector<Heap*> mHeapsPendingUsage;
-+    gpgmm::d3d12::ResidencySet mResidencySet;
++    gpgmm::d3d12::ResidencyList mResidencyList;
  
      std::vector<Ref<Buffer>> mTempBuffers;
  };
@@ -968,7 +968,7 @@ index dcbe7dfed..b855e38c2 100644
  }  // namespace dawn::native::d3d12
  
 diff --git a/src/dawn/native/d3d12/TextureD3D12.cpp b/src/dawn/native/d3d12/TextureD3D12.cpp
-index c7258a5b1..51c03c2f3 100644
+index c7258a5b1..230ba9a31 100644
 --- a/src/dawn/native/d3d12/TextureD3D12.cpp
 +++ b/src/dawn/native/d3d12/TextureD3D12.cpp
 @@ -556,12 +556,8 @@ MaybeError Texture::InitializeAsExternalTexture(const TextureDescriptor* descrip
@@ -1037,7 +1037,7 @@ index c7258a5b1..51c03c2f3 100644
          // Track the underlying heap to ensure residency.
 -        Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -        commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
-+        commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
++        commandContext->GetResidencyList()->Add(mResourceAllocation->GetMemory());
      }
  
      std::vector<D3D12_RESOURCE_BARRIER> barriers;
@@ -1051,7 +1051,7 @@ index c7258a5b1..51c03c2f3 100644
 -        commandContext->TrackHeapUsage(heap, GetDevice()->GetPendingCommandSerial());
 +    // Track the underlying heap to ensure residency.
 +    if (GetTextureState() != TextureState::OwnedExternal) {
-+        commandContext->GetResidencySet()->Insert(mResourceAllocation->GetMemory());
++        commandContext->GetResidencyList()->Add(mResourceAllocation->GetMemory());
      }
  
      HandleTransitionSpecialCases(commandContext);
