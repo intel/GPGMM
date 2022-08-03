@@ -202,7 +202,7 @@ namespace gpgmm::d3d12 {
         @param ppResidencySets The array of ResidencySet residency sets to make resident.
         @param count The size of commandLists and residencyLists arrays.
 
-        /deprecated Use ResidencyList instead of ResidencySet.
+        \deprecated Use ResidencyList instead of ResidencySet.
         */
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,

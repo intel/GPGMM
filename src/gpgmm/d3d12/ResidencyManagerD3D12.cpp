@@ -567,7 +567,7 @@ namespace gpgmm::d3d12 {
 
     /** \brief  Execute command lists using residency managed heaps.
     *
-    /deprecated use ResidencyList instead of ResidencySet
+    \deprecated use ResidencyList instead of ResidencySet
     */
     HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                                   ID3D12CommandList* const* ppCommandLists,
