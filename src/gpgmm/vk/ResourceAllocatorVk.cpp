@@ -215,12 +215,12 @@ namespace gpgmm::vk {
         }
 
         GpAllocatorCreateInfo newInfo = info;
-        newInfo.MemoryGrowthFactor = (newInfo.MemoryGrowthFactor >= 1.0)
-                                         ? newInfo.MemoryGrowthFactor
+        newInfo.memoryGrowthFactor = (newInfo.memoryGrowthFactor >= 1.0)
+                                         ? newInfo.memoryGrowthFactor
                                          : kDefaultMemoryGrowthFactor;
 
-        newInfo.MemoryFragmentationLimit = (newInfo.MemoryFragmentationLimit > 0)
-                                               ? newInfo.MemoryFragmentationLimit
+        newInfo.memoryFragmentationLimit = (newInfo.memoryFragmentationLimit > 0)
+                                               ? newInfo.memoryFragmentationLimit
                                                : kDefaultFragmentationLimit;
 
         if (allocatorOut != VK_NULL_HANDLE) {
@@ -405,9 +405,9 @@ namespace gpgmm::vk {
         static constexpr uint64_t kMaxDeviceMemorySize = GPGMM_GB_TO_BYTES(32);
 
         const uint64_t memoryGrowthFactor =
-            (info.MemoryGrowthFactor >= 1.0) ? info.MemoryGrowthFactor : kDefaultMemoryGrowthFactor;
+            (info.memoryGrowthFactor >= 1.0) ? info.memoryGrowthFactor : kDefaultMemoryGrowthFactor;
 
-        switch (info.SubAllocationAlgorithm) {
+        switch (info.subAllocationAlgorithm) {
             case GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
                 return std::make_unique<BuddyMemoryAllocator>(
                     /*systemSize*/ kMaxDeviceMemorySize,
@@ -420,7 +420,7 @@ namespace gpgmm::vk {
                     /*maxSlabSize*/ kMaxDeviceMemorySize,
                     /*minSlabSize*/ std::max(memoryAlignment, info.preferredDeviceMemorySize),
                     /*slabAlignment*/ memoryAlignment,
-                    /*slabFragmentationLimit*/ info.MemoryFragmentationLimit,
+                    /*slabFragmentationLimit*/ info.memoryFragmentationLimit,
                     /*allowSlabPrefetch*/
                     !(info.flags & GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH),
                     /*slabGrowthFactor*/ memoryGrowthFactor,

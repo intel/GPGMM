@@ -148,7 +148,7 @@ namespace gpgmm::vk {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        GpAllocatorAlgorithm SubAllocationAlgorithm = GP_ALLOCATOR_ALGORITHM_SLAB;
+        GpAllocatorAlgorithm subAllocationAlgorithm = GP_ALLOCATOR_ALGORITHM_SLAB;
 
         /** \brief Specifies the algorithm to use for device memory pooling.
 
@@ -177,14 +177,14 @@ namespace gpgmm::vk {
         alignment requirements. For example, a 192KB resource may need to allocate 256KB of
         allocated space, which is equivalent to a fragmentation limit of 33%.
 
-        When |preferredDeviceMemorySize| is non-zero, the MemoryFragmentationLimit could be
-        exceeded. Also, the MemoryFragmentationLimit should never be zero, as some fragmentation
+        When |preferredDeviceMemorySize| is non-zero, the memoryFragmentationLimit could be
+        exceeded. Also, the memoryFragmentationLimit should never be zero, as some fragmentation
         can occur.
 
         Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
         device memory size.
         */
-        double MemoryFragmentationLimit;
+        double memoryFragmentationLimit;
 
         /** \brief Memory growth factor, expressed as a multipler of the device memory size
         that will monotonically increase.
@@ -201,7 +201,7 @@ namespace gpgmm::vk {
 
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
-        double MemoryGrowthFactor;
+        double memoryGrowthFactor;
     };
 
     /** \enum GpResourceAllocationCreateFlags
