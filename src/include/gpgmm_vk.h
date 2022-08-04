@@ -12,15 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_INCLUDE_GPGMM_VK_H_
-#define GPGMM_INCLUDE_GPGMM_VK_H_
-
-#include <gpgmm_export.h>
-
-// clang-format off
+#ifndef INCLUDE_GPGMM_VK_H_
+#define INCLUDE_GPGMM_VK_H_
 
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
-// clang-format on
-
-#endif  // GPGMM_INCLUDE_GPGMM_VK_H_
+#endif  // INCLUDE_GPGMM_VK_H_

@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_INCLUDE_GPGMM_D3D12_H_
-#define GPGMM_INCLUDE_GPGMM_D3D12_H_
-
-#include <gpgmm_export.h>
-
-// clang-format off
+#ifndef INCLUDE_GPGMM_D3D12_H_
+#define INCLUDE_GPGMM_D3D12_H_
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
@@ -25,6 +21,4 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 
-// clang-format on
-
-#endif  // GPGMM_INCLUDE_GPGMM_D3D12_H_
+#endif  // INCLUDE_GPGMM_D3D12_H_
