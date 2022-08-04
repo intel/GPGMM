@@ -98,12 +98,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac6320bbc9162d64f29069ad55ceeb845"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a084b843e7a93b6bb10f432dc7780c881"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a084b843e7a93b6bb10f432dc7780c881">~MemoryPool</a> ()</td></tr>
 <tr class="separator:a084b843e7a93b6bb10f432dc7780c881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7446b6107a3c069a99d84b353b350197"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197">AcquireFromPool</a> (uint64_t memoryIndex=kInvalidIndex)=0</td></tr>
-<tr class="memdesc:a7446b6107a3c069a99d84b353b350197"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a memory allocation from the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197">More...</a><br /></td></tr>
-<tr class="separator:a7446b6107a3c069a99d84b353b350197"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55e54ecee941a16bc9dc837bd9b508a7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7">ReturnToPool</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation, uint64_t memoryIndex=kInvalidIndex)=0</td></tr>
-<tr class="memdesc:a55e54ecee941a16bc9dc837bd9b508a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a memory allocation back to the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7">More...</a><br /></td></tr>
-<tr class="separator:a55e54ecee941a16bc9dc837bd9b508a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15faae054958102cc16727ae4030441b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a15faae054958102cc16727ae4030441b">AcquireFromPool</a> (uint64_t indexInPool=kInvalidIndex)=0</td></tr>
+<tr class="memdesc:a15faae054958102cc16727ae4030441b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a memory allocation from the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#a15faae054958102cc16727ae4030441b">More...</a><br /></td></tr>
+<tr class="separator:a15faae054958102cc16727ae4030441b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5705abce522e9be408dc3f9bbb0c0ca"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#ae5705abce522e9be408dc3f9bbb0c0ca">ReturnToPool</a> (<a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> allocation, uint64_t indexInPool=kInvalidIndex)=0</td></tr>
+<tr class="memdesc:ae5705abce522e9be408dc3f9bbb0c0ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a memory allocation back to the pool using an optional index.  <a href="classgpgmm_1_1_memory_pool.html#ae5705abce522e9be408dc3f9bbb0c0ca">More...</a><br /></td></tr>
+<tr class="separator:ae5705abce522e9be408dc3f9bbb0c0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d301fb93b67a9dae861606c5a1ace16"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16">ReleasePool</a> (uint64_t bytesToRelease=kInvalidSize)=0</td></tr>
 <tr class="memdesc:a8d301fb93b67a9dae861606c5a1ace16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate or shrink the pool.  <a href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16">More...</a><br /></td></tr>
 <tr class="separator:a8d301fb93b67a9dae861606c5a1ace16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,8 +129,8 @@ Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Stores a collection of memory allocations. </p>
 <p >Memory allocations stored in the pool must ALL be in the same state (ex. "free pool").</p>
-<p >To grow the pool, created memory allocations are inserted into the pool by <a class="el" href="classgpgmm_1_1_memory_pool.html#a55e54ecee941a16bc9dc837bd9b508a7" title="Returns a memory allocation back to the pool using an optional index.">ReturnToPool()</a>.</p>
-<p >To shrink the pool, existing allocations can removed out by <a class="el" href="classgpgmm_1_1_memory_pool.html#a7446b6107a3c069a99d84b353b350197" title="Retrieves a memory allocation from the pool using an optional index.">AcquireFromPool()</a> or de-allocated together by <a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16" title="Deallocate or shrink the pool.">ReleasePool()</a>. </p>
+<p >To grow the pool, created memory allocations are inserted into the pool by <a class="el" href="classgpgmm_1_1_memory_pool.html#ae5705abce522e9be408dc3f9bbb0c0ca" title="Returns a memory allocation back to the pool using an optional index.">ReturnToPool()</a>.</p>
+<p >To shrink the pool, existing allocations can removed out by <a class="el" href="classgpgmm_1_1_memory_pool.html#a15faae054958102cc16727ae4030441b" title="Retrieves a memory allocation from the pool using an optional index.">AcquireFromPool()</a> or de-allocated together by <a class="el" href="classgpgmm_1_1_memory_pool.html#a8d301fb93b67a9dae861606c5a1ace16" title="Deallocate or shrink the pool.">ReleasePool()</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac6320bbc9162d64f29069ad55ceeb845" name="ac6320bbc9162d64f29069ad55ceeb845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6320bbc9162d64f29069ad55ceeb845">&#9670;&nbsp;</a></span>MemoryPool()</h2>
@@ -159,7 +159,7 @@ Protected Member Functions</h2></td></tr>
 <p>Constructs a pool for memory of the specified size. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">memorySize</td><td>Size, in bytes, of the memory object stored in the pool. </td></tr>
+    <tr><td class="paramname">memorySize</td><td>Size, in bytes, of the memory allocation stored in the pool. </td></tr>
   </table>
   </dd>
 </dl>
@@ -192,8 +192,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7446b6107a3c069a99d84b353b350197" name="a7446b6107a3c069a99d84b353b350197"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7446b6107a3c069a99d84b353b350197">&#9670;&nbsp;</a></span>AcquireFromPool()</h2>
+<a id="a15faae054958102cc16727ae4030441b" name="a15faae054958102cc16727ae4030441b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15faae054958102cc16727ae4030441b">&#9670;&nbsp;</a></span>AcquireFromPool()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -202,10 +202,10 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; gpgmm::MemoryPool::AcquireFromPool </td>
+          <td class="memname">virtual <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> gpgmm::MemoryPool::AcquireFromPool </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>memoryIndex</em> = <code>kInvalidIndex</code></td><td>)</td>
+          <td class="paramname"><em>indexInPool</em> = <code>kInvalidIndex</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -219,12 +219,12 @@ Protected Member Functions</h2></td></tr>
 <p>Retrieves a memory allocation from the pool using an optional index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">memoryIndex</td><td>Optional index of the memory object to retrieve. </td></tr>
+    <tr><td class="paramname">indexInPool</td><td>Optional index of the memory allocation to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1_indexed_memory_pool.html#a8158c0744ba81b85efb3d2fb00f7dcfa">gpgmm::IndexedMemoryPool</a>, and <a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a25449353cbe14c030fc93bdd25203b43">gpgmm::LIFOMemoryPool</a>.</p>
+<p>Implemented in <a class="el" href="classgpgmm_1_1_indexed_memory_pool.html#a503e7473527e57837569c5a31f52af1a">gpgmm::IndexedMemoryPool</a>, and <a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#a0d44a0a0804fd48d73735a2b46f82222">gpgmm::LIFOMemoryPool</a>.</p>
 
 </div>
 </div>
@@ -363,8 +363,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a55e54ecee941a16bc9dc837bd9b508a7" name="a55e54ecee941a16bc9dc837bd9b508a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55e54ecee941a16bc9dc837bd9b508a7">&#9670;&nbsp;</a></span>ReturnToPool()</h2>
+<a id="ae5705abce522e9be408dc3f9bbb0c0ca" name="ae5705abce522e9be408dc3f9bbb0c0ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5705abce522e9be408dc3f9bbb0c0ca">&#9670;&nbsp;</a></span>ReturnToPool()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -375,14 +375,14 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void gpgmm::MemoryPool::ReturnToPool </td>
           <td>(</td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a>&#160;</td>
           <td class="paramname"><em>allocation</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>memoryIndex</em> = <code>kInvalidIndex</code>&#160;</td>
+          <td class="paramname"><em>indexInPool</em> = <code>kInvalidIndex</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -401,12 +401,12 @@ Protected Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">allocation</td><td>A pointer to <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> which will be returned. </td></tr>
-    <tr><td class="paramname">memoryIndex</td><td>Optional index of the memory object to return. </td></tr>
+    <tr><td class="paramname">indexInPool</td><td>Optional index of the memory allocation to return. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1_indexed_memory_pool.html#a5a89cde3f5d7df9463434236c1d3cd2b">gpgmm::IndexedMemoryPool</a>, and <a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#ac1c7f6f17939dd4e06ecf51d896e6bcf">gpgmm::LIFOMemoryPool</a>.</p>
+<p>Implemented in <a class="el" href="classgpgmm_1_1_indexed_memory_pool.html#a17876020c90c8f9918020be1163f7942">gpgmm::IndexedMemoryPool</a>, and <a class="el" href="classgpgmm_1_1_l_i_f_o_memory_pool.html#ac3c46d6306af5c1ac6c718b0aa5d756a">gpgmm::LIFOMemoryPool</a>.</p>
 
 </div>
 </div>
