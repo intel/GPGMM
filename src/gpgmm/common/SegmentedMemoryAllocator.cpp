@@ -131,17 +131,19 @@ namespace gpgmm {
         MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
         ASSERT(segment != nullptr);
 
-        std::unique_ptr<MemoryAllocation> allocation = segment->AcquireFromPool();
-        if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
+        MemoryAllocation allocation = segment->AcquireFromPool();
+        if (allocation == GPGMM_ERROR_INVALID_ALLOCATION) {
+            std::unique_ptr<MemoryAllocation> allocationPtr;
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocationPtr);
+            allocation = *allocationPtr;
         } else {
-            mInfo.FreeMemoryUsage -= allocation->GetSize();
+            mInfo.FreeMemoryUsage -= allocation.GetSize();
         }
 
         mInfo.UsedMemoryCount++;
-        mInfo.UsedMemoryUsage += allocation->GetSize();
+        mInfo.UsedMemoryUsage += allocation.GetSize();
 
-        MemoryBase* memory = allocation->GetMemory();
+        MemoryBase* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
 
         memory->SetPool(segment);
@@ -166,8 +168,8 @@ namespace gpgmm {
         MemoryPool* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
-        pool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory,
-                                                              allocation->GetRequestSize()));
+        pool->ReturnToPool(
+            MemoryAllocation(GetNextInChain(), memory, allocation->GetRequestSize()));
     }
 
     uint64_t SegmentedMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

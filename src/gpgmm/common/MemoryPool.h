@@ -15,13 +15,12 @@
 #ifndef GPGMM_COMMON_MEMORYPOOL_H_
 #define GPGMM_COMMON_MEMORYPOOL_H_
 
+#include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/utils/Limits.h"
 
 #include <memory>
 
 namespace gpgmm {
-
-    class MemoryAllocation;
 
     /** \struct MemoryPoolInfo
     Additional information about the memory pool.
@@ -45,25 +44,24 @@ namespace gpgmm {
       public:
         /** \brief Constructs a pool for memory of the specified size.
 
-        @param memorySize Size, in bytes, of the memory object stored in the pool.
+        @param memorySize Size, in bytes, of the memory allocation stored in the pool.
         */
         explicit MemoryPool(uint64_t memorySize);
         virtual ~MemoryPool();
 
         /** \brief Retrieves a memory allocation from the pool using an optional index.
 
-        @param memoryIndex Optional index of the memory object to retrieve.
+        @param indexInPool Optional index of the memory allocation to retrieve.
         */
-        virtual std::unique_ptr<MemoryAllocation> AcquireFromPool(
-            uint64_t memoryIndex = kInvalidIndex) = 0;
+        virtual MemoryAllocation AcquireFromPool(uint64_t indexInPool = kInvalidIndex) = 0;
 
         /** \brief Returns a memory allocation back to the pool using an optional index.
 
         @param allocation A pointer to MemoryAllocation which will be returned.
-        @param memoryIndex Optional index of the memory object to return.
+        @param indexInPool Optional index of the memory allocation to return.
         */
-        virtual void ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
-                                  uint64_t memoryIndex = kInvalidIndex) = 0;
+        virtual void ReturnToPool(MemoryAllocation allocation,
+                                  uint64_t indexInPool = kInvalidIndex) = 0;
 
         /** \brief Deallocate or shrink the pool.
 
@@ -105,8 +103,9 @@ namespace gpgmm {
             uint64_t totalBytesReleased = 0;
             uint64_t lastIndex = 0;
             for (auto& allocation : pool) {
-                totalBytesReleased += allocation->GetSize();
-                allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
+                totalBytesReleased += allocation.GetSize();
+                allocation.GetAllocator()->DeallocateMemory(
+                    std::make_unique<MemoryAllocation>(allocation));
                 lastIndex++;
                 if (totalBytesReleased >= bytesToRelease) {
                     break;

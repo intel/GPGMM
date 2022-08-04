@@ -22,20 +22,19 @@ namespace gpgmm {
     IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPool(memorySize) {
     }
 
-    std::unique_ptr<MemoryAllocation> IndexedMemoryPool::AcquireFromPool(uint64_t memoryIndex) {
-        if (memoryIndex >= mPool.size()) {
-            mPool.resize(memoryIndex + 1);
+    MemoryAllocation IndexedMemoryPool::AcquireFromPool(uint64_t indexInPool) {
+        if (indexInPool >= mPool.size()) {
+            mPool.resize(indexInPool + 1);
         }
-        return std::move(mPool[memoryIndex]);
+        MemoryAllocation tmp = mPool[indexInPool];
+        mPool[indexInPool] = {};  // invalidate it
+        return tmp;
     }
 
-    void IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocation> allocation,
-                                         uint64_t memoryIndex) {
-        ASSERT(allocation != nullptr);
-        ASSERT(memoryIndex < mPool.size());
-        ASSERT(allocation->GetSize() == GetMemorySize());
-
-        mPool[memoryIndex] = std::move(allocation);
+    void IndexedMemoryPool::ReturnToPool(MemoryAllocation allocation, uint64_t indexInPool) {
+        ASSERT(indexInPool < mPool.size());
+        ASSERT(allocation.GetSize() == GetMemorySize());
+        mPool[indexInPool] = std::move(allocation);
     }
 
     uint64_t IndexedMemoryPool::ReleasePool(uint64_t bytesToRelease) {
@@ -45,7 +44,7 @@ namespace gpgmm {
     uint64_t IndexedMemoryPool::GetPoolSize() const {
         uint64_t count = 0;
         for (auto& allocation : mPool) {
-            if (allocation != nullptr) {
+            if (allocation != GPGMM_ERROR_INVALID_ALLOCATION) {
                 count++;
             }
         }
