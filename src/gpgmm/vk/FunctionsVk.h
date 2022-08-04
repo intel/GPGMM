@@ -16,17 +16,25 @@
 
 namespace gpgmm::vk {
 
+    // Used to determine which dynamically linked functions to load based on the required Vulkan API
+    // extension.
+    struct VulkanExtensions {
+        bool enableMemoryBudgetEXT = false;
+    };
+
     // Vulkan entrypoints used by GPGMM.
     struct VulkanFunctions {
         // Used to dynamically set functions from a shared library (DLL or so).
-        void LoadInstanceFunctions(VkInstance instance);
+        void LoadInstanceFunctions(VkInstance instance,
+                                   const VulkanExtensions& vkExtensions,
+                                   uint32_t vkApiVersion);
         void LoadDeviceFunctions(VkDevice device);
 
         // Used to statically set functions from a static library (Vulkan loader).
-        void ImportDeviceFunctions();
+        void ImportFunctions(uint32_t vkApiVersion);
 
         // Used to import pre-loaded functions set by the user.
-        void ImportDeviceFunctions(const VulkanFunctions* vkFunctions);
+        void ImportFunctions(const VulkanFunctions* vkFunctions);
 
         // Order is important: instance must be loaded before device.
         PFN_vkGetInstanceProcAddr GetInstanceProcAddr = nullptr;
@@ -46,9 +54,14 @@ namespace gpgmm::vk {
         PFN_vkCreateImage CreateImage = nullptr;
         PFN_vkDestroyImage DestroyImage = nullptr;
         PFN_vkDestroyBuffer DestroyBuffer = nullptr;
+
+        // Core Vulkan 1.1
+        PFN_vkGetPhysicalDeviceMemoryProperties2 GetPhysicalDeviceMemoryProperties2 = nullptr;
     };
 
     // ASSERTs if any Vulkan function is left unset.
-    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions);
+    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions,
+                                    const VulkanExtensions& vkExtensions,
+                                    uint32_t vkApiVersion);
 
 }  // namespace gpgmm::vk

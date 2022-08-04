@@ -59,6 +59,14 @@ namespace gpgmm::vk {
         minimal possible GPU memory footprint or debugging OOM failures.
         */
         GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND = 0x8,
+
+        /** \brief Creates resource within budget.
+
+        Requires the device extension VK_EXT_memory_budget to be supported before use.
+        The instance specified in GpAllocatorCreateInfo is also required to support
+        VK_KHR_get_physical_device_properties2.
+        */
+        GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET = 0x10,
     };
 
     /** \enum GpAllocatorAlgorithm
