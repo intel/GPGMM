@@ -96,6 +96,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1vk_1_1_v_k_test_base.html">VKTestBase</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_extensions.html">VulkanExtensions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -104,6 +106,7 @@ Enumerations</h2></td></tr>
 <tr class="memitem:acbd246f80e3453eadf5bc945f88a44b6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6">GpAllocatorCreateFlags</a> { <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a6eedcff4846b79716a6ea0720996ab34">GP_ALLOCATOR_CREATE_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6ac334c08000f123197b4920083c5af7a7">GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH</a> = 0x4
 , <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde">GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f">GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET</a> = 0x10
  }</td></tr>
 <tr class="memdesc:acbd246f80e3453eadf5bc945f88a44b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures how allocators should be created.  <a href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6">More...</a><br /></td></tr>
 <tr class="separator:acbd246f80e3453eadf5bc945f88a44b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,8 +128,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a974740d8609bf82f673e90d9a6522050"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a974740d8609bf82f673e90d9a6522050"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a974740d8609bf82f673e90d9a6522050">ToBackend</a> (T &amp;&amp;common) -&gt; decltype(gpgmm::ToBackend&lt; <a class="el" href="structgpgmm_1_1vk_1_1_backend_trait.html">BackendTrait</a> &gt;(common))</td></tr>
 <tr class="separator:a974740d8609bf82f673e90d9a6522050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab460072e426e911351d40391459dd1b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#ab460072e426e911351d40391459dd1b6">AssertVulkanFunctionsExist</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> &amp;vkFunctions)</td></tr>
-<tr class="separator:ab460072e426e911351d40391459dd1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cd7502415bce09c9c73e42fd873eed4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a3cd7502415bce09c9c73e42fd873eed4">AssertVulkanFunctionsExist</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> &amp;vkFunctions, const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_extensions.html">VulkanExtensions</a> &amp;vkExtensions, uint32_t vkApiVersion)</td></tr>
+<tr class="separator:a3cd7502415bce09c9c73e42fd873eed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a714d3c0ca5f86caa30020a08646ceb65"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">gpCreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_gp_allocator_create_info.html">GpAllocatorCreateInfo</a> &amp;info, <a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *allocatorOut)</td></tr>
 <tr class="memdesc:a714d3c0ca5f86caa30020a08646ceb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create allocator used to create and manage video memory for the App specified device and instance.  <a href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">More...</a><br /></td></tr>
 <tr class="separator:a714d3c0ca5f86caa30020a08646ceb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,6 +216,11 @@ equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
 <tr><td class="fieldname"><a id="acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde" name="acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde"></a>GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Tell GPGMM to allocate exactly what is needed, and to de-allocate memory immediately once no longer needed (instead of re-using it). </p>
 <p >This is very slow and not recommended for general use but may be useful for running with the minimal possible GPU memory footprint or debugging OOM failures. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f" name="acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f"></a>GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
+<pre class="fragment">Requires the device extension VK_EXT_memory_budget to be supported before use.
+The instance specified in GpAllocatorCreateInfo is also required to support
+VK_KHR_get_physical_device_properties2.
+</pre> </td></tr>
 </table>
 
 </div>
@@ -253,8 +261,8 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ab460072e426e911351d40391459dd1b6" name="ab460072e426e911351d40391459dd1b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab460072e426e911351d40391459dd1b6">&#9670;&nbsp;</a></span>AssertVulkanFunctionsExist()</h2>
+<a id="a3cd7502415bce09c9c73e42fd873eed4" name="a3cd7502415bce09c9c73e42fd873eed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cd7502415bce09c9c73e42fd873eed4">&#9670;&nbsp;</a></span>AssertVulkanFunctionsExist()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,8 +271,24 @@ ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
           <td class="memname">void gpgmm::vk::AssertVulkanFunctionsExist </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> &amp;&#160;</td>
-          <td class="paramname"><em>vkFunctions</em></td><td>)</td>
+          <td class="paramname"><em>vkFunctions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_extensions.html">VulkanExtensions</a> &amp;&#160;</td>
+          <td class="paramname"><em>vkExtensions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>vkApiVersion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -8,7 +8,8 @@ var searchData=
   ['gp_5fallocator_5falgorithm_5ffixed_5fpool_5',['GP_ALLOCATOR_ALGORITHM_FIXED_POOL',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787eacdef595920add93787422ca014ae5aaf',1,'gpgmm::vk']]],
   ['gp_5fallocator_5falgorithm_5fsegmented_5fpool_6',['GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea9869547137c9b4bae14485fec1b4243d',1,'gpgmm::vk']]],
   ['gp_5fallocator_5falgorithm_5fslab_7',['GP_ALLOCATOR_ALGORITHM_SLAB',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea266566240e02692c3a84e320a9f864ec',1,'gpgmm::vk']]],
-  ['gp_5fallocator_5fcreate_5falways_5fon_5fdemand_8',['GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde',1,'gpgmm::vk']]],
-  ['gp_5fallocator_5fcreate_5fdisable_5fmemory_5fprefetch_9',['GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6ac334c08000f123197b4920083c5af7a7',1,'gpgmm::vk']]],
-  ['gp_5fallocator_5fcreate_5fnone_10',['GP_ALLOCATOR_CREATE_NONE',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a6eedcff4846b79716a6ea0720996ab34',1,'gpgmm::vk']]]
+  ['gp_5fallocator_5fcreate_5falways_5fin_5fbudget_8',['GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5falways_5fon_5fdemand_9',['GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5fdisable_5fmemory_5fprefetch_10',['GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6ac334c08000f123197b4920083c5af7a7',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5fnone_11',['GP_ALLOCATOR_CREATE_NONE',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a6eedcff4846b79716a6ea0720996ab34',1,'gpgmm::vk']]]
 ];

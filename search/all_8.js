@@ -1,7 +1,7 @@
 var searchData=
 [
   ['id_0',['ID',['../structgpgmm_1_1_event_message_info.html#a494da1d16d5f0192f77b723f2de661f5',1,'gpgmm::EventMessageInfo']]],
-  ['importdevicefunctions_1',['ImportDeviceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a690aae65c9bfaef6895102b55919b353',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions *vkFunctions)'],['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a82cfd79b7e97bb7726803018a52c5eaa',1,'gpgmm::vk::VulkanFunctions::ImportDeviceFunctions()']]],
+  ['importfunctions_1',['ImportFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#afd102bee3733bd3e3078eba299e25a07',1,'gpgmm::vk::VulkanFunctions::ImportFunctions(const VulkanFunctions *vkFunctions)'],['../structgpgmm_1_1vk_1_1_vulkan_functions.html#ab820c7548f02888dff9c06bbe8ab88dc',1,'gpgmm::vk::VulkanFunctions::ImportFunctions(uint32_t vkApiVersion)']]],
   ['indexedmemorypool_2',['IndexedMemoryPool',['../classgpgmm_1_1_indexed_memory_pool.html',1,'gpgmm::IndexedMemoryPool'],['../classgpgmm_1_1_indexed_memory_pool.html#a7577a2f813c6bde712e44538dcd3ebb7',1,'gpgmm::IndexedMemoryPool::IndexedMemoryPool()']]],
   ['indexedmemorypool_2ecpp_3',['IndexedMemoryPool.cpp',['../_indexed_memory_pool_8cpp.html',1,'']]],
   ['indexedmemorypool_2eh_4',['IndexedMemoryPool.h',['../_indexed_memory_pool_8h.html',1,'']]],

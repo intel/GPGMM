@@ -79,14 +79,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a51437b023b7731e8a9f14c91ae94ae3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a51437b023b7731e8a9f14c91ae94ae3c">LoadInstanceFunctions</a> (VkInstance instance)</td></tr>
-<tr class="separator:a51437b023b7731e8a9f14c91ae94ae3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a296b0662c8c5ece9e3fea95c4663b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a2a296b0662c8c5ece9e3fea95c4663b7">LoadInstanceFunctions</a> (VkInstance instance, const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_extensions.html">VulkanExtensions</a> &amp;vkExtensions, uint32_t vkApiVersion)</td></tr>
+<tr class="separator:a2a296b0662c8c5ece9e3fea95c4663b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8469e6167ea6fcea37add81422951c64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a8469e6167ea6fcea37add81422951c64">LoadDeviceFunctions</a> (VkDevice device)</td></tr>
 <tr class="separator:a8469e6167ea6fcea37add81422951c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82cfd79b7e97bb7726803018a52c5eaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a82cfd79b7e97bb7726803018a52c5eaa">ImportDeviceFunctions</a> ()</td></tr>
-<tr class="separator:a82cfd79b7e97bb7726803018a52c5eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a690aae65c9bfaef6895102b55919b353"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a690aae65c9bfaef6895102b55919b353">ImportDeviceFunctions</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> *vkFunctions)</td></tr>
-<tr class="separator:a690aae65c9bfaef6895102b55919b353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab820c7548f02888dff9c06bbe8ab88dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#ab820c7548f02888dff9c06bbe8ab88dc">ImportFunctions</a> (uint32_t vkApiVersion)</td></tr>
+<tr class="separator:ab820c7548f02888dff9c06bbe8ab88dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd102bee3733bd3e3078eba299e25a07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#afd102bee3733bd3e3078eba299e25a07">ImportFunctions</a> (const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> *vkFunctions)</td></tr>
+<tr class="separator:afd102bee3733bd3e3078eba299e25a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -120,18 +120,21 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac75229aa0618a442f8e37ac3cfcd6f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b38432f6894b225397bb4acfa31ad44"><td class="memItemLeft" align="right" valign="top">PFN_vkDestroyBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a5b38432f6894b225397bb4acfa31ad44">DestroyBuffer</a> = nullptr</td></tr>
 <tr class="separator:a5b38432f6894b225397bb4acfa31ad44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b182b5409537f90d96ded6ef11c8069"><td class="memItemLeft" align="right" valign="top">PFN_vkGetPhysicalDeviceMemoryProperties2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html#a7b182b5409537f90d96ded6ef11c8069">GetPhysicalDeviceMemoryProperties2</a> = nullptr</td></tr>
+<tr class="separator:a7b182b5409537f90d96ded6ef11c8069"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a82cfd79b7e97bb7726803018a52c5eaa" name="a82cfd79b7e97bb7726803018a52c5eaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82cfd79b7e97bb7726803018a52c5eaa">&#9670;&nbsp;</a></span>ImportDeviceFunctions() <span class="overload">[1/2]</span></h2>
+<a id="afd102bee3733bd3e3078eba299e25a07" name="afd102bee3733bd3e3078eba299e25a07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd102bee3733bd3e3078eba299e25a07">&#9670;&nbsp;</a></span>ImportFunctions() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gpgmm::vk::VulkanFunctions::ImportDeviceFunctions </td>
+          <td class="memname">void gpgmm::vk::VulkanFunctions::ImportFunctions </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> *&#160;</td>
+          <td class="paramname"><em>vkFunctions</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -139,17 +142,17 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a690aae65c9bfaef6895102b55919b353" name="a690aae65c9bfaef6895102b55919b353"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a690aae65c9bfaef6895102b55919b353">&#9670;&nbsp;</a></span>ImportDeviceFunctions() <span class="overload">[2/2]</span></h2>
+<a id="ab820c7548f02888dff9c06bbe8ab88dc" name="ab820c7548f02888dff9c06bbe8ab88dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab820c7548f02888dff9c06bbe8ab88dc">&#9670;&nbsp;</a></span>ImportFunctions() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gpgmm::vk::VulkanFunctions::ImportDeviceFunctions </td>
+          <td class="memname">void gpgmm::vk::VulkanFunctions::ImportFunctions </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_functions.html">VulkanFunctions</a> *&#160;</td>
-          <td class="paramname"><em>vkFunctions</em></td><td>)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>vkApiVersion</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -175,8 +178,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a51437b023b7731e8a9f14c91ae94ae3c" name="a51437b023b7731e8a9f14c91ae94ae3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51437b023b7731e8a9f14c91ae94ae3c">&#9670;&nbsp;</a></span>LoadInstanceFunctions()</h2>
+<a id="a2a296b0662c8c5ece9e3fea95c4663b7" name="a2a296b0662c8c5ece9e3fea95c4663b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a296b0662c8c5ece9e3fea95c4663b7">&#9670;&nbsp;</a></span>LoadInstanceFunctions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,8 +188,24 @@ Public Attributes</h2></td></tr>
           <td class="memname">void gpgmm::vk::VulkanFunctions::LoadInstanceFunctions </td>
           <td>(</td>
           <td class="paramtype">VkInstance&#160;</td>
-          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1vk_1_1_vulkan_extensions.html">VulkanExtensions</a> &amp;&#160;</td>
+          <td class="paramname"><em>vkExtensions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>vkApiVersion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -370,6 +389,20 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">PFN_vkGetPhysicalDeviceMemoryProperties gpgmm::vk::VulkanFunctions::GetPhysicalDeviceMemoryProperties = nullptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b182b5409537f90d96ded6ef11c8069" name="a7b182b5409537f90d96ded6ef11c8069"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b182b5409537f90d96ded6ef11c8069">&#9670;&nbsp;</a></span>GetPhysicalDeviceMemoryProperties2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PFN_vkGetPhysicalDeviceMemoryProperties2 gpgmm::vk::VulkanFunctions::GetPhysicalDeviceMemoryProperties2 = nullptr</td>
         </tr>
       </table>
 </div><div class="memdoc">
