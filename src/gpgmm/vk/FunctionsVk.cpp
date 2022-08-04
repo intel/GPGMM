@@ -34,11 +34,17 @@
     } while (0)
 
 namespace gpgmm::vk {
-    void VulkanFunctions::LoadInstanceFunctions(VkInstance instance) {
+    void VulkanFunctions::LoadInstanceFunctions(VkInstance instance,
+                                                const VulkanExtensions& vkExtensions,
+                                                uint32_t vkApiVersion) {
         GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetDeviceProcAddr);
         GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetPhysicalDeviceMemoryProperties);
         GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetPhysicalDeviceProperties);
         // TODO
+
+        if (vkExtensions.enableMemoryBudgetEXT || vkApiVersion >= VK_API_VERSION_1_1) {
+            GPGMM_DYNAMIC_GET_INSTANCE_FUNC(GetPhysicalDeviceMemoryProperties2);
+        }
     }
 
     void VulkanFunctions::LoadDeviceFunctions(VkDevice device) {
@@ -55,7 +61,7 @@ namespace gpgmm::vk {
         // TODO
     }
 
-    void VulkanFunctions::ImportDeviceFunctions() {
+    void VulkanFunctions::ImportFunctions(uint32_t vkApiVersion) {
         GPGMM_STATIC_GET_FUNC(GetPhysicalDeviceMemoryProperties);
         GPGMM_STATIC_GET_FUNC(GetPhysicalDeviceProperties);
         GPGMM_STATIC_GET_FUNC(AllocateMemory);
@@ -69,10 +75,15 @@ namespace gpgmm::vk {
         GPGMM_STATIC_GET_FUNC(DestroyBuffer);
         GPGMM_STATIC_GET_FUNC(DestroyImage);
         // TODO
+
+        if (vkApiVersion >= VK_API_VERSION_1_1) {
+            GPGMM_STATIC_GET_FUNC(GetPhysicalDeviceMemoryProperties2);
+        }
     }
 
-    void VulkanFunctions::ImportDeviceFunctions(const VulkanFunctions* vkFunctions) {
+    void VulkanFunctions::ImportFunctions(const VulkanFunctions* vkFunctions) {
         GetPhysicalDeviceMemoryProperties = vkFunctions->GetPhysicalDeviceMemoryProperties;
+        GetPhysicalDeviceMemoryProperties2 = vkFunctions->GetPhysicalDeviceMemoryProperties2;
         GetPhysicalDeviceProperties = vkFunctions->GetPhysicalDeviceProperties;
         AllocateMemory = vkFunctions->AllocateMemory;
         FreeMemory = vkFunctions->FreeMemory;
@@ -86,7 +97,9 @@ namespace gpgmm::vk {
         DestroyImage = vkFunctions->DestroyImage;
     }
 
-    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions) {
+    void AssertVulkanFunctionsExist(const VulkanFunctions& vkFunctions,
+                                    const VulkanExtensions& vkExtensions,
+                                    uint32_t vkApiVersion) {
         ASSERT(vkFunctions.GetPhysicalDeviceMemoryProperties != nullptr);
         ASSERT(vkFunctions.GetPhysicalDeviceProperties != nullptr);
         ASSERT(vkFunctions.AllocateMemory != nullptr);
@@ -99,6 +112,10 @@ namespace gpgmm::vk {
         ASSERT(vkFunctions.CreateImage != nullptr);
         ASSERT(vkFunctions.DestroyBuffer != nullptr);
         ASSERT(vkFunctions.DestroyImage != nullptr);
+
+        if (vkApiVersion >= VK_API_VERSION_1_1 || vkExtensions.enableMemoryBudgetEXT) {
+            ASSERT(vkFunctions.GetPhysicalDeviceMemoryProperties2 != nullptr);
+        }
     }
 
 }  // namespace gpgmm::vk

@@ -188,29 +188,34 @@ namespace gpgmm::vk {
     // static
     VkResult GpResourceAllocator_T::CreateAllocator(const GpAllocatorCreateInfo& info,
                                                     GpResourceAllocator* allocatorOut) {
-        VulkanFunctions vulkanFunctions = {};
+        VulkanFunctions vkFunctions = {};
         {
+            VulkanExtensions vkExtensionsRequired = {};
+            vkExtensionsRequired.enableMemoryBudgetEXT =
+                (info.flags & GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET);
+
             if (info.pVulkanFunctions != nullptr) {
-                vulkanFunctions.ImportDeviceFunctions(info.pVulkanFunctions);
+                vkFunctions.ImportFunctions(info.pVulkanFunctions);
             } else {
 #if defined(GPGMM_STATIC_VULKAN_FUNCTIONS)
-                vulkanFunctions.ImportDeviceFunctions();
+                vkFunctions.ImportFunctions(info.vulkanApiVersion);
 #else  // GPGMM_DYNAMIC_VULKAN_FUNCTIONS
-                vulkanFunctions.LoadInstanceFunctions(info.instance);
-                vulkanFunctions.LoadDeviceFunctions(info.device);
+                vkFunctions.LoadInstanceFunctions(info.instance, vkExtensionsRequired,
+                                                  info.vulkanApiVersion);
+                vkFunctions.LoadDeviceFunctions(info.device);
 #endif
             }
 
 #ifndef NDEBUG
-            AssertVulkanFunctionsExist(vulkanFunctions);
+            AssertVulkanFunctionsExist(vkFunctions, vkExtensionsRequired, info.vulkanApiVersion);
 #endif
         }
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(Caps::CreateCaps(info.physicalDevice, vulkanFunctions,
-                                            info.vulkanApiVersion, &ptr));
+            ReturnIfFailed(
+                Caps::CreateCaps(info.physicalDevice, vkFunctions, info.vulkanApiVersion, &ptr));
             caps.reset(ptr);
         }
 
@@ -224,7 +229,7 @@ namespace gpgmm::vk {
                                                : kDefaultFragmentationLimit;
 
         if (allocatorOut != VK_NULL_HANDLE) {
-            *allocatorOut = new GpResourceAllocator_T(newInfo, vulkanFunctions, std::move(caps));
+            *allocatorOut = new GpResourceAllocator_T(newInfo, vkFunctions, std::move(caps));
         }
 
         return VK_SUCCESS;
