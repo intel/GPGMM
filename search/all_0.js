@@ -68,7 +68,7 @@ var searchData=
   ['assert_5ffailed_65',['ASSERT_FAILED',['../_d3_d12_test_8h.html#aa98dd464c7bcc2283ad4717c9df0aa97',1,'ASSERT_FAILED():&#160;D3D12Test.h'],['../_v_k_test_8h.html#aa98dd464c7bcc2283ad4717c9df0aa97',1,'ASSERT_FAILED():&#160;VKTest.h']]],
   ['assert_5fsucceeded_66',['ASSERT_SUCCEEDED',['../_d3_d12_test_8h.html#adcb38e211914eadfb0fd3718341bc98e',1,'D3D12Test.h']]],
   ['assert_5fsuccess_67',['ASSERT_SUCCESS',['../_v_k_test_8h.html#a0af13070a756a7e1d1de81b9288579cc',1,'VKTest.h']]],
-  ['assertvulkanfunctionsexist_68',['AssertVulkanFunctionsExist',['../namespacegpgmm_1_1vk.html#ab460072e426e911351d40391459dd1b6',1,'gpgmm::vk']]],
+  ['assertvulkanfunctionsexist_68',['AssertVulkanFunctionsExist',['../namespacegpgmm_1_1vk.html#a3cd7502415bce09c9c73e42fd873eed4',1,'gpgmm::vk']]],
   ['asynceventimpl_69',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html#a67410e9654d985c1a6afe57735eaf565',1,'gpgmm::AsyncEventImpl::AsyncEventImpl()'],['../classgpgmm_1_1_async_event_impl.html',1,'gpgmm::AsyncEventImpl']]],
   ['asyncthreadpoolimpl_70',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a59a2ce8555af55ff8b234cbd7f647bc1',1,'gpgmm::AsyncThreadPoolImpl::AsyncThreadPoolImpl()'],['../classgpgmm_1_1_async_thread_pool_impl.html',1,'gpgmm::AsyncThreadPoolImpl']]],
   ['attach_71',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]],
