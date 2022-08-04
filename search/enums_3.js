@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['feature_0',['FEATURE',['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4',1,'gpgmm::d3d12']]]
+  ['gpallocatoralgorithm_0',['GpAllocatorAlgorithm',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787e',1,'gpgmm::vk']]],
+  ['gpallocatorcreateflags_1',['GpAllocatorCreateFlags',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6',1,'gpgmm::vk']]],
+  ['gpresourceallocationcreateflags_2',['GpResourceAllocationCreateFlags',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879',1,'gpgmm::vk']]],
+  ['gpuvendor_3',['GPUVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16b',1,'gpgmm']]]
 ];
