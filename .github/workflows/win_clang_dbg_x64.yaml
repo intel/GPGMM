@@ -61,11 +61,17 @@ jobs:
         cd base
         ninja -C out\Debug
 
+    - name: Run gpgmm_end2end_tests leak tests
+      shell: cmd
+      run: |
+        cd base
+        out\Debug\gpgmm_end2end_tests.exe --gtest_filter=*NoLeak
+
     - name: Run gpgmm_end2end_tests
       shell: cmd
       run: |
         cd base
-        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json 2>&1
+        out\Debug\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json 2>&1
 
     - name: Run gpgmm_unittests
       shell: cmd
@@ -129,7 +135,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_end2end_tests.exe --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json 2>&1
+        out\Debug\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json 2>&1
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
