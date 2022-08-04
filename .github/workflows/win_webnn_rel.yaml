@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  job:
+  win_webnn_rel:
 
     runs-on: windows-2019
 
