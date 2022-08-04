@@ -1242,12 +1242,12 @@ namespace gpgmm::d3d12 {
         return mResidencyManager != nullptr && !mIsAlwaysInBudget;
     }
 
-    HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
+    HRESULT ResourceAllocator::CheckFeatureSupport(FEATURE feature,
                                                    void* pFeatureSupportData,
-                                                   uint32_t featureSupportDataSize) {
+                                                   uint32_t featureSupportDataSize) const {
         switch (feature) {
-            case RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT: {
-                ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT data = {};
+            case FEATURE_RESOURCE_SUBALLOCATION_SUPPORT: {
+                FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT data = {};
                 if (featureSupportDataSize != sizeof(data)) {
                     return E_INVALIDARG;
                 }

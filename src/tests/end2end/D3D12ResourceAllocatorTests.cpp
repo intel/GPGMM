@@ -1387,20 +1387,20 @@ TEST_F(D3D12ResourceAllocatorTests, CheckFeatureSupport) {
             uint64_t bigItem;
         } WrongData = {};
 
-        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
-            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, &WrongData, sizeof(WrongData)));
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(FEATURE_RESOURCE_SUBALLOCATION_SUPPORT,
+                                                             &WrongData, sizeof(WrongData)));
     }
 
     // Request information with no data.
     {
-        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
-            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, nullptr, 0));
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(FEATURE_RESOURCE_SUBALLOCATION_SUPPORT,
+                                                             nullptr, 0));
     }
 
     // Request information with valid data size.
     {
-        ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT data = {};
+        FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT data = {};
         ASSERT_SUCCEEDED(resourceAllocator->CheckFeatureSupport(
-            RESOURCE_ALLOCATOR_FEATURE_SUBALLOCATION_SUPPORT, &data, sizeof(data)));
+            FEATURE_RESOURCE_SUBALLOCATION_SUPPORT, &data, sizeof(data)));
     }
 }
