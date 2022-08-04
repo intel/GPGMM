@@ -25,7 +25,7 @@ namespace gpgmm {
     // slab being allocated from.
     struct SlabBlock : public MemoryBlock {
         SlabBlock* pNext = nullptr;
-        Slab* pSlab = nullptr;
+        Slab** ppSlab = nullptr;
     };
 
     // SlabBlockAllocator uses the slab allocation technique to satisfy an
@@ -37,8 +37,14 @@ namespace gpgmm {
     // slab block allocation is always fast.
     class SlabBlockAllocator final : public BlockAllocator {
       public:
+        SlabBlockAllocator() = default;
         SlabBlockAllocator(uint64_t blockCount, uint64_t blockSize);
-        ~SlabBlockAllocator() override;
+        ~SlabBlockAllocator() override = default;
+
+        SlabBlockAllocator(const SlabBlockAllocator& other);
+        SlabBlockAllocator& operator=(const SlabBlockAllocator& other);
+
+        void ReleaseBlocks();
 
         // BlockAllocator interface
         MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) override;
@@ -55,8 +61,8 @@ namespace gpgmm {
 
         BlockList mFreeList;
 
-        const uint64_t mBlockCount;
-        const uint64_t mBlockSize;
+        uint64_t mBlockCount = kInvalidSize;
+        uint64_t mBlockSize = kInvalidSize;
 
         uint64_t mNextFreeBlockIndex = kInvalidIndex;  // Next index or "slot" in the slab.
     };
