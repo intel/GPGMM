@@ -16,7 +16,7 @@ var searchData=
   ['allocatornode_13',['AllocatorNode',['../classgpgmm_1_1_allocator_node.html#a3a8b2208e459a4d8d4097eddb8192352',1,'gpgmm::AllocatorNode::AllocatorNode()=default'],['../classgpgmm_1_1_allocator_node.html#a8f264d1a2274e923b6174d6859411976',1,'gpgmm::AllocatorNode::AllocatorNode(std::unique_ptr&lt; T &gt; next)']]],
   ['apply_14',['Apply',['../_memory_allocator_perf_tests_8cpp.html#a0ebc53d042a52e051ffd75100a9f16d6',1,'MemoryAllocatorPerfTests.cpp']]],
   ['as_15',['As',['../classgpgmm_1_1d3d12_1_1_heap.html#a3e13c4360d9aca83cb4a607466534294',1,'gpgmm::d3d12::Heap']]],
-  ['assertvulkanfunctionsexist_16',['AssertVulkanFunctionsExist',['../namespacegpgmm_1_1vk.html#a3cd7502415bce09c9c73e42fd873eed4',1,'gpgmm::vk']]],
+  ['assertvulkanfunctionsexist_16',['AssertVulkanFunctionsExist',['../namespacegpgmm_1_1vk.html#ab460072e426e911351d40391459dd1b6',1,'gpgmm::vk']]],
   ['asynceventimpl_17',['AsyncEventImpl',['../classgpgmm_1_1_async_event_impl.html#a67410e9654d985c1a6afe57735eaf565',1,'gpgmm::AsyncEventImpl']]],
   ['asyncthreadpoolimpl_18',['AsyncThreadPoolImpl',['../classgpgmm_1_1_async_thread_pool_impl.html#a59a2ce8555af55ff8b234cbd7f647bc1',1,'gpgmm::AsyncThreadPoolImpl']]],
   ['attach_19',['Attach',['../classgpgmm_1_1_scoped_ref.html#a850d01b329438d30357cd1c83c5e5de4',1,'gpgmm::ScopedRef']]]

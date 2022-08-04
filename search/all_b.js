@@ -21,7 +21,7 @@ var searchData=
   ['llvmfuzzerinitialize_18',['LLVMFuzzerInitialize',['../_d3_d12_resource_allocator_fuzzer_8cpp.html#aa30889313cc057073351a87b2590b886',1,'LLVMFuzzerInitialize(int *argc, char ***argv):&#160;D3D12ResourceAllocatorFuzzer.cpp'],['../_d3_d12_residency_manager_fuzzer_8cpp.html#aa30889313cc057073351a87b2590b886',1,'LLVMFuzzerInitialize(int *argc, char ***argv):&#160;D3D12ResidencyManagerFuzzer.cpp']]],
   ['llvmfuzzertestoneinput_19',['LLVMFuzzerTestOneInput',['../_d3_d12_resource_allocator_fuzzer_8cpp.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;D3D12ResourceAllocatorFuzzer.cpp'],['../_d3_d12_residency_manager_fuzzer_8cpp.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;D3D12ResidencyManagerFuzzer.cpp']]],
   ['loaddevicefunctions_20',['LoadDeviceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a8469e6167ea6fcea37add81422951c64',1,'gpgmm::vk::VulkanFunctions']]],
-  ['loadinstancefunctions_21',['LoadInstanceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a2a296b0662c8c5ece9e3fea95c4663b7',1,'gpgmm::vk::VulkanFunctions']]],
+  ['loadinstancefunctions_21',['LoadInstanceFunctions',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a51437b023b7731e8a9f14c91ae94ae3c',1,'gpgmm::vk::VulkanFunctions']]],
   ['lockheap_22',['LockHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532',1,'gpgmm::d3d12::ResidencyManager']]],
   ['log_23',['Log',['../namespacegpgmm.html#a1fb5946092920615e922bd2f43bf901c',1,'gpgmm']]],
   ['log_2ecpp_24',['Log.cpp',['../_log_8cpp.html',1,'']]],

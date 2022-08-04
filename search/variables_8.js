@@ -11,7 +11,7 @@ var searchData=
   ['isneverallocate_8',['IsNeverAllocate',['../struct_test_enviroment_params.html#a77965554f9ee8835d96a173b1203f380',1,'TestEnviromentParams']]],
   ['isprefetchallowed_9',['IsPrefetchAllowed',['../struct_test_enviroment_params.html#a8fa6eff56d0e9a85c143415ac28afbe1',1,'TestEnviromentParams']]],
   ['isresident_10',['IsResident',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a55c283d1377387927a69877f8dea317e',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['isresourceaccessalwayscoherent_11',['IsResourceAccessAlwaysCoherent',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___f_e_a_t_u_r_e___d_a_t_a___s_u_b_a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html#ab61fe8f056000e8678b64dba72b1c992',1,'gpgmm::d3d12::ALLOCATOR_FEATURE_DATA_SUBALLOCATION_SUPPORT']]],
+  ['isresourceaccessalwayscoherent_11',['IsResourceAccessAlwaysCoherent',['../structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___s_u_b_a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html#a97fbc5b1d13c536614efc59de34c7078',1,'gpgmm::d3d12::FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT']]],
   ['issamecapsrequired_12',['IsSameCapsRequired',['../struct_test_enviroment_params.html#a415b7adbe22fb3be53520d1b383dac5c',1,'TestEnviromentParams']]],
   ['issuballocationdisabled_13',['IsSuballocationDisabled',['../struct_test_enviroment_params.html#ae993a2720189745cd81f0592a62882c0',1,'TestEnviromentParams']]],
   ['isuma_14',['IsUMA',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2f8e943fbe0d0ac61cb28acb1f58ccd7',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
