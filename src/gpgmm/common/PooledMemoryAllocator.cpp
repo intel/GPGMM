@@ -42,20 +42,22 @@ namespace gpgmm {
 
         GPGMM_INVALID_IF(!ValidateRequest(request));
 
-        std::unique_ptr<MemoryAllocation> allocation = mPool->AcquireFromPool();
-        if (allocation == nullptr) {
-            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
+        MemoryAllocation allocation = mPool->AcquireFromPool();
+        if (allocation == GPGMM_ERROR_INVALID_ALLOCATION) {
+            std::unique_ptr<MemoryAllocation> allocationPtr;
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocationPtr);
+            allocation = *allocationPtr;
         } else {
-            mInfo.FreeMemoryUsage -= allocation->GetSize();
+            mInfo.FreeMemoryUsage -= allocation.GetSize();
         }
 
         mInfo.UsedMemoryCount++;
-        mInfo.UsedMemoryUsage += allocation->GetSize();
+        mInfo.UsedMemoryUsage += allocation.GetSize();
 
-        MemoryBase* memory = allocation->GetMemory();
+        MemoryBase* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
 
-        return std::make_unique<MemoryAllocation>(this, memory, allocation->GetRequestSize());
+        return std::make_unique<MemoryAllocation>(this, memory, allocation.GetRequestSize());
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
@@ -71,8 +73,8 @@ namespace gpgmm {
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        mPool->ReturnToPool(std::make_unique<MemoryAllocation>(GetNextInChain(), memory,
-                                                               allocation->GetRequestSize()));
+        mPool->ReturnToPool(
+            MemoryAllocation(GetNextInChain(), memory, allocation->GetRequestSize()));
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

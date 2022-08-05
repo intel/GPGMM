@@ -19,6 +19,10 @@
 
 namespace gpgmm {
 
+#define GPGMM_ERROR_INVALID_ALLOCATION \
+    MemoryAllocation {                 \
+    }
+
 #define GPGMM_TRY_ASSIGN(expr, value)            \
     {                                            \
         auto result = expr;                      \
