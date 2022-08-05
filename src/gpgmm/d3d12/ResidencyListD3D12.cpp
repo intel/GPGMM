@@ -52,4 +52,39 @@ namespace gpgmm::d3d12 {
         return "ResidencyList";
     }
 
+    ResidencySet::ResidencySet() {
+        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+    }
+
+    ResidencySet::~ResidencySet() {
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+    }
+
+    HRESULT ResidencySet::Insert(Heap* pHeap) {
+        if (pHeap == nullptr) {
+            return E_INVALIDARG;
+        }
+        if (mSet.insert(pHeap).second) {
+            return S_OK;
+        }
+        return S_FALSE;
+    }
+
+    HRESULT ResidencySet::Reset() {
+        mSet.clear();
+        return S_OK;
+    }
+
+    ResidencySet::UnderlyingType::iterator ResidencySet::begin() const {
+        return mSet.begin();
+    }
+
+    ResidencySet::UnderlyingType::iterator ResidencySet::end() const {
+        return mSet.end();
+    }
+
+    const char* ResidencySet::GetTypename() const {
+        return "ResidencySet";
+    }
+
 }  // namespace gpgmm::d3d12

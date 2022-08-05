@@ -33,6 +33,7 @@ namespace gpgmm::d3d12 {
     class Fence;
     class Heap;
     class ResidencyList;
+    class ResidencySet;
     class ResourceAllocator;
 
     /** \struct RESIDENCY_DESC
@@ -190,6 +191,22 @@ namespace gpgmm::d3d12 {
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
                                     ResidencyList* const* ppResidencyLists,
+                                    uint32_t count);
+
+        /** \brief  Execute command lists using residency managed heaps.
+
+        Submits an array of command lists and residency sets for the specified command queue.
+
+        @param pQueue The command queue to submit to.
+        @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
+        @param ppResidencySets The array of ResidencySet residency sets to make resident.
+        @param count The size of commandLists and residencyLists arrays.
+
+        \deprecated Use ResidencyList instead of ResidencySet.
+        */
+        HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+                                    ID3D12CommandList* const* ppCommandLists,
+                                    ResidencySet* const* ppResidencySets,
                                     uint32_t count);
 
         /** \brief  Sets video memory reservation.

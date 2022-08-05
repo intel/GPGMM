@@ -166,7 +166,14 @@ namespace gpgmm::d3d12 {
 
         \return Error HRESULT if the specified interface was not represented by the
         heap.
+
+        \deprecated Use ComPtr<Heap::As instead of Heap::As.
         */
+        template <typename T>
+        HRESULT As(Microsoft::WRL::Details::ComPtrRef<ComPtr<T>> ptr) const {
+            return mPageable.As(ptr);
+        }
+
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
 
         /** \brief Determine if the heap is resident or not.
