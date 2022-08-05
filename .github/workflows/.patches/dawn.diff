@@ -1,4 +1,4 @@
-From be80c6e52d951647f7f501ad665ab6506acae698 Mon Sep 17 00:00:00 2001
+From 8ef270d881c9f8d91a3acbaa7f8fbc572baa3d57 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -22,7 +22,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/D3D12Backend.cpp        |  17 ++-
  src/dawn/native/d3d12/DeviceD3D12.cpp         | 114 +++++++++++++++---
  src/dawn/native/d3d12/DeviceD3D12.h           |  20 +--
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  80 +++++++-----
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  79 +++++++-----
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  11 +-
  src/dawn/native/d3d12/StagingBufferD3D12.cpp  |  22 +---
  src/dawn/native/d3d12/StagingBufferD3D12.h    |   4 +-
@@ -31,7 +31,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 26 files changed, 326 insertions(+), 162 deletions(-)
+ 26 files changed, 325 insertions(+), 162 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -725,7 +725,7 @@ index 99b03e396..b1cf46fd0 100644
      static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup = 3 * kMaxSamplersPerShaderStage;
      static constexpr uint32_t kMaxViewDescriptorsPerBindGroup =
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
-index fe99a63ac..40ce7b4a7 100644
+index fe99a63ac..e169435f9 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 @@ -93,7 +93,8 @@ ShaderVisibleDescriptorAllocator::ShaderVisibleDescriptorAllocator(
@@ -738,7 +738,7 @@ index fe99a63ac..40ce7b4a7 100644
      ASSERT(heapType == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV ||
             heapType == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
  }
-@@ -140,31 +141,41 @@ void ShaderVisibleDescriptorAllocator::Tick(ExecutionSerial completedSerial) {
+@@ -140,31 +141,40 @@ void ShaderVisibleDescriptorAllocator::Tick(ExecutionSerial completedSerial) {
  
  ResultOrError<std::unique_ptr<ShaderVisibleDescriptorHeap>>
  ShaderVisibleDescriptorAllocator::AllocateHeap(uint32_t descriptorCount) const {
@@ -787,19 +787,18 @@ index fe99a63ac..40ce7b4a7 100644
 -    // We must track the allocation in the LRU when it is created, otherwise the residency
 -    // manager will see the allocation as non-resident in the later call to LockAllocation.
 -    mDevice->GetResidencyManager()->TrackResidentAllocation(descriptorHeap.get());
-+    gpgmm::d3d12::Heap* descriptorHeapPtr = nullptr;
++    ComPtr<gpgmm::d3d12::Heap> descriptorHeap;
 +    DAWN_TRY(CheckOutOfMemoryHRESULT(
 +        gpgmm::d3d12::Heap::CreateHeap(heapDesc, mDevice->GetResidencyManager(), createHeapFn,
-+                                       &descriptorHeapPtr),
++                                       &descriptorHeap),
 +        "Unable to create descriptor heap"));
  
 -    return std::move(descriptorHeap);
-+    return std::make_unique<ShaderVisibleDescriptorHeap>(
-+        std::unique_ptr<gpgmm::d3d12::Heap>(descriptorHeapPtr));
++    return std::make_unique<ShaderVisibleDescriptorHeap>(std::move(descriptorHeap));
  }
  
  // Creates a GPU descriptor heap that manages descriptors in a FIFO queue.
-@@ -174,7 +185,9 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
+@@ -174,7 +184,9 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
      // The first phase increasingly grows a small heap in binary sizes for light users while the
      // second phase pool-allocates largest sized heaps for heavy users.
      if (mHeap != nullptr) {
@@ -810,7 +809,7 @@ index fe99a63ac..40ce7b4a7 100644
  
          const uint32_t maxDescriptorCount = GetD3D12ShaderVisibleHeapMaxSize(
              mHeapType, mDevice->IsToggleEnabled(Toggle::UseD3D12SmallShaderVisibleHeapForTesting));
-@@ -200,7 +213,10 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
+@@ -200,7 +212,10 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
          DAWN_TRY_ASSIGN(descriptorHeap, AllocateHeap(mDescriptorCount));
      }
  
@@ -822,7 +821,7 @@ index fe99a63ac..40ce7b4a7 100644
  
      // Create a FIFO buffer from the recently created heap.
      mHeap = std::move(descriptorHeap);
-@@ -227,12 +243,12 @@ uint64_t ShaderVisibleDescriptorAllocator::GetShaderVisiblePoolSizeForTesting()
+@@ -227,12 +242,12 @@ uint64_t ShaderVisibleDescriptorAllocator::GetShaderVisiblePoolSizeForTesting()
  }
  
  bool ShaderVisibleDescriptorAllocator::IsShaderVisibleHeapLockedResidentForTesting() const {
@@ -837,7 +836,7 @@ index fe99a63ac..40ce7b4a7 100644
  }
  
  bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
-@@ -244,12 +260,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
+@@ -244,12 +259,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
  }
  
  ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(
@@ -845,24 +844,24 @@ index fe99a63ac..40ce7b4a7 100644
 -    uint64_t size)
 -    : Pageable(d3d12DescriptorHeap, MemorySegment::Local, size),
 -      mD3d12DescriptorHeap(std::move(d3d12DescriptorHeap)) {}
-+    std::unique_ptr<gpgmm::d3d12::Heap> descriptorHeap)
++    ComPtr<gpgmm::d3d12::Heap> descriptorHeap)
 +    : mDescriptorHeap(std::move(descriptorHeap)) {}
  
  ID3D12DescriptorHeap* ShaderVisibleDescriptorHeap::GetD3D12DescriptorHeap() const {
 -    return mD3d12DescriptorHeap.Get();
 +    ComPtr<ID3D12DescriptorHeap> descriptorHeap;
-+    HRESULT hr = mDescriptorHeap->As(&descriptorHeap);
++    HRESULT hr = mDescriptorHeap.As(&descriptorHeap);
 +    ASSERT(SUCCEEDED(hr));
 +    return descriptorHeap.Get();
 +}
 +
 +gpgmm::d3d12::Heap* ShaderVisibleDescriptorHeap::GetHeap() const {
-+    return mDescriptorHeap.get();
++    return mDescriptorHeap.Get();
  }
 +
  }  // namespace dawn::native::d3d12
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
-index cf09f9d50..008b54818 100644
+index cf09f9d50..86a661c4a 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.h
 @@ -24,6 +24,8 @@
@@ -882,13 +881,13 @@ index cf09f9d50..008b54818 100644
 +class ShaderVisibleDescriptorHeap {
    public:
 -    ShaderVisibleDescriptorHeap(ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap, uint64_t size);
-+    ShaderVisibleDescriptorHeap(std::unique_ptr<gpgmm::d3d12::Heap> descriptorHeap);
++    ShaderVisibleDescriptorHeap(ComPtr<gpgmm::d3d12::Heap> descriptorHeap);
      ID3D12DescriptorHeap* GetD3D12DescriptorHeap() const;
 +    gpgmm::d3d12::Heap* GetHeap() const;
  
    private:
 -    ComPtr<ID3D12DescriptorHeap> mD3d12DescriptorHeap;
-+    std::unique_ptr<gpgmm::d3d12::Heap> mDescriptorHeap;
++    ComPtr<gpgmm::d3d12::Heap> mDescriptorHeap;
  };
  
  class ShaderVisibleDescriptorAllocator {
