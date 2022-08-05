@@ -1,14 +1,14 @@
 var searchData=
 [
   ['uint8touint64_0',['UInt8ToUInt64',['../_d3_d12_fuzzer_8h.html#acf3f7e7fa42bda7a10ab10021334695c',1,'UInt8ToUInt64(const uint8_t *src):&#160;D3D12Fuzzer.cpp'],['../_d3_d12_fuzzer_8cpp.html#acf3f7e7fa42bda7a10ab10021334695c',1,'UInt8ToUInt64(const uint8_t *src):&#160;D3D12Fuzzer.cpp']]],
-  ['underlyingtype_1',['UnderlyingType',['../classgpgmm_1_1d3d12_1_1_residency_list.html#a4002cc07dd9e7f1969f8c53b5dc5ba59',1,'gpgmm::d3d12::ResidencyList']]],
+  ['underlyingtype_1',['UnderlyingType',['../classgpgmm_1_1d3d12_1_1_residency_list.html#a4002cc07dd9e7f1969f8c53b5dc5ba59',1,'gpgmm::d3d12::ResidencyList::UnderlyingType()'],['../classgpgmm_1_1d3d12_1_1_residency_set.html#aa9ec54fe066278aa184581434d5a451d',1,'gpgmm::d3d12::ResidencySet::UnderlyingType()']]],
   ['unittestsmain_2ecpp_2',['UnittestsMain.cpp',['../_unittests_main_8cpp.html',1,'']]],
   ['unknown_3',['Unknown',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a0663c56bfef2396a756ef856a940bff0',1,'gpgmm']]],
   ['unlockheap_4',['UnlockHeap',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668',1,'gpgmm::d3d12::ResidencyManager']]],
   ['unmap_5',['Unmap',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#aacb13e9781e92486cd62b08b39adf645',1,'gpgmm::d3d12::ResourceAllocation']]],
   ['unreachable_6',['UNREACHABLE',['../_assert_8h.html#a3af99897b60119951af8961dbd52dd3f',1,'Assert.h']]],
   ['unref_7',['Unref',['../classgpgmm_1_1_ref_counted.html#a850338d6a459a388bbbcd974a470831c',1,'gpgmm::RefCounted']]],
-  ['unregisterandexit_8',['UnregisterAndExit',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#a2f04a3554e40c3b75ec8c9248b8aa5d5',1,'gpgmm::d3d12::BudgetUpdateTask::UnregisterAndExit()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#a96670ad9ba7b6c15cbacb07043e4777d',1,'gpgmm::d3d12::BudgetUpdateEvent::UnregisterAndExit()']]],
+  ['unregisterandexit_8',['UnregisterAndExit',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#a96670ad9ba7b6c15cbacb07043e4777d',1,'gpgmm::d3d12::BudgetUpdateEvent::UnregisterAndExit()'],['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#a2f04a3554e40c3b75ec8c9248b8aa5d5',1,'gpgmm::d3d12::BudgetUpdateTask::UnregisterAndExit()']]],
   ['updatebudgetbypolling_9',['UpdateBudgetByPolling',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
   ['updatevideomemorysegments_10',['UpdateVideoMemorySegments',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a6e75d0e53352b915a43de66b9ffd5237',1,'gpgmm::d3d12::ResidencyManager']]],
   ['usedblockcount_11',['UsedBlockCount',['../structgpgmm_1_1_memory_allocator_info.html#afd06e9f1ba23dff9b1aaeb662a5febc0',1,'gpgmm::MemoryAllocatorInfo']]],
