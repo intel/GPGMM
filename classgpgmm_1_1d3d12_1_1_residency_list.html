@@ -100,7 +100,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3f5d58aebff0818b6d7f14bd95420036"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a heap to the residency list.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#a3f5d58aebff0818b6d7f14bd95420036">More...</a><br /></td></tr>
 <tr class="separator:a3f5d58aebff0818b6d7f14bd95420036"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">Reset</a> ()</td></tr>
-<tr class="memdesc:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency list.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">More...</a><br /></td></tr>
+<tr class="memdesc:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency set.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">More...</a><br /></td></tr>
 <tr class="separator:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7508617f471a2732248663897192fa82"><td class="memItemLeft" align="right" valign="top">UnderlyingType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a7508617f471a2732248663897192fa82">begin</a> () const</td></tr>
 <tr class="separator:a7508617f471a2732248663897192fa82"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,7 +109,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a list of heaps which will be "made resident" when executing a command-list. </p>
-<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a> by inserting heaps, by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0" title="Returns the heap assigned to this resource allocation.">ResourceAllocation::GetMemory</a>, into the list. Once <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> is called, the list can be reset or cleared for the next frame.</p>
+<p >A residency set helps track heaps for residency which will be referenced together by a command-list. The application uses a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a> by inserting heaps, by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0" title="Returns the heap assigned to this resource allocation.">ResourceAllocation::GetMemory</a>, into the list. Once <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> is called, the list can be reset or cleared for the next frame.</p>
 <p >Without a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a>, the application would need to manually <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532" title="Locks the specified heap.">ResidencyManager::LockHeap</a> and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668" title="Unlocks the specified heap.">ResidencyManager::UnlockHeap</a> each heap before and after <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a>, respectively. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a4002cc07dd9e7f1969f8c53b5dc5ba59" name="a4002cc07dd9e7f1969f8c53b5dc5ba59"></a>
@@ -292,8 +292,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reset this residency list. </p>
-<p >Removes all heaps from the list so the list can be re-used. </p>
+<p>Reset this residency set. </p>
+<p >Removes all heaps from the set so the set can be re-used. </p>
 
 </div>
 </div>

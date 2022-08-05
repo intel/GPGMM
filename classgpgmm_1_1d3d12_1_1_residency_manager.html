@@ -104,6 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af2f9332f515d4312456bb59826f2d49c"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c">ExecuteCommandLists</a> (ID3D12CommandQueue *pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a> *const *ppResidencyLists, uint32_t count)</td></tr>
 <tr class="memdesc:af2f9332f515d4312456bb59826f2d49c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c">More...</a><br /></td></tr>
 <tr class="separator:af2f9332f515d4312456bb59826f2d49c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7f5b1ac8d2adb237651f04bf83e4c2a"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab7f5b1ac8d2adb237651f04bf83e4c2a">ExecuteCommandLists</a> (ID3D12CommandQueue *pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> *const *ppResidencySets, uint32_t count)</td></tr>
+<tr class="memdesc:ab7f5b1ac8d2adb237651f04bf83e4c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ab7f5b1ac8d2adb237651f04bf83e4c2a">More...</a><br /></td></tr>
+<tr class="separator:ab7f5b1ac8d2adb237651f04bf83e4c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a9f3f1c562c37cbb65b1787e4bf192e"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3a9f3f1c562c37cbb65b1787e4bf192e">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)</td></tr>
 <tr class="memdesc:a3a9f3f1c562c37cbb65b1787e4bf192e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3a9f3f1c562c37cbb65b1787e4bf192e">More...</a><br /></td></tr>
 <tr class="separator:a3a9f3f1c562c37cbb65b1787e4bf192e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +232,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="af2f9332f515d4312456bb59826f2d49c" name="af2f9332f515d4312456bb59826f2d49c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2f9332f515d4312456bb59826f2d49c">&#9670;&nbsp;</a></span>ExecuteCommandLists()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af2f9332f515d4312456bb59826f2d49c">&#9670;&nbsp;</a></span>ExecuteCommandLists() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,6 +280,60 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ab7f5b1ac8d2adb237651f04bf83e4c2a" name="ab7f5b1ac8d2adb237651f04bf83e4c2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7f5b1ac8d2adb237651f04bf83e4c2a">&#9670;&nbsp;</a></span>ExecuteCommandLists() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::ExecuteCommandLists </td>
+          <td>(</td>
+          <td class="paramtype">ID3D12CommandQueue *&#160;</td>
+          <td class="paramname"><em>pQueue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3D12CommandList *const *&#160;</td>
+          <td class="paramname"><em>ppCommandLists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html">ResidencySet</a> *const *&#160;</td>
+          <td class="paramname"><em>ppResidencySets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Execute command lists using residency managed heaps. </p>
+<p >Submits an array of command lists and residency sets for the specified command queue.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pQueue</td><td>The command queue to submit to. </td></tr>
+    <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. </td></tr>
+    <tr><td class="paramname">ppResidencySets</td><td>The array of <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencySet</a> residency sets to make resident. </td></tr>
+    <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000004">Deprecated:</a></b></dt><dd>Use <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a> instead of <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencySet</a>. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000003">Deprecated:</a></b></dt><dd>use <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a> instead of <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_set.html" title="Represents a set of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencySet</a> </dd></dl>
 
 </div>
 </div>
