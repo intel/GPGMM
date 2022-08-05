@@ -565,30 +565,6 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    /** \brief  Execute command lists using residency managed heaps.
-    *
-    \deprecated use ResidencyList instead of ResidencySet
-    */
-    HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
-                                                  ID3D12CommandList* const* ppCommandLists,
-                                                  ResidencySet* const* ppResidencySets,
-                                                  uint32_t count) {
-        ResidencyList residencyList;
-
-        // TODO: support multiple command lists.
-        if (count > 1) {
-            return E_NOTIMPL;
-        }
-
-        for (Heap* heap : *ppResidencySets[0]) {
-            residencyList.Add(heap);
-        }
-
-        ResidencyList* residencyListPtr = &residencyList;
-
-        return ExecuteCommandLists(pQueue, ppCommandLists, &residencyListPtr, count);
-    }
-
     // Given a list of heaps that are pending usage, this function will estimate memory needed,
     // evict resources until enough space is available, then make resident any heaps scheduled for
     // usage.
