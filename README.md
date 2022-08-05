@@ -52,7 +52,7 @@ physical GPU memory. GPGMM integrates residency into the resource allocators to 
 
 ```cpp
 gpgmm::d3d12::ResidencyList list;
-list.Insert(allocation->GetMemory());
+list.Add(allocation->GetMemory());
 
 residency->ExecuteCommandList(&queue, &commandList, &list, 1);
 
