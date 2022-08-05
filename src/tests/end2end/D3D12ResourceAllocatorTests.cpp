@@ -120,6 +120,23 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocatorNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_END();
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferNoLeak) {
+    GPGMM_TEST_MEMORY_LEAK_START();
+    {
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator);
+        for (auto& bufferAllocationExpectation : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            resourceAllocator->CreateResource(
+                {},
+                CreateBasicBufferDesc(bufferAllocationExpectation.size,
+                                      bufferAllocationExpectation.alignment),
+                D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation);
+        }
+    }
+    GPGMM_TEST_MEMORY_LEAK_END();
+}
+
 // Exceeding the max resource heap size should always fail.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
     ComPtr<ResourceAllocator> resourceAllocator;
