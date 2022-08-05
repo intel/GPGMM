@@ -76,19 +76,25 @@ jobs:
         cd test
         ninja -C out\Release
 
-    - name: Run gpgmm_end2end_tests
+    - name: Run gpgmm_end2end_tests leak tests (with patch)
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_end2end_tests.exe --check-device-leaks
+        out\Release\gpgmm_end2end_tests.exe --gtest_filter=*NoLeak --check-device-leaks
 
-    - name: Run gpgmm_unittests
+    - name: Run gpgmm_end2end_tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --check-device-leaks
+
+    - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |
         cd test
         out\Release\gpgmm_unittests.exe
 
-    - name: Run gpgmm_capture_replay_tests
+    - name: Run gpgmm_capture_replay_tests (with patch)
       shell: cmd
       run: |
         cd test
