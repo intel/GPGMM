@@ -272,49 +272,6 @@ namespace gpgmm {
         LinkNode<T> root_;
     };
 
-    // SizedLinkedList is like LinkedList but also keeps track of the number of nodes in the
-    // list. Random insertion is not supported, only deletion. To insert, push from start or end
-    // of the list.
-    template <typename T>
-    class SizedLinkedList : public LinkedList<T> {
-      public:
-        // Appends |e| to the end of the linked list.
-        void push_back(LinkNode<T>* e) {
-            e->InsertBefore(LinkedList<T>::end());
-            size_++;
-        }
-
-        // Prepend |e| to the start of the linked list.
-        void push_front(LinkNode<T>* e) {
-            e->InsertBefore(LinkedList<T>::head());
-            size_++;
-        }
-
-        // Removes the first node in the linked list.
-        void pop_front() {
-            remove(LinkedList<T>::head());
-        }
-
-        // Removes |e| from the linked list, decreasing the size by 1.
-        void remove(LinkNode<T>* e) {
-            ASSERT(size_ > 0);
-            e->RemoveFromList();
-            size_--;
-        }
-
-        size_t size() const {
-            return size_;
-        }
-
-        void clear() {
-            LinkedList<T>::clear();
-            size_ = 0;
-        }
-
-      private:
-        size_t size_ = 0;
-    };
-
 }  // namespace gpgmm
 
 #endif  // GPGMM_UTILS_LINKED_LIST_H

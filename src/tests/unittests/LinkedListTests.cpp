@@ -131,27 +131,3 @@ TEST_F(LinkedListTests, Iterator) {
         EXPECT_EQ(node.value()->mId, ++index);
     }
 }
-
-TEST_F(LinkedListTests, ListWithSize) {
-    LinkNode<FakeObject>* first = new FakeObject(1);
-    LinkNode<FakeObject>* second = new FakeObject(2);
-    LinkNode<FakeObject>* third = new FakeObject(3);
-
-    SizedLinkedList<FakeObject> list;
-    list.push_front(first);
-    list.push_front(second);
-    list.push_front(third);
-
-    EXPECT_EQ(list.size(), 3u);
-
-    list.pop_front();
-    EXPECT_EQ(list.head(), second);
-    EXPECT_EQ(list.size(), 2u);
-
-    list.remove(second);
-    EXPECT_EQ(list.head(), first);
-    EXPECT_EQ(list.size(), 1u);
-
-    list.clear();
-    EXPECT_EQ(list.size(), 0u);
-}

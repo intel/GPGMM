@@ -148,7 +148,20 @@ TEST(StableListTests, StableItems) {
 }
 
 TEST(StableListTests, Enumerate) {
-    // Over a list with a single chunk.
+    // Over a single item in a chunk.
+    {
+        StableList<int, 4> list;
+        list.push_back(0);
+
+        int i = 0;
+        for (auto& it : list) {
+            EXPECT_EQ(it, i++);
+        }
+
+        EXPECT_EQ(i, 1);
+    }
+
+    // Over multiple items in a chunk.
     {
         StableList<int, 4> list;
         list.push_back(0);
@@ -160,9 +173,11 @@ TEST(StableListTests, Enumerate) {
         for (auto& it : list) {
             EXPECT_EQ(it, i++);
         }
+
+        EXPECT_EQ(i, 4);
     }
 
-    // Over a list with multiple chunks.
+    // Over multiple chunks.
     {
         StableList<int, 2> list;
         list.push_back(0);
@@ -175,9 +190,11 @@ TEST(StableListTests, Enumerate) {
         for (auto& it : list) {
             EXPECT_EQ(it, i++);
         }
+
+        EXPECT_EQ(i, 5);
     }
 
-    // Over a list with holes in odd indexes.
+    // Over holes in odd indexes.
     {
         StableList<int, 2> list;
         list.push_back(0);
@@ -190,13 +207,17 @@ TEST(StableListTests, Enumerate) {
         list.erase(3);
 
         int i = 0;
+        int n = 0;
         for (auto& it : list) {
             EXPECT_EQ(it, i);
             i += 2;
+            n++;
         }
+
+        EXPECT_EQ(n, 3);
     }
 
-    // Over a list with holes of various sizes.
+    // Over holes of various sizes.
     {
         StableList<int, 2> list;
         list.push_back(0);
@@ -214,14 +235,18 @@ TEST(StableListTests, Enumerate) {
         list.erase(5);
 
         int i = 0;
+        int n = 0;
         for (auto& it : list) {
             if (i != 1 && i != 4 && i != 5) {
                 EXPECT_EQ(it, i++);
             }
+            n++;
         }
+
+        EXPECT_EQ(n, 6);
     }
 
-    // Over a list made empty.
+    // Over empty list.
     {
         StableList<int, 4> list;
         list.push_back(0xdeadbeef);

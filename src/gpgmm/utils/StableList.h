@@ -414,14 +414,14 @@ namespace gpgmm {
             if (GPGMM_UNLIKELY(empty())) {
                 return {this, 0};
             }
-            return {this, GetSizeWithUnused() - 1};
+            return {this, GetSizeWithUnused()};
         }
 
         const_iterator end() const {
             if (GPGMM_UNLIKELY(empty())) {
                 return {this, 0};
             }
-            return {this, GetSizeWithUnused() - 1};
+            return {this, GetSizeWithUnused()};
         }
 
         const_iterator cend() const {
