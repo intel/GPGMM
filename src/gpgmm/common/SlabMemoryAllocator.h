@@ -18,8 +18,8 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryCache.h"
 #include "gpgmm/common/SlabBlockAllocator.h"
+#include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Math.h"
-#include "gpgmm/utils/StableList.h"
 
 #include <vector>
 
@@ -74,18 +74,11 @@ namespace gpgmm {
 
         // Group of one or more slabs of the same size.
         struct SlabCache {
-            StableList<Slab> FreeList;  // Slabs that contain partial or empty
-                                        // slabs or some free blocks.
-            StableList<Slab> FullList;  // Slabs that are full or all blocks
-                                        // are marked as used.
-
-            StableList<Slab*> Slabs;  // Pointers back to the slabs in the free or full list.
+            SizedLinkedList<Slab> FreeList;  // Slabs that contain partial or empty
+                                             // slabs or some free blocks.
+            SizedLinkedList<Slab> FullList;  // Slabs that are full or all blocks
+                                             // are marked as used.
         };
-
-        Slab* MoveSlabInCache(Slab* pSlab,
-                              SlabCache* pCache,
-                              StableList<Slab>* pSrcList,
-                              StableList<Slab>* pDstList);
 
         SlabCache* GetOrCreateCache(uint64_t slabSize);
 
