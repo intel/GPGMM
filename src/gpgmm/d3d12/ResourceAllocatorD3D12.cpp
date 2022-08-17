@@ -843,7 +843,8 @@ namespace gpgmm::d3d12 {
             !isAlwaysCommitted && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
-            // GetResourceAllocationInfo() always rejects smaller alignments than 64KB.
+            // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the
+            // alignment was unspecified, assign the smallest alignment possible.
             if (resourceDescriptor.Alignment == 0) {
                 // Only constant buffers must be 256B aligned.
                 request.Alignment = (initialResourceState == D3D12_RESOURCE_STATE_GENERIC_READ)
