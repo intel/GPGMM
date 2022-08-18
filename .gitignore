@@ -19,6 +19,8 @@
 /tools
 /out
 
+.gclient_previous_sync_commits
+
 ### CMake ###
 CMakeFiles
 CMakeCache.txt
