@@ -18,12 +18,9 @@ import("../../../build_overrides/gpgmm_overrides_with_defaults.gni")
 import("//build_overrides/build.gni")
 import("${gpgmm_root_dir}/build_overrides/gpgmm_features.gni")
 
-# Use Chromium's dcheck_always_on when available so that we respect it when
-# running tests on the GPU builders
+# Use Chromium's dcheck_always_on when building inside Chromium.
 if (build_with_chromium) {
   import("//build/config/dcheck_always_on.gni")
-} else {
-  dcheck_always_on = false
 }
 
 if (build_with_chromium) {
@@ -45,8 +42,7 @@ config("gpgmm_public_config") {
 
 config("gpgmm_common_config") {
   defines = []
-  if (gpgmm_always_assert || dcheck_always_on || is_debug ||
-      use_fuzzing_engine) {
+  if (gpgmm_always_assert || is_debug || use_fuzzing_engine) {
     defines += [ "GPGMM_ENABLE_ASSERTS" ]
   }
 
