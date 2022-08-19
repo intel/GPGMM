@@ -80,6 +80,11 @@ extern void __cdecl __debugbreak(void);
 #    error "Unsupported compiler"
 #endif
 
+// Non-compiler specific language extensions
+#if defined(__has_builtin)
+#    define GPGMM_HAS_BUILTIN __has_builtin
+#endif
+
 // It seems that (void) EXPR works on all compilers to silence the unused variable warning.
 #define GPGMM_UNUSED(EXPR) (void)EXPR
 // Likewise using static asserting on sizeof(&FUNC) seems to make it tagged as used
@@ -97,6 +102,9 @@ extern void __cdecl __debugbreak(void);
 #endif
 #if !defined(GPGMM_FORCE_INLINE)
 #    define GPGMM_FORCE_INLINE inline
+#endif
+#if !defined(GPGMM_HAS_BUILTIN)
+#    define GPGMM_HAS_BUILTIN(X) 0
 #endif
 
 #if defined(__clang__)
