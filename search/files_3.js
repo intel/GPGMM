@@ -16,12 +16,10 @@ var searchData=
   ['debugobjectd3d12_2eh_13',['DebugObjectD3D12.h',['../_debug_object_d3_d12_8h.html',1,'']]],
   ['debugresourceallocatord3d12_2ecpp_14',['DebugResourceAllocatorD3D12.cpp',['../_debug_resource_allocator_d3_d12_8cpp.html',1,'']]],
   ['debugresourceallocatord3d12_2eh_15',['DebugResourceAllocatorD3D12.h',['../_debug_resource_allocator_d3_d12_8h.html',1,'']]],
-  ['dedicatedmemoryallocator_2ecpp_16',['DedicatedMemoryAllocator.cpp',['../_dedicated_memory_allocator_8cpp.html',1,'']]],
-  ['dedicatedmemoryallocator_2eh_17',['DedicatedMemoryAllocator.h',['../_dedicated_memory_allocator_8h.html',1,'']]],
-  ['defaults_2eh_18',['Defaults.h',['../_defaults_8h.html',1,'']]],
-  ['devicememoryallocatorvk_2ecpp_19',['DeviceMemoryAllocatorVk.cpp',['../_device_memory_allocator_vk_8cpp.html',1,'']]],
-  ['devicememoryallocatorvk_2eh_20',['DeviceMemoryAllocatorVk.h',['../_device_memory_allocator_vk_8h.html',1,'']]],
-  ['devicememoryvk_2ecpp_21',['DeviceMemoryVk.cpp',['../_device_memory_vk_8cpp.html',1,'']]],
-  ['devicememoryvk_2eh_22',['DeviceMemoryVk.h',['../_device_memory_vk_8h.html',1,'']]],
-  ['dummymemoryallocator_2eh_23',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
+  ['defaults_2eh_16',['Defaults.h',['../_defaults_8h.html',1,'']]],
+  ['devicememoryallocatorvk_2ecpp_17',['DeviceMemoryAllocatorVk.cpp',['../_device_memory_allocator_vk_8cpp.html',1,'']]],
+  ['devicememoryallocatorvk_2eh_18',['DeviceMemoryAllocatorVk.h',['../_device_memory_allocator_vk_8h.html',1,'']]],
+  ['devicememoryvk_2ecpp_19',['DeviceMemoryVk.cpp',['../_device_memory_vk_8cpp.html',1,'']]],
+  ['devicememoryvk_2eh_20',['DeviceMemoryVk.h',['../_device_memory_vk_8h.html',1,'']]],
+  ['dummymemoryallocator_2eh_21',['DummyMemoryAllocator.h',['../_dummy_memory_allocator_8h.html',1,'']]]
 ];
