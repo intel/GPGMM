@@ -382,14 +382,15 @@ namespace gpgmm::d3d12 {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
-            gpgmm::WarningLog() << "Debug layer must be installed and enabled to use "
-                                   "GPGMM_ENABLE_DEVICE_LEAK_CHECKS.";
+            gpgmm::WarningLog()
+                << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS was specified but the D3D12 debug "
+                   "layer was either not installed or enabled.";
         }
 #endif
 
         if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
-            gpgmm::WarningLog() << "Residency must be specified and enabled to use "
-                                   "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET.";
+            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was specified but residency "
+                                   "management was not enabled.";
         }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*ppResourceAllocatorOut, newDescriptor);
