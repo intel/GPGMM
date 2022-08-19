@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/common/StandaloneMemoryAllocator.h"
+#include "gpgmm/common/DedicatedMemoryAllocator.h"
 
 #include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
 
-    StandaloneMemoryAllocator::StandaloneMemoryAllocator(
+    DedicatedMemoryAllocator::DedicatedMemoryAllocator(
         std::unique_ptr<MemoryAllocator> memoryAllocator)
         : MemoryAllocator(std::move(memoryAllocator)) {
     }
 
-    std::unique_ptr<MemoryAllocation> StandaloneMemoryAllocator::TryAllocateMemory(
+    std::unique_ptr<MemoryAllocation> DedicatedMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::Default, "DedicatedMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -42,8 +42,8 @@ namespace gpgmm {
             new MemoryBlock{0, request.SizeInBytes}, request.SizeInBytes);
     }
 
-    void StandaloneMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "StandaloneMemoryAllocator.DeallocateMemory");
+    void DedicatedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+        TRACE_EVENT0(TraceEventCategory::Default, "DedicatedMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -55,18 +55,18 @@ namespace gpgmm {
         GetNextInChain()->DeallocateMemory(std::move(allocation));
     }
 
-    MemoryAllocatorInfo StandaloneMemoryAllocator::GetInfo() const {
+    MemoryAllocatorInfo DedicatedMemoryAllocator::GetInfo() const {
         std::lock_guard<std::mutex> lock(mMutex);
         MemoryAllocatorInfo result = mInfo;
         result += GetNextInChain()->GetInfo();
         return result;
     }
 
-    uint64_t StandaloneMemoryAllocator::GetMemoryAlignment() const {
+    uint64_t DedicatedMemoryAllocator::GetMemoryAlignment() const {
         return GetNextInChain()->GetMemoryAlignment();
     }
 
-    const char* StandaloneMemoryAllocator::GetTypename() const {
-        return "StandaloneMemoryAllocator";
+    const char* DedicatedMemoryAllocator::GetTypename() const {
+        return "DedicatedMemoryAllocator";
     }
 }  // namespace gpgmm

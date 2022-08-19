@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_STANDALONEMEMORYALLOCATOR_H_
-#define GPGMM_COMMON_STANDALONEMEMORYALLOCATOR_H_
+#ifndef GPGMM_COMMON_DEDICATEDMEMORYALLOCATOR_H_
+#define GPGMM_COMMON_DEDICATEDMEMORYALLOCATOR_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
 
@@ -21,10 +21,10 @@
 
 namespace gpgmm {
 
-    // StandaloneMemoryAllocator sub-allocates memory with exactly one block.
-    class StandaloneMemoryAllocator final : public MemoryAllocator {
+    // DedicatedMemoryAllocator sub-allocates memory with exactly one block.
+    class DedicatedMemoryAllocator final : public MemoryAllocator {
       public:
-        StandaloneMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator);
+        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
@@ -38,4 +38,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_STANDALONEMEMORYALLOCATOR_H_
+#endif  // GPGMM_COMMON_DEDICATEDMEMORYALLOCATOR_H_

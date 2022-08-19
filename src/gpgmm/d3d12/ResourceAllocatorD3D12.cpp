@@ -16,12 +16,12 @@
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
+#include "gpgmm/common/DedicatedMemoryAllocator.h"
 #include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
-#include "gpgmm/common/StandaloneMemoryAllocator.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"

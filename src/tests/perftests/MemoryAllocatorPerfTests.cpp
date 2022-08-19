@@ -15,10 +15,10 @@
 #include <benchmark/benchmark.h>
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
+#include "gpgmm/common/DedicatedMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
-#include "gpgmm/common/StandaloneMemoryAllocator.h"
 #include "tests/DummyMemoryAllocator.h"
 
 #include <vector>
@@ -128,7 +128,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, BuddySystem)(benchmark::State&
 }
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Standalone)(benchmark::State& state) {
-    StandaloneMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>());
+    DedicatedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
