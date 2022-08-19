@@ -17,6 +17,5 @@ var searchData=
   ['stablelist_14',['StableList',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
   ['stablelist_3c_20gpgmm_3a_3aslab_20_2a_20_3e_15',['StableList&lt; gpgmm::Slab * &gt;',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
   ['stablelist_3c_20gpgmm_3a_3aslab_20_3e_16',['StableList&lt; gpgmm::Slab &gt;',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
-  ['stablelist_3c_20t_2c_20chunksize_20_3e_17',['StableList&lt; T, ChunkSize &gt;',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]],
-  ['standalonememoryallocator_18',['StandaloneMemoryAllocator',['../classgpgmm_1_1_standalone_memory_allocator.html',1,'gpgmm']]]
+  ['stablelist_3c_20t_2c_20chunksize_20_3e_17',['StableList&lt; T, ChunkSize &gt;',['../classgpgmm_1_1_stable_list.html',1,'gpgmm']]]
 ];

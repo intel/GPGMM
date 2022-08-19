@@ -7,10 +7,11 @@ var searchData=
   ['debugobject_4',['DebugObject',['../classgpgmm_1_1d3d12_1_1_debug_object.html',1,'gpgmm::d3d12']]],
   ['debugplatform_5',['DebugPlatform',['../classgpgmm_1_1_debug_platform.html',1,'gpgmm']]],
   ['debugresourceallocator_6',['DebugResourceAllocator',['../classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html',1,'gpgmm::d3d12']]],
-  ['desc_7',['Desc',['../structgpgmm_1_1_desc.html',1,'gpgmm']]],
-  ['devicememory_8',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk']]],
-  ['devicememoryallocator_9',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html',1,'gpgmm::vk']]],
-  ['dummybuddyblockallocator_10',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html',1,'']]],
-  ['dummymemoryallocator_11',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
-  ['dummyobject_12',['DummyObject',['../class_dummy_object.html',1,'']]]
+  ['dedicatedmemoryallocator_7',['DedicatedMemoryAllocator',['../classgpgmm_1_1_dedicated_memory_allocator.html',1,'gpgmm']]],
+  ['desc_8',['Desc',['../structgpgmm_1_1_desc.html',1,'gpgmm']]],
+  ['devicememory_9',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk']]],
+  ['devicememoryallocator_10',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html',1,'gpgmm::vk']]],
+  ['dummybuddyblockallocator_11',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html',1,'']]],
+  ['dummymemoryallocator_12',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
+  ['dummyobject_13',['DummyObject',['../class_dummy_object.html',1,'']]]
 ];
