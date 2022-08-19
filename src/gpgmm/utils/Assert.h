@@ -49,9 +49,17 @@
 #else
 #    if defined(GPGMM_COMPILER_MSVC)
 #        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) __assume(condition)
-#    elif defined(GPGMM_COMPILER_CLANG) && defined(__builtin_assume)
+#    elif defined(GPGMM_COMPILER_CLANG) && GPGMM_HAS_BUILTIN(__builtin_unreachable)
+// Avoid using __builtin_assume since it results into clang assuming _every_ function call has a
+// side effect. Alternatively, suppress these warnings with -Wno-assume or wrap _builtin_assume in
+// pragmas. Since the generated code below is equivelent, replacing with __builtin_unreachable is
+// used.
 #        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
-            __builtin_assume(condition)
+            do {                                                          \
+                if (!(condition)) {                                       \
+                    GPGMM_BUILTIN_UNREACHABLE();                          \
+                }                                                         \
+            } while (GPGMM_ASSERT_LOOP_CONDITION)
 #    else
 #        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
             do {                                                          \
