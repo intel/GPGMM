@@ -74,7 +74,7 @@ namespace gpgmm {
         const uint64_t mSize;
         const uint64_t mAlignment;
 
-        MemoryPool* mPool = nullptr;
+        MemoryPool* mPool = nullptr;  // nullptr means no pool is assigned.
     };
 
 }  // namespace gpgmm

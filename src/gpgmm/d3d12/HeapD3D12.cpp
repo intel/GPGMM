@@ -141,7 +141,7 @@ namespace gpgmm::d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {IsResident(), GetRefCount(), GetPool()};
+        return {IsResident()};
     }
 
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {

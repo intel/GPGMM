@@ -21,7 +21,6 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
-#include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
 
 #include <functional>  // for std::function
@@ -29,7 +28,6 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResidencyList;
     class ResidencyManager;
     class ResourceAllocator;
 
@@ -52,18 +50,6 @@ namespace gpgmm::d3d12 {
         /** \brief Check if the heap is resident or not.
          */
         bool IsResident;
-
-        /** \brief The number of sub-allocations made using this heap.
-
-        A count of 0 means the entire heap is being used.
-        */
-        uint64_t SubAllocatedRefs;
-
-        /** \brief The pool this heap is assigned to.
-
-        A NULL pool means this heap cannot be recycled by GPGMM.
-        */
-        MemoryPool* MemoryPool;
     };
 
     /** \struct HEAP_DESC
