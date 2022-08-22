@@ -125,13 +125,13 @@ namespace gpgmm::d3d12 {
     Additional information about the residency manager.
     */
     struct RESIDENCY_INFO {
-        /** \brief Amount of memory, in bytes, being made resident.
+        /** \brief Amount of memory, in bytes, made resident.
          */
-        uint64_t ResidentMemoryUsage = 0;
+        uint64_t ResidentMemoryUsage;
 
-        /** \brief Number of heaps currently being made resident.
+        /** \brief Number of heaps, made resident.
          */
-        uint64_t ResidentMemoryCount = 0;
+        uint64_t ResidentMemoryCount;
     };
 
     class BudgetUpdateEvent;
