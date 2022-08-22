@@ -17,6 +17,7 @@
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/utils/Utils.h"
 
@@ -52,7 +53,7 @@ namespace gpgmm::d3d12 {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
             gpgmm::WarnEvent(allocation->GetAllocator()->GetTypename())
                 << "Live ResourceAllocation at " << ToString(allocation) << ", "
-                << "RefCount: " << allocation->GetRefCount();
+                << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
         }
     }
 
