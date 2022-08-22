@@ -21,7 +21,7 @@
 
 namespace gpgmm::d3d12 {
 
-    class GPGMM_EXPORT IUnknownImpl : public IUnknown, public RefCounted {
+    class GPGMM_EXPORT IUnknownImpl : public IUnknown {
       public:
         IUnknownImpl();
         virtual ~IUnknownImpl() = default;
@@ -31,8 +31,12 @@ namespace gpgmm::d3d12 {
         ULONG STDMETHODCALLTYPE AddRef() override;
         ULONG STDMETHODCALLTYPE Release() override;
 
+      protected:
         // Derived class may override this if they require a custom deleter.
         virtual void DeleteThis();
+
+      private:
+        RefCounted mRefs;  // Maintains the COM ref-count of this object.
     };
 
 }  // namespace gpgmm::d3d12
