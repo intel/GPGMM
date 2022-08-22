@@ -176,12 +176,6 @@ namespace gpgmm::d3d12 {
     JSONDict JSONSerializer::Serialize(const HEAP_INFO& info) {
         JSONDict dict;
         dict.AddItem("IsResident", info.IsResident);
-        dict.AddItem("SubAllocatedRefs", info.SubAllocatedRefs);
-
-        if (info.MemoryPool != nullptr) {
-            dict.AddItem("MemoryPool", gpgmm::JSONSerializer::Serialize(info.MemoryPool));
-        }
-
         return dict;
     }
 
