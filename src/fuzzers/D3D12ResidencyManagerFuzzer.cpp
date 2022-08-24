@@ -30,10 +30,10 @@ namespace {
         if (residencyManager == nullptr) {
             return 0;
         }
-        DXGI_QUERY_VIDEO_MEMORY_INFO* segment =
-            gResidencyManager->GetVideoMemoryInfo(memorySegmentGroup);
-        return (segment->Budget > segment->CurrentUsage) ? (segment->Budget - segment->CurrentUsage)
-                                                         : 0;
+        DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
+        gResidencyManager->QueryVideoMemoryInfo(memorySegmentGroup, &segment);
+        return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
+                                                       : 0;
     }
 
 }  // namespace

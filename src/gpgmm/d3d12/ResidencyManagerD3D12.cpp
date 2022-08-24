@@ -61,11 +61,20 @@ namespace gpgmm::d3d12 {
                 switch (waitedEvent) {
                     // mBudgetNotificationUpdateEvent
                     case (WAIT_OBJECT_0 + 0): {
-                        hr = mResidencyManager->UpdateVideoMemorySegments();
-                        if (SUCCEEDED(hr)) {
-                            gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
-                                << "Updated GPU budget from OS notification.";
+                        hr =
+                            mResidencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+                        if (FAILED(hr)) {
+                            break;
                         }
+
+                        hr = mResidencyManager->UpdateMemorySegment(
+                            DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+                        if (FAILED(hr)) {
+                            break;
+                        }
+
+                        gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
+                            << "Updated GPU budget from OS notification.";
                         break;
                     }
                     // mUnregisterAndExitEvent
@@ -181,7 +190,8 @@ namespace gpgmm::d3d12 {
         }
 
         // Set the initial video memory limits per segment.
-        ReturnIfFailed(residencyManager->UpdateVideoMemorySegments());
+        ReturnIfFailed(residencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
+        ReturnIfFailed(residencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
 
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
@@ -381,7 +391,7 @@ namespace gpgmm::d3d12 {
 
         videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
 
-        ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
+        ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
 
         if (pCurrentReservationOut != nullptr) {
             *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
@@ -390,9 +400,13 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::QueryVideoMemoryInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const {
+    HRESULT ResidencyManager::UpdateMemorySegmentInternal(
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+        // For UMA adapters, non-local is always zero.
+        if (mIsUMA && memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) {
+            return S_OK;
+        }
+
         DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfoOut;
         ReturnIfFailed(
             mAdapter->QueryVideoMemoryInfo(0, memorySegmentGroup, &queryVideoMemoryInfoOut));
@@ -403,6 +417,8 @@ namespace gpgmm::d3d12 {
         // component from consuming a disproportionate share of memory and ensures that Dawn can
         // continue to make forward progress. Note the choice to halve memory is arbitrarily chosen
         // and subject to future experimentation.
+        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(memorySegmentGroup);
+
         pVideoMemoryInfo->CurrentReservation =
             std::min(queryVideoMemoryInfoOut.Budget / 2, pVideoMemoryInfo->AvailableForReservation);
 
@@ -448,21 +464,18 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::UpdateVideoMemorySegments() {
+    HRESULT ResidencyManager::UpdateMemorySegment(
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return UpdateVideoMemorySegmentsInternal();
+        ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
+        return S_OK;
     }
 
-    HRESULT ResidencyManager::UpdateVideoMemorySegmentsInternal() {
-        DXGI_QUERY_VIDEO_MEMORY_INFO* queryVideoMemoryInfo =
-            GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
-
-        ReturnIfFailed(QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, queryVideoMemoryInfo));
-        if (!mIsUMA) {
-            queryVideoMemoryInfo = GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
-            ReturnIfFailed(
-                QueryVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, queryVideoMemoryInfo));
-        }
+    HRESULT ResidencyManager::QueryVideoMemoryInfo(
+        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
+        std::lock_guard<std::mutex> lock(mMutex);
+        *pVideoMemoryInfoOut = *GetVideoMemoryInfo(memorySegmentGroup);
         return S_OK;
     }
 
@@ -481,19 +494,16 @@ namespace gpgmm::d3d12 {
                                             uint64_t* bytesEvictedOut) {
         TRACE_EVENT0(TraceEventCategory::Default, "ResidencyManager.Evict");
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo =
-            GetVideoMemoryInfo(memorySegmentGroup);
-
+        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(memorySegmentGroup);
         if (IsBudgetNotificationUpdatesDisabled()) {
-            ReturnIfFailed(QueryVideoMemoryInfo(memorySegmentGroup, videoMemorySegmentInfo));
+            ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
         }
 
-        const uint64_t currentUsageAfterEvict = bytesToEvict + videoMemorySegmentInfo->CurrentUsage;
+        const uint64_t currentUsageAfterEvict = bytesToEvict + pVideoMemoryInfo->CurrentUsage;
 
         // Return if we will remain under budget after evict or there is no budget to evict from.
         // The latter happens if the first budget change event hasn't happened yet.
-        if (videoMemorySegmentInfo->Budget == 0 ||
-            currentUsageAfterEvict < videoMemorySegmentInfo->Budget) {
+        if (pVideoMemoryInfo->Budget == 0 || currentUsageAfterEvict < pVideoMemoryInfo->Budget) {
             return S_OK;
         }
 
@@ -502,7 +512,7 @@ namespace gpgmm::d3d12 {
         // enough memory, we should evict until there is.
         std::vector<ID3D12Pageable*> objectsToEvict;
         const uint64_t bytesNeededToBeUnderBudget =
-            currentUsageAfterEvict - videoMemorySegmentInfo->Budget;
+            currentUsageAfterEvict - pVideoMemoryInfo->Budget;
 
         // Return if nothing needs to be evicted to stay within budget.
         if (bytesNeededToBeUnderBudget == 0) {
@@ -659,7 +669,8 @@ namespace gpgmm::d3d12 {
         // never changes (ie. not manually updated or through budget change events), the
         // residency manager wouldn't know what to page in or out.
         if (IsBudgetNotificationUpdatesDisabled()) {
-            ReturnIfFailed(UpdateVideoMemorySegmentsInternal());
+            ReturnIfFailed(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
+            ReturnIfFailed(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
