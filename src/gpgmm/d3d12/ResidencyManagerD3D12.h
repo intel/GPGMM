@@ -209,15 +209,16 @@ namespace gpgmm::d3d12 {
         /** \brief  Get the current budget and memory usage.
 
         @param memorySegmentGroup Memory segment to retrieve info from.
-
-        \return A pointer to DXGI_QUERY_VIDEO_MEMORY_INFO struct of the video memory segment info.
+        @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate.
         */
-        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
-            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut);
 
-        /** \brief Manually update the video memory budgets.
-         */
-        HRESULT UpdateVideoMemorySegments();
+        /** \brief  Update and retrieve the current budget and memory usage.
+
+        @param memorySegmentGroup Memory segment to update info.
+        */
+        HRESULT UpdateMemorySegment(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         /** \brief  Return the current residency manager usage.
 
@@ -268,10 +269,10 @@ namespace gpgmm::d3d12 {
 
         LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo) const;
+        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
+            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
-        HRESULT UpdateVideoMemorySegmentsInternal();
+        HRESULT UpdateMemorySegmentInternal(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         HRESULT StartBudgetNotificationUpdates();
         void StopBudgetNotificationUpdates();

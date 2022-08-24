@@ -81,10 +81,10 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
     uint64_t GetBudgetLeft(ResidencyManager* residencyManager,
                            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
-        DXGI_QUERY_VIDEO_MEMORY_INFO* segment =
-            residencyManager->GetVideoMemoryInfo(memorySegmentGroup);
-        return (segment->Budget > segment->CurrentUsage) ? (segment->Budget - segment->CurrentUsage)
-                                                         : 0;
+        DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
+        residencyManager->QueryVideoMemoryInfo(memorySegmentGroup, &segment);
+        return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
+                                                       : 0;
     }
 };
 
