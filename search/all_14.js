@@ -10,7 +10,7 @@ var searchData=
   ['unref_7',['Unref',['../classgpgmm_1_1_ref_counted.html#a850338d6a459a388bbbcd974a470831c',1,'gpgmm::RefCounted']]],
   ['unregisterandexit_8',['UnregisterAndExit',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#a2f04a3554e40c3b75ec8c9248b8aa5d5',1,'gpgmm::d3d12::BudgetUpdateTask::UnregisterAndExit()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#a96670ad9ba7b6c15cbacb07043e4777d',1,'gpgmm::d3d12::BudgetUpdateEvent::UnregisterAndExit()']]],
   ['updatebudgetbypolling_9',['UpdateBudgetByPolling',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ac071e175de962c0c146e0081d3f35f48',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['updatevideomemorysegments_10',['UpdateVideoMemorySegments',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a6e75d0e53352b915a43de66b9ffd5237',1,'gpgmm::d3d12::ResidencyManager']]],
+  ['updatememorysegment_10',['UpdateMemorySegment',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#a0f74f1700c9a730dcd9372ddf658c5b9',1,'gpgmm::d3d12::ResidencyManager']]],
   ['usedblockcount_11',['UsedBlockCount',['../structgpgmm_1_1_memory_allocator_info.html#afd06e9f1ba23dff9b1aaeb662a5febc0',1,'gpgmm::MemoryAllocatorInfo']]],
   ['usedblocksperslab_12',['UsedBlocksPerSlab',['../structgpgmm_1_1_slab.html#a5f110a091295f769e48a034f6d2a9d50',1,'gpgmm::Slab']]],
   ['usedblockusage_13',['UsedBlockUsage',['../structgpgmm_1_1_memory_allocator_info.html#aa5974ff23bcde1201ddecf7172de9d20',1,'gpgmm::MemoryAllocatorInfo']]],
