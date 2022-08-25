@@ -23,18 +23,20 @@
 namespace gpgmm::d3d12 {
 
     class Heap;
+    class JSONSerializer;
+    class ResidencyManager;
 
-    /** \brief Represents a list of heaps which will be "made resident" when executing a
+    /** \brief Represents a list of heaps which will be "made resident" upon executing a
     command-list.
 
     A residency list helps track heaps for residency which will be referenced together by a
     command-list. The application uses a ResidencyList by inserting heaps, by calling
     ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is
-    called, the list can be reset or cleared for the next frame.
+    called, the list can be reset or cleared for the next frame or compute job.
 
-    Without a ResidencyList, the application would need to manually ResidencyManager::LockHeap and
-    ResidencyManager::UnlockHeap each heap before and after ResidencyManager::ExecuteCommandLists,
-    respectively.
+    Without ResidencyList, the application would need to call ResidencyManager::LockHeap and
+    ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
+    being executed.
     */
     class GPGMM_EXPORT ResidencyList final {
       public:
@@ -60,12 +62,15 @@ namespace gpgmm::d3d12 {
         */
         HRESULT Reset();
 
+      private:
+        friend JSONSerializer;
+        friend ResidencyManager;
+
         using UnderlyingType = std::vector<Heap*>;
 
         UnderlyingType::const_iterator begin() const;
         UnderlyingType::const_iterator end() const;
 
-      private:
         const char* GetTypename() const;
 
         UnderlyingType mList;
