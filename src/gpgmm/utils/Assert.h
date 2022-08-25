@@ -48,7 +48,16 @@
         } while (GPGMM_ASSERT_LOOP_CONDITION)
 #else
 #    if defined(GPGMM_COMPILER_MSVC)
-#        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) __assume(condition)
+// Avoid calling __assume(condition) directly because we can't assume the |condition| will always
+// evaluate to be true at runtime and when false, the condition (or code) could be optimized out by
+// MSVC and never executed. To protect the ASSERT's code, the equivelent generated code using
+// __assume(0) is used.
+#        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
+            do {                                                          \
+                if (!(condition)) {                                       \
+                    GPGMM_UNREACHABLE();                                  \
+                }                                                         \
+            } while (GPGMM_ASSERT_LOOP_CONDITION)
 #    elif defined(GPGMM_COMPILER_CLANG) && GPGMM_HAS_BUILTIN(__builtin_unreachable)
 // Avoid using __builtin_assume since it results into clang assuming _every_ function call has a
 // side effect. Alternatively, suppress these warnings with -Wno-assume or wrap _builtin_assume in
@@ -57,7 +66,7 @@
 #        define GPGMM_ASSERT_CALLSITE_HELPER(file, func, line, condition) \
             do {                                                          \
                 if (!(condition)) {                                       \
-                    GPGMM_BUILTIN_UNREACHABLE();                          \
+                    GPGMM_UNREACHABLE();                                  \
                 }                                                         \
             } while (GPGMM_ASSERT_LOOP_CONDITION)
 #    else
@@ -70,10 +79,11 @@
 
 #define GPGMM_ASSERT(condition) \
     GPGMM_ASSERT_CALLSITE_HELPER(__FILE__, __func__, __LINE__, condition)
-#define GPGMM_UNREACHABLE()                                                  \
+
+#define GPGMM_ASSERT_UNREACHABLE()                                           \
     do {                                                                     \
         GPGMM_ASSERT(GPGMM_ASSERT_LOOP_CONDITION && "Unreachable code hit"); \
-        GPGMM_BUILTIN_UNREACHABLE();                                         \
+        GPGMM_UNREACHABLE();                                                 \
     } while (GPGMM_ASSERT_LOOP_CONDITION)
 
 // Disable short-hand defined macros due to possible name clash.
@@ -83,7 +93,7 @@
 #endif
 
 #if !defined(UNREACHABLE)
-#    define UNREACHABLE GPGMM_UNREACHABLE
+#    define UNREACHABLE GPGMM_ASSERT_UNREACHABLE
 #endif
 
 namespace gpgmm {
