@@ -19,7 +19,7 @@
 // Defines macros for compiler-specific functionality
 //  - GPGMM_COMPILER_[CLANG|GCC|MSVC]: Compiler detection
 //  - GPGMM_BREAKPOINT(): Raises an exception and breaks in the debugger
-//  - GPGMM_BUILTIN_UNREACHABLE(): Hints the compiler that a code path is unreachable
+//  - GPGMM_UNREACHABLE(): Hints the compiler that a code path is unreachable
 //  - GPGMM_NO_DISCARD: An attribute that is C++17 [[nodiscard]] where available
 //  - GPGMM_(UN)?LIKELY(EXPR): Where available, hints the compiler that the expression will be true
 //      (resp. false) to help it generate code that leads to better branch prediction.
@@ -44,7 +44,7 @@
 #        define GPGMM_BREAKPOINT()
 #    endif
 
-#    define GPGMM_BUILTIN_UNREACHABLE() __builtin_unreachable()
+#    define GPGMM_UNREACHABLE() __builtin_unreachable()
 #    define GPGMM_LIKELY(x) __builtin_expect(!!(x), 1)
 #    define GPGMM_UNLIKELY(x) __builtin_expect(!!(x), 0)
 
@@ -64,10 +64,10 @@
 extern void __cdecl __debugbreak(void);
 #    define GPGMM_BREAKPOINT() __debugbreak()
 
-#    define GPGMM_BUILTIN_UNREACHABLE() __assume(false)
+#    define GPGMM_UNREACHABLE() __assume(false)
 
 // Visual Studio 2017 15.3 adds support for [[nodiscard]]
-#    if _MSC_VER >= 1911 && DAWN_CPP_VERSION >= 17
+#    if _MSC_VER >= 1911 && GPGMM_CPP_VERSION >= 17
 #        define GPGMM_NO_DISCARD [[nodiscard]]
 #    endif
 
