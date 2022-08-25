@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['underlyingtype_0',['UnderlyingType',['../classgpgmm_1_1d3d12_1_1_residency_list.html#a4002cc07dd9e7f1969f8c53b5dc5ba59',1,'gpgmm::d3d12::ResidencyList']]]
+  ['value_5ftype_0',['value_type',['../classgpgmm_1_1_flags.html#a7571944b56f71c3dc84fd4ec54efc9b5',1,'gpgmm::Flags::value_type()'],['../classgpgmm_1_1_linked_list_iterator.html#a2363adad4963fae7f069f9cc1a3ace6d',1,'gpgmm::LinkedListIterator::value_type()']]]
 ];
