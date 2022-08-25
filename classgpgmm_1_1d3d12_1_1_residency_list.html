@@ -68,17 +68,23 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classgpgmm_1_1d3d12_1_1_residency_list-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">gpgmm::d3d12::ResidencyList Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a list of heaps which will be "made resident" upon executing a command-list.  
+<p>Represents a list of heaps which will be "made resident" when executing a command-list.  
  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#details">More...</a></p>
 
 <p><code>#include &lt;ResidencyListD3D12.h&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a4002cc07dd9e7f1969f8c53b5dc5ba59"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a4002cc07dd9e7f1969f8c53b5dc5ba59">UnderlyingType</a> = std::vector&lt; <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> * &gt;</td></tr>
+<tr class="separator:a4002cc07dd9e7f1969f8c53b5dc5ba59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a499969f03411f459e9653c91023ef8eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a499969f03411f459e9653c91023ef8eb">ResidencyList</a> ()</td></tr>
@@ -96,12 +102,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">Reset</a> ()</td></tr>
 <tr class="memdesc:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency list.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">More...</a><br /></td></tr>
 <tr class="separator:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7508617f471a2732248663897192fa82"><td class="memItemLeft" align="right" valign="top">UnderlyingType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a7508617f471a2732248663897192fa82">begin</a> () const</td></tr>
+<tr class="separator:a7508617f471a2732248663897192fa82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a3a98b7528b18ac24b126fd5524b713"><td class="memItemLeft" align="right" valign="top">UnderlyingType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a5a3a98b7528b18ac24b126fd5524b713">end</a> () const</td></tr>
+<tr class="separator:a5a3a98b7528b18ac24b126fd5524b713"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
-<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; upon executing a command-list.">ResidencyList</a> by inserting heaps, by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0" title="Returns the heap assigned to this resource allocation.">ResourceAllocation::GetMemory</a>, into the list. Once <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> is called, the list can be reset or cleared for the next frame or compute job.</p>
-<p >Without <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; upon executing a command-list.">ResidencyList</a>, the application would need to call <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532" title="Locks the specified heap.">ResidencyManager::LockHeap</a> and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668" title="Unlocks the specified heap.">ResidencyManager::UnlockHeap</a> for each heap before and after every GPU command or command-list being executed. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<div class="textblock"><p >Represents a list of heaps which will be "made resident" when executing a command-list. </p>
+<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a> by inserting heaps, by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0" title="Returns the heap assigned to this resource allocation.">ResourceAllocation::GetMemory</a>, into the list. Once <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> is called, the list can be reset or cleared for the next frame.</p>
+<p >Without a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; when executing a command-list.">ResidencyList</a>, the application would need to manually <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532" title="Locks the specified heap.">ResidencyManager::LockHeap</a> and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668" title="Unlocks the specified heap.">ResidencyManager::UnlockHeap</a> each heap before and after <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a>, respectively. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a4002cc07dd9e7f1969f8c53b5dc5ba59" name="a4002cc07dd9e7f1969f8c53b5dc5ba59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4002cc07dd9e7f1969f8c53b5dc5ba59">&#9670;&nbsp;</a></span>UnderlyingType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a4002cc07dd9e7f1969f8c53b5dc5ba59">gpgmm::d3d12::ResidencyList::UnderlyingType</a> =  std::vector&lt;<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a>*&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a499969f03411f459e9653c91023ef8eb" name="a499969f03411f459e9653c91023ef8eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a499969f03411f459e9653c91023ef8eb">&#9670;&nbsp;</a></span>ResidencyList() <span class="overload">[1/2]</span></h2>
 
@@ -189,6 +214,40 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>S_OK if heap was added, else error. </dd></dl>
+
+</div>
+</div>
+<a id="a7508617f471a2732248663897192fa82" name="a7508617f471a2732248663897192fa82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7508617f471a2732248663897192fa82">&#9670;&nbsp;</a></span>begin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResidencyList::UnderlyingType::const_iterator gpgmm::d3d12::ResidencyList::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a3a98b7528b18ac24b126fd5524b713" name="a5a3a98b7528b18ac24b126fd5524b713"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a3a98b7528b18ac24b126fd5524b713">&#9670;&nbsp;</a></span>end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ResidencyList::UnderlyingType::const_iterator gpgmm::d3d12::ResidencyList::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
