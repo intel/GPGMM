@@ -146,7 +146,7 @@ namespace gpgmm::d3d12 {
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags, bool allowMSAA) {
             const D3D12_HEAP_FLAGS denyAllTexturesFlags =
                 D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
-            if (Flags(heapFlags).HasFlags(denyAllTexturesFlags)) {
+            if (HasAllFlags(heapFlags, denyAllTexturesFlags)) {
                 return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
             }
 
@@ -758,7 +758,7 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         bool isAlwaysCommitted = mIsAlwaysCommitted;
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
-        if (!Flags(heapFlags).HasFlags(allocationDescriptor.ExtraRequiredHeapFlags)) {
+        if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
             DebugEvent(GetTypename())
                 << "Required heap flags are incompatible with resource heap type ("
                 << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "

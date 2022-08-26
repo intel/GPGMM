@@ -17,7 +17,7 @@ target_sources(gpgmm_utils PRIVATE
   "Assert.cpp"
   "Assert.h"
   "Compiler.h"
-  "Flags.h"
+  "EnumFlags.h"
   "JSONEncoder.cpp"
   "JSONEncoder.h"
   "Limits.h"
