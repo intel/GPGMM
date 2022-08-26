@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['optionflags_0',['OptionFlags',['../structgpgmm_1_1_desc.html#a705ef8db174c6365900251d224f3581b',1,'gpgmm::Desc']]]
+  ['option_0',['Option',['../structgpgmm_1_1_desc.html#a2fbb9adb4a464210a74b98fff04c4cda',1,'gpgmm::Desc']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['memorytype_0',['MemoryType',['../structgpgmm_1_1d3d12_1_1_backend_trait.html#a4a5d68651af61034ea822a19e5af629a',1,'gpgmm::d3d12::BackendTrait::MemoryType()'],['../structgpgmm_1_1vk_1_1_backend_trait.html#ae3216c16e93d879b94b4909b00f51fb2',1,'gpgmm::vk::BackendTrait::MemoryType()']]]
+  ['iterator_0',['iterator',['../classgpgmm_1_1_memory_cache.html#ab2cb058db5534f2e3de9b52d1ff8559d',1,'gpgmm::MemoryCache::iterator()'],['../classgpgmm_1_1_linked_list.html#a9b5691d71ec84ca3e14f71516693f8e1',1,'gpgmm::LinkedList::iterator()']]],
+  ['iterator_5fcategory_1',['iterator_category',['../classgpgmm_1_1_linked_list_iterator.html#a23a7041964a4fdc7e7b3b402ced22fd8',1,'gpgmm::LinkedListIterator']]]
 ];
