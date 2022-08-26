@@ -257,10 +257,10 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:ab2a02a30de47db6ab71a4c650cadb16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a> { <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16">kStandalone</a> = 0x0
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37">kSubAllocated</a> = 0x2
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d">kSubAllocatedWithin</a> = 0x4
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3">kUndefined</a> = 0x8
+<tr class="memitem:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a> { <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3">kUndefined</a> = 0
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16">kStandalone</a> = 1
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37">kSubAllocated</a> = 2
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d">kSubAllocatedWithin</a> = 3
  }</td></tr>
 <tr class="separator:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">TraceEventCategory</a> { <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">Default</a> = 0
@@ -438,7 +438,10 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p >Represents how memory was allocated. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16" name="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16"></a>kStandalone&#160;</td><td class="fielddoc"><p >Not sub-divided. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3" name="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3"></a>kUndefined&#160;</td><td class="fielddoc"><p >Not yet allocated or invalid. </p>
+<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16" name="a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16"></a>kStandalone&#160;</td><td class="fielddoc"><p >Not sub-divided. </p>
 <pre class="fragment">One and only one allocation exists for the memory.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37" name="a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37"></a>kSubAllocated&#160;</td><td class="fielddoc"><p >Sub-divided using one or more allocations. </p>
@@ -446,9 +449,6 @@ Functions</h2></td></tr>
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d" name="a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"><p >Sub-divided within a single memory allocation. </p>
 <pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3" name="a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3"></a>kUndefined&#160;</td><td class="fielddoc"><p >Not yet allocated or invalid. </p>
-<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
 </pre> </td></tr>
 </table>
 
