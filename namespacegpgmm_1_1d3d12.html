@@ -170,8 +170,8 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 0x2
+<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 0x1
  }</td></tr>
 <tr class="separator:a50666648c6ef0535d4b9afed754af8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb593a377ed0913fc1a06e2cb34a4c8a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8a">RESIDENCY_SEGMENT</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8aa09a7381ca02c68878aa7e939ea7b2350">RESIDENCY_SEGMENT_UNKNOWN</a>
@@ -189,10 +189,14 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">ALLOCATOR_ALGORITHM_SLAB</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 0x3
+<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">ALLOCATOR_ALGORITHM_SLAB</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x3
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 0x4
+<br />
  }</td></tr>
 <tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
@@ -348,7 +352,9 @@ Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </div><div class="memdoc">
 <p >Specify the algorithms used for allocation. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7" name="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
 <pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
 Slab allocation does not suffer from internal fragmentation but could externally fragment
