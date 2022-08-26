@@ -67,7 +67,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, will log only corruption messages.
         */
-        D3D12_MESSAGE_SEVERITY MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
+        D3D12_MESSAGE_SEVERITY MinLogLevel;
 
         /** \brief Specifies recording options.
 

@@ -338,6 +338,15 @@ namespace gpgmm::d3d12 {
                                                ? allocatorDescriptor.MemoryGrowthFactor
                                                : kDefaultMemoryGrowthFactor;
 
+        // By default, slab-allocate from a sorted segmented list.
+        if (newDescriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_DEFAULT) {
+            newDescriptor.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        }
+
+        if (newDescriptor.SubAllocationAlgorithm == ALLOCATOR_ALGORITHM_DEFAULT) {
+            newDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        }
+
         // ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
         // call ID3D12Device::MakeResident, requiring resource heaps to be "created in budget".
         // But this can be disabled if D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is supported.
