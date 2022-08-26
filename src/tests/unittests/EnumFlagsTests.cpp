@@ -14,27 +14,26 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/utils/Flags.h"
+// Make sure DEFINE_ENUM_FLAG_OPERATORS is being tested is from GPGMM.
+#undef DEFINE_ENUM_FLAG_OPERATORS
+
+#include "gpgmm/utils/EnumFlags.h"
 
 #include <sstream>
 
 namespace gpgmm {
 
-    enum Count {
+    enum CountFlags {
         kZero,
         kOne = 1,
         kTwo = 2,
         kThree = 3,
     };
 
-    using CountFlags = Flags<Count>;
-    DEFINE_OPERATORS_FOR_FLAGS(CountFlags)
+    DEFINE_ENUM_FLAG_OPERATORS(CountFlags)
 
-    TEST(FlagsTests, Basic) {
-        CountFlags a;
-        a |= kZero;
-        EXPECT_TRUE(a == kZero);
-        EXPECT_EQ(a, 0);
+    TEST(EnumFlagsTests, Basic) {
+        CountFlags a = kZero;
 
         a |= kOne;
         EXPECT_TRUE(a == kOne);
@@ -54,21 +53,19 @@ namespace gpgmm {
     }
 
     struct Desc {
-        enum Option {
+        enum OptionFlags {
             kNone,
             kFirst = 1,
             kSecond = 2,
             kThird = 3,
             kFourth = 4,
         };
-
-        using OptionFlags = Flags<Option>;
     };
 
-    DEFINE_OPERATORS_FOR_FLAGS(Desc::OptionFlags)
+    DEFINE_ENUM_FLAG_OPERATORS(Desc::OptionFlags)
 
-    TEST(FlagsTests, Struct) {
-        Desc::OptionFlags a;
+    TEST(EnumFlagsTests, Struct) {
+        Desc::OptionFlags a = Desc::OptionFlags::kNone;
         a |= Desc::kFirst;
         EXPECT_TRUE(a == Desc::kFirst);
 
@@ -88,13 +85,11 @@ namespace gpgmm {
         }
     }
 
-    TEST(FlagsTests, HasFlags) {
-        constexpr Desc::OptionFlags firstAndSecond = Desc::kFirst | Desc::kSecond;
-
-        EXPECT_TRUE(firstAndSecond.HasFlags(Desc::kSecond));
-        EXPECT_TRUE(firstAndSecond.HasFlags(Desc::kFirst));
-
-        EXPECT_FALSE(firstAndSecond.HasFlags(Desc::kFourth));
+    TEST(EnumFlagsTests, HasAllFlags) {
+        Desc::OptionFlags firstAndSecond = Desc::kFirst | Desc::kSecond;
+        EXPECT_TRUE(HasAllFlags(firstAndSecond, Desc::kSecond));
+        EXPECT_TRUE(HasAllFlags(firstAndSecond, Desc::kFirst));
+        EXPECT_FALSE(HasAllFlags(firstAndSecond, Desc::kFourth));
     }
 
 }  // namespace gpgmm

@@ -16,7 +16,9 @@
 #define GPGMM_D3D12_EVENTRECORDD3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
-#include "gpgmm/utils/Flags.h"
+#include "gpgmm/utils/EnumFlags.h"
+
+#include <string>
 
 namespace gpgmm::d3d12 {
 
@@ -57,8 +59,7 @@ namespace gpgmm::d3d12 {
         EVENT_RECORD_FLAG_ALL_EVENTS = 0xFF,
     };
 
-    using EVENT_RECORD_FLAGS_TYPE = Flags<EVENT_RECORD_FLAGS>;
-    DEFINE_OPERATORS_FOR_FLAGS(EVENT_RECORD_FLAGS_TYPE)
+    DEFINE_ENUM_FLAG_OPERATORS(EVENT_RECORD_FLAGS)
 
     /** \enum EVENT_RECORD_SCOPE
     Represents recording scopes to limit event recording.
@@ -82,7 +83,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, nothing is recorded.
         */
-        EVENT_RECORD_FLAGS_TYPE Flags = EVENT_RECORD_FLAG_NONE;
+        EVENT_RECORD_FLAGS Flags = EVENT_RECORD_FLAG_NONE;
 
         /** \brief Minimum severity level to record messages.
 

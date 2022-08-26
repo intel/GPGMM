@@ -19,7 +19,7 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/d3d12/EventRecordD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
-#include "gpgmm/utils/Flags.h"
+#include "gpgmm/utils/EnumFlags.h"
 #include "include/gpgmm_export.h"
 
 #include <array>
@@ -80,8 +80,7 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
     };
 
-    using ALLOCATOR_FLAGS_TYPE = Flags<ALLOCATOR_FLAGS>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_FLAGS_TYPE)
+    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_FLAGS)
 
     /** \enum ALLOCATOR_ALGORITHM
     Specify the algorithms used for allocation.
@@ -127,8 +126,7 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x3,
     };
 
-    using ALLOCATOR_ALGORITHM_TYPE = Flags<ALLOCATOR_ALGORITHM>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATOR_ALGORITHM_TYPE)
+    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_ALGORITHM)
 
     /** \struct ALLOCATOR_DESC
     Specify parameters for creating allocators.
@@ -151,7 +149,7 @@ namespace gpgmm::d3d12 {
         For example, whether the allocator can reuse memory, or resources should be resident upon
         creation.
         */
-        ALLOCATOR_FLAGS_TYPE Flags = ALLOCATOR_FLAG_NONE;
+        ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
 
         /** \brief Minimum severity level to log messages to console.
 
@@ -303,8 +301,7 @@ namespace gpgmm::d3d12 {
         ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x10,
     };
 
-    using ALLOCATION_FLAGS_TYPE = Flags<ALLOCATION_FLAGS>;
-    DEFINE_OPERATORS_FOR_FLAGS(ALLOCATION_FLAGS_TYPE)
+    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)
 
     /** \struct ALLOCATION_FLAGS
     Specifies how allocations should be created.
@@ -314,7 +311,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, GPGMM will decide automatically.
         */
-        ALLOCATION_FLAGS_TYPE Flags = ALLOCATION_FLAG_NONE;
+        ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
 
         /** \brief Heap type that the resource to be allocated requires.
 
