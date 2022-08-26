@@ -209,7 +209,7 @@ test("gpgmm_end2end_tests") {
 
 trace_index_file_name = "traces.json"
 
-action("generate_capture_replay_trace_index_file") {
+action("generate_capture_replay_trace_index") {
   script = "${gpgmm_root_dir}/scripts/generate_capture_replay_trace_index.py"
   outputs = [ "$target_gen_dir" + "/" + trace_index_file_name ]
 
@@ -230,7 +230,7 @@ source_set("gpgmm_capture_replay_tests_sources") {
   testonly = true
 
   deps = [
-    ":generate_capture_replay_trace_index_file",
+    ":generate_capture_replay_trace_index",
     ":gmock_and_gtest",
     "${gpgmm_root_dir}/src/gpgmm:gpgmm_sources",
     "${gpgmm_root_dir}/third_party/gn/jsoncpp",
