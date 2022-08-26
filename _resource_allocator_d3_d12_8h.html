@@ -70,7 +70,6 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">ResourceAllocatorD3D12.h File Reference</div></div>
 </div><!--header-->
@@ -78,7 +77,7 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="_memory_allocator_8h.html">gpgmm/common/MemoryAllocator.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_event_record_d3_d12_8h.html">gpgmm/d3d12/EventRecordD3D12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_flags_8h.html">gpgmm/utils/Flags.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_enum_flags_8h.html">gpgmm/utils/EnumFlags.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
@@ -103,15 +102,6 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:addd8571a3cf9c1c8893f16f664612090"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#addd8571a3cf9c1c8893f16f664612090">gpgmm::d3d12::ALLOCATOR_FLAGS_TYPE</a> = Flags&lt; ALLOCATOR_FLAGS &gt;</td></tr>
-<tr class="separator:addd8571a3cf9c1c8893f16f664612090"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb6716a7aa24ebf09a7c61136b46b217"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb6716a7aa24ebf09a7c61136b46b217">gpgmm::d3d12::ALLOCATOR_ALGORITHM_TYPE</a> = Flags&lt; ALLOCATOR_ALGORITHM &gt;</td></tr>
-<tr class="separator:adb6716a7aa24ebf09a7c61136b46b217"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a978095e9c5b00f02cf77e0a74e89d0fc">gpgmm::d3d12::ALLOCATION_FLAGS_TYPE</a> = Flags&lt; <a class="el" href="struct_a_l_l_o_c_a_t_i_o_n___f_l_a_g_s.html">ALLOCATION_FLAGS</a> &gt;</td></tr>
-<tr class="separator:a978095e9c5b00f02cf77e0a74e89d0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">gpgmm::d3d12::ALLOCATOR_FLAGS</a> { <br />
@@ -124,14 +114,10 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7">gpgmm::d3d12::ALLOCATOR_ALGORITHM_DEFAULT</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SLAB</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">gpgmm::d3d12::ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">gpgmm::d3d12::ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x3
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 0x4
-<br />
+<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SLAB</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">gpgmm::d3d12::ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">gpgmm::d3d12::ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 0x3
  }</td></tr>
 <tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">gpgmm::d3d12::ALLOCATION_FLAGS</a> { <br />

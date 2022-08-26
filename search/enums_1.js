@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['count_0',['Count',['../namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000',1,'gpgmm']]]
+  ['countflags_0',['CountFlags',['../namespacegpgmm.html#a276891a7cffdff20645589803afa8964',1,'gpgmm']]]
 ];

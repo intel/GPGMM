@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/tests/unittests/FlagsTests.cpp File Reference</title>
+<title>GPGMM: src/tests/unittests/EnumFlagsTests.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,14 +70,13 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">FlagsTests.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">EnumFlagsTests.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;gtest/gtest.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="_flags_8h.html">gpgmm/utils/Flags.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_enum_flags_8h.html">gpgmm/utils/EnumFlags.h</a>&quot;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -90,28 +89,23 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacegpgmm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html">gpgmm</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a4bbe45c15bab3ce231c949e88a31bc8b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a4bbe45c15bab3ce231c949e88a31bc8b">gpgmm::CountFlags</a> = Flags&lt; Count &gt;</td></tr>
-<tr class="separator:a4bbe45c15bab3ce231c949e88a31bc8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a52dbbf264aa5e07c97f08b2145350000"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000">gpgmm::Count</a> { <a class="el" href="namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000ada94b72158eec57c5d883e4d8e3fc081">gpgmm::kZero</a>
-, <a class="el" href="namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a823b43fdd917ccf755d892b43e66add8">gpgmm::kOne</a> = 1
-, <a class="el" href="namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a66fe5ad73ec107dfd2fe171755db6917">gpgmm::kTwo</a> = 2
-, <a class="el" href="namespacegpgmm.html#a52dbbf264aa5e07c97f08b2145350000a48b75453b3e2474add0c86c7a34015f8">gpgmm::kThree</a> = 3
+<tr class="memitem:a276891a7cffdff20645589803afa8964"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a276891a7cffdff20645589803afa8964">gpgmm::CountFlags</a> { <a class="el" href="namespacegpgmm.html#a276891a7cffdff20645589803afa8964ada94b72158eec57c5d883e4d8e3fc081">gpgmm::kZero</a>
+, <a class="el" href="namespacegpgmm.html#a276891a7cffdff20645589803afa8964a823b43fdd917ccf755d892b43e66add8">gpgmm::kOne</a> = 1
+, <a class="el" href="namespacegpgmm.html#a276891a7cffdff20645589803afa8964a66fe5ad73ec107dfd2fe171755db6917">gpgmm::kTwo</a> = 2
+, <a class="el" href="namespacegpgmm.html#a276891a7cffdff20645589803afa8964a48b75453b3e2474add0c86c7a34015f8">gpgmm::kThree</a> = 3
  }</td></tr>
-<tr class="separator:a52dbbf264aa5e07c97f08b2145350000"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a276891a7cffdff20645589803afa8964"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6d7efb9d8a9fcf0f09c0f06fa9ab389d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a6d7efb9d8a9fcf0f09c0f06fa9ab389d">gpgmm::TEST</a> (FlagsTests, Basic)</td></tr>
-<tr class="separator:a6d7efb9d8a9fcf0f09c0f06fa9ab389d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6211fbd21de3401c9514b938548f591"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ae6211fbd21de3401c9514b938548f591">gpgmm::TEST</a> (FlagsTests, Struct)</td></tr>
-<tr class="separator:ae6211fbd21de3401c9514b938548f591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58215ca98e459b04852643ce654886d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ab58215ca98e459b04852643ce654886d">gpgmm::TEST</a> (FlagsTests, HasFlags)</td></tr>
-<tr class="separator:ab58215ca98e459b04852643ce654886d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c836f76eb2640a5ce251834c966c656"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a5c836f76eb2640a5ce251834c966c656">gpgmm::TEST</a> (EnumFlagsTests, Basic)</td></tr>
+<tr class="separator:a5c836f76eb2640a5ce251834c966c656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f30bd5cd2a3962dcc816c81bd5f7f5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a0f30bd5cd2a3962dcc816c81bd5f7f5b">gpgmm::TEST</a> (EnumFlagsTests, Struct)</td></tr>
+<tr class="separator:a0f30bd5cd2a3962dcc816c81bd5f7f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab30f9d7e3f7585ab66dcaf3ccd49bc5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ab30f9d7e3f7585ab66dcaf3ccd49bc5e">gpgmm::TEST</a> (EnumFlagsTests, HasAllFlags)</td></tr>
+<tr class="separator:ab30f9d7e3f7585ab66dcaf3ccd49bc5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
