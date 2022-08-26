@@ -88,7 +88,7 @@ namespace gpgmm::d3d12 {
     enum ALLOCATOR_ALGORITHM {
         /** \brief Use default allocation mechanism.
          */
-        ALLOCATOR_ALGORITHM_DEFAULT = 0x0,
+        ALLOCATOR_ALGORITHM_DEFAULT = 0,
 
         /** \brief Use the slab allocation mechanism.
 
@@ -97,7 +97,7 @@ namespace gpgmm::d3d12 {
         Slab allocation does not suffer from internal fragmentation but could externally fragment
         when many unique request sizes are used.
         */
-        ALLOCATOR_ALGORITHM_SLAB = 0x1,
+        ALLOCATOR_ALGORITHM_SLAB = 1,
 
         /** \brief Use the buddy system mechanism.
 
@@ -111,7 +111,7 @@ namespace gpgmm::d3d12 {
         requests can fit within the specified PreferredResourceHeapSize but not too large where
         creating the larger resource heap becomes a bigger bottleneck.
         */
-        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x2,
+        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 2,
 
         /** \brief Recycles resource heaps of a size being specified.
 
@@ -121,13 +121,13 @@ namespace gpgmm::d3d12 {
         PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
         equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
-        ALLOCATOR_ALGORITHM_FIXED_POOL = 0x3,
+        ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
 
         /** \brief Recycles resource heaps of any size using multiple pools.
 
         Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
         */
-        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x4,
+        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 4,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_ALGORITHM)
