@@ -86,6 +86,10 @@ namespace gpgmm::d3d12 {
     Specify the algorithms used for allocation.
     */
     enum ALLOCATOR_ALGORITHM {
+        /** \brief Use default allocation mechanism.
+         */
+        ALLOCATOR_ALGORITHM_DEFAULT = 0x0,
+
         /** \brief Use the slab allocation mechanism.
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
@@ -93,7 +97,7 @@ namespace gpgmm::d3d12 {
         Slab allocation does not suffer from internal fragmentation but could externally fragment
         when many unique request sizes are used.
         */
-        ALLOCATOR_ALGORITHM_SLAB = 0x0,
+        ALLOCATOR_ALGORITHM_SLAB = 0x1,
 
         /** \brief Use the buddy system mechanism.
 
@@ -107,7 +111,7 @@ namespace gpgmm::d3d12 {
         requests can fit within the specified PreferredResourceHeapSize but not too large where
         creating the larger resource heap becomes a bigger bottleneck.
         */
-        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x1,
+        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x2,
 
         /** \brief Recycles resource heaps of a size being specified.
 
@@ -117,13 +121,13 @@ namespace gpgmm::d3d12 {
         PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
         equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
-        ALLOCATOR_ALGORITHM_FIXED_POOL = 0x2,
+        ALLOCATOR_ALGORITHM_FIXED_POOL = 0x3,
 
         /** \brief Recycles resource heaps of any size using multiple pools.
 
         Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
         */
-        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x3,
+        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x4,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_ALGORITHM)
@@ -149,13 +153,13 @@ namespace gpgmm::d3d12 {
         For example, whether the allocator can reuse memory, or resources should be resident upon
         creation.
         */
-        ALLOCATOR_FLAGS Flags = ALLOCATOR_FLAG_NONE;
+        ALLOCATOR_FLAGS Flags;
 
         /** \brief Minimum severity level to log messages to console.
 
         Messages with lower severity will be ignored.
         */
-        D3D12_MESSAGE_SEVERITY MinLogLevel = D3D12_MESSAGE_SEVERITY_WARNING;
+        D3D12_MESSAGE_SEVERITY MinLogLevel;
 
         /** \brief Specifies recording options.
 
@@ -179,7 +183,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        ALLOCATOR_ALGORITHM SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        ALLOCATOR_ALGORITHM SubAllocationAlgorithm;
 
         /** \brief Specifies the algorithm to use for resource heap pooling.
 
@@ -188,7 +192,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        ALLOCATOR_ALGORITHM PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        ALLOCATOR_ALGORITHM PoolAlgorithm;
 
         /** \brief Specifies the preferred size of the resource heap.
 
@@ -311,13 +315,13 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, GPGMM will decide automatically.
         */
-        ALLOCATION_FLAGS Flags = ALLOCATION_FLAG_NONE;
+        ALLOCATION_FLAGS Flags;
 
         /** \brief Heap type that the resource to be allocated requires.
 
-        Required parameter. GPGMM always initializes to D3D12_HEAP_TYPE_DEFAULT.
+        Required parameter.
         */
-        D3D12_HEAP_TYPE HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        D3D12_HEAP_TYPE HeapType;
 
         /** \brief Additional heap flags that the resource requires.
 
@@ -330,7 +334,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter.
         */
-        D3D12_HEAP_FLAGS ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_NONE;
+        D3D12_HEAP_FLAGS ExtraRequiredHeapFlags;
 
         /** \brief Require additional bytes to be appended to the resource allocation.
 
@@ -342,7 +346,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. No extra padding is applied by default.
         */
-        uint64_t RequireResourceHeapPadding = 0;
+        uint64_t RequireResourceHeapPadding;
 
         /** \brief Associates a name with the given allocation.
 

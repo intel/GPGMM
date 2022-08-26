@@ -149,9 +149,13 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
                                                         &resourceAllocator, nullptr));
 
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
     ComPtr<ResourceAllocation> allocation;
-    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-        {}, CreateBasicBufferDesc(1), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(1),
+                                                       D3D12_RESOURCE_STATE_COMMON, nullptr,
+                                                       &allocation));
 
     // Inserting a non-existant heap should always fail
     {
@@ -252,7 +256,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+            bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         allocationsBelowBudget.push_back(std::move(allocation));
     }
 
@@ -271,7 +275,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     while (currentMemoryUsage + kMemoryOverBudget > resourceAllocator->GetInfo().UsedMemoryUsage) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+            bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         allocationsAboveBudget.push_back(std::move(allocation));
     }
 

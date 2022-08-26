@@ -68,11 +68,11 @@ namespace gpgmm::d3d12 {
 
         /** \brief Scopes events per process (or multiple instances).
          */
-        EVENT_RECORD_SCOPE_PER_PROCESS = 0x1,
+        EVENT_RECORD_SCOPE_PER_PROCESS = 0x0,
 
         /** \brief Scopes events per instance.
          */
-        EVENT_RECORD_SCOPE_PER_INSTANCE = 0x2,
+        EVENT_RECORD_SCOPE_PER_INSTANCE = 0x1,
     };
 
     /** \struct EVENT_RECORD_OPTIONS
@@ -83,7 +83,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, nothing is recorded.
         */
-        EVENT_RECORD_FLAGS Flags = EVENT_RECORD_FLAG_NONE;
+        EVENT_RECORD_FLAGS Flags;
 
         /** \brief Minimum severity level to record messages.
 
@@ -91,19 +91,19 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, the minimum severity level is WARN.
         */
-        D3D12_MESSAGE_SEVERITY MinMessageLevel = D3D12_MESSAGE_SEVERITY_WARNING;
+        D3D12_MESSAGE_SEVERITY MinMessageLevel;
 
         /** \brief Specifies the scope of the events.
 
         Optional parameter. By default, recording is per process.
         */
-        EVENT_RECORD_SCOPE EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;
+        EVENT_RECORD_SCOPE EventScope;
 
         /** \brief Record detailed timing events.
 
         Optional parameter. By default, detailed timing events are disabled.
         */
-        bool UseDetailedTimingEvents = false;
+        bool UseDetailedTimingEvents;
 
         /** \brief Path to trace file.
 
