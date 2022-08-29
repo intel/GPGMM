@@ -29,6 +29,7 @@ namespace gpgmm::d3d12 {
     class Heap;
     class ResidencyManager;
     class ResidencyList;
+    class ResourceAllocator;
 
     /** \struct RESOURCE_ALLOCATION_DESC
     Describes a resource allocation.
@@ -93,27 +94,6 @@ namespace gpgmm::d3d12 {
                                                   public DebugObject,
                                                   public IUnknownImpl {
       public:
-        /** \brief Constructs a resource allocation using memory containing one or more resources.
-
-        @param desc A RESOURCE_ALLOCATION_DESC describing the resource allocation.
-        @param pResidencyManager A pointer to ResidencyManager which manages residency for the
-        resource allocation.
-        @param pAllocator A pointer to MemoryAllocator which created the resourceHeap for the
-        resource.
-        @param pResourceHeap A pointer to the Heap used for the resource allocation.
-        @param pBlock A pointer to MemoryBlock which describes the region in Heap being allocated.
-        @param resource A pointer to the ID3D12Resource used for the allocation.
-        @param[out] ppResourceAllocationOut Pointer to a resource allocation that recieves a pointer
-        to the resource allocation.
-        */
-        static HRESULT CreateResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                                                ResidencyManager* pResidencyManager,
-                                                MemoryAllocator* pAllocator,
-                                                Heap* pResourceHeap,
-                                                MemoryBlock* pBlock,
-                                                ComPtr<ID3D12Resource> resource,
-                                                ResourceAllocation** ppResourceAllocationOut);
-
         ~ResourceAllocation() override;
 
         /** \brief Maps the resource allocation.
@@ -191,6 +171,8 @@ namespace gpgmm::d3d12 {
         Heap* GetMemory() const;
 
       private:
+        friend ResourceAllocator;
+
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
