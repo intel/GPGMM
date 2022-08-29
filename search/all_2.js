@@ -58,7 +58,6 @@ var searchData=
   ['createplatformtime_55',['CreatePlatformTime',['../namespacegpgmm.html#a15c1b9e3be85f95740ce2570300f0b55',1,'gpgmm']]],
   ['createresidencymanager_56',['CreateResidencyManager',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507',1,'gpgmm::d3d12::ResidencyManager']]],
   ['createresource_57',['CreateResource',['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1d407c024e4c07f5137b00afe050eefb',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(ComPtr&lt; ID3D12Resource &gt; committedResource, ResourceAllocation **ppResourceAllocationOut)'],['../classgpgmm_1_1d3d12_1_1_resource_allocator.html#a1e9f2be39db54e1c922ff89d1fe07944',1,'gpgmm::d3d12::ResourceAllocator::CreateResource(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, ResourceAllocation **ppResourceAllocationOut)']]],
-  ['createresourceallocation_58',['CreateResourceAllocation',['../classgpgmm_1_1d3d12_1_1_resource_allocation.html#aab8ca01d98fd11ec1e75fd15514aac06',1,'gpgmm::d3d12::ResourceAllocation']]],
-  ['currentusage_59',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]],
-  ['customprinttostringparamname_60',['CustomPrintToStringParamName',['../class_capture_replay_test_with_params.html#afd1e165cf078b426625ea0a89333e011',1,'CaptureReplayTestWithParams']]]
+  ['currentusage_58',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]],
+  ['customprinttostringparamname_59',['CustomPrintToStringParamName',['../class_capture_replay_test_with_params.html#afd1e165cf078b426625ea0a89333e011',1,'CaptureReplayTestWithParams']]]
 ];
