@@ -1,3 +1,8 @@
+# Enables GN source-package dependency management through GitHub Workflows.
+# The workflow automatically updates each sub-package to be on the latest commit.
+# These commits are then squashed into a pull-request that will be auto-merged
+# once the integration tests become green.
+# Any new dependencies in .\DEPS should also be added here.
 name: 'Auto Roll DEPS'
 
 on:
@@ -41,6 +46,56 @@ jobs:
         copy scripts\standalone.gclient .gclient
         gclient sync
 
+    # Dependencies required to use GN/Clang in standalone
+    - name: Roll build
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree build
+
+    - name: Roll buildtools
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree buildtools
+
+    - name: Roll buildtools/third_party/libc++/trunk
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree buildtools/third_party/libc++/trunk
+
+    - name: Roll buildtools/third_party/libc++abi/trunk
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree buildtools/third_party/libc++abi/trunk
+
+    - name: Roll tools/clang
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree tools/clang
+
+    # Testing, GTest and GMock
+    - name: Roll testing
+      shell: cmd
+      continue-on-error: true
+      run: |
+        set "PATH=%CD%\..\depot_tools;%PATH%"
+        set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+        roll-dep --no-log --ignore-dirty-tree testing
+
     - name: Roll third_party/googletest
       shell: cmd
       continue-on-error: true
@@ -57,6 +112,7 @@ jobs:
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         roll-dep --no-log --ignore-dirty-tree third_party/vulkan-deps
 
+    # Dependency of //testing
     - name: Roll third_party/catapult
       shell: cmd
       continue-on-error: true
@@ -73,6 +129,7 @@ jobs:
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         roll-dep --no-log --ignore-dirty-tree third_party/jsoncpp/source
 
+    # Fuzzing
     - name: Roll third_party/libFuzzer/src
       shell: cmd
       continue-on-error: true
