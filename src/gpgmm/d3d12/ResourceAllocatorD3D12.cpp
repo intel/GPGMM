@@ -712,6 +712,10 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, pClearValue, &allocation));
 
+        if (!allocationDescriptor.DebugName.empty()) {
+            ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
+        }
+
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
@@ -884,10 +888,9 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
+                    *ppResourceAllocationOut = new ResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(committedResource),
-                        ppResourceAllocationOut));
+                        resourceHeap, subAllocation.GetBlock(), std::move(committedResource));
 
                     return S_OK;
                 }));
@@ -924,10 +927,9 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
+                    *ppResourceAllocationOut = new ResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(placedResource),
-                        ppResourceAllocationOut));
+                        resourceHeap, subAllocation.GetBlock(), std::move(placedResource));
 
                     return S_OK;
                 }));
@@ -964,10 +966,9 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
+                    *ppResourceAllocationOut = new ResourceAllocation(
                         allocationDesc, mResidencyManager.Get(), allocation.GetAllocator(),
-                        resourceHeap, allocation.GetBlock(), std::move(placedResource),
-                        ppResourceAllocationOut));
+                        resourceHeap, allocation.GetBlock(), std::move(placedResource));
 
                     return S_OK;
                 }));
@@ -1012,9 +1013,9 @@ namespace gpgmm::d3d12 {
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-        ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
-            allocationDesc, mResidencyManager.Get(), this, resourceHeap, nullptr,
-            std::move(committedResource), ppResourceAllocationOut));
+        *ppResourceAllocationOut =
+            new ResourceAllocation(allocationDesc, mResidencyManager.Get(), this, resourceHeap,
+                                   nullptr, std::move(committedResource));
 
         return S_OK;
     }
@@ -1067,9 +1068,8 @@ namespace gpgmm::d3d12 {
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
 
-        ReturnIfFailed(ResourceAllocation::CreateResourceAllocation(
-            allocationDesc, nullptr, this, resourceHeap, nullptr, std::move(resource),
-            ppResourceAllocationOut));
+        *ppResourceAllocationOut = new ResourceAllocation(
+            allocationDesc, nullptr, this, resourceHeap, nullptr, std::move(resource));
 
         return S_OK;
     }
