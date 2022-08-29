@@ -19,7 +19,6 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/d3d12/EventRecordD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
-#include "gpgmm/utils/EnumFlags.h"
 #include "include/gpgmm_export.h"
 
 #include <array>
@@ -28,7 +27,6 @@
 
 namespace gpgmm {
     class MemoryAllocator;
-    class PlatformTime;
 }  // namespace gpgmm
 
 namespace gpgmm::d3d12 {
@@ -129,8 +127,6 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 4,
     };
-
-    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_ALGORITHM)
 
     /** \struct ALLOCATOR_DESC
     Specify parameters for creating allocators.
