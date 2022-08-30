@@ -437,4 +437,20 @@ namespace gpgmm::d3d12 {
         return object->SetName(TCharToWString(name.c_str()).c_str());
     }
 
+    DXGI_MEMORY_SEGMENT_GROUP GetDefaultMemorySegmentGroup(ID3D12Device* device,
+                                                           D3D12_HEAP_TYPE heapType,
+                                                           bool isUMA) {
+        if (isUMA) {
+            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        }
+
+        D3D12_HEAP_PROPERTIES heapProperties = device->GetCustomHeapProperties(0, heapType);
+
+        if (heapProperties.MemoryPoolPreference == D3D12_MEMORY_POOL_L1) {
+            return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        }
+
+        return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
+    }
+
 }  // namespace gpgmm::d3d12
