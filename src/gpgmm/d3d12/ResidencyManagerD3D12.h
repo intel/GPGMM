@@ -30,6 +30,7 @@ namespace gpgmm {
 
 namespace gpgmm::d3d12 {
 
+    class BudgetUpdateTask;
     class Fence;
     class Heap;
     class ResidencyList;
@@ -214,12 +215,6 @@ namespace gpgmm::d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut);
 
-        /** \brief  Update and retrieve the current budget and memory usage.
-
-        @param memorySegmentGroup Memory segment to update info.
-        */
-        HRESULT UpdateMemorySegment(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
-
         /** \brief  Return the current residency manager usage.
 
         \return A RESIDENCY_INFO struct.
@@ -244,6 +239,9 @@ namespace gpgmm::d3d12 {
         HRESULT InsertHeapInternal(Heap* heap);
 
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
+
+        friend BudgetUpdateTask;
+        HRESULT UpdateMemorySegment(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
 
         const char* GetTypename() const;
 
