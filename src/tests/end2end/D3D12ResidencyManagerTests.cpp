@@ -15,6 +15,7 @@
 #include "tests/D3D12Test.h"
 
 #include "gpgmm/common/SizeClass.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include <gpgmm_d3d12.h>
 
@@ -88,7 +89,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 };
 
-TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
+TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
     ComPtr<ResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
         CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
@@ -248,7 +249,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        residencyManager->GetMemorySegmentGroup(bufferAllocationDesc.HeapType);
+        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
     // Keep allocating until we reach the budget.
@@ -310,7 +311,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetUsingBudgetNotifications) {
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        residencyManager->GetMemorySegmentGroup(bufferAllocationDesc.HeapType);
+        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
@@ -354,7 +355,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        residencyManager->GetMemorySegmentGroup(bufferAllocationDesc.HeapType);
+        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
     while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {

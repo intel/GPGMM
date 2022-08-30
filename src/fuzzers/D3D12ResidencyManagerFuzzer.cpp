@@ -18,6 +18,7 @@
 
 #include "D3D12Fuzzer.h"
 #include "gpgmm/common/SizeClass.h"
+#include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace {
 
@@ -80,7 +81,8 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        gResidencyManager->GetMemorySegmentGroup(allocationDesc.HeapType);
+        gpgmm::d3d12::GetDefaultMemorySegmentGroup(residencyDesc.Device.Get(),
+                                                   allocationDesc.HeapType, residencyDesc.IsUMA);
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBufferDesc(kBufferMemorySize);

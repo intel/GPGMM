@@ -226,16 +226,6 @@ namespace gpgmm::d3d12 {
         */
         RESIDENCY_INFO GetInfo() const;
 
-        /** \brief Divugles the memory segment used for the specified heap type.
-
-        @param heapType A D3D12_HEAP_TYPE-typed value that specifies the heap to get the memory
-        segment for.
-
-        \return A DXGI_MEMORY_SEGMENT_GROUP that provides the memory segment for the specified heap
-        type.
-        */
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
-
       private:
         friend Heap;
         friend ResourceAllocator;
@@ -252,6 +242,8 @@ namespace gpgmm::d3d12 {
         HRESULT InsertHeap(Heap* heap);
 
         HRESULT InsertHeapInternal(Heap* heap);
+
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
 
         const char* GetTypename() const;
 
