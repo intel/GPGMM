@@ -160,10 +160,10 @@ namespace gpgmm::d3d12 {
         // GPU.
         std::unique_ptr<Fence> residencyFence;
         {
-            Fence* ptr = nullptr;
+            Fence* fencePtr = nullptr;
             ReturnIfFailed(
-                Fence::CreateFence(descriptor.Device, descriptor.InitialFenceValue, &ptr));
-            residencyFence.reset(ptr);
+                Fence::CreateFence(descriptor.Device, descriptor.InitialFenceValue, &fencePtr));
+            residencyFence.reset(fencePtr);
         }
 
         if (descriptor.VideoMemoryBudget != 0 && descriptor.Budget != 0) {
