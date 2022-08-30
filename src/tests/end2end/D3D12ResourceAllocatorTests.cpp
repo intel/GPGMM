@@ -405,6 +405,28 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetDebugName(), allocationDesc.DebugName);
     }
+
+    // Creating a buffer without a heap type should be inferred based on the resource state.
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &allocation));
+        ASSERT_NE(allocation, nullptr);
+    }
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr, &allocation));
+        ASSERT_NE(allocation, nullptr);
+    }
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+            nullptr, &allocation));
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
