@@ -882,7 +882,7 @@ namespace gpgmm::d3d12 {
                     ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.RequestSizeInBytes = resourceDescriptor.Width;
+                    allocationDesc.SizeInBytes = resourceDescriptor.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
                     allocationDesc.Method = AllocationMethod::kSubAllocatedWithin;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
@@ -921,7 +921,7 @@ namespace gpgmm::d3d12 {
                                                         initialResourceState, &placedResource));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.RequestSizeInBytes = request.SizeInBytes;
+                    allocationDesc.SizeInBytes = request.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
                     allocationDesc.Method = subAllocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
@@ -960,7 +960,7 @@ namespace gpgmm::d3d12 {
                                                         initialResourceState, &placedResource));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.RequestSizeInBytes = request.SizeInBytes;
+                    allocationDesc.SizeInBytes = request.SizeInBytes;
                     allocationDesc.HeapOffset = allocation.GetOffset();
                     allocationDesc.Method = allocation.GetMethod();
                     allocationDesc.OffsetFromResource = 0;
@@ -1008,7 +1008,7 @@ namespace gpgmm::d3d12 {
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
-        allocationDesc.RequestSizeInBytes = request.SizeInBytes;
+        allocationDesc.SizeInBytes = request.SizeInBytes;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
@@ -1064,7 +1064,7 @@ namespace gpgmm::d3d12 {
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
-        allocationDesc.RequestSizeInBytes = resourceInfo.SizeInBytes;
+        allocationDesc.SizeInBytes = resourceInfo.SizeInBytes;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
 
