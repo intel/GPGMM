@@ -37,9 +37,10 @@ namespace gpgmm::d3d12 {
     struct RESOURCE_ALLOCATION_DESC {
         /** \brief Requested size, in bytes, of the resource allocation.
 
-        Must be non-zero.
+        The requested size is the non-zero allocation size before being subjected to allocator
+        alignment.
         */
-        uint64_t RequestSizeInBytes;
+        uint64_t SizeInBytes;
 
         /** \brief Offset, in bytes, of the resource in the heap.
          */
@@ -48,7 +49,7 @@ namespace gpgmm::d3d12 {
         /** \brief Offset, in bytes, of the allocation, from the start of the
         resource.
 
-         Always zero when the resource is placed in a heap or created with it's own heap.
+        Always zero when the resource is placed in a heap or created with it's own heap.
         */
         uint64_t OffsetFromResource;
 
@@ -104,14 +105,14 @@ namespace gpgmm::d3d12 {
         pointer value will start from the allocation instead of the resource.
 
         @param subresource Specifies the index number of the subresource.
-        @param readRange A pointer to a D3D12_RANGE structure that describes the range of memory to
+        @param pReadRange A pointer to a D3D12_RANGE structure that describes the range of memory to
         access.
-        @param[out] dataOut A pointer to a memory block that receives a pointer to the resource
+        @param[out] ppDataOut A pointer to a memory block that receives a pointer to the resource
         data.
         */
         HRESULT Map(uint32_t subresource = 0,
-                    const D3D12_RANGE* readRange = nullptr,
-                    void** dataOut = nullptr);
+                    const D3D12_RANGE* pReadRange = nullptr,
+                    void** ppDataOut = nullptr);
 
         /** \brief Unmaps the resource allocation.
 
@@ -121,7 +122,7 @@ namespace gpgmm::d3d12 {
         @param writtenRange A pointer to a D3D12_RANGE structure that describes the range of memory
         to unmap.
         */
-        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* writtenRange = nullptr);
+        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* pWrittenRange = nullptr);
 
         /** \brief Returns the resource owned by this allocation.
 

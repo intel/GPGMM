@@ -52,7 +52,7 @@ namespace gpgmm::d3d12 {
                            desc.HeapOffset,
                            desc.Method,
                            block,
-                           desc.RequestSizeInBytes),
+                           desc.SizeInBytes),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
@@ -73,8 +73,8 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocation::Map(uint32_t subresource,
-                                    const D3D12_RANGE* readRange,
-                                    void** dataOut) {
+                                    const D3D12_RANGE* pReadRange,
+                                    void** ppDataOut) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
@@ -89,24 +89,24 @@ namespace gpgmm::d3d12 {
         // adjusted if the entire resource is being mapped where allocation coordinates are relative
         // to entire resource.
         D3D12_RANGE newReadRange{};
-        const D3D12_RANGE* newReadRangePtr = readRange;
+        const D3D12_RANGE* newReadRangePtr = pReadRange;
         if (newReadRangePtr != nullptr && mOffsetFromResource > 0) {
             ASSERT(subresource == 0);
-            newReadRange = GetResourceRange(readRange, static_cast<size_t>(mOffsetFromResource));
+            newReadRange = GetResourceRange(pReadRange, static_cast<size_t>(mOffsetFromResource));
             newReadRangePtr = &newReadRange;
         }
 
         void* mappedData = nullptr;
         ReturnIfFailed(mResource->Map(subresource, newReadRangePtr, &mappedData));
 
-        if (dataOut != nullptr) {
-            *dataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;
+        if (ppDataOut != nullptr) {
+            *ppDataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;
         }
 
         return S_OK;
     }
 
-    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
+    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         ASSERT(subresource == 0 || GetMethod() != AllocationMethod::kSubAllocatedWithin);
@@ -116,7 +116,7 @@ namespace gpgmm::d3d12 {
         }
 
         D3D12_RANGE newWrittenRange{};
-        const D3D12_RANGE* newWrittenRangePtr = writtenRange;
+        const D3D12_RANGE* newWrittenRangePtr = pWrittenRange;
         if (newWrittenRangePtr != nullptr && mOffsetFromResource > 0) {
             ASSERT(subresource == 0);
             newWrittenRange =
