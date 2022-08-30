@@ -315,7 +315,8 @@ namespace gpgmm::d3d12 {
 
         /** \brief Heap type that the resource to be allocated requires.
 
-        Required parameter.
+        Optional parameter. If the heap type is not provided, the heap type will be inferred by the
+        parameters used to call CreateResource.
         */
         D3D12_HEAP_TYPE HeapType;
 

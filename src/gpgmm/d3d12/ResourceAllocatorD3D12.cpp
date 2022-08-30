@@ -224,6 +224,22 @@ namespace gpgmm::d3d12 {
             }
         }
 
+        HRESULT GetHeapType(D3D12_RESOURCE_STATES initialResourceState, D3D12_HEAP_TYPE* heapType) {
+            if (HasAllFlags(GetInitialResourceState(D3D12_HEAP_TYPE_UPLOAD),
+                            initialResourceState)) {
+                *heapType = D3D12_HEAP_TYPE_UPLOAD;
+                return S_OK;
+            }
+
+            if (HasAllFlags(GetInitialResourceState(D3D12_HEAP_TYPE_READBACK),
+                            initialResourceState)) {
+                *heapType = D3D12_HEAP_TYPE_READBACK;
+                return S_OK;
+            }
+
+            return E_UNEXPECTED;
+        }
+
         // RAII wrapper to lock/unlock heap from the residency cache.
         class ScopedResidencyLock final : public NonCopyable {
           public:
@@ -761,9 +777,14 @@ namespace gpgmm::d3d12 {
             return E_OUTOFMEMORY;
         }
 
-        const RESOURCE_HEAP_TYPE resourceHeapType =
-            GetResourceHeapType(newResourceDesc.Dimension, allocationDescriptor.HeapType,
-                                newResourceDesc.Flags, mResourceHeapTier);
+        // If the heap type was not specified, infer it using the initial resource state.
+        D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
+        if (heapType == 0) {
+            ReturnIfFailed(GetHeapType(initialResourceState, &heapType));
+        }
+
+        const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
+            newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
         if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
             return E_INVALIDARG;
         }
@@ -824,7 +845,7 @@ namespace gpgmm::d3d12 {
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
             const DXGI_MEMORY_SEGMENT_GROUP segment =
-                mResidencyManager->GetMemorySegmentGroup(allocationDescriptor.HeapType);
+                mResidencyManager->GetMemorySegmentGroup(heapType);
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(segment);
 
@@ -853,8 +874,8 @@ namespace gpgmm::d3d12 {
         if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-            GetInitialResourceState(allocationDescriptor.HeapType) == initialResourceState &&
-            !isAlwaysCommitted && !neverSubAllocate) {
+            GetInitialResourceState(heapType) == initialResourceState && !isAlwaysCommitted &&
+            !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the
@@ -995,9 +1016,9 @@ namespace gpgmm::d3d12 {
 
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(CreateCommittedResource(
-            allocationDescriptor.HeapType, heapFlags, resourceInfo, &newResourceDesc, clearValue,
-            initialResourceState, &committedResource, &resourceHeap));
+        ReturnIfFailed(CreateCommittedResource(heapType, heapFlags, resourceInfo, &newResourceDesc,
+                                               clearValue, initialResourceState, &committedResource,
+                                               &resourceHeap));
 
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).
