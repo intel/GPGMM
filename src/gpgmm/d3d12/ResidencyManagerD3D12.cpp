@@ -32,7 +32,7 @@
 
 namespace gpgmm::d3d12 {
 
-    static constexpr uint32_t kDefaultEvictBatchSize = GPGMM_MB_TO_BYTES(50);
+    static constexpr uint32_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;  // 95%
 
     // Creates a long-lived task to recieve and process OS budget change events.
@@ -227,8 +227,8 @@ namespace gpgmm::d3d12 {
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
           mIsBudgetRestricted(descriptor.Budget > 0),
-          mEvictBatchSize(descriptor.EvictBatchSize == 0 ? kDefaultEvictBatchSize
-                                                         : descriptor.EvictBatchSize),
+          mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
+                                                             : descriptor.EvictSizeInBytes),
           mIsUMA(descriptor.IsUMA),
           mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
@@ -709,7 +709,8 @@ namespace gpgmm::d3d12 {
             // If nothing can be evicted after MakeResident has failed, we cannot continue
             // execution and must throw a fatal error.
             uint64_t evictedSizeInBytes = 0;
-            ReturnIfFailed(EvictInternal(mEvictBatchSize, memorySegmentGroup, &evictedSizeInBytes));
+            ReturnIfFailed(
+                EvictInternal(mEvictSizeInBytes, memorySegmentGroup, &evictedSizeInBytes));
             if (evictedSizeInBytes == 0) {
                 return E_OUTOFMEMORY;
             }

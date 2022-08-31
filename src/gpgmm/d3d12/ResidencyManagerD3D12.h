@@ -94,13 +94,12 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Budget;
 
-        /** \brief Specifies the amount of memory, in bytes, to evict from residency at once,
+        /** \brief Size of memory, in bytes, to evict from residency at once,
         should there not be enough budget left.
 
-        Optional parameter. When 0 is specified, the API will automatically set the video memory
-        evict size to 50MB.
+        Optional parameter. When 0 is specified, the API will use a evict size of 50MB.
         */
-        uint64_t EvictBatchSize;
+        uint64_t EvictSizeInBytes;
 
         /** \brief Initial fence value to use when managing heaps for residency.
 
@@ -275,7 +274,7 @@ namespace gpgmm::d3d12 {
 
         const float mVideoMemoryBudget;
         const bool mIsBudgetRestricted;
-        const uint64_t mEvictBatchSize;
+        const uint64_t mEvictSizeInBytes;
         const bool mIsUMA;
         const bool mIsBudgetChangeEventsDisabled;
         const bool mFlushEventBuffersOnDestruct;
