@@ -62,13 +62,7 @@ namespace gpgmm::d3d12 {
                     // mBudgetNotificationUpdateEvent
                     case (WAIT_OBJECT_0 + 0): {
                         hr =
-                            mResidencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
-                        if (FAILED(hr)) {
-                            break;
-                        }
-
-                        hr = mResidencyManager->UpdateMemorySegment(
-                            DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+                            mResidencyManager->UpdateMemorySegments();
                         if (FAILED(hr)) {
                             break;
                         }
@@ -189,9 +183,8 @@ namespace gpgmm::d3d12 {
             gpgmm::DebugLog() << "OS event based budget updates enabled.";
         }
 
-        // Set the initial video memory limits per segment.
-        ReturnIfFailed(residencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
-        ReturnIfFailed(residencyManager->UpdateMemorySegment(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
+        // Set the initial video memory limits.
+        ReturnIfFailed(residencyManager->UpdateMemorySegments());
 
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
@@ -464,10 +457,10 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::UpdateMemorySegment(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+    HRESULT ResidencyManager::UpdateMemorySegments() {
         std::lock_guard<std::mutex> lock(mMutex);
-        ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
+        ReturnIfFailed(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
+        ReturnIfFailed(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
         return S_OK;
     }
 
