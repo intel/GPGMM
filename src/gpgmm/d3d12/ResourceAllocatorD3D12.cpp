@@ -303,17 +303,20 @@ namespace gpgmm::d3d12 {
 
         ComPtr<ResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
+            std::unique_ptr<Caps> caps;
+            {
+                Caps* ptr = nullptr;
+                ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device.Get(),
+                                                allocatorDescriptor.Adapter.Get(), &ptr));
+                caps.reset(ptr);
+            }
+
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
-
-            D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-            ReturnIfFailed(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE,
-                                                                     &arch, sizeof(arch)));
-            residencyDesc.IsUMA = arch.UMA;
-
+            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+            residencyDesc.IsUMA = caps->IsAdapterUMA();
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
-            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
 
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));

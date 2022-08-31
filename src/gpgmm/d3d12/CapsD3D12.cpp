@@ -77,6 +77,11 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
+        D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
+        ReturnIfFailed(
+            device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+        caps->mIsAdapterUMA = arch.UMA;
+
         // D3D12 has no feature to detect support and must be set manually.
         if (adapterDesc.VendorId == kIntel_VkVendor) {
             caps->mIsResourceAccessAlwaysCoherent = true;
@@ -100,6 +105,10 @@ namespace gpgmm::d3d12 {
 
     bool Caps::IsResourceAccessAlwaysCoherent() const {
         return mIsResourceAccessAlwaysCoherent;
+    }
+
+    bool Caps::IsAdapterUMA() const {
+        return mIsAdapterUMA;
     }
 
 }  // namespace gpgmm::d3d12
