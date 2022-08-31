@@ -240,7 +240,7 @@ namespace gpgmm::d3d12 {
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const;
 
         friend BudgetUpdateTask;
-        HRESULT UpdateMemorySegment(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        HRESULT UpdateMemorySegments();
 
         const char* GetTypename() const;
 
