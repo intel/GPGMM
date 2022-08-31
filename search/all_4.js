@@ -48,7 +48,7 @@ var searchData=
   ['eventtracewriter_2eh_45',['EventTraceWriter.h',['../_event_trace_writer_8h.html',1,'']]],
   ['eventtracewritertests_46',['EventTraceWriterTests',['../class_event_trace_writer_tests.html',1,'']]],
   ['eventtracewritertests_2ecpp_47',['EventTraceWriterTests.cpp',['../_event_trace_writer_tests_8cpp.html',1,'']]],
-  ['evictbatchsize_48',['EvictBatchSize',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a53a630fb905d3b72bbeffe1b00030b82',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
+  ['evictsizeinbytes_48',['EvictSizeInBytes',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab114ef99d3f1af9c49f493c1004b315f',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
   ['execute_5fcommand_5flists_5fdesc_49',['EXECUTE_COMMAND_LISTS_DESC',['../structgpgmm_1_1d3d12_1_1_e_x_e_c_u_t_e___c_o_m_m_a_n_d___l_i_s_t_s___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['executecommandlists_50',['ExecuteCommandLists',['../classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c',1,'gpgmm::d3d12::ResidencyManager']]],
   ['expect_5ffailed_51',['EXPECT_FAILED',['../_d3_d12_test_8h.html#a42e6fdcab733c6e579810c9d001665b7',1,'D3D12Test.h']]],
