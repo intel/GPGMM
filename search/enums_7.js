@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['traceeventcategory_0',['TraceEventCategory',['../namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f',1,'gpgmm']]],
-  ['traceeventphase_1',['TraceEventPhase',['../namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829',1,'gpgmm']]]
+  ['residency_5fsegment_0',['RESIDENCY_SEGMENT',['../namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8a',1,'gpgmm::d3d12::RESIDENCY_SEGMENT()'],['../namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8a',1,'gpgmm::d3d12::RESIDENCY_SEGMENT()']]]
 ];

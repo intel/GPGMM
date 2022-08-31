@@ -82,18 +82,22 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;IUnknownImplD3D12.h&gt;</code></p>
+<p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::d3d12::IUnknownImpl:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classgpgmm_1_1d3d12_1_1_i_unknown_impl.png" usemap="#gpgmm::d3d12::IUnknownImpl_map" alt=""/>
   <map id="gpgmm::d3d12::IUnknownImpl_map" name="gpgmm::d3d12::IUnknownImpl_map">
-<area href="class_test_i_unknown_impl_sub_class.html" alt="TestIUnknownImplSubClass" shape="rect" coords="0,112,208,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="218,112,426,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache." alt="gpgmm::d3d12::ResidencyManager" shape="rect" coords="436,112,644,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource." alt="gpgmm::d3d12::ResourceAllocation" shape="rect" coords="654,112,862,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation." alt="gpgmm::d3d12::ResourceAllocator" shape="rect" coords="872,112,1080,136"/>
+<area href="class_test_i_unknown_impl_sub_class.html" alt="TestIUnknownImplSubClass" shape="rect" coords="327,112,535,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="327,168,535,192"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="327,224,535,248"/>
+<area href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache." alt="gpgmm::d3d12::ResidencyManager" shape="rect" coords="327,280,535,304"/>
+<area href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache." alt="gpgmm::d3d12::ResidencyManager" shape="rect" coords="327,336,535,360"/>
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource." alt="gpgmm::d3d12::ResourceAllocation" shape="rect" coords="327,392,535,416"/>
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource." alt="gpgmm::d3d12::ResourceAllocation" shape="rect" coords="327,448,535,472"/>
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation." alt="gpgmm::d3d12::ResourceAllocator" shape="rect" coords="327,504,535,528"/>
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation." alt="gpgmm::d3d12::ResourceAllocator" shape="rect" coords="327,560,535,584"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -101,14 +105,26 @@ Inheritance diagram for gpgmm::d3d12::IUnknownImpl:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
 <tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a654400af7d6e7341dbd65b959ad9d400"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a654400af7d6e7341dbd65b959ad9d400">~IUnknownImpl</a> ()=default</td></tr>
-<tr class="separator:a654400af7d6e7341dbd65b959ad9d400"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af148920b9a182a494b17e9d940a4539a"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#af148920b9a182a494b17e9d940a4539a">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
-<tr class="separator:af148920b9a182a494b17e9d940a4539a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a498fba8b143ee29ba9c87de4c74de6e4"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a498fba8b143ee29ba9c87de4c74de6e4">AddRef</a> () override</td></tr>
-<tr class="separator:a498fba8b143ee29ba9c87de4c74de6e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e2c505fb4cf4e354835f847a4946ee5"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a5e2c505fb4cf4e354835f847a4946ee5">Release</a> () override</td></tr>
-<tr class="separator:a5e2c505fb4cf4e354835f847a4946ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78d8d8aeb40c540ef6592ee600199b28"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a78d8d8aeb40c540ef6592ee600199b28">~IUnknownImpl</a> ()=default</td></tr>
+<tr class="separator:a78d8d8aeb40c540ef6592ee600199b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae46f6ac979609d793881462bb6930df8"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
+<tr class="separator:ae46f6ac979609d793881462bb6930df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
+<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
+<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
+<tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1efb129df43d1e141bfced89882e7ccf"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a1efb129df43d1e141bfced89882e7ccf">~IUnknownImpl</a> ()</td></tr>
+<tr class="separator:a1efb129df43d1e141bfced89882e7ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae46f6ac979609d793881462bb6930df8"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
+<tr class="separator:ae46f6ac979609d793881462bb6930df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
+<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
+<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63928891a46a1952ba1fdf90155e91e3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a63928891a46a1952ba1fdf90155e91e3">DeleteThis</a> ()</td></tr>
+<tr class="separator:a63928891a46a1952ba1fdf90155e91e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -117,7 +133,7 @@ Protected Member Functions</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a87e1fbb5727ccf1c7c37cf2eef7fe1ae" name="a87e1fbb5727ccf1c7c37cf2eef7fe1ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">&#9670;&#160;</a></span>IUnknownImpl()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">&#9670;&#160;</a></span>IUnknownImpl() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -133,8 +149,50 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a654400af7d6e7341dbd65b959ad9d400" name="a654400af7d6e7341dbd65b959ad9d400"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a654400af7d6e7341dbd65b959ad9d400">&#9670;&#160;</a></span>~IUnknownImpl()</h2>
+<a id="a78d8d8aeb40c540ef6592ee600199b28" name="a78d8d8aeb40c540ef6592ee600199b28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78d8d8aeb40c540ef6592ee600199b28">&#9670;&#160;</a></span>~IUnknownImpl() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">gpgmm::d3d12::IUnknownImpl::~IUnknownImpl </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a87e1fbb5727ccf1c7c37cf2eef7fe1ae" name="a87e1fbb5727ccf1c7c37cf2eef7fe1ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">&#9670;&#160;</a></span>IUnknownImpl() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gpgmm::d3d12::IUnknownImpl::IUnknownImpl </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1efb129df43d1e141bfced89882e7ccf" name="a1efb129df43d1e141bfced89882e7ccf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1efb129df43d1e141bfced89882e7ccf">&#9670;&#160;</a></span>~IUnknownImpl() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +209,7 @@ Protected Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -159,8 +217,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a498fba8b143ee29ba9c87de4c74de6e4" name="a498fba8b143ee29ba9c87de4c74de6e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a498fba8b143ee29ba9c87de4c74de6e4">&#9670;&#160;</a></span>AddRef()</h2>
+<a id="a0b6b0473356d595ebda3bc73ebbd3c33" name="a0b6b0473356d595ebda3bc73ebbd3c33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6b0473356d595ebda3bc73ebbd3c33">&#9670;&#160;</a></span>AddRef() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -169,7 +227,32 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ULONG gpgmm::d3d12::IUnknownImpl::AddRef </td>
+          <td class="memname">ULONG STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::AddRef </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b6b0473356d595ebda3bc73ebbd3c33" name="a0b6b0473356d595ebda3bc73ebbd3c33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6b0473356d595ebda3bc73ebbd3c33">&#9670;&#160;</a></span>AddRef() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ULONG STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::AddRef </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -185,7 +268,7 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a6b125e84fc9a47302e56d20808a60fc3" name="a6b125e84fc9a47302e56d20808a60fc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b125e84fc9a47302e56d20808a60fc3">&#9670;&#160;</a></span>DeleteThis()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b125e84fc9a47302e56d20808a60fc3">&#9670;&#160;</a></span>DeleteThis() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,8 +292,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af148920b9a182a494b17e9d940a4539a" name="af148920b9a182a494b17e9d940a4539a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af148920b9a182a494b17e9d940a4539a">&#9670;&#160;</a></span>QueryInterface()</h2>
+<a id="a63928891a46a1952ba1fdf90155e91e3" name="a63928891a46a1952ba1fdf90155e91e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63928891a46a1952ba1fdf90155e91e3">&#9670;&#160;</a></span>DeleteThis() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,7 +302,32 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::IUnknownImpl::QueryInterface </td>
+          <td class="memname">virtual void gpgmm::d3d12::IUnknownImpl::DeleteThis </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae46f6ac979609d793881462bb6930df8" name="ae46f6ac979609d793881462bb6930df8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae46f6ac979609d793881462bb6930df8">&#9670;&#160;</a></span>QueryInterface() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::QueryInterface </td>
           <td>(</td>
           <td class="paramtype">REFIID&#160;</td>
           <td class="paramname"><em>riid</em>, </td>
@@ -245,8 +353,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5e2c505fb4cf4e354835f847a4946ee5" name="a5e2c505fb4cf4e354835f847a4946ee5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e2c505fb4cf4e354835f847a4946ee5">&#9670;&#160;</a></span>Release()</h2>
+<a id="ae46f6ac979609d793881462bb6930df8" name="ae46f6ac979609d793881462bb6930df8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae46f6ac979609d793881462bb6930df8">&#9670;&#160;</a></span>QueryInterface() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +363,68 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ULONG gpgmm::d3d12::IUnknownImpl::Release </td>
+          <td class="memname">HRESULT STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::QueryInterface </td>
+          <td>(</td>
+          <td class="paramtype">REFIID&#160;</td>
+          <td class="paramname"><em>riid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>ppvObject</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7339b10bc3aed0dfb2605dad132fd58" name="ae7339b10bc3aed0dfb2605dad132fd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7339b10bc3aed0dfb2605dad132fd58">&#9670;&#160;</a></span>Release() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ULONG STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::Release </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7339b10bc3aed0dfb2605dad132fd58" name="ae7339b10bc3aed0dfb2605dad132fd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7339b10bc3aed0dfb2605dad132fd58">&#9670;&#160;</a></span>Release() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ULONG STDMETHODCALLTYPE gpgmm::d3d12::IUnknownImpl::Release </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -272,7 +441,9 @@ Protected Member Functions</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/d3d12/<a class="el" href="_i_unknown_impl_d3_d12_8h.html">IUnknownImplD3D12.h</a></li>
+<li>src/include/min/<a class="el" href="min_2gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 <li>src/gpgmm/d3d12/<a class="el" href="_i_unknown_impl_d3_d12_8cpp.html">IUnknownImplD3D12.cpp</a></li>
+<li>src/include/min/<a class="el" href="gpgmm__d3d12_8cpp.html">gpgmm_d3d12.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

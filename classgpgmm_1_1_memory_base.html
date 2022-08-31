@@ -84,16 +84,17 @@ $(function() {
 <p>Represents a memory object.  
  <a href="classgpgmm_1_1_memory_base.html#details">More...</a></p>
 
-<p><code>#include &lt;Memory.h&gt;</code></p>
+<p><code>#include &lt;gpgmm.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::MemoryBase:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classgpgmm_1_1_memory_base.png" usemap="#gpgmm::MemoryBase_map" alt=""/>
   <map id="gpgmm::MemoryBase_map" name="gpgmm::MemoryBase_map">
-<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="86,0,248,24"/>
+<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="172,0,334,24"/>
 <area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="0,112,162,136"/>
-<area href="classgpgmm_1_1vk_1_1_device_memory.html" alt="gpgmm::vk::DeviceMemory" shape="rect" coords="172,112,334,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="172,112,334,136"/>
+<area href="classgpgmm_1_1vk_1_1_device_memory.html" alt="gpgmm::vk::DeviceMemory" shape="rect" coords="344,112,506,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -122,6 +123,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac58a6c631c99352979d82339e641000b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac58a6c631c99352979d82339e641000b">RemoveSubAllocationRef</a> ()</td></tr>
 <tr class="memdesc:ac58a6c631c99352979d82339e641000b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrements the sub-allocation reference count on the heap.  <a href="classgpgmm_1_1_memory_base.html#ac58a6c631c99352979d82339e641000b">More...</a><br /></td></tr>
 <tr class="separator:ac58a6c631c99352979d82339e641000b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b65212d2077e6522a5e20e38e2ab745"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a3b65212d2077e6522a5e20e38e2ab745">MemoryBase</a> (uint64_t size, uint64_t alignment)</td></tr>
+<tr class="separator:a3b65212d2077e6522a5e20e38e2ab745"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3804a803741919cb773664d51a8cf84"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ad3804a803741919cb773664d51a8cf84">~MemoryBase</a> ()</td></tr>
+<tr class="separator:ad3804a803741919cb773664d51a8cf84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8addb77c0844c340245e441cb9dcd3d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac8addb77c0844c340245e441cb9dcd3d">GetSize</a> () const</td></tr>
+<tr class="separator:ac8addb77c0844c340245e441cb9dcd3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabc8d1742deec70f6da4e7eaec968e92"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#aabc8d1742deec70f6da4e7eaec968e92">GetAlignment</a> () const</td></tr>
+<tr class="separator:aabc8d1742deec70f6da4e7eaec968e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -140,7 +149,7 @@ Additional Inherited Members</h2></td></tr>
 <p >When memory is sub-allocated, it will have a non-zero refcount. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3b65212d2077e6522a5e20e38e2ab745" name="a3b65212d2077e6522a5e20e38e2ab745"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b65212d2077e6522a5e20e38e2ab745">&#9670;&#160;</a></span>MemoryBase()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b65212d2077e6522a5e20e38e2ab745">&#9670;&#160;</a></span>MemoryBase() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +194,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="afa1057319c223e505d296f4ede900506" name="afa1057319c223e505d296f4ede900506"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa1057319c223e505d296f4ede900506">&#9670;&#160;</a></span>~MemoryBase()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa1057319c223e505d296f4ede900506">&#9670;&#160;</a></span>~MemoryBase() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,6 +204,59 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">gpgmm::MemoryBase::~MemoryBase </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b65212d2077e6522a5e20e38e2ab745" name="a3b65212d2077e6522a5e20e38e2ab745"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b65212d2077e6522a5e20e38e2ab745">&#9670;&#160;</a></span>MemoryBase() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gpgmm::MemoryBase::MemoryBase </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>alignment</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad3804a803741919cb773664d51a8cf84" name="ad3804a803741919cb773664d51a8cf84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3804a803741919cb773664d51a8cf84">&#9670;&#160;</a></span>~MemoryBase() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual gpgmm::MemoryBase::~MemoryBase </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -230,7 +292,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="aabc8d1742deec70f6da4e7eaec968e92" name="aabc8d1742deec70f6da4e7eaec968e92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabc8d1742deec70f6da4e7eaec968e92">&#9670;&#160;</a></span>GetAlignment()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc8d1742deec70f6da4e7eaec968e92">&#9670;&#160;</a></span>GetAlignment() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -246,6 +308,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the alignment of the memory object. </p>
 <dl class="section return"><dt>Returns</dt><dd>Alignment, in bytes, of the memory object. </dd></dl>
+
+</div>
+</div>
+<a id="aabc8d1742deec70f6da4e7eaec968e92" name="aabc8d1742deec70f6da4e7eaec968e92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc8d1742deec70f6da4e7eaec968e92">&#9670;&#160;</a></span>GetAlignment() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MemoryBase::GetAlignment </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -270,7 +349,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="ac8addb77c0844c340245e441cb9dcd3d" name="ac8addb77c0844c340245e441cb9dcd3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8addb77c0844c340245e441cb9dcd3d">&#9670;&#160;</a></span>GetSize()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8addb77c0844c340245e441cb9dcd3d">&#9670;&#160;</a></span>GetSize() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,6 +365,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the size of the memory object. </p>
 <dl class="section return"><dt>Returns</dt><dd>Size, in bytes, of the memory object. </dd></dl>
+
+</div>
+</div>
+<a id="ac8addb77c0844c340245e441cb9dcd3d" name="ac8addb77c0844c340245e441cb9dcd3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8addb77c0844c340245e441cb9dcd3d">&#9670;&#160;</a></span>GetSize() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::MemoryBase::GetSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -336,7 +432,9 @@ Additional Inherited Members</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/common/<a class="el" href="_memory_8h.html">Memory.h</a></li>
+<li>src/include/min/<a class="el" href="gpgmm_8h.html">gpgmm.h</a></li>
 <li>src/gpgmm/common/<a class="el" href="_memory_8cpp.html">Memory.cpp</a></li>
+<li>src/include/min/<a class="el" href="gpgmm_8cpp.html">gpgmm.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
