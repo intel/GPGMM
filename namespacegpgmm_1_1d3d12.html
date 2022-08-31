@@ -181,11 +181,6 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
  }</td></tr>
 <tr class="separator:a50666648c6ef0535d4b9afed754af8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb593a377ed0913fc1a06e2cb34a4c8a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8a">RESIDENCY_SEGMENT</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8aa09a7381ca02c68878aa7e939ea7b2350">RESIDENCY_SEGMENT_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8aa068a1dd18f5c0c43d0a5f40de81ed9cc">RESIDENCY_SEGMENT_LOCAL</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8aa2e8b39318067317def5a965a1bd89aee">RESIDENCY_SEGMENT_NON_LOCAL</a> = 2
- }</td></tr>
-<tr class="separator:adb593a377ed0913fc1a06e2cb34a4c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
@@ -256,8 +251,8 @@ Functions</h2></td></tr>
 <tr class="separator:afe198cab730bda500c14194a2786c482"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17b7083de0eb18cb08ef62ce47ec7b53"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a17b7083de0eb18cb08ef62ce47ec7b53">SetDebugObjectName</a> (ID3D12Object *object, const std::string &amp;name)</td></tr>
 <tr class="separator:a17b7083de0eb18cb08ef62ce47ec7b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30c09dd146c4639e1c9706875e74803a"><td class="memItemLeft" align="right" valign="top">DXGI_MEMORY_SEGMENT_GROUP&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a30c09dd146c4639e1c9706875e74803a">GetDefaultMemorySegmentGroup</a> (ID3D12Device *device, D3D12_HEAP_TYPE heapType, bool isUMA)</td></tr>
-<tr class="separator:a30c09dd146c4639e1c9706875e74803a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a414f54f10d4de9987c678fa6cedc1896"><td class="memItemLeft" align="right" valign="top">DXGI_MEMORY_SEGMENT_GROUP&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a414f54f10d4de9987c678fa6cedc1896">GetMemorySegmentGroup</a> (D3D12_MEMORY_POOL memoryPool, bool isUMA)</td></tr>
+<tr class="separator:a414f54f10d4de9987c678fa6cedc1896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeebd2399e605ce395a7b98a6a10c0d38"><td class="memItemLeft" align="right" valign="top">D3D12_MESSAGE_SEVERITY&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aeebd2399e605ce395a7b98a6a10c0d38">GetMessageSeverity</a> (<a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf">LogSeverity</a> logSeverity)</td></tr>
 <tr class="separator:aeebd2399e605ce395a7b98a6a10c0d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -504,62 +499,7 @@ through the GPU/driver instead of explicitly through GPGMM.
 
 </div>
 </div>
-<a id="adb593a377ed0913fc1a06e2cb34a4c8a" name="adb593a377ed0913fc1a06e2cb34a4c8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb593a377ed0913fc1a06e2cb34a4c8a">&#9670;&#160;</a></span>RESIDENCY_SEGMENT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#adb593a377ed0913fc1a06e2cb34a4c8a">gpgmm::d3d12::RESIDENCY_SEGMENT</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Specifies which type of segment the heap belongs to.</p>
-<p >RESIDENCY_SEGMENT is equivelent to DXGI_MEMORY_SEGMENT_GROUP but also has RESIDENCY_SEGMENT_UNKNOWN. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adb593a377ed0913fc1a06e2cb34a4c8aa09a7381ca02c68878aa7e939ea7b2350" name="adb593a377ed0913fc1a06e2cb34a4c8aa09a7381ca02c68878aa7e939ea7b2350"></a>RESIDENCY_SEGMENT_UNKNOWN&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="adb593a377ed0913fc1a06e2cb34a4c8aa068a1dd18f5c0c43d0a5f40de81ed9cc" name="adb593a377ed0913fc1a06e2cb34a4c8aa068a1dd18f5c0c43d0a5f40de81ed9cc"></a>RESIDENCY_SEGMENT_LOCAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="adb593a377ed0913fc1a06e2cb34a4c8aa2e8b39318067317def5a965a1bd89aee" name="adb593a377ed0913fc1a06e2cb34a4c8aa2e8b39318067317def5a965a1bd89aee"></a>RESIDENCY_SEGMENT_NON_LOCAL&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a30c09dd146c4639e1c9706875e74803a" name="a30c09dd146c4639e1c9706875e74803a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30c09dd146c4639e1c9706875e74803a">&#9670;&#160;</a></span>GetDefaultMemorySegmentGroup()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">DXGI_MEMORY_SEGMENT_GROUP gpgmm::d3d12::GetDefaultMemorySegmentGroup </td>
-          <td>(</td>
-          <td class="paramtype">ID3D12Device *&#160;</td>
-          <td class="paramname"><em>device</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">D3D12_HEAP_TYPE&#160;</td>
-          <td class="paramname"><em>heapType</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isUMA</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a43e9130aee00fce32c2c86c84ffac851" name="a43e9130aee00fce32c2c86c84ffac851"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43e9130aee00fce32c2c86c84ffac851">&#9670;&#160;</a></span>GetDeviceErrorMessage()</h2>
 
@@ -618,6 +558,34 @@ through the GPU/driver instead of explicitly through GPGMM.
           <td class="paramtype">D3D12_MESSAGE_SEVERITY&#160;</td>
           <td class="paramname"><em>messageSeverity</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a414f54f10d4de9987c678fa6cedc1896" name="a414f54f10d4de9987c678fa6cedc1896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a414f54f10d4de9987c678fa6cedc1896">&#9670;&#160;</a></span>GetMemorySegmentGroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DXGI_MEMORY_SEGMENT_GROUP gpgmm::d3d12::GetMemorySegmentGroup </td>
+          <td>(</td>
+          <td class="paramtype">D3D12_MEMORY_POOL&#160;</td>
+          <td class="paramname"><em>memoryPool</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isUMA</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

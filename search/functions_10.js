@@ -13,7 +13,7 @@ var searchData=
   ['reserve_10',['reserve',['../classgpgmm_1_1_stable_list.html#a0cd3fbbbcf4b1ef1c9a8277c8eae9456',1,'gpgmm::StableList']]],
   ['reset_11',['Reset',['../classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0',1,'gpgmm::d3d12::ResidencyList']]],
   ['residencylist_12',['ResidencyList',['../classgpgmm_1_1d3d12_1_1_residency_list.html#a499969f03411f459e9653c91023ef8eb',1,'gpgmm::d3d12::ResidencyList::ResidencyList()'],['../classgpgmm_1_1d3d12_1_1_residency_list.html#ab4d72cc3d8f719d4a0c026825e775008',1,'gpgmm::d3d12::ResidencyList::ResidencyList(const ResidencyList &amp;)=default']]],
-  ['resourceheapallocator_13',['ResourceHeapAllocator',['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a1d334953ca8e52721d4c13db043d3947',1,'gpgmm::d3d12::ResourceHeapAllocator']]],
+  ['resourceheapallocator_13',['ResourceHeapAllocator',['../classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#aed26145aaff9cbcaa45940e4577e2e04',1,'gpgmm::d3d12::ResourceHeapAllocator']]],
   ['returntopool_14',['ReturnToPool',['../classgpgmm_1_1_indexed_memory_pool.html#a17876020c90c8f9918020be1163f7942',1,'gpgmm::IndexedMemoryPool::ReturnToPool()'],['../classgpgmm_1_1_l_i_f_o_memory_pool.html#ac3c46d6306af5c1ac6c718b0aa5d756a',1,'gpgmm::LIFOMemoryPool::ReturnToPool()'],['../classgpgmm_1_1_memory_pool.html#ae5705abce522e9be408dc3f9bbb0c0ca',1,'gpgmm::MemoryPool::ReturnToPool()']]],
   ['roundup_15',['RoundUp',['../namespacegpgmm.html#a46ca514fe8b903d6c42010074de2d57e',1,'gpgmm']]],
   ['runsingletest_16',['RunSingleTest',['../class_capture_replay_test_with_params.html#a47923c53c7df83231c5adb2fab79b104',1,'CaptureReplayTestWithParams']]],
