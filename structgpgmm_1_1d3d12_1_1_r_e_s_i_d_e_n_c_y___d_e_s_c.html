@@ -106,9 +106,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aac67b1916a22771093bc77268102f36b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b">Budget</a></td></tr>
 <tr class="memdesc:aac67b1916a22771093bc77268102f36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specify the budget, in bytes, for residency.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b">More...</a><br /></td></tr>
 <tr class="separator:aac67b1916a22771093bc77268102f36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab114ef99d3f1af9c49f493c1004b315f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab114ef99d3f1af9c49f493c1004b315f">EvictSizeInBytes</a></td></tr>
-<tr class="memdesc:ab114ef99d3f1af9c49f493c1004b315f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total amount of memory, in bytes, to evict from residency at once, should there not be enough budget left.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab114ef99d3f1af9c49f493c1004b315f">More...</a><br /></td></tr>
-<tr class="separator:ab114ef99d3f1af9c49f493c1004b315f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53a630fb905d3b72bbeffe1b00030b82"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a53a630fb905d3b72bbeffe1b00030b82">EvictBatchSize</a></td></tr>
+<tr class="memdesc:a53a630fb905d3b72bbeffe1b00030b82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the amount of memory, in bytes, to evict from residency at once, should there not be enough budget left.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a53a630fb905d3b72bbeffe1b00030b82">More...</a><br /></td></tr>
+<tr class="separator:a53a630fb905d3b72bbeffe1b00030b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e773d9b18c48091bb224aba4980b603"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603">InitialFenceValue</a></td></tr>
 <tr class="memdesc:a6e773d9b18c48091bb224aba4980b603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial fence value to use when managing heaps for residency.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a6e773d9b18c48091bb224aba4980b603">More...</a><br /></td></tr>
 <tr class="separator:a6e773d9b18c48091bb224aba4980b603"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,20 +171,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab114ef99d3f1af9c49f493c1004b315f" name="ab114ef99d3f1af9c49f493c1004b315f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab114ef99d3f1af9c49f493c1004b315f">&#9670;&#160;</a></span>EvictSizeInBytes</h2>
+<a id="a53a630fb905d3b72bbeffe1b00030b82" name="a53a630fb905d3b72bbeffe1b00030b82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a630fb905d3b72bbeffe1b00030b82">&#9670;&#160;</a></span>EvictBatchSize</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t gpgmm::d3d12::RESIDENCY_DESC::EvictSizeInBytes</td>
+          <td class="memname">uint64_t gpgmm::d3d12::RESIDENCY_DESC::EvictBatchSize</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Total amount of memory, in bytes, to evict from residency at once, should there not be enough budget left. </p>
-<p >Optional parameter. When 0 is specified, the API will use a evict size of 50MB. </p>
+<p>Specifies the amount of memory, in bytes, to evict from residency at once, should there not be enough budget left. </p>
+<p >Optional parameter. When 0 is specified, the API will automatically set the video memory evict size to 50MB. </p>
 
 </div>
 </div>
