@@ -475,22 +475,20 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
+                        D3D12_HEAP_PROPERTIES heapProperties = {};
+                        heapProperties.Type = static_cast<D3D12_HEAP_TYPE>(
+                            args["Heap"]["Properties"]["Type"].asInt());
+                        heapProperties.CPUPageProperty = static_cast<D3D12_CPU_PAGE_PROPERTY>(
+                            args["Heap"]["Properties"]["CPUPageProperty"].asInt());
+                        heapProperties.MemoryPoolPreference = static_cast<D3D12_MEMORY_POOL>(
+                            args["Heap"]["Properties"]["MemoryPoolPreference"].asInt());
+
                         HEAP_DESC resourceHeapDesc = {};
                         resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
                         resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
                         resourceHeapDesc.IsExternal = args["IsExternal"].asBool();
-                        resourceHeapDesc.HeapType = static_cast<D3D12_HEAP_TYPE>(
-                            args["Heap"]["Properties"]["Type"].asInt());
-
-                        D3D12_HEAP_PROPERTIES heapProperties = {};
-                        heapProperties.Type = resourceHeapDesc.HeapType;
-
-                        D3D12_HEAP_DESC heapDesc = {};
-                        heapDesc.Properties = heapProperties;
-                        heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
-                        heapDesc.Alignment = resourceHeapDesc.Alignment;
-                        heapDesc.Flags =
-                            static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
+                        resourceHeapDesc.MemorySegmentGroup =
+                            GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
 
                         ResidencyManager* residencyManager =
                             createdResidencyManagerToID[currentResidencyID].Get();
@@ -500,6 +498,13 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_SUCCEEDED(Heap::CreateHeap(
                             resourceHeapDesc, residencyManager,
                             [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+                                D3D12_HEAP_DESC heapDesc = {};
+                                heapDesc.Properties = heapProperties;
+                                heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+                                heapDesc.Alignment = resourceHeapDesc.Alignment;
+                                heapDesc.Flags =
+                                    static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
+
                                 ComPtr<ID3D12Heap> heap;
                                 ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
 

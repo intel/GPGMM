@@ -542,23 +542,24 @@ namespace gpgmm::d3d12 {
                           ComPtr<ResidencyManager> residencyManager,
                           std::unique_ptr<Caps> caps);
 
-        std::unique_ptr<MemoryAllocator> CreateResourceSubAllocator(
+        std::unique_ptr<MemoryAllocator> CreateResourceHeapSubAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_TYPE heapType,
+            D3D12_HEAP_PROPERTIES heapProperties,
             uint64_t heapAlignment);
 
         std::unique_ptr<MemoryAllocator> CreateResourceHeapAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_TYPE heapType,
+            D3D12_HEAP_PROPERTIES heapProperties,
             uint64_t heapAlignment);
 
         std::unique_ptr<MemoryAllocator> CreateSmallBufferAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_TYPE heapType,
-            uint64_t heapAlignment);
+            D3D12_HEAP_PROPERTIES heapProperties,
+            uint64_t heapAlignment,
+            D3D12_RESOURCE_STATES initialResourceState);
 
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
@@ -567,7 +568,7 @@ namespace gpgmm::d3d12 {
                                      D3D12_RESOURCE_STATES initialResourceState,
                                      ID3D12Resource** placedResourceOut);
 
-        HRESULT CreateCommittedResource(D3D12_HEAP_TYPE heapType,
+        HRESULT CreateCommittedResource(D3D12_HEAP_PROPERTIES heapProperties,
                                         D3D12_HEAP_FLAGS heapFlags,
                                         const D3D12_RESOURCE_ALLOCATION_INFO& info,
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,

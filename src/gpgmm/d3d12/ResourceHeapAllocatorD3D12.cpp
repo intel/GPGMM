@@ -28,14 +28,16 @@ namespace gpgmm::d3d12 {
 
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
-                                                 D3D12_HEAP_TYPE heapType,
+                                                 D3D12_HEAP_PROPERTIES heapProperties,
                                                  D3D12_HEAP_FLAGS heapFlags,
+                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                                  bool alwaysInBudget)
         : mResidencyManager(residencyManager),
           mDevice(device),
-          mHeapType(heapType),
+          mHeapProperties(heapProperties),
           mHeapFlags(heapFlags),
-          mAlwaysInBudget(alwaysInBudget) {
+          mAlwaysInBudget(alwaysInBudget),
+          mMemorySegment(memorySegment) {
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -64,17 +66,14 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.DebugName = "Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
         resourceHeapDesc.AlwaysInBudget = mAlwaysInBudget;
-        resourceHeapDesc.HeapType = mHeapType;
+        resourceHeapDesc.MemorySegmentGroup = mMemorySegment;
 
         Heap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(
                 resourceHeapDesc, mResidencyManager,
                 [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                    D3D12_HEAP_PROPERTIES heapProperties = {};
-                    heapProperties.Type = resourceHeapDesc.HeapType;
-
                     D3D12_HEAP_DESC heapDesc = {};
-                    heapDesc.Properties = heapProperties;
+                    heapDesc.Properties = mHeapProperties;
                     heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
                     heapDesc.Alignment = resourceHeapDesc.Alignment;
                     heapDesc.Flags = mHeapFlags;

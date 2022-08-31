@@ -1,4 +1,4 @@
-From 8ef270d881c9f8d91a3acbaa7f8fbc572baa3d57 Mon Sep 17 00:00:00 2001
+From 887577ccf4be7e2b74733c5c10b9051da8c3af38 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -14,6 +14,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/Device.cpp                    |   1 +
  src/dawn/native/Toggles.cpp                   |   8 ++
  src/dawn/native/Toggles.h                     |   2 +
+ src/dawn/native/d3d12/AdapterD3D12.cpp        |   4 +
  src/dawn/native/d3d12/BufferD3D12.cpp         |  51 ++++----
  src/dawn/native/d3d12/BufferD3D12.h           |   7 +-
  src/dawn/native/d3d12/CommandBufferD3D12.cpp  |   9 +-
@@ -22,7 +23,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/D3D12Backend.cpp        |  17 ++-
  src/dawn/native/d3d12/DeviceD3D12.cpp         | 114 +++++++++++++++---
  src/dawn/native/d3d12/DeviceD3D12.h           |  20 +--
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  79 +++++++-----
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  80 +++++++-----
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  11 +-
  src/dawn/native/d3d12/StagingBufferD3D12.cpp  |  22 +---
  src/dawn/native/d3d12/StagingBufferD3D12.h    |   4 +-
@@ -31,7 +32,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 26 files changed, 325 insertions(+), 162 deletions(-)
+ 27 files changed, 329 insertions(+), 163 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -189,6 +190,21 @@ index 341db798f..9e760e05b 100644
      SkipValidation,
      VulkanUseD32S8,
      VulkanUseS8,
+diff --git a/src/dawn/native/d3d12/AdapterD3D12.cpp b/src/dawn/native/d3d12/AdapterD3D12.cpp
+index 4ac41348f..8ea7e6272 100644
+--- a/src/dawn/native/d3d12/AdapterD3D12.cpp
++++ b/src/dawn/native/d3d12/AdapterD3D12.cpp
+@@ -363,6 +363,10 @@ MaybeError Adapter::InitializeDebugLayerFilters() {
+         // Even this means that no vertex buffer view has been set in D3D12 backend.
+         // https://crbug.com/dawn/1255
+         D3D12_MESSAGE_ID_COMMAND_LIST_DRAW_VERTEX_BUFFER_NOT_SET,
++        
++        // Dawn doesn't specify the smallest range possible but D3D12 still warns of inefficiencies.
++        D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
++        D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE,
+     };
+ 
+     // Create a retrieval filter with a deny list to suppress messages.
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
 index 0488fce6a..6b0dd1627 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
@@ -725,7 +741,7 @@ index 99b03e396..b1cf46fd0 100644
      static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup = 3 * kMaxSamplersPerShaderStage;
      static constexpr uint32_t kMaxViewDescriptorsPerBindGroup =
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
-index fe99a63ac..e169435f9 100644
+index fe99a63ac..1ecd21da3 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 @@ -93,7 +93,8 @@ ShaderVisibleDescriptorAllocator::ShaderVisibleDescriptorAllocator(
@@ -763,7 +779,7 @@ index fe99a63ac..e169435f9 100644
 +    heapDesc.SizeInBytes = mSizeIncrement * descriptorCount;
 +
 +    heapDesc.DebugName = "Shader visible heap";
-+    heapDesc.MemorySegment = gpgmm::d3d12::RESIDENCY_SEGMENT_LOCAL;
++    heapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 +
 +    auto createHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
 +        ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap;
@@ -836,15 +852,16 @@ index fe99a63ac..e169435f9 100644
  }
  
  bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
-@@ -244,12 +259,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
+@@ -243,13 +258,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
+             allocation.GetHeapSerial() == mHeapSerial);
  }
  
- ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(
+-ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(
 -    ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap,
 -    uint64_t size)
 -    : Pageable(d3d12DescriptorHeap, MemorySegment::Local, size),
 -      mD3d12DescriptorHeap(std::move(d3d12DescriptorHeap)) {}
-+    ComPtr<gpgmm::d3d12::Heap> descriptorHeap)
++ShaderVisibleDescriptorHeap::ShaderVisibleDescriptorHeap(ComPtr<gpgmm::d3d12::Heap> descriptorHeap)
 +    : mDescriptorHeap(std::move(descriptorHeap)) {}
  
  ID3D12DescriptorHeap* ShaderVisibleDescriptorHeap::GetD3D12DescriptorHeap() const {

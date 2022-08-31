@@ -26,9 +26,7 @@ namespace gpgmm::d3d12 {
     bool IsDepthFormat(DXGI_FORMAT format);
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
     HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name);
-    DXGI_MEMORY_SEGMENT_GROUP GetDefaultMemorySegmentGroup(ID3D12Device* device,
-                                                           D3D12_HEAP_TYPE heapType,
-                                                           bool isUMA);
+    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool, bool isUMA);
 
 }  // namespace gpgmm::d3d12
 
