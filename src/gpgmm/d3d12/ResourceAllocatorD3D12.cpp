@@ -213,6 +213,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES GetInitialResourceState(D3D12_HEAP_TYPE heapType) {
             switch (heapType) {
                 case D3D12_HEAP_TYPE_DEFAULT:
+                    return D3D12_RESOURCE_STATE_COMMON;
                 case D3D12_HEAP_TYPE_UPLOAD:
                     return D3D12_RESOURCE_STATE_GENERIC_READ;
                 case D3D12_HEAP_TYPE_READBACK:
