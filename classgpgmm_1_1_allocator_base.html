@@ -77,7 +77,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classgpgmm_1_1_allocator_base-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">gpgmm::AllocatorBase Class Reference</div></div>
+  <div class="headertitle"><div class="title">gpgmm::AllocatorBase Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -115,8 +115,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae4b400b35adb6119cc634fb6771e0e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a620e5f1017d4a2f92a8684d5e71f5415"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#a620e5f1017d4a2f92a8684d5e71f5415">~AllocatorBase</a> ()=default</td></tr>
 <tr class="separator:a620e5f1017d4a2f92a8684d5e71f5415"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac58e8d4ec1e859b3f8182b7752d67c17"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#ac58e8d4ec1e859b3f8182b7752d67c17">GetTypename</a> () const</td></tr>
-<tr class="separator:ac58e8d4ec1e859b3f8182b7752d67c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab98a264a232c5786123cb2e9afc56c05"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_allocator_base.html#ab98a264a232c5786123cb2e9afc56c05">GetTypename</a> () const =0</td></tr>
+<tr class="separator:ab98a264a232c5786123cb2e9afc56c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -182,8 +182,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac58e8d4ec1e859b3f8182b7752d67c17" name="ac58e8d4ec1e859b3f8182b7752d67c17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac58e8d4ec1e859b3f8182b7752d67c17">&#9670;&#160;</a></span>GetTypename()</h2>
+<a id="ab98a264a232c5786123cb2e9afc56c05" name="ab98a264a232c5786123cb2e9afc56c05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab98a264a232c5786123cb2e9afc56c05">&#9670;&#160;</a></span>GetTypename()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -200,12 +200,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a65d972d0891aed4d977f736f3feae024">gpgmm::BuddyBlockAllocator</a>, <a class="el" href="classgpgmm_1_1_buddy_memory_allocator.html#ac5a438a6499e0dfd946c1f0ba56a0dc2">gpgmm::BuddyMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_conditional_memory_allocator.html#ae389e6c5c1035b1be2a52ec0d6e88d08">gpgmm::ConditionalMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_dedicated_memory_allocator.html#a108dbd7f9ee677b84d0d092b057713a7">gpgmm::DedicatedMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_memory_allocator.html#a0979d8f6eac2fe544394e09e33d11335">gpgmm::MemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#acd1bcd1e12766e9d38bd24b79a3c2091">gpgmm::PooledMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_segmented_memory_allocator.html#a813b84ad3c4876f50ff64bc5ebaf9d3f">gpgmm::SegmentedMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_slab_block_allocator.html#adcb284c61483264c7f77e1ad2f784773">gpgmm::SlabBlockAllocator</a>, <a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#ad9fab4999d0537d5e2908022d8dd18ee">gpgmm::SlabMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#afa1ddab2e5b10a7a8140304bba950cbb">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a3b3807fd2c3f4f342b0113cb72bed149">gpgmm::d3d12::ResourceHeapAllocator</a>.</p>
+<p>Implemented in <a class="el" href="classgpgmm_1_1_buddy_block_allocator.html#a65d972d0891aed4d977f736f3feae024">gpgmm::BuddyBlockAllocator</a>, <a class="el" href="classgpgmm_1_1_buddy_memory_allocator.html#ac5a438a6499e0dfd946c1f0ba56a0dc2">gpgmm::BuddyMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_conditional_memory_allocator.html#ae389e6c5c1035b1be2a52ec0d6e88d08">gpgmm::ConditionalMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_dedicated_memory_allocator.html#a108dbd7f9ee677b84d0d092b057713a7">gpgmm::DedicatedMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_memory_allocator.html#a0979d8f6eac2fe544394e09e33d11335">gpgmm::MemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#acd1bcd1e12766e9d38bd24b79a3c2091">gpgmm::PooledMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_segmented_memory_allocator.html#a813b84ad3c4876f50ff64bc5ebaf9d3f">gpgmm::SegmentedMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_slab_block_allocator.html#adcb284c61483264c7f77e1ad2f784773">gpgmm::SlabBlockAllocator</a>, <a class="el" href="classgpgmm_1_1_slab_memory_allocator.html#ad9fab4999d0537d5e2908022d8dd18ee">gpgmm::SlabMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#afa1ddab2e5b10a7a8140304bba950cbb">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html#a3b3807fd2c3f4f342b0113cb72bed149">gpgmm::d3d12::ResourceHeapAllocator</a>.</p>
 
 </div>
 </div>
