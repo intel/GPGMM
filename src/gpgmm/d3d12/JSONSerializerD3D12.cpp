@@ -251,7 +251,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("IsUMA", desc.IsUMA);
         dict.AddItem("VideoMemoryBudget", desc.VideoMemoryBudget);
         dict.AddItem("Budget", desc.Budget);
-        dict.AddItem("EvictBatchSize", desc.EvictBatchSize);
+        dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
         dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
         return dict;
     }
