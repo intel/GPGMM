@@ -38,6 +38,9 @@ namespace gpgmm::d3d12 {
         // Allows a resource to be shared between multiple command queues.
         bool IsResourceAccessAlwaysCoherent() const;
 
+        // Specifies if the adapter uses a Unified Memory Architecture (UMA).
+        bool IsAdapterUMA() const;
+
       private:
         Caps() = default;
 
@@ -45,6 +48,7 @@ namespace gpgmm::d3d12 {
         uint64_t mMaxResourceHeapSize = 0;
         bool mIsCreateHeapNotResidentSupported = false;
         bool mIsResourceAccessAlwaysCoherent = false;
+        bool mIsAdapterUMA = false;
     };
 
 }  // namespace gpgmm::d3d12
