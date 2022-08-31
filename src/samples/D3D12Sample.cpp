@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gpgmm_d3d12.h>
-
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <wrl.h>
+
+#include <gpgmm_d3d12.h>
 
 HRESULT Init() {
     Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
