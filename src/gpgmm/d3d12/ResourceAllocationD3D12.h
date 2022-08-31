@@ -119,7 +119,7 @@ namespace gpgmm::d3d12 {
         Invalidates the CPU pointer to the specified subresource in the resource.
 
         @param subresource Specifies the index number of the subresource.
-        @param writtenRange A pointer to a D3D12_RANGE structure that describes the range of memory
+        @param pWrittenRange A pointer to a D3D12_RANGE structure that describes the range of memory
         to unmap.
         */
         void Unmap(uint32_t subresource = 0, const D3D12_RANGE* pWrittenRange = nullptr);
