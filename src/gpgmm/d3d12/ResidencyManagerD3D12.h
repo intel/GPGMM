@@ -224,7 +224,7 @@ namespace gpgmm::d3d12 {
         friend Heap;
         friend ResourceAllocator;
 
-        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> fence);
+        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> residencyFence);
 
         HRESULT EnsureInBudget(uint64_t bytesToEvict,
                                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
@@ -279,7 +279,7 @@ namespace gpgmm::d3d12 {
 
         std::mutex mMutex;
 
-        std::unique_ptr<Fence> mFence;
+        std::unique_ptr<Fence> mResidencyFence;
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;

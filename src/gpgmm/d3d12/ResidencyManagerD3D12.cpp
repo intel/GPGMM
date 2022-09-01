@@ -213,7 +213,7 @@ namespace gpgmm::d3d12 {
     }
 
     ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
-                                       std::unique_ptr<Fence> fence)
+                                       std::unique_ptr<Fence> residencyFence)
         : mDevice(descriptor.Device),
           mAdapter(descriptor.Adapter),
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
@@ -225,13 +225,13 @@ namespace gpgmm::d3d12 {
           mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
-          mFence(std::move(fence)),
+          mResidencyFence(std::move(residencyFence)),
           mThreadPool(ThreadPool::Create()) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
         ASSERT(mAdapter != nullptr);
-        ASSERT(mFence != nullptr);
+        ASSERT(mResidencyFence != nullptr);
     }
 
     ResidencyManager::~ResidencyManager() {
@@ -531,13 +531,13 @@ namespace gpgmm::d3d12 {
             // submission, it is because more memory is being used in a single command list than is
             // available. In this scenario, we cannot make any more resources resident and thrashing
             // must occur.
-            if (lastUsedFenceValue == mFence->GetCurrentFence()) {
+            if (lastUsedFenceValue == mResidencyFence->GetCurrentFence()) {
                 break;
             }
 
             // We must ensure that any previous use of a resource has completed before the resource
             // can be evicted.
-            ReturnIfFailed(mFence->WaitFor(lastUsedFenceValue));
+            ReturnIfFailed(mResidencyFence->WaitFor(lastUsedFenceValue));
 
             heap->RemoveFromList();
 
@@ -602,7 +602,7 @@ namespace gpgmm::d3d12 {
 
             // ResidencyList can contain duplicates. We can skip them by checking if the heap's last
             // used fence is the same as the current one.
-            if (heap->GetLastUsedFenceValue() == mFence->GetCurrentFence()) {
+            if (heap->GetLastUsedFenceValue() == mResidencyFence->GetCurrentFence()) {
                 continue;
             }
 
@@ -627,7 +627,7 @@ namespace gpgmm::d3d12 {
             // command list stay resident at least until that command list has finished execution.
             // Setting this serial unnecessarily can leave the LRU in a state where nothing is
             // eligible for eviction, even though some evictions may be possible.
-            heap->SetLastUsedFenceValue(mFence->GetCurrentFence());
+            heap->SetLastUsedFenceValue(mResidencyFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
             InsertHeapInternal(heap);
@@ -654,7 +654,7 @@ namespace gpgmm::d3d12 {
         // Queue and command-lists may not be specified since they are not capturable for playback.
         if (ppCommandLists != nullptr && pQueue != nullptr) {
             pQueue->ExecuteCommandLists(count, ppCommandLists);
-            ReturnIfFailed(mFence->Signal(pQueue));
+            ReturnIfFailed(mResidencyFence->Signal(pQueue));
         }
 
         // Keep video memory segments up-to-date. This must always happen because if the budget
@@ -690,7 +690,7 @@ namespace gpgmm::d3d12 {
         if (mDevice3 != nullptr) {
             ReturnIfSucceeded(mDevice3->EnqueueMakeResident(
                 D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
-                mFence->GetFence(), mFence->GetLastSignaledFence() + 1));
+                mResidencyFence->GetFence(), mResidencyFence->GetLastSignaledFence() + 1));
         }
 
         // A MakeResident call can fail if there's not enough available memory. This
