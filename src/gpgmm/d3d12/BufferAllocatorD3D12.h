@@ -26,7 +26,7 @@ namespace gpgmm::d3d12 {
     class BufferAllocator : public MemoryAllocator {
       public:
         BufferAllocator(ResourceAllocator* resourceAllocator,
-                        D3D12_HEAP_TYPE heapType,
+                        D3D12_HEAP_PROPERTIES heapProperties,
                         D3D12_HEAP_FLAGS heapFlags,
                         D3D12_RESOURCE_FLAGS resourceFlags,
                         D3D12_RESOURCE_STATES initialResourceState,
@@ -45,7 +45,7 @@ namespace gpgmm::d3d12 {
       private:
         ResourceAllocator* const mResourceAllocator;
 
-        const D3D12_HEAP_TYPE mHeapType;
+        const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;
         const D3D12_RESOURCE_FLAGS mResourceFlags;
         const D3D12_RESOURCE_STATES mInitialResourceState;

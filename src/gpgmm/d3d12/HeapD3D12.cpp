@@ -28,24 +28,12 @@ namespace gpgmm::d3d12 {
                              ResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
                              Heap** ppHeapOut) {
-        // Always use the memory segment specified.
-        DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup = {};
-        if (descriptor.MemorySegment == RESIDENCY_SEGMENT_LOCAL) {
-            memorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-        } else if (descriptor.MemorySegment == RESIDENCY_SEGMENT_NON_LOCAL) {
-            memorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
-        }
-
-        // Else, infer the memory segment using the heap type.
-        if (pResidencyManager != nullptr && descriptor.MemorySegment == RESIDENCY_SEGMENT_UNKNOWN) {
-            memorySegmentGroup = pResidencyManager->GetMemorySegmentGroup(descriptor.HeapType);
-        }
 
         // Ensure enough free memory exists before allocating to avoid an out-of-memory error
         // when over budget.
         if (pResidencyManager != nullptr && descriptor.AlwaysInBudget) {
-            ReturnIfFailed(
-                pResidencyManager->EnsureInBudget(descriptor.SizeInBytes, memorySegmentGroup));
+            ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
+                                                             descriptor.MemorySegmentGroup));
         }
 
         ComPtr<ID3D12Pageable> pageable;
@@ -54,7 +42,7 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
 
-        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), memorySegmentGroup,
+        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor.MemorySegmentGroup,
                                             descriptor.SizeInBytes, descriptor.Alignment,
                                             descriptor.IsExternal));
 

@@ -759,9 +759,4 @@ namespace gpgmm::d3d12 {
         mBudgetNotificationUpdateEvent = nullptr;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetMemorySegmentGroup(
-        D3D12_HEAP_TYPE heapType) const {
-        return GetDefaultMemorySegmentGroup(mDevice.Get(), heapType, mIsUMA);
-    }
-
 }  // namespace gpgmm::d3d12

@@ -31,18 +31,6 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
-    /** \enum RESIDENCY_SEGMENT
-    Specifies which type of segment the heap belongs to.
-
-    RESIDENCY_SEGMENT is equivelent to DXGI_MEMORY_SEGMENT_GROUP but also has
-    RESIDENCY_SEGMENT_UNKNOWN.
-    */
-    enum RESIDENCY_SEGMENT {
-        RESIDENCY_SEGMENT_UNKNOWN = 0,
-        RESIDENCY_SEGMENT_LOCAL = 1,
-        RESIDENCY_SEGMENT_NON_LOCAL = 2,
-    };
-
     /** \struct HEAP_INFO
     Additional information about the heap.
     */
@@ -68,12 +56,6 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief Specifies the type of heap.
-
-        When resident, heaps reside in a particular video segment.
-        */
-        D3D12_HEAP_TYPE HeapType;
-
         /** \brief Requires the heap to be created in budget.
          */
         bool AlwaysInBudget;
@@ -88,7 +70,7 @@ namespace gpgmm::d3d12 {
 
         Allows any heap to specify a segment which does not have a attributed heap type.
         */
-        RESIDENCY_SEGMENT MemorySegment;
+        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
 
         /** \brief Debug name associated with the heap.
          */

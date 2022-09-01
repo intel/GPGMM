@@ -114,7 +114,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
 
     HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
-    resourceHeapDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+    resourceHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     ASSERT_SUCCEEDED(
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, nullptr));
@@ -248,8 +248,11 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+    D3D12_HEAP_PROPERTIES heapProperties =
+        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
+
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
+        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
     // Keep allocating until we reach the budget.
@@ -310,8 +313,11 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetUsingBudgetNotifications) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+    D3D12_HEAP_PROPERTIES heapProperties =
+        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
+
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
+        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
@@ -354,8 +360,11 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+    D3D12_HEAP_PROPERTIES heapProperties =
+        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
+
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetDefaultMemorySegmentGroup(mDevice.Get(), bufferAllocationDesc.HeapType, mIsUMA);
+        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
     while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
