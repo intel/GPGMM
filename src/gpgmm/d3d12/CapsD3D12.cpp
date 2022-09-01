@@ -14,8 +14,12 @@
 
 #include "gpgmm/d3d12/CapsD3D12.h"
 
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Limits.h"
+#include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/Utils.h"
+#include "gpgmm/utils/WindowsUtils.h"
 
 #include <memory>
 
@@ -66,6 +70,15 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
+    HRESULT GetMaxResourceHeapTierSupported(ID3D12Device* device,
+                                            D3D12_RESOURCE_HEAP_TIER* maxResourceHeapTierOut) {
+        D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
+        ReturnIfFailed(
+            device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
+        *maxResourceHeapTierOut = options.ResourceHeapTier;
+        return S_OK;
+    }
+
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
         DXGI_ADAPTER_DESC adapterDesc;
@@ -86,6 +99,27 @@ namespace gpgmm::d3d12 {
         if (adapterDesc.VendorId == kIntel_VkVendor) {
             caps->mIsResourceAccessAlwaysCoherent = true;
         }
+
+        // Dump log for debugging purposes.
+        DebugLog() << "GPU: " << WCharToUTF8(adapterDesc.Description)
+                   << " (device: " << ToHexStr(adapterDesc.DeviceId)
+                   << ", vendor: " << ToHexStr(adapterDesc.VendorId) << ")";
+        DebugLog() << "System memory: "
+                   << GPGMM_BYTES_TO_GB(adapterDesc.SharedSystemMemory +
+                                        adapterDesc.DedicatedSystemMemory)
+                   << " GBs"
+                   << " (" << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedSystemMemory)
+                   << " dedicated) ";
+
+        DebugLog() << "Unified memory architecture: " << ((arch.UMA) ? "yes" : "no")
+                   << ((arch.CacheCoherentUMA) ? " (cache-coherent)" : "");
+        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_MB(caps->GetMaxResourceSize())
+                   << " MBs";
+        DebugLog() << "Max resource heap tier: " << caps->GetMaxResourceHeapTierSupported();
+        DebugLog() << "Max resource heap size: "
+                   << GPGMM_BYTES_TO_GB(caps->GetMaxResourceHeapSize()) << " GBs";
+        DebugLog() << "Creation of non-resident heaps: "
+                   << ((caps->IsCreateHeapNotResidentSupported()) ? "Supported" : "Not supported");
 
         *capsOut = caps.release();
         return S_OK;
@@ -109,6 +143,10 @@ namespace gpgmm::d3d12 {
 
     bool Caps::IsAdapterUMA() const {
         return mIsAdapterUMA;
+    }
+
+    bool Caps::GetMaxResourceHeapTierSupported() const {
+        return mMaxResourceHeapTier;
     }
 
 }  // namespace gpgmm::d3d12
