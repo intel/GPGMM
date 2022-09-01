@@ -15,11 +15,9 @@
 #ifndef GPGMM_COMMON_ALLOCATOR_H_
 #define GPGMM_COMMON_ALLOCATOR_H_
 
-#include "gpgmm/utils/NonCopyable.h"
-
 namespace gpgmm {
 
-    class AllocatorBase : public NonCopyable {
+    class AllocatorBase {
       public:
         AllocatorBase() = default;
         virtual ~AllocatorBase() = default;

@@ -17,7 +17,6 @@
 
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Log.h"
-#include "gpgmm/utils/NonCopyable.h"
 
 #include <sstream>
 #include <string>
@@ -39,7 +38,7 @@ namespace gpgmm {
         int ID;
     };
 
-    class EventMessage : public NonCopyable {
+    class EventMessage {
       public:
         EventMessage(const LogSeverity& level,
                      const char* name,

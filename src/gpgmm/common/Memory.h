@@ -15,7 +15,6 @@
 #ifndef GPGMM_COMMON_MEMORY_H_
 #define GPGMM_COMMON_MEMORY_H_
 
-#include "gpgmm/utils/NonCopyable.h"
 #include "gpgmm/utils/RefCount.h"
 
 namespace gpgmm {
@@ -26,7 +25,7 @@ namespace gpgmm {
 
     When memory is sub-allocated, it will have a non-zero refcount.
     */
-    class MemoryBase : public NonCopyable {
+    class MemoryBase {
       public:
         /** \brief Constructs a memory object of the specified size and alignment.
 

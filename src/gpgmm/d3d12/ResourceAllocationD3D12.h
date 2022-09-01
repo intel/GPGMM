@@ -20,7 +20,6 @@
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
-#include "gpgmm/utils/NonCopyable.h"
 #include "include/gpgmm_export.h"
 
 namespace gpgmm::d3d12 {
@@ -91,7 +90,6 @@ namespace gpgmm::d3d12 {
     operations with it (eg. Map, Unmap, etc).
     */
     class GPGMM_EXPORT ResourceAllocation final : public MemoryAllocation,
-                                                  public NonCopyable,
                                                   public DebugObject,
                                                   public IUnknownImpl {
       public:
