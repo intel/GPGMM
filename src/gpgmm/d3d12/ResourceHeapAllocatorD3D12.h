@@ -30,7 +30,6 @@ namespace gpgmm::d3d12 {
                               ID3D12Device* device,
                               D3D12_HEAP_PROPERTIES heapProperties,
                               D3D12_HEAP_FLAGS heapFlags,
-                              DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                               bool alwaysInBudget);
         ~ResourceHeapAllocator() override = default;
 
@@ -47,7 +46,6 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;
         const bool mAlwaysInBudget;
-        const DXGI_MEMORY_SEGMENT_GROUP mMemorySegment;
     };
 
 }  // namespace gpgmm::d3d12

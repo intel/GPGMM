@@ -35,6 +35,7 @@ namespace gpgmm::d3d12 {
     class Heap;
     class ResidencyList;
     class ResourceAllocator;
+    class ResourceHeapAllocator;
 
     /** \struct RESIDENCY_DESC
      Specify parameters when creating a residency manager.
@@ -223,6 +224,7 @@ namespace gpgmm::d3d12 {
       private:
         friend Heap;
         friend ResourceAllocator;
+        friend ResourceHeapAllocator;
 
         ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> residencyFence);
 
@@ -239,6 +241,8 @@ namespace gpgmm::d3d12 {
 
         friend BudgetUpdateTask;
         HRESULT UpdateMemorySegments();
+
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool) const;
 
         const char* GetTypename() const;
 
