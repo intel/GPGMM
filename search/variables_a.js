@@ -1,7 +1,7 @@
 var searchData=
 [
   ['madapter_0',['mAdapter',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a5abe7985860427acf3da46c21711e83a',1,'gpgmm::d3d12::D3D12TestBase']]],
-  ['mallocator_1',['mAllocator',['../classgpgmm_1_1_memory_allocation.html#a1f5fddabf32874b04a4175515ab67ca2',1,'gpgmm::MemoryAllocation::mAllocator()'],['../class_dummy_buddy_block_allocator.html#a1a6219075023012a5cd9d0c1692c6ecc',1,'DummyBuddyBlockAllocator::mAllocator()']]],
+  ['mallocator_1',['mAllocator',['../classgpgmm_1_1_memory_allocation.html#a042c293174ad61e3b8638737cbc0b240',1,'gpgmm::MemoryAllocation::mAllocator()'],['../class_dummy_buddy_block_allocator.html#a1a6219075023012a5cd9d0c1692c6ecc',1,'DummyBuddyBlockAllocator::mAllocator()']]],
   ['mapmemory_2',['MapMemory',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a1ea9a9da65261c9a1d123a36e3b1376e',1,'gpgmm::vk::VulkanFunctions']]],
   ['maxresourceheapsize_3',['MaxResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a78af20a2888ae8d89880b0a6554c9cb7',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['mcapturedmemorystats_4',['mCapturedMemoryStats',['../class_d3_d12_event_trace_replay.html#af8ccadde0ee707d67ebcfd2e0b50dada',1,'D3D12EventTraceReplay']]],

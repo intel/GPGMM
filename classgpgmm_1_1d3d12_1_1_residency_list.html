@@ -84,7 +84,7 @@ $(function() {
 <p>Represents a list of heaps which will be "made resident" upon executing a command-list.  
  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#details">More...</a></p>
 
-<p><code>#include &lt;ResidencyListD3D12.h&gt;</code></p>
+<p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -103,6 +103,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">Reset</a> ()</td></tr>
 <tr class="memdesc:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset this residency list.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">More...</a><br /></td></tr>
 <tr class="separator:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a499969f03411f459e9653c91023ef8eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a499969f03411f459e9653c91023ef8eb">ResidencyList</a> ()</td></tr>
+<tr class="separator:a499969f03411f459e9653c91023ef8eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f5d58aebff0818b6d7f14bd95420036"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a3f5d58aebff0818b6d7f14bd95420036">Add</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *pHeap)</td></tr>
+<tr class="separator:a3f5d58aebff0818b6d7f14bd95420036"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#afa70bba7c64c4748861fe9b6c6dad3a0">Reset</a> ()</td></tr>
+<tr class="separator:afa70bba7c64c4748861fe9b6c6dad3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
@@ -110,10 +116,13 @@ Public Member Functions</h2></td></tr>
 <p >Without <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html" title="Represents a list of heaps which will be &quot;made resident&quot; upon executing a command-list.">ResidencyList</a>, the application would need to call <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532" title="Locks the specified heap.">ResidencyManager::LockHeap</a> and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668" title="Unlocks the specified heap.">ResidencyManager::UnlockHeap</a> for each heap before and after every GPU command or command-list being executed. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a499969f03411f459e9653c91023ef8eb" name="a499969f03411f459e9653c91023ef8eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a499969f03411f459e9653c91023ef8eb">&#9670;&#160;</a></span>ResidencyList() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a499969f03411f459e9653c91023ef8eb">&#9670;&#160;</a></span>ResidencyList() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">gpgmm::d3d12::ResidencyList::ResidencyList </td>
@@ -122,6 +131,11 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Create a residency list or collection of heaps to manage together for residency. </p>
@@ -146,7 +160,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ab4d72cc3d8f719d4a0c026825e775008" name="ab4d72cc3d8f719d4a0c026825e775008"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4d72cc3d8f719d4a0c026825e775008">&#9670;&#160;</a></span>ResidencyList() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4d72cc3d8f719d4a0c026825e775008">&#9670;&#160;</a></span>ResidencyList() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -171,9 +185,26 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a499969f03411f459e9653c91023ef8eb" name="a499969f03411f459e9653c91023ef8eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a499969f03411f459e9653c91023ef8eb">&#9670;&#160;</a></span>ResidencyList() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gpgmm::d3d12::ResidencyList::ResidencyList </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a3f5d58aebff0818b6d7f14bd95420036" name="a3f5d58aebff0818b6d7f14bd95420036"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f5d58aebff0818b6d7f14bd95420036">&#9670;&#160;</a></span>Add()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f5d58aebff0818b6d7f14bd95420036">&#9670;&#160;</a></span>Add() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,6 +227,24 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>S_OK if heap was added, else error. </dd></dl>
+
+</div>
+</div>
+<a id="a3f5d58aebff0818b6d7f14bd95420036" name="a3f5d58aebff0818b6d7f14bd95420036"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f5d58aebff0818b6d7f14bd95420036">&#9670;&#160;</a></span>Add() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::ResidencyList::Add </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td>
+          <td class="paramname"><em>pHeap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -226,7 +275,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="afa70bba7c64c4748861fe9b6c6dad3a0" name="afa70bba7c64c4748861fe9b6c6dad3a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa70bba7c64c4748861fe9b6c6dad3a0">&#9670;&#160;</a></span>Reset()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa70bba7c64c4748861fe9b6c6dad3a0">&#9670;&#160;</a></span>Reset() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,9 +294,28 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afa70bba7c64c4748861fe9b6c6dad3a0" name="afa70bba7c64c4748861fe9b6c6dad3a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa70bba7c64c4748861fe9b6c6dad3a0">&#9670;&#160;</a></span>Reset() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::ResidencyList::Reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/d3d12/<a class="el" href="_residency_list_d3_d12_8h.html">ResidencyListD3D12.h</a></li>
+<li>src/include/min/<a class="el" href="min_2gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 <li>src/gpgmm/d3d12/<a class="el" href="_residency_list_d3_d12_8cpp.html">ResidencyListD3D12.cpp</a></li>
+<li>src/include/min/<a class="el" href="gpgmm__d3d12_8cpp.html">gpgmm_d3d12.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
