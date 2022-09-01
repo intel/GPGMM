@@ -41,11 +41,15 @@ namespace gpgmm::d3d12 {
         // Specifies if the adapter uses a Unified Memory Architecture (UMA).
         bool IsAdapterUMA() const;
 
+        // Specifies if a texture and buffer can belong in the same heap.
+        bool GetMaxResourceHeapTierSupported() const;
+
       private:
         Caps() = default;
 
         uint64_t mMaxResourceSize = 0;
         uint64_t mMaxResourceHeapSize = 0;
+        D3D12_RESOURCE_HEAP_TIER mMaxResourceHeapTier;
         bool mIsCreateHeapNotResidentSupported = false;
         bool mIsResourceAccessAlwaysCoherent = false;
         bool mIsAdapterUMA = false;
