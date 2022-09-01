@@ -30,14 +30,12 @@ namespace gpgmm::d3d12 {
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_PROPERTIES heapProperties,
                                                  D3D12_HEAP_FLAGS heapFlags,
-                                                 DXGI_MEMORY_SEGMENT_GROUP memorySegment,
                                                  bool alwaysInBudget)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapProperties(heapProperties),
           mHeapFlags(heapFlags),
-          mAlwaysInBudget(alwaysInBudget),
-          mMemorySegment(memorySegment) {
+          mAlwaysInBudget(alwaysInBudget){
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -66,7 +64,11 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.DebugName = "Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
         resourceHeapDesc.AlwaysInBudget = mAlwaysInBudget;
-        resourceHeapDesc.MemorySegmentGroup = mMemorySegment;
+
+        if (mResidencyManager != nullptr) {
+            resourceHeapDesc.MemorySegmentGroup =
+                mResidencyManager->GetMemorySegmentGroup(mHeapProperties.MemoryPoolPreference);
+        }
 
         Heap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(

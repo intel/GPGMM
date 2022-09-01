@@ -758,4 +758,9 @@ namespace gpgmm::d3d12 {
         mBudgetNotificationUpdateEvent = nullptr;
     }
 
+    DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetMemorySegmentGroup(
+        D3D12_MEMORY_POOL memoryPool) const {
+        return d3d12::GetMemorySegmentGroup(memoryPool, mIsUMA);
+    }
+
 }  // namespace gpgmm::d3d12

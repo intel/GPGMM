@@ -569,10 +569,8 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties,
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
-            std::make_unique<ResourceHeapAllocator>(
-                mResidencyManager.Get(), mDevice.Get(), heapProperties, heapFlags,
-                GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA()),
-                mIsAlwaysInBudget);
+            std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
+                                                    heapProperties, heapFlags, mIsAlwaysInBudget);
 
         if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
             switch (descriptor.PoolAlgorithm) {
@@ -856,8 +854,8 @@ namespace gpgmm::d3d12 {
 
         // Limit available memory to unused budget when residency is enabled.
         if (mResidencyManager != nullptr) {
-            const DXGI_MEMORY_SEGMENT_GROUP segment = GetMemorySegmentGroup(
-                customHeapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+            const DXGI_MEMORY_SEGMENT_GROUP segment =
+                mResidencyManager->GetMemorySegmentGroup(customHeapProperties.MemoryPoolPreference);
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(segment);
 
@@ -1076,8 +1074,6 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
         resourceHeapDesc.IsExternal = true;
-        resourceHeapDesc.MemorySegmentGroup =
-            GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
 
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(Heap::CreateHeap(
@@ -1150,8 +1146,11 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.DebugName = "Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.AlwaysInBudget = mIsAlwaysInBudget;
-        resourceHeapDesc.MemorySegmentGroup =
-            GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+
+        if (mResidencyManager != nullptr) {
+            resourceHeapDesc.MemorySegmentGroup =
+                mResidencyManager->GetMemorySegmentGroup(heapProperties.MemoryPoolPreference);
+        }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         Heap* resourceHeap = nullptr;
