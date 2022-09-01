@@ -86,15 +86,14 @@ $(function() {
 <p><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  
  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a></p>
 
-<p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
+<p><code>#include &lt;ResidencyManagerD3D12.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::d3d12::ResidencyManager:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classgpgmm_1_1d3d12_1_1_residency_manager.png" usemap="#gpgmm::d3d12::ResidencyManager_map" alt=""/>
   <map id="gpgmm::d3d12::ResidencyManager_map" name="gpgmm::d3d12::ResidencyManager_map">
-<area href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" alt="gpgmm::d3d12::IUnknownImpl" shape="rect" coords="109,56,317,80"/>
-<area href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" alt="gpgmm::d3d12::IUnknownImpl" shape="rect" coords="545,56,753,80"/>
+<area href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" alt="gpgmm::d3d12::IUnknownImpl" shape="rect" coords="0,56,208,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -120,57 +119,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5f843b77407214737dfeeee3477fb835"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5f843b77407214737dfeeee3477fb835">GetInfo</a> () const</td></tr>
 <tr class="memdesc:a5f843b77407214737dfeeee3477fb835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current residency manager usage.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5f843b77407214737dfeeee3477fb835">More...</a><br /></td></tr>
 <tr class="separator:a5f843b77407214737dfeeee3477fb835"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1979b48148ac12e5d628eaec13eb5ba1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a1979b48148ac12e5d628eaec13eb5ba1">~ResidencyManager</a> () override</td></tr>
-<tr class="separator:a1979b48148ac12e5d628eaec13eb5ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38adea03a5895f98b14540061b252532"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a38adea03a5895f98b14540061b252532">LockHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *pHeap)</td></tr>
-<tr class="separator:a38adea03a5895f98b14540061b252532"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3dcdc097bae5ac7a0fb83e42f4079668"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3dcdc097bae5ac7a0fb83e42f4079668">UnlockHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *pHeap)</td></tr>
-<tr class="separator:a3dcdc097bae5ac7a0fb83e42f4079668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2f9332f515d4312456bb59826f2d49c"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#af2f9332f515d4312456bb59826f2d49c">ExecuteCommandLists</a> (ID3D12CommandQueue *pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a> *const *ppResidencyLists, uint32_t count)</td></tr>
-<tr class="separator:af2f9332f515d4312456bb59826f2d49c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a9f3f1c562c37cbb65b1787e4bf192e"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a3a9f3f1c562c37cbb65b1787e4bf192e">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)</td></tr>
-<tr class="separator:a3a9f3f1c562c37cbb65b1787e4bf192e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d698f9c5e6e76ba6a4b3c157df151bb"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5d698f9c5e6e76ba6a4b3c157df151bb">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)</td></tr>
-<tr class="separator:a5d698f9c5e6e76ba6a4b3c157df151bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f843b77407214737dfeeee3477fb835"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a5f843b77407214737dfeeee3477fb835">GetInfo</a> () const</td></tr>
-<tr class="separator:a5f843b77407214737dfeeee3477fb835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html">gpgmm::d3d12::IUnknownImpl</a></td></tr>
 <tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
 <tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78d8d8aeb40c540ef6592ee600199b28 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a78d8d8aeb40c540ef6592ee600199b28">~IUnknownImpl</a> ()=default</td></tr>
-<tr class="separator:a78d8d8aeb40c540ef6592ee600199b28 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
-<tr class="separator:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
-<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
-<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
-<tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1efb129df43d1e141bfced89882e7ccf inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a1efb129df43d1e141bfced89882e7ccf">~IUnknownImpl</a> ()</td></tr>
-<tr class="separator:a1efb129df43d1e141bfced89882e7ccf inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
-<tr class="separator:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
-<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
-<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a654400af7d6e7341dbd65b959ad9d400 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a654400af7d6e7341dbd65b959ad9d400">~IUnknownImpl</a> ()=default</td></tr>
+<tr class="separator:a654400af7d6e7341dbd65b959ad9d400 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af148920b9a182a494b17e9d940a4539a inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#af148920b9a182a494b17e9d940a4539a">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
+<tr class="separator:af148920b9a182a494b17e9d940a4539a inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a498fba8b143ee29ba9c87de4c74de6e4 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a498fba8b143ee29ba9c87de4c74de6e4">AddRef</a> () override</td></tr>
+<tr class="separator:a498fba8b143ee29ba9c87de4c74de6e4 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e2c505fb4cf4e354835f847a4946ee5 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a5e2c505fb4cf4e354835f847a4946ee5">Release</a> () override</td></tr>
+<tr class="separator:a5e2c505fb4cf4e354835f847a4946ee5 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:addb4d0384c58741a33865fdcb83eb507"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:addb4d0384c58741a33865fdcb83eb507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#addb4d0384c58741a33865fdcb83eb507">More...</a><br /></td></tr>
 <tr class="separator:addb4d0384c58741a33865fdcb83eb507"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4e94a38b918eb46e91c5543be44c10b"><td class="memItemLeft" align="right" valign="top">static HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ad4e94a38b918eb46e91c5543be44c10b">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **ppResidencyManagerOut)</td></tr>
-<tr class="separator:ad4e94a38b918eb46e91c5543be44c10b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html">gpgmm::d3d12::IUnknownImpl</a></td></tr>
 <tr class="memitem:a6b125e84fc9a47302e56d20808a60fc3 inherit pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a6b125e84fc9a47302e56d20808a60fc3">DeleteThis</a> ()</td></tr>
 <tr class="separator:a6b125e84fc9a47302e56d20808a60fc3 inherit pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63928891a46a1952ba1fdf90155e91e3 inherit pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a63928891a46a1952ba1fdf90155e91e3">DeleteThis</a> ()</td></tr>
-<tr class="separator:a63928891a46a1952ba1fdf90155e91e3 inherit pro_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache. </p>
@@ -178,32 +149,7 @@ Additional Inherited Members</h2></td></tr>
 <p >Internally, the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> keeps the application in-budget by calling ID3D12Device::Evict and ID3D12Device::MakeResident to page-out or page-in heaps, respectively. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1979b48148ac12e5d628eaec13eb5ba1" name="a1979b48148ac12e5d628eaec13eb5ba1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1979b48148ac12e5d628eaec13eb5ba1">&#9670;&#160;</a></span>~ResidencyManager() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">gpgmm::d3d12::ResidencyManager::~ResidencyManager </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1979b48148ac12e5d628eaec13eb5ba1" name="a1979b48148ac12e5d628eaec13eb5ba1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1979b48148ac12e5d628eaec13eb5ba1">&#9670;&#160;</a></span>~ResidencyManager() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1979b48148ac12e5d628eaec13eb5ba1">&#9670;&#160;</a></span>~ResidencyManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +175,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="addb4d0384c58741a33865fdcb83eb507" name="addb4d0384c58741a33865fdcb83eb507"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addb4d0384c58741a33865fdcb83eb507">&#9670;&#160;</a></span>CreateResidencyManager() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#addb4d0384c58741a33865fdcb83eb507">&#9670;&#160;</a></span>CreateResidencyManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -273,44 +219,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ad4e94a38b918eb46e91c5543be44c10b" name="ad4e94a38b918eb46e91c5543be44c10b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4e94a38b918eb46e91c5543be44c10b">&#9670;&#160;</a></span>CreateResidencyManager() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static HRESULT gpgmm::d3d12::ResidencyManager::CreateResidencyManager </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;&#160;</td>
-          <td class="paramname"><em>descriptor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> **&#160;</td>
-          <td class="paramname"><em>ppResidencyManagerOut</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="af2f9332f515d4312456bb59826f2d49c" name="af2f9332f515d4312456bb59826f2d49c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2f9332f515d4312456bb59826f2d49c">&#9670;&#160;</a></span>ExecuteCommandLists() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af2f9332f515d4312456bb59826f2d49c">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -361,48 +271,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="af2f9332f515d4312456bb59826f2d49c" name="af2f9332f515d4312456bb59826f2d49c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2f9332f515d4312456bb59826f2d49c">&#9670;&#160;</a></span>ExecuteCommandLists() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::ExecuteCommandLists </td>
-          <td>(</td>
-          <td class="paramtype">ID3D12CommandQueue *&#160;</td>
-          <td class="paramname"><em>pQueue</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ID3D12CommandList *const *&#160;</td>
-          <td class="paramname"><em>ppCommandLists</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a> *const *&#160;</td>
-          <td class="paramname"><em>ppResidencyLists</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a5f843b77407214737dfeeee3477fb835" name="a5f843b77407214737dfeeee3477fb835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f843b77407214737dfeeee3477fb835">&#9670;&#160;</a></span>GetInfo() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f843b77407214737dfeeee3477fb835">&#9670;&#160;</a></span>GetInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,25 +291,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a5f843b77407214737dfeeee3477fb835" name="a5f843b77407214737dfeeee3477fb835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f843b77407214737dfeeee3477fb835">&#9670;&#160;</a></span>GetInfo() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a> gpgmm::d3d12::ResidencyManager::GetInfo </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a38adea03a5895f98b14540061b252532" name="a38adea03a5895f98b14540061b252532"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38adea03a5895f98b14540061b252532">&#9670;&#160;</a></span>LockHeap() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a38adea03a5895f98b14540061b252532">&#9670;&#160;</a></span>LockHeap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -465,26 +318,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a38adea03a5895f98b14540061b252532" name="a38adea03a5895f98b14540061b252532"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38adea03a5895f98b14540061b252532">&#9670;&#160;</a></span>LockHeap() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::LockHeap </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td>
-          <td class="paramname"><em>pHeap</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a5d698f9c5e6e76ba6a4b3c157df151bb" name="a5d698f9c5e6e76ba6a4b3c157df151bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d698f9c5e6e76ba6a4b3c157df151bb">&#9670;&#160;</a></span>QueryVideoMemoryInfo() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d698f9c5e6e76ba6a4b3c157df151bb">&#9670;&#160;</a></span>QueryVideoMemoryInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -520,36 +355,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a5d698f9c5e6e76ba6a4b3c157df151bb" name="a5d698f9c5e6e76ba6a4b3c157df151bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d698f9c5e6e76ba6a4b3c157df151bb">&#9670;&#160;</a></span>QueryVideoMemoryInfo() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::QueryVideoMemoryInfo </td>
-          <td>(</td>
-          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>memorySegmentGroup</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">DXGI_QUERY_VIDEO_MEMORY_INFO *&#160;</td>
-          <td class="paramname"><em>pVideoMemoryInfoOut</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a3a9f3f1c562c37cbb65b1787e4bf192e" name="a3a9f3f1c562c37cbb65b1787e4bf192e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a9f3f1c562c37cbb65b1787e4bf192e">&#9670;&#160;</a></span>SetVideoMemoryReservation() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a9f3f1c562c37cbb65b1787e4bf192e">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -593,42 +400,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3a9f3f1c562c37cbb65b1787e4bf192e" name="a3a9f3f1c562c37cbb65b1787e4bf192e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a9f3f1c562c37cbb65b1787e4bf192e">&#9670;&#160;</a></span>SetVideoMemoryReservation() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::SetVideoMemoryReservation </td>
-          <td>(</td>
-          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>memorySegmentGroup</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>availableForReservation</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint64_t *&#160;</td>
-          <td class="paramname"><em>pCurrentReservationOut</em> = <code>nullptr</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a3dcdc097bae5ac7a0fb83e42f4079668" name="a3dcdc097bae5ac7a0fb83e42f4079668"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3dcdc097bae5ac7a0fb83e42f4079668">&#9670;&#160;</a></span>UnlockHeap() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dcdc097bae5ac7a0fb83e42f4079668">&#9670;&#160;</a></span>UnlockHeap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -654,29 +427,9 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3dcdc097bae5ac7a0fb83e42f4079668" name="a3dcdc097bae5ac7a0fb83e42f4079668"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3dcdc097bae5ac7a0fb83e42f4079668">&#9670;&#160;</a></span>UnlockHeap() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::ResidencyManager::UnlockHeap </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td>
-          <td class="paramname"><em>pHeap</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/d3d12/<a class="el" href="_residency_manager_d3_d12_8h.html">ResidencyManagerD3D12.h</a></li>
-<li>src/include/min/<a class="el" href="min_2gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 <li>src/gpgmm/d3d12/<a class="el" href="_residency_manager_d3_d12_8cpp.html">ResidencyManagerD3D12.cpp</a></li>
-<li>src/include/min/<a class="el" href="gpgmm__d3d12_8cpp.html">gpgmm_d3d12.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
