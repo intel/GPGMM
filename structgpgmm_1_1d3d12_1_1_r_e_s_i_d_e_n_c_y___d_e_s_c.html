@@ -103,6 +103,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a2968f221adfd367a56db90b17b457594"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2968f221adfd367a56db90b17b457594">VideoMemoryBudget</a></td></tr>
 <tr class="memdesc:a2968f221adfd367a56db90b17b457594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total budget of video memory, expressed as a percentage.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a2968f221adfd367a56db90b17b457594">More...</a><br /></td></tr>
 <tr class="separator:a2968f221adfd367a56db90b17b457594"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeeba709c7a28a0c6113377ba2d765949"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aeeba709c7a28a0c6113377ba2d765949">MinPctOfBudgetToReserve</a></td></tr>
+<tr class="memdesc:aeeba709c7a28a0c6113377ba2d765949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest amount of budgeted memory, expressed as a percentage, that can be reserved.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aeeba709c7a28a0c6113377ba2d765949">More...</a><br /></td></tr>
+<tr class="separator:aeeba709c7a28a0c6113377ba2d765949"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac67b1916a22771093bc77268102f36b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b">Budget</a></td></tr>
 <tr class="memdesc:aac67b1916a22771093bc77268102f36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specify the budget, in bytes, for residency.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b">More...</a><br /></td></tr>
 <tr class="separator:aac67b1916a22771093bc77268102f36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,6 +242,24 @@ Public Attributes</h2></td></tr>
 <p>Minimum severity level to log messages to console. </p>
 <p >Messages with lower severity will be ignored.</p>
 <p >Optional parameter. By default, will log only corruption messages. </p>
+
+</div>
+</div>
+<a id="aeeba709c7a28a0c6113377ba2d765949" name="aeeba709c7a28a0c6113377ba2d765949"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeeba709c7a28a0c6113377ba2d765949">&#9670;&#160;</a></span>MinPctOfBudgetToReserve</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float gpgmm::d3d12::RESIDENCY_DESC::MinPctOfBudgetToReserve</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lowest amount of budgeted memory, expressed as a percentage, that can be reserved. </p>
+<p >If SetVideoMemoryReservation is used a set a reservation larger then the budget, this amount is used instead so the application can make forward progress.</p>
+<p >Optional parameter. By default, the API restricts the residency manager reservation to never go below 50% of the budget. </p>
 
 </div>
 </div>
