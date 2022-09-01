@@ -194,7 +194,7 @@ namespace gpgmm::d3d12 {
 
             localVideoMemorySegmentInfo->Budget =
                 localVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
-            if (!descriptor.IsUMA) {
+            if (!residencyManager->mIsUMA) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
                     residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
 
