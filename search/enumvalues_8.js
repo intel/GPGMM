@@ -11,12 +11,12 @@ var searchData=
   ['kone_8',['kOne',['../namespacegpgmm.html#a276891a7cffdff20645589803afa8964a823b43fdd917ccf755d892b43e66add8',1,'gpgmm']]],
   ['kqualcomm_5fvkvendor_9',['kQualcomm_VkVendor',['../namespacegpgmm.html#ab2a02a30de47db6ab71a4c650cadb16ba7f7e8040f9b0ca03f7d108e2ec6a89d6',1,'gpgmm']]],
   ['ksecond_10',['kSecond',['../structgpgmm_1_1_desc.html#a705ef8db174c6365900251d224f3581baa186e75aa5599a9c08064cdd56fd235a',1,'gpgmm::Desc']]],
-  ['kstandalone_11',['kStandalone',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5d1b6831c0de7652f8d3109ac05a9b16',1,'gpgmm']]],
-  ['ksuballocated_12',['kSubAllocated',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dada55b270e6b46212059614af90c04f37',1,'gpgmm']]],
-  ['ksuballocatedwithin_13',['kSubAllocatedWithin',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da5434829ba99e5357f0530e677300a07d',1,'gpgmm']]],
+  ['kstandalone_11',['kStandalone',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da659193fb73cb6b09abed03c770722bfe',1,'gpgmm']]],
+  ['ksuballocated_12',['kSubAllocated',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da02a1560c968eb4c511116c81b39217d7',1,'gpgmm']]],
+  ['ksuballocatedwithin_13',['kSubAllocatedWithin',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dacac3389b95badb9f3810778804e89ab9',1,'gpgmm']]],
   ['kthird_14',['kThird',['../structgpgmm_1_1_desc.html#a705ef8db174c6365900251d224f3581ba117dd93ce5e9b4b929361a3e3584670c',1,'gpgmm::Desc']]],
   ['kthree_15',['kThree',['../namespacegpgmm.html#a276891a7cffdff20645589803afa8964a48b75453b3e2474add0c86c7a34015f8',1,'gpgmm']]],
   ['ktwo_16',['kTwo',['../namespacegpgmm.html#a276891a7cffdff20645589803afa8964a66fe5ad73ec107dfd2fe171755db6917',1,'gpgmm']]],
-  ['kundefined_17',['kUndefined',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da43b473196e75f7f8c93b17beabef7fc3',1,'gpgmm']]],
+  ['kundefined_17',['kUndefined',['../namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8daaf670c579b64f89ac05ad4c474affa7f',1,'gpgmm']]],
   ['kzero_18',['kZero',['../namespacegpgmm.html#a276891a7cffdff20645589803afa8964ada94b72158eec57c5d883e4d8e3fc081',1,'gpgmm']]]
 ];

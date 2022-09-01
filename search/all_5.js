@@ -1,9 +1,9 @@
 var searchData=
 [
   ['fakeobject_0',['FakeObject',['../class_linked_list_tests_1_1_fake_object.html#ae244249ac81035777f76e5dba082d1e3',1,'LinkedListTests::FakeObject::FakeObject()'],['../struct_fake_object.html#a7093656aad7a8677e08f5f865d9b3d22',1,'FakeObject::FakeObject()'],['../struct_fake_object.html',1,'FakeObject'],['../class_linked_list_tests_1_1_fake_object.html',1,'LinkedListTests::FakeObject']]],
-  ['feature_1',['FEATURE',['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4',1,'gpgmm::d3d12']]],
+  ['feature_1',['FEATURE',['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4',1,'gpgmm::d3d12::FEATURE()'],['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4',1,'gpgmm::d3d12::FEATURE()']]],
   ['feature_5fdata_5fresource_5fsuballocation_5fsupport_2',['FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT',['../structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___s_u_b_a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html',1,'gpgmm::d3d12']]],
-  ['feature_5fresource_5fsuballocation_5fsupport_3',['FEATURE_RESOURCE_SUBALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4a4a0e1d86264f5ce6f6e772e2e5b4fb5c',1,'gpgmm::d3d12']]],
+  ['feature_5fresource_5fsuballocation_5fsupport_3',['FEATURE_RESOURCE_SUBALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a8b9c8131ea6bc5d5142a117acc2f0fc4a5fabc9b62dba22dead49b098346cc133',1,'gpgmm::d3d12']]],
   ['fence_4',['Fence',['../classgpgmm_1_1d3d12_1_1_fence.html',1,'gpgmm::d3d12']]],
   ['fenced3d12_2ecpp_5',['FenceD3D12.cpp',['../_fence_d3_d12_8cpp.html',1,'']]],
   ['fenced3d12_2eh_6',['FenceD3D12.h',['../_fence_d3_d12_8h.html',1,'']]],
