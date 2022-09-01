@@ -34,6 +34,7 @@ namespace gpgmm::d3d12 {
 
     static constexpr uint32_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultVideoMemoryBudget = 0.95f;  // 95%
+    static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;  // 50%
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -218,6 +219,9 @@ namespace gpgmm::d3d12 {
           mAdapter(descriptor.Adapter),
           mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
                                                                : descriptor.VideoMemoryBudget),
+          mMinPctOfBudgetToReserve(descriptor.MinPctOfBudgetToReserve == 0
+                                       ? kDefaultMinPctOfBudgetToReserve
+                                       : descriptor.MinPctOfBudgetToReserve),
           mIsBudgetRestricted(descriptor.Budget > 0),
           mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
                                                              : descriptor.EvictSizeInBytes),
@@ -406,13 +410,12 @@ namespace gpgmm::d3d12 {
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
         // cap the external reservation to half the available budget, which prevents the external
-        // component from consuming a disproportionate share of memory and ensures that Dawn can
-        // continue to make forward progress. Note the choice to halve memory is arbitrarily chosen
-        // and subject to future experimentation.
+        // component from consuming a disproportionate share of memory and ensures forward progress.
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(memorySegmentGroup);
 
-        pVideoMemoryInfo->CurrentReservation =
-            std::min(queryVideoMemoryInfoOut.Budget / 2, pVideoMemoryInfo->AvailableForReservation);
+        pVideoMemoryInfo->CurrentReservation = std::min(
+            static_cast<uint64_t>(queryVideoMemoryInfoOut.Budget * mMinPctOfBudgetToReserve),
+            pVideoMemoryInfo->AvailableForReservation);
 
         pVideoMemoryInfo->CurrentUsage =
             queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;

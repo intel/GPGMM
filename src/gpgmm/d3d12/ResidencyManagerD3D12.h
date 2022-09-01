@@ -86,6 +86,17 @@ namespace gpgmm::d3d12 {
         */
         float VideoMemoryBudget;
 
+        /** \brief Lowest amount of budgeted memory, expressed as a percentage, that can be
+        reserved.
+
+        If SetVideoMemoryReservation is used a set a reservation larger then the budget, this amount
+        is used instead so the application can make forward progress.
+
+        Optional parameter. By default, the API restricts the residency manager reservation to never
+        go below 50% of the budget.
+        */
+        float MinPctOfBudgetToReserve;
+
         /** \brief Specify the budget, in bytes, for residency.
 
         Allows a fixed budget to be artifically set for testing purposes.
@@ -275,6 +286,7 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12Device3> mDevice3;
 
         const float mVideoMemoryBudget;
+        const float mMinPctOfBudgetToReserve;
         const bool mIsBudgetRestricted;
         const uint64_t mEvictSizeInBytes;
         const bool mIsUMA;
