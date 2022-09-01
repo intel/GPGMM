@@ -16,12 +16,13 @@
 #define GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/NonCopyable.h"
 #include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
 
 namespace gpgmm::d3d12 {
 
-    class GPGMM_EXPORT IUnknownImpl : public IUnknown {
+    class GPGMM_EXPORT IUnknownImpl : public IUnknown, public NonCopyable {
       public:
         IUnknownImpl();
         virtual ~IUnknownImpl() = default;
