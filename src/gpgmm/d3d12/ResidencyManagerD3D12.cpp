@@ -61,8 +61,7 @@ namespace gpgmm::d3d12 {
                 switch (waitedEvent) {
                     // mBudgetNotificationUpdateEvent
                     case (WAIT_OBJECT_0 + 0): {
-                        hr =
-                            mResidencyManager->UpdateMemorySegments();
+                        hr = mResidencyManager->UpdateMemorySegments();
                         if (FAILED(hr)) {
                             break;
                         }
