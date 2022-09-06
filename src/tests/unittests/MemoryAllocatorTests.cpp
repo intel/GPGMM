@@ -21,6 +21,8 @@
 
 using namespace gpgmm;
 
+static constexpr uint64_t kReleaseAllMemory = std::numeric_limits<uint64_t>::max();
+
 static uint64_t DestructCount = 0;
 static uint64_t ReleaseMemoryCount = 0;
 
@@ -36,7 +38,7 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
         DestructCount++;
     }
 
-    uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override {
+    uint64_t ReleaseMemory(uint64_t bytesToRelease) override {
         ReleaseMemoryCount++;
         return MemoryAllocator::ReleaseMemory(bytesToRelease);
     }
@@ -56,7 +58,7 @@ TEST_F(MemoryAllocatorTests, SingleAllocator) {
 
     EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
-    parent->ReleaseMemory();
+    parent->ReleaseMemory(kReleaseAllMemory);
     EXPECT_EQ(ReleaseMemoryCount, 2u);
 
     parent.reset();
@@ -70,7 +72,7 @@ TEST_F(MemoryAllocatorTests, MultipleAllocators) {
 
     EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
-    parent->ReleaseMemory();
+    parent->ReleaseMemory(kReleaseAllMemory);
     EXPECT_EQ(ReleaseMemoryCount, 3u);
 
     parent.reset();

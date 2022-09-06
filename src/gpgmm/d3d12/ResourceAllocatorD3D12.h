@@ -485,14 +485,14 @@ namespace gpgmm::d3d12 {
         system. Apps should call ReleaseMemory() when going idle for a period of time since there is
         a brief performance hit when the internal resource heaps get reallocated by the OS.
 
-        @param bytesToRelease Amount of memory to release, in bytes. A kInvalidSize means ALL memory
-        will be released.
+        @param bytesToRelease Amount of memory to release, in bytes. A value of UINT64_MAX
+        releases ALL memory held by the allocator.
 
         \return Amount of memory, in bytes, released. The released size might be smaller then
         bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
         total up to the amount.
         */
-        uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
+        uint64_t ReleaseMemory(uint64_t bytesToRelease) override;
 
         /** \brief  Return the current allocator usage.
 

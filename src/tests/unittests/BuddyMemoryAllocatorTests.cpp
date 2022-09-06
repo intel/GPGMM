@@ -27,6 +27,7 @@ using namespace gpgmm;
 
 static constexpr uint64_t kDefaultMemorySize = 128u;
 static constexpr uint64_t kDefaultMemoryAlignment = 128u;
+static constexpr uint64_t kReleaseAllMemory = std::numeric_limits<uint64_t>::max();
 
 class BuddyMemoryAllocatorTests : public testing::Test {
   public:
@@ -510,7 +511,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 
     EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
 
-    allocator.ReleaseMemory();
+    allocator.ReleaseMemory(kReleaseAllMemory);
 }
 
 // Verify resource heaps that were reused from a pool can be destroyed.
@@ -550,5 +551,5 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
 
     EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kNumOfHeaps * kDefaultMemorySize);
 
-    allocator.ReleaseMemory();
+    allocator.ReleaseMemory(kReleaseAllMemory);
 }
