@@ -94,6 +94,7 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(
             device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
         caps->mIsAdapterUMA = arch.UMA;
+        caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 
         // D3D12 has no feature to detect support and must be set manually.
         if (adapterDesc.VendorId == kIntel_VkVendor) {
@@ -143,6 +144,10 @@ namespace gpgmm::d3d12 {
 
     bool Caps::IsAdapterUMA() const {
         return mIsAdapterUMA;
+    }
+
+    bool Caps::IsAdapterCacheCoherentUMA() const {
+        return mIsAdapterCacheCoherentUMA;
     }
 
     bool Caps::GetMaxResourceHeapTierSupported() const {
