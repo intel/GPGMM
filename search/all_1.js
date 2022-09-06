@@ -21,12 +21,11 @@ var searchData=
   ['buddymemoryallocator_2eh_18',['BuddyMemoryAllocator.h',['../_buddy_memory_allocator_8h.html',1,'']]],
   ['buddymemoryallocatortests_19',['BuddyMemoryAllocatorTests',['../class_buddy_memory_allocator_tests.html',1,'']]],
   ['buddymemoryallocatortests_2ecpp_20',['BuddyMemoryAllocatorTests.cpp',['../_buddy_memory_allocator_tests_8cpp.html',1,'']]],
-  ['budget_21',['Budget',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#aac67b1916a22771093bc77268102f36b',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['budgetexceeded_22',['BudgetExceeded',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088abc085bd3d9215cc753baaab2d1c8c61c',1,'gpgmm']]],
-  ['budgetupdate_23',['BudgetUpdate',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088ad4a8670b33dfb0150e1059a1bb2e8df7',1,'gpgmm']]],
-  ['budgetupdateevent_24',['BudgetUpdateEvent',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#acc872e8d6fec237abf11b51121028be6',1,'gpgmm::d3d12::BudgetUpdateEvent::BudgetUpdateEvent()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html',1,'gpgmm::d3d12::BudgetUpdateEvent']]],
-  ['budgetupdatetask_25',['BudgetUpdateTask',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#aea174d566448ec90abb0976a0cfce11d',1,'gpgmm::d3d12::BudgetUpdateTask::BudgetUpdateTask()'],['../classgpgmm_1_1d3d12_1_1_budget_update_task.html',1,'gpgmm::d3d12::BudgetUpdateTask']]],
-  ['bufferallocator_26',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a2d5104d37de68b76c2d9cf96e86dfafe',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
-  ['bufferallocatord3d12_2ecpp_27',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
-  ['bufferallocatord3d12_2eh_28',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
+  ['budgetexceeded_21',['BudgetExceeded',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088abc085bd3d9215cc753baaab2d1c8c61c',1,'gpgmm']]],
+  ['budgetupdate_22',['BudgetUpdate',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088ad4a8670b33dfb0150e1059a1bb2e8df7',1,'gpgmm']]],
+  ['budgetupdateevent_23',['BudgetUpdateEvent',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#acc872e8d6fec237abf11b51121028be6',1,'gpgmm::d3d12::BudgetUpdateEvent::BudgetUpdateEvent()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html',1,'gpgmm::d3d12::BudgetUpdateEvent']]],
+  ['budgetupdatetask_24',['BudgetUpdateTask',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#aea174d566448ec90abb0976a0cfce11d',1,'gpgmm::d3d12::BudgetUpdateTask::BudgetUpdateTask()'],['../classgpgmm_1_1d3d12_1_1_budget_update_task.html',1,'gpgmm::d3d12::BudgetUpdateTask']]],
+  ['bufferallocator_25',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a2d5104d37de68b76c2d9cf96e86dfafe',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
+  ['bufferallocatord3d12_2ecpp_26',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
+  ['bufferallocatord3d12_2eh_27',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
 ];
