@@ -27,6 +27,7 @@
 using namespace gpgmm::d3d12;
 
 static constexpr uint64_t kDefaultBufferSize = 4ll * 1024ll * 1024ll;  // 4MB
+static constexpr uint64_t kReleaseAllMemory = std::numeric_limits<uint64_t>::max();
 
 #define GPGMM_GET_VAR_NAME(x) (#x)
 
@@ -942,7 +943,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
 
     EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, bufferSize + bufferSize / 2);
 
-    EXPECT_EQ(poolAllocator->ReleaseMemory(), bufferSize + bufferSize / 2);
+    EXPECT_EQ(poolAllocator->ReleaseMemory(kReleaseAllMemory), bufferSize + bufferSize / 2);
 
     EXPECT_EQ(poolAllocator->GetInfo().FreeMemoryUsage, 0u);
 

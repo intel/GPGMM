@@ -221,14 +221,14 @@ namespace gpgmm {
 
         /** \brief Return free memory back to the OS.
 
-        @param bytesToRelease Amount of memory to release, in bytes. A kInvalidSize means ALL memory
-        will be released.
+        @param bytesToRelease Amount of memory to release, in bytes. A value of UINT64_MAX
+        releases ALL memory held by the allocator.
 
         \return Amount of memory, in bytes, released. The released size might be smaller then
         bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
         total up to the amount.
         */
-        virtual uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize);
+        virtual uint64_t ReleaseMemory(uint64_t bytesToRelease);
 
         /** \brief Get the fixed-memory sized of the MemoryAllocator.
 
