@@ -430,6 +430,32 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     }
 }
 
+// Verifies there are no attribution of heaps when UMA + no read-back.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
+    GPGMM_SKIP_TEST_IF(!mIsUMA);
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kDefaultBufferSize);
+
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kDefaultBufferSize * 2);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(

@@ -238,7 +238,8 @@ namespace gpgmm::d3d12 {
                 return S_OK;
             }
 
-            return E_UNEXPECTED;
+            *heapType = D3D12_HEAP_TYPE_DEFAULT;
+            return S_OK;
         }
 
         // RAII wrapper to lock/unlock heap from the residency cache.
@@ -789,6 +790,19 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
         if (heapType == 0) {
             ReturnIfFailed(GetHeapType(initialResourceState, &heapType));
+            // Abandon the attribution of heaps when isCacheCoherentUMA is true by always using the
+            // custom equivelent of upload heap. This allows the same resource allocator to be used.
+            if (mCaps->IsAdapterCacheCoherentUMA()) {
+                // CPU read back could be inefficient since upload heaps are usually write-combined
+                // (vs write-back) pages.
+                if (heapType != D3D12_HEAP_TYPE_READBACK) {
+                    heapType = D3D12_HEAP_TYPE_UPLOAD;
+                } else {
+                    DebugLog() << "Resource state" << ToHexStr(initialResourceState)
+                               << " used heap type " << heapType
+                               << " which disables UMA optimization.";
+                }
+            }
         }
 
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(

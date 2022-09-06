@@ -41,6 +41,9 @@ namespace gpgmm::d3d12 {
         // Specifies if the adapter uses a Unified Memory Architecture (UMA).
         bool IsAdapterUMA() const;
 
+        // Specifies if the UMA adapter is also cache-coherent.
+        bool IsAdapterCacheCoherentUMA() const;
+
         // Specifies if a texture and buffer can belong in the same heap.
         bool GetMaxResourceHeapTierSupported() const;
 
@@ -53,6 +56,7 @@ namespace gpgmm::d3d12 {
         bool mIsCreateHeapNotResidentSupported = false;
         bool mIsResourceAccessAlwaysCoherent = false;
         bool mIsAdapterUMA = false;
+        bool mIsAdapterCacheCoherentUMA = false;
     };
 
 }  // namespace gpgmm::d3d12
