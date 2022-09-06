@@ -312,8 +312,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
                         residencyDesc.IsUMA = snapshot["IsUMA"].asBool();
-                        residencyDesc.VideoMemoryBudget = snapshot["VideoMemoryBudget"].asFloat();
-                        residencyDesc.Budget = snapshot["Budget"].asUInt64();
+                        residencyDesc.MaxPctOfVideoMemoryToBudget =
+                            snapshot["MaxPctOfVideoMemoryToBudget"].asFloat();
+                        residencyDesc.MaxBudgetInBytes = snapshot["MaxBudgetInBytes"].asUInt64();
                         residencyDesc.EvictSizeInBytes = snapshot["EvictSizeInBytes"].asUInt64();
                         residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
 

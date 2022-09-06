@@ -248,8 +248,8 @@ namespace gpgmm::d3d12 {
     JSONDict JSONSerializer::Serialize(const RESIDENCY_DESC& desc) {
         JSONDict dict;
         dict.AddItem("IsUMA", desc.IsUMA);
-        dict.AddItem("VideoMemoryBudget", desc.VideoMemoryBudget);
-        dict.AddItem("Budget", desc.Budget);
+        dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
+        dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);
         dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
         dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
         return dict;

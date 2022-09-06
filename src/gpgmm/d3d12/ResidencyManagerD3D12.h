@@ -79,12 +79,15 @@ namespace gpgmm::d3d12 {
         */
         EVENT_RECORD_OPTIONS RecordOptions;
 
-        /** \brief Total budget of video memory, expressed as a percentage.
+        /** \brief Maximum amount of budgeted memory, expressed as a percentage of video memory,
+        that can be budgeted.
 
-        Optional parameter. When 0 is specified, the API will automatically set the video
-        memory budget to 95%, leaving 5% for the OS and other applications.
+        If a non-zero MaxBudgetInBytes is specified, MaxPctOfVideoMemoryToBudget is ignored.
+
+        Optional parameter. By default, the API will automatically set the budget to 95% of video
+        memory, leaving 5% for the OS and other applications.
         */
-        float VideoMemoryBudget;
+        float MaxPctOfVideoMemoryToBudget;
 
         /** \brief Lowest amount of budgeted memory, expressed as a percentage, that can be
         reserved.
@@ -97,14 +100,14 @@ namespace gpgmm::d3d12 {
         */
         float MinPctOfBudgetToReserve;
 
-        /** \brief Specify the budget, in bytes, for residency.
+        /** \brief Maximum amount of budgeted memory, in bytes, that can be budgeted.
 
         Allows a fixed budget to be artifically set for testing purposes.
 
-        Optional parameter. When 0 is specified, the API will not restrict the residency manager
+        Optional parameter. By default, the API will not further restrict the residency manager
         budget.
         */
-        uint64_t Budget;
+        uint64_t MaxBudgetInBytes;
 
         /** \brief Size of memory, in bytes, to evict from residency at once,
         should there not be enough budget left.
@@ -285,7 +288,7 @@ namespace gpgmm::d3d12 {
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device3> mDevice3;
 
-        const float mVideoMemoryBudget;
+        const float mMaxPctOfVideoMemoryToBudget;
         const float mMinPctOfBudgetToReserve;
         const bool mIsBudgetRestricted;
         const uint64_t mEvictSizeInBytes;

@@ -1,4 +1,4 @@
-From 887577ccf4be7e2b74733c5c10b9051da8c3af38 Mon Sep 17 00:00:00 2001
+From f277373035017d3c20b456eb07c009f6ce7b5db6 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -191,14 +191,14 @@ index 341db798f..9e760e05b 100644
      VulkanUseD32S8,
      VulkanUseS8,
 diff --git a/src/dawn/native/d3d12/AdapterD3D12.cpp b/src/dawn/native/d3d12/AdapterD3D12.cpp
-index 4ac41348f..8ea7e6272 100644
+index 4ac41348f..0a874dd57 100644
 --- a/src/dawn/native/d3d12/AdapterD3D12.cpp
 +++ b/src/dawn/native/d3d12/AdapterD3D12.cpp
 @@ -363,6 +363,10 @@ MaybeError Adapter::InitializeDebugLayerFilters() {
          // Even this means that no vertex buffer view has been set in D3D12 backend.
          // https://crbug.com/dawn/1255
          D3D12_MESSAGE_ID_COMMAND_LIST_DRAW_VERTEX_BUFFER_NOT_SET,
-+        
++
 +        // Dawn doesn't specify the smallest range possible but D3D12 still warns of inefficiencies.
 +        D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
 +        D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE,
@@ -511,7 +511,7 @@ index 9747b41c0..50db56dbd 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 90ddc3041..62b8f28e1 100644
+index 90ddc3041..610b30989 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -130,8 +130,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
@@ -536,7 +536,7 @@ index 90ddc3041..62b8f28e1 100644
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +        residencyDesc.UpdateBudgetByPolling = true;
-+        residencyDesc.Budget = 100000000;  // 100MB
++        residencyDesc.MaxBudgetInBytes = 100000000;  // 100MB
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 +    }
@@ -548,7 +548,7 @@ index 90ddc3041..62b8f28e1 100644
 +    }
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12ResidencyManagement)) {
-+        residencyDesc.VideoMemoryBudget = 0.95;  // Use up to 95%
++        residencyDesc.MaxPctOfVideoMemoryToBudget = 0.95;  // Use up to 95%
 +        DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResidencyManager::CreateResidencyManager(
 +                                  residencyDesc, &mResidencyManager),
 +                              "D3D12 create residency manager"));
