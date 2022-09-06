@@ -84,7 +84,7 @@ $(function() {
 <p><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  
  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#details">More...</a></p>
 
-<p><code>#include &lt;ResourceAllocationD3D12.h&gt;</code></p>
+<p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::d3d12::ResourceAllocation:</div>
 <div class="dyncontent">
@@ -94,7 +94,10 @@ Inheritance diagram for gpgmm::d3d12::ResourceAllocation:</div>
 <area href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory." alt="gpgmm::MemoryAllocation" shape="rect" coords="0,56,208,80"/>
 <area href="classgpgmm_1_1d3d12_1_1_debug_object.html" title="Debug object associates additional information for D3D objects using SetPrivateData." alt="gpgmm::d3d12::DebugObject" shape="rect" coords="218,56,426,80"/>
 <area href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" alt="gpgmm::d3d12::IUnknownImpl" shape="rect" coords="436,56,644,80"/>
-<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="545,0,753,24"/>
+<area href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory." alt="gpgmm::MemoryAllocation" shape="rect" coords="654,56,862,80"/>
+<area href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" alt="gpgmm::d3d12::IUnknownImpl" shape="rect" coords="1090,56,1298,80"/>
+<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="436,0,644,24"/>
+<area href="classgpgmm_1_1_non_copyable.html" alt="gpgmm::NonCopyable" shape="rect" coords="1090,0,1298,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -129,6 +132,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">GetMemory</a> () const</td></tr>
 <tr class="memdesc:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">More...</a><br /></td></tr>
 <tr class="separator:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44961b0c02815582c9b80cb889786afe"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a44961b0c02815582c9b80cb889786afe">Map</a> (uint32_t subresource=0, const D3D12_RANGE *readRange=nullptr, void **dataOut=nullptr)</td></tr>
+<tr class="separator:a44961b0c02815582c9b80cb889786afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb13e9781e92486cd62b08b39adf645"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aacb13e9781e92486cd62b08b39adf645">Unmap</a> (uint32_t subresource=0, const D3D12_RANGE *writtenRange=nullptr)</td></tr>
+<tr class="separator:aacb13e9781e92486cd62b08b39adf645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a815fcf5ee846af23e4c7bec3f651062f"><td class="memItemLeft" align="right" valign="top">ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f">GetResource</a> () const</td></tr>
+<tr class="separator:a815fcf5ee846af23e4c7bec3f651062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d3bb112feb4a08e232403c168a309d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d">IsResident</a> () const</td></tr>
+<tr class="separator:ac3d3bb112feb4a08e232403c168a309d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d80ddaa72841a41425b31e761c68ece"><td class="memItemLeft" align="right" valign="top">D3D12_GPU_VIRTUAL_ADDRESS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a1d80ddaa72841a41425b31e761c68ece">GetGPUVirtualAddress</a> () const</td></tr>
+<tr class="separator:a1d80ddaa72841a41425b31e761c68ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19512a090309ff8ec431b01b871eedcf"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a19512a090309ff8ec431b01b871eedcf">GetOffsetFromResource</a> () const</td></tr>
+<tr class="separator:a19512a090309ff8ec431b01b871eedcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3268c0efbbc8ec68476c74e9ad2f61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#acf3268c0efbbc8ec68476c74e9ad2f61">GetInfo</a> () const</td></tr>
+<tr class="separator:acf3268c0efbbc8ec68476c74e9ad2f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">GetMemory</a> () const</td></tr>
+<tr class="separator:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1_memory_allocation"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1_memory_allocation')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1_memory_allocation.html">gpgmm::MemoryAllocation</a></td></tr>
 <tr class="memitem:acbebdd6253faea0ecd45fe982fc46747 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#acbebdd6253faea0ecd45fe982fc46747">MemoryAllocation</a> ()</td></tr>
 <tr class="memdesc:acbebdd6253faea0ecd45fe982fc46747 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contructs an invalid memory allocation.  <a href="classgpgmm_1_1_memory_allocation.html#acbebdd6253faea0ecd45fe982fc46747">More...</a><br /></td></tr>
@@ -139,8 +158,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a9c6d21c73a131e7d13a7049b44ba78 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a4a9c6d21c73a131e7d13a7049b44ba78">MemoryAllocation</a> (<a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *allocator, <a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a> *memory, uint64_t requestSize, uint8_t *mappedPointer=nullptr)</td></tr>
 <tr class="memdesc:a4a9c6d21c73a131e7d13a7049b44ba78 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a "standalone" memory allocation.  <a href="classgpgmm_1_1_memory_allocation.html#a4a9c6d21c73a131e7d13a7049b44ba78">More...</a><br /></td></tr>
 <tr class="separator:a4a9c6d21c73a131e7d13a7049b44ba78 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad63c86ff2564a49a924ac46550a472a inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#aad63c86ff2564a49a924ac46550a472a">~MemoryAllocation</a> ()=default</td></tr>
-<tr class="separator:aad63c86ff2564a49a924ac46550a472a inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73254f973c3f4a4191a402e22845b0a1 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a73254f973c3f4a4191a402e22845b0a1">~MemoryAllocation</a> ()=default</td></tr>
+<tr class="separator:a73254f973c3f4a4191a402e22845b0a1 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc23800d76e0b20544393c4420e2d52f inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#abc23800d76e0b20544393c4420e2d52f">MemoryAllocation</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;)=default</td></tr>
 <tr class="separator:abc23800d76e0b20544393c4420e2d52f inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a847262a13ba8f60da70ccfe2bee7119b inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a847262a13ba8f60da70ccfe2bee7119b">operator=</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;)=default</td></tr>
@@ -179,6 +198,38 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b91e96e69e43585323e668d196b9ae7 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7">GetBlock</a> () const</td></tr>
 <tr class="memdesc:a4b91e96e69e43585323e668d196b9ae7 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the block used to assign a range of memory for this allocation.  <a href="classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7">More...</a><br /></td></tr>
 <tr class="separator:a4b91e96e69e43585323e668d196b9ae7 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ebb50f65e20ad11319c41c7af415892 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a7ebb50f65e20ad11319c41c7af415892">MemoryAllocation</a> (<a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *allocator, <a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a> *memory, uint64_t requestSize)</td></tr>
+<tr class="separator:a7ebb50f65e20ad11319c41c7af415892 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d0686fa17856c36284143fd283360b0 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a9d0686fa17856c36284143fd283360b0">~MemoryAllocation</a> ()</td></tr>
+<tr class="separator:a9d0686fa17856c36284143fd283360b0 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae16f54860698f5975d55512748ef4eed inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#ae16f54860698f5975d55512748ef4eed">MemoryAllocation</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;)</td></tr>
+<tr class="separator:ae16f54860698f5975d55512748ef4eed inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad145bfdbcac73e83e1bc7f8e48ccf605 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#ad145bfdbcac73e83e1bc7f8e48ccf605">operator=</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;)</td></tr>
+<tr class="separator:ad145bfdbcac73e83e1bc7f8e48ccf605 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a769b7c39359d90a8931d295ba0a4a660 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a769b7c39359d90a8931d295ba0a4a660">operator==</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;) const</td></tr>
+<tr class="separator:a769b7c39359d90a8931d295ba0a4a660 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52088dfac9aa8a4ee409032a5b62e806 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a52088dfac9aa8a4ee409032a5b62e806">operator!=</a> (const <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &amp;other) const</td></tr>
+<tr class="separator:a52088dfac9aa8a4ee409032a5b62e806 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b2f9edc0d050f77786b6ec651a5e6b2 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_allocation_info.html">MemoryAllocationInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a6b2f9edc0d050f77786b6ec651a5e6b2">GetInfo</a> () const</td></tr>
+<tr class="separator:a6b2f9edc0d050f77786b6ec651a5e6b2 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a743e629c32cca3ddf29b0866e59c1a57 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_base.html">MemoryBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a743e629c32cca3ddf29b0866e59c1a57">GetMemory</a> () const</td></tr>
+<tr class="separator:a743e629c32cca3ddf29b0866e59c1a57 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda8e623c3f722007fc72e3eaf2d13af inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#abda8e623c3f722007fc72e3eaf2d13af">GetMappedPointer</a> () const</td></tr>
+<tr class="separator:abda8e623c3f722007fc72e3eaf2d13af inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a274bbaab428e2d65b8715952c535ebce inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a274bbaab428e2d65b8715952c535ebce">GetAllocator</a> () const</td></tr>
+<tr class="separator:a274bbaab428e2d65b8715952c535ebce inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0981e61eeca068d3506f99abcad0d406 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a0981e61eeca068d3506f99abcad0d406">GetSize</a> () const</td></tr>
+<tr class="separator:a0981e61eeca068d3506f99abcad0d406 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff19ab6fee6e47ace4f6e8639d6270a inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a3ff19ab6fee6e47ace4f6e8639d6270a">GetRequestSize</a> () const</td></tr>
+<tr class="separator:a3ff19ab6fee6e47ace4f6e8639d6270a inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5df4f26c555e8f6ef20a3b1f01efad inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#afd5df4f26c555e8f6ef20a3b1f01efad">GetAlignment</a> () const</td></tr>
+<tr class="separator:afd5df4f26c555e8f6ef20a3b1f01efad inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae654ca9c7ab68a54bccd9ad89c04d884 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#ae654ca9c7ab68a54bccd9ad89c04d884">GetOffset</a> () const</td></tr>
+<tr class="separator:ae654ca9c7ab68a54bccd9ad89c04d884 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39d1392f33c7b24025bfc4dd83334aae inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a39d1392f33c7b24025bfc4dd83334aae">GetMethod</a> () const</td></tr>
+<tr class="separator:a39d1392f33c7b24025bfc4dd83334aae inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b91e96e69e43585323e668d196b9ae7 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1_memory_block.html">MemoryBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a4b91e96e69e43585323e668d196b9ae7">GetBlock</a> () const</td></tr>
+<tr class="separator:a4b91e96e69e43585323e668d196b9ae7 inherit pub_methods_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1d3d12_1_1_debug_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1d3d12_1_1_debug_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_debug_object.html">gpgmm::d3d12::DebugObject</a></td></tr>
 <tr class="memitem:ad9396e69d3375db03ec419a4f9776871 inherit pub_methods_classgpgmm_1_1d3d12_1_1_debug_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_object.html#ad9396e69d3375db03ec419a4f9776871">DebugObject</a> ()=default</td></tr>
 <tr class="separator:ad9396e69d3375db03ec419a4f9776871 inherit pub_methods_classgpgmm_1_1d3d12_1_1_debug_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,14 +248,24 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html">gpgmm::d3d12::IUnknownImpl</a></td></tr>
 <tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
 <tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a654400af7d6e7341dbd65b959ad9d400 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a654400af7d6e7341dbd65b959ad9d400">~IUnknownImpl</a> ()=default</td></tr>
-<tr class="separator:a654400af7d6e7341dbd65b959ad9d400 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af148920b9a182a494b17e9d940a4539a inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#af148920b9a182a494b17e9d940a4539a">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
-<tr class="separator:af148920b9a182a494b17e9d940a4539a inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a498fba8b143ee29ba9c87de4c74de6e4 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a498fba8b143ee29ba9c87de4c74de6e4">AddRef</a> () override</td></tr>
-<tr class="separator:a498fba8b143ee29ba9c87de4c74de6e4 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e2c505fb4cf4e354835f847a4946ee5 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a5e2c505fb4cf4e354835f847a4946ee5">Release</a> () override</td></tr>
-<tr class="separator:a5e2c505fb4cf4e354835f847a4946ee5 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78d8d8aeb40c540ef6592ee600199b28 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a78d8d8aeb40c540ef6592ee600199b28">~IUnknownImpl</a> ()=default</td></tr>
+<tr class="separator:a78d8d8aeb40c540ef6592ee600199b28 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
+<tr class="separator:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
+<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
+<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a87e1fbb5727ccf1c7c37cf2eef7fe1ae">IUnknownImpl</a> ()</td></tr>
+<tr class="separator:a87e1fbb5727ccf1c7c37cf2eef7fe1ae inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1efb129df43d1e141bfced89882e7ccf inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a1efb129df43d1e141bfced89882e7ccf">~IUnknownImpl</a> ()</td></tr>
+<tr class="separator:a1efb129df43d1e141bfced89882e7ccf inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae46f6ac979609d793881462bb6930df8">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
+<tr class="separator:ae46f6ac979609d793881462bb6930df8 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a0b6b0473356d595ebda3bc73ebbd3c33">AddRef</a> () override</td></tr>
+<tr class="separator:a0b6b0473356d595ebda3bc73ebbd3c33 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memItemLeft" align="right" valign="top">ULONG STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#ae7339b10bc3aed0dfb2605dad132fd58">Release</a> () override</td></tr>
+<tr class="separator:ae7339b10bc3aed0dfb2605dad132fd58 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_unknown_impl"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -212,6 +273,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:abe955782ce32ac1afd5b6bda4662c802"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b125e84fc9a47302e56d20808a60fc3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a6b125e84fc9a47302e56d20808a60fc3">DeleteThis</a> ()</td></tr>
 <tr class="separator:a6b125e84fc9a47302e56d20808a60fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63928891a46a1952ba1fdf90155e91e3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#a63928891a46a1952ba1fdf90155e91e3">DeleteThis</a> ()</td></tr>
+<tr class="separator:a63928891a46a1952ba1fdf90155e91e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classgpgmm_1_1_non_copyable"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgpgmm_1_1_non_copyable')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgpgmm_1_1_non_copyable.html">gpgmm::NonCopyable</a></td></tr>
 <tr class="memitem:a588c58b8330a3d62608141c07a4132bf inherit pro_methods_classgpgmm_1_1_non_copyable"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_non_copyable.html#a588c58b8330a3d62608141c07a4132bf">NonCopyable</a> ()=default</td></tr>
 <tr class="separator:a588c58b8330a3d62608141c07a4132bf inherit pro_methods_classgpgmm_1_1_non_copyable"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,8 +285,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a153fce82aa0c5ccdb509860de17779ab inherit pro_methods_classgpgmm_1_1_non_copyable"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_non_copyable.html">NonCopyable</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_non_copyable.html#a153fce82aa0c5ccdb509860de17779ab">operator=</a> (<a class="el" href="classgpgmm_1_1_non_copyable.html">NonCopyable</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a153fce82aa0c5ccdb509860de17779ab inherit pro_methods_classgpgmm_1_1_non_copyable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgpgmm_1_1_memory_allocation"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgpgmm_1_1_memory_allocation')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgpgmm_1_1_memory_allocation.html">gpgmm::MemoryAllocation</a></td></tr>
-<tr class="memitem:a1f5fddabf32874b04a4175515ab67ca2 inherit pro_attribs_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a1f5fddabf32874b04a4175515ab67ca2">mAllocator</a></td></tr>
-<tr class="separator:a1f5fddabf32874b04a4175515ab67ca2 inherit pro_attribs_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a042c293174ad61e3b8638737cbc0b240 inherit pro_attribs_classgpgmm_1_1_memory_allocation"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_allocator.html">MemoryAllocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocation.html#a042c293174ad61e3b8638737cbc0b240">mAllocator</a></td></tr>
+<tr class="separator:a042c293174ad61e3b8638737cbc0b240 inherit pro_attribs_classgpgmm_1_1_memory_allocation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource. </p>
@@ -257,7 +320,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1d80ddaa72841a41425b31e761c68ece" name="a1d80ddaa72841a41425b31e761c68ece"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d80ddaa72841a41425b31e761c68ece">&#9670;&#160;</a></span>GetGPUVirtualAddress()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d80ddaa72841a41425b31e761c68ece">&#9670;&#160;</a></span>GetGPUVirtualAddress() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,8 +340,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1d80ddaa72841a41425b31e761c68ece" name="a1d80ddaa72841a41425b31e761c68ece"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d80ddaa72841a41425b31e761c68ece">&#9670;&#160;</a></span>GetGPUVirtualAddress() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">D3D12_GPU_VIRTUAL_ADDRESS gpgmm::d3d12::ResourceAllocation::GetGPUVirtualAddress </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acf3268c0efbbc8ec68476c74e9ad2f61" name="acf3268c0efbbc8ec68476c74e9ad2f61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf3268c0efbbc8ec68476c74e9ad2f61">&#9670;&#160;</a></span>GetInfo()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acf3268c0efbbc8ec68476c74e9ad2f61">&#9670;&#160;</a></span>GetInfo() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -297,8 +377,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="acf3268c0efbbc8ec68476c74e9ad2f61" name="acf3268c0efbbc8ec68476c74e9ad2f61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf3268c0efbbc8ec68476c74e9ad2f61">&#9670;&#160;</a></span>GetInfo() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a> gpgmm::d3d12::ResourceAllocation::GetInfo </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aaf88ee12b00d53ea2cd6244ef730dfc0" name="aaf88ee12b00d53ea2cd6244ef730dfc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf88ee12b00d53ea2cd6244ef730dfc0">&#9670;&#160;</a></span>GetMemory()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf88ee12b00d53ea2cd6244ef730dfc0">&#9670;&#160;</a></span>GetMemory() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -317,8 +414,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aaf88ee12b00d53ea2cd6244ef730dfc0" name="aaf88ee12b00d53ea2cd6244ef730dfc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf88ee12b00d53ea2cd6244ef730dfc0">&#9670;&#160;</a></span>GetMemory() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> * gpgmm::d3d12::ResourceAllocation::GetMemory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a19512a090309ff8ec431b01b871eedcf" name="a19512a090309ff8ec431b01b871eedcf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19512a090309ff8ec431b01b871eedcf">&#9670;&#160;</a></span>GetOffsetFromResource()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a19512a090309ff8ec431b01b871eedcf">&#9670;&#160;</a></span>GetOffsetFromResource() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,8 +452,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a19512a090309ff8ec431b01b871eedcf" name="a19512a090309ff8ec431b01b871eedcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19512a090309ff8ec431b01b871eedcf">&#9670;&#160;</a></span>GetOffsetFromResource() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::d3d12::ResourceAllocation::GetOffsetFromResource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a815fcf5ee846af23e4c7bec3f651062f" name="a815fcf5ee846af23e4c7bec3f651062f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a815fcf5ee846af23e4c7bec3f651062f">&#9670;&#160;</a></span>GetResource()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a815fcf5ee846af23e4c7bec3f651062f">&#9670;&#160;</a></span>GetResource() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,6 +486,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Returns the resource owned by this allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to ID3D12Resource, owned by this allocation. </dd></dl>
+
+</div>
+</div>
+<a id="a815fcf5ee846af23e4c7bec3f651062f" name="a815fcf5ee846af23e4c7bec3f651062f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a815fcf5ee846af23e4c7bec3f651062f">&#9670;&#160;</a></span>GetResource() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ID3D12Resource * gpgmm::d3d12::ResourceAllocation::GetResource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -379,7 +527,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="ac3d3bb112feb4a08e232403c168a309d" name="ac3d3bb112feb4a08e232403c168a309d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3d3bb112feb4a08e232403c168a309d">&#9670;&#160;</a></span>IsResident()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d3bb112feb4a08e232403c168a309d">&#9670;&#160;</a></span>IsResident() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -398,8 +546,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ac3d3bb112feb4a08e232403c168a309d" name="ac3d3bb112feb4a08e232403c168a309d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d3bb112feb4a08e232403c168a309d">&#9670;&#160;</a></span>IsResident() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::ResourceAllocation::IsResident </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8f8384f383d68af93d39ea641b1c70a2" name="a8f8384f383d68af93d39ea641b1c70a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f8384f383d68af93d39ea641b1c70a2">&#9670;&#160;</a></span>Map()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f8384f383d68af93d39ea641b1c70a2">&#9670;&#160;</a></span>Map() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -444,8 +609,42 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a44961b0c02815582c9b80cb889786afe" name="a44961b0c02815582c9b80cb889786afe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44961b0c02815582c9b80cb889786afe">&#9670;&#160;</a></span>Map() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::ResourceAllocation::Map </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>subresource</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const D3D12_RANGE *&#160;</td>
+          <td class="paramname"><em>readRange</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>dataOut</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acd5ebeeb118f79538858c1e617fea592" name="acd5ebeeb118f79538858c1e617fea592"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd5ebeeb118f79538858c1e617fea592">&#9670;&#160;</a></span>Unmap()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acd5ebeeb118f79538858c1e617fea592">&#9670;&#160;</a></span>Unmap() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -482,9 +681,39 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aacb13e9781e92486cd62b08b39adf645" name="aacb13e9781e92486cd62b08b39adf645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacb13e9781e92486cd62b08b39adf645">&#9670;&#160;</a></span>Unmap() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gpgmm::d3d12::ResourceAllocation::Unmap </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>subresource</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const D3D12_RANGE *&#160;</td>
+          <td class="paramname"><em>writtenRange</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/d3d12/<a class="el" href="_resource_allocation_d3_d12_8h.html">ResourceAllocationD3D12.h</a></li>
+<li>src/include/min/<a class="el" href="min_2gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 <li>src/gpgmm/d3d12/<a class="el" href="_resource_allocation_d3_d12_8cpp.html">ResourceAllocationD3D12.cpp</a></li>
+<li>src/include/min/<a class="el" href="gpgmm__d3d12_8cpp.html">gpgmm_d3d12.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
