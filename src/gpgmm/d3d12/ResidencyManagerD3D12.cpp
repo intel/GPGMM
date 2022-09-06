@@ -33,8 +33,8 @@
 namespace gpgmm::d3d12 {
 
     static constexpr uint32_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
-    static constexpr float kDefaultVideoMemoryBudget = 0.95f;  // 95%
-    static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;  // 50%
+    static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
+    static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -160,7 +160,7 @@ namespace gpgmm::d3d12 {
             residencyFence.reset(fencePtr);
         }
 
-        if (descriptor.VideoMemoryBudget != 0 && descriptor.Budget != 0) {
+        if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
             gpgmm::WarningLog()
                 << "Video memory budget was ignored since a budget was already specified.";
         }
@@ -189,18 +189,18 @@ namespace gpgmm::d3d12 {
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
         // limit, we can create a predictable and reproducible budget.
-        if (descriptor.Budget > 0) {
+        if (descriptor.MaxBudgetInBytes > 0) {
             DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
                 residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
 
             localVideoMemorySegmentInfo->Budget =
-                localVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
+                localVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             if (!residencyManager->mIsUMA) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
                     residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
 
                 nonLocalVideoMemorySegmentInfo->Budget =
-                    nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.Budget;
+                    nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             }
         }
 
@@ -217,12 +217,13 @@ namespace gpgmm::d3d12 {
                                        std::unique_ptr<Fence> residencyFence)
         : mDevice(descriptor.Device),
           mAdapter(descriptor.Adapter),
-          mVideoMemoryBudget(descriptor.VideoMemoryBudget == 0 ? kDefaultVideoMemoryBudget
-                                                               : descriptor.VideoMemoryBudget),
+          mMaxPctOfVideoMemoryToBudget(descriptor.MaxPctOfVideoMemoryToBudget == 0
+                                           ? kDefaultMaxPctOfVideoMemoryToBudget
+                                           : descriptor.MaxPctOfVideoMemoryToBudget),
           mMinPctOfBudgetToReserve(descriptor.MinPctOfBudgetToReserve == 0
                                        ? kDefaultMinPctOfBudgetToReserve
                                        : descriptor.MinPctOfBudgetToReserve),
-          mIsBudgetRestricted(descriptor.Budget > 0),
+          mIsBudgetRestricted(descriptor.MaxBudgetInBytes > 0),
           mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
                                                              : descriptor.EvictSizeInBytes),
           mIsUMA(descriptor.IsUMA),
@@ -424,7 +425,7 @@ namespace gpgmm::d3d12 {
         if (!mIsBudgetRestricted) {
             pVideoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
-                mVideoMemoryBudget);
+                mMaxPctOfVideoMemoryToBudget);
         }
 
         // Ignore when no budget was specified.

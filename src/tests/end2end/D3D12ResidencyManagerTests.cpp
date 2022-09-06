@@ -62,7 +62,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         residencyDesc.UpdateBudgetByPolling = true;
 
         // Specify a restricted budget, the OS budget fluctuates unpredicatbly.
-        residencyDesc.Budget = budget;
+        residencyDesc.MaxBudgetInBytes = budget;
 
         // Required
         residencyDesc.IsUMA = mIsUMA;
