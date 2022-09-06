@@ -131,9 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae163f9da6c034ddc327c137b4169aa13"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation)=0</td></tr>
 <tr class="memdesc:ae163f9da6c034ddc327c137b4169aa13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a memory allocation.  <a href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">More...</a><br /></td></tr>
 <tr class="separator:ae163f9da6c034ddc327c137b4169aa13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fa9976471da2750c2a5f38d86df2f5b"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize)</td></tr>
-<tr class="memdesc:a6fa9976471da2750c2a5f38d86df2f5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">More...</a><br /></td></tr>
-<tr class="separator:a6fa9976471da2750c2a5f38d86df2f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fa8e56f5dd78f763694b3e165b1fd0c"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c">ReleaseMemory</a> (uint64_t bytesToRelease)</td></tr>
+<tr class="memdesc:a0fa8e56f5dd78f763694b3e165b1fd0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c">More...</a><br /></td></tr>
+<tr class="separator:a0fa8e56f5dd78f763694b3e165b1fd0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3756514ac48ac4445118a09112ae135"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">GetMemorySize</a> () const</td></tr>
 <tr class="memdesc:ae3756514ac48ac4445118a09112ae135"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory sized of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">More...</a><br /></td></tr>
 <tr class="separator:ae3756514ac48ac4445118a09112ae135"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,7 +213,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> services a fixed or variable sized <a class="el" href="structgpgmm_1_1_memory_allocation_request.html">MemoryAllocationRequest</a>. </p>
-<p >Internally, <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> sub-allocates existing memory objects into smaller chucks (called memory blocks) or allocates whole memory objects then decides which memory blocks or objects to cache. Since cached memory objects count against the application's memory usage, freeing this cache periodically by calling <a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b" title="Return free memory back to the OS.">ReleaseMemory()</a> is highly recommended. </p>
+<p >Internally, <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> sub-allocates existing memory objects into smaller chucks (called memory blocks) or allocates whole memory objects then decides which memory blocks or objects to cache. Since cached memory objects count against the application's memory usage, freeing this cache periodically by calling <a class="el" href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c" title="Return free memory back to the OS.">ReleaseMemory()</a> is highly recommended. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a546a30ca32c0f4a542ee22539d0076ff" name="a546a30ca32c0f4a542ee22539d0076ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a546a30ca32c0f4a542ee22539d0076ff">&#9670;&#160;</a></span>MemoryAllocator() <span class="overload">[1/2]</span></h2>
@@ -457,8 +457,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6fa9976471da2750c2a5f38d86df2f5b" name="a6fa9976471da2750c2a5f38d86df2f5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fa9976471da2750c2a5f38d86df2f5b">&#9670;&#160;</a></span>ReleaseMemory()</h2>
+<a id="a0fa8e56f5dd78f763694b3e165b1fd0c" name="a0fa8e56f5dd78f763694b3e165b1fd0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fa8e56f5dd78f763694b3e165b1fd0c">&#9670;&#160;</a></span>ReleaseMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,7 +470,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">uint64_t gpgmm::MemoryAllocator::ReleaseMemory </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>bytesToRelease</em> = <code>kInvalidSize</code></td><td>)</td>
+          <td class="paramname"><em>bytesToRelease</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -484,13 +484,13 @@ Protected Attributes</h2></td></tr>
 <p>Return free memory back to the OS. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A kInvalidSize means ALL memory will be released.</td></tr>
+    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A value of UINT64_MAX releases ALL memory held by the allocator.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, released. The released size might be smaller then bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly total up to the amount. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a2fd35f384d89ba91ac4d8c12f583c95c">gpgmm::PooledMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_segmented_memory_allocator.html#a8dbee6149f05ffe3132b1937ddcdee51">gpgmm::SegmentedMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#adbf6c43a5273f6a71a581d436dc7f852">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="class_test_memory_allocator.html#aa422e0d75b526121c5288050a49f1722">TestMemoryAllocator</a>.</p>
+<p>Reimplemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad04c9bbcda28467a6b255004c247330a">gpgmm::d3d12::ResourceAllocator</a>, <a class="el" href="class_test_memory_allocator.html#ace605387849a6560a4569d9c3237c705">TestMemoryAllocator</a>, <a class="el" href="classgpgmm_1_1_pooled_memory_allocator.html#a2fd35f384d89ba91ac4d8c12f583c95c">gpgmm::PooledMemoryAllocator</a>, and <a class="el" href="classgpgmm_1_1_segmented_memory_allocator.html#a8dbee6149f05ffe3132b1937ddcdee51">gpgmm::SegmentedMemoryAllocator</a>.</p>
 
 </div>
 </div>

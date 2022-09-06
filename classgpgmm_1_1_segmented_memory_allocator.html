@@ -136,9 +136,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">DeallocateMemory</a> (std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1_memory_allocation.html">MemoryAllocation</a> &gt; allocation)=0</td></tr>
 <tr class="memdesc:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a memory allocation.  <a href="classgpgmm_1_1_memory_allocator.html#ae163f9da6c034ddc327c137b4169aa13">More...</a><br /></td></tr>
 <tr class="separator:ae163f9da6c034ddc327c137b4169aa13 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">ReleaseMemory</a> (uint64_t bytesToRelease=kInvalidSize)</td></tr>
-<tr class="memdesc:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">More...</a><br /></td></tr>
-<tr class="separator:a6fa9976471da2750c2a5f38d86df2f5b inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fa8e56f5dd78f763694b3e165b1fd0c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c">ReleaseMemory</a> (uint64_t bytesToRelease)</td></tr>
+<tr class="memdesc:a0fa8e56f5dd78f763694b3e165b1fd0c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c">More...</a><br /></td></tr>
+<tr class="separator:a0fa8e56f5dd78f763694b3e165b1fd0c inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">GetMemorySize</a> () const</td></tr>
 <tr class="memdesc:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fixed-memory sized of the <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>.  <a href="classgpgmm_1_1_memory_allocator.html#ae3756514ac48ac4445118a09112ae135">More...</a><br /></td></tr>
 <tr class="separator:ae3756514ac48ac4445118a09112ae135 inherit pub_methods_classgpgmm_1_1_memory_allocator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -412,13 +412,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Return free memory back to the OS. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A kInvalidSize means ALL memory will be released.</td></tr>
+    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A value of UINT64_MAX releases ALL memory held by the allocator.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, released. The released size might be smaller then bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly total up to the amount. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a6fa9976471da2750c2a5f38d86df2f5b">gpgmm::MemoryAllocator</a>.</p>
+<p>Reimplemented from <a class="el" href="classgpgmm_1_1_memory_allocator.html#a0fa8e56f5dd78f763694b3e165b1fd0c">gpgmm::MemoryAllocator</a>.</p>
 
 </div>
 </div>
