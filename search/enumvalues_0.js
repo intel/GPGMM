@@ -15,11 +15,12 @@ var searchData=
   ['allocator_5fflag_5falways_5fcommited_12',['ALLOCATOR_FLAG_ALWAYS_COMMITED',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fin_5fbudget_13',['ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fon_5fdemand_14',['ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fdisable_5fmemory_5fprefetch_15',['ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnone_16',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311',1,'gpgmm::d3d12']]],
-  ['allocator_5fprofile_5fcaptured_17',['ALLOCATOR_PROFILE_CAPTURED',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52aabffa8f6a5653a87cd848350c2e09716',1,'GPGMMCaptureReplayTests.h']]],
-  ['allocator_5fprofile_5fdefault_18',['ALLOCATOR_PROFILE_DEFAULT',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52ab4cdcd6650084581da6f1a4ec17175c9',1,'GPGMMCaptureReplayTests.h']]],
-  ['allocator_5fprofile_5flow_5fmemory_19',['ALLOCATOR_PROFILE_LOW_MEMORY',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52ae7bf3365772f4328a0e0a142ab65847d',1,'GPGMMCaptureReplayTests.h']]],
-  ['allocator_5fprofile_5fmax_5fperformance_20',['ALLOCATOR_PROFILE_MAX_PERFORMANCE',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52abbdc82a7c7638ab3c50aeee3eb0ea600',1,'GPGMMCaptureReplayTests.h']]],
-  ['allocatorfailed_21',['AllocatorFailed',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088aeeb323139ec8a922d9c58b88e7fbff56',1,'gpgmm']]]
+  ['allocator_5fflag_5fdisable_5fcustom_5fheaps_15',['ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fdisable_5fmemory_5fprefetch_16',['ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fnone_17',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311',1,'gpgmm::d3d12']]],
+  ['allocator_5fprofile_5fcaptured_18',['ALLOCATOR_PROFILE_CAPTURED',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52aabffa8f6a5653a87cd848350c2e09716',1,'GPGMMCaptureReplayTests.h']]],
+  ['allocator_5fprofile_5fdefault_19',['ALLOCATOR_PROFILE_DEFAULT',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52ab4cdcd6650084581da6f1a4ec17175c9',1,'GPGMMCaptureReplayTests.h']]],
+  ['allocator_5fprofile_5flow_5fmemory_20',['ALLOCATOR_PROFILE_LOW_MEMORY',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52ae7bf3365772f4328a0e0a142ab65847d',1,'GPGMMCaptureReplayTests.h']]],
+  ['allocator_5fprofile_5fmax_5fperformance_21',['ALLOCATOR_PROFILE_MAX_PERFORMANCE',['../_g_p_g_m_m_capture_replay_tests_8h.html#a72bdf48239b01f0790bbbdedf60a6a52abbdc82a7c7638ab3c50aeee3eb0ea600',1,'GPGMMCaptureReplayTests.h']]],
+  ['allocatorfailed_22',['AllocatorFailed',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088aeeb323139ec8a922d9c58b88e7fbff56',1,'gpgmm']]]
 ];
