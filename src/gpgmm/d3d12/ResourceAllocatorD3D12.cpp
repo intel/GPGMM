@@ -292,6 +292,40 @@ namespace gpgmm::d3d12 {
             return hr;
         }
 
+        D3D12_HEAP_PROPERTIES GetHeapProperties(ID3D12Device* device,
+                                                D3D12_HEAP_TYPE heapType,
+                                                bool isCustomHeapDisabled) {
+            // Produces the corresponding properties from the corresponding heap type per this table
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getcustomheapproperties
+            if (!isCustomHeapDisabled) {
+                return device->GetCustomHeapProperties(0, heapType);
+            }
+
+            D3D12_HEAP_PROPERTIES heapProperties = {};
+            heapProperties.Type = heapType;
+            heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+
+            return heapProperties;
+        }
+
+        D3D12_MEMORY_POOL GetMemoryPool(const D3D12_HEAP_PROPERTIES& heapProperties, bool isUMA) {
+            // Custom heap types are required to specify a non-unknown pool.
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_properties
+            if (heapProperties.MemoryPoolPreference != D3D12_MEMORY_POOL_UNKNOWN) {
+                return heapProperties.MemoryPoolPreference;
+            }
+
+            // Otherwise, a unknown pool corresponds to the custom heap type properties and only L1
+            // exists when non-UMA adapter.
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getcustomheapproperties
+            if (!isUMA && heapProperties.Type == D3D12_HEAP_TYPE_DEFAULT) {
+                return D3D12_MEMORY_POOL_L1;
+            } else {
+                return D3D12_MEMORY_POOL_L0;  // Physical system
+            }
+        }
+
     }  // namespace
 
     // static
@@ -444,7 +478,8 @@ namespace gpgmm::d3d12 {
           mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
-          mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents) {
+          mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
+          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
 #if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
@@ -458,32 +493,33 @@ namespace gpgmm::d3d12 {
 
             const D3D12_HEAP_FLAGS& heapFlags =
                 GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
+            const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
             const uint64_t msaaHeapAlignment = GetHeapAlignment(heapFlags, true);
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags, false);
 
-            const D3D12_HEAP_PROPERTIES customHeapProperties =
-                mDevice->GetCustomHeapProperties(0, GetHeapType(resourceHeapType));
+            const D3D12_HEAP_PROPERTIES heapProperties =
+                GetHeapProperties(mDevice.Get(), heapType, mIsCustomHeapsDisabled);
 
             // General-purpose allocators.
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
             mResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapSubAllocator(
-                descriptor, heapFlags, customHeapProperties, heapAlignment);
+                descriptor, heapFlags, heapProperties, heapAlignment);
 
             mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapSubAllocator(
-                descriptor, heapFlags, customHeapProperties, msaaHeapAlignment);
+                descriptor, heapFlags, heapProperties, msaaHeapAlignment);
 
-            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapAllocator(
-                descriptor, heapFlags, customHeapProperties, heapAlignment);
+            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
+                CreateResourceHeapAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
 
             mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapAllocator(
-                descriptor, heapFlags, customHeapProperties, msaaHeapAlignment);
+                descriptor, heapFlags, heapProperties, msaaHeapAlignment);
 
             // Resource specific allocators.
-            mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = CreateSmallBufferAllocator(
-                descriptor, heapFlags, customHeapProperties, heapAlignment,
-                GetInitialResourceState(GetHeapType(resourceHeapType)));
+            mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
+                CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapAlignment,
+                                           GetInitialResourceState(heapType));
 
             // Cache resource sizes commonly requested.
             // Allows the next memory block to be made available upon request without
@@ -864,12 +900,13 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        D3D12_HEAP_PROPERTIES customHeapProperties = mDevice->GetCustomHeapProperties(0, heapType);
+        const D3D12_HEAP_PROPERTIES heapProperties =
+            GetHeapProperties(mDevice.Get(), heapType, mIsCustomHeapsDisabled);
 
         // Limit available memory to unused budget when residency is enabled.
-        if (mResidencyManager != nullptr) {
-            const DXGI_MEMORY_SEGMENT_GROUP segment =
-                mResidencyManager->GetMemorySegmentGroup(customHeapProperties.MemoryPoolPreference);
+        if (IsResidencyEnabled()) {
+            const DXGI_MEMORY_SEGMENT_GROUP segment = mResidencyManager->GetMemorySegmentGroup(
+                GetMemoryPool(heapProperties, mResidencyManager->IsUMA()));
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(segment);
 
@@ -1040,7 +1077,7 @@ namespace gpgmm::d3d12 {
 
         ComPtr<ID3D12Resource> committedResource;
         Heap* resourceHeap = nullptr;
-        ReturnIfFailed(CreateCommittedResource(customHeapProperties, heapFlags, resourceInfo,
+        ReturnIfFailed(CreateCommittedResource(heapProperties, heapFlags, resourceInfo,
                                                &newResourceDesc, clearValue, initialResourceState,
                                                &committedResource, &resourceHeap));
 
@@ -1161,9 +1198,9 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.AlwaysInBudget = mIsAlwaysInBudget;
 
-        if (mResidencyManager != nullptr) {
-            resourceHeapDesc.MemorySegmentGroup =
-                mResidencyManager->GetMemorySegmentGroup(heapProperties.MemoryPoolPreference);
+        if (IsResidencyEnabled()) {
+            resourceHeapDesc.MemorySegmentGroup = mResidencyManager->GetMemorySegmentGroup(
+                GetMemoryPool(heapProperties, mResidencyManager->IsUMA()));
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
@@ -1295,7 +1332,11 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return mResidencyManager != nullptr && !mIsAlwaysInBudget;
+        return IsResidencyEnabled() && !mIsAlwaysInBudget;
+    }
+
+    bool ResourceAllocator::IsResidencyEnabled() const {
+        return mResidencyManager != nullptr;
     }
 
     HRESULT ResourceAllocator::CheckFeatureSupport(FEATURE feature,
