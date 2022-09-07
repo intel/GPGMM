@@ -256,7 +256,7 @@ namespace gpgmm::d3d12 {
         friend BudgetUpdateTask;
         HRESULT UpdateMemorySegments();
 
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool) const;
+        bool IsUMA() const;
 
         const char* GetTypename() const;
 
