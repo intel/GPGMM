@@ -22,6 +22,10 @@
 
 namespace gpgmm::d3d12 {
 
+    /** \brief IUnknownImpl is a thread-safe ref-count implementation for custom COM based objects.
+
+    The custom COM based object must override DeleteThis() if they require a custom-deleter.
+    */
     class GPGMM_EXPORT IUnknownImpl : public IUnknown, public NonCopyable {
       public:
         IUnknownImpl();
