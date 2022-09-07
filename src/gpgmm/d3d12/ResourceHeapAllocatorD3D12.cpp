@@ -66,8 +66,8 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.AlwaysInBudget = mAlwaysInBudget;
 
         if (mResidencyManager != nullptr) {
-            resourceHeapDesc.MemorySegmentGroup =
-                mResidencyManager->GetMemorySegmentGroup(mHeapProperties.MemoryPoolPreference);
+            resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
+                mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         Heap* resourceHeap = nullptr;
@@ -79,6 +79,11 @@ namespace gpgmm::d3d12 {
                     heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
                     heapDesc.Alignment = resourceHeapDesc.Alignment;
                     heapDesc.Flags = mHeapFlags;
+
+                    // Non-custom heaps are not allowed to have the pool-specified.
+                    if (heapDesc.Properties.Type != D3D12_HEAP_TYPE_CUSTOM) {
+                        heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+                    }
 
                     ComPtr<ID3D12Heap> heap;
                     ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));

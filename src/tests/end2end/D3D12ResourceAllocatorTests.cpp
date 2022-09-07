@@ -456,6 +456,23 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
     EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kDefaultBufferSize * 2);
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableCustomHeaps) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS;
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+
+    ComPtr<ResourceAllocation> allocation;
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &allocation));
+
+    D3D12_HEAP_PROPERTIES heapProperties = {};
+    ASSERT_SUCCEEDED(allocation->GetResource()->GetHeapProperties(&heapProperties, nullptr));
+    EXPECT_NE(heapProperties.Type, D3D12_HEAP_TYPE_CUSTOM);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(

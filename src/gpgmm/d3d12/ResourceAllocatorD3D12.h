@@ -76,6 +76,13 @@ namespace gpgmm::d3d12 {
         minimal possible GPU memory footprint or debugging OOM failures.
         */
         ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
+
+        /** \brief Disables use of D3D12_HEAP_TYPE_CUSTOM.
+
+        Used to workaround issues when a custom-equivalent heap is not considered equal to
+        the corresponding heap type.
+        */
+        ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS = 0x10,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_FLAGS)
@@ -585,6 +592,7 @@ namespace gpgmm::d3d12 {
         static HRESULT ReportLiveDeviceObjects(ComPtr<ID3D12Device> device);
 
         bool IsCreateHeapNotResident() const;
+        bool IsResidencyEnabled() const;
 
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
@@ -601,6 +609,7 @@ namespace gpgmm::d3d12 {
         const bool mIsAlwaysInBudget;
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
+        const bool mIsCustomHeapsDisabled;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 
