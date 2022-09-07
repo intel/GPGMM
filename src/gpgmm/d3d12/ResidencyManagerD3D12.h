@@ -258,8 +258,6 @@ namespace gpgmm::d3d12 {
 
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool) const;
 
-        bool IsUMA() const;
-
         const char* GetTypename() const;
 
         using LRUCache = LinkedList<Heap>;
