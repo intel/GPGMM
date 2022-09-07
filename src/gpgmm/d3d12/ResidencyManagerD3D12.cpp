@@ -764,6 +764,7 @@ namespace gpgmm::d3d12 {
 
     DXGI_MEMORY_SEGMENT_GROUP ResidencyManager::GetMemorySegmentGroup(
         D3D12_MEMORY_POOL memoryPool) const {
+        ASSERT(memoryPool != D3D12_MEMORY_POOL_UNKNOWN);
         return d3d12::GetMemorySegmentGroup(memoryPool, mIsUMA);
     }
 
