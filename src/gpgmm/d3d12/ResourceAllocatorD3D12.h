@@ -306,6 +306,20 @@ namespace gpgmm::d3d12 {
         Allow internal data structures used for resource allocation to be cached in-memory.
         */
         ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x10,
+
+        /** \brief Requires heaps to be always attributed by D3D12_HEAP_TYPE.
+
+        With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
+        This enables better resource optimization during allocation. However, certain heap flags or
+        access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
+        D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
+        as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
+        properties are always write-combined.
+
+        If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
+        D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
+        */
+        ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)

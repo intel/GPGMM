@@ -830,18 +830,22 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
         if (heapType == 0) {
             ReturnIfFailed(GetHeapType(initialResourceState, &heapType));
-            // Abandon the attribution of heaps when isCacheCoherentUMA is true by always using the
-            // custom equivelent of upload heap. This allows the same resource allocator to be used.
-            if (mCaps->IsAdapterCacheCoherentUMA()) {
-                // CPU read back could be inefficient since upload heaps are usually write-combined
-                // (vs write-back) pages.
-                if (heapType != D3D12_HEAP_TYPE_READBACK) {
-                    heapType = D3D12_HEAP_TYPE_UPLOAD;
-                } else {
-                    DebugLog() << "Resource state" << ToHexStr(initialResourceState)
-                               << " used heap type " << heapType
-                               << " which disables UMA optimization.";
-                }
+        }
+
+        // Abandon the attribution of heaps when isCacheCoherentUMA is true by always using the
+        // custom equivelent of upload heap everywhere. This optimizes resource allocation by
+        // allowing the same resource allocator to be used, improving heap reuse. However, CPU
+        // read-back would be inefficent since upload heaps on UMA adapters are usually
+        // write-combined (vs write-back) so leave read back heaps alone.
+        if (!(allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS) &&
+            mCaps->IsAdapterCacheCoherentUMA() && !mIsCustomHeapsDisabled) {
+            if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
+                heapType = D3D12_HEAP_TYPE_UPLOAD;
+            } else {
+                DebugLog() << "Unable to optimize resource allocation for supported UMA adapter "
+                              "due to D3D12_HEAP_TYPE_READBACK being specified. Please consider "
+                              "using an unspecified heap type if CPU read-back efficency is "
+                              "not important.";
             }
         }
 

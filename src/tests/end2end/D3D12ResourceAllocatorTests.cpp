@@ -317,55 +317,49 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
-        ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize),
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
-        ASSERT_NE(allocation, nullptr);
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
     }
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
 
-        ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize),
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &allocation));
-        ASSERT_NE(allocation, nullptr);
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
     }
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-        ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COMMON,
-            nullptr, &allocation));
-        ASSERT_NE(allocation, nullptr);
+            nullptr, nullptr));
     }
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
 
-        ComPtr<ResourceAllocation> allocation;
-        ASSERT_FAILED(resourceAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COMMON,
-            nullptr, &allocation));
+            nullptr, nullptr));
     }
 
     // Creating a zero sized buffer is not allowed.
     {
-        ComPtr<ResourceAllocation> allocation;
         ASSERT_FAILED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(0), D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        ASSERT_EQ(allocation, nullptr);
+            {}, CreateBasicBufferDesc(0), D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
     }
 
-    // Creating a buffer with required but unsupported heap flag should always succeed.
+    // Creating a buffer with a custom heap flag should always succeed.
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
         allocationDesc.ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_SHARED;
+
+        // D3D12_HEAP_FLAG_SHARED is incompatible CPU accessible heaps.
+        allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
 
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
@@ -453,6 +447,15 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
         resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
                                           D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
 
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kDefaultBufferSize);
+
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
+
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
+
     EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kDefaultBufferSize * 2);
 }
 
@@ -463,14 +466,24 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableCustomHeaps) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
 
-    ComPtr<ResourceAllocation> allocation;
-    ASSERT_SUCCEEDED(
-        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
-                                          D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &allocation));
+    {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kDefaultBufferSize), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &allocation));
 
-    D3D12_HEAP_PROPERTIES heapProperties = {};
-    ASSERT_SUCCEEDED(allocation->GetResource()->GetHeapProperties(&heapProperties, nullptr));
-    EXPECT_NE(heapProperties.Type, D3D12_HEAP_TYPE_CUSTOM);
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        ASSERT_SUCCEEDED(allocation->GetResource()->GetHeapProperties(&heapProperties, nullptr));
+        EXPECT_NE(heapProperties.Type, D3D12_HEAP_TYPE_CUSTOM);
+    }
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
+
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize),
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
