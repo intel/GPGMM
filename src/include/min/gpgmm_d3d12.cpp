@@ -329,7 +329,7 @@ namespace gpgmm::d3d12 {
         return mInfo;
     }
 
-    HRESULT ResourceAllocator::CheckFeatureSupport(FEATURE feature,
+    HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                                    void* pFeatureSupportData,
                                                    uint32_t featureSupportDataSize) const {
         return E_INVALIDARG;  // Unsupported

@@ -273,8 +273,8 @@ namespace gpgmm::d3d12 {
         std::string DebugName;
     };
 
-    enum FEATURE {
-        FEATURE_RESOURCE_SUBALLOCATION_SUPPORT,
+    enum ALLOCATOR_FEATURE {
+        ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
     };
 
     using RESOURCE_ALLOCATOR_INFO = MemoryAllocatorInfo;
@@ -302,7 +302,7 @@ namespace gpgmm::d3d12 {
 
         RESOURCE_ALLOCATOR_INFO GetInfo() const override;
 
-        HRESULT CheckFeatureSupport(FEATURE feature,
+        HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const;
 

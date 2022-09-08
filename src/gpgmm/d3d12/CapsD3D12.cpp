@@ -98,7 +98,7 @@ namespace gpgmm::d3d12 {
 
         // D3D12 has no feature to detect support and must be set manually.
         if (adapterDesc.VendorId == kIntel_VkVendor) {
-            caps->mIsResourceAccessAlwaysCoherent = true;
+            caps->mIsResourceAllocationWithinCoherent = true;
         }
 
         // Dump log for debugging purposes.
@@ -138,8 +138,8 @@ namespace gpgmm::d3d12 {
         return mIsCreateHeapNotResidentSupported;
     }
 
-    bool Caps::IsResourceAccessAlwaysCoherent() const {
-        return mIsResourceAccessAlwaysCoherent;
+    bool Caps::IsResourceAllocationWithinCoherent() const {
+        return mIsResourceAllocationWithinCoherent;
     }
 
     bool Caps::IsAdapterUMA() const {

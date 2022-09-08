@@ -36,7 +36,7 @@ namespace gpgmm::d3d12 {
         bool IsCreateHeapNotResidentSupported() const;
 
         // Allows a resource to be shared between multiple command queues.
-        bool IsResourceAccessAlwaysCoherent() const;
+        bool IsResourceAllocationWithinCoherent() const;
 
         // Specifies if the adapter uses a Unified Memory Architecture (UMA).
         bool IsAdapterUMA() const;
@@ -54,7 +54,7 @@ namespace gpgmm::d3d12 {
         uint64_t mMaxResourceHeapSize = 0;
         D3D12_RESOURCE_HEAP_TIER mMaxResourceHeapTier;
         bool mIsCreateHeapNotResidentSupported = false;
-        bool mIsResourceAccessAlwaysCoherent = false;
+        bool mIsResourceAllocationWithinCoherent = false;
         bool mIsAdapterUMA = false;
         bool mIsAdapterCacheCoherentUMA = false;
     };
