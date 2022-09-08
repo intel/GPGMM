@@ -1520,7 +1520,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
     EXPECT_EQ(allocationWithPadding->GetMethod(), gpgmm::AllocationMethod::kStandalone);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CheckFeatureSupport) {
+TEST_F(D3D12ResourceAllocatorTests, AllocatorFeatures) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
@@ -1532,20 +1532,20 @@ TEST_F(D3D12ResourceAllocatorTests, CheckFeatureSupport) {
             uint64_t bigItem;
         } WrongData = {};
 
-        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(FEATURE_RESOURCE_SUBALLOCATION_SUPPORT,
-                                                             &WrongData, sizeof(WrongData)));
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
+            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &WrongData, sizeof(WrongData)));
     }
 
     // Request information with no data.
     {
-        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(FEATURE_RESOURCE_SUBALLOCATION_SUPPORT,
-                                                             nullptr, 0));
+        ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
+            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, nullptr, 0));
     }
 
     // Request information with valid data size.
     {
-        FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT data = {};
+        FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT data = {};
         ASSERT_SUCCEEDED(resourceAllocator->CheckFeatureSupport(
-            FEATURE_RESOURCE_SUBALLOCATION_SUPPORT, &data, sizeof(data)));
+            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &data, sizeof(data)));
     }
 }

@@ -1352,16 +1352,17 @@ namespace gpgmm::d3d12 {
         return mResidencyManager != nullptr;
     }
 
-    HRESULT ResourceAllocator::CheckFeatureSupport(FEATURE feature,
+    HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                                    void* pFeatureSupportData,
                                                    uint32_t featureSupportDataSize) const {
         switch (feature) {
-            case FEATURE_RESOURCE_SUBALLOCATION_SUPPORT: {
-                FEATURE_DATA_RESOURCE_SUBALLOCATION_SUPPORT data = {};
+            case ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT: {
+                FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT data = {};
                 if (featureSupportDataSize != sizeof(data)) {
                     return E_INVALIDARG;
                 }
-                data.IsResourceAccessAlwaysCoherent = mCaps->IsResourceAccessAlwaysCoherent();
+                data.IsResourceAllocationWithinCoherent =
+                    mCaps->IsResourceAllocationWithinCoherent();
                 memcpy(pFeatureSupportData, &data, featureSupportDataSize);
                 return S_OK;
             }
