@@ -54,10 +54,13 @@ namespace gpgmm::d3d12 {
         */
         Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
 
-        /** \brief Specifies if unified memory architecture (UMA) support is enabled.
+        /** \brief Specifies if unified memory architecture (UMA) is enabled.
 
-        Used to determine if residency manager must manage local and non-local segments seperately
-        or not.
+        When UMA is enabled, the residency manager will budget using a single memory segment.
+        Else, when UMA is false, the residency manager will have two budgets for local and non-local
+        memory segments, respectively. If IsUMA is false and the adapter is discrete, this will
+        effectively double the amount of memory bandwidth. If IsUMA is true and the adapter is UMA,
+        using a single budget can reduce residency and memory overhead.
 
         Required parameter. Use CheckFeatureSupport to determine if supported.
         */
