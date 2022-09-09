@@ -424,6 +424,20 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     }
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(
+        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    ComPtr<ResourceAllocation> allocation;
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+    allocation.Detach();  // leaked!
+}
+
 // Verifies there are no attribution of heaps when UMA + no read-back.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
     GPGMM_SKIP_TEST_IF(!mIsUMA);

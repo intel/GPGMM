@@ -50,7 +50,7 @@ declare_args() {
 
   # Enables checking of allocator leaks.
   # Sets -dGPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS
-  gpgmm_enable_allocator_leak_checks = is_debug
+  gpgmm_enable_allocator_leak_checks = false
 
   # Enables ASSERT on severity functionality.
   # Sets -dGPGMM_ENABLE_ASSERT_ON_WARNING

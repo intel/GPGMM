@@ -74,6 +74,7 @@ namespace gpgmm {
     }
 
     MemoryAllocator::~MemoryAllocator() {
+#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         // If memory cannot be reused by a (parent) allocator, ensure no used memory leaked.
         if (GetParent() == nullptr) {
             ASSERT(mInfo.UsedBlockUsage == 0u);
@@ -81,6 +82,7 @@ namespace gpgmm {
             ASSERT(mInfo.UsedMemoryCount == 0u);
             ASSERT(mInfo.UsedMemoryUsage == 0u);
         }
+#endif
     }
 
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(

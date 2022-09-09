@@ -482,9 +482,9 @@ namespace gpgmm::d3d12 {
           mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
-#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
-        mDebugAllocator = std::make_unique<DebugResourceAllocator>();
-#endif
+        if (descriptor.Flags & ALLOCATOR_FLAG_NEVER_LEAK_MEMORY) {
+            mDebugAllocator = std::make_unique<DebugResourceAllocator>();
+        }
 
         const bool isUMA =
             (IsResidencyEnabled()) ? mResidencyManager->IsUMA() : mCaps->IsAdapterUMA();
@@ -686,6 +686,11 @@ namespace gpgmm::d3d12 {
     ResourceAllocator::~ResourceAllocator() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
 
+        // Give the debug allocator the first chance to report leaks.
+        if (mDebugAllocator) {
+            mDebugAllocator->ReportLiveAllocations();
+        }
+
         // Destroy allocators in the reverse order they were created so we can record delete events
         // before event tracer shutdown.
         mSmallBufferAllocatorOfType = {};
@@ -695,10 +700,6 @@ namespace gpgmm::d3d12 {
 
         mResourceAllocatorOfType = {};
         mResourceHeapAllocatorOfType = {};
-
-#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
-        mDebugAllocator->ReportLiveAllocations();
-#endif
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
         ReportLiveDeviceObjects(mDevice);
