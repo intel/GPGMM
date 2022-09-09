@@ -68,7 +68,7 @@ namespace gpgmm::d3d12 {
                         }
 
                         gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
-                            << "Updated GPU budget from OS notification.";
+                            << "Recieved budget update event from OS.";
                         break;
                     }
                     // mUnregisterAndExitEvent
@@ -418,14 +418,46 @@ namespace gpgmm::d3d12 {
             static_cast<uint64_t>(queryVideoMemoryInfoOut.Budget * mMinPctOfBudgetToReserve),
             pVideoMemoryInfo->AvailableForReservation);
 
+        const uint64_t oldUsage = pVideoMemoryInfo->CurrentUsage;
         pVideoMemoryInfo->CurrentUsage =
             queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
 
+        if (oldUsage > pVideoMemoryInfo->CurrentUsage) {
+            gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
+                                      ? "Dedicated"
+                                      : "Shared")
+                              << " GPU memory usage went down by "
+                              << GPGMM_BYTES_TO_MB(oldUsage - pVideoMemoryInfo->CurrentUsage) << " MBs.";
+        } else if (oldUsage < pVideoMemoryInfo->CurrentUsage) {
+            gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
+                                      ? "Dedicated"
+                                      : "Shared")
+                              << " GPU memory usage went up by "
+                              << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - oldUsage) << " MBs.";
+        }
+
         // If we're restricting the budget, leave the budget as is.
         if (!mIsBudgetRestricted) {
+            const uint64_t oldBudget = pVideoMemoryInfo->Budget;
             pVideoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
                 mMaxPctOfVideoMemoryToBudget);
+
+            if (oldBudget > pVideoMemoryInfo->Budget) {
+                gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
+                                          ? "Dedicated"
+                                          : "Shared")
+                                  << " GPU memory budget went down by "
+                                  << GPGMM_BYTES_TO_MB(oldBudget - pVideoMemoryInfo->Budget)
+                                  << " MBs.";
+            } else if (oldBudget < pVideoMemoryInfo->Budget) {
+                gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
+                                          ? "Dedicated"
+                                          : "Shared")
+                                  << " GPU memory budget went up by "
+                                  << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - oldBudget)
+                                  << " MBs.";
+            }
         }
 
         // Ignore when no budget was specified.
