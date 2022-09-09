@@ -45,7 +45,7 @@ namespace gpgmm::d3d12 {
         bool IsAdapterCacheCoherentUMA() const;
 
         // Specifies if a texture and buffer can belong in the same heap.
-        bool GetMaxResourceHeapTierSupported() const;
+        D3D12_RESOURCE_HEAP_TIER GetMaxResourceHeapTierSupported() const;
 
       private:
         Caps() = default;

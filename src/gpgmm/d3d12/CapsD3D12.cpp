@@ -70,7 +70,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT GetMaxResourceHeapTierSupported(ID3D12Device* device,
+    HRESULT SetMaxResourceHeapTierSupported(ID3D12Device* device,
                                             D3D12_RESOURCE_HEAP_TIER* maxResourceHeapTierOut) {
         D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
         ReturnIfFailed(
@@ -87,6 +87,7 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Caps> caps(new Caps());
         ReturnIfFailed(SetMaxResourceSize(device, &caps->mMaxResourceSize));
         ReturnIfFailed(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
+        ReturnIfFailed(SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier));
         ReturnIfFailed(
             SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
@@ -150,7 +151,7 @@ namespace gpgmm::d3d12 {
         return mIsAdapterCacheCoherentUMA;
     }
 
-    bool Caps::GetMaxResourceHeapTierSupported() const {
+    D3D12_RESOURCE_HEAP_TIER Caps::GetMaxResourceHeapTierSupported() const {
         return mMaxResourceHeapTier;
     }
 
