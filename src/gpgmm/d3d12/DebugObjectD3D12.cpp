@@ -16,7 +16,7 @@
 
 namespace gpgmm::d3d12 {
 
-    std::string DebugObject::GetDebugName() const {
+    const std::string& DebugObject::GetDebugName() const {
         return mDebugName;
     }
 

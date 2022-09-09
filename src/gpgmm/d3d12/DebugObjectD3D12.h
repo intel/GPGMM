@@ -39,7 +39,7 @@ namespace gpgmm::d3d12 {
 
         \return A string that contains the debug name associated with the debug object.
         */
-        std::string GetDebugName() const;
+        const std::string& GetDebugName() const;
 
         /** \brief Associate a debug name.
 
