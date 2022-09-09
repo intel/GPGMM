@@ -445,10 +445,13 @@ disables creating standalone allocations whose memory cannot be reused.
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
 vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource) by using GetOffsetFromResource().
-Since all devices guarentee command queue accesses are coherent between sub-allocations
-within the same resource. The app developer must check if the adapter is supported OR
-ensure only a command single queue is used.
+from the start of the allocation (vs subresource index) by using
+ResourceAllocation::GetOffsetFromResource().
+
+The app developer must either check if the allocator supports sub-allocation within resource
+beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
+single queue is used since not all devices guarentee command queue accesses are coherent
+between sub-allocations within the same resource.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
 <pre class="fragment">The created resource will always be allocated with it's own resource heap.
@@ -487,10 +490,13 @@ disables creating standalone allocations whose memory cannot be reused.
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
 vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource) by using GetOffsetFromResource().
-Since all devices guarentee command queue accesses are coherent between sub-allocations
-within the same resource. The app developer must check if the adapter is supported OR
-ensure only a command single queue is used.
+from the start of the allocation (vs subresource index) by using
+ResourceAllocation::GetOffsetFromResource().
+
+The app developer must either check if the allocator supports sub-allocation within resource
+beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
+single queue is used since not all devices guarentee command queue accesses are coherent
+between sub-allocations within the same resource.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
 <pre class="fragment">The created resource will always be allocated with it's own resource heap.
@@ -545,10 +551,13 @@ disables creating standalone allocations whose memory cannot be reused.
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
 vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource) by using GetOffsetFromResource().
-Since all devices guarentee command queue accesses are coherent between sub-allocations
-within the same resource. The app developer must check if the adapter is supported OR
-ensure only a command single queue is used.
+from the start of the allocation (vs subresource index) by using
+ResourceAllocation::GetOffsetFromResource().
+
+The app developer must either check if the allocator supports sub-allocation within resource
+beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
+single queue is used since not all devices guarentee command queue accesses are coherent
+between sub-allocations within the same resource.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
 <pre class="fragment">The created resource will always be allocated with it's own resource heap.
@@ -587,10 +596,13 @@ disables creating standalone allocations whose memory cannot be reused.
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
 vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource) by using GetOffsetFromResource().
-Since all devices guarentee command queue accesses are coherent between sub-allocations
-within the same resource. The app developer must check if the adapter is supported OR
-ensure only a command single queue is used.
+from the start of the allocation (vs subresource index) by using
+ResourceAllocation::GetOffsetFromResource().
+
+The app developer must either check if the allocator supports sub-allocation within resource
+beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
+single queue is used since not all devices guarentee command queue accesses are coherent
+between sub-allocations within the same resource.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
 <pre class="fragment">The created resource will always be allocated with it's own resource heap.
