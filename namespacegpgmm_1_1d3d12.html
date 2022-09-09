@@ -350,8 +350,8 @@ Functions</h2></td></tr>
 <tr class="separator:add235ed62661f00d31810f5fc7effbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4537f1d56646df04cd974c73b4481f48"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a4537f1d56646df04cd974c73b4481f48">SetCreateHeapNotResidentSupported</a> (ID3D12Device *device, bool *createHeapNotResidencySupported)</td></tr>
 <tr class="separator:a4537f1d56646df04cd974c73b4481f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cdea12d2c0972c463f0590afede41c1"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a7cdea12d2c0972c463f0590afede41c1">SetMaxResourceHeapTierSupported</a> (ID3D12Device *device, D3D12_RESOURCE_HEAP_TIER *maxResourceHeapTierOut)</td></tr>
-<tr class="separator:a7cdea12d2c0972c463f0590afede41c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0443243063e2a2bd7c2f34c124f0beaf"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0443243063e2a2bd7c2f34c124f0beaf">GetMaxResourceHeapTierSupported</a> (ID3D12Device *device, D3D12_RESOURCE_HEAP_TIER *maxResourceHeapTierOut)</td></tr>
+<tr class="separator:a0443243063e2a2bd7c2f34c124f0beaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac27affdc439f0ee00613f15835c347cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac27affdc439f0ee00613f15835c347cd">GetErrorMessage</a> (HRESULT error)</td></tr>
 <tr class="separator:ac27affdc439f0ee00613f15835c347cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43e9130aee00fce32c2c86c84ffac851"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a43e9130aee00fce32c2c86c84ffac851">GetDeviceErrorMessage</a> (ID3D12Device *device, HRESULT error)</td></tr>
@@ -1166,6 +1166,34 @@ the corresponding heap type.
 
 </div>
 </div>
+<a id="a0443243063e2a2bd7c2f34c124f0beaf" name="a0443243063e2a2bd7c2f34c124f0beaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0443243063e2a2bd7c2f34c124f0beaf">&#9670;&#160;</a></span>GetMaxResourceHeapTierSupported()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::GetMaxResourceHeapTierSupported </td>
+          <td>(</td>
+          <td class="paramtype">ID3D12Device *&#160;</td>
+          <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">D3D12_RESOURCE_HEAP_TIER *&#160;</td>
+          <td class="paramname"><em>maxResourceHeapTierOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a414f54f10d4de9987c678fa6cedc1896" name="a414f54f10d4de9987c678fa6cedc1896"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a414f54f10d4de9987c678fa6cedc1896">&#9670;&#160;</a></span>GetMemorySegmentGroup()</h2>
 
@@ -1455,34 +1483,6 @@ the corresponding heap type.
           <td></td>
           <td class="paramtype">uint64_t *&#160;</td>
           <td class="paramname"><em>sizeOut</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7cdea12d2c0972c463f0590afede41c1" name="a7cdea12d2c0972c463f0590afede41c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cdea12d2c0972c463f0590afede41c1">&#9670;&#160;</a></span>SetMaxResourceHeapTierSupported()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT gpgmm::d3d12::SetMaxResourceHeapTierSupported </td>
-          <td>(</td>
-          <td class="paramtype">ID3D12Device *&#160;</td>
-          <td class="paramname"><em>device</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">D3D12_RESOURCE_HEAP_TIER *&#160;</td>
-          <td class="paramname"><em>maxResourceHeapTierOut</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
