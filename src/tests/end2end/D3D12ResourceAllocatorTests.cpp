@@ -480,7 +480,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableCustomHeaps) {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
 
-        ASSERT_FAILED(resourceAllocator->CreateResource(
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kDefaultBufferSize),
             D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
     }

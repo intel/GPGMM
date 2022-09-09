@@ -336,13 +336,14 @@ namespace gpgmm::d3d12 {
 
         /** \brief Heap type that the resource to be allocated requires.
 
-        It is recommended to not specifiy the heap type, if possible. This enables better resource
-        optimization for UMA adapters by using a single custom-equivelent heap type everywhere. A
-        D3D12_HEAP_TYPE_READBACK is usually the only heap type that benefits from being explicitly
-        specified since most UMA adapters could benefit from write-combined CPU reads.
+        It is recommended to not specifiy the heap type or equivelently specify
+        D3D12_HEAP_TYPE_CUSTOM, if possible. This enables better resource optimization for UMA
+        adapters by using a single custom-equivelent heap type everywhere. D3D12_HEAP_TYPE_READBACK
+        is usually the only heap type that benefits from being explicitly specified since UMA
+        adapters benefit from write-combined CPU reads.
 
-        Optional parameter. If the heap type is not provided, the heap type will be inferred by the
-        adapter properties and the initial resource state.
+        Optional parameter. If the heap type is not provided or D3D12_HEAP_TYPE_CUSTOM, the heap
+        type will be inferred by using adapter properties and the initial resource state.
         */
         D3D12_HEAP_TYPE HeapType;
 
