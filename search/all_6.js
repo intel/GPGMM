@@ -18,7 +18,7 @@ var searchData=
   ['getbuffersize_15',['GetBufferSize',['../classgpgmm_1_1_scoped_trace_buffer_in_t_l_s.html#a290f37af232497e1a1c53c587bbac836',1,'gpgmm::ScopedTraceBufferInTLS']]],
   ['getcaps_16',['GetCaps',['../structgpgmm_1_1vk_1_1_gp_resource_allocator___t.html#a150992a8b98014dc59ce609bfc8264aa',1,'gpgmm::vk::GpResourceAllocator_T']]],
   ['getcurrentfence_17',['GetCurrentFence',['../classgpgmm_1_1d3d12_1_1_fence.html#a621d14907488b93142f3e5586835ea2d',1,'gpgmm::d3d12::Fence']]],
-  ['getdebugname_18',['GetDebugName',['../classgpgmm_1_1d3d12_1_1_debug_object.html#a01a5bdc96a0785b34b6d6f6fc5931dbf',1,'gpgmm::d3d12::DebugObject']]],
+  ['getdebugname_18',['GetDebugName',['../classgpgmm_1_1d3d12_1_1_debug_object.html#a0f9754b4f847582b8ac456ab6978791e',1,'gpgmm::d3d12::DebugObject']]],
   ['getdebugplatform_19',['GetDebugPlatform',['../class_g_p_g_m_m_test_base.html#a31bde82efe3f39061cec23834ffdc60e',1,'GPGMMTestBase']]],
   ['getdefaulteventmessagelevel_20',['GetDefaultEventMessageLevel',['../namespacegpgmm.html#a1ec6249a8274fa6a1c38dbae05f3743d',1,'gpgmm']]],
   ['getdefaultloglevel_21',['GetDefaultLogLevel',['../classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a0f43bb2b5e9f01b9f46ea76466d3f605',1,'gpgmm::d3d12::D3D12TestBase']]],
