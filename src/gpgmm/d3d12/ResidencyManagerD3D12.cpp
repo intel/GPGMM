@@ -162,7 +162,7 @@ namespace gpgmm::d3d12 {
 
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
             gpgmm::WarningLog()
-                << "Video memory budget was ignored since a budget was already specified.";
+                << "OS based memory budget was ignored since a budget was specified.";
         }
 
         if (descriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
