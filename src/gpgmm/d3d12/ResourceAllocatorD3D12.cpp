@@ -828,7 +828,7 @@ namespace gpgmm::d3d12 {
 
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
-        if (heapType == 0) {
+        if (heapType == 0 || heapType == D3D12_HEAP_TYPE_CUSTOM) {
             ReturnIfFailed(GetHeapType(initialResourceState, &heapType));
         }
 
