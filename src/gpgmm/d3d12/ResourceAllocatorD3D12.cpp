@@ -832,6 +832,13 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(GetHeapType(initialResourceState, &heapType));
         }
 
+        // Attribution of heaps may be abandoned but the original heap type is needed to
+        // check if sub-allocation within is allowed. Since default heaps do not require a
+        // persistent resource state once created, they are disallowed.
+        const bool isCreatedResourceStateRequired =
+            (heapType != D3D12_HEAP_TYPE_DEFAULT) &&
+            (GetInitialResourceState(heapType) == initialResourceState);
+
         // Abandon the attribution of heaps when isCacheCoherentUMA is true by always using the
         // custom equivelent of upload heap everywhere. This optimizes resource allocation by
         // allowing the same resource allocator to be used, improving heap reuse. However, CPU
@@ -947,8 +954,7 @@ namespace gpgmm::d3d12 {
         if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-            GetInitialResourceState(heapType) == initialResourceState && !isAlwaysCommitted &&
-            !neverSubAllocate) {
+            isCreatedResourceStateRequired && !isAlwaysCommitted && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the

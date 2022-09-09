@@ -665,7 +665,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferDesc, CreateBasicBufferDesc(4u, 1), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
-        ASSERT_NE(smallBuffer, nullptr);
+
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
@@ -683,7 +683,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferWithinDesc, CreateBasicBufferDesc(4u, 16), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
-        ASSERT_NE(smallBuffer, nullptr);
+
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 16u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
@@ -701,7 +701,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferWithinDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
-        ASSERT_NE(smallBuffer, nullptr);
+
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 256u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
@@ -719,7 +719,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferWithinDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
-        ASSERT_NE(smallBuffer, nullptr);
+
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
@@ -733,11 +733,64 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
-        ASSERT_NE(smallBuffer, nullptr);
+
         EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
         EXPECT_EQ(smallBuffer->GetSize(), 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetAlignment(), 4u);  // Re-align
+    }
+
+    // Default heap using a required resource state of another compatible heap type is not allowed.
+    {
+        ALLOCATION_DESC invalidSmallBufferWithinDesc = baseAllocationDesc;
+        invalidSmallBufferWithinDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            invalidSmallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
+            nullptr, &smallBuffer));
+        EXPECT_NE(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    }
+
+    // Non-compatible heap type is not allowed reguardless of resource state specified.
+    {
+        ALLOCATION_DESC invalidSmallBufferWithinDesc = baseAllocationDesc;
+        invalidSmallBufferWithinDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            invalidSmallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COMMON,
+            nullptr, &smallBuffer));
+        EXPECT_NE(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    }
+
+    // Custom heaps should use a heap type inferred by the resource state required.
+    {
+        ALLOCATION_DESC smallBufferWithinDesc = baseAllocationDesc;
+        smallBufferWithinDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            smallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
+            nullptr, &smallBuffer));
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    }
+
+    // Unspecified heap type should use the heap type inferred by the resource state
+    // required.
+    {
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            baseAllocationDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &smallBuffer));
+        EXPECT_EQ(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    }
+    {
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(3u),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &smallBuffer));
+        EXPECT_NE(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
     }
 }
 
