@@ -277,10 +277,13 @@ namespace gpgmm::d3d12 {
         which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
         can only be in one state at a time, this is mostly restricted to constant buffers (index and
         vertex buffers which will stay read-only after creation). The app developer must use offsets
-        from the start of the allocation (vs subresource) by using GetOffsetFromResource().
-        Since all devices guarentee command queue accesses are coherent between sub-allocations
-        within the same resource. The app developer must check if the adapter is supported OR
-        ensure only a command single queue is used.
+        from the start of the allocation (vs subresource index) by using
+        ResourceAllocation::GetOffsetFromResource().
+
+        The app developer must either check if the allocator supports sub-allocation within resource
+        beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
+        single queue is used since not all devices guarentee command queue accesses are coherent
+        between sub-allocations within the same resource.
         */
         ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
