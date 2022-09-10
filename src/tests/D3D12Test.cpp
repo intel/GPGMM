@@ -86,6 +86,9 @@ namespace gpgmm::d3d12 {
             desc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
         }
 
+        // Make sure leak detection is always enabled.
+        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_NEVER_LEAK_MEMORY;
+
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpAllEventsEnabled()) {

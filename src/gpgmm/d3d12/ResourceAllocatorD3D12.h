@@ -83,6 +83,13 @@ namespace gpgmm::d3d12 {
         the corresponding heap type.
         */
         ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS = 0x10,
+
+        /** \brief Report leaks of resource allocations.
+
+        Used to track outstanding allocations made with this allocator. When the allocator is about
+        to be released, it will report details on any leaked allocations as log messages.
+        */
+        ALLOCATOR_FLAG_NEVER_LEAK_MEMORY = 0x20,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_FLAGS)

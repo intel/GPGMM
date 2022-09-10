@@ -173,10 +173,6 @@ endif()
 
 if(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
   target_compile_definitions(gpgmm_common_config INTERFACE "GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS")
-else()
-  target_compile_definitions(gpgmm_common_config INTERFACE
-    $<$<CONFIG:Debug>:GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS>
-  )
 endif()
 
 if(GPGMM_DISABLE_SIZE_CACHE)
