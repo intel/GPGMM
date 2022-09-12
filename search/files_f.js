@@ -1,15 +1,19 @@
 var searchData=
 [
-  ['segmentedmemoryallocator_2ecpp_0',['SegmentedMemoryAllocator.cpp',['../_segmented_memory_allocator_8cpp.html',1,'']]],
-  ['segmentedmemoryallocator_2eh_1',['SegmentedMemoryAllocator.h',['../_segmented_memory_allocator_8h.html',1,'']]],
-  ['segmentedmemoryallocatortests_2ecpp_2',['SegmentedMemoryAllocatorTests.cpp',['../_segmented_memory_allocator_tests_8cpp.html',1,'']]],
-  ['sizeclass_2eh_3',['SizeClass.h',['../_size_class_8h.html',1,'']]],
-  ['slabblockallocator_2ecpp_4',['SlabBlockAllocator.cpp',['../_slab_block_allocator_8cpp.html',1,'']]],
-  ['slabblockallocator_2eh_5',['SlabBlockAllocator.h',['../_slab_block_allocator_8h.html',1,'']]],
-  ['slabblockallocatortests_2ecpp_6',['SlabBlockAllocatorTests.cpp',['../_slab_block_allocator_tests_8cpp.html',1,'']]],
-  ['slabmemoryallocator_2ecpp_7',['SlabMemoryAllocator.cpp',['../_slab_memory_allocator_8cpp.html',1,'']]],
-  ['slabmemoryallocator_2eh_8',['SlabMemoryAllocator.h',['../_slab_memory_allocator_8h.html',1,'']]],
-  ['slabmemoryallocatortests_2ecpp_9',['SlabMemoryAllocatorTests.cpp',['../_slab_memory_allocator_tests_8cpp.html',1,'']]],
-  ['stablelist_2eh_10',['StableList.h',['../_stable_list_8h.html',1,'']]],
-  ['stablelisttests_2ecpp_11',['StableListTests.cpp',['../_stable_list_tests_8cpp.html',1,'']]]
+  ['refcount_2ecpp_0',['RefCount.cpp',['../_ref_count_8cpp.html',1,'']]],
+  ['refcount_2eh_1',['RefCount.h',['../_ref_count_8h.html',1,'']]],
+  ['refcounttests_2ecpp_2',['RefCountTests.cpp',['../_ref_count_tests_8cpp.html',1,'']]],
+  ['residencylistd3d12_2ecpp_3',['ResidencyListD3D12.cpp',['../_residency_list_d3_d12_8cpp.html',1,'']]],
+  ['residencylistd3d12_2eh_4',['ResidencyListD3D12.h',['../_residency_list_d3_d12_8h.html',1,'']]],
+  ['residencymanagerd3d12_2ecpp_5',['ResidencyManagerD3D12.cpp',['../_residency_manager_d3_d12_8cpp.html',1,'']]],
+  ['residencymanagerd3d12_2eh_6',['ResidencyManagerD3D12.h',['../_residency_manager_d3_d12_8h.html',1,'']]],
+  ['resourceallocationd3d12_2ecpp_7',['ResourceAllocationD3D12.cpp',['../_resource_allocation_d3_d12_8cpp.html',1,'']]],
+  ['resourceallocationd3d12_2eh_8',['ResourceAllocationD3D12.h',['../_resource_allocation_d3_d12_8h.html',1,'']]],
+  ['resourceallocatord3d12_2ecpp_9',['ResourceAllocatorD3D12.cpp',['../_resource_allocator_d3_d12_8cpp.html',1,'']]],
+  ['resourceallocatord3d12_2eh_10',['ResourceAllocatorD3D12.h',['../_resource_allocator_d3_d12_8h.html',1,'']]],
+  ['resourceallocatorvk_2ecpp_11',['ResourceAllocatorVk.cpp',['../_resource_allocator_vk_8cpp.html',1,'']]],
+  ['resourceallocatorvk_2eh_12',['ResourceAllocatorVk.h',['../_resource_allocator_vk_8h.html',1,'']]],
+  ['resourceheapallocatord3d12_2ecpp_13',['ResourceHeapAllocatorD3D12.cpp',['../_resource_heap_allocator_d3_d12_8cpp.html',1,'']]],
+  ['resourceheapallocatord3d12_2eh_14',['ResourceHeapAllocatorD3D12.h',['../_resource_heap_allocator_d3_d12_8h.html',1,'']]],
+  ['resourcesized3d12_2eh_15',['ResourceSizeD3D12.h',['../_resource_size_d3_d12_8h.html',1,'']]]
 ];

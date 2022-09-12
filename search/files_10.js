@@ -1,6 +1,15 @@
 var searchData=
 [
-  ['traceevent_2ecpp_0',['TraceEvent.cpp',['../_trace_event_8cpp.html',1,'']]],
-  ['traceevent_2eh_1',['TraceEvent.h',['../_trace_event_8h.html',1,'']]],
-  ['traceeventphase_2eh_2',['TraceEventPhase.h',['../_trace_event_phase_8h.html',1,'']]]
+  ['segmentedmemoryallocator_2ecpp_0',['SegmentedMemoryAllocator.cpp',['../_segmented_memory_allocator_8cpp.html',1,'']]],
+  ['segmentedmemoryallocator_2eh_1',['SegmentedMemoryAllocator.h',['../_segmented_memory_allocator_8h.html',1,'']]],
+  ['segmentedmemoryallocatortests_2ecpp_2',['SegmentedMemoryAllocatorTests.cpp',['../_segmented_memory_allocator_tests_8cpp.html',1,'']]],
+  ['sizeclass_2eh_3',['SizeClass.h',['../_size_class_8h.html',1,'']]],
+  ['slabblockallocator_2ecpp_4',['SlabBlockAllocator.cpp',['../_slab_block_allocator_8cpp.html',1,'']]],
+  ['slabblockallocator_2eh_5',['SlabBlockAllocator.h',['../_slab_block_allocator_8h.html',1,'']]],
+  ['slabblockallocatortests_2ecpp_6',['SlabBlockAllocatorTests.cpp',['../_slab_block_allocator_tests_8cpp.html',1,'']]],
+  ['slabmemoryallocator_2ecpp_7',['SlabMemoryAllocator.cpp',['../_slab_memory_allocator_8cpp.html',1,'']]],
+  ['slabmemoryallocator_2eh_8',['SlabMemoryAllocator.h',['../_slab_memory_allocator_8h.html',1,'']]],
+  ['slabmemoryallocatortests_2ecpp_9',['SlabMemoryAllocatorTests.cpp',['../_slab_memory_allocator_tests_8cpp.html',1,'']]],
+  ['stablelist_2eh_10',['StableList.h',['../_stable_list_8h.html',1,'']]],
+  ['stablelisttests_2ecpp_11',['StableListTests.cpp',['../_stable_list_tests_8cpp.html',1,'']]]
 ];
