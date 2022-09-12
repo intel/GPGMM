@@ -425,7 +425,8 @@ namespace gpgmm::d3d12 {
         if (oldUsage > pVideoMemoryInfo->CurrentUsage) {
             gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went down by "
-                              << GPGMM_BYTES_TO_MB(oldUsage - pVideoMemoryInfo->CurrentUsage) << " MBs.";
+                              << GPGMM_BYTES_TO_MB(oldUsage - pVideoMemoryInfo->CurrentUsage)
+                              << " MBs.";
         } else if (oldUsage < pVideoMemoryInfo->CurrentUsage) {
             gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went up by "
@@ -474,8 +475,7 @@ namespace gpgmm::d3d12 {
 
         // Reservations are optional.
         GPGMM_TRACE_EVENT_METRIC(
-            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA),
-                     " GPU memory reserved (MB)")
+            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA), " GPU memory reserved (MB)")
                 .c_str(),
             GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentReservation));
 
