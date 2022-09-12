@@ -423,17 +423,14 @@ namespace gpgmm::d3d12 {
             queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
 
         if (oldUsage > pVideoMemoryInfo->CurrentUsage) {
-            gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
-                                      ? "Dedicated"
-                                      : "Shared")
+            gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went down by "
                               << GPGMM_BYTES_TO_MB(oldUsage - pVideoMemoryInfo->CurrentUsage) << " MBs.";
         } else if (oldUsage < pVideoMemoryInfo->CurrentUsage) {
-            gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
-                                      ? "Dedicated"
-                                      : "Shared")
+            gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went up by "
-                              << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - oldUsage) << " MBs.";
+                              << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - oldUsage)
+                              << " MBs.";
         }
 
         // If we're restricting the budget, leave the budget as is.
@@ -444,16 +441,12 @@ namespace gpgmm::d3d12 {
                 mMaxPctOfVideoMemoryToBudget);
 
             if (oldBudget > pVideoMemoryInfo->Budget) {
-                gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
-                                          ? "Dedicated"
-                                          : "Shared")
+                gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                                   << " GPU memory budget went down by "
                                   << GPGMM_BYTES_TO_MB(oldBudget - pVideoMemoryInfo->Budget)
                                   << " MBs.";
             } else if (oldBudget < pVideoMemoryInfo->Budget) {
-                gpgmm::DebugLog() << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL)
-                                          ? "Dedicated"
-                                          : "Shared")
+                gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                                   << " GPU memory budget went up by "
                                   << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - oldBudget)
                                   << " MBs.";
@@ -464,8 +457,7 @@ namespace gpgmm::d3d12 {
         if (pVideoMemoryInfo->Budget > 0 &&
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
             WarnEvent("ResidencyManager", EventMessageId::BudgetExceeded)
-                << ((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                : "Shared")
+                << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                 << " GPU memory exceeds budget: "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget) << " MBs.";
@@ -473,8 +465,7 @@ namespace gpgmm::d3d12 {
 
         // Not all segments could be used.
         GPGMM_TRACE_EVENT_METRIC(
-            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                 : "Shared",
+            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA),
                      " GPU memory utilization (%)")
                 .c_str(),
             (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
@@ -483,8 +474,7 @@ namespace gpgmm::d3d12 {
 
         // Reservations are optional.
         GPGMM_TRACE_EVENT_METRIC(
-            ToString((memorySegmentGroup == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) ? "Dedicated"
-                                                                                 : "Shared",
+            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA),
                      " GPU memory reserved (MB)")
                 .c_str(),
             GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentReservation));

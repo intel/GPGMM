@@ -449,4 +449,22 @@ namespace gpgmm::d3d12 {
         return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
     }
 
+    const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup, bool isUMA) {
+        if (isUMA) {
+            return "Shared";
+        }
+
+        switch (memorySegmentGroup) {
+            case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
+                return "Dedicated";
+
+            case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
+                return "Shared";
+
+            default:
+                UNREACHABLE();
+                return "";
+        }
+    }
+
 }  // namespace gpgmm::d3d12
