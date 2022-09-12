@@ -52,7 +52,7 @@ namespace gpgmm::d3d12 {
         for (auto allocationEntry : mLiveAllocations) {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
             gpgmm::WarnEvent(allocation->GetAllocator()->GetTypename())
-                << "Live ResourceAllocation at " << ToString(allocation) << ", "
+                << "Live ResourceAllocation at " << ToHexStr(allocation) << ", "
                 << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
         }
     }

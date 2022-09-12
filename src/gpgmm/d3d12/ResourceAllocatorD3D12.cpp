@@ -785,9 +785,9 @@ namespace gpgmm::d3d12 {
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
-#if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
-        mDebugAllocator->AddLiveAllocation(allocation.Get());
-#endif
+        if (mDebugAllocator) {
+            mDebugAllocator->AddLiveAllocation(allocation.Get());
+        }
 
         // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
