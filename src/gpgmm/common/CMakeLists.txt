@@ -29,8 +29,6 @@ target_sources(gpgmm_common PRIVATE
     "EventTraceWriter.h"
     "EventMessage.cpp"
     "EventMessage.h"
-    "AllocatorNode.cpp"
-    "AllocatorNode.h"
     "IndexedMemoryPool.cpp"
     "IndexedMemoryPool.h"
     "JSONSerializer.cpp"
