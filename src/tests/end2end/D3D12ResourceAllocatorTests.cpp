@@ -145,7 +145,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
         ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator));
     ASSERT_NE(resourceAllocator, nullptr);
 
-    constexpr uint64_t kOversizedBuffer = 32ll * 1024ll * 1024ll * 1024ll;  // 32GB
+    constexpr uint64_t kOversizedBuffer = GPGMM_GB_TO_BYTES(32);
     ComPtr<ResourceAllocation> allocation;
     ASSERT_FAILED(resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
                                                     D3D12_RESOURCE_STATE_COMMON, nullptr,
@@ -224,6 +224,25 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
     {
         ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
         newAllocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
 
         ComPtr<ResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));

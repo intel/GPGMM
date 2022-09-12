@@ -17,11 +17,12 @@
 
 #include "gpgmm/common/MemoryAllocator.h"
 
-#include <memory>
-
 namespace gpgmm {
 
-    // DedicatedMemoryAllocator sub-allocates memory with exactly one block.
+    // DedicatedMemoryAllocator allocates from device memory with exactly one block.
+    // DedicatedMemoryAllocator is useful in situations where whole memory objects could be reused
+    // without the need for sub-allocation. DedicatedMemoryAllocator also allows
+    // memory to be tracked.
     class DedicatedMemoryAllocator final : public MemoryAllocator {
       public:
         DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator);
@@ -33,6 +34,8 @@ namespace gpgmm {
         uint64_t GetMemoryAlignment() const override;
 
         MemoryAllocatorInfo GetInfo() const override;
+
+      private:
         const char* GetTypename() const override;
     };
 

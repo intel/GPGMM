@@ -597,6 +597,9 @@ namespace gpgmm::d3d12 {
                     /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
+            case ALLOCATOR_ALGORITHM_DEDICATED:
+                return std::make_unique<DedicatedMemoryAllocator>(
+                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             default: {
                 UNREACHABLE();
                 return {};
@@ -677,6 +680,9 @@ namespace gpgmm::d3d12 {
                     /*slabMemoryGrowth*/ 1,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
+            case ALLOCATOR_ALGORITHM_DEDICATED:
+                return std::make_unique<DedicatedMemoryAllocator>(
+                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             default:
                 UNREACHABLE();
                 return {};
