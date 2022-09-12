@@ -15,6 +15,7 @@
 #ifndef GPGMM_COMMON_MEMORY_H_
 #define GPGMM_COMMON_MEMORY_H_
 
+#include "gpgmm/common/Object.h"
 #include "gpgmm/utils/RefCount.h"
 
 namespace gpgmm {
@@ -25,7 +26,7 @@ namespace gpgmm {
 
     When memory is sub-allocated, it will have a non-zero refcount.
     */
-    class MemoryBase {
+    class MemoryBase : public ObjectBase {
       public:
         /** \brief Constructs a memory object of the specified size and alignment.
 
@@ -33,7 +34,7 @@ namespace gpgmm {
         @param alignment Alignment, in bytes, of the memory object.
         */
         explicit MemoryBase(uint64_t size, uint64_t alignment);
-        virtual ~MemoryBase();
+        virtual ~MemoryBase() override;
 
         /** \brief Return the size of the memory object.
 
@@ -68,6 +69,8 @@ namespace gpgmm {
         bool RemoveSubAllocationRef();
 
       private:
+        const char* GetTypename() const override;
+
         RefCounted mSubAllocationRefs;
 
         const uint64_t mSize;

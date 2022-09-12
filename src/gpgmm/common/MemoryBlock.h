@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_ALLOCATOR_H_
-#define GPGMM_COMMON_ALLOCATOR_H_
+#ifndef GPGMM_COMMON_MEMORYBLOCK_H_
+#define GPGMM_COMMON_MEMORYBLOCK_H_
+
+#include "gpgmm/utils/Limits.h"
 
 namespace gpgmm {
 
-    class AllocatorBase {
-      public:
-        AllocatorBase() = default;
-        virtual ~AllocatorBase() = default;
-        virtual const char* GetTypename() const = 0;
+    struct MemoryBlock {
+        uint64_t Offset = kInvalidOffset;
+        uint64_t Size = kInvalidSize;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_ALLOCATOR_H_
+#endif  // GPGMM_COMMON_MEMORYBLOCK_H_

@@ -165,6 +165,8 @@ namespace gpgmm {
         uint64_t AvailableForAllocation;
     };
 
+    class BlockAllocator;
+
     /** \brief MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.
 
     Internally, MemoryAllocator sub-allocates existing memory objects into smaller chucks
@@ -178,7 +180,7 @@ namespace gpgmm {
     MemoryAllocator to sub-allocate from larger blocks provided by the second-order MemoryAllocator
     and so on.
     */
-    class MemoryAllocator : public AllocatorBase, public LinkNode<MemoryAllocator> {
+    class MemoryAllocator : public ObjectBase, public LinkNode<MemoryAllocator> {
       public:
         /** \brief Constructs a standalone MemoryAllocator.
 

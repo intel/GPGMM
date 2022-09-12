@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_BLOCKALLOCATOR_H_
-#define GPGMM_COMMON_BLOCKALLOCATOR_H_
-
-#include "gpgmm/common/MemoryBlock.h"
-#include "gpgmm/common/Object.h"
+#ifndef GPGMM_COMMON_OBJECT_H_
+#define GPGMM_COMMON_OBJECT_H_
 
 namespace gpgmm {
 
-    // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
-    class BlockAllocator : public ObjectBase {
+    class ObjectBase {
       public:
-        ~BlockAllocator() override = default;
-
-        virtual MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment) = 0;
-        virtual void DeallocateBlock(MemoryBlock* block) = 0;
+        ObjectBase() = default;
+        virtual ~ObjectBase() = default;
+        virtual const char* GetTypename() const = 0;
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_BLOCKALLOCATOR_H_
+#endif  // GPGMM_COMMON_OBJECT_H_

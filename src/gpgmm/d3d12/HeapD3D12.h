@@ -164,7 +164,7 @@ namespace gpgmm::d3d12 {
              bool isExternal);
 
         HRESULT SetDebugNameImpl(const std::string& name) override;
-        const char* GetTypename() const;
+        const char* GetTypename() const override;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was

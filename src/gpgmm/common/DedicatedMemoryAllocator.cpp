@@ -14,6 +14,7 @@
 
 #include "gpgmm/common/DedicatedMemoryAllocator.h"
 
+#include "gpgmm/common/MemoryBlock.h"
 #include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
