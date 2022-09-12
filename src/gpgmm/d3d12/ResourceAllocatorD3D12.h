@@ -69,11 +69,14 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH = 0x4,
 
-        /** \brief Tell GPGMM to allocate exactly what is needed, and to de-allocate
-        memory immediately once no longer needed (instead of re-using it).
+        /** \brief Disables recycling of GPU memory.
+
+        Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
+        (instead of re-using it).
 
         This is very slow and not recommended for general use but may be useful for running with the
-        minimal possible GPU memory footprint or debugging OOM failures.
+        minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
+        corruption of heaps.
         */
         ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
 
@@ -99,7 +102,20 @@ namespace gpgmm::d3d12 {
     */
     enum ALLOCATOR_ALGORITHM {
         /** \brief Use default allocation mechanism.
-         */
+
+        Relies on internal heuristics to automatically determine the best allocation mechanism. The
+        selection of algorithm depends on:
+
+        1. The heap properties or flags specified by the user.
+        2. The size the resource being created.
+        3. The amount of available memory.
+
+        In general, the most-efficent resource allocator will be attempted first (efficent
+        being defined as fastest service-time to allocate/deallocate with smallest memory
+        footprint), subject to other constraints. However, since it's impossible to predict all
+        future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
+        prove to be faster as expected. Further experimentation is recommended.
+        */
         ALLOCATOR_ALGORITHM_DEFAULT = 0,
 
         /** \brief Use the slab allocation mechanism.
@@ -140,6 +156,20 @@ namespace gpgmm::d3d12 {
         Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
         */
         ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 4,
+
+        /** \brief Use the dedicated allocation mechanism.
+
+        Allows resources to be created as a dedicated allocation, rather than sub-allocated.
+
+        A dedicated allocation allocates exactly what is needed for the resource and nothing more.
+
+        Internally, dedicated allocations are "placed resources" which allows the heap to be
+        recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
+        allocation" but without heaps being recycled by GPGMM.
+
+        Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
+        */
+        ALLOCATOR_ALGORITHM_DEDICATED = 5,
     };
 
     /** \struct ALLOCATOR_DESC

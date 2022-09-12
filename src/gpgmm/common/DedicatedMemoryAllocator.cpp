@@ -35,11 +35,11 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
 
         mInfo.UsedBlockCount++;
-        mInfo.UsedBlockUsage += request.SizeInBytes;
+        mInfo.UsedBlockUsage += allocation->GetSize();
 
         return std::make_unique<MemoryAllocation>(
             this, allocation->GetMemory(), /*offset*/ 0, allocation->GetMethod(),
-            new MemoryBlock{0, request.SizeInBytes}, request.SizeInBytes);
+            new MemoryBlock{0, allocation->GetSize()}, request.SizeInBytes);
     }
 
     void DedicatedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
