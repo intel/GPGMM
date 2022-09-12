@@ -48,12 +48,10 @@ namespace gpgmm::d3d12 {
 
     void DebugResourceAllocator::ReportLiveAllocations() const {
         std::lock_guard<std::mutex> lock(mMutex);
-
         for (auto allocationEntry : mLiveAllocations) {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
-            gpgmm::WarnEvent(allocation->GetAllocator()->GetTypename())
-                << "Live ResourceAllocation at " << ToHexStr(allocation) << ", "
-                << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
+            gpgmm::WarningLog() << "Live ResourceAllocation at " << ToHexStr(allocation) << ", "
+                                << JSONSerializer::Serialize(allocation->GetInfo()).ToString();
         }
     }
 
