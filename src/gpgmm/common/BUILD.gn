@@ -176,8 +176,6 @@ source_set("gpgmm_common_sources") {
   configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   sources = [
-    "AllocatorNode.cpp",
-    "AllocatorNode.h",
     "BlockAllocator.h",
     "BuddyBlockAllocator.cpp",
     "BuddyBlockAllocator.h",

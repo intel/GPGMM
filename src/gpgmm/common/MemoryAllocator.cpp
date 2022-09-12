@@ -70,7 +70,8 @@ namespace gpgmm {
     }
 
     MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> next)
-        : AllocatorNode(std::move(next)), mThreadPool(ThreadPool::Create()) {
+        : mThreadPool(ThreadPool::Create()) {
+        InsertIntoChain(std::move(next));
     }
 
     MemoryAllocator::~MemoryAllocator() {
@@ -83,6 +84,15 @@ namespace gpgmm {
             ASSERT(mInfo.UsedMemoryUsage == 0u);
         }
 #endif
+
+        // Deletes adjacent node recursively (post-order).
+        if (mNext != nullptr) {
+            SafeDelete(mNext);
+        }
+
+        if (IsInList()) {
+            RemoveFromList();
+        }
     }
 
     std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(
@@ -156,6 +166,20 @@ namespace gpgmm {
         }
 
         return true;
+    }
+
+    MemoryAllocator* MemoryAllocator::GetNextInChain() const {
+        return static_cast<MemoryAllocator*>(mNext);
+    }
+
+    MemoryAllocator* MemoryAllocator::GetParent() const {
+        return mParent;
+    }
+
+    void MemoryAllocator::InsertIntoChain(std::unique_ptr<MemoryAllocator> next) {
+        ASSERT(next != nullptr);
+        next->mParent = this->value();
+        mNext = next.release();
     }
 
 }  // namespace gpgmm

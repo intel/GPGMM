@@ -16,7 +16,6 @@
 #ifndef GPGMM_COMMON_MEMORYALLOCATOR_H_
 #define GPGMM_COMMON_MEMORYALLOCATOR_H_
 
-#include "gpgmm/common/AllocatorNode.h"
 #include "gpgmm/common/BlockAllocator.h"
 #include "gpgmm/common/Error.h"
 #include "gpgmm/common/Memory.h"
@@ -24,6 +23,7 @@
 #include "gpgmm/common/WorkerThread.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Limits.h"
+#include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Log.h"
 
 #include <memory>
@@ -171,8 +171,14 @@ namespace gpgmm {
     (called memory blocks) or allocates whole memory objects then decides which memory blocks
     or objects to cache. Since cached memory objects count against the application's memory
     usage, freeing this cache periodically by calling ReleaseMemory() is highly recommended.
+
+    MemoryAllocator can also be created with another MemoryAllocator. MemoryAllocator represents
+    a chain where allocations made between the first-order MemoryAllocator (or parent)
+    and the next MemoryAllocator (or child) form a one-way edge. This allows the first-order
+    MemoryAllocator to sub-allocate from larger blocks provided by the second-order MemoryAllocator
+    and so on.
     */
-    class MemoryAllocator : public AllocatorBase, public AllocatorNode<MemoryAllocator> {
+    class MemoryAllocator : public AllocatorBase, public LinkNode<MemoryAllocator> {
       public:
         /** \brief Constructs a standalone MemoryAllocator.
 
@@ -273,6 +279,18 @@ namespace gpgmm {
         */
         bool ValidateRequest(const MemoryAllocationRequest& request) const;
 
+        /** \brief Return the next MemoryAllocator.
+
+        \return Pointer of next memory allocator in the chain.
+        */
+        MemoryAllocator* GetNextInChain() const;
+
+        /** \brief Return the previous MemoryAllocator.
+
+        \return Pointer of previous memory allocator in the chain.
+        */
+        MemoryAllocator* GetParent() const;
+
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
@@ -310,10 +328,16 @@ namespace gpgmm {
                 nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
         }
 
+        void InsertIntoChain(std::unique_ptr<MemoryAllocator> next);
+
         MemoryAllocatorInfo mInfo = {};
 
         mutable std::mutex mMutex;
         std::shared_ptr<ThreadPool> mThreadPool;
+
+      private:
+        MemoryAllocator* mNext = nullptr;
+        MemoryAllocator* mParent = nullptr;
     };
 
 }  // namespace gpgmm
