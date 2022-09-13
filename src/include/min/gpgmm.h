@@ -69,7 +69,10 @@ namespace gpgmm {
         kSubAllocatedWithin = 3,
     };
 
-    class MemoryBlock;
+    struct MemoryBlock {
+        uint64_t Offset;
+        uint64_t Size;
+    };
 
     class MemoryAllocation {
       public:
