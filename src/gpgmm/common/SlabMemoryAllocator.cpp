@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/Memory.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Utils.h"
 
@@ -23,7 +24,7 @@
 
 namespace gpgmm {
 
-    // Disables pre-fetching of memory objects that have too little space.
+    // Disables pre-fetching from slabs that contain too few allocations.
     constexpr static uint64_t kSlabPrefetchMinBlockCount = 4u;
 
     // Disables pre-fetching of memory objects that are under-utilizied.
@@ -35,7 +36,7 @@ namespace gpgmm {
     // This threshold is used to restrict pre-fetching to smaller memory blocks to minimize the
     // the amount of time required for the application to be busy or not waiting on the next
     // allocation.
-    constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = 64u * 1024 * 1024;
+    constexpr static uint64_t kSlabPrefetchMemorySizeThreshold = GPGMM_MB_TO_BYTES(64);
 
     // Coverage is the fraction of total misses that should be eliminated because of pre-fetching.
     // If coverage goes below the specified min. coverage threshold, a warning event will be
