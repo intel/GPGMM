@@ -16,6 +16,10 @@
 
 #include <gpgmm_d3d12.h>
 
+#include "gpgmm/common/SizeClass.h"
+#include "gpgmm/d3d12/CapsD3D12.h"
+#include "gpgmm/utils/WindowsUtils.h"
+
 namespace gpgmm::d3d12 {
 
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(LogSeverity logSeverity) {
@@ -66,6 +70,37 @@ namespace gpgmm::d3d12 {
         ASSERT_SUCCEEDED(
             mDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
         mResourceHeapTier = options.ResourceHeapTier;
+
+        DXGI_ADAPTER_DESC adapterDesc;
+        ASSERT_SUCCEEDED(mAdapter->GetDesc(&adapterDesc));
+
+        DebugLog() << "GPU: " << WCharToUTF8(adapterDesc.Description)
+                   << " (device: " << ToHexStr(adapterDesc.DeviceId)
+                   << ", vendor: " << ToHexStr(adapterDesc.VendorId) << ")";
+        DebugLog() << "System memory: "
+                   << GPGMM_BYTES_TO_GB(adapterDesc.SharedSystemMemory +
+                                        adapterDesc.DedicatedSystemMemory)
+                   << " GBs"
+                   << " (" << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedSystemMemory)
+                   << " dedicated) ";
+
+        DebugLog() << "Unified memory: " << ((arch.UMA) ? "yes" : "no")
+                   << ((arch.CacheCoherentUMA) ? " (cache-coherent)" : "");
+
+        std::unique_ptr<Caps> caps;
+        {
+            Caps* capsPtr = nullptr;
+            ASSERT_SUCCEEDED(Caps::CreateCaps(mDevice.Get(), mAdapter.Get(), &capsPtr));
+            caps.reset(capsPtr);
+        }
+
+        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_MB(caps->GetMaxResourceSize())
+                   << " MBs";
+        DebugLog() << "Max resource heap tier: " << caps->GetMaxResourceHeapTierSupported();
+        DebugLog() << "Max resource heap size: "
+                   << GPGMM_BYTES_TO_GB(caps->GetMaxResourceHeapSize()) << " GBs";
+        DebugLog() << "Creation of non-resident heaps: "
+                   << ((caps->IsCreateHeapNotResidentSupported()) ? "Supported" : "Not supported");
     }
 
     void D3D12TestBase::TearDown() {
