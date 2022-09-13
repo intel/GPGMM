@@ -299,7 +299,7 @@ namespace gpgmm::d3d12 {
             },
             &resourceHeap));
 
-        const uint64_t allocationSize = resourceHeap->GetSize();
+        const uint64_t& allocationSize = resourceHeap->GetSize();
         mInfo.UsedMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount++;
         mInfo.UsedBlockUsage += allocationSize;
@@ -341,7 +341,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        const uint64_t allocationSize = allocation->GetSize();
+        const uint64_t& allocationSize = allocation->GetSize();
         mInfo.UsedMemoryUsage -= allocationSize;
         mInfo.UsedMemoryCount--;
         mInfo.UsedBlockUsage -= allocationSize;

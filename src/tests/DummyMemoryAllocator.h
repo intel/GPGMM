@@ -41,6 +41,7 @@ namespace gpgmm {
 
             mInfo.UsedMemoryCount++;
             mInfo.UsedMemoryUsage += request.SizeInBytes;
+
             return std::make_unique<MemoryAllocation>(
                 this, new MemoryBase(request.SizeInBytes, request.Alignment), request.SizeInBytes);
         }
@@ -52,6 +53,7 @@ namespace gpgmm {
 
             mInfo.UsedMemoryCount--;
             mInfo.UsedMemoryUsage -= allocation->GetSize();
+
             SafeRelease(allocation);
         }
     };

@@ -1108,7 +1108,7 @@ namespace gpgmm::d3d12 {
 
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).
-        const uint64_t allocationSize = resourceHeap->GetSize();
+        const uint64_t& allocationSize = resourceHeap->GetSize();
         mInfo.UsedMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount++;
         mInfo.UsedBlockUsage += allocationSize;
@@ -1164,13 +1164,14 @@ namespace gpgmm::d3d12 {
             },
             &resourceHeap));
 
-        mInfo.UsedMemoryUsage += resourceInfo.SizeInBytes;
+        const uint64_t& allocationSize = resourceInfo.SizeInBytes;
+        mInfo.UsedMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount++;
-        mInfo.UsedBlockUsage += resourceInfo.SizeInBytes;
+        mInfo.UsedBlockUsage += allocationSize;
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
-        allocationDesc.SizeInBytes = resourceInfo.SizeInBytes;
+        allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
 
@@ -1353,7 +1354,7 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        const uint64_t allocationSize = allocation->GetSize();
+        const uint64_t& allocationSize = allocation->GetSize();
         mInfo.UsedMemoryUsage -= allocationSize;
         mInfo.UsedMemoryCount--;
         mInfo.UsedBlockUsage -= allocationSize;

@@ -158,9 +158,10 @@ namespace gpgmm {
 
         ASSERT(allocation != nullptr);
 
-        mInfo.FreeMemoryUsage += allocation->GetSize();
+        const uint64_t& allocationSize = allocation->GetSize();
+        mInfo.FreeMemoryUsage += allocationSize;
         mInfo.UsedMemoryCount--;
-        mInfo.UsedMemoryUsage -= allocation->GetSize();
+        mInfo.UsedMemoryUsage -= allocationSize;
 
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
