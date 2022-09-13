@@ -98,7 +98,6 @@ namespace gpgmm {
 
         void Attach(T* ptr) {
             mPtr = ptr;
-            ptr = nullptr;
         }
 
         static ScopedRef<T> Acquire(T* ptr) {
