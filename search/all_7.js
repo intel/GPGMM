@@ -6,14 +6,10 @@ var searchData=
   ['head_3',['head',['../classgpgmm_1_1_linked_list.html#a37254c01e28b0154513bb15d7b5ef923',1,'gpgmm::LinkedList']]],
   ['heap_4',['Heap',['../classgpgmm_1_1d3d12_1_1_heap.html',1,'gpgmm::d3d12']]],
   ['heap_5fdesc_5',['HEAP_DESC',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html',1,'gpgmm::d3d12']]],
-  ['heap_5fflag_5falways_5fin_5fbudget_6',['HEAP_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929',1,'gpgmm::d3d12']]],
-  ['heap_5fflag_5fnever_5fuse_5fresidency_7',['HEAP_FLAG_NEVER_USE_RESIDENCY',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662afbda689b0dcf0ff7b8fdfc5f5d372ff0',1,'gpgmm::d3d12']]],
-  ['heap_5finfo_8',['HEAP_INFO',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html',1,'gpgmm::d3d12']]],
-  ['heapd3d12_2ecpp_9',['HeapD3D12.cpp',['../_heap_d3_d12_8cpp.html',1,'']]],
-  ['heapd3d12_2eh_10',['HeapD3D12.h',['../_heap_d3_d12_8h.html',1,'']]],
-  ['heapdescriptor_11',['HeapDescriptor',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___h_e_a_p___d_e_s_c.html#a7200dd8e7f2c64f67fadf348ba919d43',1,'gpgmm::d3d12::CREATE_HEAP_DESC']]],
-  ['heapoffset_12',['HeapOffset',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aeeba45039b3912861fd6cd09099abd8e',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]],
-  ['heaps_5fflag_5fnone_13',['HEAPS_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9',1,'gpgmm::d3d12']]],
-  ['heaps_5fflags_14',['HEAPS_FLAGS',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662',1,'gpgmm::d3d12::HEAPS_FLAGS()'],['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662',1,'gpgmm::d3d12::HEAPS_FLAGS()']]],
-  ['heaptype_15',['HeapType',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691',1,'gpgmm::d3d12::ALLOCATION_DESC']]]
+  ['heap_5finfo_6',['HEAP_INFO',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html',1,'gpgmm::d3d12']]],
+  ['heapd3d12_2ecpp_7',['HeapD3D12.cpp',['../_heap_d3_d12_8cpp.html',1,'']]],
+  ['heapd3d12_2eh_8',['HeapD3D12.h',['../_heap_d3_d12_8h.html',1,'']]],
+  ['heapdescriptor_9',['HeapDescriptor',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___h_e_a_p___d_e_s_c.html#a7200dd8e7f2c64f67fadf348ba919d43',1,'gpgmm::d3d12::CREATE_HEAP_DESC']]],
+  ['heapoffset_10',['HeapOffset',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aeeba45039b3912861fd6cd09099abd8e',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC']]],
+  ['heaptype_11',['HeapType',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691',1,'gpgmm::d3d12::ALLOCATION_DESC::HeapType()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a4bb5b1cd3f567799f552a65d0772abc2',1,'gpgmm::d3d12::HEAP_DESC::HeapType()']]]
 ];

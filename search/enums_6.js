@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['optionflags_0',['OptionFlags',['../structgpgmm_1_1_desc.html#a705ef8db174c6365900251d224f3581b',1,'gpgmm::Desc']]]
+  ['traceeventcategory_0',['TraceEventCategory',['../namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f',1,'gpgmm']]],
+  ['traceeventphase_1',['TraceEventPhase',['../namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829',1,'gpgmm']]]
 ];
