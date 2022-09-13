@@ -65,7 +65,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocation::DeleteThis() {
-        GetAllocator()->DeallocateMemory(std::unique_ptr<ResourceAllocation>(this));
+        GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocation>(this));
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
