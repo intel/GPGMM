@@ -38,9 +38,12 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocation;
 
+    /** \enum ALLOCATOR_FLAGS
+    Specify creation options for allocator.
+    */
     enum ALLOCATOR_FLAGS {
 
-        /** \brief Disables all allocator flags.
+        /** \brief Disables all option flags.
          */
         ALLOCATOR_FLAG_NONE = 0x0,
 

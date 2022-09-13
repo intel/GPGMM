@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = heapSize;
         resourceHeapDesc.DebugName = "Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
-        resourceHeapDesc.AlwaysInBudget = mAlwaysInBudget;
+        resourceHeapDesc.Flags |= (mAlwaysInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
 
         if (mResidencyManager != nullptr) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(

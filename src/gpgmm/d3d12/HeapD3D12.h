@@ -40,8 +40,28 @@ namespace gpgmm::d3d12 {
         bool IsResident;
     };
 
+    /** \enum HEAPS_FLAGS
+    Specify creation options to configure the heap.
+    */
+    enum HEAPS_FLAGS {
+
+        /** \brief Disables all option flags.
+         */
+        HEAPS_FLAG_NONE = 0x0,
+
+        /** \brief Requires the heap to be created in budget.
+         */
+        HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
+
+        /** \brief Specifies to leave the heap unmanaged for residency.
+         */
+        HEAP_FLAG_NEVER_USE_RESIDENCY = 0x2,
+    };
+
+    DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
+
     /** \struct HEAP_DESC
-    Specifies properties of a managed heap.
+    Specifies creation options for a residency managed heap.
     */
     struct HEAP_DESC {
         /** \brief Created size of the heap, in bytes.
@@ -56,15 +76,9 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief Requires the heap to be created in budget.
+        /** \brief Specifies heaps options.
          */
-        bool AlwaysInBudget;
-
-        /** \brief Specifies to leave the heap unmanaged by GPGMM.
-
-        External heaps are not supported for residency.
-        */
-        bool IsExternal;
+        HEAPS_FLAGS Flags;
 
         /** \brief Specifies the memory segment to use for residency.
 
@@ -157,11 +171,7 @@ namespace gpgmm::d3d12 {
         friend ResidencyManager;
         friend ResourceAllocator;
 
-        Heap(ComPtr<ID3D12Pageable> pageable,
-             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-             uint64_t size,
-             uint64_t alignment,
-             bool isExternal);
+        Heap(ComPtr<ID3D12Pageable> pageable, const HEAP_DESC& descriptor);
 
         HRESULT SetDebugNameImpl(const std::string& name) override;
         const char* GetTypename() const override;

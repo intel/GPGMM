@@ -69,12 +69,18 @@ namespace gpgmm::d3d12 {
         bool IsResident;
     };
 
+    enum HEAPS_FLAGS {
+        HEAPS_FLAG_NONE = 0x0,
+        HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
+        HEAP_FLAG_NEVER_USE_RESIDENCY = 0x2,
+    };
+
+    DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
+
     struct HEAP_DESC {
         uint64_t SizeInBytes;
         uint64_t Alignment;
-        D3D12_HEAP_TYPE HeapType;
-        bool AlwaysInBudget;
-        bool IsExternal;
+        HEAPS_FLAGS Flags;
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
         std::string DebugName;
     };
