@@ -41,6 +41,24 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> mAllocation;
     };
 
+    // MemoryAllocatorInfo
+
+    MemoryAllocatorInfo& MemoryAllocatorInfo::operator+=(const MemoryAllocatorInfo& rhs) {
+        UsedBlockCount += rhs.UsedBlockCount;
+        UsedBlockUsage += rhs.UsedBlockUsage;
+        FreeMemoryUsage += rhs.FreeMemoryUsage;
+        UsedMemoryUsage += rhs.UsedMemoryUsage;
+        UsedMemoryCount += rhs.UsedMemoryCount;
+
+        PrefetchedMemoryMisses += rhs.PrefetchedMemoryMisses;
+        PrefetchedMemoryMissesEliminated += rhs.PrefetchedMemoryMissesEliminated;
+
+        SizeCacheMisses += rhs.SizeCacheMisses;
+        SizeCacheHits += rhs.SizeCacheHits;
+
+        return *this;
+    }
+
     // MemoryAllocationEvent
 
     MemoryAllocationEvent::MemoryAllocationEvent(std::shared_ptr<Event> event,
