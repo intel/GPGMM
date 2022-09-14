@@ -228,6 +228,15 @@ namespace gpgmm::vk {
                                                ? newInfo.memoryFragmentationLimit
                                                : kDefaultFragmentationLimit;
 
+        // By default, slab-allocate from a sorted segmented list.
+        if (newInfo.poolAlgorithm == GP_ALLOCATOR_ALGORITHM_DEFAULT) {
+            newInfo.poolAlgorithm = GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        }
+
+        if (newInfo.subAllocationAlgorithm == GP_ALLOCATOR_ALGORITHM_DEFAULT) {
+            newInfo.subAllocationAlgorithm = GP_ALLOCATOR_ALGORITHM_SLAB;
+        }
+
         if (allocatorOut != VK_NULL_HANDLE) {
             *allocatorOut = new GpResourceAllocator_T(newInfo, vkFunctions, std::move(caps));
         }

@@ -72,6 +72,23 @@ namespace gpgmm::vk {
     Specify the algorithms used for allocation.
     */
     enum GpAllocatorAlgorithm {
+        /** \brief Use default allocation mechanism.
+
+        Relies on internal heuristics to automatically determine the best allocation mechanism. The
+        selection of algorithm depends on:
+
+        1. The memory properties or flags specified by the user.
+        2. The size the resource being created.
+        3. The amount of available memory.
+
+        In general, the most-efficent resource allocator will be attempted first (efficent
+        being defined as fastest service-time to allocate/deallocate with smallest memory
+        footprint), subject to other constraints. However, since it's impossible to predict all
+        future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
+        prove to be faster as expected. Further experimentation is recommended.
+        */
+        GP_ALLOCATOR_ALGORITHM_DEFAULT = 0,
+
         /** \brief Use the slab allocation mechanism.
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
@@ -79,7 +96,7 @@ namespace gpgmm::vk {
         Slab allocation does not suffer from internal fragmentation but could externally fragment
         when many unique request sizes are used.
         */
-        GP_ALLOCATOR_ALGORITHM_SLAB = 0x0,
+        GP_ALLOCATOR_ALGORITHM_SLAB = 1,
 
         /** \brief Use the buddy system mechanism.
 
@@ -93,7 +110,7 @@ namespace gpgmm::vk {
         requests can fit within the specified preferredDeviceMemorySize but not too large where
         creating the larger device memory becomes a bigger bottleneck.
         */
-        GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 0x1,
+        GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 2,
 
         /** \brief Recycles device memory of a size being specified.
 
@@ -103,13 +120,13 @@ namespace gpgmm::vk {
         preferredDeviceMemorySize. A preferredDeviceMemorySize of zero is effectively
         equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
-        GP_ALLOCATOR_ALGORITHM_FIXED_POOL = 0x2,
+        GP_ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
 
         /** \brief Recycles device memory of any size using multiple pools.
 
         Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
         */
-        GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 0x3,
+        GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 4,
     };
 
     /** \struct GpAllocatorCreateInfo
