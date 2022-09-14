@@ -26,7 +26,7 @@ var searchData=
   ['budgetupdate_23',['BudgetUpdate',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088ad4a8670b33dfb0150e1059a1bb2e8df7',1,'gpgmm']]],
   ['budgetupdateevent_24',['BudgetUpdateEvent',['../classgpgmm_1_1d3d12_1_1_budget_update_event.html#acc872e8d6fec237abf11b51121028be6',1,'gpgmm::d3d12::BudgetUpdateEvent::BudgetUpdateEvent()'],['../classgpgmm_1_1d3d12_1_1_budget_update_event.html',1,'gpgmm::d3d12::BudgetUpdateEvent']]],
   ['budgetupdatetask_25',['BudgetUpdateTask',['../classgpgmm_1_1d3d12_1_1_budget_update_task.html#aea174d566448ec90abb0976a0cfce11d',1,'gpgmm::d3d12::BudgetUpdateTask::BudgetUpdateTask()'],['../classgpgmm_1_1d3d12_1_1_budget_update_task.html',1,'gpgmm::d3d12::BudgetUpdateTask']]],
-  ['bufferallocator_26',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a2d5104d37de68b76c2d9cf96e86dfafe',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
+  ['bufferallocator_26',['BufferAllocator',['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html#a120c1212d88457c4e132225d0ec6fb6a',1,'gpgmm::d3d12::BufferAllocator::BufferAllocator()'],['../classgpgmm_1_1d3d12_1_1_buffer_allocator.html',1,'gpgmm::d3d12::BufferAllocator']]],
   ['bufferallocatord3d12_2ecpp_27',['BufferAllocatorD3D12.cpp',['../_buffer_allocator_d3_d12_8cpp.html',1,'']]],
   ['bufferallocatord3d12_2eh_28',['BufferAllocatorD3D12.h',['../_buffer_allocator_d3_d12_8h.html',1,'']]]
 ];
