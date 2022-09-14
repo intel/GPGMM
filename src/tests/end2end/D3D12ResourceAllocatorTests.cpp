@@ -261,6 +261,68 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
     }
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+
+    // ALLOCATOR_ALGORITHM_SLAB
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        // Slab allocator requires heaps to be in aligned in powers-of-two sizes.
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), GPGMM_MB_TO_BYTES(16));
+    }
+
+    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        // Buddy allocator requires heaps to be in aligned in powers-of-two sizes.
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), GPGMM_MB_TO_BYTES(16));
+    }
+
+    // ALLOCATOR_ALGORITHM_DEDICATED
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+        newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kDefaultBufferSize),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        // Dedicated allocator ignores the preferred resource heap size and allocates exactly what
+        // is needed.
+        EXPECT_EQ(allocation->GetMemory()->GetSize(), kDefaultBufferSize);
+    }
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyDeallocateAtEnd) {
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
