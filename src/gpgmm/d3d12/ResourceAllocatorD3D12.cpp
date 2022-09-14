@@ -961,7 +961,7 @@ namespace gpgmm::d3d12 {
         if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-            isCreatedResourceStateRequired && !isAlwaysCommitted && !neverSubAllocate) {
+            isCreatedResourceStateRequired && !neverSubAllocate) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the
