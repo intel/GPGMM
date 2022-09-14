@@ -415,6 +415,11 @@ namespace gpgmm::d3d12 {
                 ? std::min(allocatorDescriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
                 : caps->GetMaxResourceHeapSize();
 
+        newDescriptor.PreferredResourceHeapSize =
+            (allocatorDescriptor.PreferredResourceHeapSize == 0)
+                ? kNoRequiredAlignment
+                : allocatorDescriptor.PreferredResourceHeapSize;
+
         newDescriptor.MemoryFragmentationLimit = (allocatorDescriptor.MemoryFragmentationLimit > 0)
                                                      ? allocatorDescriptor.MemoryFragmentationLimit
                                                      : kDefaultFragmentationLimit;
@@ -611,16 +616,19 @@ namespace gpgmm::d3d12 {
         const uint64_t maxResourceHeapSize = mCaps->GetMaxResourceHeapSize();
         switch (algorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
+                // System and memory size must be aligned at creation-time.
                 return std::make_unique<BuddyMemoryAllocator>(
                     /*systemSize*/ PrevPowerOfTwo(maxResourceHeapSize),
-                    /*memorySize*/ std::max(memoryAlignment, memorySize),
+                    /*memorySize*/ NextPowerOfTwo(memorySize),
                     /*memoryAlignment*/ memoryAlignment,
                     /*memoryAllocator*/ std::move(underlyingAllocator));
             }
             case ALLOCATOR_ALGORITHM_SLAB: {
+                // Min slab size is always equal to the memory size because the
+                // slab allocator aligns the slab size at allocate-time.
                 return std::make_unique<SlabCacheAllocator>(
                     /*maxSlabSize*/ PrevPowerOfTwo(maxResourceHeapSize),
-                    /*minSlabSize*/ std::max(memoryAlignment, memorySize),
+                    /*minSlabSize*/ memorySize,
                     /*slabAlignment*/ memoryAlignment,
                     /*slabFragmentationLimit*/ memoryFragmentationLimit,
                     /*allowSlabPrefetch*/ isPrefetchAllowed,
@@ -647,15 +655,16 @@ namespace gpgmm::d3d12 {
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                     heapProperties, heapFlags, mIsAlwaysInBudget);
 
+        const uint64_t heapSize =
+            std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
+
         std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator = CreatePoolAllocator(
-            descriptor.PoolAlgorithm, /*memorySize*/ descriptor.PreferredResourceHeapSize,
-            heapAlignment, (descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
-            std::move(resourceHeapAllocator));
+            descriptor.PoolAlgorithm, heapSize, heapAlignment,
+            (descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND), std::move(resourceHeapAllocator));
 
         return CreateSubAllocator(
-            descriptor.SubAllocationAlgorithm,
-            /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
-            heapAlignment, descriptor.MemoryFragmentationLimit, descriptor.MemoryGrowthFactor,
+            descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
+            descriptor.MemoryFragmentationLimit, descriptor.MemoryGrowthFactor,
             /*allowSlabPrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
             std::move(pooledOrNonPooledAllocator));
     }
@@ -677,14 +686,15 @@ namespace gpgmm::d3d12 {
                                 (descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
                                 std::move(smallBufferOnlyAllocator));
 
+        const uint64_t heapSize =
+            std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
+
         // Any amount of fragmentation must be allowed for small buffers since the allocation can
         // be smaller then the resource heap alignment.
-        return CreateSubAllocator(
-            descriptor.SubAllocationAlgorithm,
-            /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
-            heapAlignment,
-            /*memoryFragmentationLimit*/ 1, descriptor.MemoryGrowthFactor,
-            /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
+        return CreateSubAllocator(descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
+                                  /*memoryFragmentationLimit*/ 1, descriptor.MemoryGrowthFactor,
+                                  /*allowSlabPrefetch*/ false,
+                                  std::move(pooledOrNonPooledAllocator));
     }
 
     ResourceAllocator::~ResourceAllocator() {
