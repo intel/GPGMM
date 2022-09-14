@@ -508,17 +508,22 @@ namespace gpgmm::d3d12 {
             // General-purpose allocators.
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
-            mResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapSubAllocator(
-                descriptor, heapFlags, heapProperties, heapAlignment);
+            mResourceAllocatorOfType[resourceHeapTypeIndex] =
+                CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
 
-            mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapSubAllocator(
-                descriptor, heapFlags, heapProperties, msaaHeapAlignment);
+            mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
+                CreateResourceAllocator(descriptor, heapFlags, heapProperties, msaaHeapAlignment);
 
-            mResourceHeapAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceHeapAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
+            // Dedicated allocators are used when sub-allocation cannot but heaps could still be
+            // recycled.
+            ALLOCATOR_DESC dedicatedDescriptor = descriptor;
+            dedicatedDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
 
-            mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex] = CreateResourceHeapAllocator(
-                descriptor, heapFlags, heapProperties, msaaHeapAlignment);
+            mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
+                dedicatedDescriptor, heapFlags, heapProperties, heapAlignment);
+
+            mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
+                dedicatedDescriptor, heapFlags, heapProperties, msaaHeapAlignment);
 
             // Resource specific allocators.
             mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
@@ -569,37 +574,25 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceHeapSubAllocator(
-        const ALLOCATOR_DESC& descriptor,
-        D3D12_HEAP_FLAGS heapFlags,
-        D3D12_HEAP_PROPERTIES heapProperties,
-        uint64_t heapAlignment) {
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
-            CreateResourceHeapAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
+    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreatePoolAllocator(
+        ALLOCATOR_ALGORITHM algorithm,
+        uint64_t memorySize,
+        uint64_t memoryAlignment,
+        bool isAlwaysOnDemand,
+        std::unique_ptr<MemoryAllocator> underlyingAllocator) {
+        if (isAlwaysOnDemand) {
+            return underlyingAllocator;
+        }
 
-        const uint64_t maxResourceHeapSize = mCaps->GetMaxResourceHeapSize();
-        switch (descriptor.SubAllocationAlgorithm) {
-            case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
-                return std::make_unique<BuddyMemoryAllocator>(
-                    /*systemSize*/ PrevPowerOfTwo(maxResourceHeapSize),
-                    /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
-                    /*memoryAlignment*/ heapAlignment,
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
+        switch (algorithm) {
+            case ALLOCATOR_ALGORITHM_FIXED_POOL: {
+                return std::make_unique<PooledMemoryAllocator>(memorySize, memoryAlignment,
+                                                               std::move(underlyingAllocator));
             }
-            case ALLOCATOR_ALGORITHM_SLAB: {
-                return std::make_unique<SlabCacheAllocator>(
-                    /*maxSlabSize*/ PrevPowerOfTwo(maxResourceHeapSize),
-                    /*minSlabSize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
-                    /*slabAlignment*/ heapAlignment,
-                    /*slabFragmentationLimit*/ descriptor.MemoryFragmentationLimit,
-                    /*allowSlabPrefetch*/
-                    !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
-                    /*slabGrowthFactor*/ descriptor.MemoryGrowthFactor,
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
+            case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
+                return std::make_unique<SegmentedMemoryAllocator>(std::move(underlyingAllocator),
+                                                                  memoryAlignment);
             }
-            case ALLOCATOR_ALGORITHM_DEDICATED:
-                return std::make_unique<DedicatedMemoryAllocator>(
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             default: {
                 UNREACHABLE();
                 return {};
@@ -607,7 +600,45 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceHeapAllocator(
+    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSubAllocator(
+        ALLOCATOR_ALGORITHM algorithm,
+        uint64_t memorySize,
+        uint64_t memoryAlignment,
+        double memoryFragmentationLimit,
+        double memoryGrowthFactor,
+        bool isPrefetchAllowed,
+        std::unique_ptr<MemoryAllocator> underlyingAllocator) {
+        const uint64_t maxResourceHeapSize = mCaps->GetMaxResourceHeapSize();
+        switch (algorithm) {
+            case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
+                return std::make_unique<BuddyMemoryAllocator>(
+                    /*systemSize*/ PrevPowerOfTwo(maxResourceHeapSize),
+                    /*memorySize*/ std::max(memoryAlignment, memorySize),
+                    /*memoryAlignment*/ memoryAlignment,
+                    /*memoryAllocator*/ std::move(underlyingAllocator));
+            }
+            case ALLOCATOR_ALGORITHM_SLAB: {
+                return std::make_unique<SlabCacheAllocator>(
+                    /*maxSlabSize*/ PrevPowerOfTwo(maxResourceHeapSize),
+                    /*minSlabSize*/ std::max(memoryAlignment, memorySize),
+                    /*slabAlignment*/ memoryAlignment,
+                    /*slabFragmentationLimit*/ memoryFragmentationLimit,
+                    /*allowSlabPrefetch*/ isPrefetchAllowed,
+                    /*slabGrowthFactor*/ memoryGrowthFactor,
+                    /*memoryAllocator*/ std::move(underlyingAllocator));
+            }
+            case ALLOCATOR_ALGORITHM_DEDICATED: {
+                return std::make_unique<DedicatedMemoryAllocator>(
+                    /*memoryAllocator*/ std::move(underlyingAllocator));
+            }
+            default: {
+                UNREACHABLE();
+                return {};
+            }
+        }
+    }
+
+    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceAllocator(
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         D3D12_HEAP_PROPERTIES heapProperties,
@@ -616,25 +647,17 @@ namespace gpgmm::d3d12 {
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
                                                     heapProperties, heapFlags, mIsAlwaysInBudget);
 
-        if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
-            switch (descriptor.PoolAlgorithm) {
-                case ALLOCATOR_ALGORITHM_FIXED_POOL: {
-                    return std::make_unique<PooledMemoryAllocator>(
-                        descriptor.PreferredResourceHeapSize, heapAlignment,
-                        std::move(resourceHeapAllocator));
-                }
-                case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
-                    return std::make_unique<SegmentedMemoryAllocator>(
-                        std::move(resourceHeapAllocator), heapAlignment);
-                }
-                default: {
-                    UNREACHABLE();
-                    return {};
-                }
-            }
-        }
+        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator = CreatePoolAllocator(
+            descriptor.PoolAlgorithm, /*memorySize*/ descriptor.PreferredResourceHeapSize,
+            heapAlignment, (descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
+            std::move(resourceHeapAllocator));
 
-        return resourceHeapAllocator;
+        return CreateSubAllocator(
+            descriptor.SubAllocationAlgorithm,
+            /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
+            heapAlignment, descriptor.MemoryFragmentationLimit, descriptor.MemoryGrowthFactor,
+            /*allowSlabPrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
+            std::move(pooledOrNonPooledAllocator));
     }
 
     std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSmallBufferAllocator(
@@ -647,46 +670,21 @@ namespace gpgmm::d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
         std::unique_ptr<MemoryAllocator> smallBufferOnlyAllocator =
             std::make_unique<BufferAllocator>(this, heapProperties, heapFlags,
-                                              D3D12_RESOURCE_FLAG_NONE, initialResourceState,
-                                              /*bufferSize*/ heapAlignment,
-                                              /*bufferAlignment*/ heapAlignment);
+                                              D3D12_RESOURCE_FLAG_NONE, initialResourceState);
 
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator;
-        if (!(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND)) {
-            // Small buffers always use a 64KB heap.
-            pooledOrNonPooledAllocator = std::make_unique<PooledMemoryAllocator>(
-                heapAlignment, heapAlignment, std::move(smallBufferOnlyAllocator));
-        } else {
-            pooledOrNonPooledAllocator = std::move(smallBufferOnlyAllocator);
-        }
+        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
+            CreatePoolAllocator(descriptor.PoolAlgorithm, heapAlignment, heapAlignment,
+                                (descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
+                                std::move(smallBufferOnlyAllocator));
 
-        switch (descriptor.SubAllocationAlgorithm) {
-            case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
-                return std::make_unique<BuddyMemoryAllocator>(
-                    /*systemSize*/ heapAlignment,
-                    /*memorySize*/ heapAlignment,
-                    /*memoryAlignment*/ heapAlignment,
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
-            }
-            case ALLOCATOR_ALGORITHM_SLAB: {
-                // Any amount of fragmentation must be allowed for small buffers since the resource
-                // heap size cannot change.
-                return std::make_unique<SlabCacheAllocator>(
-                    /*maxSlabSize*/ heapAlignment,
-                    /*slabSize*/ heapAlignment,
-                    /*slabAlignment*/ heapAlignment,
-                    /*slabFragmentationLimit*/ 1,
-                    /*allowSlabPrefetch*/ false,
-                    /*slabMemoryGrowth*/ 1,
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
-            }
-            case ALLOCATOR_ALGORITHM_DEDICATED:
-                return std::make_unique<DedicatedMemoryAllocator>(
-                    /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
-            default:
-                UNREACHABLE();
-                return {};
-        }
+        // Any amount of fragmentation must be allowed for small buffers since the allocation can
+        // be smaller then the resource heap alignment.
+        return CreateSubAllocator(
+            descriptor.SubAllocationAlgorithm,
+            /*memorySize*/ std::max(heapAlignment, descriptor.PreferredResourceHeapSize),
+            heapAlignment,
+            /*memoryFragmentationLimit*/ 1, descriptor.MemoryGrowthFactor,
+            /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
     }
 
     ResourceAllocator::~ResourceAllocator() {
@@ -701,11 +699,11 @@ namespace gpgmm::d3d12 {
         // before event tracer shutdown.
         mSmallBufferAllocatorOfType = {};
 
-        mMSAAResourceHeapAllocatorOfType = {};
+        mMSAADedicatedResourceAllocatorOfType = {};
         mMSAAResourceAllocatorOfType = {};
 
         mResourceAllocatorOfType = {};
-        mResourceHeapAllocatorOfType = {};
+        mDedicatedResourceAllocatorOfType = {};
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
         ReportLiveDeviceObjects(mDevice);
@@ -737,7 +735,8 @@ namespace gpgmm::d3d12 {
             }
 
             bytesReleased +=
-                mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(bytesToRelease);
+                mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(
+                    bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
                 break;
             }
@@ -748,8 +747,9 @@ namespace gpgmm::d3d12 {
                 break;
             }
 
-            bytesReleased += mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(
-                bytesToRelease);
+            bytesReleased +=
+                mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->ReleaseMemory(
+                    bytesToRelease);
             if (bytesReleased >= bytesToRelease) {
                 break;
             }
@@ -1050,10 +1050,11 @@ namespace gpgmm::d3d12 {
         if (!isAlwaysCommitted) {
             if (isMSAA) {
                 allocator =
-                    mMSAAResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+                    mMSAADedicatedResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)]
+                        .get();
             } else {
                 allocator =
-                    mResourceHeapAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
+                    mDedicatedResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
             request.Alignment = allocator->GetMemoryAlignment();
@@ -1282,11 +1283,11 @@ namespace gpgmm::d3d12 {
              resourceHeapTypeIndex++) {
             result += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
 
-            result += mMSAAResourceHeapAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
             result += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
 
             result += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
-            result += mResourceHeapAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
         }
 
         GPGMM_TRACE_EVENT_METRIC(

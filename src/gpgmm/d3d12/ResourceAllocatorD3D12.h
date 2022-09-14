@@ -612,13 +612,7 @@ namespace gpgmm::d3d12 {
                           ComPtr<ResidencyManager> residencyManager,
                           std::unique_ptr<Caps> caps);
 
-        std::unique_ptr<MemoryAllocator> CreateResourceHeapSubAllocator(
-            const ALLOCATOR_DESC& descriptor,
-            D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_PROPERTIES heapProperties,
-            uint64_t heapAlignment);
-
-        std::unique_ptr<MemoryAllocator> CreateResourceHeapAllocator(
+        std::unique_ptr<MemoryAllocator> CreateResourceAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             D3D12_HEAP_PROPERTIES heapProperties,
@@ -630,6 +624,22 @@ namespace gpgmm::d3d12 {
             D3D12_HEAP_PROPERTIES heapProperties,
             uint64_t heapAlignment,
             D3D12_RESOURCE_STATES initialResourceState);
+
+        std::unique_ptr<MemoryAllocator> CreatePoolAllocator(
+            ALLOCATOR_ALGORITHM algorithm,
+            uint64_t memorySize,
+            uint64_t memoryAlignment,
+            bool isAlwaysOnDemand,
+            std::unique_ptr<MemoryAllocator> underlyingAllocator);
+
+        std::unique_ptr<MemoryAllocator> CreateSubAllocator(
+            ALLOCATOR_ALGORITHM algorithm,
+            uint64_t memorySize,
+            uint64_t memoryAlignment,
+            double memoryFragmentationLimit,
+            double memoryGrowthFactor,
+            bool isPrefetchAllowed,
+            std::unique_ptr<MemoryAllocator> underlyingAllocator);
 
         HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
@@ -672,12 +682,12 @@ namespace gpgmm::d3d12 {
         static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
 
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mResourceHeapAllocatorOfType;
+            mDedicatedResourceAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mResourceAllocatorOfType;
 
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
-            mMSAAResourceHeapAllocatorOfType;
+            mMSAADedicatedResourceAllocatorOfType;
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mMSAAResourceAllocatorOfType;
 

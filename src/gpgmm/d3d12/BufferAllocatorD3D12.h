@@ -29,18 +29,13 @@ namespace gpgmm::d3d12 {
                         D3D12_HEAP_PROPERTIES heapProperties,
                         D3D12_HEAP_FLAGS heapFlags,
                         D3D12_RESOURCE_FLAGS resourceFlags,
-                        D3D12_RESOURCE_STATES initialResourceState,
-                        uint64_t bufferSize,
-                        uint64_t bufferAlignment);
+                        D3D12_RESOURCE_STATES initialResourceState);
         ~BufferAllocator() override = default;
 
         // MemoryAllocator interface
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
-
-        uint64_t GetMemorySize() const override;
-        uint64_t GetMemoryAlignment() const override;
 
       private:
         ResourceAllocator* const mResourceAllocator;
@@ -49,8 +44,6 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_FLAGS mHeapFlags;
         const D3D12_RESOURCE_FLAGS mResourceFlags;
         const D3D12_RESOURCE_STATES mInitialResourceState;
-        const uint64_t mBufferSize;
-        const uint64_t mBufferAlignment;
     };
 
 }  // namespace gpgmm::d3d12
