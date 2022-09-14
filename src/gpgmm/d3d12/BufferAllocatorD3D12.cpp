@@ -14,11 +14,13 @@
 
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm::d3d12 {
 
@@ -26,16 +28,12 @@ namespace gpgmm::d3d12 {
                                      D3D12_HEAP_PROPERTIES heapProperties,
                                      D3D12_HEAP_FLAGS heapFlags,
                                      D3D12_RESOURCE_FLAGS resourceFlags,
-                                     D3D12_RESOURCE_STATES initialResourceState,
-                                     uint64_t bufferSize,
-                                     uint64_t bufferAlignment)
+                                     D3D12_RESOURCE_STATES initialResourceState)
         : mResourceAllocator(resourceAllocator),
           mHeapProperties(heapProperties),
           mHeapFlags(heapFlags),
           mResourceFlags(resourceFlags),
-          mInitialResourceState(initialResourceState),
-          mBufferSize(bufferSize),
-          mBufferAlignment(bufferAlignment) {
+          mInitialResourceState(initialResourceState) {
     }
 
     std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(
@@ -44,13 +42,20 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (GetMemorySize() != request.SizeInBytes || GetMemoryAlignment() != request.Alignment ||
-            request.NeverAllocate) {
+        if (request.NeverAllocate) {
             return {};
         }
 
+        const uint64_t heapSize = AlignTo(request.SizeInBytes, request.Alignment);
+        if (heapSize > request.SizeInBytes) {
+            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+                << "Resource heap size is larger then the requested size (" +
+                       std::to_string(heapSize) + " vs " + std::to_string(request.SizeInBytes) +
+                       " bytes).";
+        }
+
         D3D12_RESOURCE_ALLOCATION_INFO info = {};
-        info.SizeInBytes = request.SizeInBytes;
+        info.SizeInBytes = heapSize;
         info.Alignment = request.Alignment;
 
         D3D12_RESOURCE_DESC resourceDescriptor;
@@ -90,13 +95,4 @@ namespace gpgmm::d3d12 {
 
         SafeRelease(allocation);
     }
-
-    uint64_t BufferAllocator::GetMemorySize() const {
-        return mBufferSize;
-    }
-
-    uint64_t BufferAllocator::GetMemoryAlignment() const {
-        return mBufferAlignment;
-    }
-
 }  // namespace gpgmm::d3d12
