@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logseverity_0',['LogSeverity',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf',1,'gpgmm']]]
+  ['optionflags_0',['OptionFlags',['../structgpgmm_1_1_desc.html#a705ef8db174c6365900251d224f3581b',1,'gpgmm::Desc']]]
 ];

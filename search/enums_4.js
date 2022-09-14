@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['heaps_5fflags_0',['HEAPS_FLAGS',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662',1,'gpgmm::d3d12::HEAPS_FLAGS()'],['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662',1,'gpgmm::d3d12::HEAPS_FLAGS()']]]
+  ['logseverity_0',['LogSeverity',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf',1,'gpgmm']]]
 ];
