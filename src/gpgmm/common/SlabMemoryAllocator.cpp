@@ -311,10 +311,6 @@ namespace gpgmm {
         // the next slab size will be larger than the previous slab size.
         mLastUsedSlabSize = slabSize;
 
-        // Disallow pre-fetching when coverage goes below threshold.
-        // TODO: Consider re-allowing when AlwaysCacheSize=true.
-        const bool allowSlabPrefetch = mAllowSlabPrefetch && IsPrefetchCoverageBelowThreshold();
-
         // Prefetch memory for future slab.
         //
         // This check is overly conservative since waiting for the device to retrieve pre-fetched
@@ -322,9 +318,11 @@ namespace gpgmm {
         //
         // TODO: Measure if the slab allocation time remaining exceeds the prefetch memory task
         // time before deciding to prefetch.
-        if ((request.AlwaysPrefetch || allowSlabPrefetch) && mNextSlabAllocationEvent == nullptr &&
-            pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
-            pFreeSlab->GetBlockCount() >= kSlabPrefetchMinBlockCount) {
+        if (mAllowSlabPrefetch && mNextSlabAllocationEvent == nullptr &&
+            (request.AlwaysPrefetch ||
+             (IsPrefetchCoverageBelowThreshold() &&
+              pFreeSlab->GetUsedPercent() >= kSlabPrefetchUsageThreshold &&
+              pFreeSlab->GetBlockCount() >= kSlabPrefetchMinBlockCount))) {
             // If a subsequent TryAllocateMemory() uses a request size different than the current
             // request size, memory required for the next slab could be the wrong size. If so,
             // pre-fetching did not pay off and the pre-fetched memory will be de-allocated instead.

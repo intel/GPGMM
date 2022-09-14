@@ -44,9 +44,9 @@ class SlabMemoryAllocatorTests : public testing::Test {
     static constexpr uint64_t kDefaultSlabSize = 128u;
     static constexpr uint64_t kDefaultSlabAlignment = 1u;
     static constexpr double kDefaultSlabFragmentationLimit = 0.125;
-    static constexpr double kNoSlabGrowthFactor = 1.0;
+    static constexpr double kDisableSlabGrowth = 1.0;
     static constexpr bool kNoSlabPrefetchAllowed = false;
-    static constexpr bool kSlabPrefetchAllowed = true;
+    static constexpr bool kAllowSlabPrefetching = true;
 };
 
 // Verify allocation in a single slab.
@@ -60,7 +60,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
 
         ASSERT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize * 2, 1)), nullptr);
@@ -72,7 +72,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
 
         ASSERT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kMaxSlabSize, 1)), nullptr);
@@ -86,7 +86,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = kBlockSize;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                       kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                      kNoSlabGrowthFactor, dummyMemoryAllocator.get());
+                                      kDisableSlabGrowth, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
@@ -105,7 +105,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                       kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                      kNoSlabGrowthFactor, dummyMemoryAllocator.get());
+                                      kDisableSlabGrowth, dummyMemoryAllocator.get());
 
         // Max allocation cannot be more than 1/8th the max slab size or 4 bytes.
         // Since a 10 byte allocation requires a 128 byte slab, allocation should always fail.
@@ -130,7 +130,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = 128;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                       kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                      kNoSlabGrowthFactor, dummyMemoryAllocator.get());
+                                      kDisableSlabGrowth, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
@@ -148,7 +148,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = 128;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                       kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                      kNoSlabGrowthFactor, dummyMemoryAllocator.get());
+                                      kDisableSlabGrowth, dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
@@ -165,7 +165,7 @@ TEST_F(SlabMemoryAllocatorTests, SingleSlab) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
 
         EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1, true)), nullptr);
@@ -188,7 +188,7 @@ TEST_F(SlabMemoryAllocatorTests, MultipleSlabs) {
 
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, /*slabSize*/ kBlockSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
         const uint64_t kNumOfSlabs = 12;
         std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
@@ -215,7 +215,7 @@ TEST_F(SlabMemoryAllocatorTests, MultipleSlabs) {
 
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
         // Fill up exactly two 128B slabs.
         std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
@@ -242,7 +242,7 @@ TEST_F(SlabMemoryAllocatorTests, MultipleSlabs) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
 
         // Both allocation A and B go in Slab A, which will become full.
@@ -330,7 +330,7 @@ TEST_F(SlabMemoryAllocatorTests, AllocationOverflow) {
     constexpr uint64_t kMaxSlabSize = 512;
     SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                   kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                  kNoSlabGrowthFactor, dummyMemoryAllocator.get());
+                                  kDisableSlabGrowth, dummyMemoryAllocator.get());
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     std::unique_ptr<MemoryAllocation> invalidAllocation =
@@ -347,7 +347,7 @@ TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
     constexpr uint64_t kMaxSlabSize = 512;
     SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                   kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                  kNoSlabGrowthFactor, poolAllocator.get());
+                                  kDisableSlabGrowth, poolAllocator.get());
 
     std::set<MemoryBase*> slabMemory = {};
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
@@ -390,7 +390,7 @@ TEST_F(SlabMemoryAllocatorTests, GetInfo) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       dummyMemoryAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
@@ -424,7 +424,7 @@ TEST_F(SlabMemoryAllocatorTests, GetInfo) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabMemoryAllocator allocator(kBlockSize, kMaxSlabSize, kDefaultSlabSize,
                                       kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-                                      kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+                                      kNoSlabPrefetchAllowed, kDisableSlabGrowth,
                                       poolAllocator.get());
 
         std::unique_ptr<MemoryAllocation> allocation =
@@ -690,7 +690,7 @@ TEST_F(SlabCacheAllocatorTests, SlabOversized) {
     constexpr uint64_t kMinSlabSize = 16;
     SlabCacheAllocator allocator(kMaxSlabSize, kMinSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     EXPECT_EQ(allocator.TryAllocateMemory(CreateBasicRequest(kMaxSlabSize + 1, 1)), nullptr);
 }
@@ -700,7 +700,7 @@ TEST_F(SlabCacheAllocatorTests, SingleSlabMultipleSize) {
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     // Verify requesting an allocation without memory will not return a valid allocation.
     {
@@ -716,7 +716,7 @@ TEST_F(SlabCacheAllocatorTests, SingleSlabMultipleAlignments) {
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     // Verify requesting an allocation of same size using multiple alignment succeeds.
     {
@@ -741,7 +741,7 @@ TEST_F(SlabCacheAllocatorTests, MultipleSlabsSameSize) {
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     std::unique_ptr<MemoryAllocation> firstAllocation =
         allocator.TryAllocateMemory(CreateBasicRequest(22, 1));
@@ -771,7 +771,7 @@ TEST_F(SlabCacheAllocatorTests, MultipleSlabsVariableSizes) {
     constexpr uint64_t kSlabSize = 0;  // deduce slab size from allocation size.
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
     {
         constexpr uint64_t allocationSize = 22;
         std::unique_ptr<MemoryAllocation> allocation =
@@ -817,7 +817,7 @@ TEST_F(SlabCacheAllocatorTests, SingleSlabInBuddy) {
     constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor,
+                                 kDisableSlabGrowth,
                                  std::make_unique<BuddyMemoryAllocator>(
                                      kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                      std::make_unique<DummyMemoryAllocator>()));
@@ -841,7 +841,7 @@ TEST_F(SlabCacheAllocatorTests, MultipleSlabsInBuddy) {
     constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
     SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor,
+                                 kDisableSlabGrowth,
                                  std::make_unique<BuddyMemoryAllocator>(
                                      kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                      std::make_unique<DummyMemoryAllocator>()));
@@ -918,7 +918,7 @@ TEST_F(SlabCacheAllocatorTests, GetInfo) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                      kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                     kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                     kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
         std::unique_ptr<MemoryAllocation> allocation =
             allocator.TryAllocateMemory(CreateBasicRequest(kBlockSize, 1));
@@ -947,7 +947,7 @@ TEST_F(SlabCacheAllocatorTests, GetInfo) {
         constexpr uint64_t kMaxSlabSize = 512;
         SlabCacheAllocator allocator(
             kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment, kDefaultSlabFragmentationLimit,
-            kNoSlabPrefetchAllowed, kNoSlabGrowthFactor,
+            kNoSlabPrefetchAllowed, kDisableSlabGrowth,
             std::make_unique<PooledMemoryAllocator>(kDefaultSlabSize, kDefaultSlabAlignment,
                                                     std::make_unique<DummyMemoryAllocator>()));
 
@@ -979,7 +979,7 @@ TEST_F(SlabCacheAllocatorTests, GetInfo) {
         constexpr uint64_t kSlabSize = kDefaultSlabSize / 8;
         SlabCacheAllocator allocator(kMaxSlabSize, kSlabSize, kDefaultSlabAlignment,
                                      kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                     kNoSlabGrowthFactor,
+                                     kDisableSlabGrowth,
                                      std::make_unique<BuddyMemoryAllocator>(
                                          kMaxBlockSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                          std::make_unique<DummyMemoryAllocator>()));
@@ -1013,8 +1013,8 @@ TEST_F(SlabCacheAllocatorTests, SlabPrefetch) {
     constexpr uint64_t kMaxSlabSize = 512;
 
     SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
-                                 kDefaultSlabFragmentationLimit, kSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDefaultSlabFragmentationLimit, kAllowSlabPrefetching,
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     constexpr uint64_t kNumOfSlabs = 10u;
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
@@ -1030,11 +1030,36 @@ TEST_F(SlabCacheAllocatorTests, SlabPrefetch) {
     }
 }
 
+TEST_F(SlabCacheAllocatorTests, SlabPrefetchDisabled) {
+    constexpr uint64_t kBlockSize = 32;
+    constexpr uint64_t kMaxSlabSize = 512;
+
+    SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
+                                 kDefaultSlabFragmentationLimit, !kAllowSlabPrefetching,
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
+
+    MemoryAllocationRequest alwaysPrefetchRequest = CreateBasicRequest(kBlockSize, 1);
+    alwaysPrefetchRequest.AlwaysPrefetch = true;
+
+    constexpr uint64_t kNumOfSlabs = 10u;
+    std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
+    for (size_t i = 0; i < kNumOfSlabs * (kDefaultSlabSize / kBlockSize); i++) {
+        allocations.push_back(allocator.TryAllocateMemory(alwaysPrefetchRequest));
+    }
+
+    EXPECT_EQ(allocator.GetInfo().PrefetchedMemoryMissesEliminated, 0u);
+    EXPECT_EQ(allocator.GetInfo().PrefetchedMemoryMisses, 0u);
+
+    for (auto& allocation : allocations) {
+        allocator.DeallocateMemory(std::move(allocation));
+    }
+}
+
 TEST_F(SlabCacheAllocatorTests, AlwaysCache) {
     constexpr uint64_t kMaxSlabSize = 512;
     SlabCacheAllocator allocator(kMaxSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     // Re-requesting same size from cached allocation should always succeed.
     MemoryAllocationRequest request = CreateBasicRequest(32, 1);
@@ -1052,7 +1077,7 @@ TEST_F(SlabCacheAllocatorTests, AlwaysCache) {
 TEST_F(SlabCacheAllocatorTests, OutOfMemory) {
     SlabCacheAllocator allocator(kDefaultSlabSize, kDefaultSlabSize, kDefaultSlabAlignment,
                                  kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
-                                 kNoSlabGrowthFactor, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     constexpr uint64_t kTotalMemoryAvailable = 512;
 

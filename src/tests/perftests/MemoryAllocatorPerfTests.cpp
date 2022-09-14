@@ -25,6 +25,7 @@
 
 using namespace gpgmm;
 
+static constexpr double kDisableSlabGrowth = 1.0;
 static constexpr uint64_t kMemoryAlignment = 1;
 
 class MemoryAllocatorPerfTests : public benchmark::Fixture {
@@ -80,7 +81,7 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::State& state) {
     SlabCacheAllocator allocator(
         state.range(1), state.range(0), kMemoryAlignment, kMemoryAlignment, /*allowPrefetch*/ false,
-        /*kNoSlabGrowthFactor*/ 1, std::make_unique<DummyMemoryAllocator>());
+        kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     // Below is effectively equivelent to STL's reserve(size=1).
     {
@@ -98,7 +99,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::Sta
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Cold)(benchmark::State& state) {
     SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
                                  /*slabFragmentationLimit*/ 1, /*allowPrefetch*/ false,
-                                 /*kNoSlabGrowthFactor*/ 1,
+                                 kDisableSlabGrowth,
                                  std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
