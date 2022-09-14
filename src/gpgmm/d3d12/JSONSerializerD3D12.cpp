@@ -164,8 +164,7 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("AlwaysInBudget", desc.AlwaysInBudget);
-        dict.AddItem("IsExternal", desc.IsExternal);
+        dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
         dict.AddItem("DebugName", desc.DebugName);
         return dict;

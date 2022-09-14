@@ -280,7 +280,6 @@ namespace gpgmm::d3d12 {
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
-        resourceHeapDesc.HeapType = allocationDescriptor.HeapType;
 
         ReturnIfFailed(Heap::CreateHeap(
             resourceHeapDesc, mResidencyManager.Get(),

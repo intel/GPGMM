@@ -1149,7 +1149,7 @@ namespace gpgmm::d3d12 {
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
-        resourceHeapDesc.IsExternal = true;
+        resourceHeapDesc.Flags |= HEAP_FLAG_NEVER_USE_RESIDENCY;
 
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(Heap::CreateHeap(
@@ -1222,7 +1222,8 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.DebugName = "Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
-        resourceHeapDesc.AlwaysInBudget = mIsAlwaysInBudget;
+        resourceHeapDesc.Flags |=
+            (mIsAlwaysInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(

@@ -28,10 +28,9 @@ namespace gpgmm::d3d12 {
                              ResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
                              Heap** ppHeapOut) {
-
         // Ensure enough free memory exists before allocating to avoid an out-of-memory error
         // when over budget.
-        if (pResidencyManager != nullptr && descriptor.AlwaysInBudget) {
+        if (pResidencyManager != nullptr && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                              descriptor.MemorySegmentGroup));
         }
@@ -42,9 +41,7 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
 
-        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor.MemorySegmentGroup,
-                                            descriptor.SizeInBytes, descriptor.Alignment,
-                                            descriptor.IsExternal));
+        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor));
 
         if (pResidencyManager != nullptr) {
             ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
@@ -60,16 +57,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    Heap::Heap(ComPtr<ID3D12Pageable> pageable,
-               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-               uint64_t size,
-               uint64_t alignment,
-               bool isExternal)
-        : MemoryBase(size, alignment),
+    Heap::Heap(ComPtr<ID3D12Pageable> pageable, const HEAP_DESC& descriptor)
+        : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
           mPageable(std::move(pageable)),
-          mMemorySegmentGroup(memorySegmentGroup),
+          mMemorySegmentGroup(descriptor.MemorySegmentGroup),
           mResidencyLock(0),
-          mIsExternal(isExternal) {
+          mIsExternal(descriptor.Flags & HEAP_FLAG_NEVER_USE_RESIDENCY) {
         ASSERT(mPageable != nullptr);
         if (!mIsExternal) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);

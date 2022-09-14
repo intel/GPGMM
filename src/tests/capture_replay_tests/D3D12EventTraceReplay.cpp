@@ -487,7 +487,6 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         HEAP_DESC resourceHeapDesc = {};
                         resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
                         resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
-                        resourceHeapDesc.IsExternal = args["IsExternal"].asBool();
                         resourceHeapDesc.MemorySegmentGroup =
                             GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
 
