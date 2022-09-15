@@ -132,10 +132,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">GetMemory</a> () const</td></tr>
 <tr class="memdesc:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aaf88ee12b00d53ea2cd6244ef730dfc0">More...</a><br /></td></tr>
 <tr class="separator:aaf88ee12b00d53ea2cd6244ef730dfc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44961b0c02815582c9b80cb889786afe"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a44961b0c02815582c9b80cb889786afe">Map</a> (uint32_t subresource=0, const D3D12_RANGE *readRange=nullptr, void **dataOut=nullptr)</td></tr>
-<tr class="separator:a44961b0c02815582c9b80cb889786afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacb13e9781e92486cd62b08b39adf645"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aacb13e9781e92486cd62b08b39adf645">Unmap</a> (uint32_t subresource=0, const D3D12_RANGE *writtenRange=nullptr)</td></tr>
-<tr class="separator:aacb13e9781e92486cd62b08b39adf645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f8384f383d68af93d39ea641b1c70a2"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a8f8384f383d68af93d39ea641b1c70a2">Map</a> (uint32_t subresource=0, const D3D12_RANGE *pReadRange=nullptr, void **ppDataOut=nullptr)</td></tr>
+<tr class="separator:a8f8384f383d68af93d39ea641b1c70a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd5ebeeb118f79538858c1e617fea592"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#acd5ebeeb118f79538858c1e617fea592">Unmap</a> (uint32_t subresource=0, const D3D12_RANGE *pWrittenRange=nullptr)</td></tr>
+<tr class="separator:acd5ebeeb118f79538858c1e617fea592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a815fcf5ee846af23e4c7bec3f651062f"><td class="memItemLeft" align="right" valign="top">ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f">GetResource</a> () const</td></tr>
 <tr class="separator:a815fcf5ee846af23e4c7bec3f651062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d3bb112feb4a08e232403c168a309d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d">IsResident</a> () const</td></tr>
@@ -609,8 +609,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a44961b0c02815582c9b80cb889786afe" name="a44961b0c02815582c9b80cb889786afe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44961b0c02815582c9b80cb889786afe">&#9670;&#160;</a></span>Map() <span class="overload">[2/2]</span></h2>
+<a id="a8f8384f383d68af93d39ea641b1c70a2" name="a8f8384f383d68af93d39ea641b1c70a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f8384f383d68af93d39ea641b1c70a2">&#9670;&#160;</a></span>Map() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -625,13 +625,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const D3D12_RANGE *&#160;</td>
-          <td class="paramname"><em>readRange</em> = <code>nullptr</code>, </td>
+          <td class="paramname"><em>pReadRange</em> = <code>nullptr</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>dataOut</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>ppDataOut</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -681,8 +681,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aacb13e9781e92486cd62b08b39adf645" name="aacb13e9781e92486cd62b08b39adf645"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacb13e9781e92486cd62b08b39adf645">&#9670;&#160;</a></span>Unmap() <span class="overload">[2/2]</span></h2>
+<a id="acd5ebeeb118f79538858c1e617fea592" name="acd5ebeeb118f79538858c1e617fea592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd5ebeeb118f79538858c1e617fea592">&#9670;&#160;</a></span>Unmap() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -697,7 +697,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const D3D12_RANGE *&#160;</td>
-          <td class="paramname"><em>writtenRange</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>pWrittenRange</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
