@@ -178,7 +178,7 @@ namespace gpgmm::d3d12 {
             new ResidencyManager(descriptor, std::move(residencyFence)));
 
         // Require automatic video memory budget updates.
-        if (!descriptor.UpdateBudgetByPolling) {
+        if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
             ReturnIfFailed(residencyManager->StartBudgetNotificationUpdates());
             gpgmm::DebugLog() << "OS event based budget updates enabled.";
         }
@@ -227,7 +227,8 @@ namespace gpgmm::d3d12 {
           mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
                                                              : descriptor.EvictSizeInBytes),
           mIsUMA(descriptor.IsUMA),
-          mIsBudgetChangeEventsDisabled(descriptor.UpdateBudgetByPolling),
+          mIsBudgetChangeEventsDisabled(descriptor.Flags &
+                                        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
           mResidencyFence(std::move(residencyFence)),
