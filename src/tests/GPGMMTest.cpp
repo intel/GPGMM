@@ -14,6 +14,8 @@
 
 #include "tests/GPGMMTest.h"
 
+#include "gpgmm/common/SizeClass.h"
+
 #include <iostream>
 
 static GPGMMTestEnvironment* gTestEnv = nullptr;
@@ -61,20 +63,20 @@ std::vector<MEMORY_ALLOCATION_EXPECT> GPGMMTestBase::GenerateTestAllocations(uin
 
         // Common small sizes, likely sub-allocated.
         {256, alignment, true},
-        {1 * 1024, alignment, true},
-        {4 * 1024, alignment, true},
+        {GPGMM_KB_TO_BYTES(1), alignment, true},
+        {GPGMM_KB_TO_BYTES(4), alignment, true},
 
         // Common large sizes, likely standalone.
-        {16 * 1024 * 1024, 0, true},
-        {64 * 1024 * 1024, 0, true},
+        {GPGMM_MB_TO_BYTES(16), 0, true},
+        {GPGMM_MB_TO_BYTES(64), 0, true},
 
         // Mixed sizes, any method.
-        {1 * 1024, 1, true},
-        {64 * 1024 * 1024, 0, true},
-        {1 * 1024, 1, true},
-        {64 * 1024 * 1024, 0, true},
-        {1 * 1024, 1, true},
-        {64 * 1024 * 1024, 0, true},
+        {GPGMM_KB_TO_BYTES(1), 1, true},
+        {GPGMM_MB_TO_BYTES(64), 0, true},
+        {GPGMM_KB_TO_BYTES(1), 1, true},
+        {GPGMM_MB_TO_BYTES(64), 0, true},
+        {GPGMM_KB_TO_BYTES(1), 1, true},
+        {GPGMM_MB_TO_BYTES(64), 0, true},
 
         // Increasing sizes, any method.
         {alignment * 1, 0, true},

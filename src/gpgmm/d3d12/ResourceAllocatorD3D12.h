@@ -363,6 +363,16 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
         */
         ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
+
+        /** \brief Forces the allocator allocation algorithm to be used or E_FAIL.
+
+        By default, the allocation method used may not be used due to incompatible constraints. This
+        flag will disable the default fall-back behavior of using the safest allocation method
+        possible.
+
+        Mostly used for debug and testing when certain allocation methods unexpectedly fail.
+        */
+        ALLOCATION_FLAG_NEVER_FALLBACK = 0x40,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)

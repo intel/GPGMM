@@ -156,26 +156,12 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
-    // ALLOCATOR_ALGORITHM_SLAB
-    {
-        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+    // Ensure the underlying memory size is large enough so all buffer allocation can fit.
+    allocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(64);
 
-        ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
-        ASSERT_NE(resourceAllocator, nullptr);
-
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-
-        for (auto& alloc : GenerateBufferAllocations()) {
-            ComPtr<ResourceAllocation> allocation;
-            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
-                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
-                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
-                      alloc.succeeds);
-        }
-    }
+    // Ensure the allocation will never fall-back to use any method other than the one being tested.
+    ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_FALLBACK;
 
     // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
     {
@@ -186,8 +172,61 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
         ASSERT_NE(resourceAllocator, nullptr);
 
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM + ALLOCATOR_ALGORITHM_FIXED_POOL
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_FIXED_POOL;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM + ALLOCATOR_ALGORITHM_SEGMENTED_POOL
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
+
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_SLAB
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
 
         for (auto& alloc : GenerateBufferAllocations()) {
             ComPtr<ResourceAllocation> allocation;
@@ -208,8 +247,24 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
         ASSERT_NE(resourceAllocator, nullptr);
 
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        for (auto& alloc : GenerateBufferAllocations()) {
+            ComPtr<ResourceAllocation> allocation;
+            EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
+                          allocationDesc, CreateBasicBufferDesc(alloc.size, alloc.alignment),
+                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation)),
+                      alloc.succeeds);
+        }
+    }
+
+    // ALLOCATOR_ALGORITHM_SLAB + ALLOCATOR_ALGORITHM_SEGMENTED_POOL
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
+        ASSERT_NE(resourceAllocator, nullptr);
 
         for (auto& alloc : GenerateBufferAllocations()) {
             ComPtr<ResourceAllocation> allocation;
@@ -229,9 +284,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
         ASSERT_NE(resourceAllocator, nullptr);
 
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-
         for (auto& alloc : GenerateBufferAllocations()) {
             ComPtr<ResourceAllocation> allocation;
             EXPECT_EQ(SUCCEEDED(resourceAllocator->CreateResource(
@@ -240,6 +292,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
                       alloc.succeeds);
         }
     }
+
+    // ALLOCATOR_ALGORITHM_DEDICATED
     {
         ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
         newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
@@ -247,9 +301,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         ComPtr<ResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(newAllocatorDesc, &resourceAllocator));
         ASSERT_NE(resourceAllocator, nullptr);
-
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
         for (auto& alloc : GenerateBufferAllocations()) {
             ComPtr<ResourceAllocation> allocation;
