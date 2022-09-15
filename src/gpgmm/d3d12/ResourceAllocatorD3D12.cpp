@@ -480,7 +480,7 @@ namespace gpgmm::d3d12 {
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
-          mIsAlwaysInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
+          mIsHeapAlwaysCreatedInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
@@ -653,7 +653,8 @@ namespace gpgmm::d3d12 {
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapProperties, heapFlags, mIsAlwaysInBudget);
+                                                    heapProperties, heapFlags,
+                                                    mIsHeapAlwaysCreatedInBudget);
 
         const uint64_t heapSize =
             std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
@@ -1241,7 +1242,7 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.DebugName = "Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.Flags |=
-            (mIsAlwaysInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
+            (mIsHeapAlwaysCreatedInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
@@ -1382,7 +1383,7 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && !mIsAlwaysInBudget;
+        return IsResidencyEnabled() && !mIsHeapAlwaysCreatedInBudget;
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {
