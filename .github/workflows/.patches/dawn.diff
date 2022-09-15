@@ -1,4 +1,4 @@
-From b231d6396d8007e26f82ad6f8734c1bb35bea60c Mon Sep 17 00:00:00 2001
+From ca7224dcb0731150338846cc02c586b1c43e77d9 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -511,7 +511,7 @@ index 9747b41c0..50db56dbd 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 90ddc3041..389523e6e 100644
+index 90ddc3041..810b9006c 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -130,8 +130,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
@@ -535,7 +535,7 @@ index 90ddc3041..389523e6e 100644
 +    residencyDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
-+        residencyDesc.UpdateBudgetByPolling = true;
++        residencyDesc.Flags |= gpgmm::d3d12::RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
 +        residencyDesc.MaxBudgetInBytes = 100000000;  // 100MB
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;

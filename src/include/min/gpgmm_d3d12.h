@@ -140,10 +140,18 @@ namespace gpgmm::d3d12 {
         std::string TraceFile;
     };
 
+    enum RESIDENCY_FLAGS {
+        RESIDENCY_FLAG_NONE = 0x0,
+        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD = 0x1,
+    };
+
+    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
+
     struct RESIDENCY_DESC {
         Microsoft::WRL::ComPtr<ID3D12Device> Device;
         Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
         bool IsUMA;
+        RESIDENCY_FLAGS Flags;
         D3D12_MESSAGE_SEVERITY MinLogLevel;
         EVENT_RECORD_OPTIONS RecordOptions;
         float MaxPctOfVideoMemoryToBudget;
@@ -151,7 +159,6 @@ namespace gpgmm::d3d12 {
         uint64_t MaxBudgetInBytes;
         uint64_t EvictSizeInBytes;
         uint64_t InitialFenceValue;
-        bool UpdateBudgetByPolling;
     };
 
     struct RESIDENCY_INFO {

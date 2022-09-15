@@ -37,6 +37,26 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
+    /** \enum RESIDENCY_FLAGS
+    Specify options to configure the residency manager.
+    */
+    enum RESIDENCY_FLAGS {
+
+        /** \brief Disables all option flags.
+         */
+        RESIDENCY_FLAG_NONE = 0x0,
+
+        /** \brief Disables automatic background memory budget updates by OS notifications.
+
+        By default, memory budget updates will be pushed by the OS using a background thread. If
+        the OS does not support push notifications or budget updates are not frequent enough, this
+        mechanism can be disabled where a pull-based method is used instead.
+        */
+        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD = 0x1,
+    };
+
+    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
+
     /** \struct RESIDENCY_DESC
      Specify parameters when creating a residency manager.
      */
@@ -65,6 +85,10 @@ namespace gpgmm::d3d12 {
         Required parameter. Use CheckFeatureSupport to determine if supported.
         */
         bool IsUMA;
+
+        /** \brief Specifies residency options.
+         */
+        RESIDENCY_FLAGS Flags;
 
         /** \brief Minimum severity level to log messages to console.
 
@@ -128,15 +152,6 @@ namespace gpgmm::d3d12 {
         Optional parameter. Zero by default.
         */
         uint64_t InitialFenceValue;
-
-        /** \brief Disables video memory budget updates from OS notifications.
-
-        Used for polling video memory for budget updates when event based budget
-        changes are not updating frequently enough or otherwise disabled by the OS.
-
-        Optional parameter. Polling is disabled by default.
-        */
-        bool UpdateBudgetByPolling;
     };
 
     /** \struct RESIDENCY_INFO
