@@ -173,13 +173,13 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocation::Map(uint32_t subresource,
-                                    const D3D12_RANGE* readRange,
-                                    void** dataOut) {
-        return mResource->Map(subresource, readRange, dataOut);
+                                    const D3D12_RANGE* pReadRange,
+                                    void** ppDataOut) {
+        return mResource->Map(subresource, pReadRange, ppDataOut);
     }
 
-    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* writtenRange) {
-        return mResource->Unmap(subresource, writtenRange);
+    void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) {
+        return mResource->Unmap(subresource, pWrittenRange);
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {

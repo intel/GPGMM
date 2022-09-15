@@ -202,9 +202,9 @@ namespace gpgmm::d3d12 {
     class ResourceAllocation final : public MemoryAllocation, public IUnknownImpl {
       public:
         HRESULT Map(uint32_t subresource = 0,
-                    const D3D12_RANGE* readRange = nullptr,
-                    void** dataOut = nullptr);
-        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* writtenRange = nullptr);
+                    const D3D12_RANGE* pReadRange = nullptr,
+                    void** ppDataOut = nullptr);
+        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* pWrittenRange = nullptr);
         ID3D12Resource* GetResource() const;
         bool IsResident() const;
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
