@@ -879,8 +879,11 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        // Check memory requirements.
+        // Resource is always committed when heaps flags are incompatible with the resource heap
+        // type or if specified by the flag.
         bool isAlwaysCommitted = mIsAlwaysCommitted;
+
+        // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
             DebugEvent(GetTypename())
@@ -1108,6 +1111,9 @@ namespace gpgmm::d3d12 {
         }
 
         if (!isAlwaysCommitted) {
+            if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
+                return E_FAIL;
+            }
             InfoEvent(GetTypename(), EventMessageId::AllocatorFailed)
                 << "Unable to allocate by using a heap, falling back to a committed resource.";
         }
