@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['sizeexceeded_0',['SizeExceeded',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a7cc24164b49c832aa38d39ce20808c38',1,'gpgmm']]]
+  ['residency_5fflag_5fnever_5fupdate_5fbudget_5fon_5fworker_5fthread_0',['RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5fnone_1',['RESIDENCY_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df',1,'gpgmm::d3d12']]]
 ];
