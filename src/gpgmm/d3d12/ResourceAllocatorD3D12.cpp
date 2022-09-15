@@ -649,7 +649,7 @@ namespace gpgmm::d3d12 {
     std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceAllocator(
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
-        D3D12_HEAP_PROPERTIES heapProperties,
+        const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
@@ -673,7 +673,7 @@ namespace gpgmm::d3d12 {
     std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSmallBufferAllocator(
         const ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
-        D3D12_HEAP_PROPERTIES heapProperties,
+        const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment,
         D3D12_RESOURCE_STATES initialResourceState) {
         // Buffers are always 64KB aligned.

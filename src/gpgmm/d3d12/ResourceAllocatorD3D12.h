@@ -625,13 +625,13 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<MemoryAllocator> CreateResourceAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_PROPERTIES heapProperties,
+            const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment);
 
         std::unique_ptr<MemoryAllocator> CreateSmallBufferAllocator(
             const ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
-            D3D12_HEAP_PROPERTIES heapProperties,
+            const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment,
             D3D12_RESOURCE_STATES initialResourceState);
 
