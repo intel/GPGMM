@@ -887,6 +887,18 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &smallBuffer));
         EXPECT_NE(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
     }
+
+    // Resource flags are not allowed.
+    {
+        D3D12_RESOURCE_DESC resourceDescWithFlags = CreateBasicBufferDesc(3u);
+        resourceDescWithFlags.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
+
+        ComPtr<ResourceAllocation> smallBuffer;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            baseAllocationDesc, resourceDescWithFlags, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            &smallBuffer));
+        EXPECT_NE(smallBuffer->GetMethod(), gpgmm::AllocationMethod::kSubAllocatedWithin);
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
