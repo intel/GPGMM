@@ -146,9 +146,9 @@ namespace gpgmm::d3d12 {
         bool IsUMA;
         D3D12_MESSAGE_SEVERITY MinLogLevel;
         EVENT_RECORD_OPTIONS RecordOptions;
-        float VideoMemoryBudget;
+        float MaxPctOfVideoMemoryToBudget;
         float MinPctOfBudgetToReserve;
-        uint64_t Budget;
+        uint64_t MaxBudgetInBytes;
         uint64_t EvictSizeInBytes;
         uint64_t InitialFenceValue;
         bool UpdateBudgetByPolling;
