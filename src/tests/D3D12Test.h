@@ -40,7 +40,7 @@ namespace gpgmm::d3d12 {
         void SetUp();
         void TearDown();
 
-        ALLOCATOR_DESC CreateBasicAllocatorDesc(bool isPrefetchAllowed = false) const;
+        ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
 
         static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width, uint64_t alignment = 0);
 

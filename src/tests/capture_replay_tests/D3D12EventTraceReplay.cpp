@@ -375,9 +375,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
                         ASSERT_FALSE(snapshot.empty());
 
+                        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+                        if (!envParams.IsPrefetchAllowed) {
+                            allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+                        }
+
                         // Apply profile (if specified).
-                        ALLOCATOR_DESC allocatorDesc =
-                            CreateBasicAllocatorDesc(envParams.IsPrefetchAllowed);
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
                             allocatorDesc.Flags |=
