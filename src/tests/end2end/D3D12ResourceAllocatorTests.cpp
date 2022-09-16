@@ -58,6 +58,21 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
     void TearDown() override {
         D3D12TestBase::TearDown();
     }
+
+    // Configures allocator for testing allocation in a controlled and predictable
+    // fashion.
+    ALLOCATOR_DESC CreateBasicAllocatorDesc() const {
+        ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
+
+        // Pre-fetching is enabled by default. However for testing purposes, pre-fetching changes
+        // expectations that check GPU memory usage and needs to be tested in isolation.
+        desc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+
+        // Make sure leak detection is always enabled.
+        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_NEVER_LEAK_MEMORY;
+
+        return desc;
+    }
 };
 
 TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
@@ -1520,9 +1535,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
 
 // Creates a bunch of small buffers using the smallest size allowed with pre-fetching enabled.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
+    // Prefetching is explicitly disabled but otherwise allowed, re-enable it by clearing the
+    // disable flag.
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.Flags ^= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
-        CreateBasicAllocatorDesc(/*allowPrefetch*/ true), &resourceAllocator));
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
     ASSERT_NE(resourceAllocator, nullptr);
 
     constexpr uint64_t kNumOfBuffers = 1000u;
