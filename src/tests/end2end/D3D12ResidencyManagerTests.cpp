@@ -297,8 +297,8 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     }
 }
 
-// Keeps allocating until it goes over the OS limited budget.
-TEST_F(D3D12ResidencyManagerTests, OverBudgetUsingBudgetNotifications) {
+// Keeps allocating until it goes over the OS provided budget.
+TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     constexpr uint64_t kBudgetIsDeterminedByOS = 0;
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kBudgetIsDeterminedByOS);
     residencyDesc.Flags ^= RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
@@ -324,9 +324,11 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetUsingBudgetNotifications) {
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
-    // Keep allocating until we reach the budget.
+    // Keep allocating until we reach the budget. Should a budget change occur, we must also
+    // terminate the loop since we cannot guarantee all allocations will be created resident.
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
-    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
+    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget &&
+           GetBudgetLeft(residencyManager.Get(), bufferMemorySegment) >= kBufferMemorySize) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
