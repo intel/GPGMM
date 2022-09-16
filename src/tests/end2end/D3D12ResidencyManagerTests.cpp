@@ -103,6 +103,9 @@ TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
     heapDesc.Properties = heapProperties;
     heapDesc.SizeInBytes = kHeapSize;
 
+    // Assume tier 1, which all adapters support.
+    heapDesc.Flags |= D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
+
     auto createHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
         ComPtr<ID3D12Heap> heap;
         if (FAILED(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)))) {
