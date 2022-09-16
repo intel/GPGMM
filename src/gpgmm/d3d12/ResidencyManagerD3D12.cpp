@@ -389,7 +389,9 @@ namespace gpgmm::d3d12 {
 
         videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
 
-        ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
+        if (IsBudgetNotificationUpdatesDisabled()) {
+            ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
+        }
 
         if (pCurrentReservationOut != nullptr) {
             *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
@@ -494,7 +496,14 @@ namespace gpgmm::d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
         std::lock_guard<std::mutex> lock(mMutex);
-        *pVideoMemoryInfoOut = *GetVideoMemoryInfo(memorySegmentGroup);
+        if (IsBudgetNotificationUpdatesDisabled()) {
+            ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
+        }
+
+        if (pVideoMemoryInfoOut != nullptr) {
+            *pVideoMemoryInfoOut = *GetVideoMemoryInfo(memorySegmentGroup);
+        }
+
         return S_OK;
     }
 

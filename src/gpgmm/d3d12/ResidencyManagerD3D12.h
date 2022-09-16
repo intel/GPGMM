@@ -233,7 +233,8 @@ namespace gpgmm::d3d12 {
         @param memorySegmentGroup Memory segment to reserve.
         @param availableForReservation Amount of memory to reserve, in bytes.
         @param[out] pCurrentReservationOut the amount of memory reserved, which may be less then the
-        |reservation| when under video memory pressure.
+        |reservation| when under video memory pressure. A value of nullptr will update but not
+        return the current reservation.
         */
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                           uint64_t availableForReservation,
@@ -242,7 +243,8 @@ namespace gpgmm::d3d12 {
         /** \brief  Get the current budget and memory usage.
 
         @param memorySegmentGroup Memory segment to retrieve info from.
-        @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate.
+        @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
+        of nullptr will update but not return the current info.
         */
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut);
