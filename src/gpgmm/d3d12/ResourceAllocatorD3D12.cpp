@@ -388,6 +388,16 @@ namespace gpgmm::d3d12 {
             caps.reset(ptr);
         }
 
+        if (allocatorDescriptor.ResourceHeapTier != caps->GetMaxResourceHeapTierSupported()) {
+            gpgmm::WarningLog()
+                << "Resource heap tier does not match capabilities of the adapter "
+                   "(ResourceHeapTier:"
+                << allocatorDescriptor.ResourceHeapTier << " vs "
+                << caps->GetMaxResourceHeapTierSupported()
+                << "). This is probably not what the developer intended. Please use "
+                   "CheckFeatureSupport instead.";
+        }
+
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
         newDescriptor.MemoryGrowthFactor = (allocatorDescriptor.MemoryGrowthFactor >= 1.0)
                                                ? allocatorDescriptor.MemoryGrowthFactor

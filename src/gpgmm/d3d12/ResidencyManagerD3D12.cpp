@@ -19,6 +19,7 @@
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/common/WorkerThread.h"
+#include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -150,6 +151,26 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                                      ResidencyManager** ppResidencyManagerOut) {
+        if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
+            return E_INVALIDARG;
+        }
+
+        std::unique_ptr<Caps> caps;
+        {
+            Caps* ptr = nullptr;
+            ReturnIfFailed(
+                Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &ptr));
+            caps.reset(ptr);
+        }
+
+        if (descriptor.IsUMA != caps->IsAdapterUMA()) {
+            gpgmm::WarningLog()
+                << "Memory architecture does not match capabilities of the adapter (IsUMA:"
+                << descriptor.IsUMA << " vs " << caps->IsAdapterUMA()
+                << "). This is probably not what the developer intended. Please use "
+                   "CheckFeatureSupport instead.";
+        }
+
         // Residency manager needs it's own fence to know when heaps are no longer being used by the
         // GPU.
         std::unique_ptr<Fence> residencyFence;

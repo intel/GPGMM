@@ -185,6 +185,29 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
+    // Create residency without adapter must always fail.
+    {
+        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+        residencyDesc.Adapter = nullptr;
+
+        ASSERT_FAILED(ResidencyManager::CreateResidencyManager(residencyDesc, nullptr));
+    }
+
+    // Create residency without device must always fail.
+    {
+        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+        residencyDesc.Device = nullptr;
+
+        ASSERT_FAILED(ResidencyManager::CreateResidencyManager(residencyDesc, nullptr));
+    }
+
+    // Create residency alone.
+    {
+        ComPtr<ResidencyManager> residencyManager;
+        ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
+            CreateBasicResidencyDesc(kDefaultBudget), nullptr));
+    }
+
     // Create allocator with residency support, together.
     {
         ComPtr<ResidencyManager> residencyManager;
