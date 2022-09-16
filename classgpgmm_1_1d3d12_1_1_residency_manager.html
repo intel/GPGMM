@@ -524,7 +524,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to retrieve info from. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">pVideoMemoryInfoOut</td><td>Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">pVideoMemoryInfoOut</td><td>Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value of nullptr will update but not return the current info. </td></tr>
   </table>
   </dd>
 </dl>
@@ -597,7 +597,7 @@ Additional Inherited Members</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to reserve. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">availableForReservation</td><td>Amount of memory to reserve, in bytes. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">pCurrentReservationOut</td><td>the amount of memory reserved, which may be less then the |reservation| when under video memory pressure. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">pCurrentReservationOut</td><td>the amount of memory reserved, which may be less then the |reservation| when under video memory pressure. A value of nullptr will update but not return the current reservation. </td></tr>
   </table>
   </dd>
 </dl>
