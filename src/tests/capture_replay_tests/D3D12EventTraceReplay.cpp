@@ -311,7 +311,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         RESIDENCY_DESC residencyDesc = {};
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
-                        residencyDesc.IsUMA = snapshot["IsUMA"].asBool();
+                        residencyDesc.IsUMA = mIsUMA;
                         residencyDesc.MaxPctOfVideoMemoryToBudget =
                             snapshot["MaxPctOfVideoMemoryToBudget"].asFloat();
                         residencyDesc.MaxBudgetInBytes = snapshot["MaxBudgetInBytes"].asUInt64();

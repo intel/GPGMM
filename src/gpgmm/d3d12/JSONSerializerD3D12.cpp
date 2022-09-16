@@ -40,9 +40,12 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
+        dict.AddItem("SubAllocationAlgorithm", desc.SubAllocationAlgorithm);
+        dict.AddItem("PoolAlgorithm", desc.PoolAlgorithm);
         dict.AddItem("PreferredResourceHeapSize", desc.PreferredResourceHeapSize);
         dict.AddItem("MaxResourceHeapSize", desc.MaxResourceHeapSize);
         dict.AddItem("MemoryFragmentationLimit", desc.MemoryFragmentationLimit);
+        dict.AddItem("MemoryGrowthFactor", desc.MemoryGrowthFactor);
         return dict;
     }
 
@@ -166,7 +169,9 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
-        dict.AddItem("DebugName", desc.DebugName);
+        if (!desc.DebugName.empty()) {
+            dict.AddItem("DebugName", desc.DebugName);
+        }
         return dict;
     }
 
@@ -247,7 +252,10 @@ namespace gpgmm::d3d12 {
     JSONDict JSONSerializer::Serialize(const RESIDENCY_DESC& desc) {
         JSONDict dict;
         dict.AddItem("IsUMA", desc.IsUMA);
+        dict.AddItem("Flags", desc.Flags);
+        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
+        dict.AddItem("MinPctOfBudgetToReserve", desc.MinPctOfBudgetToReserve);
         dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);
         dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
         dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
