@@ -83,6 +83,8 @@ namespace gpgmm::d3d12 {
                    << " GBs"
                    << " (" << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedSystemMemory)
                    << " dedicated) ";
+        DebugLog() << "GPU memory: " << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedVideoMemory)
+                   << " GBs.";
 
         DebugLog() << "Unified memory: " << ((arch.UMA) ? "yes" : "no")
                    << ((arch.CacheCoherentUMA) ? " (cache-coherent)" : "");
