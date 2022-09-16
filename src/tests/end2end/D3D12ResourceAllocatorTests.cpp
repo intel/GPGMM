@@ -630,6 +630,27 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableCustomHeaps) {
             allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
     }
+
+    // Abandonment of heap type attribution is disallowed when custom heaps are disabled.
+    resourceAllocator->ReleaseMemory(kReleaseAllMemory);
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
+
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
+
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+
+        EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kBufferOf4MBAllocationSize * 2);
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
