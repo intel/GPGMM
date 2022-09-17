@@ -472,11 +472,13 @@ namespace gpgmm::d3d12 {
                                    "management was not enabled.";
         }
 
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(*ppResourceAllocatorOut, newDescriptor);
+        std::unique_ptr<ResourceAllocator> resourceAllocator = std::unique_ptr<ResourceAllocator>(
+            new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps)));
+
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
         if (ppResourceAllocatorOut != nullptr) {
-            *ppResourceAllocatorOut =
-                new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps));
+            *ppResourceAllocatorOut = resourceAllocator.release();
         }
 
         return S_OK;
