@@ -44,18 +44,24 @@ namespace gpgmm::d3d12 {
         enum RESOURCE_HEAP_TYPE {
             // Resource heap tier 2
             // Resource heaps contain all buffer and textures types.
-            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x0,
-            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x1,
-            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0x2,
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES = 0,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES = 1,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES = 2,
 
             // Resource heap tier 1
             // Resource heaps contain buffers or textures but not both.
-            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS = 0x3,
-            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS = 0x4,
-            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS = 0x5,
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS = 3,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS = 4,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS = 5,
 
-            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 0x6,
-            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 0x7,
+            // Further heap attribution is required for tier 1: textures are categorized into render
+            // target or depth-stencil textures but not both.
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 6,
+            RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_RT_OR_DS_TEXTURES = 7,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 8,
+            RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_RT_OR_DS_TEXTURES = 9,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES = 10,
+            RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES = 11,
 
             RESOURCE_HEAP_TYPE_INVALID,
         };
@@ -105,6 +111,8 @@ namespace gpgmm::d3d12 {
             switch (resourceHeapType) {
                 case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_BUFFERS:
                 case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_RT_OR_DS_TEXTURES:
                     return D3D12_HEAP_TYPE_READBACK;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ALL_BUFFERS_AND_TEXTURES:
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_BUFFERS:
@@ -113,6 +121,8 @@ namespace gpgmm::d3d12 {
                     return D3D12_HEAP_TYPE_DEFAULT;
                 case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS:
                 case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_RT_OR_DS_TEXTURES:
                     return D3D12_HEAP_TYPE_UPLOAD;
                 default:
                     UNREACHABLE();
@@ -133,8 +143,12 @@ namespace gpgmm::d3d12 {
                 case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_BUFFERS:
                     return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES:
                     return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
                 case RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_RT_OR_DS_TEXTURES:
+                case RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_RT_OR_DS_TEXTURES:
                     return createHeapFlags | D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES;
                 default:
                     UNREACHABLE();
@@ -193,6 +207,14 @@ namespace gpgmm::d3d12 {
                 case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
                 case D3D12_RESOURCE_DIMENSION_TEXTURE3D: {
                     switch (heapType) {
+                        case D3D12_HEAP_TYPE_UPLOAD: {
+                            if ((flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ||
+                                (flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)) {
+                                return RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_RT_OR_DS_TEXTURES;
+                            }
+                            return RESOURCE_HEAP_TYPE_UPLOAD_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES;
+                        }
+
                         case D3D12_HEAP_TYPE_DEFAULT: {
                             if ((flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ||
                                 (flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)) {
@@ -201,6 +223,15 @@ namespace gpgmm::d3d12 {
                             return RESOURCE_HEAP_TYPE_DEFAULT_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES;
                         }
 
+                        case D3D12_HEAP_TYPE_READBACK: {
+                            if ((flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ||
+                                (flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)) {
+                                return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_RT_OR_DS_TEXTURES;
+                            }
+                            return RESOURCE_HEAP_TYPE_READBACK_ALLOW_ONLY_NON_RT_OR_DS_TEXTURES;
+                        }
+
+                        case D3D12_HEAP_TYPE_CUSTOM:
                         default:
                             return RESOURCE_HEAP_TYPE_INVALID;
                     }
@@ -388,14 +419,12 @@ namespace gpgmm::d3d12 {
             caps.reset(ptr);
         }
 
-        if (allocatorDescriptor.ResourceHeapTier != caps->GetMaxResourceHeapTierSupported()) {
-            gpgmm::WarningLog()
-                << "Resource heap tier does not match capabilities of the adapter "
-                   "(ResourceHeapTier:"
-                << allocatorDescriptor.ResourceHeapTier << " vs "
-                << caps->GetMaxResourceHeapTierSupported()
-                << "). This is probably not what the developer intended. Please use "
-                   "CheckFeatureSupport instead.";
+        if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
+            gpgmm::ErrorLog() << "Resource heap tier does not match capabilities of the adapter "
+                                 "(ResourceHeapTier:"
+                              << allocatorDescriptor.ResourceHeapTier << " vs "
+                              << caps->GetMaxResourceHeapTierSupported() << ").";
+            return E_FAIL;
         }
 
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
