@@ -952,7 +952,13 @@ namespace gpgmm::d3d12 {
             GetHeapProperties(mDevice.Get(), heapType, mIsCustomHeapsDisabled);
 
         // Limit available memory to unused budget when residency is enabled.
+        // Available memory acts like a hint to the allocator to avoid creating new larger heaps
+        // then the budget allows where older, small heaps would get immediately evicited to make
+        // room.
         if (IsResidencyEnabled()) {
+            // Memory pool maps to the memory segment the allocation will belong to.
+            // But since D3D12 requires the pool to be specified for the given heap type at
+            // allocation-time, it must be set here and again, when a resource heap is created.
             heapProperties.MemoryPoolPreference =
                 GetMemoryPool(heapProperties, mResidencyManager->IsUMA());
 
@@ -962,7 +968,7 @@ namespace gpgmm::d3d12 {
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(segment);
 
-            // If over-budget, only free memory is left available.
+            // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetInfoInternal().
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
                 request.AvailableForAllocation = GetInfoInternal().FreeMemoryUsage;
