@@ -4,6 +4,7 @@
 /.cipd
 /.gclient
 /.gclient_entries
+/.gclient_previous_*
 /build
 /buildtools
 /testing
