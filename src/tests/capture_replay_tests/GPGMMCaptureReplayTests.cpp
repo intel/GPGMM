@@ -85,8 +85,8 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--same-caps", argv[i]) == 0) {
-            mParams.IsSameCapsRequired = true;
+        if (strcmp("--ignore-caps-mismatch", argv[i]) == 0) {
+            mParams.IsIgnoreCapsMismatchEnabled = true;
             continue;
         }
 
@@ -95,8 +95,13 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--disable-allocation-playback", argv[i]) == 0) {
-            mParams.IsAllocationPlaybackDisabled = true;
+        if (strcmp("--disable-allocation", argv[i]) == 0) {
+            mParams.IsAllocatorDisabled = true;
+            continue;
+        }
+
+        if (strcmp("--disable-memory", argv[i]) == 0) {
+            mParams.IsMemoryDisabled = true;
             continue;
         }
 
@@ -135,8 +140,8 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
                 << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Profile to apply.\n"
-                << " --disable-allocation-playback: Disable allocation playback for testing "
-                   "budgets.\n";
+                << " --disable-allocator: Disables allocator playback.\n"
+                << " --disable-memory: Disables playback of memory from capture.\n";
             continue;
         }
     }
@@ -159,16 +164,10 @@ void GPGMMCaptureReplayTestEnvironment::TearDown() {
 void GPGMMCaptureReplayTestEnvironment::PrintCaptureReplaySettings() const {
     gpgmm::InfoLog() << "Playback settings\n"
                         "-----------------\n"
-                     << "Iterations per test: " << mParams.Iterations << "\n"
-                     << "Must use same caps: " << (mParams.IsSameCapsRequired ? "true" : "false")
-                     << "\n"
-                     << "No Allocations: "
-                     << (mParams.IsAllocationPlaybackDisabled ? "true" : "false") << "\n";
+                     << "Iterations per test: " << mParams.Iterations << "\n";
 
     gpgmm::InfoLog() << "Experiment settings\n"
                         "-------------------\n"
-                     << "Disable sub-allocation: "
-                     << (mParams.IsSuballocationDisabled ? "true" : "false") << "\n"
                      << "Profile: " << AllocatorProfileToString(mParams.AllocatorProfile) << "\n";
 }
 
@@ -221,8 +220,8 @@ void CaptureReplayTestWithParams::RunTestLoop(const TestEnviromentParams& forceP
         envParams.CaptureEventMask |= forceParams.CaptureEventMask;
     }
 
-    if (forceParams.IsSameCapsRequired != envParams.IsSameCapsRequired) {
-        envParams.IsSameCapsRequired |= forceParams.IsSameCapsRequired;
+    if (forceParams.IsIgnoreCapsMismatchEnabled != envParams.IsIgnoreCapsMismatchEnabled) {
+        envParams.IsIgnoreCapsMismatchEnabled |= forceParams.IsIgnoreCapsMismatchEnabled;
     }
 
     if (forceParams.Iterations != envParams.Iterations) {

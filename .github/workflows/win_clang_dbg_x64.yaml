@@ -149,6 +149,12 @@ jobs:
         cd test
         out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_output=json:${{ github.workspace }}\..\test_capture_replay_tests.json 2>&1
 
+    - name: Run gpgmm_capture_replay_tests to re-capture (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Debug\gpgmm_capture_replay_tests.exe -log-level=DEBUG --gtest_filter=*Replay/* --capture-mask=0x3 --ignore-caps-mismatch --disable-memory
+
     - name: Regression check end2end tests
       run: |
         python test\scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2end_tests.json ${{ github.workspace }}\..\test_end2end_tests.json
