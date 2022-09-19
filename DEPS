@@ -31,8 +31,6 @@ vars = {
 
 deps = {
   # Dependencies required to test integrations
-  # Note: rolling Dawn also may require vulkan-deps to be rolled below.
-  # TODO(gpgmm): Consider linking vulkan-deps to Dawn like Tint.
   # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
   # build errors are related to Dawn version mismatches.
   'third_party/dawn': {
