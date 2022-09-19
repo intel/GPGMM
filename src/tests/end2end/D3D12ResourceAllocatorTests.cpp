@@ -93,6 +93,18 @@ TEST_F(D3D12ResourceAllocatorTests, CreateAllocator) {
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
+    // Creating an allocator with the wrong resource heap tier should always fail.
+    {
+        // Tier 3 doesn't exist in D3D12.
+        ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+        desc.ResourceHeapTier =
+            static_cast<D3D12_RESOURCE_HEAP_TIER>(D3D12_RESOURCE_HEAP_TIER_2 + 1);
+
+        ComPtr<ResourceAllocator> resourceAllocator;
+        EXPECT_FAILED(ResourceAllocator::CreateAllocator(desc, &resourceAllocator));
+        EXPECT_EQ(resourceAllocator, nullptr);
+    }
+
     // Creating a NULL allocator should always succeed.
     EXPECT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), nullptr));
 
@@ -151,6 +163,78 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNoLeak) {
         }
     }
     GPGMM_TEST_MEMORY_LEAK_END();
+}
+
+// Exceeding the max resource heap size should always fail.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSameHeap) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+
+    // Heaps of only the same size can be reused between resource types.
+    allocatorDesc.PreferredResourceHeapSize = kBufferOf4MBAllocationSize;
+
+    // Adapter must support mixing of resource types in same heap.
+    GPGMM_SKIP_TEST_IF(allocatorDesc.ResourceHeapTier < D3D12_RESOURCE_HEAP_TIER_2);
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+
+    // Create memory for buffer in Heap A.
+    {
+        ComPtr<ResourceAllocation> bufferAllocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON,
+            nullptr, &bufferAllocation));
+    }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kBufferOf4MBAllocationSize);
+
+    // Reuse memory for texture in Heap A.
+    {
+        ComPtr<ResourceAllocation> textureAllocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &textureAllocation));
+    }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kBufferOf4MBAllocationSize);
+}
+
+// Exceeding the max resource heap size should always fail.
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
+    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
+
+    // Heaps of only the same size can be reused between resource types.
+    allocatorDesc.PreferredResourceHeapSize = kBufferOf4MBAllocationSize;
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(allocatorDesc, &resourceAllocator));
+
+    // Create memory for buffer in Heap A.
+    {
+        ComPtr<ResourceAllocation> bufferAllocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON,
+            nullptr, &bufferAllocation));
+
+        EXPECT_EQ(bufferAllocation->GetMemory()->GetSize(),
+                  allocatorDesc.PreferredResourceHeapSize);
+    }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kBufferOf4MBAllocationSize);
+
+    // Reuse memory for texture in Heap A.
+    {
+        ComPtr<ResourceAllocation> textureAllocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &textureAllocation));
+
+        EXPECT_EQ(textureAllocation->GetMemory()->GetSize(),
+                  allocatorDesc.PreferredResourceHeapSize);
+    }
+
+    EXPECT_EQ(resourceAllocator->GetInfo().FreeMemoryUsage, kBufferOf4MBAllocationSize * 2);
 }
 
 // Exceeding the max resource heap size should always fail.

@@ -689,7 +689,7 @@ namespace gpgmm::d3d12 {
         const bool mUseDetailedTimingEvents;
         const bool mIsCustomHeapsDisabled;
 
-        static constexpr uint64_t kNumOfResourceHeapTypes = 8u;
+        static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mDedicatedResourceAllocatorOfType;
