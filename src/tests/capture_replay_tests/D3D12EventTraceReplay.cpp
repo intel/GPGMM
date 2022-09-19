@@ -186,7 +186,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
 
-                        if (envParams.IsAllocationPlaybackDisabled) {
+                        if (envParams.IsAllocatorDisabled) {
                             continue;
                         }
 
@@ -305,7 +305,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
                                        std::to_string(mIsUMA) + ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
+                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
                         RESIDENCY_DESC residencyDesc = {};
@@ -430,7 +430,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                        std::to_string(snapshot["ResourceHeapTier"].asInt()) +
                                        " vs " + std::to_string(allocatorDesc.ResourceHeapTier) +
                                        ").";
-                            GPGMM_SKIP_TEST_IF(envParams.IsSameCapsRequired);
+                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
                         ComPtr<ResidencyManager> residencyManager;
@@ -476,6 +476,10 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         // Only ID3D12Resource or ID3D12Heaps can be created.
                         if (args["Heap"].empty()) {
+                            continue;
+                        }
+
+                        if (envParams.IsMemoryDisabled) {
                             continue;
                         }
 
@@ -587,8 +591,6 @@ TEST_P(D3D12EventTraceReplay, Replay) {
 // Verify that playback of a captured trace does not exceed peak usage.
 TEST_P(D3D12EventTraceReplay, PeakUsage) {
     TestEnviromentParams forceParams = {};
-    forceParams.IsSameCapsRequired = true;
-
     RunSingleTest(forceParams);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
@@ -605,7 +607,6 @@ TEST_P(D3D12EventTraceReplay, AllowPrefetch) {
 // Verify no heap re-use through sub-allocation will succeed.
 TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     TestEnviromentParams forceParams = {};
-    forceParams.IsSameCapsRequired = true;
     forceParams.IsSuballocationDisabled = true;
 
     RunSingleTest(forceParams);
@@ -613,7 +614,7 @@ TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, mCapturedMemoryStats.PeakUsage);
 }
 
-// Verify that playback with memory creation disabled will succeed.
+// Verify that playback no memory created will succeed.
 TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     TestEnviromentParams forceParams = {};
     forceParams.IsNeverAllocate = true;
@@ -621,15 +622,6 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     RunSingleTest(forceParams);
 
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, 0u);
-}
-
-// Playback captured trace into a new trace with capture-only events.
-// Test must run last since the new trace will replace the old trace.
-TEST_P(D3D12EventTraceReplay, Recapture) {
-    TestEnviromentParams forceParams = {};
-
-    forceParams.CaptureEventMask = EVENT_RECORD_FLAG_CAPTURE;
-    RunSingleTest(forceParams);
 }
 
 GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);

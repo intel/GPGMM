@@ -45,11 +45,12 @@ struct TestEnviromentParams {
     uint64_t Iterations = 1;  // Number of test iterations to run.
     int CaptureEventMask = 0;
 
-    bool IsSameCapsRequired = false;  // Caps of test device must match capture caps.
+    bool IsIgnoreCapsMismatchEnabled = false;  // Test device must match capture caps.
     bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;
     bool IsPrefetchAllowed = false;
-    bool IsAllocationPlaybackDisabled = false;  // Disables creation of new allocations.
+    bool IsAllocatorDisabled = false;  // Disables creation of new allocations.
+    bool IsMemoryDisabled = false;     // Disables creation of captured heaps.
 
     AllocatorProfile AllocatorProfile =
         AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.
