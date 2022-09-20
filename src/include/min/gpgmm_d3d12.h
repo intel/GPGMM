@@ -65,14 +65,20 @@ namespace gpgmm::d3d12 {
         uint64_t mRefCount;
     };
 
+    enum RESIDENCY_STATUS {
+        RESIDENCY_UNKNOWN = 0,
+        PENDING_RESIDENCY = 1,
+        CURRENT_RESIDENT = 2,
+    };
+
     struct HEAP_INFO {
-        bool IsResident;
+        bool IsLocked;
+        RESIDENCY_STATUS Status;
     };
 
     enum HEAPS_FLAGS {
         HEAPS_FLAG_NONE = 0x0,
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
-        HEAP_FLAG_NEVER_USE_RESIDENCY = 0x2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
@@ -102,7 +108,9 @@ namespace gpgmm::d3d12 {
         HEAP_INFO GetInfo() const;
 
       private:
-        Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable, uint64_t size, uint64_t alignment);
+        Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
+             const HEAP_DESC& descriptor,
+             bool isResidencyDisabled);
 
         Microsoft::WRL::ComPtr<ID3D12Pageable> mPageable;
     };

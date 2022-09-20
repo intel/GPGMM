@@ -31,13 +31,44 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
+    /** \enum RESIDENCY_STATUS
+
+    Heaps are created in one of three states: never made resident or unknown, about to become
+    resident or pending residency, and currently resident. When a heap gets evicted or paged-out, it
+    transitions from currently resident to pending residency. Paged-in is the reverse of this,
+    pending residency to currently resident.
+
+    If the heap was pinned or locked, it will stay currently resident until it is unlocked, then
+    back to pending residency.
+
+    D3D12 does not provide a means to determine what state the heap is in so this status is used to
+    track the approximate state.
+    */
+    enum RESIDENCY_STATUS {
+        /** \brief Heap is not being managed for residency.
+         */
+        RESIDENCY_UNKNOWN = 0,
+
+        /** \brief Heap is about to be resident.
+         */
+        PENDING_RESIDENCY = 1,
+
+        /** \brief Heap was made resident.
+         */
+        CURRENT_RESIDENT = 2,
+    };
+
     /** \struct HEAP_INFO
     Additional information about the heap.
     */
     struct HEAP_INFO {
+        /** \brief Check if the heap currently locked for residency.
+         */
+        bool IsLocked;
+
         /** \brief Check if the heap is resident or not.
          */
-        bool IsResident;
+        RESIDENCY_STATUS Status;
     };
 
     /** \enum HEAPS_FLAGS
@@ -52,10 +83,6 @@ namespace gpgmm::d3d12 {
         /** \brief Requires the heap to be created in budget.
          */
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
-
-        /** \brief Specifies to leave the heap unmanaged for residency.
-         */
-        HEAP_FLAG_NEVER_USE_RESIDENCY = 0x2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
@@ -171,7 +198,9 @@ namespace gpgmm::d3d12 {
         friend ResidencyManager;
         friend ResourceAllocator;
 
-        Heap(ComPtr<ID3D12Pageable> pageable, const HEAP_DESC& descriptor);
+        Heap(ComPtr<ID3D12Pageable> pageable,
+             const HEAP_DESC& descriptor,
+             bool isResidencyDisabled);
 
         HRESULT SetDebugNameImpl(const std::string& name) override;
         const char* GetTypename() const override;
@@ -182,6 +211,8 @@ namespace gpgmm::d3d12 {
         // least until that fence has completed.
         uint64_t GetLastUsedFenceValue() const;
         void SetLastUsedFenceValue(uint64_t fenceValue);
+
+        void SetResidencyState(RESIDENCY_STATUS newStatus);
 
         // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
         // heaps or mapping resources).
@@ -195,6 +226,7 @@ namespace gpgmm::d3d12 {
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
         RefCounted mResidencyLock;
         bool mIsResidencyDisabled;
+        RESIDENCY_STATUS mState;
     };
 }  // namespace gpgmm::d3d12
 

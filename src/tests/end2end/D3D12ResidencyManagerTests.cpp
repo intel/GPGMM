@@ -89,7 +89,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 };
 
-TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
+TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     ComPtr<ResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
         CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
@@ -122,7 +122,17 @@ TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
     ASSERT_SUCCEEDED(
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, nullptr));
 
+    // Create a resource heap without residency.
     ComPtr<Heap> resourceHeap;
+    ASSERT_SUCCEEDED(Heap::CreateHeap(resourceHeapDesc, nullptr, createHeapFn, &resourceHeap));
+
+    // Ensure the unmanaged resource heap state is always unknown. Even though D3D12 implicitly
+    // creates heaps as resident, untrack resource heaps would never transition out from
+    // CURRENT_RESIDENT and must be left RESIDENCY_UNKNOWN.
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_UNKNOWN);
+    EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
+
+    // Create a resource heap with residency.
     ASSERT_SUCCEEDED(
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
@@ -134,8 +144,13 @@ TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
     resourceHeap.As(&heap);
 
     EXPECT_NE(heap, nullptr);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::CURRENT_RESIDENT);
+    EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
+
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::CURRENT_RESIDENT);
+    EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
     EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryUsage, kHeapSize);
     EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
@@ -144,6 +159,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateHeap) {
 
     EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryUsage, kHeapSize);
     EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
+    EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     ASSERT_FAILED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
 }
