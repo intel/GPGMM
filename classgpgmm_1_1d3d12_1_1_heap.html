@@ -115,10 +115,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaeab55534248d3676fd0958233c24da8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#aaeab55534248d3676fd0958233c24da8">GetInfo</a> () const</td></tr>
 <tr class="memdesc:aaeab55534248d3676fd0958233c24da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get information about the heap.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#aaeab55534248d3676fd0958233c24da8">More...</a><br /></td></tr>
 <tr class="separator:aaeab55534248d3676fd0958233c24da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15b6bcf5922f7e99cd26fdfc3a92b825"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a15b6bcf5922f7e99cd26fdfc3a92b825">IsInResidencyLRUCacheForTesting</a> () const</td></tr>
-<tr class="separator:a15b6bcf5922f7e99cd26fdfc3a92b825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03817c4378c77f70c7386ba71bfc4fd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a03817c4378c77f70c7386ba71bfc4fd4">IsResidencyLockedForTesting</a> () const</td></tr>
-<tr class="separator:a03817c4378c77f70c7386ba71bfc4fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66f53435585765b9e80613996684156a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a66f53435585765b9e80613996684156a">IsInResidencyLRUCache</a> () const</td></tr>
+<tr class="separator:a66f53435585765b9e80613996684156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed0eb3bbb56c2a860fdacef508406372"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#aed0eb3bbb56c2a860fdacef508406372">IsResidencyLocked</a> () const</td></tr>
+<tr class="separator:aed0eb3bbb56c2a860fdacef508406372"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ab9a9af5d5574e3101da5f27d31b8d8d9">IsResident</a> () const</td></tr>
+<tr class="separator:ab9a9af5d5574e3101da5f27d31b8d8d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1b1594072689b83f07c1a68774b9183"><td class="memItemLeft" align="right" valign="top">HRESULT STDMETHODCALLTYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ad1b1594072689b83f07c1a68774b9183">QueryInterface</a> (REFIID riid, void **ppvObject) override</td></tr>
 <tr class="separator:ad1b1594072689b83f07c1a68774b9183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeab55534248d3676fd0958233c24da8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#aaeab55534248d3676fd0958233c24da8">GetInfo</a> () const</td></tr>
@@ -424,14 +426,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a15b6bcf5922f7e99cd26fdfc3a92b825" name="a15b6bcf5922f7e99cd26fdfc3a92b825"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15b6bcf5922f7e99cd26fdfc3a92b825">&#9670;&#160;</a></span>IsInResidencyLRUCacheForTesting()</h2>
+<a id="a66f53435585765b9e80613996684156a" name="a66f53435585765b9e80613996684156a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66f53435585765b9e80613996684156a">&#9670;&#160;</a></span>IsInResidencyLRUCache()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool gpgmm::d3d12::Heap::IsInResidencyLRUCacheForTesting </td>
+          <td class="memname">bool gpgmm::d3d12::Heap::IsInResidencyLRUCache </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -441,14 +443,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a03817c4378c77f70c7386ba71bfc4fd4" name="a03817c4378c77f70c7386ba71bfc4fd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03817c4378c77f70c7386ba71bfc4fd4">&#9670;&#160;</a></span>IsResidencyLockedForTesting()</h2>
+<a id="aed0eb3bbb56c2a860fdacef508406372" name="aed0eb3bbb56c2a860fdacef508406372"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed0eb3bbb56c2a860fdacef508406372">&#9670;&#160;</a></span>IsResidencyLocked()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool gpgmm::d3d12::Heap::IsResidencyLockedForTesting </td>
+          <td class="memname">bool gpgmm::d3d12::Heap::IsResidencyLocked </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9a9af5d5574e3101da5f27d31b8d8d9" name="ab9a9af5d5574e3101da5f27d31b8d8d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9a9af5d5574e3101da5f27d31b8d8d9">&#9670;&#160;</a></span>IsResident()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::Heap::IsResident </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
