@@ -327,9 +327,11 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
-        /** \brief Disallow creating multiple resource allocations from the same resource heap.
+        /** \brief Disallow allowing the creation of multiple resources using the same resource
+        heap.
 
-        The created resource will always be allocated with it's own resource heap.
+        When this flag is used, the created resource will always be allocated with it's own resource
+        heap.
         */
         ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
 
@@ -364,11 +366,10 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
 
-        /** \brief Forces the allocator allocation algorithm to be used or E_FAIL.
+        /** \brief Forces use of the resource allocator or E_FAIL.
 
-        By default, the allocation method used may not be used due to incompatible constraints. This
-        flag will disable the default fall-back behavior of using the safest allocation method
-        possible.
+        The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
+        allocator (CreateCommittedResource) when resource allocation fails.
 
         Mostly used for debug and testing when certain allocation methods unexpectedly fail.
         */
