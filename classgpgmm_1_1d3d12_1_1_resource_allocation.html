@@ -114,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a815fcf5ee846af23e4c7bec3f651062f"><td class="memItemLeft" align="right" valign="top">ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f">GetResource</a> () const</td></tr>
 <tr class="memdesc:a815fcf5ee846af23e4c7bec3f651062f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource owned by this allocation.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f">More...</a><br /></td></tr>
 <tr class="separator:a815fcf5ee846af23e4c7bec3f651062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d3bb112feb4a08e232403c168a309d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d">IsResident</a> () const</td></tr>
+<tr class="memdesc:ac3d3bb112feb4a08e232403c168a309d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the resource allocation was made resident or not.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d">More...</a><br /></td></tr>
+<tr class="separator:ac3d3bb112feb4a08e232403c168a309d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d80ddaa72841a41425b31e761c68ece"><td class="memItemLeft" align="right" valign="top">D3D12_GPU_VIRTUAL_ADDRESS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a1d80ddaa72841a41425b31e761c68ece">GetGPUVirtualAddress</a> () const</td></tr>
 <tr class="memdesc:a1d80ddaa72841a41425b31e761c68ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the GPU virtual address of the resource allocation.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a1d80ddaa72841a41425b31e761c68ece">More...</a><br /></td></tr>
 <tr class="separator:a1d80ddaa72841a41425b31e761c68ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,6 +138,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acd5ebeeb118f79538858c1e617fea592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a815fcf5ee846af23e4c7bec3f651062f"><td class="memItemLeft" align="right" valign="top">ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a815fcf5ee846af23e4c7bec3f651062f">GetResource</a> () const</td></tr>
 <tr class="separator:a815fcf5ee846af23e4c7bec3f651062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d3bb112feb4a08e232403c168a309d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ac3d3bb112feb4a08e232403c168a309d">IsResident</a> () const</td></tr>
+<tr class="separator:ac3d3bb112feb4a08e232403c168a309d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d80ddaa72841a41425b31e761c68ece"><td class="memItemLeft" align="right" valign="top">D3D12_GPU_VIRTUAL_ADDRESS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a1d80ddaa72841a41425b31e761c68ece">GetGPUVirtualAddress</a> () const</td></tr>
 <tr class="separator:a1d80ddaa72841a41425b31e761c68ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19512a090309ff8ec431b01b871eedcf"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a19512a090309ff8ec431b01b871eedcf">GetOffsetFromResource</a> () const</td></tr>
@@ -518,6 +523,43 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Returns the class name of this allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to a C character string with data, "ResourceAllocation". </dd></dl>
+
+</div>
+</div>
+<a id="ac3d3bb112feb4a08e232403c168a309d" name="ac3d3bb112feb4a08e232403c168a309d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d3bb112feb4a08e232403c168a309d">&#9670;&#160;</a></span>IsResident() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::ResourceAllocation::IsResident </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if the resource allocation was made resident or not. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if resident, else, false. </dd></dl>
+
+</div>
+</div>
+<a id="ac3d3bb112feb4a08e232403c168a309d" name="ac3d3bb112feb4a08e232403c168a309d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d3bb112feb4a08e232403c168a309d">&#9670;&#160;</a></span>IsResident() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::ResourceAllocation::IsResident </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
