@@ -151,11 +151,6 @@ namespace gpgmm::d3d12 {
         */
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
 
-        /** \brief Determine if the heap is resident or not.
-
-        \return True if the heap is resident, false if not.
-        */
-        bool IsResident() const;
 
         /** \brief Get information about the heap.
 
@@ -166,6 +161,7 @@ namespace gpgmm::d3d12 {
         // Testing only.
         bool IsInResidencyLRUCache() const;
         bool IsResidencyLocked() const;
+        bool IsResident() const;
 
       private:
         friend ResidencyManager;
