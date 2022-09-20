@@ -39,6 +39,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
+        copy scripts\dawn.deps DEPS
         copy scripts\dawn.gclient .gclient
         gclient sync
 
@@ -81,6 +82,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
+        copy scripts\dawn.deps DEPS
         copy scripts\dawn.gclient .gclient
         gclient sync
 
