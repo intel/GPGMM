@@ -194,7 +194,7 @@ namespace gpgmm::d3d12 {
         uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
         RefCounted mResidencyLock;
-        bool mIsExternal;
+        bool mIsResidencyDisabled;
     };
 }  // namespace gpgmm::d3d12
 

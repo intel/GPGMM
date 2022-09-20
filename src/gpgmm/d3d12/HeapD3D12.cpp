@@ -28,8 +28,7 @@ namespace gpgmm::d3d12 {
                              ResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
                              Heap** ppHeapOut) {
-        // Ensure enough free memory exists before allocating to avoid an out-of-memory error
-        // when over budget.
+        // Ensure enough budget exists before allocating to avoid an out-of-memory error.
         if (pResidencyManager != nullptr && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                              descriptor.MemorySegmentGroup));
@@ -62,22 +61,21 @@ namespace gpgmm::d3d12 {
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(descriptor.MemorySegmentGroup),
           mResidencyLock(0),
-          mIsExternal(descriptor.Flags & HEAP_FLAG_NEVER_USE_RESIDENCY) {
+          mIsResidencyDisabled(descriptor.Flags & HEAP_FLAG_NEVER_USE_RESIDENCY) {
         ASSERT(mPageable != nullptr);
-        if (!mIsExternal) {
+        if (!mIsResidencyDisabled) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);
         }
     }
 
-    // When a pageable is destroyed, it no longer resides in resident memory, so we must evict
-    // it from the LRU cache. If this heap is not manually removed from the LRU-cache, the
-    // ResidencyManager will attempt to use it after it has been deallocated.
     Heap::~Heap() {
-        // Externally created heaps do not support residency.
-        if (mIsExternal) {
+        if (mIsResidencyDisabled) {
             return;
         }
 
+        // When a heap is destroyed, it no longer resides in resident memory, so we must evict
+        // it from the residency cache. If this heap is not manually removed from the residency
+        // cache, the ResidencyManager will attempt to use it after it has been deallocated.
         if (IsInResidencyLRUCache()) {
             RemoveFromList();
         }
