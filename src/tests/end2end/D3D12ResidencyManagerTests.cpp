@@ -300,9 +300,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
         allocationsBelowBudget.push_back(std::move(allocation));
     }
 
-    // Created allocations below the budget should be resident.
+    // Created allocations below the budget should become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->IsResident());
+        EXPECT_TRUE(allocation->GetMemory()->IsInResidencyLRUCacheForTesting());
     }
 
     // Keep allocating |kMemoryOverBudget| over the budget.
@@ -319,14 +319,14 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
         allocationsAboveBudget.push_back(std::move(allocation));
     }
 
-    // Created allocations above the budget should be resident.
+    // Created allocations above the budget should become resident.
     for (auto& allocation : allocationsAboveBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->IsResident());
+        EXPECT_TRUE(allocation->GetMemory()->IsInResidencyLRUCacheForTesting());
     }
 
-    // Created allocations below the budget should NOT be resident.
+    // Created allocations below the budget should NOT become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_FALSE(allocation->GetMemory()->IsResident());
+        EXPECT_FALSE(allocation->GetMemory()->IsInResidencyLRUCacheForTesting());
     }
 }
 
@@ -369,9 +369,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
         allocations.push_back(std::move(allocation));
     }
 
-    // All allocations should be created resident.
+    // All allocations should become resident.
     for (auto& allocation : allocations) {
-        EXPECT_TRUE(allocation->GetMemory()->IsResident());
+        EXPECT_TRUE(allocation->GetMemory()->IsInResidencyLRUCacheForTesting());
     }
 }
 
@@ -449,9 +449,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         allocationsBelowBudget.push_back(std::move(allocation));
     }
 
-    // Locked allocations should stay resident.
+    // Locked heaps should stay locked.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->IsResident());
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().IsLocked, true);
     }
 
     // Since locked heaps are ineligable for eviction and HEAP_FLAG_ALWAYS_IN_BUDGET is true,

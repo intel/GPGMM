@@ -103,7 +103,7 @@ namespace gpgmm::d3d12 {
         // When a heap is destroyed, it no longer resides in resident memory, so we must evict
         // it from the residency cache. If this heap is not manually removed from the residency
         // cache, the ResidencyManager will attempt to use it after it has been deallocated.
-        if (IsInResidencyLRUCache()) {
+        if (IsInList()) {
             RemoveFromList();
         }
 
@@ -126,10 +126,6 @@ namespace gpgmm::d3d12 {
         return mMemorySegmentGroup;
     }
 
-    bool Heap::IsInResidencyLRUCache() const {
-        return IsInList();
-    }
-
     void Heap::AddResidencyLockRef() {
         mResidencyLock.Ref();
     }
@@ -140,10 +136,6 @@ namespace gpgmm::d3d12 {
 
     bool Heap::IsResidencyLocked() const {
         return mResidencyLock.GetRefCount() > 0;
-    }
-
-    bool Heap::IsResident() const {
-        return IsInList() || IsResidencyLocked();
     }
 
     HEAP_INFO Heap::GetInfo() const {
@@ -160,6 +152,14 @@ namespace gpgmm::d3d12 {
 
     void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
         mState = newStatus;
+    }
+
+    bool Heap::IsInResidencyLRUCacheForTesting() const {
+        return IsInList();
+    }
+
+    bool Heap::IsResidencyLockedForTesting() const {
+        return IsResidencyLocked();
     }
 
 }  // namespace gpgmm::d3d12
