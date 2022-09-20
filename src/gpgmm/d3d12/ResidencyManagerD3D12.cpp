@@ -295,8 +295,8 @@ namespace gpgmm::d3d12 {
             pHeap->RemoveFromList();
 
             // Untracked heaps are not attributed toward residency usage.
-            mInfo.ResidentMemoryCount++;
-            mInfo.ResidentMemoryUsage += pHeap->GetSize();
+            mInfo.CurrentMemoryCount++;
+            mInfo.CurrentMemoryUsage += pHeap->GetSize();
         }
 
         pHeap->AddResidencyLockRef();
@@ -332,9 +332,9 @@ namespace gpgmm::d3d12 {
         // the corresponding LRU.
         ReturnIfFailed(InsertHeapInternal(pHeap));
 
-        // Heaps tracked for residency are always attributed in residency usage.
-        mInfo.ResidentMemoryCount--;
-        mInfo.ResidentMemoryUsage -= pHeap->GetSize();
+        // Heaps inserted into the residency cache are already attributed in residency usage.
+        mInfo.CurrentMemoryCount--;
+        mInfo.CurrentMemoryUsage -= pHeap->GetSize();
 
         return S_OK;
     }
@@ -782,15 +782,26 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_INFO ResidencyManager::GetInfo() const {
+        // Heaps inserted into the residency cache are not resident until MakeResident() is called
+        // on them. This occurs if the heap was created resident, heap gets locked, or call to
+        // ExecuteCommandLists().
+
+        // Locked heaps are not stored in the residency cache, so usage must be tracked by the
+        // residency manager on Lock/Unlock then added here to get the sum.
         RESIDENCY_INFO info = mInfo;
-        for (const auto& node : mLocalVideoMemorySegment.cache) {
-            info.ResidentMemoryUsage += node.value()->GetSize();
-            info.ResidentMemoryCount++;
+
+        for (const auto& entry : mLocalVideoMemorySegment.cache) {
+            if (entry.value()->GetInfo().Status == CURRENT_RESIDENT) {
+                info.CurrentMemoryUsage += entry.value()->GetSize();
+                info.CurrentMemoryCount++;
+            }
         }
 
-        for (const auto& node : mNonLocalVideoMemorySegment.cache) {
-            info.ResidentMemoryUsage += node.value()->GetSize();
-            info.ResidentMemoryCount++;
+        for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
+            if (entry.value()->GetInfo().Status == CURRENT_RESIDENT) {
+                info.CurrentMemoryUsage += entry.value()->GetSize();
+                info.CurrentMemoryCount++;
+            }
         }
 
         return info;
