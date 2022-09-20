@@ -128,12 +128,6 @@ namespace gpgmm::d3d12 {
         */
         ID3D12Resource* GetResource() const;
 
-        /** \brief Check if the resource allocation was made resident or not.
-
-        \return True if resident, else, false.
-        */
-        bool IsResident() const;
-
         /** \brief Returns the GPU virtual address of the resource allocation.
 
         If sub-allocated within the resource, the GPU virtual address will

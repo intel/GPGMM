@@ -91,12 +91,8 @@ namespace gpgmm::d3d12 {
         return mPageable->QueryInterface(riid, ppvObject);
     }
 
-    bool Heap::IsResident() const {
-        return true;
-    }
-
     HEAP_INFO Heap::GetInfo() const {
-        return {IsResident()};
+        return {};
     }
 
     Heap::Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
@@ -186,10 +182,6 @@ namespace gpgmm::d3d12 {
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
         return mResource.Get();
-    }
-
-    bool ResourceAllocation::IsResident() const {
-        return true;
     }
 
     D3D12_GPU_VIRTUAL_ADDRESS ResourceAllocation::GetGPUVirtualAddress() const {

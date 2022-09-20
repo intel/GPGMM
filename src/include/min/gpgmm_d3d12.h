@@ -104,7 +104,6 @@ namespace gpgmm::d3d12 {
                                   Heap** ppHeapOut);
 
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
-        bool IsResident() const;
         HEAP_INFO GetInfo() const;
 
       private:
@@ -221,7 +220,6 @@ namespace gpgmm::d3d12 {
                     void** ppDataOut = nullptr);
         void Unmap(uint32_t subresource = 0, const D3D12_RANGE* pWrittenRange = nullptr);
         ID3D12Resource* GetResource() const;
-        bool IsResident() const;
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
         uint64_t GetOffsetFromResource() const;
         RESOURCE_ALLOCATION_INFO GetInfo() const;

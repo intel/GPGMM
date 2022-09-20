@@ -127,12 +127,6 @@ namespace gpgmm::d3d12 {
         mResource->Unmap(subresource, newWrittenRangePtr);
     }
 
-    bool ResourceAllocation::IsResident() const {
-        const Heap* resourceHeap = GetMemory();
-        ASSERT(resourceHeap != nullptr);
-        return resourceHeap->IsResident();
-    }
-
     D3D12_GPU_VIRTUAL_ADDRESS ResourceAllocation::GetGPUVirtualAddress() const {
         ASSERT(mResource != nullptr);
         return mResource->GetGPUVirtualAddress() + mOffsetFromResource;
