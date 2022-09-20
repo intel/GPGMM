@@ -66,7 +66,7 @@ var searchData=
   ['startmemorycheck_63',['StartMemoryCheck',['../classgpgmm_1_1_windows_debug_platform.html#a47d4b553b08999699767334505e0bcdc',1,'gpgmm::WindowsDebugPlatform::StartMemoryCheck()'],['../classgpgmm_1_1_debug_platform.html#ab8b269d9f000126c2f301d8b7f33b080',1,'gpgmm::DebugPlatform::StartMemoryCheck()']]],
   ['startupeventtrace_64',['StartupEventTrace',['../namespacegpgmm.html#afbbf691371390b91763764005a301e24',1,'gpgmm']]],
   ['status_65',['Status',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#abccb4fe93b87d4e6b60bbb8a7c7742c4',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['suballocationalgorithm_66',['subAllocationAlgorithm',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aa9c9a7ecf364ca57862369e3e6e2136f',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
-  ['suballocationalgorithm_67',['SubAllocationAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['suballocationalgorithm_66',['SubAllocationAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['suballocationalgorithm_67',['subAllocationAlgorithm',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aa9c9a7ecf364ca57862369e3e6e2136f',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['succeeds_68',['succeeds',['../struct_m_e_m_o_r_y___a_l_l_o_c_a_t_i_o_n___e_x_p_e_c_t.html#aa33793d4b6abad648dd5638b07a543c9',1,'MEMORY_ALLOCATION_EXPECT']]]
 ];
