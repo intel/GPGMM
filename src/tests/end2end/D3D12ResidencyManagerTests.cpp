@@ -273,7 +273,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_END();
 }
 
-// Keeps allocating until it goes over the limited |kDefaultBudget| size budget.
+// Keeps allocating until it reaches the restricted budget then over-commits to ensure older heaps
+// will evicted.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
@@ -290,16 +291,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    D3D12_HEAP_PROPERTIES heapProperties =
-        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
-
-    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
-    const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
-
     // Keep allocating until we reach the budget.
     std::vector<ComPtr<ResourceAllocation>> allocationsBelowBudget = {};
-    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
+    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize <= kDefaultBudget) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
@@ -381,8 +375,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     }
 }
 
-// Keeps allocating heaps of increasing size until it goes over budget.
-TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
+// Keeps allocating until it reaches the restricted budget then over-commits to ensure new heaps
+// will not keep increasing in size.
+TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<ResidencyManager> residencyManager;
@@ -404,14 +399,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    D3D12_HEAP_PROPERTIES heapProperties =
-        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
-
-    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
-    const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
-
-    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
+    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize <= kDefaultBudget) {
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
@@ -429,4 +417,53 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithGrowth) {
     ASSERT_GT(resourceHeaps.size(), 1u);
     EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetSize(),
               resourceHeaps.at(allocations.size() - 2)->GetSize());
+}
+
+// Keeps allocating until it reaches the restricted budget then over-commits to ensure locked heaps
+// will never be evicted.
+TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
+    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+
+    ComPtr<ResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+        CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
+
+    constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
+
+    ALLOCATION_DESC bufferAllocationDesc = {};
+    bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+    // Keep allocating until we reach the budget.
+    std::vector<ComPtr<ResourceAllocation>> allocationsBelowBudget = {};
+    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize <= kDefaultBudget) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        ASSERT_SUCCEEDED(residencyManager->LockHeap(allocation->GetMemory()));
+
+        allocationsBelowBudget.push_back(std::move(allocation));
+    }
+
+    // Locked allocations should stay resident.
+    for (auto& allocation : allocationsBelowBudget) {
+        EXPECT_TRUE(allocation->GetMemory()->IsResident());
+    }
+
+    // Since locked heaps are ineligable for eviction and HEAP_FLAG_ALWAYS_IN_BUDGET is true,
+    // CreateResource should always fail since there is not enough budget.
+    ASSERT_FAILED(resourceAllocator->CreateResource(bufferAllocationDesc, bufferDesc,
+                                                    D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+
+    // Unlocked allocations should be always eligable for eviction.
+    for (auto& allocation : allocationsBelowBudget) {
+        ASSERT_SUCCEEDED(residencyManager->UnlockHeap(allocation->GetMemory()));
+    }
+
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 }
