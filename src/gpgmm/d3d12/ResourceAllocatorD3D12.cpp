@@ -1215,7 +1215,6 @@ namespace gpgmm::d3d12 {
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
-        resourceHeapDesc.Flags |= HEAP_FLAG_NEVER_USE_RESIDENCY;
 
         Heap* resourceHeap = nullptr;
         ReturnIfFailed(Heap::CreateHeap(

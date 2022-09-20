@@ -287,6 +287,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(pHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
             ReturnIfFailed(MakeResident(pHeap->GetMemorySegmentGroup(), pHeap->GetSize(), 1,
                                         pageable.GetAddressOf()));
+            pHeap->SetResidencyState(CURRENT_RESIDENT);
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -597,6 +598,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(mResidencyFence->WaitFor(lastUsedFenceValue));
 
             heap->RemoveFromList();
+            heap->SetResidencyState(PENDING_RESIDENCY);
 
             bytesEvicted += heap->GetSize();
 
@@ -651,6 +653,7 @@ namespace gpgmm::d3d12 {
         uint64_t localSizeToMakeResident = 0;
         uint64_t nonLocalSizeToMakeResident = 0;
 
+        std::vector<Heap*> heapsToMakeResident;
         for (Heap* heap : *residencyList) {
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
@@ -688,6 +691,10 @@ namespace gpgmm::d3d12 {
 
             // Insert the heap into the appropriate LRU.
             InsertHeapInternal(heap);
+
+            // Temporarily track which heaps will be made resident. Once MakeResident() is called
+            // on them will we transition them all together.
+            heapsToMakeResident.push_back(heap);
         }
 
         if (localSizeToMakeResident > 0) {
@@ -702,6 +709,12 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
                                         nonLocalSizeToMakeResident, numberOfObjectsToMakeResident,
                                         nonLocalHeapsToMakeResident.data()));
+        }
+
+        // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
+        // no way of knowing for certain.
+        for (Heap* heap : heapsToMakeResident) {
+            heap->SetResidencyState(CURRENT_RESIDENT);
         }
 
         GPGMM_TRACE_EVENT_METRIC(

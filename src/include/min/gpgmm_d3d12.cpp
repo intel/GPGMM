@@ -81,7 +81,7 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(createHeapFn(&pageable));
 
         if (ppHeapOut != nullptr) {
-            *ppHeapOut = new Heap(pageable, descriptor.SizeInBytes, descriptor.Alignment);
+            *ppHeapOut = new Heap(pageable, descriptor, (pResidencyManager == nullptr));
         }
 
         return S_OK;
@@ -99,8 +99,10 @@ namespace gpgmm::d3d12 {
         return {IsResident()};
     }
 
-    Heap::Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable, uint64_t size, uint64_t alignment)
-        : MemoryBase(size, alignment), mPageable(std::move(pageable)) {
+    Heap::Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
+               const HEAP_DESC& descriptor,
+               bool isResidencyDisabled)
+        : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment), mPageable(std::move(pageable)) {
     }
 
     // ResidencyList

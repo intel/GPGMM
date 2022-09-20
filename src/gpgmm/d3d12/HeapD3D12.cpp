@@ -28,8 +28,10 @@ namespace gpgmm::d3d12 {
                              ResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
                              Heap** ppHeapOut) {
+        const bool isResidencyDisabled = (pResidencyManager == nullptr);
+
         // Ensure enough budget exists before allocating to avoid an out-of-memory error.
-        if (pResidencyManager != nullptr && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+        if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                              descriptor.MemorySegmentGroup));
         }
@@ -40,10 +42,32 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
 
-        std::unique_ptr<Heap> heap(new Heap(std::move(pageable), descriptor));
+        std::unique_ptr<Heap> heap(new Heap(pageable, descriptor, isResidencyDisabled));
 
-        if (pResidencyManager != nullptr) {
+        if (!isResidencyDisabled) {
             ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
+
+            // Check if the underlying memory was implicitly made resident.
+            // This is always the case for resource heaps unless the "not resident" flag was
+            // explicitly used in createHeapFn().
+            D3D12_HEAP_FLAGS resourceHeapFlags = D3D12_HEAP_FLAG_NONE;
+
+            ComPtr<ID3D12Heap> d3d12Heap;
+            if (SUCCEEDED(pageable.As(&d3d12Heap))) {
+                resourceHeapFlags = d3d12Heap->GetDesc().Flags;
+            }
+
+            ComPtr<ID3D12Resource> committedResource;
+            if (SUCCEEDED(pageable.As(&committedResource))) {
+                ReturnIfFailed(committedResource->GetHeapProperties(nullptr, &resourceHeapFlags));
+            }
+
+            if ((d3d12Heap || committedResource) &&
+                !(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
+                heap->mState = CURRENT_RESIDENT;
+            } else {
+                heap->mState = PENDING_RESIDENCY;
+            }
         }
 
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
@@ -56,12 +80,15 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    Heap::Heap(ComPtr<ID3D12Pageable> pageable, const HEAP_DESC& descriptor)
+    Heap::Heap(ComPtr<ID3D12Pageable> pageable,
+               const HEAP_DESC& descriptor,
+               bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
           mPageable(std::move(pageable)),
           mMemorySegmentGroup(descriptor.MemorySegmentGroup),
           mResidencyLock(0),
-          mIsResidencyDisabled(descriptor.Flags & HEAP_FLAG_NEVER_USE_RESIDENCY) {
+          mIsResidencyDisabled(isResidencyDisabled),
+          mState(RESIDENCY_UNKNOWN) {
         ASSERT(mPageable != nullptr);
         if (!mIsResidencyDisabled) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -120,7 +147,7 @@ namespace gpgmm::d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {IsResident()};
+        return {IsResidencyLocked(), mState};
     }
 
     HRESULT Heap::SetDebugNameImpl(const std::string& name) {
@@ -130,4 +157,9 @@ namespace gpgmm::d3d12 {
     HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {
         return mPageable->QueryInterface(riid, ppvObject);
     }
+
+    void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
+        mState = newStatus;
+    }
+
 }  // namespace gpgmm::d3d12

@@ -178,7 +178,8 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const HEAP_INFO& info) {
         JSONDict dict;
-        dict.AddItem("IsResident", info.IsResident);
+        dict.AddItem("IsLocked", info.IsLocked);
+        dict.AddItem("Status", info.Status);
         return dict;
     }
 
