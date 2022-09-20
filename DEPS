@@ -2,25 +2,16 @@ use_relative_paths = True
 
 gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
-  'checkout_dawn',
-  'checkout_webnn',
   'build_with_chromium',
   'generate_location_tags',
 ]
 
 vars = {
   'chromium_git': 'https://chromium.googlesource.com',
-  'dawn_git': 'https://dawn.googlesource.com',
   'github_git': 'https://github.com',
 
   'gpgmm_standalone': True,
   'build_with_chromium': False,
-
-  # Checkout and download Dawn by default. This can be disabled with custom_vars.
-  'checkout_dawn': False,
-
-  # Checkout and download WebNN by default. This can be disabled with custom_vars.
-  'checkout_webnn': False,
 
   # Required by Chromium's //testing to generate directory->tags mapping used by ResultDB.
   'generate_location_tags': False,
@@ -30,21 +21,6 @@ vars = {
 }
 
 deps = {
-  # Dependencies required to test integrations
-  # Note: rolling Dawn also may require vulkan-deps to be rolled below.
-  # TODO(gpgmm): Consider linking vulkan-deps to Dawn like Tint.
-  # TODO(gpgmm): WebNN hard codes builds to third_party/dawn and should be fixed if the
-  # build errors are related to Dawn version mismatches.
-  'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@be4c9f48aaef9f2144a654a847b76a6a0050ec5b',
-    'condition': 'checkout_dawn or checkout_webnn',
-  },
-
-  'third_party/webnn_native': {
-    'url': '{github_git}/webmachinelearning/webnn-native.git@9add656df0e715aa9cf1d28536c132dd6506f784',
-    'condition': 'checkout_webnn',
-  },
-
   # Dependencies required to use GN/Clang in standalone
   'build': {
     'url': '{chromium_git}/chromium/src/build@f14f6d206b9a0c81a0fefba487bcba0d90ddb5fe',
@@ -232,44 +208,9 @@ hooks = [
     'action': ['python3', 'build/util/lastchange.py',
                '-o', 'build/util/LASTCHANGE'],
   },
-  # Apply Dawn integration patch.
-  # Patch can be removed should GPGMM be merged into upstream.
-  # Removes un-tracked files from previous apply.
-  {
-    'name': 'apply_dawn_patch_1',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'clean', '-f', '-x',
-    ],
-  },
-  # Removes un-staged changes from previous apply.
-  {
-    'name': 'apply_dawn_patch_2',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'checkout', '.',
-    ],
-  },
-  {
-    'name': 'apply_dawn_patch_3',
-    'pattern': '.',
-    'condition': 'checkout_dawn',
-    'action': [ 'git', '-C', './third_party/dawn/',
-                'apply', '--ignore-space-change', '--ignore-whitespace',
-                '../../.github/workflows/.patches/dawn.diff',
-    ],
-  },
 ]
 
 recursedeps = [
   # vulkan-deps provides vulkan-headers, spirv-tools, and gslang
   'third_party/vulkan-deps',
-
-  # Dawn and Tint's revision are linked
-  'third_party/dawn',
-
-  # WebNN and DirectML revision are linked
-  'third_party/webnn_native',
 ]
