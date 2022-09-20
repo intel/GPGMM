@@ -420,11 +420,19 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
-            gpgmm::ErrorLog() << "Resource heap tier does not match capabilities of the adapter "
+            gpgmm::ErrorLog() << "Resource heap tier exceeds the capabilities of the adapter "
                                  "(ResourceHeapTier:"
                               << allocatorDescriptor.ResourceHeapTier << " vs "
-                              << caps->GetMaxResourceHeapTierSupported() << ").";
+                              << caps->GetMaxResourceHeapTierSupported()
+                              << "). Please consider using a lower resource heap tier.";
             return E_FAIL;
+        }
+
+        if (allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
+            gpgmm::DebugLog()
+                << "Resource heap tier requested was lower than what the adapter "
+                   "supports. This is allowed but not recommended because it prevents "
+                   "resources of different categories from sharing the same heap.";
         }
 
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
@@ -447,6 +455,10 @@ namespace gpgmm::d3d12 {
         if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET) &&
             !caps->IsCreateHeapNotResidentSupported()) {
             newDescriptor.Flags |= ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
+
+            gpgmm::DebugLog()
+                << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was not requested but enabled "
+                   "anyway because the adapter did not support creating non-resident heaps.";
         }
 
         newDescriptor.MaxResourceHeapSize =
@@ -464,6 +476,9 @@ namespace gpgmm::d3d12 {
                                                      : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
+            gpgmm::ErrorLog() << "Requested oreferred resource heap size exceeded the capabilities "
+                                 "of the adapter. This is probably not what the developer intended "
+                                 "to do. Please consider using a smaller resource heap size.";
             return E_INVALIDARG;
         }
 
@@ -491,14 +506,17 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
             gpgmm::WarningLog()
-                << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS was specified but the D3D12 debug "
-                   "layer was either not installed or enabled.";
+                << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has not effect because the D3D12 debug "
+                   "layer was either not installed or enabled. This is probably not what the "
+                   "developer intended to do.";
         }
 #endif
 
         if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
-            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was specified but residency "
-                                   "management was not enabled.";
+            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
+                                   "management does not exist. This is probably not what the "
+                                   "developer intended to do. Please consider creating a residency "
+                                   "manager with this resource allocator before using this flag.";
         }
 
         std::unique_ptr<ResourceAllocator> resourceAllocator = std::unique_ptr<ResourceAllocator>(

@@ -165,7 +165,7 @@ namespace gpgmm::d3d12 {
 
         if (descriptor.IsUMA != caps->IsAdapterUMA()) {
             gpgmm::WarningLog()
-                << "Memory architecture does not match capabilities of the adapter (IsUMA:"
+                << "Memory architecture did not match capabilities of the adapter (IsUMA:"
                 << descriptor.IsUMA << " vs " << caps->IsAdapterUMA()
                 << "). This is probably not what the developer intended. Please use "
                    "CheckFeatureSupport instead.";
@@ -182,8 +182,9 @@ namespace gpgmm::d3d12 {
         }
 
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
-            gpgmm::WarningLog()
-                << "OS based memory budget was ignored since a budget was specified.";
+            gpgmm::ErrorLog() << "Both the OS based memory budget and restricted budget were "
+                                 "specified but cannot be used at the same time.";
+            return E_UNEXPECTED;
         }
 
         if (descriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
@@ -201,7 +202,7 @@ namespace gpgmm::d3d12 {
         // Require automatic video memory budget updates.
         if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
             ReturnIfFailed(residencyManager->StartBudgetNotificationUpdates());
-            gpgmm::DebugLog() << "OS event based budget updates enabled.";
+            gpgmm::DebugLog() << "OS based memory budget updates were successfully enabled.";
         }
 
         // Set the initial video memory limits.
