@@ -137,8 +137,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
 
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryUsage, kHeapSize);
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryCount, 1u);
 
     ComPtr<ID3D12Heap> heap;
     resourceHeap.As(&heap);
@@ -152,13 +152,13 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::CURRENT_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryUsage, kHeapSize);
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
 
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryUsage, kHeapSize);
-    EXPECT_EQ(residencyManager->GetInfo().ResidentMemoryCount, 1u);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryUsage, kHeapSize);
+    EXPECT_EQ(residencyManager->GetInfo().CurrentMemoryCount, 1u);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     ASSERT_FAILED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked

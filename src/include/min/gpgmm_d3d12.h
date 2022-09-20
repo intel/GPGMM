@@ -169,8 +169,8 @@ namespace gpgmm::d3d12 {
     };
 
     struct RESIDENCY_INFO {
-        uint64_t ResidentMemoryUsage;
-        uint64_t ResidentMemoryCount;
+        uint64_t CurrentMemoryUsage;
+        uint64_t CurrentMemoryCount;
     };
 
     class ResidencyManager final : public IUnknownImpl {
