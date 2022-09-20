@@ -515,9 +515,9 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 single queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
-<pre class="fragment">The created resource will always be allocated with it's own resource heap.
-</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
@@ -540,10 +540,9 @@ properties are always write-combined.
 If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
 D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces the allocator allocation algorithm to be used or E_FAIL. </p>
-<pre class="fragment">By default, the allocation method used may not be used due to incompatible constraints. This
-flag will disable the default fall-back behavior of using the safest allocation method
-possible.
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
+<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
+allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
 </pre> </td></tr>
@@ -567,9 +566,9 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 single queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
-<pre class="fragment">The created resource will always be allocated with it's own resource heap.
-</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
@@ -592,10 +591,9 @@ properties are always write-combined.
 If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
 D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces the allocator allocation algorithm to be used or E_FAIL. </p>
-<pre class="fragment">By default, the allocation method used may not be used due to incompatible constraints. This
-flag will disable the default fall-back behavior of using the safest allocation method
-possible.
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
+<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
+allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
 </pre> </td></tr>
@@ -635,9 +633,9 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 single queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
-<pre class="fragment">The created resource will always be allocated with it's own resource heap.
-</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
@@ -660,10 +658,9 @@ properties are always write-combined.
 If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
 D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces the allocator allocation algorithm to be used or E_FAIL. </p>
-<pre class="fragment">By default, the allocation method used may not be used due to incompatible constraints. This
-flag will disable the default fall-back behavior of using the safest allocation method
-possible.
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
+<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
+allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
 </pre> </td></tr>
@@ -687,9 +684,9 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 single queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating multiple resource allocations from the same resource heap. </p>
-<pre class="fragment">The created resource will always be allocated with it's own resource heap.
-</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
@@ -712,10 +709,9 @@ properties are always write-combined.
 If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
 D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces the allocator allocation algorithm to be used or E_FAIL. </p>
-<pre class="fragment">By default, the allocation method used may not be used due to incompatible constraints. This
-flag will disable the default fall-back behavior of using the safest allocation method
-possible.
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
+<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
+allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
 </pre> </td></tr>
