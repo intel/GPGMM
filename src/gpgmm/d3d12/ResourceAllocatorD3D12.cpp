@@ -476,7 +476,7 @@ namespace gpgmm::d3d12 {
                                                      : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
-            gpgmm::ErrorLog() << "Requested oreferred resource heap size exceeded the capabilities "
+            gpgmm::ErrorLog() << "Requested preferred resource heap size exceeded the capabilities "
                                  "of the adapter. This is probably not what the developer intended "
                                  "to do. Please consider using a smaller resource heap size.";
             return E_INVALIDARG;
