@@ -123,7 +123,7 @@ var searchData=
   ['gpgmm_5fbytes_5fto_5fkb_120',['GPGMM_BYTES_TO_KB',['../_size_class_8h.html#a9a6cda1f8098bc20a288ef08437240d4',1,'SizeClass.h']]],
   ['gpgmm_5fbytes_5fto_5fmb_121',['GPGMM_BYTES_TO_MB',['../_size_class_8h.html#a1a4ab4e561459fae981072c78de4b388',1,'SizeClass.h']]],
   ['gpgmm_5fd3d12_2ecpp_122',['gpgmm_d3d12.cpp',['../gpgmm__d3d12_8cpp.html',1,'']]],
-  ['gpgmm_5fd3d12_2eh_123',['gpgmm_d3d12.h',['../gpgmm__d3d12_8h.html',1,'(Global Namespace)'],['../min_2gpgmm__d3d12_8h.html',1,'(Global Namespace)']]],
+  ['gpgmm_5fd3d12_2eh_123',['gpgmm_d3d12.h',['../min_2gpgmm__d3d12_8h.html',1,'(Global Namespace)'],['../gpgmm__d3d12_8h.html',1,'(Global Namespace)']]],
   ['gpgmm_5fdebug_124',['GPGMM_DEBUG',['../_log_8h.html#af29b85ea8baf198c09ff431bf14b2a51',1,'Log.h']]],
   ['gpgmm_5fdynamic_5fget_5fdevice_5ffunc_125',['GPGMM_DYNAMIC_GET_DEVICE_FUNC',['../_functions_vk_8cpp.html#a012c43b992359e867ff62057ad79d94f',1,'FunctionsVk.cpp']]],
   ['gpgmm_5fdynamic_5fget_5finstance_5ffunc_126',['GPGMM_DYNAMIC_GET_INSTANCE_FUNC',['../_functions_vk_8cpp.html#a5c778e0a88f14efe3852c7b7947712e4',1,'FunctionsVk.cpp']]],
