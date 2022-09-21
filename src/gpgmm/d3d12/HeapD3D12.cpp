@@ -95,8 +95,7 @@ namespace gpgmm::d3d12 {
             // Only heap types that are known to be created resident are eligable for evicition and
             // should be always inserted in the residency cache. For other heap types (eg.
             // descriptor heap), they must be manually locked and unlocked to be inserted into the
-            // residency cache. This is to ensure MakeResident is always called on heaps which are
-            // not known (or guarenteed) to be created implicitly resident by D3D12.
+            // residency cache.
             if (heap->mState != RESIDENCY_UNKNOWN) {
                 ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
             }
