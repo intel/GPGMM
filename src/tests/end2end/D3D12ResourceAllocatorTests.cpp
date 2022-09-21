@@ -15,6 +15,7 @@
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
+#include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Math.h"
 #include "tests/D3D12Test.h"
@@ -671,7 +672,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
 
 // Verifies there are no attribution of heaps when UMA + no read-back.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
-    GPGMM_SKIP_TEST_IF(!mIsUMA);
+    GPGMM_SKIP_TEST_IF(!mCaps->IsAdapterUMA());
 
     ComPtr<ResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(

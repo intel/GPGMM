@@ -30,6 +30,7 @@
 namespace gpgmm::d3d12 {
 
     struct ALLOCATOR_DESC;
+    class Caps;
     class ResourceAllocator;
     class ResourceAllocation;
 
@@ -59,9 +60,7 @@ namespace gpgmm::d3d12 {
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;
-
-        bool mIsUMA = false;
-        D3D12_RESOURCE_HEAP_TIER mResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
+        std::unique_ptr<Caps> mCaps;
     };
 
 }  // namespace gpgmm::d3d12

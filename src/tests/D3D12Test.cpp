@@ -61,16 +61,6 @@ namespace gpgmm::d3d12 {
         ASSERT_SUCCEEDED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&mAdapter)));
         ASSERT_NE(mAdapter.Get(), nullptr);
 
-        D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-        ASSERT_SUCCEEDED(
-            mDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
-        mIsUMA = arch.UMA;
-
-        D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-        ASSERT_SUCCEEDED(
-            mDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
-        mResourceHeapTier = options.ResourceHeapTier;
-
         DXGI_ADAPTER_DESC adapterDesc;
         ASSERT_SUCCEEDED(mAdapter->GetDesc(&adapterDesc));
 
@@ -86,23 +76,20 @@ namespace gpgmm::d3d12 {
         DebugLog() << "GPU memory: " << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedVideoMemory)
                    << " GBs.";
 
-        DebugLog() << "Unified memory: " << ((arch.UMA) ? "yes" : "no")
-                   << ((arch.CacheCoherentUMA) ? " (cache-coherent)" : "");
+        Caps* capsPtr = nullptr;
+        ASSERT_SUCCEEDED(Caps::CreateCaps(mDevice.Get(), mAdapter.Get(), &capsPtr));
+        mCaps.reset(capsPtr);
 
-        std::unique_ptr<Caps> caps;
-        {
-            Caps* capsPtr = nullptr;
-            ASSERT_SUCCEEDED(Caps::CreateCaps(mDevice.Get(), mAdapter.Get(), &capsPtr));
-            caps.reset(capsPtr);
-        }
+        DebugLog() << "Unified memory: " << ((mCaps->IsAdapterUMA()) ? "yes" : "no")
+                   << ((mCaps->IsAdapterCacheCoherentUMA()) ? " (cache-coherent)" : "");
 
-        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_MB(caps->GetMaxResourceSize())
+        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_MB(mCaps->GetMaxResourceSize())
                    << " MBs";
-        DebugLog() << "Max resource heap tier: " << caps->GetMaxResourceHeapTierSupported();
+        DebugLog() << "Max resource heap tier: " << mCaps->GetMaxResourceHeapTierSupported();
         DebugLog() << "Max resource heap size: "
-                   << GPGMM_BYTES_TO_GB(caps->GetMaxResourceHeapSize()) << " GBs";
+                   << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceHeapSize()) << " GBs";
         DebugLog() << "Creation of non-resident heaps: "
-                   << ((caps->IsCreateHeapNotResidentSupported()) ? "Supported" : "Not supported");
+                   << ((mCaps->IsCreateHeapNotResidentSupported()) ? "Supported" : "Not supported");
     }
 
     void D3D12TestBase::TearDown() {
@@ -115,7 +102,7 @@ namespace gpgmm::d3d12 {
         // Required parameters.
         desc.Adapter = mAdapter;
         desc.Device = mDevice;
-        desc.ResourceHeapTier = mResourceHeapTier;
+        desc.ResourceHeapTier = mCaps->GetMaxResourceHeapTierSupported();
 
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
