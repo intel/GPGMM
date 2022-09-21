@@ -1,4 +1,4 @@
-From 5ea9503feb3e76166d484069991aa7e52948e264 Mon Sep 17 00:00:00 2001
+From 268687007244e4659e56bd24c48dbf98382b1893 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -15,7 +15,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/Toggles.cpp                   |   8 ++
  src/dawn/native/Toggles.h                     |   2 +
  src/dawn/native/d3d12/AdapterD3D12.cpp        |   4 +
- src/dawn/native/d3d12/BufferD3D12.cpp         |  51 ++++----
+ src/dawn/native/d3d12/BufferD3D12.cpp         |  52 ++++----
  src/dawn/native/d3d12/BufferD3D12.h           |   7 +-
  src/dawn/native/d3d12/CommandBufferD3D12.cpp  |   9 +-
  .../native/d3d12/CommandRecordingContext.cpp  |  19 ++-
@@ -32,7 +32,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 27 files changed, 321 insertions(+), 166 deletions(-)
+ 27 files changed, 322 insertions(+), 166 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -212,7 +212,7 @@ index e23830e89..144ea3e22 100644
  
      // Create a retrieval filter with a deny list to suppress messages.
 diff --git a/src/dawn/native/d3d12/BufferD3D12.cpp b/src/dawn/native/d3d12/BufferD3D12.cpp
-index 0488fce6a..6b0dd1627 100644
+index 0488fce6a..db8f39de5 100644
 --- a/src/dawn/native/d3d12/BufferD3D12.cpp
 +++ b/src/dawn/native/d3d12/BufferD3D12.cpp
 @@ -153,9 +153,15 @@ MaybeError Buffer::Initialize(bool mappedAtCreation) {
@@ -305,7 +305,7 @@ index 0488fce6a..6b0dd1627 100644
  }
  
  void* Buffer::GetMappedPointerImpl() {
-@@ -392,16 +397,15 @@ void Buffer::DestroyImpl() {
+@@ -392,16 +397,16 @@ void Buffer::DestroyImpl() {
      }
      BufferBase::DestroyImpl();
  
@@ -316,7 +316,8 @@ index 0488fce6a..6b0dd1627 100644
  bool Buffer::CheckIsResidentForTesting() const {
 -    Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -    return heap->IsInList() || heap->IsResidencyLocked();
-+    return static_cast<gpgmm::d3d12::Heap*>(mResourceAllocation->GetMemory())->IsResident();
++    return mResourceAllocation->GetMemory()->IsInResidencyLRUCacheForTesting() ||
++           mResourceAllocation->GetMemory()->IsResidencyLockedForTesting();
  }
  
 -bool Buffer::CheckAllocationMethodForTesting(AllocationMethod allocationMethod) const {
@@ -326,7 +327,7 @@ index 0488fce6a..6b0dd1627 100644
  }
  
  MaybeError Buffer::EnsureDataInitialized(CommandRecordingContext* commandContext) {
-@@ -446,8 +450,7 @@ MaybeError Buffer::EnsureDataInitializedAsDestination(CommandRecordingContext* c
+@@ -446,8 +451,7 @@ MaybeError Buffer::EnsureDataInitializedAsDestination(CommandRecordingContext* c
  }
  
  void Buffer::SetLabelImpl() {
@@ -742,7 +743,7 @@ index 0373cf9d8..8b0bffdff 100644
      static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup = 3 * kMaxSamplersPerShaderStage;
      static constexpr uint32_t kMaxViewDescriptorsPerBindGroup =
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
-index fe99a63ac..1ecd21da3 100644
+index fe99a63ac..e2b5bd76f 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 @@ -93,7 +93,8 @@ ShaderVisibleDescriptorAllocator::ShaderVisibleDescriptorAllocator(
@@ -843,13 +844,13 @@ index fe99a63ac..1ecd21da3 100644
  
  bool ShaderVisibleDescriptorAllocator::IsShaderVisibleHeapLockedResidentForTesting() const {
 -    return mHeap->IsResidencyLocked();
-+    return mHeap->GetHeap()->IsResidencyLocked();
++    return mHeap->GetHeap()->IsResidencyLockedForTesting();
  }
  
  bool ShaderVisibleDescriptorAllocator::IsLastShaderVisibleHeapInLRUForTesting() const {
      ASSERT(!mPool.empty());
 -    return mPool.back().heap->IsInResidencyLRUCache();
-+    return mPool.back().heap->GetHeap()->IsInResidencyLRUCache();
++    return mPool.back().heap->GetHeap()->IsInResidencyLRUCacheForTesting();
  }
  
  bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(

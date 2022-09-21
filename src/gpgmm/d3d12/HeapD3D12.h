@@ -186,9 +186,8 @@ namespace gpgmm::d3d12 {
         HEAP_INFO GetInfo() const;
 
         // Testing only.
-        bool IsInResidencyLRUCache() const;
-        bool IsResidencyLocked() const;
-        bool IsResident() const;
+        bool IsInResidencyLRUCacheForTesting() const;
+        bool IsResidencyLockedForTesting() const;
 
       private:
         friend ResidencyManager;
@@ -209,6 +208,8 @@ namespace gpgmm::d3d12 {
         void SetLastUsedFenceValue(uint64_t fenceValue);
 
         void SetResidencyState(RESIDENCY_STATUS newStatus);
+
+        bool IsResidencyLocked() const;
 
         // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
         // heaps or mapping resources).

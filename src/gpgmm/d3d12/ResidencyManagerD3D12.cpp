@@ -283,7 +283,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (!pHeap->IsResident()) {
+        if (!pHeap->IsInList() && !pHeap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
             ReturnIfFailed(pHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
             ReturnIfFailed(MakeResident(pHeap->GetMemorySegmentGroup(), pHeap->GetSize(), 1,
@@ -292,7 +292,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
-        if (pHeap->IsInResidencyLRUCache()) {
+        if (pHeap->IsInList()) {
             pHeap->RemoveFromList();
 
             // Untracked heaps are not attributed toward residency usage.
@@ -318,7 +318,7 @@ namespace gpgmm::d3d12 {
             return E_FAIL;
         }
 
-        if (pHeap->IsInResidencyLRUCache()) {
+        if (pHeap->IsInList()) {
             return E_FAIL;
         }
 
@@ -667,7 +667,7 @@ namespace gpgmm::d3d12 {
                 continue;
             }
 
-            if (heap->IsInResidencyLRUCache()) {
+            if (heap->IsInList()) {
                 // If the heap is already in the LRU, we must remove it and append again below to
                 // update its position in the LRU.
                 heap->RemoveFromList();
