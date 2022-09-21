@@ -23,6 +23,27 @@
 
 namespace gpgmm::d3d12 {
 
+    namespace {
+
+        // Returns the resource heap flags or E_INVALIDARG, when the memory type doesn't allow
+        // resources.
+        HRESULT GetResourceHeapFlags(ComPtr<ID3D12Pageable> pageable, D3D12_HEAP_FLAGS* heapFlags) {
+            ComPtr<ID3D12Heap> heap;
+            if (SUCCEEDED(pageable.As(&heap))) {
+                *heapFlags = heap->GetDesc().Flags;
+                return S_OK;
+            }
+
+            ComPtr<ID3D12Resource> committedResource;
+            if (SUCCEEDED(pageable.As(&committedResource))) {
+                ReturnIfFailed(committedResource->GetHeapProperties(nullptr, heapFlags));
+                return S_OK;
+            }
+
+            return E_INVALIDARG;
+        }
+    }  // namespace
+
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              ResidencyManager* const pResidencyManager,
@@ -30,7 +51,7 @@ namespace gpgmm::d3d12 {
                              Heap** ppHeapOut) {
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
-        // Ensure enough budget exists before allocating to avoid an out-of-memory error.
+        // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                              descriptor.MemorySegmentGroup));
@@ -51,28 +72,33 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Heap> heap(new Heap(pageable, descriptor, isResidencyDisabled));
 
         if (!isResidencyDisabled) {
-            ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
-
             // Check if the underlying memory was implicitly made resident.
-            // This is always the case for resource heaps unless the "not resident" flag was
-            // explicitly used in createHeapFn().
             D3D12_HEAP_FLAGS resourceHeapFlags = D3D12_HEAP_FLAG_NONE;
-
-            ComPtr<ID3D12Heap> d3d12Heap;
-            if (SUCCEEDED(pageable.As(&d3d12Heap))) {
-                resourceHeapFlags = d3d12Heap->GetDesc().Flags;
+            if (SUCCEEDED(GetResourceHeapFlags(pageable, &resourceHeapFlags))) {
+                // Resource heaps created without the "create not resident" flag are always
+                // resident.
+                if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
+                    heap->mState = CURRENT_RESIDENT;
+                } else {
+                    heap->mState = PENDING_RESIDENCY;
+                }
             }
 
-            ComPtr<ID3D12Resource> committedResource;
-            if (SUCCEEDED(pageable.As(&committedResource))) {
-                ReturnIfFailed(committedResource->GetHeapProperties(nullptr, &resourceHeapFlags));
+            // Heap created not resident requires no budget to be created.
+            if (heap->mState == PENDING_RESIDENCY &&
+                (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+                gpgmm::ErrorLog() << "Creating a heap always in budget cannot be used with "
+                                     "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
+                return E_INVALIDARG;
             }
 
-            if ((d3d12Heap || committedResource) &&
-                !(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
-                heap->mState = CURRENT_RESIDENT;
-            } else {
-                heap->mState = PENDING_RESIDENCY;
+            // Only heap types that are known to be created resident are eligable for evicition and
+            // should be always inserted in the residency cache. For other heap types (eg.
+            // descriptor heap), they must be manually locked and unlocked to be inserted into the
+            // residency cache. This is to ensure MakeResident is always called on heaps which are
+            // not known (or guarenteed) to be created implicitly resident by D3D12.
+            if (heap->mState != RESIDENCY_UNKNOWN) {
+                ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
             }
         }
 

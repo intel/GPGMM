@@ -289,15 +289,23 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(MakeResident(pHeap->GetMemorySegmentGroup(), pHeap->GetSize(), 1,
                                         pageable.GetAddressOf()));
             pHeap->SetResidencyState(CURRENT_RESIDENT);
+
+            // Untracked heaps, created not resident, are not already attributed toward residency
+            // usage because they are not in the residency cache.
+            mInfo.CurrentMemoryCount++;
+            mInfo.CurrentMemoryUsage += pHeap->GetSize();
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
         if (pHeap->IsInList()) {
             pHeap->RemoveFromList();
 
-            // Untracked heaps are not attributed toward residency usage.
-            mInfo.CurrentMemoryCount++;
-            mInfo.CurrentMemoryUsage += pHeap->GetSize();
+            // Untracked heaps, previously made resident, are not attributed toward residency usage
+            // because they will be removed from the residency cache.
+            if (pHeap->mState == CURRENT_RESIDENT) {
+                mInfo.CurrentMemoryCount++;
+                mInfo.CurrentMemoryUsage += pHeap->GetSize();
+            }
         }
 
         pHeap->AddResidencyLockRef();

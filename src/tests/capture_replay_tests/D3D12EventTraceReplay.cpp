@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEventPhase.h"
+#include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
@@ -300,18 +301,19 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         ASSERT_FALSE(snapshot.empty());
 
                         if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
-                            mIsUMA != snapshot["IsUMA"].asBool() && iterationIndex == 0) {
+                            mCaps->IsAdapterUMA() != snapshot["IsUMA"].asBool() &&
+                            iterationIndex == 0) {
                             gpgmm::WarningLog()
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
-                                       std::to_string(mIsUMA) + ").";
+                                       std::to_string(mCaps->IsAdapterUMA()) + ").";
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
                         RESIDENCY_DESC residencyDesc = {};
                         residencyDesc.Device = mDevice;
                         residencyDesc.Adapter = mAdapter;
-                        residencyDesc.IsUMA = mIsUMA;
+                        residencyDesc.IsUMA = mCaps->IsAdapterUMA();
                         residencyDesc.MaxPctOfVideoMemoryToBudget =
                             snapshot["MaxPctOfVideoMemoryToBudget"].asFloat();
                         residencyDesc.MaxBudgetInBytes = snapshot["MaxBudgetInBytes"].asUInt64();
@@ -494,8 +496,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         HEAP_DESC resourceHeapDesc = {};
                         resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
                         resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
-                        resourceHeapDesc.MemorySegmentGroup =
-                            GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mIsUMA);
+                        resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
+                            heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
 
                         ResidencyManager* residencyManager =
                             createdResidencyManagerToID[currentResidencyID].Get();
