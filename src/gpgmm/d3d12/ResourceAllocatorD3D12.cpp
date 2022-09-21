@@ -158,6 +158,8 @@ namespace gpgmm::d3d12 {
 
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
         uint64_t GetHeapAlignment(D3D12_HEAP_FLAGS heapFlags, bool allowMSAA) {
+            // Buffers are always 64KB aligned.
+            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
             const D3D12_HEAP_FLAGS denyAllTexturesFlags =
                 D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES;
             if (HasAllFlags(heapFlags, denyAllTexturesFlags)) {
@@ -735,8 +737,6 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment,
         D3D12_RESOURCE_STATES initialResourceState) {
-        // Buffers are always 64KB aligned.
-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
         std::unique_ptr<MemoryAllocator> smallBufferOnlyAllocator =
             std::make_unique<BufferAllocator>(this, heapProperties, heapFlags,
                                               D3D12_RESOURCE_FLAG_NONE, initialResourceState);
