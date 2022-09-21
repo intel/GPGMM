@@ -200,4 +200,13 @@ namespace gpgmm {
         mNext = next.release();
     }
 
+    void MemoryAllocator::CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation) {
+        if (allocation.GetSize() > allocation.GetRequestSize()) {
+            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+                << "Resource allocation is larger then the requested size (" +
+                       std::to_string(allocation.GetSize()) + " vs " +
+                       std::to_string(allocation.GetRequestSize()) + " bytes).";
+        }
+    }
+
 }  // namespace gpgmm

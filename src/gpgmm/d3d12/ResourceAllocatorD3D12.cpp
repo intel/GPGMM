@@ -870,13 +870,9 @@ namespace gpgmm::d3d12 {
             GetInfoInternal();
         }
 
-#if defined(GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS)
-        if (allocation->GetSize() > allocation->GetRequestSize()) {
-            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
-                << "Resource allocation is larger then the requested size (" +
-                       std::to_string(allocation->GetSize()) + " vs " +
-                       std::to_string(allocation->GetRequestSize()) + " bytes).";
-        }
+#if defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS)
+        // Allocation is subject to alignment requirements per allocator or allocation method.
+        CheckAndReportAllocationMisalignment(*allocation.Get());
 #endif
 
         if (ppResourceAllocationOut != nullptr) {
