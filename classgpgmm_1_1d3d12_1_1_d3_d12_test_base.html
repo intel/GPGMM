@@ -125,10 +125,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a5abe7985860427acf3da46c21711e83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb42dc59899ab2ac2962d0605dbd62fa"><td class="memItemLeft" align="right" valign="top">ComPtr&lt; ID3D12Device &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#aeb42dc59899ab2ac2962d0605dbd62fa">mDevice</a></td></tr>
 <tr class="separator:aeb42dc59899ab2ac2962d0605dbd62fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad12132a9bdab4dc54be18891b16c1b3e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#ad12132a9bdab4dc54be18891b16c1b3e">mIsUMA</a> = false</td></tr>
-<tr class="separator:ad12132a9bdab4dc54be18891b16c1b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52eb2041d1ae33fd3ae14e88a68715ca"><td class="memItemLeft" align="right" valign="top">D3D12_RESOURCE_HEAP_TIER&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#a52eb2041d1ae33fd3ae14e88a68715ca">mResourceHeapTier</a> = D3D12_RESOURCE_HEAP_TIER_1</td></tr>
-<tr class="separator:a52eb2041d1ae33fd3ae14e88a68715ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd85473d3d7705bb4c44f10498861353"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgpgmm_1_1d3d12_1_1_caps.html">Caps</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html#afd85473d3d7705bb4c44f10498861353">mCaps</a></td></tr>
+<tr class="separator:afd85473d3d7705bb4c44f10498861353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -373,6 +371,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="afd85473d3d7705bb4c44f10498861353" name="afd85473d3d7705bb4c44f10498861353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd85473d3d7705bb4c44f10498861353">&#9670;&#160;</a></span>mCaps</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgpgmm_1_1d3d12_1_1_caps.html">Caps</a>&gt; gpgmm::d3d12::D3D12TestBase::mCaps</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aeb42dc59899ab2ac2962d0605dbd62fa" name="aeb42dc59899ab2ac2962d0605dbd62fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb42dc59899ab2ac2962d0605dbd62fa">&#9670;&#160;</a></span>mDevice</h2>
 
@@ -384,50 +404,6 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">ComPtr&lt;ID3D12Device&gt; gpgmm::d3d12::D3D12TestBase::mDevice</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad12132a9bdab4dc54be18891b16c1b3e" name="ad12132a9bdab4dc54be18891b16c1b3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad12132a9bdab4dc54be18891b16c1b3e">&#9670;&#160;</a></span>mIsUMA</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gpgmm::d3d12::D3D12TestBase::mIsUMA = false</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a52eb2041d1ae33fd3ae14e88a68715ca" name="a52eb2041d1ae33fd3ae14e88a68715ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52eb2041d1ae33fd3ae14e88a68715ca">&#9670;&#160;</a></span>mResourceHeapTier</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">D3D12_RESOURCE_HEAP_TIER gpgmm::d3d12::D3D12TestBase::mResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1</td>
         </tr>
       </table>
   </td>
