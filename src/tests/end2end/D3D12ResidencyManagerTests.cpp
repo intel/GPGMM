@@ -115,9 +115,17 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
         return S_OK;
     };
 
+    auto badCreateHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
+        // No pageable set should E_FAIL.
+        return S_OK;
+    };
+
     HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
     resourceHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+
+    ASSERT_FAILED(
+        Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), badCreateHeapFn, nullptr));
 
     ASSERT_SUCCEEDED(
         Heap::CreateHeap(resourceHeapDesc, residencyManager.Get(), createHeapFn, nullptr));
