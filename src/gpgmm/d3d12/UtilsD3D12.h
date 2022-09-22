@@ -25,7 +25,7 @@ namespace gpgmm::d3d12 {
     LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity);
     bool IsDepthFormat(DXGI_FORMAT format);
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
-    HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name);
+    HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name);
     DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool, bool isUMA);
     const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup, bool isUMA);
 

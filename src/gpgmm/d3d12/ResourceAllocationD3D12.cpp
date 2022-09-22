@@ -152,9 +152,9 @@ namespace gpgmm::d3d12 {
         mAllocator = allocator;
     }
 
-    HRESULT ResourceAllocation::SetDebugNameImpl(const std::string& name) {
+    HRESULT ResourceAllocation::SetDebugNameImpl(LPCWSTR name) {
         // D3D name is set per resource.
-        if (!GetDebugName().empty() && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+        if (GetDebugName() != nullptr && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
             return S_FALSE;
         }
 

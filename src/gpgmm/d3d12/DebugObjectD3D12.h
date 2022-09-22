@@ -37,22 +37,24 @@ namespace gpgmm::d3d12 {
 
         /** \brief Get the debug name.
 
-        \return A string that contains the debug name associated with the debug object.
+        \return A NULL-terminated UNICODE string that contains the name to associate with the debug
+        object.
         */
-        const std::string& GetDebugName() const;
+        LPCWSTR GetDebugName() const;
 
         /** \brief Associate a debug name.
 
-        @param name A string that contains the debug name to associate with the debug object.
+        @param Name A NULL-terminated UNICODE string that contains the name to associate with the
+        debug object.
         */
-        HRESULT SetDebugName(const std::string& name);
+        HRESULT SetDebugName(LPCWSTR Name);
 
       protected:
         // Derived classes should override to associate the name with the containing ID3D12Object.
-        virtual HRESULT SetDebugNameImpl(const std::string& name) = 0;
+        virtual HRESULT SetDebugNameImpl(LPCWSTR name) = 0;
 
       private:
-        std::string mDebugName;
+        std::wstring mDebugName;
     };
 
 }  // namespace gpgmm::d3d12

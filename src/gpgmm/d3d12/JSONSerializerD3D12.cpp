@@ -21,6 +21,7 @@
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
+#include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm::d3d12 {
 
@@ -169,8 +170,8 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
-        if (!desc.DebugName.empty()) {
-            dict.AddItem("DebugName", desc.DebugName);
+        if (desc.DebugName != nullptr) {
+            dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
         }
         return dict;
     }
@@ -190,8 +191,8 @@ namespace gpgmm::d3d12 {
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
         dict.AddItem("Method", desc.Method);
-        if (!desc.DebugName.empty()) {
-            dict.AddItem("DebugName", desc.DebugName);
+        if (desc.DebugName != nullptr) {
+            dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
         }
         return dict;
     }

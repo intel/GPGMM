@@ -61,7 +61,7 @@ namespace gpgmm::d3d12 {
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = heapSize;
-        resourceHeapDesc.DebugName = "Resource heap";
+        resourceHeapDesc.DebugName = L"Resource heap";
         resourceHeapDesc.Alignment = request.Alignment;
         resourceHeapDesc.Flags |= (mAlwaysInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
 

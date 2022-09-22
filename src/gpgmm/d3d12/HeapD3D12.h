@@ -115,7 +115,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Debug name associated with the heap.
          */
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     /** \brief Callback function used to create a ID3D12Pageable.
@@ -197,7 +197,7 @@ namespace gpgmm::d3d12 {
              const HEAP_DESC& descriptor,
              bool isResidencyDisabled);
 
-        HRESULT SetDebugNameImpl(const std::string& name) override;
+        HRESULT SetDebugNameImpl(LPCWSTR name) override;
         const char* GetTypename() const override;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 

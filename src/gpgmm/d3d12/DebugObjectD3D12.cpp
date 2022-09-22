@@ -14,15 +14,21 @@
 
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
 
+#include "gpgmm/utils/WindowsUtils.h"
+
 namespace gpgmm::d3d12 {
 
-    const std::string& DebugObject::GetDebugName() const {
-        return mDebugName;
+    LPCWSTR DebugObject::GetDebugName() const {
+        return mDebugName.c_str();
     }
 
-    HRESULT DebugObject::SetDebugName(const std::string& name) {
-        mDebugName = name;
-        return SetDebugNameImpl(name);
+    HRESULT DebugObject::SetDebugName(LPCWSTR Name) {
+        if (Name == nullptr) {
+            return S_FALSE;
+        }
+        // Store a copy of the name because D3D12 oddly doesn't have a ID3D12Object::GetName.
+        mDebugName = TCharToWString(Name);
+        return SetDebugNameImpl(Name);
     }
 
 }  // namespace gpgmm::d3d12
