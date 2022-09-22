@@ -27,6 +27,8 @@
 #define EXPECT_FAILED(expr) EXPECT_TRUE(FAILED(expr))
 #define EXPECT_SUCCEEDED(expr) EXPECT_TRUE(SUCCEEDED(expr))
 
+#define EXPECT_EQUAL_WSTR(wstr1, wstr2) EXPECT_FALSE(wcscmp(wstr1, wstr2))
+
 namespace gpgmm::d3d12 {
 
     struct ALLOCATOR_DESC;

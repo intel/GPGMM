@@ -30,7 +30,7 @@ using namespace gpgmm::d3d12;
 static constexpr uint64_t kBufferOf4MBAllocationSize = GPGMM_MB_TO_BYTES(4);
 static constexpr uint64_t kReleaseAllMemory = std::numeric_limits<uint64_t>::max();
 
-#define GPGMM_GET_VAR_NAME(x) (#x)
+#define GPGMM_GET_VAR_NAME(x) (L#x)
 
 #define EXPECT_SIZE_CACHE_HIT(allocator, statement)                \
     do {                                                           \
@@ -623,14 +623,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-        allocationDesc.DebugName = "Buffer";
+        allocationDesc.DebugName = L"Buffer";
 
         ComPtr<ResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON,
             nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
-        EXPECT_EQ(allocation->GetDebugName(), allocationDesc.DebugName);
+        EXPECT_EQUAL_WSTR(allocation->GetDebugName(), allocationDesc.DebugName);
     }
 
     // Creating a buffer without a heap type should be inferred based on the resource state.

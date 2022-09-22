@@ -427,14 +427,14 @@ namespace gpgmm::d3d12 {
         return GetTileCount(resourceDescriptor, tile) <= 16;
     }
 
-    HRESULT SetDebugObjectName(ID3D12Object* object, const std::string& name) {
+    HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name) {
         if (object == nullptr) {
             return E_POINTER;
         }
-        if (name.empty()) {
+        if (name == nullptr) {
             return S_FALSE;
         }
-        return object->SetName(TCharToWString(name.c_str()).c_str());
+        return object->SetName(name);
     }
 
     DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool, bool isUMA) {

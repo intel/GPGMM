@@ -98,7 +98,7 @@ namespace gpgmm::d3d12 {
         uint64_t Alignment;
         HEAPS_FLAGS Flags;
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     using CreateHeapFn = std::function<HRESULT(ID3D12Pageable** ppPageableOut)>;
@@ -215,7 +215,7 @@ namespace gpgmm::d3d12 {
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
         AllocationMethod Method;
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     struct RESOURCE_ALLOCATION_INFO {
@@ -304,7 +304,7 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_TYPE HeapType;
         D3D12_HEAP_FLAGS ExtraRequiredHeapFlags;
         uint64_t RequireResourceHeapPadding;
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     enum ALLOCATOR_FEATURE {

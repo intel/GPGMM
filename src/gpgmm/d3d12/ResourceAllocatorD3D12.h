@@ -430,7 +430,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, no name is associated.
         */
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     /** \struct FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT

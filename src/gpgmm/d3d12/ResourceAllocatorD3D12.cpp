@@ -854,14 +854,11 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, pClearValue, &allocation));
 
-        if (!allocationDescriptor.DebugName.empty()) {
-            ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
-        }
-
         // Insert a new (debug) allocator layer into the allocation so it can report details used
         // during leak checks. Since we don't want to use it unless we are debugging, we hide it
         // behind a macro.
         if (mDebugAllocator) {
+            ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
             mDebugAllocator->AddLiveAllocation(allocation.Get());
         }
 
@@ -1299,7 +1296,7 @@ namespace gpgmm::d3d12 {
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
-        resourceHeapDesc.DebugName = "Resource heap (committed)";
+        resourceHeapDesc.DebugName = L"Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.Flags |=
             (mIsHeapAlwaysCreatedInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;

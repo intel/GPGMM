@@ -173,7 +173,7 @@ namespace gpgmm::d3d12 {
         return {IsResidencyLocked(), mState};
     }
 
-    HRESULT Heap::SetDebugNameImpl(const std::string& name) {
+    HRESULT Heap::SetDebugNameImpl(LPCWSTR name) {
         return SetDebugObjectName(mPageable.Get(), name);
     }
 

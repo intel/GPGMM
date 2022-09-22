@@ -60,7 +60,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Debug name associated with the resource allocation.
          */
-        std::string DebugName;
+        LPCWSTR DebugName;
     };
 
     /** \struct RESOURCE_ALLOCATION_INFO
@@ -177,7 +177,7 @@ namespace gpgmm::d3d12 {
         friend DebugResourceAllocator;
         void SetDebugAllocator(MemoryAllocator* allocator);
 
-        HRESULT SetDebugNameImpl(const std::string& name) override;
+        HRESULT SetDebugNameImpl(LPCWSTR name) override;
 
         void DeleteThis() override;
 
