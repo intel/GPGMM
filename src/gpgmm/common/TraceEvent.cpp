@@ -33,7 +33,7 @@ namespace gpgmm {
         return gEventTrace.get();
     }
 
-    void StartupEventTrace(const std::string& traceFile, const TraceEventPhase& ignoreMask) {
+    void StartupEventTrace(const char* traceFile, const TraceEventPhase& ignoreMask) {
 #if defined(GPGMM_DISABLE_TRACING)
         gpgmm::WarningLog()
             << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";

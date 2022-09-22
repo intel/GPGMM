@@ -18,8 +18,6 @@
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/EnumFlags.h"
 
-#include <string>
-
 namespace gpgmm::d3d12 {
 
     /** \enum EVENT_RECORD_FLAGS
@@ -109,7 +107,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, a trace file is created for you.
         */
-        std::string TraceFile;
+        const char* TraceFile;
     };
 
 }  // namespace gpgmm::d3d12

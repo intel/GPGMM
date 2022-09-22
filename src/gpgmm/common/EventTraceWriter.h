@@ -32,7 +32,7 @@ namespace gpgmm {
         EventTraceWriter();
         ~EventTraceWriter();
 
-        void SetConfiguration(const std::string& traceFile, const TraceEventPhase& ignoreMask);
+        void SetConfiguration(const char* traceFile, const TraceEventPhase& ignoreMask);
 
         void EnqueueTraceEvent(std::shared_ptr<EventTraceWriter> writer,
                                char phase,
