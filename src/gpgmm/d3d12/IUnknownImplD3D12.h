@@ -22,8 +22,8 @@
 #ifndef GPGMM_REFCOUNT_TYPE
 #    include "gpgmm/utils/RefCount.h"
 /** \brief Defines the atomic-type to use for ref-counting the COM object.
-    \param type
-*/ 
+     @param type Integral type to use for ref-count.
+*/
 #    define GPGMM_REFCOUNT_TYPE RefCounted
 #endif
 
