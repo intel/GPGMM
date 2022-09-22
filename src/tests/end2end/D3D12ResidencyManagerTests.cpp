@@ -72,7 +72,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
         residencyDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
-        if (IsDumpAllEventsEnabled()) {
+        if (IsDumpEventsEnabled()) {
             residencyDesc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
             residencyDesc.RecordOptions.MinMessageLevel = residencyDesc.MinLogLevel;
             residencyDesc.RecordOptions.UseDetailedTimingEvents = true;

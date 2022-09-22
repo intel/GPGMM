@@ -61,7 +61,7 @@ class GPGMMTestBase {
 
     gpgmm::DebugPlatform* GetDebugPlatform();
 
-    bool IsDumpAllEventsEnabled() const;
+    bool IsDumpEventsEnabled() const;
     gpgmm::LogSeverity GetLogLevel() const;
 
     static std::vector<MEMORY_ALLOCATION_EXPECT> GenerateTestAllocations(uint64_t alignment);
@@ -77,11 +77,11 @@ class GPGMMTestEnvironment : public testing::Environment {
 
     void SetUp() override;
 
-    bool IsDumpAllEventsEnabled() const;
+    bool IsDumpEventsEnabled() const;
     gpgmm::LogSeverity GetLogLevel() const;
 
   private:
-    bool mIsDumpAllEventsEnabled = false;
+    bool mIsDumpEventsEnabled = false;
 
 #if defined(NDEBUG)
     gpgmm::LogSeverity mLogLevel = gpgmm::LogSeverity::Warning;
