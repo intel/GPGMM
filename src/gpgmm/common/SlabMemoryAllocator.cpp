@@ -203,7 +203,11 @@ namespace gpgmm {
                             request.AvailableForAllocation);
 
         // Slab cannot exceed memory size.
-        GPGMM_INVALID_IF(slabSize > mMaxSlabSize);
+        if (slabSize > mMaxSlabSize) {
+            gpgmm::DebugEvent(GetTypename())
+                << "Slab allocation was disabled because the size was invalid.";
+            return {};
+        }
 
         // Get or create the cache containing slabs of the slab size.
         SlabCache* pCache = GetOrCreateCache(slabSize);
