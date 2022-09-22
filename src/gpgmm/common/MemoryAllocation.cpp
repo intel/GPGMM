@@ -42,7 +42,9 @@ namespace gpgmm {
           mOffset(offset),
           mMethod(method),
           mBlock(block),
+#ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
           mRequestSize(requestSize),
+#endif
           mMappedPointer(mappedPointer) {
     }
 
@@ -55,7 +57,9 @@ namespace gpgmm {
           mOffset(0),
           mMethod(AllocationMethod::kStandalone),
           mBlock(nullptr),
+#ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
           mRequestSize(requestSize),
+#endif
           mMappedPointer(mappedPointer) {
     }
 
@@ -102,7 +106,11 @@ namespace gpgmm {
     }
 
     uint64_t MemoryAllocation::GetRequestSize() const {
+#ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
         return mRequestSize;
+#else
+        return kInvalidSize;
+#endif
     }
 
     uint64_t MemoryAllocation::GetAlignment() const {

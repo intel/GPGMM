@@ -69,8 +69,8 @@ declare_args() {
   gpgmm_enable_memory_leak_checks = is_debug
 
   # Enables checking of resource alignment.
-  # Sets -dGPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS
-  gpgmm_enable_resource_memory_align_checks = is_debug
+  # Sets -dGPGMM_ENABLE_MEMORY_ALIGN_CHECKS
+  gpgmm_enable_memory_align_checks = is_debug
 
   # Configures Vulkan functions by statically importing them (ie. importing the Vulkan loader symbols).
   gpgmm_vk_static_functions = true

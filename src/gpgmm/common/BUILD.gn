@@ -81,8 +81,8 @@ config("gpgmm_common_config") {
     defines += [ "GPGMM_ENABLE_MEMORY_LEAK_CHECKS" ]
   }
 
-  if (gpgmm_enable_resource_memory_align_checks) {
-    defines += [ "GPGMM_ENABLE_RESOURCE_MEMORY_ALIGN_CHECKS" ]
+  if (gpgmm_enable_memory_align_checks) {
+    defines += [ "GPGMM_ENABLE_MEMORY_ALIGN_CHECKS" ]
   }
 
   # Only internal build targets can use this config, this means only targets in

@@ -318,6 +318,8 @@ namespace gpgmm {
 
         void InsertIntoChain(std::unique_ptr<MemoryAllocator> next);
 
+        void CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation);
+
         MemoryAllocatorInfo mInfo = {};
 
         mutable std::mutex mMutex;
