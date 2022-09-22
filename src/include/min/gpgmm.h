@@ -101,7 +101,6 @@ namespace gpgmm {
 
       private:
         MemoryBase* mMemory;
-        uint64_t mRequestSize;
     };
 
 }  // namespace gpgmm

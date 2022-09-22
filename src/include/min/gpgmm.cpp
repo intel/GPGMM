@@ -16,6 +16,8 @@
 
 namespace gpgmm {
 
+    static constexpr uint64_t kInvalidSize = std::numeric_limits<uint64_t>::max();
+
     // MemoryBase
 
     MemoryBase::MemoryBase(uint64_t size, uint64_t alignment) : mSize(size), mAlignment(alignment) {
@@ -46,7 +48,7 @@ namespace gpgmm {
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
                                        MemoryBase* memory,
                                        uint64_t requestSize)
-        : mAllocator(allocator), mMemory(memory), mRequestSize(requestSize) {
+        : mAllocator(allocator), mMemory(memory) {
     }
 
     MemoryAllocation::~MemoryAllocation() = default;
@@ -77,12 +79,13 @@ namespace gpgmm {
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
         return mAllocator;
     }
+
     uint64_t MemoryAllocation::GetSize() const {
         return mMemory->GetSize();
     }
 
     uint64_t MemoryAllocation::GetRequestSize() const {
-        return mRequestSize;
+        return kInvalidSize;
     }
 
     uint64_t MemoryAllocation::GetAlignment() const {
