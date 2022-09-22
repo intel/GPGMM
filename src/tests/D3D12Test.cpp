@@ -106,10 +106,19 @@ namespace gpgmm::d3d12 {
 
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
-        if (IsDumpAllEventsEnabled()) {
+        if (IsDumpEventsEnabled()) {
             desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
             desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
+
+            // Format the output trace file as <test suite>.<test>.
+            const testing::TestInfo* const testInfoPtr =
+                ::testing::UnitTest::GetInstance()->current_test_info();
+            ASSERT(testInfoPtr != nullptr);
+            desc.RecordOptions.TraceFile =
+                std::string(std::string(testInfoPtr->test_suite_name()) + "_" +
+                            std::string(testInfoPtr->name()) + ".json")
+                    .c_str();
         }
 
         return desc;

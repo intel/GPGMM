@@ -38,8 +38,8 @@ gpgmm::DebugPlatform* GPGMMTestBase::GetDebugPlatform() {
     return mDebugPlatform.get();
 }
 
-bool GPGMMTestBase::IsDumpAllEventsEnabled() const {
-    return gTestEnv->IsDumpAllEventsEnabled();
+bool GPGMMTestBase::IsDumpEventsEnabled() const {
+    return gTestEnv->IsDumpEventsEnabled();
 }
 
 gpgmm::LogSeverity GPGMMTestBase::GetLogLevel() const {
@@ -103,7 +103,7 @@ void InitGPGMMEnd2EndTestEnvironment(int argc, char** argv) {
 GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         if (strcmp("--dump", argv[i]) == 0) {
-            mIsDumpAllEventsEnabled = true;
+            mIsDumpEventsEnabled = true;
             continue;
         }
 
@@ -156,8 +156,8 @@ void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
 void GPGMMTestEnvironment::SetUp() {
 }
 
-bool GPGMMTestEnvironment::IsDumpAllEventsEnabled() const {
-    return mIsDumpAllEventsEnabled;
+bool GPGMMTestEnvironment::IsDumpEventsEnabled() const {
+    return mIsDumpEventsEnabled;
 }
 
 gpgmm::LogSeverity GPGMMTestEnvironment::GetLogLevel() const {
