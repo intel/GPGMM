@@ -1,4 +1,4 @@
-From 268687007244e4659e56bd24c48dbf98382b1893 Mon Sep 17 00:00:00 2001
+From 7200d2a10c32a8027b90919ed0f35e90b7eebc18 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -23,7 +23,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/D3D12Backend.cpp        |  10 +-
  src/dawn/native/d3d12/DeviceD3D12.cpp         | 115 +++++++++++++++---
  src/dawn/native/d3d12/DeviceD3D12.h           |  20 +--
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  80 +++++++-----
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  78 +++++++-----
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  11 +-
  src/dawn/native/d3d12/StagingBufferD3D12.cpp  |  22 +---
  src/dawn/native/d3d12/StagingBufferD3D12.h    |   4 +-
@@ -32,7 +32,7 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 27 files changed, 322 insertions(+), 166 deletions(-)
+ 27 files changed, 320 insertions(+), 166 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -743,7 +743,7 @@ index 0373cf9d8..8b0bffdff 100644
      static constexpr uint32_t kMaxSamplerDescriptorsPerBindGroup = 3 * kMaxSamplersPerShaderStage;
      static constexpr uint32_t kMaxViewDescriptorsPerBindGroup =
 diff --git a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
-index fe99a63ac..e2b5bd76f 100644
+index fe99a63ac..033620b99 100644
 --- a/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 +++ b/src/dawn/native/d3d12/ShaderVisibleDescriptorAllocatorD3D12.cpp
 @@ -93,7 +93,8 @@ ShaderVisibleDescriptorAllocator::ShaderVisibleDescriptorAllocator(
@@ -756,7 +756,7 @@ index fe99a63ac..e2b5bd76f 100644
      ASSERT(heapType == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV ||
             heapType == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
  }
-@@ -140,31 +141,40 @@ void ShaderVisibleDescriptorAllocator::Tick(ExecutionSerial completedSerial) {
+@@ -140,31 +141,38 @@ void ShaderVisibleDescriptorAllocator::Tick(ExecutionSerial completedSerial) {
  
  ResultOrError<std::unique_ptr<ShaderVisibleDescriptorHeap>>
  ShaderVisibleDescriptorAllocator::AllocateHeap(uint32_t descriptorCount) const {
@@ -779,8 +779,6 @@ index fe99a63ac..e2b5bd76f 100644
 -                                         &heapDescriptor, IID_PPV_ARGS(&d3d12DescriptorHeap)),
 -                                     "ID3D12Device::CreateDescriptorHeap"));
 +    heapDesc.SizeInBytes = mSizeIncrement * descriptorCount;
-+
-+    heapDesc.DebugName = "Shader visible heap";
 +    heapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 +
 +    auto createHeapFn = [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
@@ -816,7 +814,7 @@ index fe99a63ac..e2b5bd76f 100644
  }
  
  // Creates a GPU descriptor heap that manages descriptors in a FIFO queue.
-@@ -174,7 +184,9 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
+@@ -174,7 +182,9 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
      // The first phase increasingly grows a small heap in binary sizes for light users while the
      // second phase pool-allocates largest sized heaps for heavy users.
      if (mHeap != nullptr) {
@@ -827,7 +825,7 @@ index fe99a63ac..e2b5bd76f 100644
  
          const uint32_t maxDescriptorCount = GetD3D12ShaderVisibleHeapMaxSize(
              mHeapType, mDevice->IsToggleEnabled(Toggle::UseD3D12SmallShaderVisibleHeapForTesting));
-@@ -200,7 +212,10 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
+@@ -200,7 +210,10 @@ MaybeError ShaderVisibleDescriptorAllocator::AllocateAndSwitchShaderVisibleHeap(
          DAWN_TRY_ASSIGN(descriptorHeap, AllocateHeap(mDescriptorCount));
      }
  
@@ -839,7 +837,7 @@ index fe99a63ac..e2b5bd76f 100644
  
      // Create a FIFO buffer from the recently created heap.
      mHeap = std::move(descriptorHeap);
-@@ -227,12 +242,12 @@ uint64_t ShaderVisibleDescriptorAllocator::GetShaderVisiblePoolSizeForTesting()
+@@ -227,12 +240,12 @@ uint64_t ShaderVisibleDescriptorAllocator::GetShaderVisiblePoolSizeForTesting()
  }
  
  bool ShaderVisibleDescriptorAllocator::IsShaderVisibleHeapLockedResidentForTesting() const {
@@ -854,7 +852,7 @@ index fe99a63ac..e2b5bd76f 100644
  }
  
  bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
-@@ -243,13 +258,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
+@@ -243,13 +256,18 @@ bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(
              allocation.GetHeapSerial() == mHeapSerial);
  }
  
