@@ -53,7 +53,6 @@
 #endif
 
 #include <functional>
-#include <string>
 
 #include "gpgmm.h"
 
@@ -154,7 +153,7 @@ namespace gpgmm::d3d12 {
         D3D12_MESSAGE_SEVERITY MinMessageLevel;
         EVENT_RECORD_SCOPE EventScope;
         bool UseDetailedTimingEvents;
-        std::string TraceFile;
+        const char* TraceFile;
     };
 
     enum RESIDENCY_FLAGS {

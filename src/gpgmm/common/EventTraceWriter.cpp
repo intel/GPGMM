@@ -68,9 +68,9 @@ namespace gpgmm {
         : mTraceFile(kDefaultTraceFile), mPlatformTime(CreatePlatformTime()) {
     }
 
-    void EventTraceWriter::SetConfiguration(const std::string& traceFile,
+    void EventTraceWriter::SetConfiguration(const char* traceFile,
                                             const TraceEventPhase& ignoreMask) {
-        mTraceFile = (traceFile.empty()) ? mTraceFile : traceFile;
+        mTraceFile = (traceFile == nullptr) ? mTraceFile : std::string(traceFile);
         mIgnoreMask = ignoreMask;
     }
 

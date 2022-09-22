@@ -323,7 +323,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         if (envParams.CaptureEventMask != 0) {
                             residencyDesc.RecordOptions.Flags |=
                                 static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
-                            residencyDesc.RecordOptions.TraceFile = traceFile.path;
+                            residencyDesc.RecordOptions.TraceFile = traceFile.path.c_str();
                             residencyDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(GetLogLevel());
 
@@ -408,7 +408,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         if (envParams.CaptureEventMask != 0) {
                             allocatorDesc.RecordOptions.Flags |=
                                 static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
-                            allocatorDesc.RecordOptions.TraceFile = traceFile.path;
+                            allocatorDesc.RecordOptions.TraceFile = traceFile.path.c_str();
                             allocatorDesc.RecordOptions.MinMessageLevel =
                                 GetMessageSeverity(GetLogLevel());
 
