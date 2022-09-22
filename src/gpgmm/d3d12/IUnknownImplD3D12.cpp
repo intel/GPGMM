@@ -15,7 +15,7 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 
 namespace gpgmm::d3d12 {
-    IUnknownImpl::IUnknownImpl() : mRefs(1) {
+    IUnknownImpl::IUnknownImpl() : mRefCount(1) {
     }
 
     HRESULT IUnknownImpl::QueryInterface(REFIID riid, void** ppvObject) {
@@ -29,7 +29,7 @@ namespace gpgmm::d3d12 {
         if (riid == IID_IUnknown) {
             // Increment reference and return pointer.
             *ppvObject = this;
-            mRefs.Ref();
+            mRefCount.Ref();
             return S_OK;
         }
 
@@ -37,12 +37,12 @@ namespace gpgmm::d3d12 {
     }
 
     ULONG IUnknownImpl::AddRef() {
-        mRefs.Ref();
-        return mRefs.GetRefCount();
+        mRefCount.Ref();
+        return mRefCount.GetRefCount();
     }
 
     ULONG IUnknownImpl::Release() {
-        const ULONG refCount = mRefs.Unref() ? 0 : mRefs.GetRefCount();
+        const ULONG refCount = mRefCount.Unref() ? 0 : mRefCount.GetRefCount();
         if (refCount == 0) {
             DeleteThis();
         }

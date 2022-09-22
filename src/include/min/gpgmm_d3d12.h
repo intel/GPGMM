@@ -18,20 +18,22 @@
 // GPGMM minimum viable implementation (MVI).
 //
 // GPGMM MVI allows users to leverage GPGMM's portable GMM interface without
-// requiring to build the full GPGMM implementation, allowing for incremental enabling during
+// requiring to build the full GPGMM implementation for incremental enabling during
 // development.
 //
 // GPGMM MVI specifically,
 // * Is not thread-safe.
 // * Is functionally-equivelent to calling ID3D12Device::CreateCommittedResource.
-// * Does not perform residency management.
+// * Does not perform residency management or call ID3D12Device::MakeResident.
+// * GMM functionality will otherwise "no-op" or pass-through.
 //
 // User should decide to define the following macros:
 // - GPGMM_D3D12_HEADERS_ALREADY_INCLUDED: D3D12 platform headers will be already included before
 // this header and does not need to be re-included.
 // - GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED: Windows.h will be already included before this header
 // and does not need to be re-included.
-//
+// - GPGMM_REFCOUNT_TYPE <type>: Allows a user-defined ref-count type to be used instead of
+// the STL-provided one. The increment, decrement, and equals operator must be defined.
 #ifndef GPGMM_D3D12_HEADERS_ALREADY_INCLUDED
 #    include <d3d12.h>
 #    include <dxgi1_4.h>
@@ -40,6 +42,14 @@
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
 #    include <windows.h>  // for DEFINE_ENUM_FLAG_OPERATORS
+#endif
+
+#if !defined(GPGMM_REFCOUNT_TYPE)
+#    include <atomic>
+#endif
+
+#ifndef GPGMM_REFCOUNT_TYPE
+#    define GPGMM_REFCOUNT_TYPE std::atomic<uint64_t>
 #endif
 
 #include <functional>
@@ -62,7 +72,7 @@ namespace gpgmm::d3d12 {
         virtual void DeleteThis();
 
       private:
-        uint64_t mRefCount;
+        GPGMM_REFCOUNT_TYPE mRefCount;
     };
 
     enum RESIDENCY_STATUS {

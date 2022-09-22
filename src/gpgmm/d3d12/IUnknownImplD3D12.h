@@ -17,8 +17,15 @@
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/NonCopyable.h"
-#include "gpgmm/utils/RefCount.h"
 #include "include/gpgmm_export.h"
+
+#ifndef GPGMM_REFCOUNT_TYPE
+#    include "gpgmm/utils/RefCount.h"
+/** \brief Defines the atomic-type to use for ref-counting the COM object.
+    \param type
+*/ 
+#    define GPGMM_REFCOUNT_TYPE RefCounted
+#endif
 
 namespace gpgmm::d3d12 {
 
@@ -41,7 +48,7 @@ namespace gpgmm::d3d12 {
         virtual void DeleteThis();
 
       private:
-        RefCounted mRefs;  // Maintains the COM ref-count of this object.
+        GPGMM_REFCOUNT_TYPE mRefCount;  // Maintains the COM ref-count of this object.
     };
 
 }  // namespace gpgmm::d3d12
