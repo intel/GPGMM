@@ -580,3 +580,98 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 }
+
+// Creates two sets of heaps, first set is below the budget, second set is above the budget, then
+// swaps the residency status using ExecuteCommandList: first set gets paged-in again, second set
+// gets paged-out.
+TEST_F(D3D12ResidencyManagerTests, ExecuteCommandListOverBudget) {
+    ComPtr<ResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
+        CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+
+    ComPtr<ResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+        CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
+
+    constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
+
+    // Create the first set of heaps below the budget.
+    std::vector<ComPtr<ResourceAllocation>> firstSetOfHeaps = {};
+    while (resourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize <= kDefaultBudget) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, CURRENT_RESIDENT);
+        firstSetOfHeaps.push_back(std::move(allocation));
+    }
+
+    // Create the second set of heaps above the budget, the first set will be evicted.
+    std::vector<ComPtr<ResourceAllocation>> secondSetOfHeaps = {};
+    for (uint64_t i = 0; i < kDefaultBudget / kBufferMemorySize; i++) {
+        ComPtr<ResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, CURRENT_RESIDENT);
+        secondSetOfHeaps.push_back(std::move(allocation));
+    }
+
+    // Page-in the first set of heaps using ExecuteCommandLists (and page-out the second set).
+    ResidencyList firstSetOfHeapsWorkingSet;
+    for (auto& allocation : firstSetOfHeaps) {
+        firstSetOfHeapsWorkingSet.Add(allocation->GetMemory());
+    }
+
+    ComPtr<ID3D12CommandAllocator> commandAllocator;
+    ASSERT_SUCCEEDED(mDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                                     IID_PPV_ARGS(&commandAllocator)));
+
+    ComPtr<ID3D12CommandList> commandList;
+    ASSERT_SUCCEEDED(mDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                                commandAllocator.Get(), nullptr,
+                                                IID_PPV_ARGS(&commandList)));
+
+    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+    ComPtr<ID3D12CommandQueue> queue;
+    ASSERT_SUCCEEDED(mDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&queue)));
+
+    {
+        ResidencyList* residencyLists[] = {&firstSetOfHeapsWorkingSet};
+        ID3D12CommandList* commandLists[] = {commandList.Get()};
+        ASSERT_SUCCEEDED(
+            residencyManager->ExecuteCommandLists(queue.Get(), commandLists, residencyLists, 1));
+    }
+
+    // Everything below the budget should now be resident.
+    for (auto& allocation : firstSetOfHeaps) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, CURRENT_RESIDENT);
+    }
+
+    // Everything above the budget should now be evicted.
+    for (auto& allocation : secondSetOfHeaps) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, PENDING_RESIDENCY);
+    }
+
+    // Page-in the second set of heaps using ExecuteCommandLists (and page-out the first set).
+    ResidencyList secondSetOfHeapsWorkingSet;
+    for (auto& allocation : secondSetOfHeaps) {
+        secondSetOfHeapsWorkingSet.Add(allocation->GetMemory());
+    }
+
+    {
+        ResidencyList* residencyLists[] = {&secondSetOfHeapsWorkingSet};
+        ID3D12CommandList* commandLists[] = {commandList.Get()};
+        ASSERT_SUCCEEDED(
+            residencyManager->ExecuteCommandLists(queue.Get(), commandLists, residencyLists, 1));
+    }
+
+    // Everything below the budget should now be evicted.
+    for (auto& allocation : firstSetOfHeaps) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, PENDING_RESIDENCY);
+    }
+
+    // Everything above the budget should now be resident.
+    for (auto& allocation : secondSetOfHeaps) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, CURRENT_RESIDENT);
+    }
+}
