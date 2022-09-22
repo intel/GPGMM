@@ -29,8 +29,7 @@ namespace gpgmm::d3d12 {
         ResourceHeapAllocator(ResidencyManager* residencyManager,
                               ID3D12Device* device,
                               D3D12_HEAP_PROPERTIES heapProperties,
-                              D3D12_HEAP_FLAGS heapFlags,
-                              bool alwaysInBudget);
+                              D3D12_HEAP_FLAGS heapFlags);
         ~ResourceHeapAllocator() override = default;
 
         // MemoryAllocator interface
@@ -45,7 +44,6 @@ namespace gpgmm::d3d12 {
         ID3D12Device* const mDevice;
         const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;
-        const bool mAlwaysInBudget;
     };
 
 }  // namespace gpgmm::d3d12

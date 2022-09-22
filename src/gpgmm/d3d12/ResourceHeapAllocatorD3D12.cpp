@@ -29,13 +29,11 @@ namespace gpgmm::d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_PROPERTIES heapProperties,
-                                                 D3D12_HEAP_FLAGS heapFlags,
-                                                 bool alwaysInBudget)
+                                                 D3D12_HEAP_FLAGS heapFlags)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapProperties(heapProperties),
-          mHeapFlags(heapFlags),
-          mAlwaysInBudget(alwaysInBudget){
+          mHeapFlags(heapFlags){
     }
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
@@ -48,22 +46,14 @@ namespace gpgmm::d3d12 {
             return {};
         }
 
+        HEAP_DESC resourceHeapDesc = {};
         // D3D12 requests (but not requires) the heap size be always a multiple of
         // alignment to avoid wasting bytes.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
-        const uint64_t heapSize = AlignTo(request.SizeInBytes, request.Alignment);
-        if (heapSize > request.SizeInBytes) {
-            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
-                << "Resource heap size is larger then the requested size (" +
-                       std::to_string(heapSize) + " vs " + std::to_string(request.SizeInBytes) +
-                       " bytes).";
-        }
-
-        HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.SizeInBytes = heapSize;
+        resourceHeapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
+        resourceHeapDesc.Alignment = request.Alignment;        
         resourceHeapDesc.DebugName = L"Resource heap";
-        resourceHeapDesc.Alignment = request.Alignment;
-        resourceHeapDesc.Flags |= (mAlwaysInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
+        resourceHeapDesc.Flags |= (mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
         if (mResidencyManager != nullptr) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
@@ -96,7 +86,14 @@ namespace gpgmm::d3d12 {
             return {};
         }
 
-        mInfo.UsedMemoryUsage += heapSize;
+        if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
+            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+                << "Resource heap was larger then the requested size (" +
+                       std::to_string(resourceHeapDesc.SizeInBytes) + " vs " + std::to_string(request.SizeInBytes) +
+                       " bytes).";
+        }
+
+        mInfo.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mInfo.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(this, resourceHeap, request.SizeInBytes);

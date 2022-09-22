@@ -714,8 +714,7 @@ namespace gpgmm::d3d12 {
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
-                                                    heapProperties, heapFlags,
-                                                    mIsHeapAlwaysCreatedInBudget);
+                                                    heapProperties, heapFlags);
 
         const uint64_t heapSize =
             std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
@@ -1296,10 +1295,10 @@ namespace gpgmm::d3d12 {
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
-        resourceHeapDesc.DebugName = L"Resource heap (committed)";
         resourceHeapDesc.Alignment = info.Alignment;
+        resourceHeapDesc.DebugName = L"Resource heap (committed)";
         resourceHeapDesc.Flags |=
-            (mIsHeapAlwaysCreatedInBudget) ? HEAP_FLAG_ALWAYS_IN_BUDGET : HEAPS_FLAG_NONE;
+            (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
