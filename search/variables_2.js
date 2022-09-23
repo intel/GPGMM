@@ -4,8 +4,17 @@ var searchData=
   ['clearvalue_1',['clearValue',['../structgpgmm_1_1d3d12_1_1_c_r_e_a_t_e___r_e_s_o_u_r_c_e___d_e_s_c.html#ac7152d41c2fd3eecb9af66ae034b1d47',1,'gpgmm::d3d12::CREATE_RESOURCE_DESC']]],
   ['count_2',['Count',['../structgpgmm_1_1d3d12_1_1_e_x_e_c_u_t_e___c_o_m_m_a_n_d___l_i_s_t_s___d_e_s_c.html#a067e2fdd6a85a0097d4590f50a9f19fc',1,'gpgmm::d3d12::EXECUTE_COMMAND_LISTS_DESC']]],
   ['createbuffer_3',['CreateBuffer',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#a2d447560b50885fa0c6f1e62ec9d920d',1,'gpgmm::vk::VulkanFunctions']]],
-  ['createimage_4',['CreateImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#accd6e6be635aa1a7b447a4316bd046bd',1,'gpgmm::vk::VulkanFunctions']]],
-  ['currentmemorycount_5',['CurrentMemoryCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html#a76b812ca1d1b35e1c51a62747698d981',1,'gpgmm::d3d12::RESIDENCY_INFO']]],
-  ['currentmemoryusage_6',['CurrentMemoryUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html#a985c7f0793c550cff6ee22800b258661',1,'gpgmm::d3d12::RESIDENCY_INFO']]],
-  ['currentusage_7',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]]
+  ['createdallocationstoid_4',['CreatedAllocationsToID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#a35bbb3fee89e5f1a233947744ca21f78',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['createdallocatorstoid_5',['CreatedAllocatorsToID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#aea54a3c8dd22335adbe764f5b43bcb8b',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['createdheapstoid_6',['CreatedHeapsToID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#afd18bad7edcca8d787267bc19adb93a5',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['createdresidencymanagerstoid_7',['CreatedResidencyManagersToID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#a3a5d9300094c4418d9e360ada8ac6145',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['createimage_8',['CreateImage',['../structgpgmm_1_1vk_1_1_vulkan_functions.html#accd6e6be635aa1a7b447a4316bd046bd',1,'gpgmm::vk::VulkanFunctions']]],
+  ['currentallocationwithoutid_9',['CurrentAllocationWithoutID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#adfc62513af62e63b4cad953b56b49985',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['currentallocatorid_10',['currentAllocatorID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#a7eb9c13f3a6504921339433317cbf1e4',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['currentheapwithoutid_11',['CurrentHeapWithoutID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#af0a7d69d8705db5af724e86604c506c6',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['currentmemorycount_12',['CurrentMemoryCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html#a76b812ca1d1b35e1c51a62747698d981',1,'gpgmm::d3d12::RESIDENCY_INFO']]],
+  ['currentmemoryusage_13',['CurrentMemoryUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html#a985c7f0793c550cff6ee22800b258661',1,'gpgmm::d3d12::RESIDENCY_INFO']]],
+  ['currentresidencyid_14',['currentResidencyID',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#a1cb57666b2b0afdbce1cd6b4e291be3c',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['currentresidencylists_15',['currentResidencyLists',['../struct_d3_d12_event_trace_replay_1_1_playback_execution_context.html#a1b05763f6cf5561464ff6ef5fb538c52',1,'D3D12EventTraceReplay::PlaybackExecutionContext']]],
+  ['currentusage_16',['CurrentUsage',['../struct_capture_replay_memory_stats.html#a667a9d17b86cccf51b5df9bba2f8e682',1,'CaptureReplayMemoryStats']]]
 ];
