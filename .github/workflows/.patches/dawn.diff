@@ -1,4 +1,4 @@
-From 7200d2a10c32a8027b90919ed0f35e90b7eebc18 Mon Sep 17 00:00:00 2001
+From f453c4cb653c4296501ac3aa41779fca2f0947e8 Mon Sep 17 00:00:00 2001
 From: Bryan Bernhart <bryan.bernhart@intel.com>
 Date: Tue, 15 Feb 2022 17:25:29 -0800
 Subject: [PATCH] Use GPGMM for D3D12 backend.
@@ -21,18 +21,18 @@ Change-Id: I47708462a1d9dd0166120c3a6af93451aae54a07
  .../native/d3d12/CommandRecordingContext.cpp  |  19 ++-
  .../native/d3d12/CommandRecordingContext.h    |   5 +-
  src/dawn/native/d3d12/D3D12Backend.cpp        |  10 +-
- src/dawn/native/d3d12/DeviceD3D12.cpp         | 115 +++++++++++++++---
+ src/dawn/native/d3d12/DeviceD3D12.cpp         | 124 +++++++++++++++---
  src/dawn/native/d3d12/DeviceD3D12.h           |  20 +--
- .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  78 +++++++-----
+ .../ShaderVisibleDescriptorAllocatorD3D12.cpp |  78 ++++++-----
  .../ShaderVisibleDescriptorAllocatorD3D12.h   |  11 +-
  src/dawn/native/d3d12/StagingBufferD3D12.cpp  |  22 +---
  src/dawn/native/d3d12/StagingBufferD3D12.h    |   4 +-
- src/dawn/native/d3d12/TextureD3D12.cpp        |  43 +++----
+ src/dawn/native/d3d12/TextureD3D12.cpp        |  43 +++---
  src/dawn/native/d3d12/TextureD3D12.h          |   4 +-
  src/dawn/native/d3d12/UtilsD3D12.cpp          |  11 ++
  src/dawn/native/d3d12/UtilsD3D12.h            |   2 +
  .../tests/white_box/D3D12ResidencyTests.cpp   |  17 +--
- 27 files changed, 320 insertions(+), 166 deletions(-)
+ 27 files changed, 329 insertions(+), 166 deletions(-)
  create mode 100644 build_overrides/gpgmm.gni
 
 diff --git a/.gitignore b/.gitignore
@@ -48,7 +48,7 @@ index a66733d04..9e2f720a6 100644
  /third_party/jinja2
  /third_party/jsoncpp
 diff --git a/DEPS b/DEPS
-index 44c173ca5..3bc042fcb 100644
+index 44c173ca5..75b81684c 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -148,6 +148,10 @@ deps = {
@@ -56,7 +56,7 @@ index 44c173ca5..3bc042fcb 100644
    },
  
 +  'third_party/gpgmm': {
-+    'url': '{github_git}/intel/gpgmm.git@02172efdafe5b74d164359452086efbd84631605',
++    'url': '{github_git}/intel/gpgmm.git@1bef1757e937d6ae407e6c7283a4d718c1922991',
 +  },
 +
    'third_party/abseil-cpp': {
@@ -510,7 +510,7 @@ index 05ddd6b4c..acf1b659d 100644
  
  AdapterDiscoveryOptions::AdapterDiscoveryOptions()
 diff --git a/src/dawn/native/d3d12/DeviceD3D12.cpp b/src/dawn/native/d3d12/DeviceD3D12.cpp
-index 214fa67f8..7747467d9 100644
+index 214fa67f8..909e7d810 100644
 --- a/src/dawn/native/d3d12/DeviceD3D12.cpp
 +++ b/src/dawn/native/d3d12/DeviceD3D12.cpp
 @@ -132,8 +132,43 @@ MaybeError Device::Initialize(const DeviceDescriptor* descriptor) {
@@ -591,7 +591,7 @@ index 214fa67f8..7747467d9 100644
  }
  
  MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
-@@ -523,15 +557,64 @@ MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
+@@ -523,15 +557,73 @@ MaybeError Device::CopyFromStagingToTexture(const StagingBufferBase* source,
      return {};
  }
  
@@ -636,24 +636,33 @@ index 214fa67f8..7747467d9 100644
 +        optimizedClearValue = &zero;
 +    }
 +
-+    gpgmm::d3d12::ALLOCATION_DESC desc = {};
-+    desc.HeapType = heapType;
-+    desc.Flags = allocationFlags;
++    gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
++    allocationDesc.HeapType = heapType;
++    allocationDesc.Flags = allocationFlags;
 +
 +    if (IsToggleEnabled(Toggle::DisableResourceSuballocation)) {
-+        desc.Flags |= gpgmm::d3d12::ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
++        allocationDesc.Flags |= gpgmm::d3d12::ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
 +    }
 +
 +    // Small residency relies on a specified budget being reached, which re-using memory
 +    // prevents and must be disabled for testing.
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
-+        desc.Flags &= ~gpgmm::d3d12::ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
-+        desc.Flags |= gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
++        allocationDesc.Flags &= ~gpgmm::d3d12::ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
++        allocationDesc.Flags |= gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
++    }
++
++    // If we are allocating memory for a 2D array texture on D3D12 backend, we need to allocate
++    // extra memory on some devices, see crbug.com/dawn/949 for details.
++    if (IsToggleEnabled(Toggle::D3D12AllocateExtraMemoryFor2DArrayTexture)) {
++        if (resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D &&
++            resourceDescriptor.DepthOrArraySize > 1) {
++            allocationDesc.RequireResourceHeapPadding = 24576u;
++        }
 +    }
 +
 +    ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
 +    DAWN_TRY(CheckOutOfMemoryHRESULT(
-+        mResourceAllocator->CreateResource(desc, resourceDescriptor, initialUsage,
++        mResourceAllocator->CreateResource(allocationDesc, resourceDescriptor, initialUsage,
 +                                           optimizedClearValue, &allocation),
 +        "CreateResource"));
 +
@@ -661,7 +670,7 @@ index 214fa67f8..7747467d9 100644
  }
  
  std::unique_ptr<ExternalImageDXGIImpl> Device::CreateExternalImageDXGIImpl(
-@@ -643,6 +726,7 @@ void Device::InitTogglesFromDriver() {
+@@ -643,6 +735,7 @@ void Device::InitTogglesFromDriver() {
      SetToggle(Toggle::UseD3D12ResourceHeapTier2, useResourceHeapTier2);
      SetToggle(Toggle::UseD3D12RenderPass, GetDeviceInfo().supportsRenderPass);
      SetToggle(Toggle::UseD3D12ResidencyManagement, true);
@@ -669,7 +678,7 @@ index 214fa67f8..7747467d9 100644
      SetToggle(Toggle::UseDXC, false);
      SetToggle(Toggle::D3D12AlwaysUseTypelessFormatsForCastableTexture,
                !GetDeviceInfo().supportsCastingFullyTypedFormat);
-@@ -813,11 +897,6 @@ void Device::DestroyImpl() {
+@@ -813,11 +906,6 @@ void Device::DestroyImpl() {
          ::CloseHandle(mFenceEvent);
      }
  
