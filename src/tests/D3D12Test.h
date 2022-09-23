@@ -32,6 +32,8 @@
 namespace gpgmm::d3d12 {
 
     struct ALLOCATOR_DESC;
+    struct RESIDENCY_DESC;
+
     class Caps;
     class ResourceAllocator;
     class ResourceAllocation;
@@ -43,6 +45,7 @@ namespace gpgmm::d3d12 {
         void SetUp();
         void TearDown();
 
+        RESIDENCY_DESC CreateBasicResidencyDesc() const;
         ALLOCATOR_DESC CreateBasicAllocatorDesc() const;
 
         static D3D12_RESOURCE_DESC CreateBasicBufferDesc(uint64_t width, uint64_t alignment = 0);
