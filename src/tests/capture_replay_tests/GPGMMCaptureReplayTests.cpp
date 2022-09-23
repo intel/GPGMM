@@ -77,9 +77,9 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        constexpr const char kCaptureMask[] = "--capture-mask=";
-        arglen = sizeof(kCaptureMask) - 1;
-        if (strncmp(argv[i], kCaptureMask, arglen) == 0) {
+        constexpr const char kCaptureEventMask[] = "--event-mask=";
+        arglen = sizeof(kCaptureEventMask) - 1;
+        if (strncmp(argv[i], kCaptureEventMask, arglen) == 0) {
             const char* mask = argv[i] + arglen;
             mParams.CaptureEventMask = strtoul(mask, nullptr, 0);
             continue;
@@ -95,13 +95,13 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
             continue;
         }
 
-        if (strcmp("--disable-allocation", argv[i]) == 0) {
-            mParams.IsAllocatorDisabled = true;
+        if (strcmp("--disable-allocation-playback", argv[i]) == 0) {
+            mParams.IsAllocationPlaybackDisabled = true;
             continue;
         }
 
-        if (strcmp("--disable-memory", argv[i]) == 0) {
-            mParams.IsMemoryDisabled = true;
+        if (strcmp("--disable-memory-playback", argv[i]) == 0) {
+            mParams.IsMemoryPlaybackDisabled = true;
             continue;
         }
 
@@ -136,12 +136,13 @@ GPGMMCaptureReplayTestEnvironment::GPGMMCaptureReplayTestEnvironment(int argc, c
                 << "Playback options:"
                 << " [--iterations=X]\n"
                 << " --iterations: Number of times to run playback.\n"
-                << " --capture-mask: Event mask to record during capture.\n"
+                << " --event-mask: Event mask to record during capture.\n"
                 << " --playback-file: Path to captured file to playback.\n"
                 << " --same-caps: Captured device must be compatible with playback device.\n"
                 << " --profile=[MAXPERF|LOWMEM|CAPTURED|DEFAULT]: Profile to apply.\n"
-                << " --disable-allocator: Disables allocator playback.\n"
-                << " --disable-memory: Disables playback of memory from capture.\n";
+                << " --disable-allocation-playback: Disables playback of allocations from "
+                   "capture.\n"
+                << " --disable-memory-playback: Disables playback of memory from capture.\n";
             continue;
         }
     }
