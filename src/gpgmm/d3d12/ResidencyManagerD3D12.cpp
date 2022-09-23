@@ -33,9 +33,10 @@
 
 namespace gpgmm::d3d12 {
 
-    static constexpr uint32_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
+    static constexpr uint64_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
     static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
+    static constexpr const char* kBudgetChangeWorkerThreadName = "GPGMM_ThreadBudgetChangeWorker";
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -829,7 +830,7 @@ namespace gpgmm::d3d12 {
             std::shared_ptr<BudgetUpdateTask> task =
                 std::make_shared<BudgetUpdateTask>(this, mAdapter);
             mBudgetNotificationUpdateEvent = std::make_shared<BudgetUpdateEvent>(
-                ThreadPool::PostTask(mThreadPool, task, "GPGMM_ThreadBudgetChangeWorker"), task);
+                ThreadPool::PostTask(mThreadPool, task, kBudgetChangeWorkerThreadName), task);
         }
 
         ASSERT(mBudgetNotificationUpdateEvent != nullptr);
