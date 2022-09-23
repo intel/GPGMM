@@ -325,6 +325,11 @@ cmake --build .
 > gpgmm_capture_replay_tests
 ```
 
+To re-generate the capture:
+```sh
+gpgmm_capture_replay_tests.exe --gtest_filter=*Replay/* --event-mask=0x3 --disable-memory-playback
+```
+
 ### Run fuzzing tests:
 ```sh
 > gpgmm_*_fuzzer  -max_total_time=<seconds_to_run>

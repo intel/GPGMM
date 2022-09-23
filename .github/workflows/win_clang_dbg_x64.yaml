@@ -153,7 +153,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_filter=*Replay/* --capture-mask=0x3 --ignore-caps-mismatch --disable-memory
+        out\Debug\gpgmm_capture_replay_tests.exe --log-level=DEBUG --gtest_filter=*Replay/* --event-mask=0x3 --ignore-caps-mismatch --disable-memory-playback
 
     - name: Run gpgmm_capture_replay_tests to playback capture (with patch)
       shell: cmd

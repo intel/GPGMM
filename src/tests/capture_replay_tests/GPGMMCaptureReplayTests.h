@@ -49,8 +49,8 @@ struct TestEnviromentParams {
     bool IsSuballocationDisabled = false;
     bool IsNeverAllocate = false;
     bool IsPrefetchAllowed = false;
-    bool IsAllocatorDisabled = false;  // Disables creation of new allocations.
-    bool IsMemoryDisabled = false;     // Disables creation of captured heaps.
+    bool IsAllocationPlaybackDisabled = false;  // Disables creation of new allocations.
+    bool IsMemoryPlaybackDisabled = false;      // Disables creation of captured heaps.
 
     AllocatorProfile AllocatorProfile =
         AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED;  // Playback uses captured settings.

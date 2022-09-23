@@ -247,7 +247,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& args = event["args"];
                         ASSERT_FALSE(args.empty());
 
-                        if (envParams.IsAllocatorDisabled) {
+                        if (envParams.IsAllocationPlaybackDisabled) {
                             continue;
                         }
 
@@ -496,7 +496,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        if (envParams.IsMemoryDisabled) {
+                        if (envParams.IsMemoryPlaybackDisabled) {
                             continue;
                         }
 
