@@ -69,8 +69,8 @@ namespace gpgmm::d3d12 {
                             break;
                         }
 
-                        gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdate)
-                            << "Recieved budget update event from OS.";
+                        gpgmm::DebugEvent("ResidencyManager", EventMessageId::BudgetUpdated)
+                            << "Recieved budget notification from OS.";
                         break;
                     }
                     // mUnregisterAndExitEvent
@@ -224,6 +224,24 @@ namespace gpgmm::d3d12 {
             if (!residencyManager->mIsUMA) {
                 nonLocalVideoMemorySegmentInfo->Budget =
                     nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
+            }
+        }
+
+        // Emit a warning if the budget was initialized to zero.
+        // This means nothing will be ever evicted, which will lead to device lost.
+        if (localVideoMemorySegmentInfo->Budget == 0) {
+            gpgmm::WarningLog()
+                << "GPU memory segment ("
+                << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, residencyManager->mIsUMA)
+                << ") did not initialize a budget. This means either a restricted budget was not "
+                   "used or the first OS budget update hasn't occured.";
+            if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
+                gpgmm::WarningLog() << "GPU memory segment ("
+                                    << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
+                                                            residencyManager->mIsUMA)
+                                    << ") did not initialize a budget. This means either a "
+                                       "restricted budget was not "
+                                       "used or the first OS budget update hasn't occured.";
             }
         }
 
@@ -565,11 +583,20 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(UpdateMemorySegmentInternal(memorySegmentGroup));
         }
 
+        // If a budget wasn't provided, it not possible to evict. This is because either the budget
+        // update event has not happened yet or was invalid.
+        if (pVideoMemoryInfo->Budget == 0) {
+            WarnEvent("GPU page-out", EventMessageId::BudgetInvalid)
+                << "GPU memory segment ("
+                << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, IsUMA())
+                << ") was unable to evict memory because a budget was not specified.";
+            return S_FALSE;
+        }
+
         const uint64_t currentUsageAfterEvict = bytesToEvict + pVideoMemoryInfo->CurrentUsage;
 
-        // Return if we will remain under budget after evict or there is no budget to evict from.
-        // The latter happens if the first budget change event hasn't happened yet.
-        if (pVideoMemoryInfo->Budget == 0 || currentUsageAfterEvict < pVideoMemoryInfo->Budget) {
+        // Return if we will remain under budget after evict.
+        if (currentUsageAfterEvict < pVideoMemoryInfo->Budget) {
             return S_OK;
         }
 
