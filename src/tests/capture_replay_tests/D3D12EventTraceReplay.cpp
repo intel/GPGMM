@@ -35,24 +35,27 @@ using namespace gpgmm::d3d12;
 
 namespace {
 
-    ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescriptorJsonValue) {
-        ALLOCATION_DESC allocationDescriptor = {};
-        allocationDescriptor.Flags =
-            static_cast<ALLOCATION_FLAGS>(allocationDescriptorJsonValue["Flags"].asInt());
-        allocationDescriptor.HeapType =
-            static_cast<D3D12_HEAP_TYPE>(allocationDescriptorJsonValue["HeapType"].asInt());
-        return allocationDescriptor;
+    ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescJson) {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.Flags = static_cast<ALLOCATION_FLAGS>(allocationDescJson["Flags"].asInt());
+        allocationDesc.HeapType =
+            static_cast<D3D12_HEAP_TYPE>(allocationDescJson["HeapType"].asInt());
+        allocationDesc.ExtraRequiredHeapFlags =
+            static_cast<D3D12_HEAP_FLAGS>(allocationDescJson["ExtraRequiredHeapFlags"].asInt());
+        allocationDesc.RequireResourceHeapPadding =
+            allocationDescJson["RequireResourceHeapPadding"].asUInt64();
+        return allocationDesc;
     }
 
-    D3D12_CLEAR_VALUE ConvertToD3D12ClearValue(const Json::Value& clearValueJsonValue) {
+    D3D12_CLEAR_VALUE ConvertToD3D12ClearValue(const Json::Value& clearValueJson) {
         D3D12_CLEAR_VALUE clearValue = {};
-        clearValue.Format = static_cast<DXGI_FORMAT>(clearValueJsonValue["Format"].asInt());
+        clearValue.Format = static_cast<DXGI_FORMAT>(clearValueJson["Format"].asInt());
         if (IsDepthFormat(clearValue.Format)) {
-            const Json::Value& depthStencilValue = clearValueJsonValue["DepthStencil"];
+            const Json::Value& depthStencilValue = clearValueJson["DepthStencil"];
             clearValue.DepthStencil.Depth = depthStencilValue["Depth"].asFloat();
             clearValue.DepthStencil.Stencil = depthStencilValue["Stencil"].asUInt();
         } else {
-            const Json::Value& rgba = clearValueJsonValue["Color"];
+            const Json::Value& rgba = clearValueJson["Color"];
             clearValue.Color[0] = rgba["R"].asFloat();
             clearValue.Color[1] = rgba["G"].asFloat();
             clearValue.Color[2] = rgba["B"].asFloat();
@@ -61,33 +64,25 @@ namespace {
         return clearValue;
     }
 
-    D3D12_RESOURCE_DESC ConvertToD3D12ResourceDesc(const Json::Value& resourceDescriptorJsonValue) {
-        D3D12_RESOURCE_DESC resourceDescriptor = {};
-        resourceDescriptor.Dimension =
-            static_cast<D3D12_RESOURCE_DIMENSION>(resourceDescriptorJsonValue["Dimension"].asInt());
-        resourceDescriptor.Alignment = resourceDescriptorJsonValue["Alignment"].asUInt64();
-        resourceDescriptor.Width = resourceDescriptorJsonValue["Width"].asUInt64();
-        resourceDescriptor.Height = resourceDescriptorJsonValue["Height"].asUInt();
-        resourceDescriptor.DepthOrArraySize =
-            resourceDescriptorJsonValue["DepthOrArraySize"].asUInt();
-        resourceDescriptor.MipLevels = resourceDescriptorJsonValue["MipLevels"].asUInt();
+    D3D12_RESOURCE_DESC ConvertToD3D12ResourceDesc(const Json::Value& resourceDescJson) {
+        D3D12_RESOURCE_DESC resourceDesc = {};
+        resourceDesc.Dimension =
+            static_cast<D3D12_RESOURCE_DIMENSION>(resourceDescJson["Dimension"].asInt());
+        resourceDesc.Alignment = resourceDescJson["Alignment"].asUInt64();
+        resourceDesc.Width = resourceDescJson["Width"].asUInt64();
+        resourceDesc.Height = resourceDescJson["Height"].asUInt();
+        resourceDesc.DepthOrArraySize = resourceDescJson["DepthOrArraySize"].asUInt();
+        resourceDesc.MipLevels = resourceDescJson["MipLevels"].asUInt();
 
-        const Json::Value& resourceDescriptorSampleDescJsonValue =
-            resourceDescriptorJsonValue["SampleDesc"];
+        const Json::Value& sampleDescJson = resourceDescJson["SampleDesc"];
+        resourceDesc.SampleDesc.Count = sampleDescJson["Count"].asUInt();
+        resourceDesc.SampleDesc.Quality = sampleDescJson["Quality"].asUInt();
 
-        resourceDescriptor.SampleDesc.Count =
-            resourceDescriptorSampleDescJsonValue["Count"].asUInt();
-        resourceDescriptor.SampleDesc.Quality =
-            resourceDescriptorSampleDescJsonValue["Quality"].asUInt();
+        resourceDesc.Format = static_cast<DXGI_FORMAT>(resourceDescJson["Format"].asInt());
+        resourceDesc.Layout = static_cast<D3D12_TEXTURE_LAYOUT>(resourceDescJson["Layout"].asInt());
+        resourceDesc.Flags = static_cast<D3D12_RESOURCE_FLAGS>(resourceDescJson["Flags"].asInt());
 
-        resourceDescriptor.Format =
-            static_cast<DXGI_FORMAT>(resourceDescriptorJsonValue["Format"].asInt());
-        resourceDescriptor.Layout =
-            static_cast<D3D12_TEXTURE_LAYOUT>(resourceDescriptorJsonValue["Layout"].asInt());
-        resourceDescriptor.Flags =
-            static_cast<D3D12_RESOURCE_FLAGS>(resourceDescriptorJsonValue["Flags"].asInt());
-
-        return resourceDescriptor;
+        return resourceDesc;
     }
 
     ALLOCATOR_DESC ConvertAndApplyToAllocatorDesc(const Json::Value& allocatorDescJson,
@@ -112,8 +107,12 @@ namespace {
     RESIDENCY_DESC ConvertAndApplyToResidencyDesc(const Json::Value& residencyDescJson,
                                                   const RESIDENCY_DESC& residencyDesc) {
         RESIDENCY_DESC newResidencyDesc = residencyDesc;
+        newResidencyDesc.IsUMA = residencyDescJson["IsUMA"].asBool();
+        newResidencyDesc.Flags |= static_cast<RESIDENCY_FLAGS>(residencyDescJson["Flags"].asInt());
         newResidencyDesc.MaxPctOfVideoMemoryToBudget =
             residencyDescJson["MaxPctOfVideoMemoryToBudget"].asFloat();
+        newResidencyDesc.MinPctOfBudgetToReserve =
+            residencyDescJson["MinPctOfBudgetToReserve"].asFloat();
         newResidencyDesc.MaxBudgetInBytes = residencyDescJson["MaxBudgetInBytes"].asUInt64();
         newResidencyDesc.EvictSizeInBytes = residencyDescJson["EvictSizeInBytes"].asUInt64();
         newResidencyDesc.InitialFenceValue = residencyDescJson["InitialFenceValue"].asUInt64();
@@ -154,6 +153,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         D3D12TestBase::TearDown();
     }
 
+    struct PlaybackExecutionContext {
+        using InstanceID = std::string;
+
+        ComPtr<ResourceAllocation> CurrentAllocationWithoutID;
+        ComPtr<Heap> CurrentHeapWithoutID;
+
+        std::unordered_map<InstanceID, ComPtr<ResourceAllocator>> CreatedAllocatorsToID;
+        std::unordered_map<InstanceID, ComPtr<ResidencyManager>> CreatedResidencyManagersToID;
+        std::unordered_map<InstanceID, ComPtr<ResourceAllocation>> CreatedAllocationsToID;
+        std::unordered_map<InstanceID, ComPtr<Heap>> CreatedHeapsToID;
+
+        InstanceID currentAllocatorID;
+        InstanceID currentResidencyID;
+
+        std::vector<ResidencyList> currentResidencyLists;
+    };
+
     void RunTest(const TraceFile& traceFile,
                  const TestEnviromentParams& envParams,
                  const uint64_t iterationIndex) override {
@@ -163,33 +179,31 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         Json::Reader reader;
         GPGMM_SKIP_TEST_IF(!reader.parse(traceFileStream, root, false));
 
-        ComPtr<ResourceAllocation> allocationWithoutID;
-        std::unique_ptr<Heap> heapWithoutID;
-
-        std::unordered_map<std::string, ComPtr<ResourceAllocator>> createdAllocatorToID;
-        std::unordered_map<std::string, ComPtr<ResidencyManager>> createdResidencyManagerToID;
-        std::unordered_map<std::string, ComPtr<ResourceAllocation>> createdAllocationToID;
-        std::unordered_map<std::string, std::unique_ptr<Heap>> createdHeapToID;
-
-        std::string currentAllocatorID;
-        std::string currentResidencyID;
-
-        std::vector<ResidencyList> currentResidencyLists;
+        PlaybackExecutionContext playbackContext = {};
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
 
+        ALLOCATOR_DESC baseAllocatorDesc = CreateBasicAllocatorDesc();
+
         // Captures never store recording options, they must be always specified.
-        EVENT_RECORD_OPTIONS eventRecordOptions = {};
-        eventRecordOptions.Flags |= static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
-        eventRecordOptions.TraceFile = traceFile.path.c_str();
-        eventRecordOptions.MinMessageLevel = GetMessageSeverity(GetLogLevel());
+        baseAllocatorDesc.RecordOptions.Flags |=
+            static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
+        baseAllocatorDesc.RecordOptions.TraceFile = traceFile.path.c_str();
+        baseAllocatorDesc.RecordOptions.MinMessageLevel = baseAllocatorDesc.MinLogLevel;
 
         // Keep recording across multiple playback iterations to ensure all
         // events will be captured instead of overwritten per iteration.
         if (envParams.Iterations == 1) {
-            eventRecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_INSTANCE;
+            baseAllocatorDesc.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_INSTANCE;
         }
+
+        if (!envParams.IsPrefetchAllowed) {
+            baseAllocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+        }
+
+        RESIDENCY_DESC baseResidencyDesc = CreateBasicResidencyDesc();
+        baseResidencyDesc.RecordOptions = baseAllocatorDesc.RecordOptions;
 
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
              eventIndex++) {
@@ -212,17 +226,20 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ResidencyList list = {};
                             for (auto heap : setJson["Heaps"]) {
                                 const std::string heapId = heap["id_ref"].asString();
-                                if (createdHeapToID.find(heapId) == createdHeapToID.end()) {
+                                if (playbackContext.CreatedHeapsToID.find(heapId) ==
+                                    playbackContext.CreatedHeapsToID.end()) {
                                     break;
                                 }
-                                list.Add(createdHeapToID[heapId].get());
+                                list.Add(playbackContext.CreatedHeapsToID[heapId].Get());
                             }
                             residencyListPtrs.push_back(&list);
-                            currentResidencyLists.push_back(std::move(list));
+                            playbackContext.currentResidencyLists.push_back(std::move(list));
                         }
 
                         ResidencyManager* residencyManager =
-                            createdResidencyManagerToID[currentResidencyID].Get();
+                            playbackContext
+                                .CreatedResidencyManagersToID[playbackContext.currentResidencyID]
+                                .Get();
                         ASSERT_NE(residencyManager, nullptr);
 
                         ASSERT_SUCCEEDED(residencyManager->ExecuteCommandLists(
@@ -230,7 +247,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             static_cast<uint32_t>(residencyListPtrs.size())));
 
                         // Prepare for the next frame.
-                        for (auto& set : currentResidencyLists) {
+                        for (auto& set : playbackContext.currentResidencyLists) {
                             set.Reset();
                         }
 
@@ -279,11 +296,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const D3D12_RESOURCE_DESC resourceDescriptor =
                             ConvertToD3D12ResourceDesc(args["resourceDescriptor"]);
 
-                        auto it = createdAllocatorToID.find(currentAllocatorID);
-                        ASSERT_TRUE(it != createdAllocatorToID.end());
+                        auto it = playbackContext.CreatedAllocatorsToID.find(
+                            playbackContext.currentAllocatorID);
+                        ASSERT_TRUE(it != playbackContext.CreatedAllocatorsToID.end());
 
                         ResourceAllocator* resourceAllocator =
-                            createdAllocatorToID[currentAllocatorID].Get();
+                            playbackContext
+                                .CreatedAllocatorsToID[playbackContext.currentAllocatorID]
+                                .Get();
                         ASSERT_NE(resourceAllocator, nullptr);
 
                         if (envParams.IsNeverAllocate) {
@@ -296,7 +316,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         HRESULT hr = resourceAllocator->CreateResource(
                             allocationDescriptor, resourceDescriptor, initialResourceState,
-                            clearValuePtr, &allocationWithoutID);
+                            clearValuePtr, &playbackContext.CurrentAllocationWithoutID);
 
                         if (FAILED(hr)) {
                             if (envParams.IsNeverAllocate) {
@@ -320,27 +340,29 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             } else if (event["name"].asString() == "ResourceAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
-                        if (allocationWithoutID == nullptr) {
+                        if (playbackContext.CurrentAllocationWithoutID == nullptr) {
                             continue;
                         }
 
-                        ASSERT_TRUE(allocationWithoutID != nullptr);
+                        ASSERT_TRUE(playbackContext.CurrentAllocationWithoutID != nullptr);
                         const std::string& allocationID = event["id"].asString();
                         ASSERT_TRUE(
-                            createdAllocationToID.insert({allocationID, allocationWithoutID})
+                            playbackContext.CreatedAllocationsToID
+                                .insert({allocationID, playbackContext.CurrentAllocationWithoutID})
                                 .second);
 
-                        ASSERT_TRUE(allocationWithoutID.Reset() == 1);
+                        ASSERT_TRUE(playbackContext.CurrentAllocationWithoutID.Reset() == 1);
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocationID = event["id"].asString();
-                        if (createdAllocationToID.find(allocationID) ==
-                            createdAllocationToID.end()) {
+                        if (playbackContext.CreatedAllocationsToID.find(allocationID) ==
+                            playbackContext.CreatedAllocationsToID.end()) {
                             continue;
                         }
 
-                        const bool didDeallocate = createdAllocationToID.erase(allocationID);
+                        const bool didDeallocate =
+                            playbackContext.CreatedAllocationsToID.erase(allocationID);
                         ASSERT_TRUE(didDeallocate || envParams.IsNeverAllocate);
 
                     } break;
@@ -352,8 +374,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& residencyManagerID = event["id"].asString();
-                        if (createdResidencyManagerToID.find(residencyManagerID) !=
-                            createdResidencyManagerToID.end()) {
+                        if (playbackContext.CreatedResidencyManagersToID.find(residencyManagerID) !=
+                            playbackContext.CreatedResidencyManagersToID.end()) {
                             continue;
                         }
 
@@ -370,15 +392,15 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
-                        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc();
-                        residencyDesc.RecordOptions = eventRecordOptions;
-                        residencyDesc = ConvertAndApplyToResidencyDesc(snapshot, residencyDesc);
+                        RESIDENCY_DESC newResidencyDesc = baseResidencyDesc;
+                        newResidencyDesc =
+                            ConvertAndApplyToResidencyDesc(snapshot, newResidencyDesc);
 
                         ComPtr<ResidencyManager> residencyManager;
                         ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
-                            residencyDesc, &residencyManager));
+                            newResidencyDesc, &residencyManager));
 
-                        ASSERT_TRUE(createdResidencyManagerToID
+                        ASSERT_TRUE(playbackContext.CreatedResidencyManagersToID
                                         .insert({residencyManagerID, std::move(residencyManager)})
                                         .second);
                     } break;
@@ -386,18 +408,21 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         // Assume subsequent events are always against this residency instance.
                         // This is because call trace events have no ID associated with them.
-                        currentResidencyID = event["id"].asString();
+                        playbackContext.currentResidencyID = event["id"].asString();
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& residencyManagerID = event["id"].asString();
 
-                        auto it = createdResidencyManagerToID.find(residencyManagerID);
-                        if (it == createdResidencyManagerToID.end()) {
+                        auto it =
+                            playbackContext.CreatedResidencyManagersToID.find(residencyManagerID);
+                        if (it == playbackContext.CreatedResidencyManagersToID.end()) {
                             continue;
                         }
 
-                        ASSERT_EQ(createdResidencyManagerToID.erase(residencyManagerID), 1u);
+                        ASSERT_EQ(
+                            playbackContext.CreatedResidencyManagersToID.erase(residencyManagerID),
+                            1u);
                     } break;
 
                     default:
@@ -407,7 +432,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
-                        if (createdAllocatorToID.find(allocatorID) != createdAllocatorToID.end()) {
+                        if (playbackContext.CreatedAllocatorsToID.find(allocatorID) !=
+                            playbackContext.CreatedAllocatorsToID.end()) {
                             continue;
                         }
 
@@ -428,58 +454,55 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
-                        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-                        allocatorDesc.RecordOptions = eventRecordOptions;
-
+                        ALLOCATOR_DESC allocatorDescOfProfile = baseAllocatorDesc;
                         // Apply profile (if specified).
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
-                            allocatorDesc = ConvertAndApplyToAllocatorDesc(snapshot, allocatorDesc);
+                            allocatorDescOfProfile =
+                                ConvertAndApplyToAllocatorDesc(snapshot, allocatorDescOfProfile);
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Any amount of (internal) fragmentation is acceptable.
-                            allocatorDesc.MemoryFragmentationLimit = 1.0f;
+                            allocatorDescOfProfile.MemoryFragmentationLimit = 1.0f;
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
-                            allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
-                            allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
-                        }
-
-                        // Apply flags by enviromental settings after the profile.
-                        if (!envParams.IsPrefetchAllowed) {
-                            allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+                            allocatorDescOfProfile.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
+                            allocatorDescOfProfile.MemoryFragmentationLimit =
+                                0.125;  // 1/8th of 4MB
                         }
 
                         ComPtr<ResidencyManager> residencyManager;
-                        if (createdResidencyManagerToID.find(currentResidencyID) !=
-                            createdResidencyManagerToID.end()) {
-                            residencyManager = createdResidencyManagerToID[currentResidencyID];
+                        if (playbackContext.CreatedResidencyManagersToID.find(
+                                playbackContext.currentResidencyID) !=
+                            playbackContext.CreatedResidencyManagersToID.end()) {
+                            residencyManager = playbackContext.CreatedResidencyManagersToID
+                                                   [playbackContext.currentResidencyID];
                         }
 
                         ComPtr<ResourceAllocator> resourceAllocator;
                         ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
-                            allocatorDesc, residencyManager.Get(), &resourceAllocator));
+                            allocatorDescOfProfile, residencyManager.Get(), &resourceAllocator));
 
-                        ASSERT_TRUE(
-                            createdAllocatorToID.insert({allocatorID, std::move(resourceAllocator)})
-                                .second);
+                        ASSERT_TRUE(playbackContext.CreatedAllocatorsToID
+                                        .insert({allocatorID, std::move(resourceAllocator)})
+                                        .second);
                     } break;
 
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         // Assume subsequent events are always against this allocator instance.
                         // This is because call trace events have no ID associated with them.
-                        currentAllocatorID = event["id"].asString();
+                        playbackContext.currentAllocatorID = event["id"].asString();
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
 
-                        auto it = createdAllocatorToID.find(allocatorID);
-                        if (it == createdAllocatorToID.end()) {
+                        auto it = playbackContext.CreatedAllocatorsToID.find(allocatorID);
+                        if (it == playbackContext.CreatedAllocatorsToID.end()) {
                             continue;
                         }
 
-                        ASSERT_EQ(createdAllocatorToID.erase(allocatorID), 1u);
+                        ASSERT_EQ(playbackContext.CreatedAllocatorsToID.erase(allocatorID), 1u);
                     } break;
 
                     default:
@@ -510,10 +533,12 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);
 
                         ResidencyManager* residencyManager =
-                            createdResidencyManagerToID[currentResidencyID].Get();
+                            playbackContext
+                                .CreatedResidencyManagersToID[playbackContext.currentResidencyID]
+                                .Get();
                         ASSERT_NE(residencyManager, nullptr);
 
-                        Heap* resourceHeap = nullptr;
+                        ComPtr<Heap> resourceHeap;
                         ASSERT_SUCCEEDED(Heap::CreateHeap(
                             resourceHeapDesc, residencyManager,
                             [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
@@ -533,7 +558,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             },
                             &resourceHeap));
 
-                        heapWithoutID.reset(resourceHeap);
+                        playbackContext.CurrentHeapWithoutID = std::move(resourceHeap);
 
                         mCapturedMemoryStats.CurrentUsage += resourceHeapDesc.SizeInBytes;
                         mCapturedMemoryStats.PeakUsage = std::max(
@@ -547,32 +572,32 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             } else if (event["name"].asString() == "Heap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
-                        if (heapWithoutID == nullptr) {
+                        if (playbackContext.CurrentHeapWithoutID == nullptr) {
                             continue;
                         }
 
-                        ASSERT_TRUE(heapWithoutID != nullptr);
+                        ASSERT_TRUE(playbackContext.CurrentHeapWithoutID != nullptr);
                         const std::string& heapID = event["id"].asString();
                         ASSERT_TRUE(
-                            createdHeapToID
-                                .insert({heapID, std::unique_ptr<Heap>(heapWithoutID.release())})
+                            playbackContext.CreatedHeapsToID
+                                .insert({heapID, std::move(playbackContext.CurrentHeapWithoutID)})
                                 .second);
 
                     } break;
 
                     case TRACE_EVENT_PHASE_DELETE_OBJECT: {
                         const std::string& heapID = event["id"].asString();
-                        auto it = createdHeapToID.find(heapID);
-                        if (it == createdHeapToID.end()) {
+                        auto it = playbackContext.CreatedHeapsToID.find(heapID);
+                        if (it == playbackContext.CreatedHeapsToID.end()) {
                             continue;
                         }
 
-                        Heap* heap = it->second.get();
+                        Heap* heap = it->second.Get();
                         ASSERT_NE(heap, nullptr);
 
                         mCapturedMemoryStats.CurrentUsage -= heap->GetSize();
 
-                        ASSERT_EQ(createdHeapToID.erase(heapID), 1u);
+                        ASSERT_EQ(playbackContext.CreatedHeapsToID.erase(heapID), 1u);
 
                     } break;
 
@@ -582,7 +607,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
             }
         }
 
-        if (mReplayedMemoryStats.PeakUsage > 0) {
+        if (mReplayedMemoryStats.PeakUsage > 0 && mCapturedMemoryStats.PeakUsage > 0) {
             gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
                              << GPGMM_BYTES_TO_MB(mCapturedMemoryStats.PeakUsage) << " vs "
                              << GPGMM_BYTES_TO_MB(mReplayedMemoryStats.PeakUsage) << " MB";
