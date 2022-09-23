@@ -75,9 +75,9 @@ namespace gpgmm::d3d12 {
     };
 
     enum RESIDENCY_STATUS {
-        RESIDENCY_UNKNOWN = 0,
-        PENDING_RESIDENCY = 1,
-        CURRENT_RESIDENT = 2,
+        RESIDENCY_STATUS_UNKNOWN = 0,
+        RESIDENCY_STATUS_PENDING_RESIDENCY = 1,
+        RESIDENCY_STATUS_CURRENT_RESIDENT = 2,
     };
 
     struct HEAP_INFO {
