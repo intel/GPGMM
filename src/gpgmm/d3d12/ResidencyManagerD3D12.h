@@ -304,6 +304,8 @@ namespace gpgmm::d3d12 {
 
         bool IsBudgetNotificationUpdatesDisabled() const;
 
+        void ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup);
+
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device3> mDevice3;

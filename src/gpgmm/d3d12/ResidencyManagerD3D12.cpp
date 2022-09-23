@@ -208,22 +208,28 @@ namespace gpgmm::d3d12 {
         // Set the initial video memory limits.
         ReturnIfFailed(residencyManager->UpdateMemorySegments());
 
+        DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
+            residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+
+        DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
+            residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
         // limit, we can create a predictable and reproducible budget.
         if (descriptor.MaxBudgetInBytes > 0) {
-            DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
-                residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
-
             localVideoMemorySegmentInfo->Budget =
                 localVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             if (!residencyManager->mIsUMA) {
-                DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
-                    residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
-
                 nonLocalVideoMemorySegmentInfo->Budget =
                     nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             }
+        }
+
+        // Dump out the initialized memory segment status.
+        residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+        if (!residencyManager->mIsUMA){
+            residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
         }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
@@ -850,6 +856,18 @@ namespace gpgmm::d3d12 {
 
     bool ResidencyManager::IsUMA() const {
         return mIsUMA;
+    }
+
+    void ResidencyManager::ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup) {
+        DXGI_QUERY_VIDEO_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
+        ASSERT(info != nullptr);
+        
+        gpgmm::DebugLog() << "GPU memory segment status (" << GetMemorySegmentName(segmentGroup, false) << "):";
+        gpgmm::DebugLog() << "\tBudget: " << GPGMM_BYTES_TO_MB(info->Budget) << " MBs ("
+                          << GPGMM_BYTES_TO_MB(info->CurrentUsage) << " used).";
+        gpgmm::DebugLog() << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation)
+                          << " MBs (" << GPGMM_BYTES_TO_MB(info->AvailableForReservation)
+                          << " available).";
     }
 
 }  // namespace gpgmm::d3d12
