@@ -437,6 +437,13 @@ namespace gpgmm::d3d12 {
                    "resources of different categories from sharing the same heap.";
         }
 
+        if (allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
+            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
+                                   "management does not exist. This is probably not what the "
+                                   "developer intended to do. Please consider creating a residency "
+                                   "manager with this resource allocator before using this flag.";
+        }
+
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
         newDescriptor.MemoryGrowthFactor = (allocatorDescriptor.MemoryGrowthFactor >= 1.0)
                                                ? allocatorDescriptor.MemoryGrowthFactor
@@ -513,13 +520,6 @@ namespace gpgmm::d3d12 {
                    "developer intended to do.";
         }
 #endif
-
-        if (newDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
-            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
-                                   "management does not exist. This is probably not what the "
-                                   "developer intended to do. Please consider creating a residency "
-                                   "manager with this resource allocator before using this flag.";
-        }
 
         std::unique_ptr<ResourceAllocator> resourceAllocator = std::unique_ptr<ResourceAllocator>(
             new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps)));
