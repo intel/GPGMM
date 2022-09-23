@@ -515,9 +515,9 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
             gpgmm::WarningLog()
-                << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has not effect because the D3D12 debug "
-                   "layer was either not installed or enabled. This is probably not what the "
-                   "developer intended to do.";
+                << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has no effect because the D3D12 debug "
+                   "layer was either not installed or enabled. Please call "
+                   "ID3D12Debug::EnableDebugLayer before using this flag.";
         }
 #endif
 
