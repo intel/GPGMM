@@ -78,14 +78,14 @@ namespace gpgmm::d3d12 {
                 // Resource heaps created without the "create not resident" flag are always
                 // resident.
                 if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
-                    heap->mState = CURRENT_RESIDENT;
+                    heap->mState = RESIDENCY_STATUS_CURRENT_RESIDENT;
                 } else {
-                    heap->mState = PENDING_RESIDENCY;
+                    heap->mState = RESIDENCY_STATUS_PENDING_RESIDENCY;
                 }
             }
 
             // Heap created not resident requires no budget to be created.
-            if (heap->mState == PENDING_RESIDENCY &&
+            if (heap->mState == RESIDENCY_STATUS_PENDING_RESIDENCY &&
                 (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
                 gpgmm::ErrorLog() << "Creating a heap always in budget cannot be used with "
                                      "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
@@ -96,7 +96,7 @@ namespace gpgmm::d3d12 {
             // should be always inserted in the residency cache. For other heap types (eg.
             // descriptor heap), they must be manually locked and unlocked to be inserted into the
             // residency cache.
-            if (heap->mState != RESIDENCY_UNKNOWN) {
+            if (heap->mState != RESIDENCY_STATUS_UNKNOWN) {
                 ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
             }
         }
@@ -119,7 +119,7 @@ namespace gpgmm::d3d12 {
           mMemorySegmentGroup(descriptor.MemorySegmentGroup),
           mResidencyLock(0),
           mIsResidencyDisabled(isResidencyDisabled),
-          mState(RESIDENCY_UNKNOWN) {
+          mState(RESIDENCY_STATUS_UNKNOWN) {
         ASSERT(mPageable != nullptr);
         if (!mIsResidencyDisabled) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);

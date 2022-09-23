@@ -33,29 +33,32 @@ namespace gpgmm::d3d12 {
 
     /** \enum RESIDENCY_STATUS
 
-    Heaps are created in one of three states: never made resident or unknown, about to become
+    D3D12 allows heaps to be explicitly created resident or not. This means the expected residency
+    status of the heap cannot be solely  determined by checking for the existence in a residency
+    cache.
+
+    Heaps are in one of three exclusive states: never made resident or unknown, about to become
     resident or pending residency, and currently resident. When a heap gets evicted or paged-out, it
     transitions from currently resident to pending residency. Paged-in is the reverse of this,
-    pending residency to currently resident.
-
-    If the heap was pinned or locked, it will stay currently resident until it is unlocked, then
-    back to pending residency.
-
-    D3D12 does not provide a means to determine what state the heap is in so this status is used to
-    track the approximate state.
+    pending residency to currently resident. If the heap was known to be created resident by D3D12,
+    it will immediately become currently resident. If the heap becomes locked, it will stay
+    currently resident until it is evicted, then back to pending residency.
     */
     enum RESIDENCY_STATUS {
-        /** \brief Heap is not being managed for residency.
+        /** \brief Heap residency status is not known and cannot be made resident.
+         Heap must become locked to be managed for residency.
          */
-        RESIDENCY_UNKNOWN = 0,
+        RESIDENCY_STATUS_UNKNOWN = 0,
 
-        /** \brief Heap is about to be resident.
-         */
-        PENDING_RESIDENCY = 1,
+        /** \brief Heap is about to be made resident.
+        Heap must be previously locked, evicted, or currently resident at creation.
+        */
+        RESIDENCY_STATUS_PENDING_RESIDENCY = 1,
 
-        /** \brief Heap was made resident.
-         */
-        CURRENT_RESIDENT = 2,
+        /** \brief Heap was made resident and can be evicted.
+        Heaps that stay locked will always be currently resident.
+        */
+        RESIDENCY_STATUS_CURRENT_RESIDENT = 2,
     };
 
     /** \struct HEAP_INFO
@@ -66,7 +69,7 @@ namespace gpgmm::d3d12 {
          */
         bool IsLocked;
 
-        /** \brief Check if the heap is resident or not.
+        /** \brief Check if the heap was made resident or not.
          */
         RESIDENCY_STATUS Status;
     };
