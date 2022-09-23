@@ -90,6 +90,54 @@ namespace {
         return resourceDescriptor;
     }
 
+    ALLOCATOR_DESC ConvertAndApplyToAllocatorDesc(const Json::Value& allocatorDescJson,
+                                                  const ALLOCATOR_DESC& allocatorDesc) {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.Flags |= static_cast<ALLOCATOR_FLAGS>(allocatorDescJson["Flags"].asInt());
+        newAllocatorDesc.ResourceHeapTier =
+            static_cast<D3D12_RESOURCE_HEAP_TIER>(allocatorDescJson["ResourceHeapTier"].asInt());
+        newAllocatorDesc.SubAllocationAlgorithm =
+            static_cast<ALLOCATOR_ALGORITHM>(allocatorDescJson["SubAllocationAlgorithm"].asInt());
+        newAllocatorDesc.PoolAlgorithm =
+            static_cast<ALLOCATOR_ALGORITHM>(allocatorDescJson["PoolAlgorithm"].asInt());
+        newAllocatorDesc.PreferredResourceHeapSize =
+            allocatorDescJson["PreferredResourceHeapSize"].asUInt64();
+        newAllocatorDesc.MaxResourceHeapSize = allocatorDescJson["MaxResourceHeapSize"].asUInt64();
+        newAllocatorDesc.MemoryFragmentationLimit =
+            allocatorDescJson["MemoryFragmentationLimit"].asDouble();
+        newAllocatorDesc.MemoryGrowthFactor = allocatorDescJson["MemoryGrowthFactor"].asDouble();
+        return newAllocatorDesc;
+    }
+
+    RESIDENCY_DESC ConvertAndApplyToResidencyDesc(const Json::Value& residencyDescJson,
+                                                  const RESIDENCY_DESC& residencyDesc) {
+        RESIDENCY_DESC newResidencyDesc = residencyDesc;
+        newResidencyDesc.MaxPctOfVideoMemoryToBudget =
+            residencyDescJson["MaxPctOfVideoMemoryToBudget"].asFloat();
+        newResidencyDesc.MaxBudgetInBytes = residencyDescJson["MaxBudgetInBytes"].asUInt64();
+        newResidencyDesc.EvictSizeInBytes = residencyDescJson["EvictSizeInBytes"].asUInt64();
+        newResidencyDesc.InitialFenceValue = residencyDescJson["InitialFenceValue"].asUInt64();
+        return newResidencyDesc;
+    }
+
+    D3D12_HEAP_PROPERTIES ConvertToD3D12HeapProperties(const Json::Value& heapPropertiesJson) {
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = static_cast<D3D12_HEAP_TYPE>(heapPropertiesJson["Type"].asInt());
+        heapProperties.CPUPageProperty =
+            static_cast<D3D12_CPU_PAGE_PROPERTY>(heapPropertiesJson["CPUPageProperty"].asInt());
+        heapProperties.MemoryPoolPreference =
+            static_cast<D3D12_MEMORY_POOL>(heapPropertiesJson["MemoryPoolPreference"].asInt());
+        return heapProperties;
+    }
+
+    HEAP_DESC ConvertAndApplyToHeapDesc(const Json::Value& heapJson, const HEAP_DESC& heapDesc) {
+        HEAP_DESC newHeapDesc = heapDesc;
+        newHeapDesc.SizeInBytes = heapJson["SizeInBytes"].asUInt64();
+        newHeapDesc.Alignment = heapJson["Alignment"].asUInt64();
+        newHeapDesc.Flags = static_cast<HEAPS_FLAGS>(heapJson["Flags"].asInt());
+        return newHeapDesc;
+    }
+
     bool IsErrorEvent(const Json::Value& args) {
         return (args.isMember("Description") && args.isMember("ID"));
     }
@@ -130,6 +178,18 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
+
+        // Captures never store recording options, they must be always specified.
+        EVENT_RECORD_OPTIONS eventRecordOptions = {};
+        eventRecordOptions.Flags |= static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
+        eventRecordOptions.TraceFile = traceFile.path.c_str();
+        eventRecordOptions.MinMessageLevel = GetMessageSeverity(GetLogLevel());
+
+        // Keep recording across multiple playback iterations to ensure all
+        // events will be captured instead of overwritten per iteration.
+        if (envParams.Iterations == 1) {
+            eventRecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_INSTANCE;
+        }
 
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
              eventIndex++) {
@@ -310,32 +370,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
-                        RESIDENCY_DESC residencyDesc = {};
-                        residencyDesc.Device = mDevice;
-                        residencyDesc.Adapter = mAdapter;
-                        residencyDesc.IsUMA = mCaps->IsAdapterUMA();
-                        residencyDesc.MaxPctOfVideoMemoryToBudget =
-                            snapshot["MaxPctOfVideoMemoryToBudget"].asFloat();
-                        residencyDesc.MaxBudgetInBytes = snapshot["MaxBudgetInBytes"].asUInt64();
-                        residencyDesc.EvictSizeInBytes = snapshot["EvictSizeInBytes"].asUInt64();
-                        residencyDesc.InitialFenceValue = snapshot["InitialFenceValue"].asUInt64();
-
-                        if (envParams.CaptureEventMask != 0) {
-                            residencyDesc.RecordOptions.Flags |=
-                                static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
-                            residencyDesc.RecordOptions.TraceFile = traceFile.path.c_str();
-                            residencyDesc.RecordOptions.MinMessageLevel =
-                                GetMessageSeverity(GetLogLevel());
-
-                            // Keep recording across multiple playback iterations to ensure all
-                            // events will be captured instead of overwritten per iteration.
-                            if (envParams.Iterations == 1) {
-                                residencyDesc.RecordOptions.EventScope =
-                                    EVENT_RECORD_SCOPE_PER_INSTANCE;
-                            }
-                        }
-
-                        residencyDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
+                        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc();
+                        residencyDesc.RecordOptions = eventRecordOptions;
+                        residencyDesc = ConvertAndApplyToResidencyDesc(snapshot, residencyDesc);
 
                         ComPtr<ResidencyManager> residencyManager;
                         ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
@@ -377,24 +414,27 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
                         ASSERT_FALSE(snapshot.empty());
 
-                        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-                        if (!envParams.IsPrefetchAllowed) {
-                            allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
+                            mCaps->GetMaxResourceHeapTierSupported() <
+                                snapshot["ResourceHeapTier"].asInt() &&
+                            iterationIndex == 0) {
+                            gpgmm::WarningLog()
+                                << "Captured device exceeds capabilities of playback device "
+                                   "(ResourceHeapTier: " +
+                                       std::to_string(snapshot["ResourceHeapTier"].asInt()) +
+                                       " vs " +
+                                       std::to_string(mCaps->GetMaxResourceHeapTierSupported()) +
+                                       ").";
+                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
+
+                        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+                        allocatorDesc.RecordOptions = eventRecordOptions;
 
                         // Apply profile (if specified).
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
-                            allocatorDesc.Flags |=
-                                static_cast<ALLOCATOR_FLAGS>(snapshot["Flags"].asInt());
-                            allocatorDesc.PreferredResourceHeapSize =
-                                snapshot["PreferredResourceHeapSize"].asUInt64();
-                            allocatorDesc.MaxResourceHeapSize =
-                                snapshot["MaxResourceHeapSize"].asUInt64();
-                            allocatorDesc.MemoryFragmentationLimit =
-                                snapshot["MemoryFragmentationLimit"].asDouble();
-                            allocatorDesc.MemoryGrowthFactor =
-                                snapshot["MemoryGrowthFactor"].asDouble();
+                            allocatorDesc = ConvertAndApplyToAllocatorDesc(snapshot, allocatorDesc);
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Any amount of (internal) fragmentation is acceptable.
@@ -405,34 +445,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             allocatorDesc.MemoryFragmentationLimit = 0.125;  // 1/8th of 4MB
                         }
 
-                        if (envParams.CaptureEventMask != 0) {
-                            allocatorDesc.RecordOptions.Flags |=
-                                static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
-                            allocatorDesc.RecordOptions.TraceFile = traceFile.path.c_str();
-                            allocatorDesc.RecordOptions.MinMessageLevel =
-                                GetMessageSeverity(GetLogLevel());
-
-                            // Keep recording across multiple playback iterations to ensure all
-                            // events will be captured instead of overwritten per iteration.
-                            if (envParams.Iterations == 1) {
-                                allocatorDesc.RecordOptions.EventScope =
-                                    EVENT_RECORD_SCOPE_PER_INSTANCE;
-                            }
-                        }
-
-                        allocatorDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
-
-                        if (GetLogLevel() <= gpgmm::LogSeverity::Warning &&
-                            allocatorDesc.ResourceHeapTier !=
-                                snapshot["ResourceHeapTier"].asInt() &&
-                            iterationIndex == 0) {
-                            gpgmm::WarningLog()
-                                << "Capture device does not match playback device "
-                                   "(ResourceHeapTier: " +
-                                       std::to_string(snapshot["ResourceHeapTier"].asInt()) +
-                                       " vs " + std::to_string(allocatorDesc.ResourceHeapTier) +
-                                       ").";
-                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
+                        // Apply flags by enviromental settings after the profile.
+                        if (!envParams.IsPrefetchAllowed) {
+                            allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
                         }
 
                         ComPtr<ResidencyManager> residencyManager;
@@ -485,19 +500,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        D3D12_HEAP_PROPERTIES heapProperties = {};
-                        heapProperties.Type = static_cast<D3D12_HEAP_TYPE>(
-                            args["Heap"]["Properties"]["Type"].asInt());
-                        heapProperties.CPUPageProperty = static_cast<D3D12_CPU_PAGE_PROPERTY>(
-                            args["Heap"]["Properties"]["CPUPageProperty"].asInt());
-                        heapProperties.MemoryPoolPreference = static_cast<D3D12_MEMORY_POOL>(
-                            args["Heap"]["Properties"]["MemoryPoolPreference"].asInt());
+                        const D3D12_HEAP_PROPERTIES heapProperties =
+                            ConvertToD3D12HeapProperties(args["Heap"]["Properties"]);
 
                         HEAP_DESC resourceHeapDesc = {};
-                        resourceHeapDesc.SizeInBytes = args["Heap"]["SizeInBytes"].asUInt64();
-                        resourceHeapDesc.Alignment = args["Heap"]["Alignment"].asUInt64();
                         resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
                             heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+                        resourceHeapDesc =
+                            ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);
 
                         ResidencyManager* residencyManager =
                             createdResidencyManagerToID[currentResidencyID].Get();

@@ -57,26 +57,13 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     // Configures residency manager for testing residency in a controlled and predictable
     // fashion.
     RESIDENCY_DESC CreateBasicResidencyDesc(uint64_t budget) const {
-        RESIDENCY_DESC residencyDesc = {};
+        RESIDENCY_DESC residencyDesc = D3D12TestBase::CreateBasicResidencyDesc();
 
         // Disable automatic budget updates, since it occurs uncontrollably by the OS.
         residencyDesc.Flags |= RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
 
         // Specify a restricted budget, the OS budget fluctuates unpredicatbly.
         residencyDesc.MaxBudgetInBytes = budget;
-
-        // Required
-        residencyDesc.IsUMA = mCaps->IsAdapterUMA();
-        residencyDesc.Adapter = mAdapter;
-        residencyDesc.Device = mDevice;
-
-        residencyDesc.MinLogLevel = GetMessageSeverity(GetLogLevel());
-
-        if (IsDumpEventsEnabled()) {
-            residencyDesc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
-            residencyDesc.RecordOptions.MinMessageLevel = residencyDesc.MinLogLevel;
-            residencyDesc.RecordOptions.UseDetailedTimingEvents = true;
-        }
 
         return residencyDesc;
     }

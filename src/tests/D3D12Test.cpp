@@ -124,6 +124,24 @@ namespace gpgmm::d3d12 {
         return desc;
     }
 
+    RESIDENCY_DESC D3D12TestBase::CreateBasicResidencyDesc() const {
+        RESIDENCY_DESC desc = {};
+        // Required
+        desc.Adapter = mAdapter;
+        desc.Device = mDevice;
+        desc.IsUMA = mCaps->IsAdapterUMA();
+
+        desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
+
+        if (IsDumpEventsEnabled()) {
+            desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
+            desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
+            desc.RecordOptions.UseDetailedTimingEvents = true;
+        }
+
+        return desc;
+    }
+
     // static
     D3D12_RESOURCE_DESC D3D12TestBase::CreateBasicBufferDesc(uint64_t width, uint64_t alignment) {
         D3D12_RESOURCE_DESC resourceDesc;
