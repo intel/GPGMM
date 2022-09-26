@@ -31,7 +31,7 @@ namespace gpgmm {
 
         std::unique_ptr<MemoryAllocation> TryAllocateMemory(
             const MemoryAllocationRequest& request) override {
-            TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.TryAllocateMemory");
+            TRACE_EVENT0(TraceEventCategory::kDefault, "DummyMemoryAllocator.TryAllocateMemory");
 
             std::lock_guard<std::mutex> lock(mMutex);
 
@@ -47,7 +47,7 @@ namespace gpgmm {
         }
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
-            TRACE_EVENT0(TraceEventCategory::Default, "DummyMemoryAllocator.DeallocateMemory");
+            TRACE_EVENT0(TraceEventCategory::kDefault, "DummyMemoryAllocator.DeallocateMemory");
 
             std::lock_guard<std::mutex> lock(mMutex);
 

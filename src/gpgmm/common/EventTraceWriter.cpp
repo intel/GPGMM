@@ -126,11 +126,11 @@ namespace gpgmm {
             eventData.AddItem("name", traceEvent.mName);
 
             switch (traceEvent.mCategory) {
-                case TraceEventCategory::Default:
+                case TraceEventCategory::kDefault:
                     eventData.AddItem("cat", "default");
                     break;
 
-                case TraceEventCategory::Metadata:
+                case TraceEventCategory::kMetadata:
                     eventData.AddItem("cat", "__metadata");
                     break;
 

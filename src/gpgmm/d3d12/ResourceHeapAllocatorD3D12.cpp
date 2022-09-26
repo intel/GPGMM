@@ -38,7 +38,7 @@ namespace gpgmm::d3d12 {
 
     std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceHeapAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -87,7 +87,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
-            DebugEvent(GetTypename(), EventMessageId::AlignmentMismatch)
+            DebugEvent(GetTypename(), EventMessageId::kAlignmentMismatch)
                 << "Resource heap was larger then the requested size (" +
                        std::to_string(resourceHeapDesc.SizeInBytes) + " vs " + std::to_string(request.SizeInBytes) +
                        " bytes).";
@@ -102,7 +102,7 @@ namespace gpgmm::d3d12 {
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceHeapAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceHeapAllocator.DeallocateMemory");
 
         mInfo.UsedMemoryUsage -= allocation->GetSize();
         mInfo.UsedMemoryCount--;

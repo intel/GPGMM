@@ -40,7 +40,7 @@ namespace gpgmm {
 #endif
 
         GetInstance()->SetConfiguration(traceFile, ignoreMask);
-        TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name",
+        TRACE_EVENT_METADATA1(TraceEventCategory::kMetadata, "thread_name", "name",
                               "GPGMM_MainThread");
     }
 

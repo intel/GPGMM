@@ -309,7 +309,7 @@ namespace gpgmm::d3d12 {
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    DebugEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
+                    DebugEvent(allocator->GetTypename(), EventMessageId::kAllocatorFailed)
                         << "Unable to allocate memory for request.";
                 }
                 return E_FAIL;
@@ -317,7 +317,7 @@ namespace gpgmm::d3d12 {
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent(allocator->GetTypename(), EventMessageId::AllocatorFailed)
+                InfoEvent(allocator->GetTypename(), EventMessageId::kAllocatorFailed)
                     << "Failed to create resource using allocation: " +
                            GetDeviceErrorMessage(device, hr);
                 allocator->DeallocateMemory(std::move(allocation));
@@ -884,7 +884,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
         ResourceAllocation** ppResourceAllocationOut) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateResource");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
@@ -1172,7 +1172,7 @@ namespace gpgmm::d3d12 {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
                 return E_FAIL;
             }
-            InfoEvent(GetTypename(), EventMessageId::AllocatorFailed)
+            InfoEvent(GetTypename(), EventMessageId::kAllocatorFailed)
                 << "Unable to allocate by using a heap, falling back to a committed resource.";
         }
 
@@ -1262,7 +1262,7 @@ namespace gpgmm::d3d12 {
                                                     const D3D12_CLEAR_VALUE* clearValue,
                                                     D3D12_RESOURCE_STATES initialResourceState,
                                                     ID3D12Resource** placedResourceOut) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreatePlacedResource");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreatePlacedResource");
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident or
         // CreatePlacedResource will fail.
@@ -1291,7 +1291,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
         Heap** resourceHeapOut) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.CreateCommittedResource");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateCommittedResource");
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
@@ -1348,7 +1348,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfoInternal() const {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.GetInfo");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.GetInfo");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_INFO result = mInfo;
@@ -1426,7 +1426,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ResourceAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 

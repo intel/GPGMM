@@ -45,14 +45,14 @@ namespace gpgmm {
 
     // EventMessage
 
-    EventMessage::EventMessage(const LogSeverity& level, const char* name, int messageId)
+    EventMessage::EventMessage(const LogSeverity& level, const char* name, EventMessageId messageId)
         : mSeverity(level), mName(name), mMessageId(messageId) {
     }
 
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity) << mName << "(" << mMessageId << ")"
+        gpgmm::Log(mSeverity) << mName << "(" << static_cast<int>(mMessageId) << ")"
                               << ": " << description;
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
@@ -65,19 +65,19 @@ namespace gpgmm {
         }
     }
 
-    EventMessage DebugEvent(const char* name, int messageId) {
+    EventMessage DebugEvent(const char* name, EventMessageId messageId) {
         return {LogSeverity::Debug, name, messageId};
     }
 
-    EventMessage InfoEvent(const char* name, int messageId) {
+    EventMessage InfoEvent(const char* name, EventMessageId messageId) {
         return {LogSeverity::Info, name, messageId};
     }
 
-    EventMessage WarnEvent(const char* name, int messageId) {
+    EventMessage WarnEvent(const char* name, EventMessageId messageId) {
         return {LogSeverity::Warning, name, messageId};
     }
 
-    EventMessage ErrorEvent(const char* name, int messageId) {
+    EventMessage ErrorEvent(const char* name, EventMessageId messageId) {
         return {LogSeverity::Error, name, messageId};
     }
 

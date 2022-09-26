@@ -17,7 +17,7 @@
 
 namespace gpgmm {
 
-    enum GPUVendor {
+    enum class GPUVendor {
         kAMD_VkVendor = 4098,
         kARM_VkVendor = 5045,
         kImagination_VkVendor = 4112,

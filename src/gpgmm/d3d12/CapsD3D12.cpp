@@ -98,7 +98,7 @@ namespace gpgmm::d3d12 {
         caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 
         // D3D12 has no feature to detect support and must be set manually.
-        if (adapterDesc.VendorId == kIntel_VkVendor) {
+        if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_VkVendor)) {
             caps->mIsResourceAllocationWithinCoherent = true;
         }
 

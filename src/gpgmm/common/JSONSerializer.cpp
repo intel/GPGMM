@@ -37,7 +37,7 @@ namespace gpgmm {
     JSONDict JSONSerializer::Serialize(const EventMessageInfo& info) {
         JSONDict dict;
         dict.AddItem("Description", info.Description);
-        dict.AddItem("ID", info.ID);
+        dict.AddItem("ID", static_cast<uint32_t>(info.ID));
         return dict;
     }
 

@@ -37,7 +37,7 @@ class EventTraceWriterTests : public testing::Test {
 TEST_F(EventTraceWriterTests, SingleThreadWrites) {
     constexpr uint32_t kEventCount = 64u;
     for (size_t i = 0; i < kEventCount; i++) {
-        TRACE_EVENT_INSTANT0(TraceEventCategory::Default, "InstantEvent");
+        TRACE_EVENT_INSTANT0(TraceEventCategory::kDefault, "InstantEvent");
     }
 
     // 1 event per thread + 1 metadata event for main thread name.
@@ -49,7 +49,7 @@ TEST_F(EventTraceWriterTests, MultiThreadWrites) {
     std::vector<std::thread> threads(kThreadCount);
     for (size_t threadIdx = 0; threadIdx < threads.size(); threadIdx++) {
         threads[threadIdx] = std::thread(
-            [&]() { TRACE_EVENT_INSTANT0(TraceEventCategory::Default, "InstantEvent"); });
+            [&]() { TRACE_EVENT_INSTANT0(TraceEventCategory::kDefault, "InstantEvent"); });
     }
 
     for (std::thread& thread : threads) {

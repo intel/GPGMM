@@ -28,7 +28,7 @@ namespace gpgmm {
         AsyncEventImpl() = default;
 
         void Wait() override {
-            TRACE_EVENT0(TraceEventCategory::Default, "AsyncEventImpl.Wait");
+            TRACE_EVENT0(TraceEventCategory::kDefault, "AsyncEventImpl.Wait");
 
             std::unique_lock<std::mutex> lock(mMutex);
             mCondition.wait(lock, [this] { return mIsSignaled; });
@@ -63,7 +63,7 @@ namespace gpgmm {
             std::shared_ptr<Event> event = std::make_shared<AsyncEventImpl>();
             std::thread thread([callback, event, name]() {
                 SetThreadName(name);
-                TRACE_EVENT_METADATA1(TraceEventCategory::Metadata, "thread_name", "name", name);
+                TRACE_EVENT_METADATA1(TraceEventCategory::kMetadata, "thread_name", "name", name);
                 (*callback)();
                 event->Signal();
             });
