@@ -36,7 +36,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "PooledMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -61,7 +61,7 @@ namespace gpgmm {
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "PooledMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "PooledMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 

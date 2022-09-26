@@ -350,7 +350,7 @@ namespace gpgmm::vk {
         }
 
         if (memoryAllocation == nullptr) {
-            ErrorEvent("GpResourceAllocator.TryAllocateResource", EventMessageId::AllocatorFailed)
+            ErrorEvent("GpResourceAllocator.TryAllocateResource", EventMessageId::kAllocatorFailed)
                 << "Unable to allocate memory for resource.";
 
             return VK_ERROR_UNKNOWN;

@@ -30,7 +30,7 @@ namespace gpgmm::vk {
 
     std::unique_ptr<MemoryAllocation> DeviceMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "DeviceMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.TryAllocateMemory");
 
         if (request.NeverAllocate) {
             return {};
@@ -39,7 +39,7 @@ namespace gpgmm::vk {
         const uint64_t maxDeviceMemoryAllocationCount =
             mResourceAllocator->GetCaps()->GetMaxDeviceAllocationCount();
         if (mInfo.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
-            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", EventMessageId::AllocatorFailed)
+            DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", EventMessageId::kAllocatorFailed)
                 << "Device exceeded max number of device memory allocations (" +
                        std::to_string(mInfo.UsedMemoryCount) + " vs " +
                        std::to_string(maxDeviceMemoryAllocationCount) + ").";
@@ -72,7 +72,7 @@ namespace gpgmm::vk {
     }
 
     void DeviceMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "DeviceMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.DeallocateMemory");
 
         VkDeviceMemory deviceMemory = ToBackend(allocation->GetMemory())->GetDeviceMemory();
         mResourceAllocator->GetFunctions().FreeMemory(mResourceAllocator->GetDevice(), deviceMemory,

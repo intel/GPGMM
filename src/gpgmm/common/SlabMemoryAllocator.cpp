@@ -192,7 +192,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -281,7 +281,7 @@ namespace gpgmm {
                         }
 
                         if (prefetchedSlabAllocation != nullptr) {
-                            DebugEvent(GetTypename(), EventMessageId::PrefetchFailed)
+                            DebugEvent(GetTypename(), EventMessageId::kPrefetchFailed)
                                 << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                                 << prefetchedSlabAllocation->GetSize() << " bytes.";
                         }
@@ -382,7 +382,7 @@ namespace gpgmm {
     }
 
     void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SlabMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -458,7 +458,7 @@ namespace gpgmm {
             SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
                        mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
         if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-            WarnEvent(GetTypename(), EventMessageId::PrefetchFailed)
+            WarnEvent(GetTypename(), EventMessageId::kPrefetchFailed)
                 << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
                 << kPrefetchCoverageWarnMinThreshold * 100;
             return false;
@@ -493,7 +493,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabCacheAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -527,7 +527,7 @@ namespace gpgmm {
     }
 
     void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SlabCacheAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabCacheAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 

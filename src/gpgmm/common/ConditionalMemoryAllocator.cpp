@@ -30,7 +30,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> ConditionalMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "ConditionalMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ConditionalMemoryAllocator.TryAllocateMemory");
         if (request.SizeInBytes <= mConditionalSize) {
             return mFirstAllocator->TryAllocateMemory(request);
         } else {

@@ -43,7 +43,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "BuddyMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -100,7 +100,7 @@ namespace gpgmm {
     void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        TRACE_EVENT0(TraceEventCategory::Default, "BuddyMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "BuddyMemoryAllocator.DeallocateMemory");
 
         ASSERT(subAllocation != nullptr);
 

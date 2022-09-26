@@ -24,7 +24,7 @@ namespace gpgmm {
     /** \enum AllocationMethod
     Represents how memory was allocated.
     */
-    enum AllocationMethod {
+    enum class AllocationMethod {
 
         /** \brief Not yet allocated or invalid.
 

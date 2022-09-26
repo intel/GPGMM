@@ -121,26 +121,26 @@ const uint64_t kNoId = 0;
 
 #define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr)                                 \
     do {                                                                     \
-        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default,      \
+        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::kDefault,      \
                                             (*objPtr).GetTypename(), objPtr); \
     } while (false)
 
 #define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr)                             \
     do {                                                                     \
-        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default,      \
+        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::kDefault,      \
                                             (*objPtr).GetTypename(), objPtr); \
     } while (false)
 
 #define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc)                   \
     do {                                                                  \
         TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(                              \
-            TraceEventCategory::Default, (*objPtr).GetTypename(), objPtr, \
+            TraceEventCategory::kDefault, (*objPtr).GetTypename(), objPtr, \
             GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled()));           \
     } while (false)
 
 #define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc)                                \
     do {                                                                         \
-        TRACE_EVENT_INSTANT1(TraceEventCategory::Default, name,                  \
+        TRACE_EVENT_INSTANT1(TraceEventCategory::kDefault, name,                  \
                               GPGMM_LAZY_SERIALIZE(desc, IsEventTraceEnabled())); \
     } while (false)
 
@@ -152,16 +152,16 @@ const uint64_t kNoId = 0;
 #define GPGMM_TRACE_EVENT_METRIC(name, value)                     \
     do {                                                          \
         if (value == 0) break;                                    \
-        TRACE_COUNTER1(TraceEventCategory::Default, name, value); \
+        TRACE_COUNTER1(TraceEventCategory::kDefault, name, value); \
     } while (false)
 
 #endif
 
 namespace gpgmm {
 
-    enum TraceEventCategory {
-        Default = 0,
-        Metadata = 1,
+    enum class TraceEventCategory {
+        kDefault = 0,
+        kMetadata = 1,
     };
 
     enum TraceEventPhase {

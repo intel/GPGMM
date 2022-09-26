@@ -23,27 +23,27 @@
 
 namespace gpgmm {
 
-    enum EventMessageId {
-        Unknown,
-        SizeExceeded,
-        AlignmentMismatch,
-        AllocatorFailed,
-        PrefetchFailed,
-        BudgetExceeded,
-        BudgetUpdated,
-        BudgetInvalid,
+    enum class EventMessageId {
+        kUnknown,
+        kSizeExceeded,
+        kAlignmentMismatch,
+        kAllocatorFailed,
+        kPrefetchFailed,
+        kBudgetExceeded,
+        kBudgetUpdated,
+        kBudgetInvalid,
     };
 
     struct EventMessageInfo {
         std::string Description;
-        int ID;
+        EventMessageId ID;
     };
 
     class EventMessage {
       public:
         EventMessage(const LogSeverity& level,
                      const char* name,
-                     int messageId = EventMessageId::Unknown);
+                     EventMessageId messageId = EventMessageId::kUnknown);
         ~EventMessage();
 
         EventMessage(EventMessage&& other) = default;
@@ -58,15 +58,15 @@ namespace gpgmm {
       private:
         LogSeverity mSeverity;
         const char* mName = nullptr;
-        int mMessageId = 0;
+        EventMessageId mMessageId = EventMessageId::kUnknown;
 
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const char* name, int messageId = EventMessageId::Unknown);
-    EventMessage InfoEvent(const char* name, int messageId = EventMessageId::Unknown);
-    EventMessage WarnEvent(const char* name, int messageId = EventMessageId::Unknown);
-    EventMessage ErrorEvent(const char* name, int messageId = EventMessageId::Unknown);
+    EventMessage DebugEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage InfoEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage WarnEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage ErrorEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);

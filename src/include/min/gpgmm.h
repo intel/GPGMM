@@ -62,7 +62,7 @@ namespace gpgmm {
         uint64_t Alignment;
     };
 
-    enum AllocationMethod {
+    enum class AllocationMethod {
         kUndefined = 0,
         kStandalone = 1,
         kSubAllocated = 2,

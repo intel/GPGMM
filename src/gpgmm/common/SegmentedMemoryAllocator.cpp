@@ -121,7 +121,7 @@ namespace gpgmm {
 
     std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.TryAllocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SegmentedMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -152,7 +152,7 @@ namespace gpgmm {
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::Default, "SegmentedMemoryAllocator.DeallocateMemory");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "SegmentedMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
