@@ -31,9 +31,8 @@ var searchData=
   ['preferredresourceheapsize_28',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
   ['prefetchedmemorymisses_29',['PrefetchedMemoryMisses',['../structgpgmm_1_1_memory_allocator_info.html#a72c067d8e6c578976152bb7aeb292c97',1,'gpgmm::MemoryAllocatorInfo']]],
   ['prefetchedmemorymisseseliminated_30',['PrefetchedMemoryMissesEliminated',['../structgpgmm_1_1_memory_allocator_info.html#ab2d5625cffc43b7e91fda532009dc09e',1,'gpgmm::MemoryAllocatorInfo']]],
-  ['prefetchfailed_31',['PrefetchFailed',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088a33dff3e1f50e77b6f9aaf0747fbfcc53',1,'gpgmm']]],
-  ['previous_32',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
-  ['prevpoweroftwo_33',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
-  ['push_5fback_34',['push_back',['../classgpgmm_1_1_stable_list.html#af70c6b4c05eb1e249b045eda0eab11c1',1,'gpgmm::StableList::push_back(const T &amp;lvalue)'],['../classgpgmm_1_1_stable_list.html#a090189808a9a2ecdce9267d400499122',1,'gpgmm::StableList::push_back(T &amp;&amp;rvalue)']]],
-  ['pvulkanfunctions_35',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a50d3442f6b682ddb33e70d71310fa001',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
+  ['previous_31',['previous',['../classgpgmm_1_1_link_node.html#ad3fdc218403b5d0fb6ba2c27eda2eb49',1,'gpgmm::LinkNode']]],
+  ['prevpoweroftwo_32',['PrevPowerOfTwo',['../namespacegpgmm.html#a26b88d121fcdf92917372b7a248af742',1,'gpgmm']]],
+  ['push_5fback_33',['push_back',['../classgpgmm_1_1_stable_list.html#af70c6b4c05eb1e249b045eda0eab11c1',1,'gpgmm::StableList::push_back(const T &amp;lvalue)'],['../classgpgmm_1_1_stable_list.html#a090189808a9a2ecdce9267d400499122',1,'gpgmm::StableList::push_back(T &amp;&amp;rvalue)']]],
+  ['pvulkanfunctions_34',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a50d3442f6b682ddb33e70d71310fa001',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
 ];

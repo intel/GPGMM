@@ -159,8 +159,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">gpgmm::TraceEventCategory</a> { <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa07687e4eace8946f087b35af8eebbed1">gpgmm::Default</a> = 0
-, <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fac0db516eb5ebe8d6c592f76285b1e871">gpgmm::Metadata</a> = 1
+<tr class="memitem:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7f">gpgmm::TraceEventCategory</a> { <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fa6867faeaa475fda467e48267db2bb8a8">gpgmm::kDefault</a> = 0
+, <a class="el" href="namespacegpgmm.html#ae50b3049f91a97681a340ff73f6b4b7fadc744975fcdff37e4159bd60ef0ee5ab">gpgmm::kMetadata</a> = 1
  }</td></tr>
 <tr class="separator:ae50b3049f91a97681a340ff73f6b4b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af07e47c92a100a7aa1cce31b0bb8d829"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829">gpgmm::TraceEventPhase</a> { <br />
@@ -246,7 +246,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                          \</div>
 <div class="line">        if (value == 0) break;                                    \</div>
-<div class="line">        <a class="code hl_define" href="_trace_event_8h.html#a1750f244061164e163224575a1d48e1d">TRACE_COUNTER1</a>(TraceEventCategory::Default, name, value); \</div>
+<div class="line">        <a class="code hl_define" href="_trace_event_8h.html#a1750f244061164e163224575a1d48e1d">TRACE_COUNTER1</a>(TraceEventCategory::kDefault, name, value); \</div>
 <div class="line">    } while (false)</div>
 <div class="ttc" id="a_trace_event_8h_html_a1750f244061164e163224575a1d48e1d"><div class="ttname"><a href="_trace_event_8h.html#a1750f244061164e163224575a1d48e1d">TRACE_COUNTER1</a></div><div class="ttdeci">#define TRACE_COUNTER1(category_group, name, value)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:67</div></div>
 </div><!-- fragment -->
@@ -278,7 +278,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                         \</div>
-<div class="line">        TRACE_EVENT_INSTANT1(TraceEventCategory::Default, name,                  \</div>
+<div class="line">        TRACE_EVENT_INSTANT1(TraceEventCategory::kDefault, name,                  \</div>
 <div class="line">                              <a class="code hl_define" href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, IsEventTraceEnabled())); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 <div class="ttc" id="a_trace_event_8h_html_af7c752aa65ef2bc022a0735a6a669124"><div class="ttname"><a href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a></div><div class="ttdeci">#define GPGMM_LAZY_SERIALIZE(object, condition)</div><div class="ttdef"><b>Definition:</b> TraceEvent.h:148</div></div>
@@ -301,7 +301,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                     \</div>
-<div class="line">        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::Default,      \</div>
+<div class="line">        TRACE_EVENT_OBJECT_DELETED_WITH_ID(TraceEventCategory::kDefault,      \</div>
 <div class="line">                                            (*objPtr).GetTypename(), objPtr); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->
@@ -323,7 +323,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                     \</div>
-<div class="line">        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::Default,      \</div>
+<div class="line">        TRACE_EVENT_OBJECT_CREATED_WITH_ID(TraceEventCategory::kDefault,      \</div>
 <div class="line">                                            (*objPtr).GetTypename(), objPtr); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->
@@ -356,7 +356,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                  \</div>
 <div class="line">        TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(                              \</div>
-<div class="line">            TraceEventCategory::Default, (*objPtr).GetTypename(), objPtr, \</div>
+<div class="line">            TraceEventCategory::kDefault, (*objPtr).GetTypename(), objPtr, \</div>
 <div class="line">            <a class="code hl_define" href="_trace_event_8h.html#af7c752aa65ef2bc022a0735a6a669124">GPGMM_LAZY_SERIALIZE</a>(desc, IsEventTraceEnabled()));           \</div>
 <div class="line">    } <span class="keywordflow">while</span> (<span class="keyword">false</span>)</div>
 </div><!-- fragment -->

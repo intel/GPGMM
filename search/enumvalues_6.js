@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['heap_5fflag_5falways_5fin_5fbudget_0',['HEAP_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929',1,'gpgmm::d3d12']]],
-  ['heaps_5fflag_5fnone_1',['HEAPS_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9',1,'gpgmm::d3d12']]]
+  ['info_0',['Info',['../namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0cafa4059b0251f66a18cb56f544728796875',1,'gpgmm']]],
+  ['instant_1',['Instant',['../namespacegpgmm.html#af07e47c92a100a7aa1cce31b0bb8d829a03af365df5946edc9c635358a96b4f2c',1,'gpgmm']]]
 ];
