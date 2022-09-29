@@ -328,6 +328,8 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_PROPERTIES GetHeapProperties(ID3D12Device* device,
                                                 D3D12_HEAP_TYPE heapType,
                                                 bool isCustomHeapDisabled) {
+            ASSERT(heapType != D3D12_HEAP_TYPE_CUSTOM);
+            
             // Produces the corresponding properties from the corresponding heap type per this table
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getcustomheapproperties
             if (!isCustomHeapDisabled) {
