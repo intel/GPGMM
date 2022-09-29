@@ -611,15 +611,13 @@ namespace gpgmm::d3d12 {
                 MemoryAllocationRequest cacheRequest = {};
                 cacheRequest.NeverAllocate = true;
                 cacheRequest.AlwaysCacheSize = true;
-                cacheRequest.AlwaysPrefetch = false;
-                cacheRequest.AvailableForAllocation = kInvalidSize;
 
                 for (const SizeClassInfo& sizeInfo : ResourceSize::GenerateAllClassSizes()) {
-                    MemoryAllocator* allocator = nullptr;
                     cacheRequest.SizeInBytes = sizeInfo.SizeInBytes;
                     cacheRequest.Alignment = sizeInfo.Alignment;
 
-                    allocator = mSmallBufferAllocatorOfType[resourceHeapTypeIndex].get();
+                    MemoryAllocator* allocator =
+                        mSmallBufferAllocatorOfType[resourceHeapTypeIndex].get();
                     if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
                         sizeInfo.Alignment == D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT) {
                         allocator->TryAllocateMemory(cacheRequest);
