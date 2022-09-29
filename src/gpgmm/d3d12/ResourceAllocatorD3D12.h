@@ -483,7 +483,7 @@ namespace gpgmm::d3d12 {
     **/
     class GPGMM_EXPORT ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
-        /** \brief Create allocator with residency.
+        /** \brief Create a resource allocator with residency.
 
         Residency requires at-least DXGI version 1.4.
 
@@ -496,11 +496,11 @@ namespace gpgmm::d3d12 {
         residency manager. If NULL is passed, the allocator will be created without using
         residency.
         */
-        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                       ResourceAllocator** ppResourceAllocatorOut,
-                                       ResidencyManager** ppResidencyManagerOut = nullptr);
+        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResourceAllocator** ppResourceAllocatorOut,
+                                               ResidencyManager** ppResidencyManagerOut = nullptr);
 
-        /** \brief Create allocator using a specified residency manager.
+        /** \brief Create a resource allocator using a specified residency manager.
 
         @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
         allocator.
@@ -510,9 +510,9 @@ namespace gpgmm::d3d12 {
         resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
         create the allocator.
         */
-        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                       ResidencyManager* pResidencyManager,
-                                       ResourceAllocator** ppResourceAllocatorOut);
+        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResidencyManager* pResidencyManager,
+                                               ResourceAllocator** ppResourceAllocatorOut);
 
         ~ResourceAllocator() override;
 

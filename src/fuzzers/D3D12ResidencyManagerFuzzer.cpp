@@ -41,7 +41,7 @@ namespace {
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-    if (FAILED(CreateAllocatorDesc(&allocatorDesc))) {
+    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc))) {
         return 0;
     }
 
@@ -72,7 +72,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         return 0;
     }
 
-    if (FAILED(gpgmm::d3d12::ResourceAllocator::CreateAllocator(
+    if (FAILED(gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(
             allocatorDesc, gResidencyManager.Get(), &gResourceAllocator))) {
         return 0;
     }

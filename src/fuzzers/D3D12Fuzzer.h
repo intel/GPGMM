@@ -19,7 +19,7 @@
 
 uint64_t UInt8ToUInt64(const uint8_t* src);
 
-HRESULT CreateAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc);
+HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc);
 
 D3D12_RESOURCE_DESC CreateBufferDesc(uint64_t width, uint64_t alignment = 0);
 

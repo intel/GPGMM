@@ -20,7 +20,7 @@ uint64_t UInt8ToUInt64(const uint8_t* src) {
     return dst;
 }
 
-HRESULT CreateAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc) {
+HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDescOut = {};
 
     // Populate the device

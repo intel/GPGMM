@@ -31,7 +31,7 @@ namespace gpgmm::vk {
 
     VkResult gpCreateResourceAllocator(const GpAllocatorCreateInfo& info,
                                        GpResourceAllocator* allocatorOut) {
-        return GpResourceAllocator_T::CreateAllocator(info, allocatorOut);
+        return GpResourceAllocator_T::CreateResourceAllocator(info, allocatorOut);
     }
 
     void gpDestroyResourceAllocator(GpResourceAllocator allocator) {
@@ -186,8 +186,8 @@ namespace gpgmm::vk {
     // GpResourceAllocator_T
 
     // static
-    VkResult GpResourceAllocator_T::CreateAllocator(const GpAllocatorCreateInfo& info,
-                                                    GpResourceAllocator* allocatorOut) {
+    VkResult GpResourceAllocator_T::CreateResourceAllocator(const GpAllocatorCreateInfo& info,
+                                                            GpResourceAllocator* allocatorOut) {
         VulkanFunctions vkFunctions = {};
         {
             VulkanExtensions vkExtensionsRequired = {};

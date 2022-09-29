@@ -62,7 +62,7 @@ HRESULT Init() {
     desc.ResourceHeapTier = options.ResourceHeapTier;
 
     Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocator> resourceAllocator;
-    hr = gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &resourceAllocator);
+    hr = gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(desc, &resourceAllocator);
     if (FAILED(hr)) {
         return hr;
     }

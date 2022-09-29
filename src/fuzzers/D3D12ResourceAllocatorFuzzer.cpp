@@ -26,12 +26,12 @@ namespace {
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-    if (FAILED(CreateAllocatorDesc(&allocatorDesc))) {
+    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc))) {
         return 0;
     }
 
-    if (FAILED(
-            gpgmm::d3d12::ResourceAllocator::CreateAllocator(allocatorDesc, &gResourceAllocator))) {
+    if (FAILED(gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(allocatorDesc,
+                                                                        &gResourceAllocator))) {
         return 0;
     }
 

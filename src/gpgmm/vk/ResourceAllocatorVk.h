@@ -355,8 +355,8 @@ namespace gpgmm::vk {
     class Caps;
     struct GpResourceAllocator_T {
       public:
-        static VkResult CreateAllocator(const GpAllocatorCreateInfo& info,
-                                        GpResourceAllocator* allocatorOut);
+        static VkResult CreateResourceAllocator(const GpAllocatorCreateInfo& info,
+                                                GpResourceAllocator* allocatorOut);
 
         VkResult TryAllocateMemory(const VkMemoryRequirements& requirements,
                                    const GpResourceAllocationCreateInfo& allocationInfo,
