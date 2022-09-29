@@ -480,7 +480,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         ComPtr<ResourceAllocator> resourceAllocator;
-                        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+                        ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
                             allocatorDescOfProfile, residencyManager.Get(), &resourceAllocator));
 
                         ASSERT_TRUE(playbackContext.CreatedAllocatorsToID

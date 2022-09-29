@@ -32,7 +32,7 @@ class VKResourceAllocatorTests : public VKTestBase, public ::testing::Test {
     }
 };
 
-TEST_F(VKResourceAllocatorTests, CreateAllocator) {
+TEST_F(VKResourceAllocatorTests, CreateResourceAllocator) {
     GpResourceAllocator resourceAllocator;
     ASSERT_SUCCESS(gpCreateResourceAllocator(CreateBasicAllocatorInfo(), &resourceAllocator));
     gpDestroyResourceAllocator(resourceAllocator);

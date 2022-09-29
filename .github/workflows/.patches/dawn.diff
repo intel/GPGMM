@@ -553,7 +553,7 @@ index 214fa67f8..909e7d810 100644
 +                              "D3D12 create residency manager"));
 +    }
 +
-+    DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResourceAllocator::CreateAllocator(
++    DAWN_TRY(CheckHRESULT(gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(
 +                              allocatorDesc, mResidencyManager.Get(), &mResourceAllocator),
 +                          "D3D12 create resource allocator"));
  

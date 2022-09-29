@@ -35,7 +35,7 @@ allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
 
 ComPtr<gpgmm::d3d12::ResidencyManager> residency; // Optional
 ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
-gpgmm::d3d12::ResourceAllocator::CreateAllocator(desc, &allocator, &residency);
+gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(desc, &allocator, &residency);
 ```
 
 ```cpp

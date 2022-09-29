@@ -266,8 +266,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
-                                                        &resourceAllocator, nullptr));
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(CreateBasicAllocatorDesc(),
+                                                                &resourceAllocator, nullptr));
 
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
@@ -328,8 +328,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     {
         ComPtr<ResidencyManager> residencyManager;
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(),
-                                                            &resourceAllocator, &residencyManager));
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
+            CreateBasicAllocatorDesc(), &resourceAllocator, &residencyManager));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
     }
@@ -341,7 +341,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
             CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+        ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
             CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
@@ -355,8 +355,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     {
         ComPtr<ResidencyManager> residencyManager;
         ComPtr<ResourceAllocator> resourceAllocator;
-        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), &resourceAllocator,
-                                           &residencyManager);
+        ResourceAllocator::CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator,
+                                                   &residencyManager);
     }
 
     // Create allocator with residency, seperately.
@@ -366,8 +366,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
                                                  &residencyManager);
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ResourceAllocator::CreateAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
-                                           &resourceAllocator);
+        ResourceAllocator::CreateResourceAllocator(CreateBasicAllocatorDesc(),
+                                                   residencyManager.Get(), &resourceAllocator);
     }
 
     GPGMM_TEST_MEMORY_LEAK_END();
@@ -382,7 +382,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
 
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -440,7 +440,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
 
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -487,7 +487,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
     allocatorDesc.MemoryGrowthFactor = 2;
 
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
     std::vector<ComPtr<ResourceAllocation>> allocations = {};
@@ -528,7 +528,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
     ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
 
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -577,7 +577,7 @@ TEST_F(D3D12ResidencyManagerTests, ExecuteCommandListOverBudget) {
         CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
 
     ComPtr<ResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(ResourceAllocator::CreateAllocator(
+    ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
         CreateBasicAllocatorDesc(), residencyManager.Get(), &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);

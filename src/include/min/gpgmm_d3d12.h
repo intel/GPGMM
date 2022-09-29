@@ -314,13 +314,13 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocator final : public MemoryAllocator, public IUnknownImpl {
       public:
-        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                       ResourceAllocator** ppResourceAllocatorOut,
-                                       ResidencyManager** ppResidencyManagerOut = nullptr);
+        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResourceAllocator** ppResourceAllocatorOut,
+                                               ResidencyManager** ppResidencyManagerOut = nullptr);
 
-        static HRESULT CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                       ResidencyManager* pResidencyManager,
-                                       ResourceAllocator** ppResourceAllocatorOut);
+        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ResidencyManager* pResidencyManager,
+                                               ResourceAllocator** ppResourceAllocatorOut);
 
         HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,

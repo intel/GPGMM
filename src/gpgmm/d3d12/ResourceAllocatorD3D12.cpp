@@ -362,9 +362,9 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     // static
-    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                               ResourceAllocator** ppResourceAllocatorOut,
-                                               ResidencyManager** ppResidencyManagerOut) {
+    HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                                       ResourceAllocator** ppResourceAllocatorOut,
+                                                       ResidencyManager** ppResidencyManagerOut) {
         if (allocatorDescriptor.Device == nullptr || allocatorDescriptor.Adapter == nullptr) {
             return E_INVALIDARG;
         }
@@ -391,8 +391,8 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ResourceAllocator> resourceAllocator;
-        ReturnIfFailed(
-            CreateAllocator(allocatorDescriptor, residencyManager.Get(), &resourceAllocator));
+        ReturnIfFailed(CreateResourceAllocator(allocatorDescriptor, residencyManager.Get(),
+                                               &resourceAllocator));
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -406,9 +406,9 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ResourceAllocator::CreateAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                               ResidencyManager* pResidencyManager,
-                                               ResourceAllocator** ppResourceAllocatorOut) {
+    HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                                       ResidencyManager* pResidencyManager,
+                                                       ResourceAllocator** ppResourceAllocatorOut) {
         if (allocatorDescriptor.Adapter == nullptr || allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
