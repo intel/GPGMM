@@ -194,7 +194,6 @@ namespace gpgmm::d3d12 {
 
       private:
         friend ResidencyManager;
-        friend ResourceAllocator;
 
         Heap(ComPtr<ID3D12Pageable> pageable,
              const HEAP_DESC& descriptor,
