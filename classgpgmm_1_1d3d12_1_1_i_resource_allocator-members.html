@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GPGMM: src/include/min Directory Reference</title>
+<title>GPGMM: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,26 +70,22 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b0856f6b0d80ccb263b2f415c91f9e17.html">include</a></li><li class="navelem"><a class="el" href="dir_5a055e83bd512f94cf4cb353164045db.html">min</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacegpgmm.html">gpgmm</a></li><li class="navelem"><a class="el" href="namespacegpgmm_1_1d3d12.html">d3d12</a></li><li class="navelem"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">min Directory Reference</div></div>
+  <div class="headertitle"><div class="title">gpgmm::d3d12::IResourceAllocator Member List</div></div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpgmm_8cpp.html">gpgmm.cpp</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpgmm_8h.html">gpgmm.h</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpgmm__d3d12_8cpp.html">gpgmm_d3d12.cpp</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="min_2gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a9dc27dd2e8023919a721d04ac93a7aa5">CheckFeatureSupport</a>(ALLOCATOR_FEATURE feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a51f550ec5771ea10b9be45cc14207937">CreateResource</a>(const ALLOCATION_DESC &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, IResourceAllocation **ppResourceAllocationOut)=0</td><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a568d37cfa8ba61dbcca4b3765c50e41e">CreateResource</a>(Microsoft::WRL::ComPtr&lt; ID3D12Resource &gt; committedResource, IResourceAllocation **ppResourceAllocationOut)=0</td><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6614e188da92c0cd8c4251f0313a37f8">GetInfo</a>() const =0</td><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6d074a6bef62cf5ccd87c79e4cd99386">ReleaseMemory</a>(uint64_t bytesToRelease)=0</td><td class="entry"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">gpgmm::d3d12::IResourceAllocator</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+</table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5

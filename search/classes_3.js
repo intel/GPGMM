@@ -12,6 +12,7 @@ var searchData=
   ['devicememory_9',['DeviceMemory',['../classgpgmm_1_1vk_1_1_device_memory.html',1,'gpgmm::vk']]],
   ['devicememoryallocator_10',['DeviceMemoryAllocator',['../classgpgmm_1_1vk_1_1_device_memory_allocator.html',1,'gpgmm::vk']]],
   ['dummybuddyblockallocator_11',['DummyBuddyBlockAllocator',['../class_dummy_buddy_block_allocator.html',1,'']]],
-  ['dummymemoryallocator_12',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
-  ['dummyobject_13',['DummyObject',['../class_dummy_object.html',1,'']]]
+  ['dummymemory_12',['DummyMemory',['../classgpgmm_1_1_dummy_memory.html',1,'gpgmm']]],
+  ['dummymemoryallocator_13',['DummyMemoryAllocator',['../classgpgmm_1_1_dummy_memory_allocator.html',1,'gpgmm']]],
+  ['dummyobject_14',['DummyObject',['../class_dummy_object.html',1,'']]]
 ];

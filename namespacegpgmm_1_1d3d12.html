@@ -106,7 +106,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_d3_d12_test_base.html">D3D12TestBase</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_object.html">DebugObject</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug object associates additional information for D3D objects using SetPrivateData.  <a href="classgpgmm_1_1d3d12_1_1_debug_object.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html">DebugResourceAllocator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html" title="DebugResourceAllocator tracks &quot;live&quot; allocations so they can be reported if leaked.">DebugResourceAllocator</a> tracks "live" allocations so they can be reported if leaked.  <a href="classgpgmm_1_1d3d12_1_1_debug_resource_allocator.html#details">More...</a><br /></td></tr>
@@ -120,11 +119,28 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_fence.html">Fence</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_debug_object.html">IDebugObject</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug object associates additional information for D3D objects using SetPrivateData.  <a href="classgpgmm_1_1d3d12_1_1_i_debug_object.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a>'s residency cache.  <a href="classgpgmm_1_1d3d12_1_1_i_heap.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_list.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html">IResourceAllocation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a>.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html">IUnknownImpl</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html" title="IUnknownImpl is a thread-safe ref-count implementation for custom COM based objects.">IUnknownImpl</a> is a thread-safe ref-count implementation for custom COM based objects.  <a href="classgpgmm_1_1d3d12_1_1_i_unknown_impl.html#details">More...</a><br /></td></tr>
@@ -136,20 +152,16 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <a href="classgpgmm_1_1d3d12_1_1_residency_list.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a>.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_heap_allocator.html">ResourceHeapAllocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,244 +170,80 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac42f78da8fd9b21b558e6d39c6e60de5">CreateHeapFn</a> = std::function&lt; HRESULT(ID3D12Pageable **ppPageableOut)&gt;</td></tr>
-<tr class="memdesc:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <a href="namespacegpgmm_1_1d3d12.html#ac42f78da8fd9b21b558e6d39c6e60de5">More...</a><br /></td></tr>
-<tr class="separator:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab7198d09751d622d892ab644dd173ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aab7198d09751d622d892ab644dd173ad">RESOURCE_ALLOCATOR_INFO</a> = <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a></td></tr>
-<tr class="separator:aab7198d09751d622d892ab644dd173ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8c9e657d16843e8b6f296ad94af852"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> = std::function&lt; HRESULT(ID3D12Pageable **ppPageableOut)&gt;</td></tr>
+<tr class="memdesc:a2e8c9e657d16843e8b6f296ad94af852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <a href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">More...</a><br /></td></tr>
+<tr class="separator:a2e8c9e657d16843e8b6f296ad94af852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add1d01a196c973b44b13ce6df72fb65f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#add1d01a196c973b44b13ce6df72fb65f">RESOURCE_ALLOCATOR_INFO</a> = <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a></td></tr>
+<tr class="separator:add1d01a196c973b44b13ce6df72fb65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a964c4ad3a4e304bf0e281459f327023c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">RESIDENCY_STATUS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca995e849faa7ad6ae73a6d4f2f46315f0">RESIDENCY_STATUS_UNKNOWN</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a">RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2">RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
+ }</td></tr>
+<tr class="separator:a964c4ad3a4e304bf0e281459f327023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff116c525e8afde5753ee3b1311d662"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662">HEAPS_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a71a9804cfbe652fef5164c6d2a22c455">HEAPS_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a076caccb5ec2fb9e005afeeac13d171f">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
+ }</td></tr>
+<tr class="separator:abff116c525e8afde5753ee3b1311d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b">EVENT_RECORD_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620">EVENT_RECORD_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba910403bd626518aacc41a8ffb54dc34b">EVENT_RECORD_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba293f09f69d9f9b13f5048972e57651b5">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba4451b8acc017f7c049709b8ce058347d">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1a1f55c80e8c930949911097f3fd1519">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620">EVENT_RECORD_FLAG_NONE</a> = 0x0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba5953585d1378f23825964434e4b6c49c">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baad24450796adb0c726ebc90b11745b59">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba730a5ea8249a36065778ece4350991a8">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
 <br />
  }</td></tr>
 <tr class="separator:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
+<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
  }</td></tr>
 <tr class="separator:a50666648c6ef0535d4b9afed754af8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a964c4ad3a4e304bf0e281459f327023c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">RESIDENCY_STATUS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-<br />
- }</td></tr>
-<tr class="separator:a964c4ad3a4e304bf0e281459f327023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abff116c525e8afde5753ee3b1311d662"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662">HEAPS_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
- }</td></tr>
-<tr class="separator:abff116c525e8afde5753ee3b1311d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91ac0725c909f9dae91c66c3bb049c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
+<tr class="memitem:a91ac0725c909f9dae91c66c3bb049c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e">RESIDENCY_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029">RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
  }</td></tr>
 <tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">ALLOCATOR_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">ALLOCATOR_FLAG_NONE</a> = 0x0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a26ea5e0aa63dd0ec1b4789c7bb470c4f">ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">ALLOCATOR_ALGORITHM_SLAB</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
 <br />
  }</td></tr>
 <tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073">ALLOCATION_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de">ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150">ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
 <br />
  }</td></tr>
 <tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24c166248417fa823597d7219566304a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
- }</td></tr>
-<tr class="separator:a24c166248417fa823597d7219566304a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a964c4ad3a4e304bf0e281459f327023c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">RESIDENCY_STATUS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-<br />
- }</td></tr>
-<tr class="separator:a964c4ad3a4e304bf0e281459f327023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abff116c525e8afde5753ee3b1311d662"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662">HEAPS_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
- }</td></tr>
-<tr class="separator:abff116c525e8afde5753ee3b1311d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b">EVENT_RECORD_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620">EVENT_RECORD_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620">EVENT_RECORD_FLAG_NONE</a> = 0x0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
-<br />
- }</td></tr>
-<tr class="separator:aa3f15dccfce0d5328b19d533a8cfdd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50666648c6ef0535d4b9afed754af8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
- }</td></tr>
-<tr class="separator:a50666648c6ef0535d4b9afed754af8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91ac0725c909f9dae91c66c3bb049c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
- }</td></tr>
-<tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">ALLOCATOR_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">ALLOCATOR_FLAG_NONE</a> = 0x0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-<br />
- }</td></tr>
-<tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
-<br />
- }</td></tr>
-<tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
-<br />
- }</td></tr>
-<tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24c166248417fa823597d7219566304a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
+<tr class="memitem:a24c166248417fa823597d7219566304a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b">ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
  }</td></tr>
 <tr class="separator:a24c166248417fa823597d7219566304a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -416,6 +264,21 @@ Functions</h2></td></tr>
 <tr class="separator:ac27affdc439f0ee00613f15835c347cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43e9130aee00fce32c2c86c84ffac851"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a43e9130aee00fce32c2c86c84ffac851">GetDeviceErrorMessage</a> (ID3D12Device *device, HRESULT error)</td></tr>
 <tr class="separator:a43e9130aee00fce32c2c86c84ffac851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">CreateHeap</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *const pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> &amp;&amp;createHeapFn, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a> **ppHeapOut)</td></tr>
+<tr class="memdesc:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <a href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">More...</a><br /></td></tr>
+<tr class="separator:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a9aa1792f31f01f4700d848c92ac86e"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0a9aa1792f31f01f4700d848c92ac86e">CreateResidencyList</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> **ppResidencyList)</td></tr>
+<tr class="memdesc:a0a9aa1792f31f01f4700d848c92ac86e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <a href="namespacegpgmm_1_1d3d12.html#a0a9aa1792f31f01f4700d848c92ac86e">More...</a><br /></td></tr>
+<tr class="separator:a0a9aa1792f31f01f4700d848c92ac86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0743e8d49caa99f875bec8a1ac2a50b"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#af0743e8d49caa99f875bec8a1ac2a50b">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memdesc:af0743e8d49caa99f875bec8a1ac2a50b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="namespacegpgmm_1_1d3d12.html#af0743e8d49caa99f875bec8a1ac2a50b">More...</a><br /></td></tr>
+<tr class="separator:af0743e8d49caa99f875bec8a1ac2a50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add456d0b4a9474e5e26021ffcbd5ff23"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#add456d0b4a9474e5e26021ffcbd5ff23">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memdesc:add456d0b4a9474e5e26021ffcbd5ff23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <a href="namespacegpgmm_1_1d3d12.html#add456d0b4a9474e5e26021ffcbd5ff23">More...</a><br /></td></tr>
+<tr class="separator:add456d0b4a9474e5e26021ffcbd5ff23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a7284f0cf647fe791faefda54399854"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *pResidencyManager, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
+<tr class="memdesc:a3a7284f0cf647fe791faefda54399854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator using a specified residency manager.  <a href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">More...</a><br /></td></tr>
+<tr class="separator:a3a7284f0cf647fe791faefda54399854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a666b52bc128c8e1b32dbf134d33617c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm.html#a977ac5299d49f79ffab44f0a5c8b0caf">LogSeverity</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a666b52bc128c8e1b32dbf134d33617c5">GetLogSeverity</a> (D3D12_MESSAGE_SEVERITY messageSeverity)</td></tr>
 <tr class="separator:a666b52bc128c8e1b32dbf134d33617c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19e0ecbc81b189ae3fc0db4162ad5733"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a19e0ecbc81b189ae3fc0db4162ad5733">IsDepthFormat</a> (DXGI_FORMAT format)</td></tr>
@@ -444,14 +307,14 @@ Functions</h2></td></tr>
 <tr class="separator:aeebd2399e605ce395a7b98a6a10c0d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ac42f78da8fd9b21b558e6d39c6e60de5" name="ac42f78da8fd9b21b558e6d39c6e60de5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac42f78da8fd9b21b558e6d39c6e60de5">&#9670;&#160;</a></span>CreateHeapFn</h2>
+<a id="a2e8c9e657d16843e8b6f296ad94af852" name="a2e8c9e657d16843e8b6f296ad94af852"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e8c9e657d16843e8b6f296ad94af852">&#9670;&#160;</a></span>CreateHeapFn</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::function&lt; HRESULT(ID3D12Pageable **ppPageableOut)&gt; <a class="el" href="namespacegpgmm_1_1d3d12.html#ac42f78da8fd9b21b558e6d39c6e60de5">gpgmm::d3d12::CreateHeapFn</a></td>
+          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">gpgmm::d3d12::CreateHeapFn</a> = typedef std::function&lt;HRESULT(ID3D12Pageable** ppPageableOut)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -467,14 +330,14 @@ Functions</h2></td></tr>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="aab7198d09751d622d892ab644dd173ad" name="aab7198d09751d622d892ab644dd173ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab7198d09751d622d892ab644dd173ad">&#9670;&#160;</a></span>RESOURCE_ALLOCATOR_INFO</h2>
+<a id="add1d01a196c973b44b13ce6df72fb65f" name="add1d01a196c973b44b13ce6df72fb65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add1d01a196c973b44b13ce6df72fb65f">&#9670;&#160;</a></span>RESOURCE_ALLOCATOR_INFO</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a> <a class="el" href="namespacegpgmm_1_1d3d12.html#aab7198d09751d622d892ab644dd173ad">gpgmm::d3d12::RESOURCE_ALLOCATOR_INFO</a></td>
+          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#add1d01a196c973b44b13ce6df72fb65f">gpgmm::d3d12::RESOURCE_ALLOCATOR_INFO</a> = typedef <a class="el" href="structgpgmm_1_1_memory_allocator_info.html">MemoryAllocatorInfo</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -483,7 +346,7 @@ Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="aec66b5dc9f1b55002d33c5c75ac2f122" name="aec66b5dc9f1b55002d33c5c75ac2f122"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec66b5dc9f1b55002d33c5c75ac2f122">&#9670;&#160;</a></span>ALLOCATION_FLAGS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aec66b5dc9f1b55002d33c5c75ac2f122">&#9670;&#160;</a></span>ALLOCATION_FLAGS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -495,14 +358,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p >Additional controls that modify allocations. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9" name="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073" name="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
 <pre class="fragment">Enabled by default.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada" name="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e" name="aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
 <pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
 disables creating standalone allocations whose memory cannot be reused.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e" name="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515" name="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
 <pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
@@ -515,10 +378,10 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 single queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de" name="aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
 <p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150" name="aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
 trigger prefetching based on heurstics. Prefetching enables more performance when
@@ -526,10 +389,10 @@ allocating for contiguous allocations or many resources of the same size.
 
 Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44" name="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p >Cache the request size. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f" name="aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p >Cache the request size. </p>
 <pre class="fragment">Allow internal data structures used for resource allocation to be cached in-memory.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015" name="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015"></a>ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS&#160;</td><td class="fielddoc"><p >Requires heaps to be always attributed by D3D12_HEAP_TYPE. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa" name="aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa"></a>ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS&#160;</td><td class="fielddoc"><p >Requires heaps to be always attributed by D3D12_HEAP_TYPE. </p>
 <pre class="fragment">With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
 This enables better resource optimization during allocation. However, certain heap flags or
 access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
@@ -540,176 +403,7 @@ properties are always write-combined.
 If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
 D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
-<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
-allocator (CreateCommittedResource) when resource allocation fails.
-
-Mostly used for debug and testing when certain allocation methods unexpectedly fail.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9" name="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
-<pre class="fragment">Enabled by default.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada" name="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
-<pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
-disables creating standalone allocations whose memory cannot be reused.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e" name="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
-<pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
-which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
-can only be in one state at a time, this is mostly restricted to constant buffers (index and
-vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource index) by using
-ResourceAllocation::GetOffsetFromResource().
-
-The app developer must either check if the allocator supports sub-allocation within resource
-beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
-single queue is used since not all devices guarentee command queue accesses are coherent
-between sub-allocations within the same resource.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
-<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
-<pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
-when the current allocation requested is completed. By default, GPGMM will automatically
-trigger prefetching based on heurstics. Prefetching enables more performance when
-allocating for contiguous allocations or many resources of the same size.
-
-Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44" name="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p >Cache the request size. </p>
-<pre class="fragment">Allow internal data structures used for resource allocation to be cached in-memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015" name="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015"></a>ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS&#160;</td><td class="fielddoc"><p >Requires heaps to be always attributed by D3D12_HEAP_TYPE. </p>
-<pre class="fragment">With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
-This enables better resource optimization during allocation. However, certain heap flags or
-access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
-D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
-as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
-properties are always write-combined.
-
-If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
-D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
-<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
-allocator (CreateCommittedResource) when resource allocation fails.
-
-Mostly used for debug and testing when certain allocation methods unexpectedly fail.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="aec66b5dc9f1b55002d33c5c75ac2f122" name="aec66b5dc9f1b55002d33c5c75ac2f122"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec66b5dc9f1b55002d33c5c75ac2f122">&#9670;&#160;</a></span>ALLOCATION_FLAGS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">gpgmm::d3d12::ALLOCATION_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9" name="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
-<pre class="fragment">Enabled by default.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada" name="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
-<pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
-disables creating standalone allocations whose memory cannot be reused.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e" name="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
-<pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
-which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
-can only be in one state at a time, this is mostly restricted to constant buffers (index and
-vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource index) by using
-ResourceAllocation::GetOffsetFromResource().
-
-The app developer must either check if the allocator supports sub-allocation within resource
-beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
-single queue is used since not all devices guarentee command queue accesses are coherent
-between sub-allocations within the same resource.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
-<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
-<pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
-when the current allocation requested is completed. By default, GPGMM will automatically
-trigger prefetching based on heurstics. Prefetching enables more performance when
-allocating for contiguous allocations or many resources of the same size.
-
-Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44" name="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p >Cache the request size. </p>
-<pre class="fragment">Allow internal data structures used for resource allocation to be cached in-memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015" name="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015"></a>ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS&#160;</td><td class="fielddoc"><p >Requires heaps to be always attributed by D3D12_HEAP_TYPE. </p>
-<pre class="fragment">With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
-This enables better resource optimization during allocation. However, certain heap flags or
-access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
-D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
-as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
-properties are always write-combined.
-
-If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
-D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
-<pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
-allocator (CreateCommittedResource) when resource allocation fails.
-
-Mostly used for debug and testing when certain allocation methods unexpectedly fail.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9" name="aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all allocation flags. </p>
-<pre class="fragment">Enabled by default.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada" name="aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow creating a new resource heap when creating a resource. </p>
-<pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
-disables creating standalone allocations whose memory cannot be reused.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e" name="aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p >Sub-allocate a resource allocation within the same resource. </p>
-<pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
-which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
-can only be in one state at a time, this is mostly restricted to constant buffers (index and
-vertex buffers which will stay read-only after creation). The app developer must use offsets
-from the start of the allocation (vs subresource index) by using
-ResourceAllocation::GetOffsetFromResource().
-
-The app developer must either check if the allocator supports sub-allocation within resource
-beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
-single queue is used since not all devices guarentee command queue accesses are coherent
-between sub-allocations within the same resource.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c" name="aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY&#160;</td><td class="fielddoc"><p >Disallow allowing the creation of multiple resources using the same resource heap. </p>
-<p >When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9" name="aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY&#160;</td><td class="fielddoc"><p >Prefetch memory for the next resource allocation. </p>
-<pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
-when the current allocation requested is completed. By default, GPGMM will automatically
-trigger prefetching based on heurstics. Prefetching enables more performance when
-allocating for contiguous allocations or many resources of the same size.
-
-Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44" name="aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p >Cache the request size. </p>
-<pre class="fragment">Allow internal data structures used for resource allocation to be cached in-memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015" name="aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015"></a>ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS&#160;</td><td class="fielddoc"><p >Requires heaps to be always attributed by D3D12_HEAP_TYPE. </p>
-<pre class="fragment">With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
-This enables better resource optimization during allocation. However, certain heap flags or
-access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
-D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
-as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
-properties are always write-combined.
-
-If ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS was specified, heap type was
-D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6" name="aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc" name="aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc"></a>ALLOCATION_FLAG_NEVER_FALLBACK&#160;</td><td class="fielddoc"><p >Forces use of the resource allocator or E_FAIL. </p>
 <pre class="fragment">The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
 allocator (CreateCommittedResource) when resource allocation fails.
 
@@ -720,7 +414,7 @@ Mostly used for debug and testing when certain allocation methods unexpectedly f
 </div>
 </div>
 <a id="ad3946897dfb4221430841cc3d229a8c0" name="ad3946897dfb4221430841cc3d229a8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3946897dfb4221430841cc3d229a8c0">&#9670;&#160;</a></span>ALLOCATOR_ALGORITHM <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3946897dfb4221430841cc3d229a8c0">&#9670;&#160;</a></span>ALLOCATOR_ALGORITHM</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -732,7 +426,7 @@ Mostly used for debug and testing when certain allocation methods unexpectedly f
 </div><div class="memdoc">
 <p >Specify the algorithms used for allocation. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75" name="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7" name="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
 <pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
 selection of algorithm depends on:
 
@@ -746,13 +440,13 @@ footprint), subject to other constraints. However, since it's impossible to pred
 future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
 prove to be faster as expected. Further experimentation is recommended.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656" name="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
 <pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
 Slab allocation does not suffer from internal fragmentation but could externally fragment
 when many unique request sizes are used.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78" name="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy system mechanism. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59" name="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy system mechanism. </p>
 <pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
 
 Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
@@ -763,189 +457,17 @@ It is recommend to specify a PreferredResourceHeapSize large enough such that mu
 requests can fit within the specified PreferredResourceHeapSize but not too large where
 creating the larger resource heap becomes a bigger bottleneck.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d" name="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681" name="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
 <pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
 
 Fixed-size pool limits recycling to resource heaps equal to
 PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
 equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d" name="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313" name="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
 <pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc" name="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p >Use the dedicated allocation mechanism. </p>
-<pre class="fragment">Allows resources to be created as a dedicated allocation, rather than sub-allocated.
-
-A dedicated allocation allocates exactly what is needed for the resource and nothing more.
-
-Internally, dedicated allocations are "placed resources" which allows the heap to be
-recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
-allocation" but without heaps being recycled by GPGMM.
-
-Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75" name="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
-<pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
-selection of algorithm depends on:
-
-1. The heap properties or flags specified by the user.
-2. The size the resource being created.
-3. The amount of available memory.
-
-In general, the most-efficent resource allocator will be attempted first (efficent
-being defined as fastest service-time to allocate/deallocate with smallest memory
-footprint), subject to other constraints. However, since it's impossible to predict all
-future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
-prove to be faster as expected. Further experimentation is recommended.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656" name="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
-<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-
-Slab allocation does not suffer from internal fragmentation but could externally fragment
-when many unique request sizes are used.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78" name="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy system mechanism. </p>
-<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
-
-Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
-does not suffer from external fragmentation as much since the resource heap size does not
-change.
-
-It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
-requests can fit within the specified PreferredResourceHeapSize but not too large where
-creating the larger resource heap becomes a bigger bottleneck.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d" name="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
-<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
-
-Fixed-size pool limits recycling to resource heaps equal to
-PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d" name="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
-<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc" name="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p >Use the dedicated allocation mechanism. </p>
-<pre class="fragment">Allows resources to be created as a dedicated allocation, rather than sub-allocated.
-
-A dedicated allocation allocates exactly what is needed for the resource and nothing more.
-
-Internally, dedicated allocations are "placed resources" which allows the heap to be
-recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
-allocation" but without heaps being recycled by GPGMM.
-
-Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="ad3946897dfb4221430841cc3d229a8c0" name="ad3946897dfb4221430841cc3d229a8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3946897dfb4221430841cc3d229a8c0">&#9670;&#160;</a></span>ALLOCATOR_ALGORITHM <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75" name="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
-<pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
-selection of algorithm depends on:
-
-1. The heap properties or flags specified by the user.
-2. The size the resource being created.
-3. The amount of available memory.
-
-In general, the most-efficent resource allocator will be attempted first (efficent
-being defined as fastest service-time to allocate/deallocate with smallest memory
-footprint), subject to other constraints. However, since it's impossible to predict all
-future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
-prove to be faster as expected. Further experimentation is recommended.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656" name="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
-<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-
-Slab allocation does not suffer from internal fragmentation but could externally fragment
-when many unique request sizes are used.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78" name="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy system mechanism. </p>
-<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
-
-Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
-does not suffer from external fragmentation as much since the resource heap size does not
-change.
-
-It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
-requests can fit within the specified PreferredResourceHeapSize but not too large where
-creating the larger resource heap becomes a bigger bottleneck.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d" name="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
-<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
-
-Fixed-size pool limits recycling to resource heaps equal to
-PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d" name="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
-<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc" name="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p >Use the dedicated allocation mechanism. </p>
-<pre class="fragment">Allows resources to be created as a dedicated allocation, rather than sub-allocated.
-
-A dedicated allocation allocates exactly what is needed for the resource and nothing more.
-
-Internally, dedicated allocations are "placed resources" which allows the heap to be
-recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
-allocation" but without heaps being recycled by GPGMM.
-
-Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75" name="ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p >Use default allocation mechanism. </p>
-<pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
-selection of algorithm depends on:
-
-1. The heap properties or flags specified by the user.
-2. The size the resource being created.
-3. The amount of available memory.
-
-In general, the most-efficent resource allocator will be attempted first (efficent
-being defined as fastest service-time to allocate/deallocate with smallest memory
-footprint), subject to other constraints. However, since it's impossible to predict all
-future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
-prove to be faster as expected. Further experimentation is recommended.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656" name="ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p >Use the slab allocation mechanism. </p>
-<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-
-Slab allocation does not suffer from internal fragmentation but could externally fragment
-when many unique request sizes are used.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78" name="ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p >Use the buddy system mechanism. </p>
-<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
-
-Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
-does not suffer from external fragmentation as much since the resource heap size does not
-change.
-
-It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
-requests can fit within the specified PreferredResourceHeapSize but not too large where
-creating the larger resource heap becomes a bigger bottleneck.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d" name="ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of a size being specified. </p>
-<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
-
-Fixed-size pool limits recycling to resource heaps equal to
-PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d" name="ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p >Recycles resource heaps of any size using multiple pools. </p>
-<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc" name="ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p >Use the dedicated allocation mechanism. </p>
+<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099" name="ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p >Use the dedicated allocation mechanism. </p>
 <pre class="fragment">Allows resources to be created as a dedicated allocation, rather than sub-allocated.
 
 A dedicated allocation allocates exactly what is needed for the resource and nothing more.
@@ -961,7 +483,7 @@ Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) sp
 </div>
 </div>
 <a id="a24c166248417fa823597d7219566304a" name="a24c166248417fa823597d7219566304a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24c166248417fa823597d7219566304a">&#9670;&#160;</a></span>ALLOCATOR_FEATURE <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a24c166248417fa823597d7219566304a">&#9670;&#160;</a></span>ALLOCATOR_FEATURE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -971,38 +493,16 @@ Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) sp
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Defines constants that specify a resource allocator feature to query about. When you want to query for the level to which an allocator supports a feature, pass one of these values to <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#af30aa5575b3aaceb07b8882d802b063e" title="Gets information about the features that are supported by the resource allocator.">ResourceAllocator::CheckFeatureSupport</a>. </p>
+<p >Defines constants that specify a resource allocator feature to query about. When you want to query for the level to which an allocator supports a feature, pass one of these values to <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a80c1014d120936a9c25081fbdb0d8c5d" title="Gets information about the features that are supported by the resource allocator.">ResourceAllocator::CheckFeatureSupport</a>. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0" name="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0"></a>ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT&#160;</td><td class="fielddoc"><p >Indicates a query for the level of support for allocated resources. The corresponding data structure for this value is <a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a>. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0" name="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0"></a>ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT&#160;</td><td class="fielddoc"><p >Indicates a query for the level of support for allocated resources. The corresponding data structure for this value is <a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a>. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a24c166248417fa823597d7219566304a" name="a24c166248417fa823597d7219566304a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24c166248417fa823597d7219566304a">&#9670;&#160;</a></span>ALLOCATOR_FEATURE <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">gpgmm::d3d12::ALLOCATOR_FEATURE</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0" name="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0"></a>ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT&#160;</td><td class="fielddoc"><p >Indicates a query for the level of support for allocated resources. The corresponding data structure for this value is <a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a>. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0" name="a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0"></a>ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT&#160;</td><td class="fielddoc"><p >Indicates a query for the level of support for allocated resources. The corresponding data structure for this value is <a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a>. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b" name="a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b"></a>ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT&#160;</td><td class="fielddoc"><p >Indicates a query for the level of support for allocated resources. The corresponding data structure for this value is <a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a>. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <a id="a41e5f9a1d561e4bc68c1e2965f8860b8" name="a41e5f9a1d561e4bc68c1e2965f8860b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41e5f9a1d561e4bc68c1e2965f8860b8">&#9670;&#160;</a></span>ALLOCATOR_FLAGS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a41e5f9a1d561e4bc68c1e2965f8860b8">&#9670;&#160;</a></span>ALLOCATOR_FLAGS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1014,14 +514,14 @@ Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) sp
 </div><div class="memdoc">
 <p >Specify creation options for allocator. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c" name="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
 <pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
 for large static resources. Otherwise, this is mostly used for debugging and testing
 purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141" name="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
 <pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
 operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
 resource will become resident once ExecuteCommandList() is called. However, this flag can be
@@ -1029,10 +529,10 @@ used to change this behavior by requiring resource heaps to be always resident a
 creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
 through the GPU/driver instead of explicitly through GPGMM.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f" name="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
 <pre class="fragment">Should be only used for debugging and testing purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Disables recycling of GPU memory. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663" name="a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Disables recycling of GPU memory. </p>
 <pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
 (instead of re-using it).
 
@@ -1040,129 +540,11 @@ This is very slow and not recommended for general use but may be useful for runn
 minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
 corruption of heaps.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6" name="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6"></a>ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS&#160;</td><td class="fielddoc"><p >Disables use of D3D12_HEAP_TYPE_CUSTOM. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a26ea5e0aa63dd0ec1b4789c7bb470c4f" name="a41e5f9a1d561e4bc68c1e2965f8860b8a26ea5e0aa63dd0ec1b4789c7bb470c4f"></a>ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS&#160;</td><td class="fielddoc"><p >Disables use of D3D12_HEAP_TYPE_CUSTOM. </p>
 <pre class="fragment">Used to workaround issues when a custom-equivalent heap is not considered equal to
 the corresponding heap type.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c" name="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p >Report leaks of resource allocations. </p>
-<pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
-to be released, it will report details on any leaked allocations as log messages.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c" name="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
-<pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
-for large static resources. Otherwise, this is mostly used for debugging and testing
-purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141" name="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
-<pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
-operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-resource will become resident once ExecuteCommandList() is called. However, this flag can be
-used to change this behavior by requiring resource heaps to be always resident at resource
-creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-through the GPU/driver instead of explicitly through GPGMM.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f" name="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
-<pre class="fragment">Should be only used for debugging and testing purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Disables recycling of GPU memory. </p>
-<pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
-(instead of re-using it).
-
-This is very slow and not recommended for general use but may be useful for running with the
-minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
-corruption of heaps.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6" name="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6"></a>ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS&#160;</td><td class="fielddoc"><p >Disables use of D3D12_HEAP_TYPE_CUSTOM. </p>
-<pre class="fragment">Used to workaround issues when a custom-equivalent heap is not considered equal to
-the corresponding heap type.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c" name="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p >Report leaks of resource allocations. </p>
-<pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
-to be released, it will report details on any leaked allocations as log messages.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="a41e5f9a1d561e4bc68c1e2965f8860b8" name="a41e5f9a1d561e4bc68c1e2965f8860b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41e5f9a1d561e4bc68c1e2965f8860b8">&#9670;&#160;</a></span>ALLOCATOR_FLAGS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">gpgmm::d3d12::ALLOCATOR_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c" name="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
-<pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
-for large static resources. Otherwise, this is mostly used for debugging and testing
-purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141" name="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
-<pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
-operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-resource will become resident once ExecuteCommandList() is called. However, this flag can be
-used to change this behavior by requiring resource heaps to be always resident at resource
-creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-through the GPU/driver instead of explicitly through GPGMM.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f" name="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
-<pre class="fragment">Should be only used for debugging and testing purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Disables recycling of GPU memory. </p>
-<pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
-(instead of re-using it).
-
-This is very slow and not recommended for general use but may be useful for running with the
-minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
-corruption of heaps.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6" name="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6"></a>ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS&#160;</td><td class="fielddoc"><p >Disables use of D3D12_HEAP_TYPE_CUSTOM. </p>
-<pre class="fragment">Used to workaround issues when a custom-equivalent heap is not considered equal to
-the corresponding heap type.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c" name="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p >Report leaks of resource allocations. </p>
-<pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
-to be released, it will report details on any leaked allocations as log messages.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c" name="a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p >Disable re-use of resource heap. </p>
-<pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
-for large static resources. Otherwise, this is mostly used for debugging and testing
-purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141" name="a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Creates resource within budget. </p>
-<pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
-operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-resource will become resident once ExecuteCommandList() is called. However, this flag can be
-used to change this behavior by requiring resource heaps to be always resident at resource
-creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-through the GPU/driver instead of explicitly through GPGMM.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f" name="a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p >Disables pre-fetching of GPU memory. </p>
-<pre class="fragment">Should be only used for debugging and testing purposes.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7" name="a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7"></a>ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p >Disables recycling of GPU memory. </p>
-<pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
-(instead of re-using it).
-
-This is very slow and not recommended for general use but may be useful for running with the
-minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
-corruption of heaps.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6" name="a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6"></a>ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS&#160;</td><td class="fielddoc"><p >Disables use of D3D12_HEAP_TYPE_CUSTOM. </p>
-<pre class="fragment">Used to workaround issues when a custom-equivalent heap is not considered equal to
-the corresponding heap type.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c" name="a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p >Report leaks of resource allocations. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4" name="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p >Report leaks of resource allocations. </p>
 <pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
 to be released, it will report details on any leaked allocations as log messages.
 </pre> </td></tr>
@@ -1171,7 +553,7 @@ to be released, it will report details on any leaked allocations as log messages
 </div>
 </div>
 <a id="aa3f15dccfce0d5328b19d533a8cfdd0b" name="aa3f15dccfce0d5328b19d533a8cfdd0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3f15dccfce0d5328b19d533a8cfdd0b">&#9670;&#160;</a></span>EVENT_RECORD_FLAGS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3f15dccfce0d5328b19d533a8cfdd0b">&#9670;&#160;</a></span>EVENT_RECORD_FLAGS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1183,92 +565,28 @@ to be released, it will report details on any leaked allocations as log messages
 </div><div class="memdoc">
 <p >Represents different event categories to record. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620" name="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba910403bd626518aacc41a8ffb54dc34b" name="aa3f15dccfce0d5328b19d533a8cfdd0ba910403bd626518aacc41a8ffb54dc34b"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05" name="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba293f09f69d9f9b13f5048972e57651b5" name="aa3f15dccfce0d5328b19d533a8cfdd0ba293f09f69d9f9b13f5048972e57651b5"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26" name="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba4451b8acc017f7c049709b8ce058347d" name="aa3f15dccfce0d5328b19d533a8cfdd0ba4451b8acc017f7c049709b8ce058347d"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae" name="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba1a1f55c80e8c930949911097f3fd1519" name="aa3f15dccfce0d5328b19d533a8cfdd0ba1a1f55c80e8c930949911097f3fd1519"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868" name="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba5953585d1378f23825964434e4b6c49c" name="aa3f15dccfce0d5328b19d533a8cfdd0ba5953585d1378f23825964434e4b6c49c"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe" name="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baad24450796adb0c726ebc90b11745b59" name="aa3f15dccfce0d5328b19d533a8cfdd0baad24450796adb0c726ebc90b11745b59"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
 <pre class="fragment"> Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
  EVENT_RECORD_FLAG_API_CALLS.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf" name="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620" name="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05" name="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26" name="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae" name="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868" name="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe" name="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
-<pre class="fragment"> Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
- EVENT_RECORD_FLAG_API_CALLS.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf" name="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="aa3f15dccfce0d5328b19d533a8cfdd0b" name="aa3f15dccfce0d5328b19d533a8cfdd0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3f15dccfce0d5328b19d533a8cfdd0b">&#9670;&#160;</a></span>EVENT_RECORD_FLAGS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b">gpgmm::d3d12::EVENT_RECORD_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620" name="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05" name="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26" name="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae" name="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868" name="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe" name="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
-<pre class="fragment"> Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
- EVENT_RECORD_FLAG_API_CALLS.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf" name="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620" name="aa3f15dccfce0d5328b19d533a8cfdd0bac35f9ab93bbe611d18f729811542a620"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p >Record nothing. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05" name="aa3f15dccfce0d5328b19d533a8cfdd0ba1dbffe77a6978264aa4e64e5d9d99d05"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p >Record lifetimes of API objects created by GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26" name="aa3f15dccfce0d5328b19d533a8cfdd0baa747f20eab3d200081cdc6a7820c8a26"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p >Record API calls made to GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae" name="aa3f15dccfce0d5328b19d533a8cfdd0ba2182967670654ade5d788793d19b95ae"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p >Record duration of GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868" name="aa3f15dccfce0d5328b19d533a8cfdd0baaa9a16c549546eb5b989b7444f61e868"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p >Record metrics made to GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe" name="aa3f15dccfce0d5328b19d533a8cfdd0ba13941619cb24a96357a6e37d97e57ffe"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p >Record events required for playback. </p>
-<pre class="fragment"> Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
- EVENT_RECORD_FLAG_API_CALLS.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf" name="aa3f15dccfce0d5328b19d533a8cfdd0ba0b986ec330f79c5d3ff625afaedf54bf"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
+<tr><td class="fieldname"><a id="aa3f15dccfce0d5328b19d533a8cfdd0ba730a5ea8249a36065778ece4350991a8" name="aa3f15dccfce0d5328b19d533a8cfdd0ba730a5ea8249a36065778ece4350991a8"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p >Record everything. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <a id="a50666648c6ef0535d4b9afed754af8c0" name="a50666648c6ef0535d4b9afed754af8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50666648c6ef0535d4b9afed754af8c0">&#9670;&#160;</a></span>EVENT_RECORD_SCOPE <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a50666648c6ef0535d4b9afed754af8c0">&#9670;&#160;</a></span>EVENT_RECORD_SCOPE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1280,44 +598,16 @@ to be released, it will report details on any leaked allocations as log messages
 </div><div class="memdoc">
 <p >Represents recording scopes to limit event recording. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142" name="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple instances). </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236" name="a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple instances). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc" name="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per instance. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142" name="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple instances). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc" name="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per instance. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a50666648c6ef0535d4b9afed754af8c0" name="a50666648c6ef0535d4b9afed754af8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50666648c6ef0535d4b9afed754af8c0">&#9670;&#160;</a></span>EVENT_RECORD_SCOPE <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0">gpgmm::d3d12::EVENT_RECORD_SCOPE</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142" name="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple instances). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc" name="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per instance. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142" name="a50666648c6ef0535d4b9afed754af8c0a15de744341d52bab4e5b6e018135a142"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p >Scopes events per process (or multiple instances). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc" name="a50666648c6ef0535d4b9afed754af8c0a7d7d14efa1c16c08253dc98530091adc"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per instance. </p>
+<tr><td class="fieldname"><a id="a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540" name="a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p >Scopes events per instance. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <a id="abff116c525e8afde5753ee3b1311d662" name="abff116c525e8afde5753ee3b1311d662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abff116c525e8afde5753ee3b1311d662">&#9670;&#160;</a></span>HEAPS_FLAGS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abff116c525e8afde5753ee3b1311d662">&#9670;&#160;</a></span>HEAPS_FLAGS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1329,44 +619,16 @@ to be released, it will report details on any leaked allocations as log messages
 </div><div class="memdoc">
 <p >Specify creation options to configure the heap. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9" name="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9"></a>HEAPS_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a71a9804cfbe652fef5164c6d2a22c455" name="abff116c525e8afde5753ee3b1311d662a71a9804cfbe652fef5164c6d2a22c455"></a>HEAPS_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929" name="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Requires the heap to be created in budget. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9" name="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9"></a>HEAPS_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929" name="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Requires the heap to be created in budget. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="abff116c525e8afde5753ee3b1311d662" name="abff116c525e8afde5753ee3b1311d662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abff116c525e8afde5753ee3b1311d662">&#9670;&#160;</a></span>HEAPS_FLAGS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662">gpgmm::d3d12::HEAPS_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9" name="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9"></a>HEAPS_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929" name="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Requires the heap to be created in budget. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9" name="abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9"></a>HEAPS_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929" name="abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Requires the heap to be created in budget. </p>
+<tr><td class="fieldname"><a id="abff116c525e8afde5753ee3b1311d662a076caccb5ec2fb9e005afeeac13d171f" name="abff116c525e8afde5753ee3b1311d662a076caccb5ec2fb9e005afeeac13d171f"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p >Requires the heap to be created in budget. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <a id="a91ac0725c909f9dae91c66c3bb049c73" name="a91ac0725c909f9dae91c66c3bb049c73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91ac0725c909f9dae91c66c3bb049c73">&#9670;&#160;</a></span>RESIDENCY_FLAGS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ac0725c909f9dae91c66c3bb049c73">&#9670;&#160;</a></span>RESIDENCY_FLAGS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1378,46 +640,9 @@ to be released, it will report details on any leaked allocations as log messages
 </div><div class="memdoc">
 <p >Specify options to configure the residency manager. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df" name="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e" name="a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd" name="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd"></a>RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p >Disables automatic background memory budget updates by OS notifications. </p>
-<pre class="fragment">By default, memory budget updates will be pushed by the OS using a background thread. If
-the OS does not support push notifications or budget updates are not frequent enough, this
-mechanism can be disabled where a pull-based method is used instead.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df" name="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd" name="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd"></a>RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p >Disables automatic background memory budget updates by OS notifications. </p>
-<pre class="fragment">By default, memory budget updates will be pushed by the OS using a background thread. If
-the OS does not support push notifications or budget updates are not frequent enough, this
-mechanism can be disabled where a pull-based method is used instead.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="a91ac0725c909f9dae91c66c3bb049c73" name="a91ac0725c909f9dae91c66c3bb049c73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91ac0725c909f9dae91c66c3bb049c73">&#9670;&#160;</a></span>RESIDENCY_FLAGS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">gpgmm::d3d12::RESIDENCY_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df" name="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd" name="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd"></a>RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p >Disables automatic background memory budget updates by OS notifications. </p>
-<pre class="fragment">By default, memory budget updates will be pushed by the OS using a background thread. If
-the OS does not support push notifications or budget updates are not frequent enough, this
-mechanism can be disabled where a pull-based method is used instead.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df" name="a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p >Disables all option flags. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd" name="a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd"></a>RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p >Disables automatic background memory budget updates by OS notifications. </p>
+<tr><td class="fieldname"><a id="a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029" name="a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029"></a>RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p >Disables automatic background memory budget updates by OS notifications. </p>
 <pre class="fragment">By default, memory budget updates will be pushed by the OS using a background thread. If
 the OS does not support push notifications or budget updates are not frequent enough, this
 mechanism can be disabled where a pull-based method is used instead.
@@ -1427,7 +652,7 @@ mechanism can be disabled where a pull-based method is used instead.
 </div>
 </div>
 <a id="a964c4ad3a4e304bf0e281459f327023c" name="a964c4ad3a4e304bf0e281459f327023c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a964c4ad3a4e304bf0e281459f327023c">&#9670;&#160;</a></span>RESIDENCY_STATUS <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a964c4ad3a4e304bf0e281459f327023c">&#9670;&#160;</a></span>RESIDENCY_STATUS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1440,51 +665,215 @@ mechanism can be disabled where a pull-based method is used instead.
 <p >D3D12 allows heaps to be explicitly created resident or not. This means the expected residency status of the heap cannot be solely determined by checking for the existence in a residency cache.</p>
 <p >Heaps are in one of three exclusive states: never made resident or unknown, about to become resident or pending residency, and currently resident. When a heap gets evicted or paged-out, it transitions from currently resident to pending residency. Paged-in is the reverse of this, pending residency to currently resident. If the heap was known to be created resident by D3D12, it will immediately become currently resident. If the heap becomes locked, it will stay currently resident until it is evicted, then back to pending residency. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366" name="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366"></a>RESIDENCY_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> residency status is not known and cannot be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must become locked to be managed for residency. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023ca995e849faa7ad6ae73a6d4f2f46315f0" name="a964c4ad3a4e304bf0e281459f327023ca995e849faa7ad6ae73a6d4f2f46315f0"></a>RESIDENCY_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> residency status is not known and cannot be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> must become locked to be managed for residency. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57" name="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57"></a>RESIDENCY_STATUS_PENDING_RESIDENCY&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is about to be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must be previously locked, evicted, or currently resident at creation. </p>
+<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a" name="a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a"></a>RESIDENCY_STATUS_PENDING_RESIDENCY&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> is about to be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> must be previously locked, evicted, or currently resident at creation. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1" name="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1"></a>RESIDENCY_STATUS_CURRENT_RESIDENT&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> was made resident and can be evicted. Heaps that stay locked will always be currently resident. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366" name="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366"></a>RESIDENCY_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> residency status is not known and cannot be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must become locked to be managed for residency. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57" name="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57"></a>RESIDENCY_STATUS_PENDING_RESIDENCY&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is about to be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must be previously locked, evicted, or currently resident at creation. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1" name="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1"></a>RESIDENCY_STATUS_CURRENT_RESIDENT&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> was made resident and can be evicted. Heaps that stay locked will always be currently resident. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a964c4ad3a4e304bf0e281459f327023c" name="a964c4ad3a4e304bf0e281459f327023c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a964c4ad3a4e304bf0e281459f327023c">&#9670;&#160;</a></span>RESIDENCY_STATUS <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">gpgmm::d3d12::RESIDENCY_STATUS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366" name="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366"></a>RESIDENCY_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> residency status is not known and cannot be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must become locked to be managed for residency. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57" name="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57"></a>RESIDENCY_STATUS_PENDING_RESIDENCY&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is about to be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must be previously locked, evicted, or currently resident at creation. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1" name="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1"></a>RESIDENCY_STATUS_CURRENT_RESIDENT&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> was made resident and can be evicted. Heaps that stay locked will always be currently resident. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366" name="a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366"></a>RESIDENCY_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> residency status is not known and cannot be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must become locked to be managed for residency. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57" name="a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57"></a>RESIDENCY_STATUS_PENDING_RESIDENCY&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is about to be made resident. <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> must be previously locked, evicted, or currently resident at creation. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1" name="a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1"></a>RESIDENCY_STATUS_CURRENT_RESIDENT&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> was made resident and can be evicted. Heaps that stay locked will always be currently resident. </p>
+<tr><td class="fieldname"><a id="a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2" name="a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2"></a>RESIDENCY_STATUS_CURRENT_RESIDENT&#160;</td><td class="fielddoc"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> was made resident and can be evicted. Heaps that stay locked will always be currently resident. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ab752b370ed612a40fbbb135a6a2d5bfa" name="ab752b370ed612a40fbbb135a6a2d5bfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab752b370ed612a40fbbb135a6a2d5bfa">&#9670;&#160;</a></span>CreateHeap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT gpgmm::d3d12::CreateHeap </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;&#160;</td>
+          <td class="paramname"><em>descriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *const&#160;</td>
+          <td class="paramname"><em>pResidencyManager</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>createHeapFn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a> **&#160;</td>
+          <td class="paramname"><em>ppHeapOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a heap managed by GPGMM. </p>
+<p >Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be tracked for residency purposes. A heap managed by GPGMM represents either a 1) committed resource backed by implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> structure that describes the heap. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> used to manage this heap. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">createHeapFn</td><td>A callback function which creates a ID3D12Pageable derived type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppHeapOut</td><td>Pointer to a memory block that recieves a pointer to the heap. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0a9aa1792f31f01f4700d848c92ac86e" name="a0a9aa1792f31f01f4700d848c92ac86e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a9aa1792f31f01f4700d848c92ac86e">&#9670;&#160;</a></span>CreateResidencyList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::CreateResidencyList </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> **&#160;</td>
+          <td class="paramname"><em>ppResidencyList</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a residency list or collection of heaps to manage together for residency. </p>
+
+</div>
+</div>
+<a id="af0743e8d49caa99f875bec8a1ac2a50b" name="af0743e8d49caa99f875bec8a1ac2a50b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0743e8d49caa99f875bec8a1ac2a50b">&#9670;&#160;</a></span>CreateResidencyManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::CreateResidencyManager </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;&#160;</td>
+          <td class="paramname"><em>descriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **&#160;</td>
+          <td class="paramname"><em>ppResidencyManagerOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create residency residency manager to manage video memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> structure that describes the residency manager. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3a7284f0cf647fe791faefda54399854" name="a3a7284f0cf647fe791faefda54399854"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a7284f0cf647fe791faefda54399854">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT gpgmm::d3d12::CreateResourceAllocator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;&#160;</td>
+          <td class="paramname"><em>allocatorDescriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *&#160;</td>
+          <td class="paramname"><em>pResidencyManager</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **&#160;</td>
+          <td class="paramname"><em>ppResourceAllocatorOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a resource allocator using a specified residency manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>Pointer to a memory block that recieves a pointer to the residency manager. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="add456d0b4a9474e5e26021ffcbd5ff23" name="add456d0b4a9474e5e26021ffcbd5ff23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add456d0b4a9474e5e26021ffcbd5ff23">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT gpgmm::d3d12::CreateResourceAllocator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;&#160;</td>
+          <td class="paramname"><em>allocatorDescriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **&#160;</td>
+          <td class="paramname"><em>ppResourceAllocatorOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **&#160;</td>
+          <td class="paramname"><em>ppResidencyManagerOut</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a resource allocator with residency. </p>
+<p >Residency requires at-least DXGI version 1.4.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a43e9130aee00fce32c2c86c84ffac851" name="a43e9130aee00fce32c2c86c84ffac851"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43e9130aee00fce32c2c86c84ffac851">&#9670;&#160;</a></span>GetDeviceErrorMessage()</h2>
 

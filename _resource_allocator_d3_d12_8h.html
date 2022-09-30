@@ -76,14 +76,14 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">ResourceAllocatorD3D12.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_memory_allocator_8h.html">gpgmm/common/MemoryAllocator.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_event_record_d3_d12_8h.html">gpgmm/d3d12/EventRecordD3D12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_enum_flags_8h.html">gpgmm/utils/EnumFlags.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gpgmm__d3d12_8h.html">include/gpgmm_d3d12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
@@ -91,14 +91,7 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">gpgmm::d3d12::ALLOCATOR_DESC</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">gpgmm::d3d12::ALLOCATION_DESC</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">gpgmm::d3d12::FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">gpgmm::d3d12::ResourceAllocator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" title="ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" title="ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.">ResourceAllocation</a>.  <a href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -107,75 +100,6 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">gpgmm::d3d12::ALLOCATOR_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">gpgmm::d3d12::ALLOCATOR_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">gpgmm::d3d12::ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5918b5ffb9d5cbcf0442e77f97199311">gpgmm::d3d12::ALLOCATOR_FLAG_NONE</a> = 0x0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a212981032eefbfd251fc6aae9890b43c">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8af8c883781d10a003a8fedd4be1d37141">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a23d34a5222ea11d3659d9bd349d1b56f">gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a5f9ade0d128b808d568c69d12b1b4fc7">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a0d85be7e980a641523df533587030fd6">gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ac88ea0982f976317a54ffde79cbd520c">gpgmm::d3d12::ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-<br />
- }</td></tr>
-<tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">gpgmm::d3d12::ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">gpgmm::d3d12::ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">gpgmm::d3d12::ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">gpgmm::d3d12::ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a763b2f583c5429c66e551a7e088ded75">gpgmm::d3d12::ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a2fd3375489662d227a66216e74b8d656">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a25806f4d2cc08c9f4edf166e9eff2f78">gpgmm::d3d12::ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0ace0b69220e6e31546d50336f33cab05d">gpgmm::d3d12::ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0af8f8c3235a6c9e53a21558fc0574002d">gpgmm::d3d12::ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a35553660d50c60f5062d5304e54028bc">gpgmm::d3d12::ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
-<br />
- }</td></tr>
-<tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">gpgmm::d3d12::ALLOCATION_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">gpgmm::d3d12::ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">gpgmm::d3d12::ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af365921e791be42833848be3a2eec5e9">gpgmm::d3d12::ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac250190a94c4c9530602bed77069eada">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a57fb5a3bffd77c489d12c53c5eed699e">gpgmm::d3d12::ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ab349bf53e567833eeac247b93dd4d00c">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a93856164e089f735ddfb907a24c446a9">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122af9db17e56ee2022984c4dbc2adcdca44">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a33b49d0910bd05eaa30c8660edcaf015">gpgmm::d3d12::ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a783af171cff70609bfac307bfc74a9b6">gpgmm::d3d12::ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
-<br />
- }</td></tr>
-<tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24c166248417fa823597d7219566304a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">gpgmm::d3d12::ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">gpgmm::d3d12::ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aaccb59f14b783fe28ae5a2940cb8499e0">gpgmm::d3d12::ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
- }</td></tr>
-<tr class="separator:a24c166248417fa823597d7219566304a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

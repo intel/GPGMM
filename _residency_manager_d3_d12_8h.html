@@ -76,26 +76,21 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">ResidencyManagerD3D12.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_event_record_d3_d12_8h.html">gpgmm/d3d12/EventRecordD3D12.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_enum_flags_8h.html">gpgmm/utils/EnumFlags.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_linked_list_8h.html">gpgmm/utils/LinkedList.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gpgmm__d3d12_8h.html">include/gpgmm_d3d12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;mutex&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">gpgmm::d3d12::RESIDENCY_DESC</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">gpgmm::d3d12::RESIDENCY_INFO</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">gpgmm::d3d12::ResidencyManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_residency_manager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -104,15 +99,6 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a91ac0725c909f9dae91c66c3bb049c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">gpgmm::d3d12::RESIDENCY_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">gpgmm::d3d12::RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">gpgmm::d3d12::RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a9d1fbe54850e1f746e6d76bad2e048df">gpgmm::d3d12::RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a8af39823a1abe244a290cd4a1a7b08dd">gpgmm::d3d12::RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD</a> = 0x1
- }</td></tr>
-<tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

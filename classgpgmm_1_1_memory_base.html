@@ -81,52 +81,41 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a memory object.  
- <a href="classgpgmm_1_1_memory_base.html#details">More...</a></p>
-
-<p><code>#include &lt;gpgmm.h&gt;</code></p>
+<p><code>#include &lt;gpgmm_mvi.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gpgmm::MemoryBase:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classgpgmm_1_1_memory_base.png" usemap="#gpgmm::MemoryBase_map" alt=""/>
   <map id="gpgmm::MemoryBase_map" name="gpgmm::MemoryBase_map">
-<area href="classgpgmm_1_1_object_base.html" alt="gpgmm::ObjectBase" shape="rect" coords="172,0,334,24"/>
-<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="0,112,162,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::Heap" shape="rect" coords="172,112,334,136"/>
-<area href="classgpgmm_1_1vk_1_1_device_memory.html" alt="gpgmm::vk::DeviceMemory" shape="rect" coords="344,112,506,136"/>
+<area href="classgpgmm_1_1_object_base.html" alt="gpgmm::ObjectBase" shape="rect" coords="258,0,420,24"/>
+<area href="classgpgmm_1_1_dummy_memory.html" alt="gpgmm::DummyMemory" shape="rect" coords="0,112,162,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" alt="gpgmm::d3d12::Heap" shape="rect" coords="172,112,334,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" alt="gpgmm::d3d12::Heap" shape="rect" coords="344,112,506,136"/>
+<area href="classgpgmm_1_1vk_1_1_device_memory.html" alt="gpgmm::vk::DeviceMemory" shape="rect" coords="516,112,678,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b65212d2077e6522a5e20e38e2ab745"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a3b65212d2077e6522a5e20e38e2ab745">MemoryBase</a> (uint64_t size, uint64_t alignment)</td></tr>
-<tr class="memdesc:a3b65212d2077e6522a5e20e38e2ab745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory object of the specified size and alignment.  <a href="classgpgmm_1_1_memory_base.html#a3b65212d2077e6522a5e20e38e2ab745">More...</a><br /></td></tr>
 <tr class="separator:a3b65212d2077e6522a5e20e38e2ab745"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7bf3682a264086421ff13033f839c55"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ad7bf3682a264086421ff13033f839c55">~MemoryBase</a> () override</td></tr>
 <tr class="separator:ad7bf3682a264086421ff13033f839c55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8addb77c0844c340245e441cb9dcd3d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac8addb77c0844c340245e441cb9dcd3d">GetSize</a> () const</td></tr>
-<tr class="memdesc:ac8addb77c0844c340245e441cb9dcd3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the memory object.  <a href="classgpgmm_1_1_memory_base.html#ac8addb77c0844c340245e441cb9dcd3d">More...</a><br /></td></tr>
 <tr class="separator:ac8addb77c0844c340245e441cb9dcd3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabc8d1742deec70f6da4e7eaec968e92"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#aabc8d1742deec70f6da4e7eaec968e92">GetAlignment</a> () const</td></tr>
-<tr class="memdesc:aabc8d1742deec70f6da4e7eaec968e92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the alignment of the memory object.  <a href="classgpgmm_1_1_memory_base.html#aabc8d1742deec70f6da4e7eaec968e92">More...</a><br /></td></tr>
 <tr class="separator:aabc8d1742deec70f6da4e7eaec968e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8f67749db930deaf60a1969521375b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_memory_pool.html">MemoryPool</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac8f67749db930deaf60a1969521375b6">GetPool</a> () const</td></tr>
-<tr class="memdesc:ac8f67749db930deaf60a1969521375b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the memory pool managing the object.  <a href="classgpgmm_1_1_memory_base.html#ac8f67749db930deaf60a1969521375b6">More...</a><br /></td></tr>
-<tr class="separator:ac8f67749db930deaf60a1969521375b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7eb6b61205460d5f7b554b8439029ca7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a7eb6b61205460d5f7b554b8439029ca7">SetPool</a> (<a class="el" href="classgpgmm_1_1_memory_pool.html">MemoryPool</a> *pool)</td></tr>
-<tr class="memdesc:a7eb6b61205460d5f7b554b8439029ca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the memory pool to manage this object.  <a href="classgpgmm_1_1_memory_base.html#a7eb6b61205460d5f7b554b8439029ca7">More...</a><br /></td></tr>
-<tr class="separator:a7eb6b61205460d5f7b554b8439029ca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a528cff7749b4faef8afde035eb104ede"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgpgmm_1_1_i_memory_pool.html">IMemoryPool</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a528cff7749b4faef8afde035eb104ede">GetPool</a> () const</td></tr>
+<tr class="separator:a528cff7749b4faef8afde035eb104ede"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b7c9cd4eaf7f65b4b984992a114ea4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a1b7c9cd4eaf7f65b4b984992a114ea4c">SetPool</a> (<a class="el" href="classgpgmm_1_1_i_memory_pool.html">IMemoryPool</a> *pool)</td></tr>
+<tr class="separator:a1b7c9cd4eaf7f65b4b984992a114ea4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc393fbe275af5290d719e50f268db9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#abc393fbe275af5290d719e50f268db9c">AddSubAllocationRef</a> ()</td></tr>
-<tr class="memdesc:abc393fbe275af5290d719e50f268db9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments the sub-allocation reference count on the heap.  <a href="classgpgmm_1_1_memory_base.html#abc393fbe275af5290d719e50f268db9c">More...</a><br /></td></tr>
 <tr class="separator:abc393fbe275af5290d719e50f268db9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac58a6c631c99352979d82339e641000b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac58a6c631c99352979d82339e641000b">RemoveSubAllocationRef</a> ()</td></tr>
-<tr class="memdesc:ac58a6c631c99352979d82339e641000b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrements the sub-allocation reference count on the heap.  <a href="classgpgmm_1_1_memory_base.html#ac58a6c631c99352979d82339e641000b">More...</a><br /></td></tr>
 <tr class="separator:ac58a6c631c99352979d82339e641000b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b65212d2077e6522a5e20e38e2ab745"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#a3b65212d2077e6522a5e20e38e2ab745">MemoryBase</a> (uint64_t size, uint64_t alignment)</td></tr>
 <tr class="separator:a3b65212d2077e6522a5e20e38e2ab745"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3804a803741919cb773664d51a8cf84"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ad3804a803741919cb773664d51a8cf84">~MemoryBase</a> ()</td></tr>
-<tr class="separator:ad3804a803741919cb773664d51a8cf84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8addb77c0844c340245e441cb9dcd3d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#ac8addb77c0844c340245e441cb9dcd3d">GetSize</a> () const</td></tr>
 <tr class="separator:ac8addb77c0844c340245e441cb9dcd3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabc8d1742deec70f6da4e7eaec968e92"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_memory_base.html#aabc8d1742deec70f6da4e7eaec968e92">GetAlignment</a> () const</td></tr>
@@ -139,10 +128,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d1e641e3b911baf39879c0c09460d91 inherit pub_methods_classgpgmm_1_1_object_base"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1_object_base.html#a1d1e641e3b911baf39879c0c09460d91">GetTypename</a> () const =0</td></tr>
 <tr class="separator:a1d1e641e3b911baf39879c0c09460d91 inherit pub_methods_classgpgmm_1_1_object_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Represents a memory object. </p>
-<p >When memory is sub-allocated, it will have a non-zero refcount. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3b65212d2077e6522a5e20e38e2ab745" name="a3b65212d2077e6522a5e20e38e2ab745"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3b65212d2077e6522a5e20e38e2ab745">&#9670;&#160;</a></span>MemoryBase() <span class="overload">[1/2]</span></h2>
 
@@ -177,19 +163,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a memory object of the specified size and alignment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">size</td><td>Size, in bytes, of the memory object. </td></tr>
-    <tr><td class="paramname">alignment</td><td>Alignment, in bytes, of the memory object. </td></tr>
-  </table>
-  </dd>
-</dl>
-
 </div>
 </div>
 <a id="ad7bf3682a264086421ff13033f839c55" name="ad7bf3682a264086421ff13033f839c55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7bf3682a264086421ff13033f839c55">&#9670;&#160;</a></span>~MemoryBase() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7bf3682a264086421ff13033f839c55">&#9670;&#160;</a></span>~MemoryBase()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,7 +183,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -241,31 +218,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad3804a803741919cb773664d51a8cf84" name="ad3804a803741919cb773664d51a8cf84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3804a803741919cb773664d51a8cf84">&#9670;&#160;</a></span>~MemoryBase() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual gpgmm::MemoryBase::~MemoryBase </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="abc393fbe275af5290d719e50f268db9c" name="abc393fbe275af5290d719e50f268db9c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc393fbe275af5290d719e50f268db9c">&#9670;&#160;</a></span>AddSubAllocationRef()</h2>
@@ -281,8 +233,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Increments the sub-allocation reference count on the heap. </p>
 
 </div>
 </div>
@@ -300,9 +250,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Return the alignment of the memory object. </p>
-<dl class="section return"><dt>Returns</dt><dd>Alignment, in bytes, of the memory object. </dd></dl>
 
 </div>
 </div>
@@ -323,23 +270,20 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac8f67749db930deaf60a1969521375b6" name="ac8f67749db930deaf60a1969521375b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8f67749db930deaf60a1969521375b6">&#9670;&#160;</a></span>GetPool()</h2>
+<a id="a528cff7749b4faef8afde035eb104ede" name="a528cff7749b4faef8afde035eb104ede"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a528cff7749b4faef8afde035eb104ede">&#9670;&#160;</a></span>GetPool()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgpgmm_1_1_memory_pool.html">MemoryPool</a> * gpgmm::MemoryBase::GetPool </td>
+          <td class="memname"><a class="el" href="classgpgmm_1_1_i_memory_pool.html">IMemoryPool</a> * gpgmm::MemoryBase::GetPool </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Get the memory pool managing the object. </p>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to <a class="el" href="classgpgmm_1_1_memory_pool.html" title="Stores a collection of memory allocations.">MemoryPool</a> managing this memory object. </dd></dl>
 
 </div>
 </div>
@@ -357,9 +301,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Return the size of the memory object. </p>
-<dl class="section return"><dt>Returns</dt><dd>Size, in bytes, of the memory object. </dd></dl>
 
 </div>
 </div>
@@ -395,12 +336,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Decrements the sub-allocation reference count on the heap. </p>
-
 </div>
 </div>
-<a id="a7eb6b61205460d5f7b554b8439029ca7" name="a7eb6b61205460d5f7b554b8439029ca7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7eb6b61205460d5f7b554b8439029ca7">&#9670;&#160;</a></span>SetPool()</h2>
+<a id="a1b7c9cd4eaf7f65b4b984992a114ea4c" name="a1b7c9cd4eaf7f65b4b984992a114ea4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b7c9cd4eaf7f65b4b984992a114ea4c">&#9670;&#160;</a></span>SetPool()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -408,28 +347,20 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void gpgmm::MemoryBase::SetPool </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1_memory_pool.html">MemoryPool</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classgpgmm_1_1_i_memory_pool.html">IMemoryPool</a> *&#160;</td>
           <td class="paramname"><em>pool</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the memory pool to manage this object. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pool</td><td>A pointer to <a class="el" href="classgpgmm_1_1_memory_pool.html" title="Stores a collection of memory allocations.">MemoryPool</a> used to manage this object. </td></tr>
-  </table>
-  </dd>
-</dl>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/gpgmm/common/<a class="el" href="_memory_8h.html">Memory.h</a></li>
-<li>src/include/min/<a class="el" href="gpgmm_8h.html">gpgmm.h</a></li>
+<li>src/mvi/<a class="el" href="gpgmm__mvi_8h.html">gpgmm_mvi.h</a></li>
 <li>src/gpgmm/common/<a class="el" href="_memory_8cpp.html">Memory.cpp</a></li>
-<li>src/include/min/<a class="el" href="gpgmm_8cpp.html">gpgmm.cpp</a></li>
+<li>src/mvi/<a class="el" href="gpgmm__mvi_8cpp.html">gpgmm_mvi.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

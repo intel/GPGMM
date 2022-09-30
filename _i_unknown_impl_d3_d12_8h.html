@@ -104,8 +104,32 @@ Macros</h2></td></tr>
 <tr class="memitem:af9100992650a2c12de72d4ac23c0fe1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_i_unknown_impl_d3_d12_8h.html#af9100992650a2c12de72d4ac23c0fe1c">GPGMM_REFCOUNT_TYPE</a>&#160;&#160;&#160;RefCounted</td></tr>
 <tr class="memdesc:af9100992650a2c12de72d4ac23c0fe1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the atomic-type to use for ref-counting the COM object.  <a href="_i_unknown_impl_d3_d12_8h.html#af9100992650a2c12de72d4ac23c0fe1c">More...</a><br /></td></tr>
 <tr class="separator:af9100992650a2c12de72d4ac23c0fe1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c58337848b93e66a6e585a69132d756"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_i_unknown_impl_d3_d12_8h.html#a6c58337848b93e66a6e585a69132d756">DEFINE_IUNKNOWNIMPL_OVERRIDES</a>()</td></tr>
+<tr class="separator:a6c58337848b93e66a6e585a69132d756"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a6c58337848b93e66a6e585a69132d756" name="a6c58337848b93e66a6e585a69132d756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c58337848b93e66a6e585a69132d756">&#9670;&#160;</a></span>DEFINE_IUNKNOWNIMPL_OVERRIDES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFINE_IUNKNOWNIMPL_OVERRIDES</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">inline</span> HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, <span class="keywordtype">void</span>** ppvObject)<span class="keyword"> override </span>{ \</div>
+<div class="line">        <span class="keywordflow">return</span> IUnknownImpl::QueryInterface(riid, ppvObject);                                 \</div>
+<div class="line">    }                                                                                         \</div>
+<div class="line">    <span class="keyword">inline</span> ULONG STDMETHODCALLTYPE AddRef()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> IUnknownImpl::AddRef(); }       \</div>
+<div class="line">    <span class="keyword">inline</span> ULONG STDMETHODCALLTYPE Release()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> IUnknownImpl::Release(); }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="af9100992650a2c12de72d4ac23c0fe1c" name="af9100992650a2c12de72d4ac23c0fe1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af9100992650a2c12de72d4ac23c0fe1c">&#9670;&#160;</a></span>GPGMM_REFCOUNT_TYPE</h2>
 

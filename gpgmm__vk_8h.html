@@ -74,11 +74,80 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">gpgmm_vk.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_resource_allocator_vk_8h.html">gpgmm/vk/ResourceAllocatorVk.h</a>&quot;</code><br />
-</div></div><!-- contents -->
+<div class="textblock"><code>#include &lt;vulkan/vulkan.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="gpgmm_8h.html">gpgmm.h</a>&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_gp_allocator_create_info.html">gpgmm::vk::GpAllocatorCreateInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to create allocator.  <a href="structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html">gpgmm::vk::GpResourceAllocationCreateInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacegpgmm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html">gpgmm</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacegpgmm_1_1vk"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html">gpgmm::vk</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:acbd246f80e3453eadf5bc945f88a44b6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6">gpgmm::vk::GpAllocatorCreateFlags</a> { <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a6eedcff4846b79716a6ea0720996ab34">gpgmm::vk::GP_ALLOCATOR_CREATE_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6ac334c08000f123197b4920083c5af7a7">gpgmm::vk::GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH</a> = 0x4
+, <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde">gpgmm::vk::GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f">gpgmm::vk::GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET</a> = 0x10
+ }</td></tr>
+<tr class="memdesc:acbd246f80e3453eadf5bc945f88a44b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures how allocators should be created.  <a href="namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6">More...</a><br /></td></tr>
+<tr class="separator:acbd246f80e3453eadf5bc945f88a44b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59e276245b71c30952b1e8b14c65787e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787e">gpgmm::vk::GpAllocatorAlgorithm</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea570dcf26ea6b691771d84efd3fd5ebff">gpgmm::vk::GP_ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
+, <a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea266566240e02692c3a84e320a9f864ec">gpgmm::vk::GP_ALLOCATOR_ALGORITHM_SLAB</a> = 1
+, <a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea5de2117df95c59919ce8963d49b0f4de">gpgmm::vk::GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
+, <a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787eacdef595920add93787422ca014ae5aaf">gpgmm::vk::GP_ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea9869547137c9b4bae14485fec1b4243d">gpgmm::vk::GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
+<br />
+ }</td></tr>
+<tr class="separator:a59e276245b71c30952b1e8b14c65787e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b98f42e0a18412e618eb4e0cc709879"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879">gpgmm::vk::GpResourceAllocationCreateFlags</a> { <a class="el" href="namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a659bc5049b8287ce7553855539f4277a">gpgmm::vk::GP_ALLOCATION_CREATE_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879aa7d68fef0e42f5e38dea75cd4258a392">gpgmm::vk::GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a1628e2a0aae1b470e5c3a656b96a06ad">gpgmm::vk::GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY</a> = 0x4
+, <a class="el" href="namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a3fcb49e1c85363cbbf59f0d3023ed97f">gpgmm::vk::GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY</a> = 0x8
+ }</td></tr>
+<tr class="separator:a3b98f42e0a18412e618eb4e0cc709879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a714d3c0ca5f86caa30020a08646ceb65"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">gpgmm::vk::gpCreateResourceAllocator</a> (const GpAllocatorCreateInfo &amp;info, <a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> *allocatorOut)</td></tr>
+<tr class="memdesc:a714d3c0ca5f86caa30020a08646ceb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create allocator used to create and manage video memory for the App specified device and instance.  <a href="namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65">More...</a><br /></td></tr>
+<tr class="separator:a714d3c0ca5f86caa30020a08646ceb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc98f4568b4de02bbd65f32c6adc7006"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">gpgmm::vk::gpDestroyResourceAllocator</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator)</td></tr>
+<tr class="memdesc:acc98f4568b4de02bbd65f32c6adc7006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy allocator.  <a href="namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006">More...</a><br /></td></tr>
+<tr class="separator:acc98f4568b4de02bbd65f32c6adc7006"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae143de825aff02b5d4c9b316fec88b4"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4">gpgmm::vk::gpCreateBuffer</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, const VkBufferCreateInfo *pBufferCreateInfo, VkBuffer *pBuffer, const GpResourceAllocationCreateInfo *pAllocationCreateInfo, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *allocationOut)</td></tr>
+<tr class="memdesc:aae143de825aff02b5d4c9b316fec88b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a buffer allocation.  <a href="namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4">More...</a><br /></td></tr>
+<tr class="separator:aae143de825aff02b5d4c9b316fec88b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87035ca264fc0e367910c896fb73045c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">gpgmm::vk::gpDestroyBuffer</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, VkBuffer buffer, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> allocation)</td></tr>
+<tr class="memdesc:a87035ca264fc0e367910c896fb73045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy buffer allocation.  <a href="namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c">More...</a><br /></td></tr>
+<tr class="separator:a87035ca264fc0e367910c896fb73045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="memItemLeft" align="right" valign="top">VkResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a">gpgmm::vk::gpCreateImage</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, const VkImageCreateInfo *pImageCreateInfo, VkImage *pImage, const GpResourceAllocationCreateInfo *pAllocationCreateInfo, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> *allocationOut)</td></tr>
+<tr class="memdesc:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a image allocation.  <a href="namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a">More...</a><br /></td></tr>
+<tr class="separator:a98b4ef536593f6e7d4d1fe0248c5528a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5">gpgmm::vk::gpDestroyImage</a> (<a class="el" href="struct_gp_resource_allocator.html">GpResourceAllocator</a> allocator, VkImage image, <a class="el" href="struct_gp_resource_allocation.html">GpResourceAllocation</a> allocation)</td></tr>
+<tr class="memdesc:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy image allocation.  <a href="namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5">More...</a><br /></td></tr>
+<tr class="separator:a8e0bd9e3e29e8f43ca886e2d7baf1ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5

@@ -77,8 +77,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">HeapD3D12.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -87,18 +86,14 @@ $(function() {
 <code>#include &quot;<a class="el" href="_i_unknown_impl_d3_d12_8h.html">gpgmm/d3d12/IUnknownImplD3D12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_limits_8h.html">gpgmm/utils/Limits.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_linked_list_8h.html">gpgmm/utils/LinkedList.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gpgmm__d3d12_8h.html">include/gpgmm_d3d12.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gpgmm__export_8h.html">include/gpgmm_export.h</a>&quot;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">gpgmm::d3d12::HEAP_INFO</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">gpgmm::d3d12::HEAP_DESC</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">gpgmm::d3d12::Heap</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3...">Heap</a> is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html" title="ResidencyManager tracks and maintains one or more Heap within a residency cache.">ResidencyManager</a>'s residency cache.  <a href="classgpgmm_1_1d3d12_1_1_heap.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -108,31 +103,11 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacegpgmm_1_1d3d12"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html">gpgmm::d3d12</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac42f78da8fd9b21b558e6d39c6e60de5">gpgmm::d3d12::CreateHeapFn</a> = std::function&lt; HRESULT(ID3D12Pageable **ppPageableOut)&gt;</td></tr>
-<tr class="memdesc:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <a href="namespacegpgmm_1_1d3d12.html#ac42f78da8fd9b21b558e6d39c6e60de5">More...</a><br /></td></tr>
-<tr class="separator:ac42f78da8fd9b21b558e6d39c6e60de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a964c4ad3a4e304bf0e281459f327023c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">gpgmm::d3d12::RESIDENCY_STATUS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">gpgmm::d3d12::RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">gpgmm::d3d12::RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacdd97804fab6f0e2728be3be2e8c9366">gpgmm::d3d12::RESIDENCY_STATUS_UNKNOWN</a> = 0
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cacb86c7e47cdbf98d50f6f30a72411d57">gpgmm::d3d12::RESIDENCY_STATUS_PENDING_RESIDENCY</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023cab0da3f95445673078440fd91079c2ae1">gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT</a> = 2
-<br />
- }</td></tr>
-<tr class="separator:a964c4ad3a4e304bf0e281459f327023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abff116c525e8afde5753ee3b1311d662"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662">gpgmm::d3d12::HEAPS_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">gpgmm::d3d12::HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">gpgmm::d3d12::HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662adcc45731fa5f985fdee82d31a941d6f9">gpgmm::d3d12::HEAPS_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#abff116c525e8afde5753ee3b1311d662a0f4ef1d7c056adaf1956d8480ffde929">gpgmm::d3d12::HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
- }</td></tr>
-<tr class="separator:abff116c525e8afde5753ee3b1311d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">gpgmm::d3d12::CreateHeap</a> (const HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, CreateHeapFn &amp;&amp;createHeapFn, IHeap **ppHeapOut)</td></tr>
+<tr class="memdesc:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <a href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">More...</a><br /></td></tr>
+<tr class="separator:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
