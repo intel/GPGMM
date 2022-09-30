@@ -33,9 +33,9 @@ allocatorDesc.Adapter = Adapter;
 // Use CheckFeatureSupport
 allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
 
-ComPtr<gpgmm::d3d12::ResidencyManager> residency; // Optional
-ComPtr<gpgmm::d3d12::ResourceAllocator> allocator;
-gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(desc, &allocator, &residency);
+ComPtr<gpgmm::d3d12::IResidencyManager> residency; // Optional
+ComPtr<gpgmm::d3d12::IResourceAllocator> allocator;
+gpgmm::d3d12::CreateResourceAllocator(desc, &allocator, &residency);
 ```
 
 ```cpp
@@ -43,7 +43,7 @@ D3D12_RESOURCE_DESC& resourceDesc = {};
 D3D12_RESOURCE_STATES initialState = {}
 gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
 
-ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
+ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;
 allocator->CreateResource(allocationDesc, resourceDesc, initialState, nullptr, &allocation);
 ```
 
@@ -51,13 +51,14 @@ GPUs do not support page-faulting, so it's up the GPU application to avoid using
 physical GPU memory. GPGMM integrates residency into the resource allocators to simplify and optimize allocation:
 
 ```cpp
-gpgmm::d3d12::ResidencyList list;
-list.Add(allocation->GetMemory());
+ComPtr<gpgmm::d3d12::IResidencyList> list;
+CreateResidencyList(&list);
+list->Add(allocation->GetMemory());
 
 residency->ExecuteCommandList(&queue, &commandList, &list, 1);
 
 // Prepare for next frame.
-list.Reset();
+list->Reset();
 ```
 
 Residency also works for non-resources too:
@@ -67,8 +68,8 @@ gpgmm::d3d12::HEAP_DESC shaderVisibleHeap = {};
 shaderVisibleHeap.SizeInBytes = kHeapSize;
 shaderVisibleHeap.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
-ComPtr<gpgmm::d3d12::Heap> descriptorHeap;
-gpgmm::d3d12::Heap::CreateHeap(shaderVisibleHeap, residencyManager,
+ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;
+gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager,
   [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
       ComPtr<ID3D12DescriptorHeap> heap;
       mDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heap));

@@ -20,7 +20,7 @@
 
 namespace {
 
-    ComPtr<gpgmm::d3d12::ResourceAllocator> gResourceAllocator;
+    ComPtr<gpgmm::d3d12::IResourceAllocator> gResourceAllocator;
 
 }  // namespace
 
@@ -30,8 +30,8 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         return 0;
     }
 
-    if (FAILED(gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(allocatorDesc,
-                                                                        &gResourceAllocator))) {
+    if (FAILED(
+            gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, &gResourceAllocator, nullptr))) {
         return 0;
     }
 
@@ -46,7 +46,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
+    ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;
     gResourceAllocator->CreateResource(allocationDesc, CreateBufferDesc(UInt8ToUInt64(data)),
                                        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation);
     return 0;

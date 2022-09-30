@@ -156,18 +156,18 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
     struct PlaybackExecutionContext {
         using InstanceID = std::string;
 
-        ComPtr<ResourceAllocation> CurrentAllocationWithoutID;
-        ComPtr<Heap> CurrentHeapWithoutID;
+        ComPtr<IResourceAllocation> CurrentAllocationWithoutID;
+        ComPtr<IHeap> CurrentHeapWithoutID;
 
-        std::unordered_map<InstanceID, ComPtr<ResourceAllocator>> CreatedAllocatorsToID;
-        std::unordered_map<InstanceID, ComPtr<ResidencyManager>> CreatedResidencyManagersToID;
-        std::unordered_map<InstanceID, ComPtr<ResourceAllocation>> CreatedAllocationsToID;
-        std::unordered_map<InstanceID, ComPtr<Heap>> CreatedHeapsToID;
+        std::unordered_map<InstanceID, ComPtr<IResourceAllocator>> CreatedAllocatorsToID;
+        std::unordered_map<InstanceID, ComPtr<IResidencyManager>> CreatedResidencyManagersToID;
+        std::unordered_map<InstanceID, ComPtr<IResourceAllocation>> CreatedAllocationsToID;
+        std::unordered_map<InstanceID, ComPtr<IHeap>> CreatedHeapsToID;
 
         InstanceID currentAllocatorID;
         InstanceID currentResidencyID;
 
-        std::vector<ResidencyList> currentResidencyLists;
+        std::vector<ComPtr<IResidencyList>> currentResidencyLists;
     };
 
     void RunTest(const TraceFile& traceFile,
@@ -221,22 +221,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         // Create ResidencyLists.
-                        std::vector<ResidencyList*> residencyListPtrs;
+                        std::vector<IResidencyList*> residencyListPtrs;
                         for (auto& setJson : args["ResidencyLists"]) {
-                            ResidencyList list = {};
+                            ComPtr<IResidencyList> list;
+                            ASSERT_SUCCEEDED(CreateResidencyList(&list));
                             for (auto heap : setJson["Heaps"]) {
                                 const std::string heapId = heap["id_ref"].asString();
                                 if (playbackContext.CreatedHeapsToID.find(heapId) ==
                                     playbackContext.CreatedHeapsToID.end()) {
                                     break;
                                 }
-                                list.Add(playbackContext.CreatedHeapsToID[heapId].Get());
+                                list->Add(playbackContext.CreatedHeapsToID[heapId].Get());
                             }
-                            residencyListPtrs.push_back(&list);
+                            residencyListPtrs.push_back(list.Get());
                             playbackContext.currentResidencyLists.push_back(std::move(list));
                         }
 
-                        ResidencyManager* residencyManager =
+                        IResidencyManager* residencyManager =
                             playbackContext
                                 .CreatedResidencyManagersToID[playbackContext.currentResidencyID]
                                 .Get();
@@ -300,7 +301,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             playbackContext.currentAllocatorID);
                         ASSERT_TRUE(it != playbackContext.CreatedAllocatorsToID.end());
 
-                        ResourceAllocator* resourceAllocator =
+                        IResourceAllocator* resourceAllocator =
                             playbackContext
                                 .CreatedAllocatorsToID[playbackContext.currentAllocatorID]
                                 .Get();
@@ -396,9 +397,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         newResidencyDesc =
                             ConvertAndApplyToResidencyDesc(snapshot, newResidencyDesc);
 
-                        ComPtr<ResidencyManager> residencyManager;
-                        ASSERT_SUCCEEDED(ResidencyManager::CreateResidencyManager(
-                            newResidencyDesc, &residencyManager));
+                        ComPtr<IResidencyManager> residencyManager;
+                        ASSERT_SUCCEEDED(
+                            CreateResidencyManager(newResidencyDesc, &residencyManager));
 
                         ASSERT_TRUE(playbackContext.CreatedResidencyManagersToID
                                         .insert({residencyManagerID, std::move(residencyManager)})
@@ -471,7 +472,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 0.125;  // 1/8th of 4MB
                         }
 
-                        ComPtr<ResidencyManager> residencyManager;
+                        ComPtr<IResidencyManager> residencyManager;
                         if (playbackContext.CreatedResidencyManagersToID.find(
                                 playbackContext.currentResidencyID) !=
                             playbackContext.CreatedResidencyManagersToID.end()) {
@@ -479,8 +480,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                                    [playbackContext.currentResidencyID];
                         }
 
-                        ComPtr<ResourceAllocator> resourceAllocator;
-                        ASSERT_SUCCEEDED(ResourceAllocator::CreateResourceAllocator(
+                        ComPtr<IResourceAllocator> resourceAllocator;
+                        ASSERT_SUCCEEDED(CreateResourceAllocator(
                             allocatorDescOfProfile, residencyManager.Get(), &resourceAllocator));
 
                         ASSERT_TRUE(playbackContext.CreatedAllocatorsToID
@@ -532,14 +533,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         resourceHeapDesc =
                             ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);
 
-                        ResidencyManager* residencyManager =
+                        IResidencyManager* residencyManager =
                             playbackContext
                                 .CreatedResidencyManagersToID[playbackContext.currentResidencyID]
                                 .Get();
                         ASSERT_NE(residencyManager, nullptr);
 
-                        ComPtr<Heap> resourceHeap;
-                        ASSERT_SUCCEEDED(Heap::CreateHeap(
+                        ComPtr<IHeap> resourceHeap;
+                        ASSERT_SUCCEEDED(CreateHeap(
                             resourceHeapDesc, residencyManager,
                             [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
                                 D3D12_HEAP_DESC heapDesc = {};
@@ -592,7 +593,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             continue;
                         }
 
-                        Heap* heap = it->second.Get();
+                        IHeap* heap = it->second.Get();
                         ASSERT_NE(heap, nullptr);
 
                         mCapturedMemoryStats.CurrentUsage -= heap->GetSize();

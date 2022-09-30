@@ -463,7 +463,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
 
-    std::set<MemoryBase*> heaps = {};
+    std::set<IMemoryObject*> heaps = {};
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
 
     constexpr uint32_t kNumOfAllocations = 100;
@@ -523,7 +523,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
 
-    std::set<MemoryBase*> heaps = {};
+    std::set<IMemoryObject*> heaps = {};
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
 
     // Count by heap (vs number of allocations) to ensure there are exactly |kNumOfHeaps| worth of

@@ -17,22 +17,9 @@
 
 #include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "include/gpgmm_d3d12.h"
 
 namespace gpgmm::d3d12 {
-
-    // Forward declare backend types.
-    struct ALLOCATION_DESC;
-    struct ALLOCATOR_DESC;
-    struct EVENT_RECORD_OPTIONS;
-    struct HEAP_DESC;
-    struct HEAP_INFO;
-    struct RESOURCE_ALLOCATION_DESC;
-    struct RESOURCE_ALLOCATION_INFO;
-    class ResidencyList;
-    struct RESIDENCY_DESC;
-
-    // Declare backend aliases.
-    using RESOURCE_ALLOCATOR_INFO = MemoryAllocatorInfo;
 
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
@@ -47,7 +34,7 @@ namespace gpgmm::d3d12 {
     };
 
     struct EXECUTE_COMMAND_LISTS_DESC {
-        ResidencyList* const* ResidencyLists;
+        IResidencyList* const* ResidencyLists;
         uint32_t Count;
     };
 

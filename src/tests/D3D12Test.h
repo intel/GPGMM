@@ -35,8 +35,6 @@ namespace gpgmm::d3d12 {
     struct RESIDENCY_DESC;
 
     class Caps;
-    class ResourceAllocator;
-    class ResourceAllocation;
 
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(LogSeverity logSeverity);
 

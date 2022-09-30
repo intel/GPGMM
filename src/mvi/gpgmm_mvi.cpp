@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm.h"
+#include "gpgmm_mvi.h"
 
 namespace gpgmm {
-
-    static constexpr uint64_t kInvalidSize = std::numeric_limits<uint64_t>::max();
 
     // MemoryBase
 
     MemoryBase::MemoryBase(uint64_t size, uint64_t alignment) : mSize(size), mAlignment(alignment) {
     }
-
-    MemoryBase::~MemoryBase() = default;
 
     uint64_t MemoryBase::GetSize() const {
         return mSize;
@@ -40,40 +36,17 @@ namespace gpgmm {
     }
 
     MemoryAllocatorInfo MemoryAllocator::GetInfo() const {
-        return {};
+        return mInfo;
     }
 
     // MemoryAllocation
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
-                                       MemoryBase* memory,
-                                       uint64_t requestSize)
+    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator, IMemoryObject* memory)
         : mAllocator(allocator), mMemory(memory) {
     }
 
-    MemoryAllocation::~MemoryAllocation() = default;
-
-    MemoryAllocation::MemoryAllocation(const MemoryAllocation&) = default;
-    MemoryAllocation& MemoryAllocation::operator=(const MemoryAllocation&) = default;
-
-    bool MemoryAllocation::operator==(const MemoryAllocation& other) const {
-        return (other.mAllocator == mAllocator && other.mMemory == mMemory);
-    }
-
-    bool MemoryAllocation::operator!=(const MemoryAllocation& other) const {
-        return !operator==(other);
-    }
-
-    MemoryAllocationInfo MemoryAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment()};
-    }
-
-    MemoryBase* MemoryAllocation::GetMemory() const {
+    IMemoryObject* MemoryAllocation::GetMemory() const {
         return mMemory;
-    }
-
-    uint8_t* MemoryAllocation::GetMappedPointer() const {
-        return nullptr;
     }
 
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
@@ -84,24 +57,8 @@ namespace gpgmm {
         return mMemory->GetSize();
     }
 
-    uint64_t MemoryAllocation::GetRequestSize() const {
-        return kInvalidSize;
-    }
-
     uint64_t MemoryAllocation::GetAlignment() const {
         return mMemory->GetAlignment();
-    }
-
-    uint64_t MemoryAllocation::GetOffset() const {
-        return 0;
-    }
-
-    AllocationMethod MemoryAllocation::GetMethod() const {
-        return AllocationMethod::kStandalone;
-    }
-
-    MemoryBlock* MemoryAllocation::GetBlock() const {
-        return nullptr;
     }
 
 }  // namespace gpgmm

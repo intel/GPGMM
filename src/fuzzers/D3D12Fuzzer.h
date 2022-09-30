@@ -17,6 +17,8 @@
 
 #include <gpgmm_d3d12.h>
 
+using Microsoft::WRL::ComPtr;
+
 uint64_t UInt8ToUInt64(const uint8_t* src);
 
 HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc);

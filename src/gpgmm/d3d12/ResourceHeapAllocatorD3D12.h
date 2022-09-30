@@ -21,12 +21,12 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResidencyManager;
+    class IResidencyManager;
 
     // Wrapper to allocate a D3D12 heap for resources of any type.
     class ResourceHeapAllocator final : public MemoryAllocator {
       public:
-        ResourceHeapAllocator(ResidencyManager* residencyManager,
+        ResourceHeapAllocator(IResidencyManager* residencyManager,
                               ID3D12Device* device,
                               D3D12_HEAP_PROPERTIES heapProperties,
                               D3D12_HEAP_FLAGS heapFlags);
@@ -40,7 +40,7 @@ namespace gpgmm::d3d12 {
         const char* GetTypename() const override;
 
       private:
-        ResidencyManager* const mResidencyManager;
+        IResidencyManager* const mResidencyManager;
         ID3D12Device* const mDevice;
         const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;

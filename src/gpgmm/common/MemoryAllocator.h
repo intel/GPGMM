@@ -25,54 +25,12 @@
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Log.h"
+#include "include/gpgmm.h"
 
 #include <memory>
 #include <mutex>
 
 namespace gpgmm {
-
-    /** \struct MemoryAllocatorInfo
-    Information about the memory allocator.
-    */
-    struct MemoryAllocatorInfo {
-        /** \brief Number of used sub-allocated blocks within the same memory.
-         */
-        uint32_t UsedBlockCount;
-
-        /** \brief Total size, in bytes, of used sub-allocated blocks.
-         */
-        uint64_t UsedBlockUsage;
-
-        /** \brief Number of used memory allocations.
-         */
-        uint32_t UsedMemoryCount;
-
-        /** \brief Total size, in bytes, of used memory.
-         */
-        uint64_t UsedMemoryUsage;
-
-        /** \brief Total size, in bytes, of free memory.
-         */
-        uint64_t FreeMemoryUsage;
-
-        /** \brief Cache misses not eliminated by prefetching.
-         */
-        uint64_t PrefetchedMemoryMisses;
-
-        /** \brief Cache misses eliminated because of prefetching.
-         */
-        uint64_t PrefetchedMemoryMissesEliminated;
-
-        /** \brief Requested size was NOT cached.
-         */
-        uint64_t SizeCacheMisses;
-
-        /** \brief Requested size was cached.
-         */
-        uint64_t SizeCacheHits;
-
-        MemoryAllocatorInfo& operator+=(const MemoryAllocatorInfo& rhs);
-    };
 
     class AllocateMemoryTask;
 
@@ -293,7 +251,7 @@ namespace gpgmm {
             MemoryBlock* block = nullptr;
             GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(requestSize, alignment), block);
 
-            MemoryBase* memory = GetOrCreateMemory(block);
+            IMemoryObject* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {

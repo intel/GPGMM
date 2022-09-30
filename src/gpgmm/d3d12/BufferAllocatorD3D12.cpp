@@ -72,7 +72,7 @@ namespace gpgmm::d3d12 {
         resourceDescriptor.Flags = mResourceFlags;
 
         // Optimized clear is not supported for buffers.
-        Heap* resourceHeap = nullptr;
+        IHeap* resourceHeap = nullptr;
         if (FAILED(mResourceAllocator->CreateCommittedResource(
                 mHeapProperties, mHeapFlags, info, &resourceDescriptor,
                 /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,

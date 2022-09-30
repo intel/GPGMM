@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/utils/Limits.h"
+#include "include/gpgmm.h"
 
 #include <memory>
 
@@ -40,7 +41,7 @@ namespace gpgmm {
     To shrink the pool, existing allocations can removed out by AcquireFromPool() or de-allocated
     together by ReleasePool().
     */
-    class MemoryPool {
+    class MemoryPool : public IMemoryPool {
       public:
         /** \brief Constructs a pool for memory of the specified size.
 

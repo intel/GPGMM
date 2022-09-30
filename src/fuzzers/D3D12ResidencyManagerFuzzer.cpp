@@ -22,11 +22,11 @@
 
 namespace {
 
-    ComPtr<gpgmm::d3d12::ResourceAllocator> gResourceAllocator;
-    ComPtr<gpgmm::d3d12::ResidencyManager> gResidencyManager;
-    std::vector<ComPtr<gpgmm::d3d12::ResourceAllocation>> gAllocationsBelowBudget = {};
+    ComPtr<gpgmm::d3d12::IResourceAllocator> gResourceAllocator;
+    ComPtr<gpgmm::d3d12::IResidencyManager> gResidencyManager;
+    std::vector<ComPtr<gpgmm::d3d12::IResourceAllocation>> gAllocationsBelowBudget = {};
 
-    uint64_t GetBudgetLeft(gpgmm::d3d12::ResidencyManager* const residencyManager,
+    uint64_t GetBudgetLeft(gpgmm::d3d12::IResidencyManager* const residencyManager,
                            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         if (residencyManager == nullptr) {
             return 0;
@@ -67,13 +67,12 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
 
     residencyDesc.IsUMA = arch.UMA;
 
-    if (FAILED(gpgmm::d3d12::ResidencyManager::CreateResidencyManager(residencyDesc,
-                                                                      &gResidencyManager))) {
+    if (FAILED(gpgmm::d3d12::CreateResidencyManager(residencyDesc, &gResidencyManager))) {
         return 0;
     }
 
-    if (FAILED(gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(
-            allocatorDesc, gResidencyManager.Get(), &gResourceAllocator))) {
+    if (FAILED(gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, gResidencyManager.Get(),
+                                                     &gResourceAllocator))) {
         return 0;
     }
 
@@ -92,7 +91,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     // Keep allocating until we reach the budget.
     uint64_t memoryUnderBudget = GetBudgetLeft(gResidencyManager.Get(), bufferMemorySegment);
     while (gResourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
-        ComPtr<gpgmm::d3d12::ResourceAllocation> allocation;
+        ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;
         if (FAILED(gResourceAllocator->CreateResource({}, bufferDesc, D3D12_RESOURCE_STATE_COMMON,
                                                       nullptr, &allocation))) {
             return 0;
@@ -112,7 +111,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    ComPtr<gpgmm::d3d12::ResourceAllocation> allocationOverBudget;
+    ComPtr<gpgmm::d3d12::IResourceAllocation> allocationOverBudget;
     gResourceAllocator->CreateResource(allocationDesc, CreateBufferDesc(UInt8ToUInt64(data)),
                                        D3D12_RESOURCE_STATE_COMMON, nullptr, &allocationOverBudget);
     return 0;

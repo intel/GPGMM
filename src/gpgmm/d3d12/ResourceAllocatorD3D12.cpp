@@ -278,7 +278,7 @@ namespace gpgmm::d3d12 {
         // RAII wrapper to lock/unlock heap from the residency cache.
         class ScopedResidencyLock final {
           public:
-            ScopedResidencyLock(ResidencyManager* const residencyManager, Heap* const heap)
+            ScopedResidencyLock(IResidencyManager* const residencyManager, IHeap* const heap)
                 : mResidencyManager(residencyManager), mHeap(heap) {
                 ASSERT(heap != nullptr);
                 if (mResidencyManager != nullptr) {
@@ -293,8 +293,8 @@ namespace gpgmm::d3d12 {
             }
 
           private:
-            ResidencyManager* const mResidencyManager;
-            Heap* const mHeap;
+            IResidencyManager* const mResidencyManager;
+            IHeap* const mHeap;
         };
 
         // Combines AllocatorMemory and Create*Resource into a single call.
@@ -363,15 +363,29 @@ namespace gpgmm::d3d12 {
 
     }  // namespace
 
+    HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                    IResourceAllocator** ppResourceAllocatorOut,
+                                    IResidencyManager** ppResidencyManagerOut = nullptr) {
+        return ResourceAllocator::CreateResourceAllocator(
+            allocatorDescriptor, ppResourceAllocatorOut, ppResidencyManagerOut);
+    }
+
+    HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                    IResidencyManager* pResidencyManager,
+                                    IResourceAllocator** ppResourceAllocatorOut) {
+        return ResourceAllocator::CreateResourceAllocator(allocatorDescriptor, pResidencyManager,
+                                                          ppResourceAllocatorOut);
+    }
+
     // static
     HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                                       ResourceAllocator** ppResourceAllocatorOut,
-                                                       ResidencyManager** ppResidencyManagerOut) {
+                                                       IResourceAllocator** ppResourceAllocatorOut,
+                                                       IResidencyManager** ppResidencyManagerOut) {
         if (allocatorDescriptor.Device == nullptr || allocatorDescriptor.Adapter == nullptr) {
             return E_INVALIDARG;
         }
 
-        ComPtr<ResidencyManager> residencyManager;
+        ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
             std::unique_ptr<Caps> caps;
             {
@@ -392,7 +406,7 @@ namespace gpgmm::d3d12 {
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
         }
 
-        ComPtr<ResourceAllocator> resourceAllocator;
+        ComPtr<IResourceAllocator> resourceAllocator;
         ReturnIfFailed(CreateResourceAllocator(allocatorDescriptor, residencyManager.Get(),
                                                &resourceAllocator));
 
@@ -408,9 +422,10 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                                       ResidencyManager* pResidencyManager,
-                                                       ResourceAllocator** ppResourceAllocatorOut) {
+    HRESULT ResourceAllocator::CreateResourceAllocator(
+        const ALLOCATOR_DESC& allocatorDescriptor,
+        IResidencyManager* pResidencyManager,
+        IResourceAllocator** ppResourceAllocatorOut) {
         if (allocatorDescriptor.Adapter == nullptr || allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
@@ -536,10 +551,10 @@ namespace gpgmm::d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                                         ComPtr<ResidencyManager> residencyManager,
+                                         IResidencyManager* pResidencyManager,
                                          std::unique_ptr<Caps> caps)
         : mDevice(std::move(descriptor.Device)),
-          mResidencyManager(std::move(residencyManager)),
+          mResidencyManager(pResidencyManager),
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
@@ -554,8 +569,11 @@ namespace gpgmm::d3d12 {
             mDebugAllocator = std::make_unique<DebugResourceAllocator>();
         }
 
+        ResidencyManager* residencyManager =
+            static_cast<ResidencyManager*>(mResidencyManager.Get());
+
         const bool isUMA =
-            (IsResidencyEnabled()) ? mResidencyManager->IsUMA() : mCaps->IsAdapterUMA();
+            (IsResidencyEnabled()) ? residencyManager->IsUMA() : mCaps->IsAdapterUMA();
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
@@ -842,14 +860,14 @@ namespace gpgmm::d3d12 {
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* pClearValue,
-                                              ResourceAllocation** ppResourceAllocationOut) {
+                                              IResourceAllocation** ppResourceAllocationOut) {
         GPGMM_TRACE_EVENT_OBJECT_CALL(
             "ResourceAllocator.CreateResource",
             (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
                                   pClearValue}));
 
         std::lock_guard<std::mutex> lock(mMutex);
-        ComPtr<ResourceAllocation> allocation;
+        ComPtr<IResourceAllocation> allocation;
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, pClearValue, &allocation));
 
@@ -858,7 +876,7 @@ namespace gpgmm::d3d12 {
         // behind a macro.
         if (mDebugAllocator) {
             ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
-            mDebugAllocator->AddLiveAllocation(allocation.Get());
+            mDebugAllocator->AddLiveAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
         }
 
         // Update the current usage counters.
@@ -868,7 +886,7 @@ namespace gpgmm::d3d12 {
 
 #if defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS)
         // Allocation is subject to alignment requirements per allocator or allocation method.
-        CheckAndReportAllocationMisalignment(*allocation.Get());
+        CheckAndReportAllocationMisalignment(*static_cast<ResourceAllocation*>(allocation.Get()));
 #endif
 
         if (ppResourceAllocationOut != nullptr) {
@@ -883,7 +901,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
-        ResourceAllocation** ppResourceAllocationOut) {
+        IResourceAllocation** ppResourceAllocationOut) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
@@ -995,17 +1013,19 @@ namespace gpgmm::d3d12 {
         // then the budget allows where older, small heaps would get immediately evicited to make
         // room.
         if (IsResidencyEnabled()) {
+            ResidencyManager* residencyManager =
+                static_cast<ResidencyManager*>(mResidencyManager.Get());
             // Memory pool maps to the memory segment the allocation will belong to.
             // But since D3D12 requires the pool to be specified for the given heap type at
             // allocation-time, it must be set here and again, when a resource heap is created.
             heapProperties.MemoryPoolPreference =
-                GetMemoryPool(heapProperties, mResidencyManager->IsUMA());
+                GetMemoryPool(heapProperties, residencyManager->IsUMA());
 
             const DXGI_MEMORY_SEGMENT_GROUP segment = GetMemorySegmentGroup(
-                heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
+                heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
 
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
-                mResidencyManager->GetVideoMemoryInfo(segment);
+                residencyManager->GetVideoMemoryInfo(segment);
 
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetInfoInternal().
@@ -1057,7 +1077,7 @@ namespace gpgmm::d3d12 {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
-                    Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
+                    IHeap* resourceHeap = static_cast<IHeap*>(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
@@ -1094,7 +1114,7 @@ namespace gpgmm::d3d12 {
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    Heap* resourceHeap = ToBackend(subAllocation.GetMemory());
+                    IHeap* resourceHeap = static_cast<IHeap*>(subAllocation.GetMemory());
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
@@ -1133,7 +1153,7 @@ namespace gpgmm::d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 mDevice.Get(), allocator, request, [&](const auto& allocation) -> HRESULT {
-                    Heap* resourceHeap = ToBackend(allocation.GetMemory());
+                    IHeap* resourceHeap = static_cast<IHeap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
@@ -1177,7 +1197,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        Heap* resourceHeap = nullptr;
+        IHeap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(heapProperties, heapFlags, resourceInfo,
                                                &newResourceDesc, clearValue, initialResourceState,
                                                &committedResource, &resourceHeap));
@@ -1204,7 +1224,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
-                                              ResourceAllocation** ppResourceAllocationOut) {
+                                              IResourceAllocation** ppResourceAllocationOut) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         if (!ppResourceAllocationOut) {
@@ -1226,7 +1246,7 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
 
-        Heap* resourceHeap = nullptr;
+        IHeap* resourceHeap = nullptr;
         ReturnIfFailed(Heap::CreateHeap(
             resourceHeapDesc, /*residencyManager*/ nullptr,
             [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
@@ -1256,7 +1276,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResource(Heap* const resourceHeap,
+    HRESULT ResourceAllocator::CreatePlacedResource(IHeap* const resourceHeap,
                                                     uint64_t resourceOffset,
                                                     const D3D12_RESOURCE_DESC* resourceDescriptor,
                                                     const D3D12_CLEAR_VALUE* clearValue,
@@ -1290,7 +1310,7 @@ namespace gpgmm::d3d12 {
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
-        Heap** resourceHeapOut) {
+        IHeap** resourceHeapOut) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateCommittedResource");
 
         HEAP_DESC resourceHeapDesc = {};
@@ -1300,13 +1320,15 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.Flags |=
             (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
+        ResidencyManager* residencyManager =
+            static_cast<ResidencyManager*>(mResidencyManager.Get());
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
-                heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
+                heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
-        Heap* resourceHeap = nullptr;
+        IHeap* resourceHeap = nullptr;
         ComPtr<ID3D12Resource> committedResource;
 
         ReturnIfFailed(Heap::CreateHeap(

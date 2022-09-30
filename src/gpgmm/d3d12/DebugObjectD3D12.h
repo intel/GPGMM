@@ -15,39 +15,22 @@
 #ifndef GPGMM_D3D12_DEBUGOBJECTD3D12_H_
 #define GPGMM_D3D12_DEBUGOBJECTD3D12_H_
 
+#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "include/gpgmm_export.h"
 
 #include <string>
 
 namespace gpgmm::d3d12 {
-
-    /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
-
-    Since a single D3D object could be re-used by one or more GPGMM objects, debug information must
-    be stored and retireved seperately.
-    */
-    class GPGMM_EXPORT DebugObject {
+    class GPGMM_EXPORT DebugObject : public IUnknownImpl {
       public:
-        DebugObject() = default;
-        virtual ~DebugObject() = default;
+        virtual ~DebugObject() override = default;
 
-        DebugObject(const DebugObject&) = default;
-        DebugObject& operator=(const DebugObject&) = default;
-
-        /** \brief Get the debug name.
-
-        \return A NULL-terminated UNICODE string that contains the name to associate with the debug
-        object.
-        */
         LPCWSTR GetDebugName() const;
-
-        /** \brief Associate a debug name.
-
-        @param Name A NULL-terminated UNICODE string that contains the name to associate with the
-        debug object.
-        */
         HRESULT SetDebugName(LPCWSTR Name);
+
+        DEFINE_IUNKNOWNIMPL_OVERRIDES()
 
       protected:
         // Derived classes should override to associate the name with the containing ID3D12Object.

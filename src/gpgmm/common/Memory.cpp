@@ -36,11 +36,11 @@ namespace gpgmm {
         return mAlignment;
     }
 
-    MemoryPool* MemoryBase::GetPool() const {
+    IMemoryPool* MemoryBase::GetPool() const {
         return mPool;
     }
 
-    void MemoryBase::SetPool(MemoryPool* pool) {
+    void MemoryBase::SetPool(IMemoryPool* pool) {
         ASSERT(pool != nullptr);
         mPool = pool;
     }
