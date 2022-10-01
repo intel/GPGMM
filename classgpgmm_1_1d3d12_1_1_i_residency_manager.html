@@ -113,9 +113,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2bd6ff54e6c8d7b20697838caf0c9100"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a2bd6ff54e6c8d7b20697838caf0c9100">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)=0</td></tr>
 <tr class="memdesc:a2bd6ff54e6c8d7b20697838caf0c9100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a2bd6ff54e6c8d7b20697838caf0c9100">More...</a><br /></td></tr>
 <tr class="separator:a2bd6ff54e6c8d7b20697838caf0c9100"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66a9fb7234a4bb98b2dd35d77a5e8dca"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a66a9fb7234a4bb98b2dd35d77a5e8dca">GetInfo</a> () const =0</td></tr>
-<tr class="memdesc:a66a9fb7234a4bb98b2dd35d77a5e8dca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current residency manager usage.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a66a9fb7234a4bb98b2dd35d77a5e8dca">More...</a><br /></td></tr>
-<tr class="separator:a66a9fb7234a4bb98b2dd35d77a5e8dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3efb5df7f1d2cac9892cd6b549fde8de"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">RESIDENCY_STATS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a3efb5df7f1d2cac9892cd6b549fde8de">GetStats</a> () const =0</td></tr>
+<tr class="memdesc:a3efb5df7f1d2cac9892cd6b549fde8de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current residency manager usage.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a3efb5df7f1d2cac9892cd6b549fde8de">More...</a><br /></td></tr>
+<tr class="separator:a3efb5df7f1d2cac9892cd6b549fde8de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> tracks and maintains one or more <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> within a residency cache. </p>
@@ -184,8 +184,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a66a9fb7234a4bb98b2dd35d77a5e8dca" name="a66a9fb7234a4bb98b2dd35d77a5e8dca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66a9fb7234a4bb98b2dd35d77a5e8dca">&#9670;&#160;</a></span>GetInfo()</h2>
+<a id="a3efb5df7f1d2cac9892cd6b549fde8de" name="a3efb5df7f1d2cac9892cd6b549fde8de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3efb5df7f1d2cac9892cd6b549fde8de">&#9670;&#160;</a></span>GetStats()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -194,7 +194,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a> gpgmm::d3d12::IResidencyManager::GetInfo </td>
+          <td class="memname">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">RESIDENCY_STATS</a> gpgmm::d3d12::IResidencyManager::GetStats </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -208,9 +208,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the current residency manager usage. </p>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___i_n_f_o.html">RESIDENCY_INFO</a> struct. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">RESIDENCY_STATS</a> struct. </dd></dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a34ca86e42f235a9c25ec0df12f4d9430">gpgmm::d3d12::ResidencyManager</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a34ca86e42f235a9c25ec0df12f4d9430">gpgmm::d3d12::ResidencyManager</a>.</p>
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a738c0e10f5b5ad0fe642864582e0f1dc">gpgmm::d3d12::ResidencyManager</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a738c0e10f5b5ad0fe642864582e0f1dc">gpgmm::d3d12::ResidencyManager</a>.</p>
 
 </div>
 </div>

@@ -156,8 +156,8 @@ Functions</h2></td></tr>
 <tr class="separator:afdee1b5f2750639829a60caca53d8cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a595d863aeeef862144ee61fd40d532d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_tests_8cpp.html#a595d863aeeef862144ee61fd40d532d6">TEST_F</a> (<a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>, CreateBufferPooled)</td></tr>
 <tr class="separator:a595d863aeeef862144ee61fd40d532d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2353a425f2ff292b3cf67c2649910fd2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_tests_8cpp.html#a2353a425f2ff292b3cf67c2649910fd2">TEST_F</a> (<a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>, CreateBufferGetInfo)</td></tr>
-<tr class="separator:a2353a425f2ff292b3cf67c2649910fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cf8f91d705a9c4a508fea0c1f6d9f3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_tests_8cpp.html#a2cf8f91d705a9c4a508fea0c1f6d9f3a">TEST_F</a> (<a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>, CreateBufferStats)</td></tr>
+<tr class="separator:a2cf8f91d705a9c4a508fea0c1f6d9f3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a575b35c35fd31ed7b08df5400d2020c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_tests_8cpp.html#a575b35c35fd31ed7b08df5400d2020c1">TEST_F</a> (<a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>, CreateTexturePooled)</td></tr>
 <tr class="separator:a575b35c35fd31ed7b08df5400d2020c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae68d86698c8f0f63390a833957bca7f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d3_d12_resource_allocator_tests_8cpp.html#ae68d86698c8f0f63390a833957bca7f7">TEST_F</a> (<a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>, CreateBufferWithLimitedFragmentation)</td></tr>
@@ -203,12 +203,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                           \</div>
-<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                             \</div>
-<div class="line">        uint64_t countBefore = allocator-&gt;GetInfo().SizeCacheHits; \</div>
-<div class="line">        EXPECT_SUCCEEDED(statement);                               \</div>
-<div class="line">        uint64_t countAfter = allocator-&gt;GetInfo().SizeCacheHits;  \</div>
-<div class="line">        EXPECT_GT(countAfter, countBefore);                        \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                            \</div>
+<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                              \</div>
+<div class="line">        uint64_t countBefore = allocator-&gt;GetStats().SizeCacheHits; \</div>
+<div class="line">        EXPECT_SUCCEEDED(statement);                                \</div>
+<div class="line">        uint64_t countAfter = allocator-&gt;GetStats().SizeCacheHits;  \</div>
+<div class="line">        EXPECT_GT(countAfter, countBefore);                         \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
@@ -238,12 +238,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                             \</div>
-<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                               \</div>
-<div class="line">        uint64_t countBefore = allocator-&gt;GetInfo().SizeCacheMisses; \</div>
-<div class="line">        EXPECT_SUCCEEDED(statement);                                 \</div>
-<div class="line">        uint64_t countAfter = allocator-&gt;GetInfo().SizeCacheMisses;  \</div>
-<div class="line">        EXPECT_GT(countAfter, countBefore);                          \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                              \</div>
+<div class="line">        ASSERT_NE(allocator, <span class="keyword">nullptr</span>);                                \</div>
+<div class="line">        uint64_t countBefore = allocator-&gt;GetStats().SizeCacheMisses; \</div>
+<div class="line">        EXPECT_SUCCEEDED(statement);                                  \</div>
+<div class="line">        uint64_t countAfter = allocator-&gt;GetStats().SizeCacheMisses;  \</div>
+<div class="line">        EXPECT_GT(countAfter, countBefore);                           \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
@@ -463,36 +463,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2353a425f2ff292b3cf67c2649910fd2" name="a2353a425f2ff292b3cf67c2649910fd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2353a425f2ff292b3cf67c2649910fd2">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/34]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST_F </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">CreateBufferGetInfo&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a7a2dba46f8daf4ccf7ade0c6e9af145d" name="a7a2dba46f8daf4ccf7ade0c6e9af145d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a2dba46f8daf4ccf7ade0c6e9af145d">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a2dba46f8daf4ccf7ade0c6e9af145d">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -520,7 +492,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a89bd2f7b655190b201ebe3671ccc4c12" name="a89bd2f7b655190b201ebe3671ccc4c12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89bd2f7b655190b201ebe3671ccc4c12">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a89bd2f7b655190b201ebe3671ccc4c12">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -548,7 +520,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ac6303444c88398b0026084eae27dce3f" name="ac6303444c88398b0026084eae27dce3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6303444c88398b0026084eae27dce3f">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6303444c88398b0026084eae27dce3f">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -576,7 +548,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a6b172142472803ad91f309bb204afd9a" name="a6b172142472803ad91f309bb204afd9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b172142472803ad91f309bb204afd9a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b172142472803ad91f309bb204afd9a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -604,7 +576,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ac0ae994ce6b4341e236b30c3bf629c75" name="ac0ae994ce6b4341e236b30c3bf629c75"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0ae994ce6b4341e236b30c3bf629c75">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0ae994ce6b4341e236b30c3bf629c75">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -632,7 +604,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2789e4f2e82f45a516e958d8430b1411" name="a2789e4f2e82f45a516e958d8430b1411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2789e4f2e82f45a516e958d8430b1411">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2789e4f2e82f45a516e958d8430b1411">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -660,7 +632,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3b51c66e61f292885d8a215f7f56c83c" name="a3b51c66e61f292885d8a215f7f56c83c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b51c66e61f292885d8a215f7f56c83c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b51c66e61f292885d8a215f7f56c83c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -688,7 +660,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="afdee1b5f2750639829a60caca53d8cd8" name="afdee1b5f2750639829a60caca53d8cd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdee1b5f2750639829a60caca53d8cd8">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afdee1b5f2750639829a60caca53d8cd8">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -716,7 +688,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a406cd551cc6fdeb168db3c0fce745f38" name="a406cd551cc6fdeb168db3c0fce745f38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a406cd551cc6fdeb168db3c0fce745f38">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a406cd551cc6fdeb168db3c0fce745f38">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -744,7 +716,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aa70f9822171f99e2d8d6950ce43c379d" name="aa70f9822171f99e2d8d6950ce43c379d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa70f9822171f99e2d8d6950ce43c379d">&#9670;&#160;</a></span>TEST_F() <span class="overload">[18/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa70f9822171f99e2d8d6950ce43c379d">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -772,7 +744,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a9af2f06d50f0e04d47c8390c99f6c844" name="a9af2f06d50f0e04d47c8390c99f6c844"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9af2f06d50f0e04d47c8390c99f6c844">&#9670;&#160;</a></span>TEST_F() <span class="overload">[19/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9af2f06d50f0e04d47c8390c99f6c844">&#9670;&#160;</a></span>TEST_F() <span class="overload">[18/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -800,7 +772,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a595d863aeeef862144ee61fd40d532d6" name="a595d863aeeef862144ee61fd40d532d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a595d863aeeef862144ee61fd40d532d6">&#9670;&#160;</a></span>TEST_F() <span class="overload">[20/34]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a595d863aeeef862144ee61fd40d532d6">&#9670;&#160;</a></span>TEST_F() <span class="overload">[19/34]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -815,6 +787,34 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">CreateBufferPooled&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2cf8f91d705a9c4a508fea0c1f6d9f3a" name="a2cf8f91d705a9c4a508fea0c1f6d9f3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cf8f91d705a9c4a508fea0c1f6d9f3a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[20/34]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_d3_d12_resource_allocator_tests.html">D3D12ResourceAllocatorTests</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CreateBufferStats&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
