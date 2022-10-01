@@ -89,7 +89,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a6ebb920a3ca6d2fea75792ca986af9ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flags used to control how the resource will be allocated.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a6ebb920a3ca6d2fea75792ca986af9ef">More...</a><br /></td></tr>
 <tr class="separator:a6ebb920a3ca6d2fea75792ca986af9ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa720936c4215d487a3e391e144836691"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_TYPE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691">HeapType</a></td></tr>
-<tr class="memdesc:aa720936c4215d487a3e391e144836691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap type that the resource to be allocated requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691">More...</a><br /></td></tr>
+<tr class="memdesc:aa720936c4215d487a3e391e144836691"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> type that the resource to be allocated requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aa720936c4215d487a3e391e144836691">More...</a><br /></td></tr>
 <tr class="separator:aa720936c4215d487a3e391e144836691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">ExtraRequiredHeapFlags</a></td></tr>
 <tr class="memdesc:a08cf139c6ad730e0dae3df0526ce36bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional heap flags that the resource requires.  <a href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">More...</a><br /></td></tr>
@@ -167,7 +167,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Heap type that the resource to be allocated requires. </p>
+<p><a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> type that the resource to be allocated requires. </p>
 <p >It is recommended to not specifiy the heap type or equivalently specify D3D12_HEAP_TYPE_CUSTOM. This enables better resource optimization for UMA adapters by using a custom-equivelent upload heap everywhere. However, since UMA adapters use write-combined memory for CPU writes, a heap type of D3D12_HEAP_TYPE_READBACK could have better performance.</p>
 <p >Optional parameter. If the heap type is not provided or D3D12_HEAP_TYPE_CUSTOM, the heap type will be inferred by using adapter properties and the initial resource state. </p>
 
@@ -193,7 +193,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
+<li>src/include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

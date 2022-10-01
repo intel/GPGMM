@@ -91,7 +91,11 @@ Inheritance diagram for gpgmm::IMemoryObject:</div>
  <div class="center">
   <img src="classgpgmm_1_1_i_memory_object.png" usemap="#gpgmm::IMemoryObject_map" alt=""/>
   <map id="gpgmm::IMemoryObject_map" name="gpgmm::IMemoryObject_map">
-<area href="classgpgmm_1_1d3d12_1_1_i_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::IHeap" shape="rect" coords="0,56,143,80"/>
+<area href="classgpgmm_1_1_dummy_memory.html" alt="gpgmm::DummyMemory" shape="rect" coords="0,56,162,80"/>
+<area href="classgpgmm_1_1d3d12_1_1_i_heap.html" title="Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3..." alt="gpgmm::d3d12::IHeap" shape="rect" coords="172,56,334,80"/>
+<area href="classgpgmm_1_1vk_1_1_device_memory.html" alt="gpgmm::vk::DeviceMemory" shape="rect" coords="344,56,506,80"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" alt="gpgmm::d3d12::Heap" shape="rect" coords="86,112,248,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_heap.html" alt="gpgmm::d3d12::Heap" shape="rect" coords="258,112,420,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -172,6 +176,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Increments the sub-allocation reference count on the heap. </p>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a485426257e7bd5ccb39d5c0b1c220832">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#a654a2135cc86e4f94f1b2918b20729da">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a485426257e7bd5ccb39d5c0b1c220832">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#a84a40defe5978cd3b0ceaa2f374d56af">gpgmm::DummyMemory</a>.</p>
+
 </div>
 </div>
 <a id="a841b6ba569060b9371b608e0598d26f6" name="a841b6ba569060b9371b608e0598d26f6"></a>
@@ -200,6 +206,8 @@ Public Member Functions</h2></td></tr>
 <p>Return the alignment of the memory object. </p>
 <dl class="section return"><dt>Returns</dt><dd>Alignment, in bytes, of the memory object. </dd></dl>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a267e03d559a1c227fb9b283c42fbc9c3">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#a999fc297bd56b80fdfbaff5e16ea6831">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a267e03d559a1c227fb9b283c42fbc9c3">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#aea8127eac2eaa57de5b312ff619dee95">gpgmm::DummyMemory</a>.</p>
+
 </div>
 </div>
 <a id="ac9a47f2d7bbc7c38c615b70af7b71490" name="ac9a47f2d7bbc7c38c615b70af7b71490"></a>
@@ -226,6 +234,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the pool this memory is contained in. </p>
+
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ad1636a1851f5f3407aaf582fb335b1df">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#afd35f4c8904ecf252583a5293fe66f4e">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ad1636a1851f5f3407aaf582fb335b1df">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#a74613f1b74c4b00c0c50623b94efd0d7">gpgmm::DummyMemory</a>.</p>
 
 </div>
 </div>
@@ -255,6 +265,8 @@ Public Member Functions</h2></td></tr>
 <p>Return the size of the memory object. </p>
 <dl class="section return"><dt>Returns</dt><dd>Size, in bytes, of the memory object. </dd></dl>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ada86c5bd189ac4e418748a4d0f46fa1d">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#a8b2c1a0252df6b893d9a8ef7860215f6">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#ada86c5bd189ac4e418748a4d0f46fa1d">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#a863b22e975973347acc1c2e4fc92c95a">gpgmm::DummyMemory</a>.</p>
+
 </div>
 </div>
 <a id="a26cd5fc603567effa83fefa5c99bf4e5" name="a26cd5fc603567effa83fefa5c99bf4e5"></a>
@@ -281,6 +293,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Decrements the sub-allocation reference count on the heap. </p>
+
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a03c38854f2b8b07f8b8b16b5832af48b">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#a95ff68018fb671fc94109f842c93b13b">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a03c38854f2b8b07f8b8b16b5832af48b">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#a3e02e2e707e8c4d3b746f3645186f375">gpgmm::DummyMemory</a>.</p>
 
 </div>
 </div>
@@ -310,10 +324,12 @@ Public Member Functions</h2></td></tr>
 
 <p>Assign the pool this memory is contained in. </p>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a6284e1d1b70ea399c86f4d0b45ea835f">gpgmm::d3d12::Heap</a>, <a class="el" href="classgpgmm_1_1vk_1_1_device_memory.html#a54101409151ba3c7e47ded55c0937c83">gpgmm::vk::DeviceMemory</a>, <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html#a6284e1d1b70ea399c86f4d0b45ea835f">gpgmm::d3d12::Heap</a>, and <a class="el" href="classgpgmm_1_1_dummy_memory.html#ae0a6c0588f9052d54bed922ae4974603">gpgmm::DummyMemory</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/<a class="el" href="gpgmm_8h.html">gpgmm.h</a></li>
+<li>src/include/<a class="el" href="gpgmm_8h.html">gpgmm.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

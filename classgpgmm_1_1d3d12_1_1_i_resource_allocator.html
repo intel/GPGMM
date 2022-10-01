@@ -81,7 +81,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.  
+<p><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a>.  
  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#details">More...</a></p>
 
 <p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
@@ -89,8 +89,12 @@ $(function() {
 Inheritance diagram for gpgmm::d3d12::IResourceAllocator:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classgpgmm_1_1d3d12_1_1_i_resource_allocator.png" alt=""/>
- </div></div>
+  <img src="classgpgmm_1_1d3d12_1_1_i_resource_allocator.png" usemap="#gpgmm::d3d12::IResourceAllocator_map" alt=""/>
+  <map id="gpgmm::d3d12::IResourceAllocator_map" name="gpgmm::d3d12::IResourceAllocator_map">
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" alt="gpgmm::d3d12::ResourceAllocator" shape="rect" coords="0,112,206,136"/>
+<area href="classgpgmm_1_1d3d12_1_1_resource_allocator.html" alt="gpgmm::d3d12::ResourceAllocator" shape="rect" coords="216,112,422,136"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -111,10 +115,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9dc27dd2e8023919a721d04ac93a7aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation. </p>
-<p >Internally, ResourceAllocator creates a request, by determining the resource allocation requirements, then finds a MemoryAllocator able to service the request.</p>
-<p >If the first MemoryAllocator attempt fails, it will try a second MemoryAllocator, and so on. MemoryAllocator attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
-<p >ResourceAllocator also uses ResidencyManager to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger Heap could be ideal for allocation but only if there is budget. And similarly, a smaller Heap allows for finer grained residency but could increase overall memory usage for allocation. </p>
+<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> is a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> that creates ID3D12Resources in a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a>. </p>
+<p >Internally, <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> creates a request, by determining the resource allocation requirements, then finds a <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> able to service the request.</p>
+<p >If the first <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> attempt fails, it will try a second <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a>, and so on. <a class="el" href="classgpgmm_1_1_memory_allocator.html" title="MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.">MemoryAllocator</a> attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
+<p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html">ResourceAllocator</a> also uses <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html">ResidencyManager</a> to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> could be ideal for allocation but only if there is budget. And similarly, a smaller <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> allows for finer grained residency but could increase overall memory usage for allocation. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a9dc27dd2e8023919a721d04ac93a7aa5" name="a9dc27dd2e8023919a721d04ac93a7aa5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9dc27dd2e8023919a721d04ac93a7aa5">&#9670;&#160;</a></span>CheckFeatureSupport()</h2>
@@ -166,6 +170,8 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. Returns E_INVALIDARG if unsupported data type is passed to pFeatureSupportData or if a size mismatch is detected for the featureSupportDataSize parameter. </dd></dl>
+
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a80c1014d120936a9c25081fbdb0d8c5d">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a80c1014d120936a9c25081fbdb0d8c5d">gpgmm::d3d12::ResourceAllocator</a>.</p>
 
 </div>
 </div>
@@ -222,8 +228,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Allocates memory and creates a D3D12 resource using it. </p>
-<p >Returns a ResourceAllocation which represents a resource allocated at a specific location in memory. The resource could be allocated within a resource heap, within the resource itself, or seperately using it's own memory (resource heap).</p>
-<p >Unlike a D3D12 resource, a resource allocation can made resident. It is recommended but not strictly required to use the D3D12 resource equivalent methods (ex. Map, Unmap) through the returned ResourceAllocation.</p>
+<p >Returns a <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> which represents a resource allocated at a specific location in memory. The resource could be allocated within a resource heap, within the resource itself, or seperately using it's own memory (resource heap).</p>
+<p >Unlike a D3D12 resource, a resource allocation can made resident. It is recommended but not strictly required to use the D3D12 resource equivalent methods (ex. Map, Unmap) through the returned <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocationDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> structure that provides properties for the resource allocation. </td></tr>
@@ -234,6 +240,8 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a751ca69b7fb8f191110eb2e03408cb40">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a751ca69b7fb8f191110eb2e03408cb40">gpgmm::d3d12::ResourceAllocator</a>.</p>
 
 </div>
 </div>
@@ -282,6 +290,8 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#acabedf5a0fc0e5da8b5ad73fc8b6a4cf">gpgmm::d3d12::ResourceAllocator</a>.</p>
+
 </div>
 </div>
 <a id="a89d618b87b741446f87184fc1fc4a3a5" name="a89d618b87b741446f87184fc1fc4a3a5"></a>
@@ -309,6 +319,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Return the current allocator usage. </p>
 <p >Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%. </p>
+
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a51d2072405c78aa333584fec0af75f66">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a51d2072405c78aa333584fec0af75f66">gpgmm::d3d12::ResourceAllocator</a>.</p>
 
 </div>
 </div>
@@ -346,10 +358,12 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, released. The released size might be smaller then bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly total up to the amount. </dd></dl>
 
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad04c9bbcda28467a6b255004c247330a">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad04c9bbcda28467a6b255004c247330a">gpgmm::d3d12::ResourceAllocator</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
+<li>src/include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

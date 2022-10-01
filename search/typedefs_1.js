@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['resource_5fallocator_5fstats_0',['RESOURCE_ALLOCATOR_STATS',['../namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86',1,'gpgmm::d3d12']]]
+  ['cache_0',['Cache',['../classgpgmm_1_1_memory_cache.html#a0d2fc00d82a2890f636431813fc4b0ce',1,'gpgmm::MemoryCache']]],
+  ['cacheentryt_1',['CacheEntryT',['../classgpgmm_1_1_memory_cache.html#a2fd6243cf3d6fede360c1e6ed0e80392',1,'gpgmm::MemoryCache']]],
+  ['commontype_2',['CommonType',['../structgpgmm_1_1_common_trait_3_01_memory_allocation_00_01_backend_trait_01_4.html#aeda31372d6bcd1fc0fffe5b016cf4e12',1,'gpgmm::CommonTrait&lt; MemoryAllocation, BackendTrait &gt;']]],
+  ['const_5fiterator_3',['const_iterator',['../classgpgmm_1_1_memory_cache.html#a081a87b6de23a73b87e5faba9334c3c6',1,'gpgmm::MemoryCache::const_iterator()'],['../classgpgmm_1_1_linked_list.html#a6e228337ed7366ce18a15a7754bcddf1',1,'gpgmm::LinkedList::const_iterator()']]],
+  ['createheapfn_4',['CreateHeapFn',['../namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852',1,'gpgmm::d3d12']]]
 ];
