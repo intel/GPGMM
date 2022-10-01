@@ -19,7 +19,7 @@
 
 namespace gpgmm {
 
-    IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPool(memorySize) {
+    IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
     MemoryAllocation IndexedMemoryPool::AcquireFromPool(uint64_t indexInPool) {

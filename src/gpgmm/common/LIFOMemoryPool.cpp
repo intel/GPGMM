@@ -21,7 +21,7 @@
 
 namespace gpgmm {
 
-    LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPool(memorySize) {
+    LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
     MemoryAllocation LIFOMemoryPool::AcquireFromPool(uint64_t indexInPool) {

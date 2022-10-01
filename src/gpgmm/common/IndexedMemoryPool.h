@@ -21,12 +21,12 @@
 
 namespace gpgmm {
 
-    class IndexedMemoryPool final : public MemoryPool {
+    class IndexedMemoryPool final : public MemoryPoolBase {
       public:
         explicit IndexedMemoryPool(uint64_t memorySize);
         ~IndexedMemoryPool() override = default;
 
-        // MemoryPool interface
+        // MemoryPoolBase interface
         MemoryAllocation AcquireFromPool(uint64_t indexInPool) override;
         void ReturnToPool(MemoryAllocation allocation, uint64_t indexInPool) override;
         uint64_t ReleasePool(uint64_t bytesToRelease) override;

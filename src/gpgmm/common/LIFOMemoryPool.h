@@ -22,12 +22,12 @@
 namespace gpgmm {
 
     // Pool using LIFO (newest are recycled first).
-    class LIFOMemoryPool : public MemoryPool {
+    class LIFOMemoryPool : public MemoryPoolBase {
       public:
         explicit LIFOMemoryPool(uint64_t memorySize);
         ~LIFOMemoryPool() override = default;
 
-        // MemoryPool interface
+        // MemoryPoolBase interface
         MemoryAllocation AcquireFromPool(uint64_t indexInPool = kInvalidIndex) override;
         void ReturnToPool(MemoryAllocation allocation,
                           uint64_t indexInPool = kInvalidIndex) override;

@@ -18,23 +18,23 @@
 
 namespace gpgmm {
 
-    MemoryPool::MemoryPool(uint64_t memorySize) : mMemorySize(memorySize) {
+    MemoryPoolBase::MemoryPoolBase(uint64_t memorySize) : mMemorySize(memorySize) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
 
-    MemoryPool::~MemoryPool() {
+    MemoryPoolBase::~MemoryPoolBase() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    uint64_t MemoryPool::GetMemorySize() const {
+    uint64_t MemoryPoolBase::GetMemorySize() const {
         return mMemorySize;
     }
 
-    MemoryPoolInfo MemoryPool::GetStats() const {
+    MemoryPoolInfo MemoryPoolBase::GetStats() const {
         return {GetPoolSize() * mMemorySize};
     }
 
-    const char* MemoryPool::GetTypename() const {
+    const char* MemoryPoolBase::GetTypename() const {
         return "MemoryPool";
     }
 
