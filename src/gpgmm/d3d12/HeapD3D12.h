@@ -22,7 +22,6 @@
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "include/gpgmm_d3d12.h"
-#include "include/gpgmm_export.h"
 
 #include <functional>  // for std::function
 #include <memory>
@@ -31,10 +30,7 @@ namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
-    class GPGMM_EXPORT Heap final : public MemoryBase,
-                                    public DebugObject,
-                                    public LinkNode<Heap>,
-                                    public IHeap {
+    class Heap final : public MemoryBase, public DebugObject, public LinkNode<Heap>, public IHeap {
       public:
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   IResidencyManager* const pResidencyManager,

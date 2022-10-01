@@ -17,7 +17,6 @@
 
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/vk/FunctionsVk.h"
-#include "include/gpgmm_export.h"
 #include "include/gpgmm_vk.h"
 
 #include <vector>

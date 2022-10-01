@@ -17,7 +17,6 @@
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/NonCopyable.h"
-#include "include/gpgmm_export.h"
 
 #ifndef GPGMM_REFCOUNT_TYPE
 #    include "gpgmm/utils/RefCount.h"
@@ -32,7 +31,7 @@ namespace gpgmm::d3d12 {
 
     The custom COM based object must override DeleteThis() if they require a custom-deleter.
     */
-    class GPGMM_EXPORT IUnknownImpl : public IUnknown, public NonCopyable {
+    class IUnknownImpl : public IUnknown, public NonCopyable {
       public:
         IUnknownImpl();
         virtual ~IUnknownImpl() = default;

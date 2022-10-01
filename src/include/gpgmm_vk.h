@@ -20,6 +20,7 @@
 #endif
 
 #include "gpgmm.h"
+#include "gpgmm_export.h"
 
 namespace gpgmm::vk {
 

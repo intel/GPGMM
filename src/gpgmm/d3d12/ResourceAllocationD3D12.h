@@ -21,7 +21,6 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "include/gpgmm_d3d12.h"
-#include "include/gpgmm_export.h"
 
 namespace gpgmm::d3d12 {
 
@@ -29,9 +28,9 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocator;
 
-    class GPGMM_EXPORT ResourceAllocation final : public MemoryAllocation,
-                                                  public DebugObject,
-                                                  public IResourceAllocation {
+    class ResourceAllocation final : public MemoryAllocation,
+                                     public DebugObject,
+                                     public IResourceAllocation {
       public:
         ~ResourceAllocation() override;
 

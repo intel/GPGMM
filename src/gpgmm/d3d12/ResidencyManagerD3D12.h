@@ -20,7 +20,6 @@
 #include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "include/gpgmm_d3d12.h"
-#include "include/gpgmm_export.h"
 
 #include <memory>
 #include <mutex>
@@ -38,7 +37,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
-    class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl, public IResidencyManager {
+    class ResidencyManager final : public IUnknownImpl, public IResidencyManager {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               IResidencyManager** ppResidencyManagerOut);

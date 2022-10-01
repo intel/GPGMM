@@ -18,7 +18,6 @@
 
 #include "gpgmm/utils/Limits.h"
 #include "include/gpgmm.h"
-#include "include/gpgmm_export.h"
 
 namespace gpgmm {
 
@@ -46,7 +45,7 @@ namespace gpgmm {
     It can represent a location in memory by one of two ways: 1) a range within a memory block or 2)
     a memory block of the entire memory range.
     */
-    class GPGMM_EXPORT MemoryAllocation {
+    class MemoryAllocation {
       public:
         /** \brief Contructs an invalid memory allocation.
          */
