@@ -81,7 +81,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource.  
+<p>ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.  
  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html#details">More...</a></p>
 
 <p><code>#include &lt;gpgmm_d3d12.h&gt;</code></p>
@@ -91,9 +91,7 @@ Inheritance diagram for gpgmm::d3d12::IResourceAllocation:</div>
  <div class="center">
   <img src="classgpgmm_1_1d3d12_1_1_i_resource_allocation.png" usemap="#gpgmm::d3d12::IResourceAllocation_map" alt=""/>
   <map id="gpgmm::d3d12::IResourceAllocation_map" name="gpgmm::d3d12::IResourceAllocation_map">
-<area href="classgpgmm_1_1d3d12_1_1_i_debug_object.html" title="Debug object associates additional information for D3D objects using SetPrivateData." alt="gpgmm::d3d12::IDebugObject" shape="rect" coords="110,56,321,80"/>
-<area href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" alt="gpgmm::d3d12::ResourceAllocation" shape="rect" coords="0,168,211,192"/>
-<area href="classgpgmm_1_1d3d12_1_1_resource_allocation.html" alt="gpgmm::d3d12::ResourceAllocation" shape="rect" coords="221,168,432,192"/>
+<area href="classgpgmm_1_1d3d12_1_1_i_debug_object.html" title="Debug object associates additional information for D3D objects using SetPrivateData." alt="gpgmm::d3d12::IDebugObject" shape="rect" coords="0,56,211,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -129,9 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a60e6f9ceffa4367f413daa746b17b4b6 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_debug_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> is <a class="el" href="classgpgmm_1_1_memory_allocation.html" title="Represents a location and range in memory.">MemoryAllocation</a> that contains a ID3D12Resource. </p>
+<div class="textblock"><p >ResourceAllocation is MemoryAllocation that contains a ID3D12Resource. </p>
 <p >It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed" in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a ID3D12Heap (called a committed resource).</p>
-<p >It is recommend to use <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html">ResourceAllocation</a> instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
+<p >It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae3442c185a353187e685a9f819d76ee8" name="ae3442c185a353187e685a9f819d76ee8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae3442c185a353187e685a9f819d76ee8">&#9670;&#160;</a></span>GetGPUVirtualAddress()</h2>
@@ -159,8 +157,6 @@ Public Member Functions</h2></td></tr>
 <p>Returns the GPU virtual address of the resource allocation. </p>
 <p >If sub-allocated within the resource, the GPU virtual address will start from the allocation instead of the resource.</p>
 <dl class="section return"><dt>Returns</dt><dd>A D3D12_GPU_VIRTUAL_ADDRESS, equal to UINT64, to represent a location in GPU memory. </dd></dl>
-
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aa1e839472d8f2892268edd1dee7341bf">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aa1e839472d8f2892268edd1dee7341bf">gpgmm::d3d12::ResourceAllocation</a>.</p>
 
 </div>
 </div>
@@ -190,8 +186,6 @@ Public Member Functions</h2></td></tr>
 <p>Returns information about this resource allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a> struct containing the information. </dd></dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a530814af8865149c15bf445640b506fe">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#a530814af8865149c15bf445640b506fe">gpgmm::d3d12::ResourceAllocation</a>.</p>
-
 </div>
 </div>
 <a id="a5c44f84dbece75b9a15404708695f420" name="a5c44f84dbece75b9a15404708695f420"></a>
@@ -218,9 +212,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the heap assigned to this resource allocation. </p>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> used by this resource allocation. </dd></dl>
-
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ae2e57f9c3f0317fdc7fbfdac209d6d58">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ae2e57f9c3f0317fdc7fbfdac209d6d58">gpgmm::d3d12::ResourceAllocation</a>.</p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the Heap used by this resource allocation. </dd></dl>
 
 </div>
 </div>
@@ -251,8 +243,6 @@ Public Member Functions</h2></td></tr>
 <p >If sub-allocated within the resource, the offset could be greater than zero.</p>
 <dl class="section return"><dt>Returns</dt><dd>A offset, in bytes, of the start of this allocation in the resource. </dd></dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aa90a66180553d983618ec824c3059a34">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#aa90a66180553d983618ec824c3059a34">gpgmm::d3d12::ResourceAllocation</a>.</p>
-
 </div>
 </div>
 <a id="a0652f2c11da5f6167b2862cd358ae864" name="a0652f2c11da5f6167b2862cd358ae864"></a>
@@ -280,8 +270,6 @@ Public Member Functions</h2></td></tr>
 
 <p>Returns the resource owned by this allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to ID3D12Resource, owned by this allocation. </dd></dl>
-
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ad835e150d041c8b3c7f36cae6f0561f3">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ad835e150d041c8b3c7f36cae6f0561f3">gpgmm::d3d12::ResourceAllocation</a>.</p>
 
 </div>
 </div>
@@ -337,8 +325,6 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#adafc84a79e39dd2312cf5ba030c87697">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#adafc84a79e39dd2312cf5ba030c87697">gpgmm::d3d12::ResourceAllocation</a>.</p>
-
 </div>
 </div>
 <a id="ab4ddb6bb798e40a28f382df2ff3bdd40" name="ab4ddb6bb798e40a28f382df2ff3bdd40"></a>
@@ -385,12 +371,10 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#afd3365c93c2a04b76de1a5ca752194c4">gpgmm::d3d12::ResourceAllocation</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#afd3365c93c2a04b76de1a5ca752194c4">gpgmm::d3d12::ResourceAllocation</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
+<li>include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
