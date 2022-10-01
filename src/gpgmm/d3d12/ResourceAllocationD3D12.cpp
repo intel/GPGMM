@@ -42,9 +42,9 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                                           ResidencyManager* residencyManager,
+                                           IResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
-                                           Heap* resourceHeap,
+                                           IHeap* resourceHeap,
                                            MemoryBlock* block,
                                            ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator,
@@ -137,15 +137,15 @@ namespace gpgmm::d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment()};
+        return {GetSize(), GetAlignment(), GetMethod()};
     }
 
     const char* ResourceAllocation::GetTypename() const {
         return "ResourceAllocation";
     }
 
-    Heap* ResourceAllocation::GetMemory() const {
-        return ToBackend(MemoryAllocation::GetMemory());
+    IHeap* ResourceAllocation::GetMemory() const {
+        return static_cast<IHeap*>(MemoryAllocation::GetMemory());
     }
 
     void ResourceAllocation::SetDebugAllocator(MemoryAllocator* allocator) {
@@ -159,6 +159,14 @@ namespace gpgmm::d3d12 {
         }
 
         return SetDebugObjectName(mResource.Get(), name);
+    }
+
+    LPCWSTR ResourceAllocation::GetDebugName() const {
+        return DebugObject::GetDebugName();
+    }
+
+    HRESULT ResourceAllocation::SetDebugName(LPCWSTR Name) {
+        return DebugObject::SetDebugName(Name);
     }
 
 }  // namespace gpgmm::d3d12

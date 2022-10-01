@@ -149,9 +149,14 @@ namespace gpgmm::d3d12 {
         std::shared_ptr<Event> mEvent;
     };
 
+    HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                   IResidencyManager** ppResidencyManagerOut) {
+        return ResidencyManager::CreateResidencyManager(descriptor, ppResidencyManagerOut);
+    }
+
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
-                                                     ResidencyManager** ppResidencyManagerOut) {
+                                                     IResidencyManager** ppResidencyManagerOut) {
         if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
@@ -301,74 +306,75 @@ namespace gpgmm::d3d12 {
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
-    HRESULT ResidencyManager::LockHeap(Heap* pHeap) {
+    HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (pHeap == nullptr) {
+        Heap* heap = static_cast<Heap*>(pHeap);
+        if (heap == nullptr) {
             return E_INVALIDARG;
         }
 
-        if (!pHeap->IsInList() && !pHeap->IsResidencyLocked()) {
+        if (!heap->IsInList() && !heap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
-            ReturnIfFailed(pHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
-            ReturnIfFailed(MakeResident(pHeap->GetMemorySegmentGroup(), pHeap->GetSize(), 1,
+            ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
+            ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
                                         pageable.GetAddressOf()));
-            pHeap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
+            heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
             mInfo.CurrentMemoryCount++;
-            mInfo.CurrentMemoryUsage += pHeap->GetSize();
+            mInfo.CurrentMemoryUsage += heap->GetSize();
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
-        if (pHeap->IsInList()) {
-            pHeap->RemoveFromList();
+        if (heap->IsInList()) {
+            heap->RemoveFromList();
 
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
-            if (pHeap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT) {
+            if (heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT) {
                 mInfo.CurrentMemoryCount++;
-                mInfo.CurrentMemoryUsage += pHeap->GetSize();
+                mInfo.CurrentMemoryUsage += heap->GetSize();
             }
         }
 
-        pHeap->AddResidencyLockRef();
+        heap->AddResidencyLockRef();
 
         return S_OK;
     }
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    HRESULT ResidencyManager::UnlockHeap(Heap* pHeap) {
+    HRESULT ResidencyManager::UnlockHeap(IHeap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
-
-        if (pHeap == nullptr) {
+        Heap* heap = static_cast<Heap*>(pHeap);
+        if (heap == nullptr) {
             return E_INVALIDARG;
         }
 
-        if (!pHeap->IsResidencyLocked()) {
+        if (!heap->IsResidencyLocked()) {
             return E_FAIL;
         }
 
-        if (pHeap->IsInList()) {
+        if (heap->IsInList()) {
             return E_FAIL;
         }
 
-        pHeap->ReleaseResidencyLock();
+        heap->ReleaseResidencyLock();
 
         // If another lock still exists on the heap, nothing further should be done.
-        if (pHeap->IsResidencyLocked()) {
+        if (heap->IsResidencyLocked()) {
             return S_OK;
         }
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        ReturnIfFailed(InsertHeapInternal(pHeap));
+        ReturnIfFailed(InsertHeapInternal(heap));
 
         // Heaps inserted into the residency cache are already attributed in residency usage.
         mInfo.CurrentMemoryCount--;
-        mInfo.CurrentMemoryUsage -= pHeap->GetSize();
+        mInfo.CurrentMemoryUsage -= heap->GetSize();
 
         return S_OK;
     }
@@ -674,7 +680,7 @@ namespace gpgmm::d3d12 {
     // usage.
     HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                                   ID3D12CommandList* const* ppCommandLists,
-                                                  ResidencyList* const* ppResidencyLists,
+                                                  IResidencyList* const* ppResidencyLists,
                                                   uint32_t count) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.ExecuteCommandLists");
 
@@ -689,7 +695,7 @@ namespace gpgmm::d3d12 {
             return E_NOTIMPL;
         }
 
-        ResidencyList* residencyList = ppResidencyLists[0];
+        ResidencyList* residencyList = static_cast<ResidencyList*>(ppResidencyLists[0]);
 
         std::vector<ID3D12Pageable*> localHeapsToMakeResident;
         std::vector<ID3D12Pageable*> nonLocalHeapsToMakeResident;
@@ -697,7 +703,10 @@ namespace gpgmm::d3d12 {
         uint64_t nonLocalSizeToMakeResident = 0;
 
         std::vector<Heap*> heapsToMakeResident;
-        for (Heap* heap : *residencyList) {
+        for (IHeap* pHeap : *residencyList) {
+            Heap* heap = static_cast<Heap*>(pHeap);
+            ASSERT(heap != nullptr);
+
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
                 continue;

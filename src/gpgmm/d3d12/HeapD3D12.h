@@ -21,6 +21,7 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
+#include "include/gpgmm_d3d12.h"
 #include "include/gpgmm_export.h"
 
 #include <functional>  // for std::function
@@ -29,168 +30,40 @@
 namespace gpgmm::d3d12 {
 
     class ResidencyManager;
-    class ResourceAllocator;
 
-    /** \enum RESIDENCY_STATUS
-
-    D3D12 allows heaps to be explicitly created resident or not. This means the expected residency
-    status of the heap cannot be solely  determined by checking for the existence in a residency
-    cache.
-
-    Heaps are in one of three exclusive states: never made resident or unknown, about to become
-    resident or pending residency, and currently resident. When a heap gets evicted or paged-out, it
-    transitions from currently resident to pending residency. Paged-in is the reverse of this,
-    pending residency to currently resident. If the heap was known to be created resident by D3D12,
-    it will immediately become currently resident. If the heap becomes locked, it will stay
-    currently resident until it is evicted, then back to pending residency.
-    */
-    enum RESIDENCY_STATUS {
-        /** \brief Heap residency status is not known and cannot be made resident.
-         Heap must become locked to be managed for residency.
-         */
-        RESIDENCY_STATUS_UNKNOWN = 0,
-
-        /** \brief Heap is about to be made resident.
-        Heap must be previously locked, evicted, or currently resident at creation.
-        */
-        RESIDENCY_STATUS_PENDING_RESIDENCY = 1,
-
-        /** \brief Heap was made resident and can be evicted.
-        Heaps that stay locked will always be currently resident.
-        */
-        RESIDENCY_STATUS_CURRENT_RESIDENT = 2,
-    };
-
-    /** \struct HEAP_INFO
-    Additional information about the heap.
-    */
-    struct HEAP_INFO {
-        /** \brief Check if the heap currently locked for residency.
-         */
-        bool IsLocked;
-
-        /** \brief Check if the heap was made resident or not.
-         */
-        RESIDENCY_STATUS Status;
-    };
-
-    /** \enum HEAPS_FLAGS
-    Specify creation options to configure the heap.
-    */
-    enum HEAPS_FLAGS {
-
-        /** \brief Disables all option flags.
-         */
-        HEAPS_FLAG_NONE = 0x0,
-
-        /** \brief Requires the heap to be created in budget.
-         */
-        HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
-    };
-
-    DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
-
-    /** \struct HEAP_DESC
-    Specifies creation options for a residency managed heap.
-    */
-    struct HEAP_DESC {
-        /** \brief Created size of the heap, in bytes.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
-        */
-        uint64_t SizeInBytes;
-
-        /** \brief Created alignment of the heap, in bytes.
-
-        Must be non-zero.
-        */
-        uint64_t Alignment;
-
-        /** \brief Specifies heaps options.
-         */
-        HEAPS_FLAGS Flags;
-
-        /** \brief Specifies the memory segment to use for residency.
-
-        Allows any heap to specify a segment which does not have a attributed heap type.
-        */
-        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
-
-        /** \brief Debug name associated with the heap.
-         */
-        LPCWSTR DebugName;
-    };
-
-    /** \brief Callback function used to create a ID3D12Pageable.
-
-    For example, to create a ID3D12Heap:
-
-    \code
-    auto callback = [heapDesc](ID3D12Pageable** ppPageableOut) -> HRESULT {
-        ComPtr<ID3D12Heap> heap;
-        ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
-        *ppPageableOut = heap.Detach();
-    };
-    \endcode
-    */
-    using CreateHeapFn = std::function<HRESULT(ID3D12Pageable** ppPageableOut)>;
-
-    /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
-    heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.
-
-    Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into
-    the cache when it is first created, and any time it is scheduled to be used by the GPU. This
-    node is removed from the cache when it is evicted from video memory due to budget constraints,
-    or when the memory is released.
-    */
     class GPGMM_EXPORT Heap final : public MemoryBase,
                                     public DebugObject,
-                                    public IUnknownImpl,
-                                    public LinkNode<Heap> {
+                                    public LinkNode<Heap>,
+                                    public IHeap {
       public:
-        /** \brief  Create a heap managed by GPGMM.
-
-        Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be tracked for residency
-        purposes. A heap managed by GPGMM represents either a 1) committed resource backed by
-        implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
-
-        @param descriptor A reference to HEAP_DESC structure that describes the heap.
-        @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
-        @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
-        @param[out] ppHeapOut Pointer to a memory block that recieves a pointer to the
-        heap.
-        */
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                                  ResidencyManager* const pResidencyManager,
+                                  IResidencyManager* const pResidencyManager,
                                   CreateHeapFn&& createHeapFn,
-                                  Heap** ppHeapOut);
+                                  IHeap** ppHeapOut);
 
         ~Heap() override;
 
-        /** \brief Returns a ComPtr object that represents the interface specified.
+        // IHeap interface
+        HEAP_INFO GetInfo() const override;
+        bool IsInResidencyLRUCacheForTesting() const override;
+        bool IsResidencyLockedForTesting() const override;
 
-        For example, to get a ID3D12Heap:
+        // IMemoryObject
+        uint64_t GetSize() const override;
+        uint64_t GetAlignment() const override;
+        void AddSubAllocationRef() override;
+        bool RemoveSubAllocationRef() override;
+        IMemoryPool* GetPool() const override;
+        void SetPool(IMemoryPool* pool) override;
 
-        \code
-        ComPtr<ID3D12Heap> heap;
-        HRESULT hr = resourceHeap.As(&heap);
-        \endcode
-
-        \return Error HRESULT if the specified interface was not represented by the
-        heap.
-        */
+        // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-
-        /** \brief Get information about the heap.
-
-        \return HEAP_INFO with the latest information.
-        */
-        HEAP_INFO GetInfo() const;
-
-        // Testing only.
-        bool IsInResidencyLRUCacheForTesting() const;
-        bool IsResidencyLockedForTesting() const;
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
         friend ResidencyManager;

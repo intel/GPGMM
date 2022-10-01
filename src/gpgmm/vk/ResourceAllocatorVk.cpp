@@ -77,7 +77,8 @@ namespace gpgmm::vk {
 
         // Associate memory with the buffer.
         result = allocator->GetFunctions().BindBufferMemory(
-            allocator->GetDevice(), buffer, ToBackend(allocation->GetMemory())->GetDeviceMemory(),
+            allocator->GetDevice(), buffer,
+            static_cast<DeviceMemory*>(allocation->GetMemory())->GetDeviceMemory(),
             allocation->GetOffset());
         if (result != VK_SUCCESS) {
             allocator->GetFunctions().DestroyBuffer(allocator->GetDevice(), buffer,
@@ -145,7 +146,8 @@ namespace gpgmm::vk {
 
         // Associate memory with the buffer.
         result = allocator->GetFunctions().BindImageMemory(
-            allocator->GetDevice(), image, ToBackend(allocation->GetMemory())->GetDeviceMemory(),
+            allocator->GetDevice(), image,
+            static_cast<DeviceMemory*>(allocation->GetMemory())->GetDeviceMemory(),
             allocation->GetOffset());
         if (result != VK_SUCCESS) {
             allocator->GetFunctions().DestroyImage(allocator->GetDevice(), image,

@@ -18,6 +18,13 @@
 
 namespace gpgmm::d3d12 {
 
+    HRESULT CreateResidencyList(IResidencyList** ppResidencyList) {
+        if (ppResidencyList != nullptr) {
+            *ppResidencyList = new ResidencyList();
+        }
+        return S_OK;
+    }
+
     ResidencyList::ResidencyList() {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
@@ -26,7 +33,7 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    HRESULT ResidencyList::Add(Heap* pHeap) {
+    HRESULT ResidencyList::Add(IHeap* pHeap) {
         if (pHeap == nullptr) {
             return E_INVALIDARG;
         }

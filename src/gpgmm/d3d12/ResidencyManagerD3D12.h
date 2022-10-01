@@ -16,9 +16,10 @@
 #ifndef GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
-#include "gpgmm/d3d12/EventRecordD3D12.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
+#include "include/gpgmm_d3d12.h"
 #include "include/gpgmm_export.h"
 
 #include <memory>
@@ -31,229 +32,37 @@ namespace gpgmm {
 namespace gpgmm::d3d12 {
 
     class BudgetUpdateTask;
+    class BudgetUpdateEvent;
     class Fence;
     class Heap;
-    class ResidencyList;
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
-    /** \enum RESIDENCY_FLAGS
-    Specify options to configure the residency manager.
-    */
-    enum RESIDENCY_FLAGS {
-
-        /** \brief Disables all option flags.
-         */
-        RESIDENCY_FLAG_NONE = 0x0,
-
-        /** \brief Disables automatic background memory budget updates by OS notifications.
-
-        By default, memory budget updates will be pushed by the OS using a background thread. If
-        the OS does not support push notifications or budget updates are not frequent enough, this
-        mechanism can be disabled where a pull-based method is used instead.
-        */
-        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD = 0x1,
-    };
-
-    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
-
-    /** \struct RESIDENCY_DESC
-     Specify parameters when creating a residency manager.
-     */
-    struct RESIDENCY_DESC {
-        /** \brief Specifies the device used by this residency manager.
-        Required parameter. Use CreateDevice get the device.
-        */
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
-
-        /** \brief Specifies the adapter used by this residency manager.
-
-        Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
-
-        Required parameter. Use EnumAdapters to get the adapter.
-        */
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
-
-        /** \brief Specifies if unified memory architecture (UMA) is enabled.
-
-        When UMA is enabled, the residency manager will budget using a single memory segment.
-        Else, when UMA is false, the residency manager will have two budgets for local and non-local
-        memory segments, respectively. If IsUMA is false and the adapter is discrete, this will
-        effectively double the amount of memory bandwidth. If IsUMA is true and the adapter is UMA,
-        using a single budget can reduce residency and memory overhead.
-
-        Required parameter. Use CheckFeatureSupport to determine if supported.
-        */
-        bool IsUMA;
-
-        /** \brief Specifies residency options.
-         */
-        RESIDENCY_FLAGS Flags;
-
-        /** \brief Minimum severity level to log messages to console.
-
-        Messages with lower severity will be ignored.
-
-        Optional parameter. By default, will log only corruption messages.
-        */
-        D3D12_MESSAGE_SEVERITY MinLogLevel;
-
-        /** \brief Specifies recording options.
-
-        For example, what events to record, and where to record them.
-
-        Optional parameter. By default, no options are specified for recording.
-        */
-        EVENT_RECORD_OPTIONS RecordOptions;
-
-        /** \brief Maximum amount of budgeted memory, expressed as a percentage of video memory,
-        that can be budgeted.
-
-        If a non-zero MaxBudgetInBytes is specified, MaxPctOfVideoMemoryToBudget is ignored.
-
-        Optional parameter. By default, the API will automatically set the budget to 95% of video
-        memory, leaving 5% for the OS and other applications.
-        */
-        float MaxPctOfVideoMemoryToBudget;
-
-        /** \brief Lowest amount of budgeted memory, expressed as a percentage, that can be
-        reserved.
-
-        If SetVideoMemoryReservation is used a set a reservation larger then the budget, this amount
-        is used instead so the application can make forward progress.
-
-        Optional parameter. By default, the API restricts the residency manager reservation to never
-        go below 50% of the budget.
-        */
-        float MinPctOfBudgetToReserve;
-
-        /** \brief Maximum amount of budgeted memory, in bytes, that can be budgeted.
-
-        Allows a fixed budget to be artifically set for testing purposes.
-
-        Optional parameter. By default, the API will not further restrict the residency manager
-        budget.
-        */
-        uint64_t MaxBudgetInBytes;
-
-        /** \brief Size of memory, in bytes, to evict from residency at once,
-        should there not be enough budget left.
-
-        Optional parameter. When 0 is specified, the API will use a evict size of 50MB.
-        */
-        uint64_t EvictSizeInBytes;
-
-        /** \brief Initial fence value to use when managing heaps for residency.
-
-        Fence value gets assigned to each managed heap and increments each time ExecuteCommandList()
-        is called. When over budget, these fence values are compared to determine which heaps can be
-        evicted.
-
-        Optional parameter. Zero by default.
-        */
-        uint64_t InitialFenceValue;
-    };
-
-    /** \struct RESIDENCY_INFO
-    Additional information about the residency manager.
-    */
-    struct RESIDENCY_INFO {
-        /** \brief Amount of memory, in bytes, currently resident.
-         */
-        uint64_t CurrentMemoryUsage;
-
-        /** \brief Number of heaps, currently resident.
-         */
-        uint64_t CurrentMemoryCount;
-    };
-
-    class BudgetUpdateEvent;
-
-    /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
-
-    A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
-    resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a
-    ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a
-    operation that always requires the Heap to be resident (eg. Map, Unmap).
-
-    Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
-    and ID3D12Device::MakeResident to page-out or page-in heaps, respectively.
-    **/
-    class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl {
+    class GPGMM_EXPORT ResidencyManager final : public IUnknownImpl, public IResidencyManager {
       public:
-        /** \brief  Create residency residency manager to manage video memory.
-
-        @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
-        manager.
-        @param[out] ppResidencyManagerOut Pointer to a memory block that recieves a pointer to the
-        residency manager. Pass NULL to test if residency Manager creation would succeed, but not
-        actually create the residency Manager. If NULL is passed and residency manager creating
-        would succeed, S_FALSE is returned.
-        */
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
-                                              ResidencyManager** ppResidencyManagerOut);
+                                              IResidencyManager** ppResidencyManagerOut);
 
         ~ResidencyManager() override;
 
-        /** \brief  Locks the specified heap.
-
-        Locking a heap means the residency manager will never evict it when over budget.
-
-        @param pHeap A pointer to the heap being locked.
-        */
-        HRESULT LockHeap(Heap* pHeap);
-
-        /** \brief  Unlocks the specified heap.
-
-        Unlocking a heap allows the residency manager will evict it when over budget.
-
-        @param pHeap A pointer to the heap being unlocked.
-        */
-        HRESULT UnlockHeap(Heap* pHeap);
-
-        /** \brief  Execute command lists using residency managed heaps.
-
-        Submits an array of command lists and residency lists for the specified command queue.
-
-        @param pQueue The command queue to submit to.
-        @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
-        @param ppResidencyLists The array of ResidencyList residency lists to make resident.
-        @param count The size of commandLists and residencyLists arrays.
-        */
+        // IResidencyManager interface
+        HRESULT LockHeap(IHeap* pHeap) override;
+        HRESULT UnlockHeap(IHeap* pHeap) override;
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
-                                    ResidencyList* const* ppResidencyLists,
-                                    uint32_t count);
+                                    IResidencyList* const* ppResidencyLists,
+                                    uint32_t count) override;
 
-        /** \brief  Sets video memory reservation.
-
-        A reservation is the lowest amount of physical memory the application need to continue
-        operation safely.
-
-        @param memorySegmentGroup Memory segment to reserve.
-        @param availableForReservation Amount of memory to reserve, in bytes.
-        @param[out] pCurrentReservationOut the amount of memory reserved, which may be less then the
-        |reservation| when under video memory pressure. A value of nullptr will update but not
-        return the current reservation.
-        */
         HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                           uint64_t availableForReservation,
-                                          uint64_t* pCurrentReservationOut = nullptr);
+                                          uint64_t* pCurrentReservationOut = nullptr) override;
 
-        /** \brief  Get the current budget and memory usage.
-
-        @param memorySegmentGroup Memory segment to retrieve info from.
-        @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
-        of nullptr will update but not return the current info.
-        */
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut);
+                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
 
-        /** \brief  Return the current residency manager usage.
+        RESIDENCY_INFO GetInfo() const override;
 
-        \return A RESIDENCY_INFO struct.
-        */
-        RESIDENCY_INFO GetInfo() const;
+        DEFINE_IUNKNOWNIMPL_OVERRIDES()
 
       private:
         friend Heap;

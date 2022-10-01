@@ -61,8 +61,8 @@ HRESULT Init() {
     desc.Device = device;
     desc.ResourceHeapTier = options.ResourceHeapTier;
 
-    Microsoft::WRL::ComPtr<gpgmm::d3d12::ResourceAllocator> resourceAllocator;
-    hr = gpgmm::d3d12::ResourceAllocator::CreateResourceAllocator(desc, &resourceAllocator);
+    Microsoft::WRL::ComPtr<gpgmm::d3d12::IResourceAllocator> resourceAllocator;
+    hr = gpgmm::d3d12::CreateResourceAllocator(desc, &resourceAllocator, nullptr);
     if (FAILED(hr)) {
         return hr;
     }

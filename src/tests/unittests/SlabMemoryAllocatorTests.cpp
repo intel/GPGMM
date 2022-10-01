@@ -349,7 +349,7 @@ TEST_F(SlabMemoryAllocatorTests, ReuseSlabs) {
                                   kDefaultSlabFragmentationLimit, kNoSlabPrefetchAllowed,
                                   kDisableSlabGrowth, poolAllocator.get());
 
-    std::set<MemoryBase*> slabMemory = {};
+    std::set<IMemoryObject*> slabMemory = {};
     std::vector<std::unique_ptr<MemoryAllocation>> allocations = {};
 
     // Count by slabs (vs number of allocations) to ensure there are exactly |kNumOfSlabs| worth of

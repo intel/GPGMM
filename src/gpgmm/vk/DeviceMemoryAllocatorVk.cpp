@@ -74,7 +74,8 @@ namespace gpgmm::vk {
     void DeviceMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.DeallocateMemory");
 
-        VkDeviceMemory deviceMemory = ToBackend(allocation->GetMemory())->GetDeviceMemory();
+        VkDeviceMemory deviceMemory =
+            static_cast<DeviceMemory*>(allocation->GetMemory())->GetDeviceMemory();
         mResourceAllocator->GetFunctions().FreeMemory(mResourceAllocator->GetDevice(), deviceMemory,
                                                       /*allocationCallbacks*/ nullptr);
 

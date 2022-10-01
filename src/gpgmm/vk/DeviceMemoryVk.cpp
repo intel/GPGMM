@@ -31,4 +31,28 @@ namespace gpgmm::vk {
         return mMemoryTypeIndex;
     }
 
+    uint64_t DeviceMemory::GetSize() const {
+        return MemoryBase::GetSize();
+    }
+
+    uint64_t DeviceMemory::GetAlignment() const {
+        return MemoryBase::GetAlignment();
+    }
+
+    void DeviceMemory::AddSubAllocationRef() {
+        return MemoryBase::AddSubAllocationRef();
+    }
+
+    bool DeviceMemory::RemoveSubAllocationRef() {
+        return MemoryBase::RemoveSubAllocationRef();
+    }
+
+    IMemoryPool* DeviceMemory::GetPool() const {
+        return MemoryBase::GetPool();
+    }
+
+    void DeviceMemory::SetPool(IMemoryPool* pool) {
+        return MemoryBase::SetPool(pool);
+    }
+
 }  // namespace gpgmm::vk

@@ -15,7 +15,9 @@
 #ifndef GPGMM_D3D12_RESIDENCYLISTD3D12_H_
 #define GPGMM_D3D12_RESIDENCYLISTD3D12_H_
 
+#include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "include/gpgmm_d3d12.h"
 #include "include/gpgmm_export.h"
 
 #include <vector>
@@ -26,47 +28,21 @@ namespace gpgmm::d3d12 {
     class JSONSerializer;
     class ResidencyManager;
 
-    /** \brief Represents a list of heaps which will be "made resident" upon executing a
-    command-list.
-
-    A residency list helps track heaps for residency which will be referenced together by a
-    command-list. The application uses a ResidencyList by inserting heaps, by calling
-    ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is
-    called, the list can be reset or cleared for the next frame or compute job.
-
-    Without ResidencyList, the application would need to call ResidencyManager::LockHeap and
-    ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
-    being executed.
-    */
-    class GPGMM_EXPORT ResidencyList final {
+    class GPGMM_EXPORT ResidencyList final : public IResidencyList, public IUnknownImpl {
       public:
-        /** \brief  Create a residency list or collection of heaps to manage together for residency.
-         */
         ResidencyList();
-        ~ResidencyList();
+        ~ResidencyList() override;
 
-        ResidencyList(const ResidencyList&) = default;
-        ResidencyList& operator=(const ResidencyList&) = default;
+        HRESULT Add(IHeap* pHeap) override;
+        HRESULT Reset() override;
 
-        /** \brief  Adds a heap to the residency list.
-
-        @param pHeap A pointer to Heap about to be added.
-
-        \return S_OK if heap was added, else error.
-        */
-        HRESULT Add(Heap* pHeap);
-
-        /** \brief  Reset this residency list.
-
-        Removes all heaps from the list so the list can be re-used.
-        */
-        HRESULT Reset();
+        DEFINE_IUNKNOWNIMPL_OVERRIDES()
 
       private:
         friend JSONSerializer;
         friend ResidencyManager;
 
-        using UnderlyingType = std::vector<Heap*>;
+        using UnderlyingType = std::vector<IHeap*>;
 
         UnderlyingType::const_iterator begin() const;
         UnderlyingType::const_iterator end() const;

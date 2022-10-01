@@ -44,17 +44,26 @@ namespace gpgmm::d3d12 {
         }
     }  // namespace
 
+    HRESULT CreateHeap(const HEAP_DESC& descriptor,
+                       IResidencyManager* const pResidencyManager,
+                       CreateHeapFn&& createHeapFn,
+                       IHeap** ppHeapOut) {
+        return Heap::CreateHeap(descriptor, pResidencyManager, std::move(createHeapFn), ppHeapOut);
+    }
+
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
-                             ResidencyManager* const pResidencyManager,
+                             IResidencyManager* const pResidencyManager,
                              CreateHeapFn&& createHeapFn,
-                             Heap** ppHeapOut) {
+                             IHeap** ppHeapOut) {
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
+
+        ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-            ReturnIfFailed(pResidencyManager->EnsureInBudget(descriptor.SizeInBytes,
-                                                             descriptor.MemorySegmentGroup));
+            ReturnIfFailed(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
+                                                            descriptor.MemorySegmentGroup));
         }
 
         ComPtr<ID3D12Pageable> pageable;
@@ -97,7 +106,7 @@ namespace gpgmm::d3d12 {
             // descriptor heap), they must be manually locked and unlocked to be inserted into the
             // residency cache.
             if (heap->mState != RESIDENCY_STATUS_UNKNOWN) {
-                ReturnIfFailed(pResidencyManager->InsertHeap(heap.get()));
+                ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
             }
         }
 
@@ -181,6 +190,14 @@ namespace gpgmm::d3d12 {
         return mPageable->QueryInterface(riid, ppvObject);
     }
 
+    ULONG STDMETHODCALLTYPE Heap::AddRef() {
+        return IUnknownImpl::AddRef();
+    }
+
+    ULONG STDMETHODCALLTYPE Heap::Release() {
+        return IUnknownImpl::Release();
+    }
+
     void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
         mState = newStatus;
     }
@@ -191,6 +208,38 @@ namespace gpgmm::d3d12 {
 
     bool Heap::IsResidencyLockedForTesting() const {
         return IsResidencyLocked();
+    }
+
+    uint64_t Heap::GetSize() const {
+        return MemoryBase::GetSize();
+    }
+
+    uint64_t Heap::GetAlignment() const {
+        return MemoryBase::GetAlignment();
+    }
+
+    void Heap::AddSubAllocationRef() {
+        return MemoryBase::AddSubAllocationRef();
+    }
+
+    bool Heap::RemoveSubAllocationRef() {
+        return MemoryBase::RemoveSubAllocationRef();
+    }
+
+    LPCWSTR Heap::GetDebugName() const {
+        return DebugObject::GetDebugName();
+    }
+
+    HRESULT Heap::SetDebugName(LPCWSTR Name) {
+        return DebugObject::SetDebugName(Name);
+    }
+
+    IMemoryPool* Heap::GetPool() const {
+        return MemoryBase::GetPool();
+    }
+
+    void Heap::SetPool(IMemoryPool* pool) {
+        return MemoryBase::SetPool(pool);
     }
 
 }  // namespace gpgmm::d3d12

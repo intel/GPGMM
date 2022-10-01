@@ -21,7 +21,7 @@ group("samples") {
   if (gpgmm_enable_d3d12) {
     deps = [
       ":D3D12Sample",
-      ":D3D12SampleMin",
+      ":D3D12SampleMVI",
     ]
   }
 }
@@ -35,20 +35,21 @@ executable("D3D12Sample") {
   ]
 }
 
-source_set("min_gpgmm") {
+source_set("gpgmm_mvi") {
   sources = [
-    "${gpgmm_root_dir}/src/include/min/gpgmm.cpp",
-    "${gpgmm_root_dir}/src/include/min/gpgmm.h",
-    "${gpgmm_root_dir}/src/include/min/gpgmm_d3d12.cpp",
-    "${gpgmm_root_dir}/src/include/min/gpgmm_d3d12.h",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12_mvi.cpp",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12_mvi.h",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.cpp",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.h",
   ]
+  include_dirs = [ "${gpgmm_root_dir}/src/include" ]
 }
 
-executable("D3D12SampleMin") {
-  deps = [ ":min_gpgmm" ]
+executable("D3D12SampleMVI") {
+  deps = [ ":gpgmm_mvi" ]
   defines = [ "GPGMM_D3D12_HEADERS_ALREADY_INCLUDED" ]
   sources = [ "D3D12Sample.cpp" ]
-  include_dirs = [ "${gpgmm_root_dir}/src/include/min" ]
+  include_dirs = [ "${gpgmm_root_dir}/src/include" ]
   libs = [
     "d3d12.lib",
     "dxgi.lib",
