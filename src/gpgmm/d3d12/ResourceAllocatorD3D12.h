@@ -26,10 +26,6 @@
 #include <memory>
 #include <string>
 
-namespace gpgmm {
-    class MemoryAllocator;
-}  // namespace gpgmm
-
 namespace gpgmm::d3d12 {
 
     class BufferAllocator;
