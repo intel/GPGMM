@@ -25,7 +25,8 @@
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Log.h"
-#include "include/gpgmm.h"
+
+#include <gpgmm.h>
 
 #include <memory>
 #include <mutex>

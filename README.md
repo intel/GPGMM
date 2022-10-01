@@ -206,7 +206,7 @@ cmake --build . --config Debug
 
 1. Copy the DLL into the `$(OutputPath)` folder and configure the VS build:
 2. Highlight project in the **Solution Explorer**, and then select **Project > Properties**.
-3. Under **Configuration Properties > C/C++ > General**, add `gpgmm\src\include` to **Additional Include Directories**.
+3. Under **Configuration Properties > C/C++ > General**, add `gpgmm\include` to **Additional Include Directories**.
 4. Under **Configuration Properties > Linker > Input**, add ``gpgmm.dll.lib`` to **Additional Dependencies**.
 5. Under **Configuration Properties > Linker > General**, add the folder path to `out\Release` to **Additional Library Directories**.
 

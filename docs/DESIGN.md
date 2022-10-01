@@ -195,7 +195,7 @@ TBD
 
 ## API Endpoints
 
-Public (exported) functions and symbols are in `src\include` directory, where `#include <gpgmm_*.h>` defines the GPGMM API for the particular backend API (ex. `gpgmm_d3d12.h`).
+Public (exported) functions and symbols are in `gpgmm/include` directory, where `#include <gpgmm_*.h>` defines the GPGMM API for the particular backend API (ex. `gpgmm_d3d12.h`).
 
 Auto-generated API documentation:
 https://intel.github.io/GPGMM/

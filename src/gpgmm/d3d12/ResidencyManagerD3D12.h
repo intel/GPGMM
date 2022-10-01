@@ -19,7 +19,8 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
-#include "include/gpgmm_d3d12.h"
+
+#include <gpgmm_d3d12.h>
 
 #include <memory>
 #include <mutex>

@@ -21,10 +21,8 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
-#include "include/gpgmm_d3d12.h"
 
-#include <functional>  // for std::function
-#include <memory>
+#include <gpgmm_d3d12.h>
 
 namespace gpgmm::d3d12 {
 
