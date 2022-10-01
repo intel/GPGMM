@@ -47,13 +47,13 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
     EXPECT_EQ(allocation->GetMethod(), AllocationMethod::kStandalone);
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     allocator.DeallocateMemory(std::move(allocation));
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
 
     EXPECT_EQ(allocator.ReleaseMemory(), kDefaultMemorySize);
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 }
 
 TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
@@ -70,7 +70,7 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_NE(secondAllocation, nullptr);
     EXPECT_EQ(secondAllocation->GetSize(), kDefaultMemorySize);
 
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
 
     allocator.DeallocateMemory(std::move(firstAllocation));
     allocator.DeallocateMemory(std::move(secondAllocation));
@@ -79,8 +79,8 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
     EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), kDefaultMemorySize);
     EXPECT_EQ(allocator.ReleaseMemory(kDefaultMemorySize), 0u);
 
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 }
 
 TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
@@ -95,7 +95,7 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kDefaultMemorySize);
 
     {
         std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemory(
@@ -106,7 +106,7 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kDefaultMemorySize);
 }
 
 TEST_F(PooledMemoryAllocatorTests, GetInfo) {
@@ -118,18 +118,18 @@ TEST_F(PooledMemoryAllocatorTests, GetInfo) {
     EXPECT_NE(allocation, nullptr);
 
     // Single memory block should be allocated.
-    EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
-    EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, kDefaultMemorySize);
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedBlockCount, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedBlockUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 
     allocator.DeallocateMemory(std::move(allocation));
 
     // Single memory is made available as free after being released.
-    EXPECT_EQ(allocator.GetInfo().UsedBlockCount, 0u);
-    EXPECT_EQ(allocator.GetInfo().UsedBlockUsage, 0u);
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryUsage, 0u);
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetStats().UsedBlockCount, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedBlockUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kDefaultMemorySize);
 }

@@ -48,11 +48,11 @@ namespace gpgmm {
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocationPtr);
             allocation = *allocationPtr;
         } else {
-            mInfo.FreeMemoryUsage -= allocation.GetSize();
+            mStats.FreeMemoryUsage -= allocation.GetSize();
         }
 
-        mInfo.UsedMemoryCount++;
-        mInfo.UsedMemoryUsage += allocation.GetSize();
+        mStats.UsedMemoryCount++;
+        mStats.UsedMemoryUsage += allocation.GetSize();
 
         IMemoryObject* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
@@ -66,9 +66,9 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
 
         const uint64_t& allocationSize = allocation->GetSize();
-        mInfo.FreeMemoryUsage += allocationSize;
-        mInfo.UsedMemoryCount--;
-        mInfo.UsedMemoryUsage -= allocationSize;
+        mStats.FreeMemoryUsage += allocationSize;
+        mStats.UsedMemoryCount--;
+        mStats.UsedMemoryUsage -= allocationSize;
 
         IMemoryObject* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
@@ -79,7 +79,7 @@ namespace gpgmm {
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
         const uint64_t bytesReleased = mPool->ReleasePool(bytesToRelease);
-        mInfo.FreeMemoryUsage -= bytesReleased;
+        mStats.FreeMemoryUsage -= bytesReleased;
         return bytesReleased;
     }
 

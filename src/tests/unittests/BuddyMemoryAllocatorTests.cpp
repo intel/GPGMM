@@ -69,7 +69,7 @@ TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
     ASSERT_EQ(allocation1->GetSize(), 128u);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     // Cannot allocate when allocator is full.
     {
@@ -79,7 +79,7 @@ TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
     }
 
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
 }
 
 // Verify that multiple allocation are created in separate heaps.
@@ -119,7 +119,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
     // First allocation creates first heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 = allocator.TryAllocateMemory(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -129,15 +129,15 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
     ASSERT_EQ(allocation2->GetMethod(), AllocationMethod::kSubAllocated);
 
     // Second allocation creates second heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
     ASSERT_NE(allocation1->GetMemory(), allocation2->GetMemory());
 
     // Deallocate both allocations
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);  // Released H0
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);  // Released H0
 
     allocator.DeallocateMemory(std::move(allocation2));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);  // Released H1
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);  // Released H1
 }
 
 // Verify multiple sub-allocations can re-use heaps.
@@ -165,7 +165,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
     // First sub-allocation creates first heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize / 2, 1));
@@ -175,7 +175,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_EQ(allocation2->GetMethod(), AllocationMethod::kSubAllocated);
 
     // Second allocation re-uses first heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
@@ -186,19 +186,19 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     ASSERT_EQ(allocation3->GetMethod(), AllocationMethod::kSubAllocated);
 
     // Third allocation creates second heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
     ASSERT_NE(allocation1->GetMemory(), allocation3->GetMemory());
 
     // Deallocate all allocations in reverse order.
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount,
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount,
               2u);  // A2 pins H0.
 
     allocator.DeallocateMemory(std::move(allocation2));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);  // Released H0
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);  // Released H0
 
     allocator.DeallocateMemory(std::move(allocation3));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);  // Released H1
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);  // Released H1
 }
 
 // Verify resource sub-allocation of various sizes over multiple heaps.
@@ -237,7 +237,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation2->GetMethod(), AllocationMethod::kSubAllocated);
 
     // A1 and A2 share H0
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
@@ -249,7 +249,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation3->GetMethod(), AllocationMethod::kSubAllocated);
 
     // A3 creates and fully occupies a new heap.
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
@@ -260,7 +260,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation4->GetOffset(), 0u);
     ASSERT_EQ(allocation4->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);
     ASSERT_NE(allocation3->GetMemory(), allocation4->GetMemory());
 
     // R5 size forms 64 byte hole after R4.
@@ -272,24 +272,24 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     ASSERT_EQ(allocation5->GetOffset(), 0u);
     ASSERT_EQ(allocation5->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 4u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 4u);
     ASSERT_NE(allocation4->GetMemory(), allocation5->GetMemory());
 
     // Deallocate allocations in staggered order.
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 4u);  // A2 pins H0
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 4u);  // A2 pins H0
 
     allocator.DeallocateMemory(std::move(allocation5));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);  // Released H3
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);  // Released H3
 
     allocator.DeallocateMemory(std::move(allocation2));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);  // Released H0
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);  // Released H0
 
     allocator.DeallocateMemory(std::move(allocation4));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);  // Released H2
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);  // Released H2
 
     allocator.DeallocateMemory(std::move(allocation3));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);  // Released H1
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);  // Released H1
 }
 
 // Verify resource sub-allocation of same sizes with various alignments.
@@ -318,7 +318,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocation1->GetOffset(), 0u);
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.TryAllocateMemory(CreateBasicRequest(64, 128));
@@ -328,7 +328,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocation2->GetOffset(), 0u);
     ASSERT_EQ(allocation2->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
     ASSERT_NE(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
@@ -339,7 +339,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocation3->GetOffset(), 0u);
     ASSERT_EQ(allocation3->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
@@ -350,20 +350,20 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     ASSERT_EQ(allocation4->GetOffset(), 64u);
     ASSERT_EQ(allocation4->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);
     ASSERT_EQ(allocation3->GetMemory(), allocation4->GetMemory());
 
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
 
     allocator.DeallocateMemory(std::move(allocation2));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     allocator.DeallocateMemory(std::move(allocation3));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     allocator.DeallocateMemory(std::move(allocation4));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
 }
 
 // Verify resource sub-allocation of various sizes with same alignments.
@@ -393,7 +393,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocation1->GetBlock()->Offset, 0u);
     ASSERT_EQ(allocation1->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     std::unique_ptr<MemoryAllocation> allocation2 =
         allocator.TryAllocateMemory(CreateBasicRequest(64, alignment));
@@ -403,7 +403,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocation2->GetOffset(), 64u);
     ASSERT_EQ(allocation2->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);  // Reuses H0
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);  // Reuses H0
     ASSERT_EQ(allocation1->GetMemory(), allocation2->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation3 =
@@ -414,7 +414,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocation3->GetOffset(), 0u);
     ASSERT_EQ(allocation3->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
     ASSERT_NE(allocation2->GetMemory(), allocation3->GetMemory());
 
     std::unique_ptr<MemoryAllocation> allocation4 =
@@ -425,20 +425,20 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     ASSERT_EQ(allocation4->GetOffset(), 0u);
     ASSERT_EQ(allocation4->GetMethod(), AllocationMethod::kSubAllocated);
 
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);
     ASSERT_NE(allocation3->GetMemory(), allocation4->GetMemory());
 
     allocator.DeallocateMemory(std::move(allocation1));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 3u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 3u);
 
     allocator.DeallocateMemory(std::move(allocation2));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 2u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 2u);
 
     allocator.DeallocateMemory(std::move(allocation3));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 1u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 1u);
 
     allocator.DeallocateMemory(std::move(allocation4));
-    ASSERT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    ASSERT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
 }
 
 // Verify allocating a very large resource does not overflow.
@@ -479,7 +479,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
@@ -487,7 +487,7 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kDefaultMemorySize * heaps.size());
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kDefaultMemorySize * heaps.size());
 
     allocations.clear();
 
@@ -502,14 +502,14 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 
     for (auto& allocation : allocations) {
         ASSERT_NE(allocation, nullptr);
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().UsedMemoryCount, 0u);
+    EXPECT_EQ(allocator.GetStats().UsedMemoryCount, 0u);
 
     allocator.ReleaseMemory(kReleaseAllMemory);
 }
@@ -541,7 +541,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
         allocations.push_back(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, 0u);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, 0u);
 
     // Return the allocations to the pool.
     for (auto& allocation : allocations) {
@@ -549,7 +549,7 @@ TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
         allocator.DeallocateMemory(std::move(allocation));
     }
 
-    EXPECT_EQ(allocator.GetInfo().FreeMemoryUsage, kNumOfHeaps * kDefaultMemorySize);
+    EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kNumOfHeaps * kDefaultMemorySize);
 
     allocator.ReleaseMemory(kReleaseAllMemory);
 }

@@ -1205,9 +1205,9 @@ namespace gpgmm::d3d12 {
         // Using committed resources will create a tightly allocated resource allocations.
         // This means the block and heap size should be equal (modulo driver padding).
         const uint64_t& allocationSize = resourceHeap->GetSize();
-        mInfo.UsedMemoryUsage += allocationSize;
-        mInfo.UsedMemoryCount++;
-        mInfo.UsedBlockUsage += allocationSize;
+        mStats.UsedMemoryUsage += allocationSize;
+        mStats.UsedMemoryCount++;
+        mStats.UsedBlockUsage += allocationSize;
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
@@ -1260,9 +1260,9 @@ namespace gpgmm::d3d12 {
             &resourceHeap));
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
-        mInfo.UsedMemoryUsage += allocationSize;
-        mInfo.UsedMemoryCount++;
-        mInfo.UsedBlockUsage += allocationSize;
+        mStats.UsedMemoryUsage += allocationSize;
+        mStats.UsedMemoryCount++;
+        mStats.UsedBlockUsage += allocationSize;
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
@@ -1364,26 +1364,26 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
+    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
         return GetInfoInternal();
     }
 
-    RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfoInternal() const {
+    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetInfoInternal() const {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.GetInfo");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
-        RESOURCE_ALLOCATOR_INFO result = mInfo;
+        RESOURCE_ALLOCATOR_STATS result = mStats;
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
-            result += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetStats();
 
-            result += mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
-            result += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            result += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
 
-            result += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
-            result += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetInfo();
+            result += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            result += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
         }
 
         GPGMM_TRACE_EVENT_METRIC(
@@ -1453,9 +1453,9 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         const uint64_t& allocationSize = allocation->GetSize();
-        mInfo.UsedMemoryUsage -= allocationSize;
-        mInfo.UsedMemoryCount--;
-        mInfo.UsedBlockUsage -= allocationSize;
+        mStats.UsedMemoryUsage -= allocationSize;
+        mStats.UsedMemoryCount--;
+        mStats.UsedBlockUsage -= allocationSize;
 
         SafeRelease(allocation);
     }

@@ -80,8 +80,8 @@ namespace gpgmm::d3d12 {
             return {};
         }
 
-        mInfo.UsedMemoryUsage += resourceHeap->GetSize();
-        mInfo.UsedMemoryCount++;
+        mStats.UsedMemoryUsage += resourceHeap->GetSize();
+        mStats.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(this, resourceHeap, request.SizeInBytes);
     }
@@ -90,8 +90,8 @@ namespace gpgmm::d3d12 {
         TRACE_EVENT0(TraceEventCategory::kDefault, "BufferAllocator.DeallocateMemory");
         std::lock_guard<std::mutex> lock(mMutex);
 
-        mInfo.UsedMemoryUsage -= allocation->GetSize();
-        mInfo.UsedMemoryCount--;
+        mStats.UsedMemoryUsage -= allocation->GetSize();
+        mStats.UsedMemoryCount--;
 
         SafeRelease(allocation);
     }

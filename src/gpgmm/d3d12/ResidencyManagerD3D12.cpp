@@ -323,8 +323,8 @@ namespace gpgmm::d3d12 {
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
-            mInfo.CurrentMemoryCount++;
-            mInfo.CurrentMemoryUsage += heap->GetSize();
+            mStats.CurrentMemoryCount++;
+            mStats.CurrentMemoryUsage += heap->GetSize();
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -334,8 +334,8 @@ namespace gpgmm::d3d12 {
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
             if (heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                mInfo.CurrentMemoryCount++;
-                mInfo.CurrentMemoryUsage += heap->GetSize();
+                mStats.CurrentMemoryCount++;
+                mStats.CurrentMemoryUsage += heap->GetSize();
             }
         }
 
@@ -373,8 +373,8 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(InsertHeapInternal(heap));
 
         // Heaps inserted into the residency cache are already attributed in residency usage.
-        mInfo.CurrentMemoryCount--;
-        mInfo.CurrentMemoryUsage -= heap->GetSize();
+        mStats.CurrentMemoryCount--;
+        mStats.CurrentMemoryUsage -= heap->GetSize();
 
         return S_OK;
     }
@@ -833,14 +833,14 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESIDENCY_INFO ResidencyManager::GetInfo() const {
+    RESIDENCY_STATS ResidencyManager::GetStats() const {
         // Heaps inserted into the residency cache are not resident until MakeResident() is called
         // on them. This occurs if the heap was created resident, heap gets locked, or call to
         // ExecuteCommandLists().
 
         // Locked heaps are not stored in the residency cache, so usage must be tracked by the
         // residency manager on Lock/Unlock then added here to get the sum.
-        RESIDENCY_INFO info = mInfo;
+        RESIDENCY_STATS info = mStats;
 
         for (const auto& entry : mLocalVideoMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {

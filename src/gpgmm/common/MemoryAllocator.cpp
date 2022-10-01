@@ -43,9 +43,9 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> mAllocation;
     };
 
-    // MemoryAllocatorInfo
+    // MemoryAllocatorStats
 
-    MemoryAllocatorInfo& MemoryAllocatorInfo::operator+=(const MemoryAllocatorInfo& rhs) {
+    MemoryAllocatorStats& MemoryAllocatorStats::operator+=(const MemoryAllocatorStats& rhs) {
         UsedBlockCount += rhs.UsedBlockCount;
         UsedBlockUsage += rhs.UsedBlockUsage;
         FreeMemoryUsage += rhs.FreeMemoryUsage;
@@ -98,10 +98,10 @@ namespace gpgmm {
 #if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         // If memory cannot be reused by a (parent) allocator, ensure no used memory leaked.
         if (GetParent() == nullptr) {
-            ASSERT(mInfo.UsedBlockUsage == 0u);
-            ASSERT(mInfo.UsedBlockCount == 0u);
-            ASSERT(mInfo.UsedMemoryCount == 0u);
-            ASSERT(mInfo.UsedMemoryUsage == 0u);
+            ASSERT(mStats.UsedBlockUsage == 0u);
+            ASSERT(mStats.UsedBlockCount == 0u);
+            ASSERT(mStats.UsedMemoryCount == 0u);
+            ASSERT(mStats.UsedMemoryUsage == 0u);
         }
 #endif
 
@@ -145,9 +145,9 @@ namespace gpgmm {
         return kNoRequiredAlignment;
     }
 
-    MemoryAllocatorInfo MemoryAllocator::GetInfo() const {
+    MemoryAllocatorStats MemoryAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        return mInfo;
+        return mStats;
     }
 
     const char* MemoryAllocator::GetTypename() const {

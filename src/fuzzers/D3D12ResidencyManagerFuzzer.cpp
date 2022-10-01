@@ -90,7 +90,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
 
     // Keep allocating until we reach the budget.
     uint64_t memoryUnderBudget = GetBudgetLeft(gResidencyManager.Get(), bufferMemorySegment);
-    while (gResourceAllocator->GetInfo().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
+    while (gResourceAllocator->GetStats().UsedMemoryUsage + kBufferMemorySize < memoryUnderBudget) {
         ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;
         if (FAILED(gResourceAllocator->CreateResource({}, bufferDesc, D3D12_RESOURCE_STATE_COMMON,
                                                       nullptr, &allocation))) {

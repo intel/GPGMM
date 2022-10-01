@@ -36,32 +36,32 @@ class LIFOMemoryPoolTests : public MemoryPoolTests {};
 TEST_F(LIFOMemoryPoolTests, SingleAllocation) {
     DummyMemoryAllocator allocator;
     LIFOMemoryPool pool(kDefaultMemorySize);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
 
     EXPECT_EQ(pool.ReleasePool(), 0u);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
 
     pool.ReturnToPool(*allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize)));
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, kDefaultMemorySize);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, kDefaultMemorySize);
     EXPECT_EQ(pool.GetPoolSize(), 1u);
 
     pool.ReturnToPool(pool.AcquireFromPool());
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, kDefaultMemorySize);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, kDefaultMemorySize);
     EXPECT_EQ(pool.GetPoolSize(), 1u);
 
     EXPECT_EQ(pool.ReleasePool(kDefaultMemorySize), kDefaultMemorySize);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
     EXPECT_EQ(pool.GetPoolSize(), 0u);
 
     EXPECT_EQ(pool.ReleasePool(), 0u);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
     EXPECT_EQ(pool.GetPoolSize(), 0u);
 }
 
 TEST_F(LIFOMemoryPoolTests, MultipleAllocations) {
     DummyMemoryAllocator allocator;
     LIFOMemoryPool pool(kDefaultMemorySize);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
     EXPECT_EQ(pool.GetPoolSize(), 0u);
 
     constexpr uint64_t kPoolSize = 64;
@@ -69,7 +69,7 @@ TEST_F(LIFOMemoryPoolTests, MultipleAllocations) {
         pool.ReturnToPool(*allocator.TryAllocateMemory(CreateBasicRequest(kDefaultMemorySize)));
     }
 
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, kDefaultMemorySize * kPoolSize);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, kDefaultMemorySize * kPoolSize);
     EXPECT_EQ(pool.GetPoolSize(), kPoolSize);
 
     // Release half of the pool.
@@ -79,6 +79,6 @@ TEST_F(LIFOMemoryPoolTests, MultipleAllocations) {
 
     // Release the other half.
     EXPECT_EQ(pool.ReleasePool(), kDefaultMemorySize * kPoolSize / 2);
-    EXPECT_EQ(pool.GetInfo().SizeInBytes, 0u);
+    EXPECT_EQ(pool.GetStats().SizeInBytes, 0u);
     EXPECT_EQ(pool.GetPoolSize(), 0u);
 }

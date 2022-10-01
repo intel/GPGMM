@@ -439,10 +439,10 @@ namespace gpgmm::d3d12 {
         uint64_t InitialFenceValue;
     };
 
-    /** \struct RESIDENCY_INFO
+    /** \struct RESIDENCY_STATS
     Additional information about the residency manager.
     */
-    struct RESIDENCY_INFO {
+    struct RESIDENCY_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
          */
         uint64_t CurrentMemoryUsage;
@@ -521,9 +521,9 @@ namespace gpgmm::d3d12 {
 
         /** \brief  Return the current residency manager usage.
 
-        \return A RESIDENCY_INFO struct.
+        \return A RESIDENCY_STATS struct.
         */
-        virtual RESIDENCY_INFO GetInfo() const = 0;
+        virtual RESIDENCY_STATS GetStats() const = 0;
     };
 
     /** \brief  Create residency residency manager to manage video memory.
@@ -1091,7 +1091,7 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
     };
 
-    using RESOURCE_ALLOCATOR_INFO = MemoryAllocatorInfo;
+    using RESOURCE_ALLOCATOR_STATS = MemoryAllocatorStats;
 
     /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
     ResourceAllocation.
@@ -1179,7 +1179,7 @@ namespace gpgmm::d3d12 {
         (UsedMemoryUsage + FreeMemoryUsage) * 100%.
 
         */
-        virtual RESOURCE_ALLOCATOR_INFO GetInfo() const = 0;
+        virtual RESOURCE_ALLOCATOR_STATS GetStats() const = 0;
 
         /** \brief Gets information about the features that are supported by the resource allocator.
 

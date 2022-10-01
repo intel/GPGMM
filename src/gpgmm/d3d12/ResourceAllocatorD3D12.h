@@ -62,7 +62,7 @@ namespace gpgmm::d3d12 {
         HRESULT CreateResource(ComPtr<ID3D12Resource> committedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease) override;
-        RESOURCE_ALLOCATOR_INFO GetInfo() const override;
+        RESOURCE_ALLOCATOR_STATS GetStats() const override;
         HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;
@@ -138,7 +138,7 @@ namespace gpgmm::d3d12 {
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        RESOURCE_ALLOCATOR_INFO GetInfoInternal() const;
+        RESOURCE_ALLOCATOR_STATS GetInfoInternal() const;
 
         ComPtr<ID3D12Device> mDevice;
         ComPtr<IResidencyManager> mResidencyManager;

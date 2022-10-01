@@ -56,10 +56,10 @@ namespace gpgmm {
         virtual void SetPool(IMemoryPool* pool) = 0;
     };
 
-    /** \struct MemoryAllocatorInfo
+    /** \struct MemoryAllocatorStats
         Information about the memory allocator.
         */
-    struct MemoryAllocatorInfo {
+    struct MemoryAllocatorStats {
         /** \brief Number of used sub-allocated blocks within the same memory.
          */
         uint32_t UsedBlockCount;
@@ -98,7 +98,7 @@ namespace gpgmm {
 
         /** \brief Adds or sums together two infos.
          */
-        MemoryAllocatorInfo& operator+=(const MemoryAllocatorInfo& rhs);
+        MemoryAllocatorStats& operator+=(const MemoryAllocatorStats& rhs);
     };
 
     /** \enum AllocationMethod

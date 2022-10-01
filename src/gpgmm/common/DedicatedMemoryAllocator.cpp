@@ -35,8 +35,8 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocation> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
 
-        mInfo.UsedBlockCount++;
-        mInfo.UsedBlockUsage += allocation->GetSize();
+        mStats.UsedBlockCount++;
+        mStats.UsedBlockUsage += allocation->GetSize();
 
         return std::make_unique<MemoryAllocation>(
             this, allocation->GetMemory(), /*offset*/ 0, allocation->GetMethod(),
@@ -49,17 +49,17 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
 
         MemoryBlock* block = allocation->GetBlock();
-        mInfo.UsedBlockCount--;
-        mInfo.UsedBlockUsage -= block->Size;
+        mStats.UsedBlockCount--;
+        mStats.UsedBlockUsage -= block->Size;
 
         SafeDelete(block);
         GetNextInChain()->DeallocateMemory(std::move(allocation));
     }
 
-    MemoryAllocatorInfo DedicatedMemoryAllocator::GetInfo() const {
+    MemoryAllocatorStats DedicatedMemoryAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        MemoryAllocatorInfo result = mInfo;
-        result += GetNextInChain()->GetInfo();
+        MemoryAllocatorStats result = mStats;
+        result += GetNextInChain()->GetStats();
         return result;
     }
 

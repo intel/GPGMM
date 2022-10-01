@@ -34,7 +34,7 @@ namespace gpgmm {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        MemoryAllocatorInfo GetInfo() const override;
+        MemoryAllocatorStats GetStats() const override;
         const char* GetTypename() const override;
 
         MemoryAllocator* GetFirstAllocatorForTesting() const;

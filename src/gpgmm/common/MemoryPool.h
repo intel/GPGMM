@@ -89,7 +89,7 @@ namespace gpgmm {
 
         \return A MemoryPoolInfo struct containing the information.
         */
-        MemoryPoolInfo GetInfo() const;
+        MemoryPoolInfo GetStats() const;
 
         /** \brief Returns the class name of this allocation.
 
