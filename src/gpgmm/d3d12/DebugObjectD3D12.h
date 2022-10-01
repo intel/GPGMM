@@ -18,12 +18,11 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 
 #include "gpgmm/d3d12/d3d12_platform.h"
-#include "include/gpgmm_export.h"
 
 #include <string>
 
 namespace gpgmm::d3d12 {
-    class GPGMM_EXPORT DebugObject : public IUnknownImpl {
+    class DebugObject : public IUnknownImpl {
       public:
         virtual ~DebugObject() override = default;
 

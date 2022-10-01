@@ -20,7 +20,6 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 #include "include/gpgmm_d3d12.h"
-#include "include/gpgmm_export.h"
 
 #include <array>
 #include <memory>
@@ -35,9 +34,9 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocation;
 
-    class GPGMM_EXPORT ResourceAllocator final : public IUnknownImpl,
-                                                 public IResourceAllocator,
-                                                 public MemoryAllocator {
+    class ResourceAllocator final : public IUnknownImpl,
+                                    public IResourceAllocator,
+                                    public MemoryAllocator {
       public:
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
                                                IResourceAllocator** ppResourceAllocatorOut,

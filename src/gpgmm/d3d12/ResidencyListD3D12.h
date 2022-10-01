@@ -18,7 +18,6 @@
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "include/gpgmm_d3d12.h"
-#include "include/gpgmm_export.h"
 
 #include <vector>
 
@@ -28,7 +27,7 @@ namespace gpgmm::d3d12 {
     class JSONSerializer;
     class ResidencyManager;
 
-    class GPGMM_EXPORT ResidencyList final : public IResidencyList, public IUnknownImpl {
+    class ResidencyList final : public IResidencyList, public IUnknownImpl {
       public:
         ResidencyList();
         ~ResidencyList() override;
