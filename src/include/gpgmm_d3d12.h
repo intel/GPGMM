@@ -224,6 +224,11 @@ namespace gpgmm::d3d12 {
     };
 
     /** \brief  Create a residency list or collection of heaps to manage together for residency.
+
+    @param[out] ppResidencyList An optional pointer to a memory block that recieves the
+    required interface pointer to the created residency list object.
+
+    \return Returns S_OK if successful.
      */
     GPGMM_EXPORT HRESULT CreateResidencyList(IResidencyList** ppResidencyList);
 
