@@ -226,7 +226,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESIDENCY_INFO ResidencyManager::GetInfo() const {
+    RESIDENCY_STATS ResidencyManager::GetStats() const {
         return {0, 0};
     }
 
@@ -402,9 +402,9 @@ namespace gpgmm::d3d12 {
             &resourceHeap));
 
         const uint64_t& allocationSize = resourceHeap->GetSize();
-        mInfo.UsedMemoryUsage += allocationSize;
-        mInfo.UsedMemoryCount++;
-        mInfo.UsedBlockUsage += allocationSize;
+        mStats.UsedMemoryUsage += allocationSize;
+        mStats.UsedMemoryCount++;
+        mStats.UsedBlockUsage += allocationSize;
 
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
@@ -427,8 +427,8 @@ namespace gpgmm::d3d12 {
         return 0;
     }
 
-    RESOURCE_ALLOCATOR_INFO ResourceAllocator::GetInfo() const {
-        return mInfo;
+    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStats() const {
+        return mStats;
     }
 
     HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
@@ -444,9 +444,9 @@ namespace gpgmm::d3d12 {
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
         const uint64_t& allocationSize = allocation->GetSize();
-        mInfo.UsedMemoryUsage -= allocationSize;
-        mInfo.UsedMemoryCount--;
-        mInfo.UsedBlockUsage -= allocationSize;
+        mStats.UsedMemoryUsage -= allocationSize;
+        mStats.UsedMemoryCount--;
+        mStats.UsedBlockUsage -= allocationSize;
         delete allocation->GetMemory();
     }
 

@@ -44,10 +44,10 @@ namespace gpgmm {
         allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
     }
 
-    MemoryAllocatorInfo ConditionalMemoryAllocator::GetInfo() const {
-        MemoryAllocatorInfo result = {};
-        result += mFirstAllocator->GetInfo();
-        result += mSecondAllocator->GetInfo();
+    MemoryAllocatorStats ConditionalMemoryAllocator::GetStats() const {
+        MemoryAllocatorStats result = {};
+        result += mFirstAllocator->GetStats();
+        result += mSecondAllocator->GetStats();
         return result;
     }
 

@@ -35,8 +35,8 @@ namespace gpgmm {
         return 0;
     }
 
-    MemoryAllocatorInfo MemoryAllocator::GetInfo() const {
-        return mInfo;
+    MemoryAllocatorStats MemoryAllocator::GetStats() const {
+        return mStats;
     }
 
     // MemoryAllocation

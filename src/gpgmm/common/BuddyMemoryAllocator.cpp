@@ -86,8 +86,8 @@ namespace gpgmm {
                          subAllocation);
 
         MemoryBlock* block = subAllocation->GetBlock();
-        mInfo.UsedBlockCount++;
-        mInfo.UsedBlockUsage += block->Size;
+        mStats.UsedBlockCount++;
+        mStats.UsedBlockUsage += block->Size;
 
         // Memory allocation offset is always memory-relative.
         const uint64_t memoryOffset = block->Offset % mMemorySize;
@@ -104,8 +104,8 @@ namespace gpgmm {
 
         ASSERT(subAllocation != nullptr);
 
-        mInfo.UsedBlockCount--;
-        mInfo.UsedBlockUsage -= subAllocation->GetSize();
+        mStats.UsedBlockCount--;
+        mStats.UsedBlockUsage -= subAllocation->GetSize();
 
         const uint64_t memoryIndex = GetMemoryIndex(subAllocation->GetBlock()->Offset);
 
@@ -132,11 +132,11 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
-    MemoryAllocatorInfo BuddyMemoryAllocator::GetInfo() const {
+    MemoryAllocatorStats BuddyMemoryAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MemoryAllocatorInfo result = mInfo;
-        const MemoryAllocatorInfo& memoryInfo = GetNextInChain()->GetInfo();
+        MemoryAllocatorStats result = mStats;
+        const MemoryAllocatorStats& memoryInfo = GetNextInChain()->GetStats();
         result.UsedMemoryCount = memoryInfo.UsedMemoryCount;
         result.UsedMemoryUsage = memoryInfo.UsedMemoryUsage;
         result.FreeMemoryUsage = memoryInfo.FreeMemoryUsage;

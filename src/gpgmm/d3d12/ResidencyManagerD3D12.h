@@ -60,7 +60,7 @@ namespace gpgmm::d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
 
-        RESIDENCY_INFO GetInfo() const override;
+        RESIDENCY_STATS GetStats() const override;
 
         DEFINE_IUNKNOWNIMPL_OVERRIDES()
 
@@ -133,7 +133,7 @@ namespace gpgmm::d3d12 {
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
-        RESIDENCY_INFO mInfo = {};
+        RESIDENCY_STATS mStats = {};
 
         std::shared_ptr<ThreadPool> mThreadPool;
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;

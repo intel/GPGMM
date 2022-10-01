@@ -21,7 +21,7 @@ namespace gpgmm {
 
     // Forward declare common types.
     struct MemoryPoolInfo;
-    struct MemoryAllocatorInfo;
+    struct MemoryAllocatorStats;
     struct MemoryAllocationInfo;
     struct MemoryAllocationRequest;
     struct EventMessageInfo;
@@ -30,7 +30,7 @@ namespace gpgmm {
       public:
         static JSONDict Serialize();
         static JSONDict Serialize(const EventMessageInfo& info);
-        static JSONDict Serialize(const MemoryAllocatorInfo& info);
+        static JSONDict Serialize(const MemoryAllocatorStats& info);
         static JSONDict Serialize(const MemoryAllocationRequest& desc);
         static JSONDict Serialize(const MemoryAllocationInfo& info);
         static JSONDict Serialize(const MemoryPoolInfo& desc);

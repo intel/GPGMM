@@ -207,9 +207,9 @@ namespace gpgmm {
         Should be overridden when a child or block allocator is used to avoid
         over-counting.
 
-        \return A MemoryAllocatorInfo struct containing the current usage.
+        \return A MemoryAllocatorStats struct containing the current usage.
         */
-        virtual MemoryAllocatorInfo GetInfo() const;
+        virtual MemoryAllocatorStats GetStats() const;
 
         /** \brief Identifies the allocator type.
 
@@ -278,7 +278,7 @@ namespace gpgmm {
 
         void CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation);
 
-        MemoryAllocatorInfo mInfo = {};
+        MemoryAllocatorStats mStats = {};
 
         mutable std::mutex mMutex;
         std::shared_ptr<ThreadPool> mThreadPool;

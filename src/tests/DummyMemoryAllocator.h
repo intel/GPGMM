@@ -70,8 +70,8 @@ namespace gpgmm {
                 return {};
             }
 
-            mInfo.UsedMemoryCount++;
-            mInfo.UsedMemoryUsage += request.SizeInBytes;
+            mStats.UsedMemoryCount++;
+            mStats.UsedMemoryUsage += request.SizeInBytes;
 
             return std::make_unique<MemoryAllocation>(
                 this, new DummyMemory(request.SizeInBytes, request.Alignment), request.SizeInBytes);
@@ -82,8 +82,8 @@ namespace gpgmm {
 
             std::lock_guard<std::mutex> lock(mMutex);
 
-            mInfo.UsedMemoryCount--;
-            mInfo.UsedMemoryUsage -= allocation->GetSize();
+            mStats.UsedMemoryCount--;
+            mStats.UsedMemoryUsage -= allocation->GetSize();
 
             SafeRelease(allocation);
         }

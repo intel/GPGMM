@@ -38,10 +38,10 @@ namespace gpgmm::vk {
 
         const uint64_t maxDeviceMemoryAllocationCount =
             mResourceAllocator->GetCaps()->GetMaxDeviceAllocationCount();
-        if (mInfo.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
+        if (mStats.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
             DebugEvent("DeviceMemoryAllocator.TryAllocateMemory", EventMessageId::kAllocatorFailed)
                 << "Device exceeded max number of device memory allocations (" +
-                       std::to_string(mInfo.UsedMemoryCount) + " vs " +
+                       std::to_string(mStats.UsedMemoryCount) + " vs " +
                        std::to_string(maxDeviceMemoryAllocationCount) + ").";
             return {};
         }
@@ -61,8 +61,8 @@ namespace gpgmm::vk {
             return {};
         }
 
-        mInfo.UsedMemoryUsage += request.SizeInBytes;
-        mInfo.UsedMemoryCount++;
+        mStats.UsedMemoryUsage += request.SizeInBytes;
+        mStats.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(
             this,
@@ -79,8 +79,8 @@ namespace gpgmm::vk {
         mResourceAllocator->GetFunctions().FreeMemory(mResourceAllocator->GetDevice(), deviceMemory,
                                                       /*allocationCallbacks*/ nullptr);
 
-        mInfo.UsedMemoryUsage -= allocation->GetSize();
-        mInfo.UsedMemoryCount--;
+        mStats.UsedMemoryUsage -= allocation->GetSize();
+        mStats.UsedMemoryCount--;
 
         SafeRelease(allocation);
     }

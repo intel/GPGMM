@@ -59,7 +59,7 @@ namespace gpgmm {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        MemoryAllocatorInfo GetInfo() const override;
+        MemoryAllocatorStats GetStats() const override;
 
         const char* GetTypename() const override;
 
@@ -125,7 +125,7 @@ namespace gpgmm {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        MemoryAllocatorInfo GetInfo() const override;
+        MemoryAllocatorStats GetStats() const override;
 
         uint64_t GetMemorySize() const override;
 

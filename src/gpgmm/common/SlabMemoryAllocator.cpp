@@ -276,7 +276,7 @@ namespace gpgmm {
                         if (prefetchedSlabAllocation != nullptr &&
                             prefetchedSlabAllocation->GetSize() == slabSize) {
                             pFreeSlab->Allocation = *prefetchedSlabAllocation;
-                            mInfo.PrefetchedMemoryMissesEliminated++;
+                            mStats.PrefetchedMemoryMissesEliminated++;
                             return pFreeSlab->Allocation.GetMemory();
                         }
 
@@ -286,7 +286,7 @@ namespace gpgmm {
                                 << prefetchedSlabAllocation->GetSize() << " bytes.";
                         }
 
-                        mInfo.PrefetchedMemoryMisses++;
+                        mStats.PrefetchedMemoryMisses++;
 
                         mMemoryAllocator->DeallocateMemory(std::move(prefetchedSlabAllocation));
                     }
@@ -373,8 +373,8 @@ namespace gpgmm {
         // offset must be made relative to the slab's underlying memory and not the slab itself.
         const uint64_t offsetFromMemory = pFreeSlab->Allocation.GetOffset() + blockInSlab->Offset;
 
-        mInfo.UsedBlockCount++;
-        mInfo.UsedBlockUsage += blockInSlab->Size;
+        mStats.UsedBlockCount++;
+        mStats.UsedBlockUsage += blockInSlab->Size;
 
         return std::make_unique<MemoryAllocation>(this, subAllocation->GetMemory(),
                                                   offsetFromMemory, AllocationMethod::kSubAllocated,
@@ -401,8 +401,8 @@ namespace gpgmm {
                                     /*pDstList*/ &pCache->FreeList);
         }
 
-        mInfo.UsedBlockCount--;
-        mInfo.UsedBlockUsage -= blockInSlab->Size;
+        mStats.UsedBlockCount--;
+        mStats.UsedBlockUsage -= blockInSlab->Size;
 
         pSlab->Allocator.DeallocateBlock(blockInSlab);
         pSlab->UsedBlocksPerSlab--;
@@ -435,10 +435,10 @@ namespace gpgmm {
         return pSlab;
     }
 
-    MemoryAllocatorInfo SlabMemoryAllocator::GetInfo() const {
+    MemoryAllocatorStats SlabMemoryAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        MemoryAllocatorInfo result = mInfo;
-        const MemoryAllocatorInfo& info = mMemoryAllocator->GetInfo();
+        MemoryAllocatorStats result = mStats;
+        const MemoryAllocatorStats& info = mMemoryAllocator->GetStats();
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;
         result.FreeMemoryUsage = info.FreeMemoryUsage;
@@ -450,13 +450,13 @@ namespace gpgmm {
     }
 
     bool SlabMemoryAllocator::IsPrefetchCoverageBelowThreshold() const {
-        if (mInfo.PrefetchedMemoryMissesEliminated >= mInfo.PrefetchedMemoryMisses) {
+        if (mStats.PrefetchedMemoryMissesEliminated >= mStats.PrefetchedMemoryMisses) {
             return true;
         }
 
         const double currentCoverage =
-            SafeDivide(mInfo.PrefetchedMemoryMissesEliminated,
-                       mInfo.PrefetchedMemoryMissesEliminated + mInfo.PrefetchedMemoryMisses);
+            SafeDivide(mStats.PrefetchedMemoryMissesEliminated,
+                       mStats.PrefetchedMemoryMissesEliminated + mStats.PrefetchedMemoryMisses);
         if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
             WarnEvent(GetTypename(), EventMessageId::kPrefetchFailed)
                 << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
@@ -543,12 +543,12 @@ namespace gpgmm {
         entry->Unref();
     }
 
-    MemoryAllocatorInfo SlabCacheAllocator::GetInfo() const {
+    MemoryAllocatorStats SlabCacheAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MemoryAllocatorInfo result = {};
+        MemoryAllocatorStats result = {};
         for (const auto& entry : mSizeCache) {
-            const MemoryAllocatorInfo& info = entry->GetValue().SlabAllocator->GetInfo();
+            const MemoryAllocatorStats& info = entry->GetValue().SlabAllocator->GetStats();
             result.UsedBlockCount += info.UsedBlockCount;
             result.UsedBlockUsage += info.UsedBlockUsage;
             result.PrefetchedMemoryMisses += info.PrefetchedMemoryMisses;
@@ -556,7 +556,7 @@ namespace gpgmm {
         }
 
         // Memory allocator is common across slab allocators.
-        const MemoryAllocatorInfo& info = GetNextInChain()->GetInfo();
+        const MemoryAllocatorStats& info = GetNextInChain()->GetStats();
         result.FreeMemoryUsage = info.FreeMemoryUsage;
         result.UsedMemoryCount = info.UsedMemoryCount;
         result.UsedMemoryUsage = info.UsedMemoryUsage;

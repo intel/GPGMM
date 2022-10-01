@@ -42,7 +42,7 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MemoryAllocatorInfo& info) {
+    JSONDict JSONSerializer::Serialize(const MemoryAllocatorStats& info) {
         JSONDict dict;
         dict.AddItem("UsedBlockCount", info.UsedBlockCount);
         dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);

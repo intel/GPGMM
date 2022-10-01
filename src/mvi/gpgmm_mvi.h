@@ -39,10 +39,10 @@ namespace gpgmm {
       public:
         virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease);
-        virtual MemoryAllocatorInfo GetInfo() const;
+        virtual MemoryAllocatorStats GetStats() const;
 
       protected:
-        MemoryAllocatorInfo mInfo = {};
+        MemoryAllocatorStats mStats = {};
     };
 
     class MemoryAllocation {
