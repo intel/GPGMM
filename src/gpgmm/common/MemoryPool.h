@@ -17,7 +17,8 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/utils/Limits.h"
-#include "include/gpgmm.h"
+
+#include <gpgmm.h>
 
 #include <memory>
 

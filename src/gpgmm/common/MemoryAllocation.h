@@ -17,7 +17,8 @@
 #define GPGMM_COMMON_MEMORYALLOCATION_H_
 
 #include "gpgmm/utils/Limits.h"
-#include "include/gpgmm.h"
+
+#include <gpgmm.h>
 
 namespace gpgmm {
 

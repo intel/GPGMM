@@ -34,7 +34,7 @@ if (build_with_chromium) {
 ###############################################################################
 
 config("gpgmm_public_config") {
-  include_dirs = [ "${gpgmm_root_dir}/src/include" ]
+  include_dirs = [ "${gpgmm_root_dir}/include" ]
 }
 
 config("gpgmm_common_config") {

@@ -19,7 +19,8 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/d3d12/IUnknownImplD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
-#include "include/gpgmm_d3d12.h"
+
+#include <gpgmm_d3d12.h>
 
 #include <array>
 #include <memory>

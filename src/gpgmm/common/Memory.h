@@ -17,7 +17,8 @@
 
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/RefCount.h"
-#include "include/gpgmm.h"
+
+#include <gpgmm.h>
 
 namespace gpgmm {
 

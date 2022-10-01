@@ -67,7 +67,7 @@ source_set("gpgmm_headers") {
   # public_deps = [ "${gpgmm_root_dir}/src/gpgmm:gpgmmcpp_headers" ]
   all_dependent_configs =
       [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_public_config" ]
-  sources = [ "${gpgmm_root_dir}/src/include/gpgmm_export.h" ]
+  sources = [ "${gpgmm_root_dir}/include/gpgmm_export.h" ]
 }
 
 # The meat of the compilation for gpgmm so that we can cheaply have

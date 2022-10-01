@@ -42,14 +42,14 @@ source_set("gpgmm_mvi") {
     "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.cpp",
     "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.h",
   ]
-  include_dirs = [ "${gpgmm_root_dir}/src/include" ]
+  include_dirs = [ "${gpgmm_root_dir}/include" ]
 }
 
 executable("D3D12SampleMVI") {
   deps = [ ":gpgmm_mvi" ]
   defines = [ "GPGMM_D3D12_HEADERS_ALREADY_INCLUDED" ]
   sources = [ "D3D12Sample.cpp" ]
-  include_dirs = [ "${gpgmm_root_dir}/src/include" ]
+  include_dirs = [ "${gpgmm_root_dir}/include" ]
   libs = [
     "d3d12.lib",
     "dxgi.lib",

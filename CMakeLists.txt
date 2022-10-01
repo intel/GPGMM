@@ -35,7 +35,7 @@ endif()
 
 # Only <PROJECT-NAME>_SOURCE_DIR is created by the project() command above.
 set(GPGMM_ROOT_DIR "${GPGMM_SOURCE_DIR}")
-set(GPGMM_INCLUDE_DIR "${GPGMM_ROOT_DIR}/src/include")
+set(GPGMM_INCLUDE_DIR "${GPGMM_ROOT_DIR}/include")
 
 # ###############################################################################
 # Configuration options
