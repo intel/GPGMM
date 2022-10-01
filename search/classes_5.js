@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['idebugobject_0',['IDebugObject',['../classgpgmm_1_1d3d12_1_1_i_debug_object.html',1,'gpgmm::d3d12']]],
-  ['iheap_1',['IHeap',['../classgpgmm_1_1d3d12_1_1_i_heap.html',1,'gpgmm::d3d12']]],
-  ['imemoryobject_2',['IMemoryObject',['../classgpgmm_1_1_i_memory_object.html',1,'gpgmm']]],
-  ['imemorypool_3',['IMemoryPool',['../classgpgmm_1_1_i_memory_pool.html',1,'gpgmm']]],
-  ['iresidencylist_4',['IResidencyList',['../classgpgmm_1_1d3d12_1_1_i_residency_list.html',1,'gpgmm::d3d12']]],
-  ['iresidencymanager_5',['IResidencyManager',['../classgpgmm_1_1d3d12_1_1_i_residency_manager.html',1,'gpgmm::d3d12']]],
-  ['iresourceallocation_6',['IResourceAllocation',['../classgpgmm_1_1d3d12_1_1_i_resource_allocation.html',1,'gpgmm::d3d12']]],
-  ['iresourceallocator_7',['IResourceAllocator',['../classgpgmm_1_1d3d12_1_1_i_resource_allocator.html',1,'gpgmm::d3d12']]]
+  ['fakeobject_0',['FakeObject',['../struct_fake_object.html',1,'FakeObject'],['../class_linked_list_tests_1_1_fake_object.html',1,'LinkedListTests::FakeObject']]],
+  ['feature_5fdata_5fresource_5fallocation_5fsupport_1',['FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT',['../structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html',1,'gpgmm::d3d12']]],
+  ['fence_2',['Fence',['../classgpgmm_1_1d3d12_1_1_fence.html',1,'gpgmm::d3d12']]],
+  ['freelinks_3',['FreeLinks',['../structgpgmm_1_1_buddy_block_allocator_1_1_buddy_block_1_1_free_links.html',1,'gpgmm::BuddyBlockAllocator::BuddyBlock']]]
 ];

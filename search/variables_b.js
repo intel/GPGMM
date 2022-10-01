@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['sizecachehits_0',['SizeCacheHits',['../structgpgmm_1_1_memory_allocator_stats.html#a53c5bbe2ec007e151e6cfdc7a3c5182a',1,'gpgmm::MemoryAllocatorStats']]],
-  ['sizecachemisses_1',['SizeCacheMisses',['../structgpgmm_1_1_memory_allocator_stats.html#ae9746d6cf9d0b091e93a163c30a149e7',1,'gpgmm::MemoryAllocatorStats']]],
-  ['sizeinbytes_2',['SizeInBytes',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f',1,'gpgmm::d3d12::HEAP_DESC::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aea8dd5cadda9d7c1af0ab968667f6571',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_DESC::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a69a8397e54b68d7e4d816b4a3743f480',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::SizeInBytes()']]],
-  ['status_3',['Status',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#abccb4fe93b87d4e6b60bbb8a7c7742c4',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['suballocationalgorithm_4',['subAllocationAlgorithm',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aa9c9a7ecf364ca57862369e3e6e2136f',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
-  ['suballocationalgorithm_5',['SubAllocationAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
+  ['name_0',['name',['../struct_trace_file.html#a86e9dc6e842f180b7a7b6e3ad5f4bd2c',1,'TraceFile']]],
+  ['neverallocate_1',['NeverAllocate',['../structgpgmm_1_1_memory_allocation_request.html#a1df833f8fdeb428443df6f730b64a5b8',1,'gpgmm::MemoryAllocationRequest']]],
+  ['numofhits_2',['NumOfHits',['../structgpgmm_1_1_cache_stats.html#a81aa18f541e3b8cc43806234a969b689',1,'gpgmm::CacheStats']]],
+  ['numofmisses_3',['NumOfMisses',['../structgpgmm_1_1_cache_stats.html#a9331f38d59d151a56f6a70542d2c4a93',1,'gpgmm::CacheStats']]]
 ];
