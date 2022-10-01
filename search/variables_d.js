@@ -12,7 +12,7 @@ var searchData=
   ['ppslab_9',['ppSlab',['../structgpgmm_1_1_slab_block.html#a8741202b2f26e10773e17327c9328c00',1,'gpgmm::SlabBlock']]],
   ['preferreddevicememorysize_10',['preferredDeviceMemorySize',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#acc85c61dfa24987e871e692394a6455c',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['preferredresourceheapsize_11',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['prefetchedmemorymisses_12',['PrefetchedMemoryMisses',['../structgpgmm_1_1_memory_allocator_stats.html#aebd7cfcdcfd7ac52363dbca92dc011e8',1,'gpgmm::MemoryAllocatorStats']]],
-  ['prefetchedmemorymisseseliminated_13',['PrefetchedMemoryMissesEliminated',['../structgpgmm_1_1_memory_allocator_stats.html#ae1d11028250d65441df1fad87be420cf',1,'gpgmm::MemoryAllocatorStats']]],
+  ['prefetchedmemorymisses_12',['PrefetchedMemoryMisses',['../structgpgmm_1_1_memory_allocator_info.html#a72c067d8e6c578976152bb7aeb292c97',1,'gpgmm::MemoryAllocatorInfo']]],
+  ['prefetchedmemorymisseseliminated_13',['PrefetchedMemoryMissesEliminated',['../structgpgmm_1_1_memory_allocator_info.html#ab2d5625cffc43b7e91fda532009dc09e',1,'gpgmm::MemoryAllocatorInfo']]],
   ['pvulkanfunctions_14',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a50d3442f6b682ddb33e70d71310fa001',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
 ];

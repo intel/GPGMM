@@ -107,9 +107,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6d074a6bef62cf5ccd87c79e4cd99386">ReleaseMemory</a> (uint64_t bytesToRelease)=0</td></tr>
 <tr class="memdesc:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6d074a6bef62cf5ccd87c79e4cd99386">More...</a><br /></td></tr>
 <tr class="separator:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89d618b87b741446f87184fc1fc4a3a5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a89d618b87b741446f87184fc1fc4a3a5">GetStats</a> () const =0</td></tr>
-<tr class="memdesc:a89d618b87b741446f87184fc1fc4a3a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current allocator usage.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a89d618b87b741446f87184fc1fc4a3a5">More...</a><br /></td></tr>
-<tr class="separator:a89d618b87b741446f87184fc1fc4a3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6614e188da92c0cd8c4251f0313a37f8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#add1d01a196c973b44b13ce6df72fb65f">RESOURCE_ALLOCATOR_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6614e188da92c0cd8c4251f0313a37f8">GetInfo</a> () const =0</td></tr>
+<tr class="memdesc:a6614e188da92c0cd8c4251f0313a37f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current allocator usage.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6614e188da92c0cd8c4251f0313a37f8">More...</a><br /></td></tr>
+<tr class="separator:a6614e188da92c0cd8c4251f0313a37f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dc27dd2e8023919a721d04ac93a7aa5"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a9dc27dd2e8023919a721d04ac93a7aa5">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
 <tr class="memdesc:a9dc27dd2e8023919a721d04ac93a7aa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a9dc27dd2e8023919a721d04ac93a7aa5">More...</a><br /></td></tr>
 <tr class="separator:a9dc27dd2e8023919a721d04ac93a7aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,8 +294,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a89d618b87b741446f87184fc1fc4a3a5" name="a89d618b87b741446f87184fc1fc4a3a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89d618b87b741446f87184fc1fc4a3a5">&#9670;&#160;</a></span>GetStats()</h2>
+<a id="a6614e188da92c0cd8c4251f0313a37f8" name="a6614e188da92c0cd8c4251f0313a37f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6614e188da92c0cd8c4251f0313a37f8">&#9670;&#160;</a></span>GetInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -304,7 +304,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> gpgmm::d3d12::IResourceAllocator::GetStats </td>
+          <td class="memname">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#add1d01a196c973b44b13ce6df72fb65f">RESOURCE_ALLOCATOR_INFO</a> gpgmm::d3d12::IResourceAllocator::GetInfo </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -320,7 +320,7 @@ Public Member Functions</h2></td></tr>
 <p>Return the current allocator usage. </p>
 <p >Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%. </p>
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a51d2072405c78aa333584fec0af75f66">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#a51d2072405c78aa333584fec0af75f66">gpgmm::d3d12::ResourceAllocator</a>.</p>
+<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">gpgmm::d3d12::ResourceAllocator</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocator.html#ad6326a2e0f9e34d2cde4234c04379434">gpgmm::d3d12::ResourceAllocator</a>.</p>
 
 </div>
 </div>
