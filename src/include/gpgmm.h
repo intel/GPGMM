@@ -23,6 +23,9 @@ namespace gpgmm {
      */
     class IMemoryPool {};
 
+    /** \brief IMemoryObject
+    Represents a memory object used for allocation.
+    */
     class IMemoryObject {
       public:
         virtual ~IMemoryObject() = default;
@@ -57,8 +60,8 @@ namespace gpgmm {
     };
 
     /** \struct MemoryAllocatorStats
-        Information about the memory allocator.
-        */
+    Additional information about the memory allocator usage.
+    */
     struct MemoryAllocatorStats {
         /** \brief Number of used sub-allocated blocks within the same memory.
          */

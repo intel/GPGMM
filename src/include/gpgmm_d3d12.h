@@ -440,7 +440,7 @@ namespace gpgmm::d3d12 {
     };
 
     /** \struct RESIDENCY_STATS
-    Additional information about the residency manager.
+    Additional information about residency manager usage.
     */
     struct RESIDENCY_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
