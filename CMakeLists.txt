@@ -130,7 +130,6 @@ endif()
 # GPGMM's public and common "configs"
 # ###############################################################################
 set(GPGMM_INCLUDE_DIRS
-  "${GPGMM_ROOT_DIR}/src"
   "${GPGMM_INCLUDE_DIR}"
 )
 
@@ -142,7 +141,7 @@ add_library(gpgmm_public_config INTERFACE)
 target_include_directories(gpgmm_public_config INTERFACE "${GPGMM_INCLUDE_DIRS}")
 
 add_library(gpgmm_common_config INTERFACE)
-target_link_libraries(gpgmm_common_config INTERFACE gpgmm_public_config)
+target_include_directories(gpgmm_common_config INTERFACE "${GPGMM_ROOT_DIR}/src")
 
 # Compile definitions for the common config
 if(GPGMM_ALWAYS_ASSERT)

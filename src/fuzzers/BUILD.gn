@@ -48,6 +48,8 @@ if (is_win) {
 
     deps = [ "${gpgmm_root_dir}:gpgmm" ]
 
+    include_dirs = [ "${gpgmm_root_dir}/src" ]
+
     libs = [
       "d3d12.lib",
       "dxgi.lib",
