@@ -89,12 +89,8 @@ $(function() {
 Inheritance diagram for gpgmm::d3d12::IResidencyList:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classgpgmm_1_1d3d12_1_1_i_residency_list.png" usemap="#gpgmm::d3d12::IResidencyList_map" alt=""/>
-  <map id="gpgmm::d3d12::IResidencyList_map" name="gpgmm::d3d12::IResidencyList_map">
-<area href="classgpgmm_1_1d3d12_1_1_residency_list.html" alt="gpgmm::d3d12::ResidencyList" shape="rect" coords="0,112,179,136"/>
-<area href="classgpgmm_1_1d3d12_1_1_residency_list.html" alt="gpgmm::d3d12::ResidencyList" shape="rect" coords="189,112,368,136"/>
-  </map>
-</div></div>
+  <img src="classgpgmm_1_1d3d12_1_1_i_residency_list.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -106,8 +102,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
-<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a> by inserting heaps, by calling <a class="el" href="classgpgmm_1_1d3d12_1_1_resource_allocation.html#ae2e57f9c3f0317fdc7fbfdac209d6d58" title="Returns the heap assigned to this resource allocation.">ResourceAllocation::GetMemory</a>, into the list. Once <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#a317fe729a37e1985f2df69f5b06ea62a" title="Execute command lists using residency managed heaps.">ResidencyManager::ExecuteCommandLists</a> is called, the list can be reset or cleared for the next frame or compute job.</p>
-<p >Without <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html">ResidencyList</a>, the application would need to call <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#aa0301e671aca38cbba174bbe643fb234" title="Locks the specified heap.">ResidencyManager::LockHeap</a> and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_manager.html#ad9c170486622945f66e5a7aec4e9f2b6" title="Unlocks the specified heap.">ResidencyManager::UnlockHeap</a> for each heap before and after every GPU command or command-list being executed. </p>
+<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a ResidencyList by inserting heaps, by calling ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is called, the list can be reset or cleared for the next frame or compute job.</p>
+<p >Without ResidencyList, the application would need to call ResidencyManager::LockHeap and ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list being executed. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a83e78f3e2a9206309c83c2f7ef8f82f9" name="a83e78f3e2a9206309c83c2f7ef8f82f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83e78f3e2a9206309c83c2f7ef8f82f9">&#9670;&#160;</a></span>Add()</h2>
@@ -136,13 +132,11 @@ Public Member Functions</h2></td></tr>
 <p>Adds a heap to the residency list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pHeap</td><td>A pointer to <a class="el" href="classgpgmm_1_1d3d12_1_1_heap.html">Heap</a> about to be added.</td></tr>
+    <tr><td class="paramname">pHeap</td><td>A pointer to Heap about to be added.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>S_OK if heap was added, else error. </dd></dl>
-
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a92ede7b20ce47ef1dc307831a8462332">gpgmm::d3d12::ResidencyList</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#a92ede7b20ce47ef1dc307831a8462332">gpgmm::d3d12::ResidencyList</a>.</p>
 
 </div>
 </div>
@@ -169,12 +163,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#abc14280cbd917136701a2e26abcb3bc6">gpgmm::d3d12::ResidencyList</a>, and <a class="el" href="classgpgmm_1_1d3d12_1_1_residency_list.html#abc14280cbd917136701a2e26abcb3bc6">gpgmm::d3d12::ResidencyList</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
+<li>include/<a class="el" href="gpgmm__d3d12_8h.html">gpgmm_d3d12.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

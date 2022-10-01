@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['event_5frecord_5fflags_0',['EVENT_RECORD_FLAGS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0b',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fscope_1',['EVENT_RECORD_SCOPE',['../namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0',1,'gpgmm::d3d12']]],
-  ['eventmessageid_2',['EventMessageId',['../namespacegpgmm.html#ada7d97a94732013a89cc316e53121088',1,'gpgmm']]]
+  ['gpallocatoralgorithm_0',['GpAllocatorAlgorithm',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787e',1,'gpgmm::vk']]],
+  ['gpallocatorcreateflags_1',['GpAllocatorCreateFlags',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6',1,'gpgmm::vk']]],
+  ['gpresourceallocationcreateflags_2',['GpResourceAllocationCreateFlags',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879',1,'gpgmm::vk']]]
 ];
