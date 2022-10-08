@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef INCLUDE_GPGMM_D3D12_MVI_H_
-#define INCLUDE_GPGMM_D3D12_MVI_H_
+#ifndef MVI_GPGMM_D3D12_H_
+#define MVI_GPGMM_D3D12_H_
 
 // GPGMM minimum viable implementation (MVI).
 //
@@ -40,7 +40,7 @@
 
 #include <gpgmm_d3d12.h>
 
-#include "gpgmm_mvi.h"
+#include "gpgmm.h"
 
 namespace gpgmm::d3d12 {
 
@@ -224,4 +224,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // INCLUDE_GPGMM_D3D12_MVI_H_
+#endif  // MVI_GPGMM_D3D12_H_

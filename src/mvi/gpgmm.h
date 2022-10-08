@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef INCLUDE_GPGMM_MVI_H_
-#define INCLUDE_GPGMM_MVI_H_
+#ifndef MVI_GPGMM_H_
+#define MVI_GPGMM_H_
 
 #include <gpgmm.h>
 
@@ -63,4 +63,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // INCLUDE_GPGMM_MVI_H_
+#endif  // MVI_GPGMM_H_

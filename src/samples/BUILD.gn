@@ -37,10 +37,10 @@ executable("D3D12Sample") {
 
 source_set("gpgmm_mvi") {
   sources = [
-    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12_mvi.cpp",
-    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12_mvi.h",
-    "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.cpp",
-    "${gpgmm_root_dir}/src/mvi/gpgmm_mvi.h",
+    "${gpgmm_root_dir}/src/mvi/gpgmm.cpp",
+    "${gpgmm_root_dir}/src/mvi/gpgmm.h",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12.cpp",
+    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12.h",
   ]
   include_dirs = [ "${gpgmm_root_dir}/include" ]
 }
