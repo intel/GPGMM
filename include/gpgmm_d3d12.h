@@ -220,6 +220,10 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT Add(IHeap* pHeap) = 0;
 
+        /** \brief Resets a residency list to its initial state as if a new residenct list was created.
+
+        \return Returns S_OK if successful.
+        */
         virtual HRESULT Reset() = 0;
     };
 
