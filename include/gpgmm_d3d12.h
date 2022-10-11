@@ -178,9 +178,11 @@ namespace gpgmm::d3d12 {
     */
     class IHeap : public IDebugObject {
       public:
+        /** \brief Returns information about this heap.
+
+        \return A HEAP_INFO struct containing the information.
+        */
         virtual HEAP_INFO GetInfo() const = 0;
-        virtual bool IsInResidencyLRUCacheForTesting() const = 0;
-        virtual bool IsResidencyLockedForTesting() const = 0;
 
         /** \brief Return the size of the heap.
 
@@ -193,6 +195,9 @@ namespace gpgmm::d3d12 {
         \return Alignment, in bytes, of the heap.
         */
         virtual uint64_t GetAlignment() const = 0;
+
+        virtual bool IsInResidencyLRUCacheForTesting() const = 0;
+        virtual bool IsResidencyLockedForTesting() const = 0;
     };
 
     /** \brief  Create a heap managed by GPGMM.
