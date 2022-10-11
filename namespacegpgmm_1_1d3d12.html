@@ -635,7 +635,7 @@ mechanism can be disabled where a pull-based method is used instead.
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> structure that describes the heap. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the ResidencyManager used to manage this heap. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">createHeapFn</td><td>A callback function which creates a ID3D12Pageable derived type. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppHeapOut</td><td>Pointer to a memory block that recieves a pointer to the heap. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppHeapOut</td><td>Pointer to a memory block that receives a pointer to the heap. </td></tr>
   </table>
   </dd>
 </dl>
@@ -661,7 +661,7 @@ mechanism can be disabled where a pull-based method is used instead.
 <p>Create a residency list or collection of heaps to manage together for residency. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyList</td><td>An optional pointer to a memory block that recieves the required interface pointer to the created residency list object.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyList</td><td>An optional pointer to a memory block that receives the required interface pointer to the created residency list object.</td></tr>
   </table>
   </dd>
 </dl>
@@ -699,7 +699,7 @@ mechanism can be disabled where a pull-based method is used instead.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> structure that describes the residency manager. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that receives a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
 </dl>
@@ -742,8 +742,8 @@ mechanism can be disabled where a pull-based method is used instead.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>Pointer to a memory block that recieves a pointer to the residency manager. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>Pointer to a memory block that receives a pointer to the residency manager. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
   </table>
   </dd>
 </dl>
@@ -787,8 +787,8 @@ mechanism can be disabled where a pull-based method is used instead.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that recieves a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that receives a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency. </td></tr>
   </table>
   </dd>
 </dl>

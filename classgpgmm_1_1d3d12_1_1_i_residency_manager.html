@@ -100,9 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0cedaad75f13c9c1538f53925c6204a0"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a0cedaad75f13c9c1538f53925c6204a0">UnlockHeap</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a> *pHeap)=0</td></tr>
 <tr class="memdesc:a0cedaad75f13c9c1538f53925c6204a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a0cedaad75f13c9c1538f53925c6204a0">More...</a><br /></td></tr>
 <tr class="separator:a0cedaad75f13c9c1538f53925c6204a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6905e0bb018a0bf8ec6baf58ba9ad05c"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a6905e0bb018a0bf8ec6baf58ba9ad05c">ExecuteCommandLists</a> (ID3D12CommandQueue *pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
-<tr class="memdesc:a6905e0bb018a0bf8ec6baf58ba9ad05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a6905e0bb018a0bf8ec6baf58ba9ad05c">More...</a><br /></td></tr>
-<tr class="separator:a6905e0bb018a0bf8ec6baf58ba9ad05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f94edea0a6e6ef616abe013438897d4"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a1f94edea0a6e6ef616abe013438897d4">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
+<tr class="memdesc:a1f94edea0a6e6ef616abe013438897d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a1f94edea0a6e6ef616abe013438897d4">More...</a><br /></td></tr>
+<tr class="separator:a1f94edea0a6e6ef616abe013438897d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae51b6c531abddc44f53e5a6c3f4c3e5b"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#ae51b6c531abddc44f53e5a6c3f4c3e5b">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
 <tr class="memdesc:ae51b6c531abddc44f53e5a6c3f4c3e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#ae51b6c531abddc44f53e5a6c3f4c3e5b">More...</a><br /></td></tr>
 <tr class="separator:ae51b6c531abddc44f53e5a6c3f4c3e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,8 +118,8 @@ Public Member Functions</h2></td></tr>
 <p >A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a operation that always requires the Heap to be resident (eg. Map, Unmap).</p>
 <p >Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict and ID3D12Device::MakeResident to page-out or page-in heaps, respectively. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6905e0bb018a0bf8ec6baf58ba9ad05c" name="a6905e0bb018a0bf8ec6baf58ba9ad05c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6905e0bb018a0bf8ec6baf58ba9ad05c">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
+<a id="a1f94edea0a6e6ef616abe013438897d4" name="a1f94edea0a6e6ef616abe013438897d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f94edea0a6e6ef616abe013438897d4">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -130,7 +130,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual HRESULT gpgmm::d3d12::IResidencyManager::ExecuteCommandLists </td>
           <td>(</td>
-          <td class="paramtype">ID3D12CommandQueue *&#160;</td>
+          <td class="paramtype">ID3D12CommandQueue *const&#160;</td>
           <td class="paramname"><em>pQueue</em>, </td>
         </tr>
         <tr>

@@ -230,7 +230,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir"></td><td class="paramname">resourceDescriptor</td><td>A reference to the D3D12_RESOURCE_DESC structure that describes the resource. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">initialResourceState</td><td>The initial state of the resource, a bitwise OR'd combination of D3D12_RESOURCE_STATES enumeration constants. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pClearValue</td><td>A pointer tp D3D12_CLEAR_VALUE structure that describes the default value for a clear color. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>An optional pointer to a memory block that recieves the required interface pointer to the created resource allocation object. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>An optional pointer to a memory block that receives the required interface pointer to the created resource allocation object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -277,7 +277,7 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">committedResource</td><td>A COM managed pointer to a D3D12 committed resource. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that recieves a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
 </dl>
