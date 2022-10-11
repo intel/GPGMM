@@ -85,6 +85,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a097b9ed7d8b4612d359036f3b18a1cc4"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a097b9ed7d8b4612d359036f3b18a1cc4">SizeInBytes</a></td></tr>
+<tr class="memdesc:a097b9ed7d8b4612d359036f3b18a1cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created size, in bytes, of the heap.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a097b9ed7d8b4612d359036f3b18a1cc4">More...</a><br /></td></tr>
+<tr class="separator:a097b9ed7d8b4612d359036f3b18a1cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44cd6b66437ee36cd251d7c04cc481f9"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a44cd6b66437ee36cd251d7c04cc481f9">Alignment</a></td></tr>
+<tr class="memdesc:a44cd6b66437ee36cd251d7c04cc481f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created alignment, in bytes, of the heap.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a44cd6b66437ee36cd251d7c04cc481f9">More...</a><br /></td></tr>
+<tr class="separator:a44cd6b66437ee36cd251d7c04cc481f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a690c1fc9d71e8d5e13a3385b10e45872"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a690c1fc9d71e8d5e13a3385b10e45872">IsLocked</a></td></tr>
 <tr class="memdesc:a690c1fc9d71e8d5e13a3385b10e45872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap currently locked for residency.  <a href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a690c1fc9d71e8d5e13a3385b10e45872">More...</a><br /></td></tr>
 <tr class="separator:a690c1fc9d71e8d5e13a3385b10e45872"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -95,6 +101,23 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Additional information about the heap. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a44cd6b66437ee36cd251d7c04cc481f9" name="a44cd6b66437ee36cd251d7c04cc481f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44cd6b66437ee36cd251d7c04cc481f9">&#9670;&#160;</a></span>Alignment</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::d3d12::HEAP_INFO::Alignment</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Created alignment, in bytes, of the heap. </p>
+<p >Must be non-zero. </p>
+
+</div>
+</div>
 <a id="a690c1fc9d71e8d5e13a3385b10e45872" name="a690c1fc9d71e8d5e13a3385b10e45872"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a690c1fc9d71e8d5e13a3385b10e45872">&#9670;&#160;</a></span>IsLocked</h2>
 
@@ -108,6 +131,23 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Check if the heap currently locked for residency. </p>
+
+</div>
+</div>
+<a id="a097b9ed7d8b4612d359036f3b18a1cc4" name="a097b9ed7d8b4612d359036f3b18a1cc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a097b9ed7d8b4612d359036f3b18a1cc4">&#9670;&#160;</a></span>SizeInBytes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t gpgmm::d3d12::HEAP_INFO::SizeInBytes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Created size, in bytes, of the heap. </p>
+<p >Must be non-zero. SizeInBytes is always a multiple of the alignment. </p>
 
 </div>
 </div>

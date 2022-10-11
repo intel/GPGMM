@@ -98,17 +98,12 @@ Inheritance diagram for gpgmm::d3d12::IHeap:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7357137dd04e3675ad3a96dfcf778c61"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html#a7357137dd04e3675ad3a96dfcf778c61">GetInfo</a> () const =0</td></tr>
+<tr class="memdesc:a7357137dd04e3675ad3a96dfcf778c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns information about this heap.  <a href="classgpgmm_1_1d3d12_1_1_i_heap.html#a7357137dd04e3675ad3a96dfcf778c61">More...</a><br /></td></tr>
 <tr class="separator:a7357137dd04e3675ad3a96dfcf778c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac51f9e56ae41b6e325dadd30d2f7cd57"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html#ac51f9e56ae41b6e325dadd30d2f7cd57">IsInResidencyLRUCacheForTesting</a> () const =0</td></tr>
 <tr class="separator:ac51f9e56ae41b6e325dadd30d2f7cd57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b8d0ed8f94081b21e4ee88f2f14fd46"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html#a7b8d0ed8f94081b21e4ee88f2f14fd46">IsResidencyLockedForTesting</a> () const =0</td></tr>
 <tr class="separator:a7b8d0ed8f94081b21e4ee88f2f14fd46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac39fb033e2a16461909cd7a5e6cadceb"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html#ac39fb033e2a16461909cd7a5e6cadceb">GetSize</a> () const =0</td></tr>
-<tr class="memdesc:ac39fb033e2a16461909cd7a5e6cadceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the heap.  <a href="classgpgmm_1_1d3d12_1_1_i_heap.html#ac39fb033e2a16461909cd7a5e6cadceb">More...</a><br /></td></tr>
-<tr class="separator:ac39fb033e2a16461909cd7a5e6cadceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad0014112e46e19168c9b0a75e0d7181"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html#aad0014112e46e19168c9b0a75e0d7181">GetAlignment</a> () const =0</td></tr>
-<tr class="memdesc:aad0014112e46e19168c9b0a75e0d7181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the alignment of the heap.  <a href="classgpgmm_1_1d3d12_1_1_i_heap.html#aad0014112e46e19168c9b0a75e0d7181">More...</a><br /></td></tr>
-<tr class="separator:aad0014112e46e19168c9b0a75e0d7181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgpgmm_1_1d3d12_1_1_i_debug_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgpgmm_1_1d3d12_1_1_i_debug_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgpgmm_1_1d3d12_1_1_i_debug_object.html">gpgmm::d3d12::IDebugObject</a></td></tr>
 <tr class="memitem:a9d710a5898e3238f6ba38996a5ae2562 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_debug_object"><td class="memItemLeft" align="right" valign="top">virtual LPCWSTR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_debug_object.html#a9d710a5898e3238f6ba38996a5ae2562">GetDebugName</a> () const =0</td></tr>
 <tr class="memdesc:a9d710a5898e3238f6ba38996a5ae2562 inherit pub_methods_classgpgmm_1_1d3d12_1_1_i_debug_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the debug name.  <a href="classgpgmm_1_1d3d12_1_1_i_debug_object.html#a9d710a5898e3238f6ba38996a5ae2562">More...</a><br /></td></tr>
@@ -121,34 +116,6 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p >Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache. </p>
 <p >Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aad0014112e46e19168c9b0a75e0d7181" name="aad0014112e46e19168c9b0a75e0d7181"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad0014112e46e19168c9b0a75e0d7181">&#9670;&#160;</a></span>GetAlignment()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual uint64_t gpgmm::d3d12::IHeap::GetAlignment </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the alignment of the heap. </p>
-<dl class="section return"><dt>Returns</dt><dd>Alignment, in bytes, of the heap. </dd></dl>
-
-</div>
-</div>
 <a id="a7357137dd04e3675ad3a96dfcf778c61" name="a7357137dd04e3675ad3a96dfcf778c61"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7357137dd04e3675ad3a96dfcf778c61">&#9670;&#160;</a></span>GetInfo()</h2>
 
@@ -172,33 +139,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="ac39fb033e2a16461909cd7a5e6cadceb" name="ac39fb033e2a16461909cd7a5e6cadceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac39fb033e2a16461909cd7a5e6cadceb">&#9670;&#160;</a></span>GetSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual uint64_t gpgmm::d3d12::IHeap::GetSize </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the size of the heap. </p>
-<dl class="section return"><dt>Returns</dt><dd>Size, in bytes, of the heap. </dd></dl>
+<p>Returns information about this heap. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a> struct containing the information. </dd></dl>
 
 </div>
 </div>
