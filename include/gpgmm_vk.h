@@ -282,7 +282,7 @@ namespace gpgmm::vk {
     and instance.
 
     @param info A reference to GpAllocatorCreateInfo structure that describes the allocator.
-    @param[out] allocatorOut Pointer to a memory block that recieves a pointer to the
+    @param[out] allocatorOut Pointer to a memory block that receives a pointer to the
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator. If NULL is passed and allocator creating would succeed, VK_INCOMPLETE is
     returned.

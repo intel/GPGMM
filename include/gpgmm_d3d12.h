@@ -192,7 +192,7 @@ namespace gpgmm::d3d12 {
     @param descriptor A reference to HEAP_DESC structure that describes the heap.
     @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
     @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
-    @param[out] ppHeapOut Pointer to a memory block that recieves a pointer to the
+    @param[out] ppHeapOut Pointer to a memory block that receives a pointer to the
     heap.
     */
     GPGMM_EXPORT HRESULT CreateHeap(const HEAP_DESC& descriptor,
@@ -231,7 +231,7 @@ namespace gpgmm::d3d12 {
 
     /** \brief  Create a residency list or collection of heaps to manage together for residency.
 
-    @param[out] ppResidencyList An optional pointer to a memory block that recieves the
+    @param[out] ppResidencyList An optional pointer to a memory block that receives the
     required interface pointer to the created residency list object.
 
     \return Returns S_OK if successful.
@@ -536,7 +536,7 @@ namespace gpgmm::d3d12 {
 
     @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
     manager.
-    @param[out] ppResidencyManagerOut Pointer to a memory block that recieves a pointer to the
+    @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
     residency manager. Pass NULL to test if residency Manager creation would succeed, but not
     actually create the residency Manager. If NULL is passed and residency manager creating
     would succeed, S_FALSE is returned.
@@ -1136,7 +1136,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES enumeration constants.
         @param pClearValue A pointer tp D3D12_CLEAR_VALUE structure that describes the default value
         for a clear color.
-        @param[out] ppResourceAllocationOut An optional pointer to a memory block that recieves the
+        @param[out] ppResourceAllocationOut An optional pointer to a memory block that receives the
         required interface pointer to the created resource allocation object.
         */
         virtual HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
@@ -1152,7 +1152,7 @@ namespace gpgmm::d3d12 {
         Residency is not supported for imported resources.
 
         @param committedResource A COM managed pointer to a D3D12 committed resource.
-        @param[out] ppResourceAllocationOut Pointer to a memory block that recieves a pointer to the
+        @param[out] ppResourceAllocationOut Pointer to a memory block that receives a pointer to the
         resource allocation. Pass NULL to test if resource allocation creation would succeed, but
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
@@ -1212,10 +1212,10 @@ namespace gpgmm::d3d12 {
 
     @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
     allocator.
-    @param[out] ppResourceAllocatorOut Pointer to a memory block that recieves a pointer to the
+    @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator.
-    @param[out] ppResidencyManagerOut Pointer to a memory block that recieves a pointer to the
+    @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
     residency manager. If NULL is passed, the allocator will be created without using
     residency.
     */
@@ -1227,9 +1227,9 @@ namespace gpgmm::d3d12 {
 
     @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
     allocator.
-    @param pResidencyManager Pointer to a memory block that recieves a pointer to the
+    @param pResidencyManager Pointer to a memory block that receives a pointer to the
     residency manager.
-    @param[out] ppResourceAllocatorOut Pointer to a memory block that recieves a pointer to the
+    @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator.
     */
