@@ -493,7 +493,7 @@ namespace gpgmm::d3d12 {
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
         @param count The size of commandLists and residencyLists arrays.
         */
-        virtual HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
+        virtual HRESULT ExecuteCommandLists(ID3D12CommandQueue* const pQueue,
                                             ID3D12CommandList* const* ppCommandLists,
                                             IResidencyList* const* ppResidencyLists,
                                             uint32_t count) = 0;
