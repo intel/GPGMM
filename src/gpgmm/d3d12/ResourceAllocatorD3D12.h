@@ -110,7 +110,7 @@ namespace gpgmm::d3d12 {
             bool isPrefetchAllowed,
             std::unique_ptr<MemoryAllocator> underlyingAllocator);
 
-        HRESULT CreatePlacedResource(IHeap* const resourceHeap,
+        HRESULT CreatePlacedResource(Heap* const resourceHeap,
                                      uint64_t resourceOffset,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
@@ -124,7 +124,7 @@ namespace gpgmm::d3d12 {
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialResourceState,
                                         ID3D12Resource** commitedResourceOut,
-                                        IHeap** resourceHeapOut);
+                                        Heap** resourceHeapOut);
 
         static HRESULT ReportLiveDeviceObjects(ComPtr<ID3D12Device> device);
 

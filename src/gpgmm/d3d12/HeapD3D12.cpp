@@ -218,28 +218,12 @@ namespace gpgmm::d3d12 {
         return MemoryBase::GetAlignment();
     }
 
-    void Heap::AddSubAllocationRef() {
-        return MemoryBase::AddSubAllocationRef();
-    }
-
-    bool Heap::RemoveSubAllocationRef() {
-        return MemoryBase::RemoveSubAllocationRef();
-    }
-
     LPCWSTR Heap::GetDebugName() const {
         return DebugObject::GetDebugName();
     }
 
     HRESULT Heap::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugName(Name);
-    }
-
-    IMemoryPool* Heap::GetPool() const {
-        return MemoryBase::GetPool();
-    }
-
-    void Heap::SetPool(IMemoryPool* pool) {
-        return MemoryBase::SetPool(pool);
     }
 
 }  // namespace gpgmm::d3d12

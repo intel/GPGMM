@@ -125,26 +125,12 @@ namespace gpgmm::d3d12 {
         return MemoryBase::GetAlignment();
     }
 
-    void Heap::AddSubAllocationRef() {
-    }
-
-    bool Heap::RemoveSubAllocationRef() {
-        return true;
-    }
-
     LPCWSTR Heap::GetDebugName() const {
         return nullptr;
     }
 
     HRESULT Heap::SetDebugName(LPCWSTR Name) {
         return E_NOTIMPL;
-    }
-
-    IMemoryPool* Heap::GetPool() const {
-        return nullptr;
-    }
-
-    void Heap::SetPool(IMemoryPool* pool) {
     }
 
     // ResidencyList
@@ -284,7 +270,7 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                                            MemoryAllocator* allocator,
-                                           IHeap* resourceHeap,
+                                           Heap* resourceHeap,
                                            Microsoft::WRL::ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator, resourceHeap), mResource(std::move(resource)) {
     }
@@ -411,8 +397,8 @@ namespace gpgmm::d3d12 {
         allocationDesc.SizeInBytes = resourceInfo.SizeInBytes;
         allocationDesc.Method = AllocationMethod::kStandalone;
 
-        *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, this, resourceHeap,
-                                                          std::move(committedResource));
+        *ppResourceAllocationOut = new ResourceAllocation(
+            allocationDesc, this, static_cast<Heap*>(resourceHeap), std::move(committedResource));
 
         return S_OK;
     }

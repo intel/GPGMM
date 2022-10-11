@@ -47,18 +47,18 @@ namespace gpgmm {
 
     class MemoryAllocation {
       public:
-        MemoryAllocation(MemoryAllocator* allocator, IMemoryObject* memory);
+        MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory);
 
         MemoryAllocator* GetAllocator() const;
         uint64_t GetSize() const;
         uint64_t GetAlignment() const;
-        IMemoryObject* GetMemory() const;
+        MemoryBase* GetMemory() const;
 
       protected:
         MemoryAllocator* mAllocator;
 
       private:
-        IMemoryObject* mMemory;
+        MemoryBase* mMemory;
     };
 
 }  // namespace gpgmm

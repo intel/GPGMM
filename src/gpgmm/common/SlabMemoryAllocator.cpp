@@ -257,7 +257,7 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
-                [&](const auto& block) -> IMemoryObject* {
+                [&](const auto& block) -> MemoryBase* {
                     // Re-use memory from the free slab.
                     if (pFreeSlab->Allocation.GetMemory() != nullptr) {
                         return pFreeSlab->Allocation.GetMemory();
@@ -407,7 +407,7 @@ namespace gpgmm {
         pSlab->Allocator.DeallocateBlock(blockInSlab);
         pSlab->UsedBlocksPerSlab--;
 
-        IMemoryObject* slabMemory = subAllocation->GetMemory();
+        MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);
 
         slabMemory->RemoveSubAllocationRef();

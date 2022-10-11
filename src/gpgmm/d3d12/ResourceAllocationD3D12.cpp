@@ -44,7 +44,7 @@ namespace gpgmm::d3d12 {
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                                            IResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
-                                           IHeap* resourceHeap,
+                                           Heap* resourceHeap,
                                            MemoryBlock* block,
                                            ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator,
@@ -145,7 +145,7 @@ namespace gpgmm::d3d12 {
     }
 
     IHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<IHeap*>(MemoryAllocation::GetMemory());
+        return static_cast<Heap*>(MemoryAllocation::GetMemory());
     }
 
     void ResourceAllocation::SetDebugAllocator(MemoryAllocator* allocator) {

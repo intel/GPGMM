@@ -54,7 +54,7 @@ namespace gpgmm {
         mStats.UsedMemoryCount++;
         mStats.UsedMemoryUsage += allocation.GetSize();
 
-        IMemoryObject* memory = allocation.GetMemory();
+        MemoryBase* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
 
         return std::make_unique<MemoryAllocation>(this, memory, allocation.GetRequestSize());
@@ -70,7 +70,7 @@ namespace gpgmm {
         mStats.UsedMemoryCount--;
         mStats.UsedMemoryUsage -= allocationSize;
 
-        IMemoryObject* memory = allocation->GetMemory();
+        MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
         mPool->ReturnToPool(

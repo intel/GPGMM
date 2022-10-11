@@ -71,14 +71,8 @@ namespace gpgmm::d3d12 {
         HEAP_INFO GetInfo() const override;
         bool IsInResidencyLRUCacheForTesting() const override;
         bool IsResidencyLockedForTesting() const override;
-
-        // IMemoryObject
         uint64_t GetSize() const override;
         uint64_t GetAlignment() const override;
-        void AddSubAllocationRef() override;
-        bool RemoveSubAllocationRef() override;
-        IMemoryPool* GetPool() const override;
-        void SetPool(IMemoryPool* pool) override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -174,7 +168,7 @@ namespace gpgmm::d3d12 {
 
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            MemoryAllocator* allocator,
-                           IHeap* resourceHeap,
+                           Heap* resourceHeap,
                            Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 
         void DeleteThis() override;

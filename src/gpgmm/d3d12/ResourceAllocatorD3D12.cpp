@@ -1077,7 +1077,7 @@ namespace gpgmm::d3d12 {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
-                    IHeap* resourceHeap = static_cast<IHeap*>(subAllocation.GetMemory());
+                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)));
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
@@ -1114,7 +1114,7 @@ namespace gpgmm::d3d12 {
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    IHeap* resourceHeap = static_cast<IHeap*>(subAllocation.GetMemory());
+                    Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
                                                         initialResourceState, &placedResource));
@@ -1153,7 +1153,7 @@ namespace gpgmm::d3d12 {
 
             ReturnIfSucceeded(TryAllocateResource(
                 mDevice.Get(), allocator, request, [&](const auto& allocation) -> HRESULT {
-                    IHeap* resourceHeap = static_cast<IHeap*>(allocation.GetMemory());
+                    Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
                                                         &newResourceDesc, clearValue,
@@ -1197,7 +1197,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        IHeap* resourceHeap = nullptr;
+        Heap* resourceHeap = nullptr;
         ReturnIfFailed(CreateCommittedResource(heapProperties, heapFlags, resourceInfo,
                                                &newResourceDesc, clearValue, initialResourceState,
                                                &committedResource, &resourceHeap));
@@ -1270,13 +1270,14 @@ namespace gpgmm::d3d12 {
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
 
-        *ppResourceAllocationOut = new ResourceAllocation(
-            allocationDesc, nullptr, this, resourceHeap, nullptr, std::move(resource));
+        *ppResourceAllocationOut =
+            new ResourceAllocation(allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap),
+                                   nullptr, std::move(resource));
 
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreatePlacedResource(IHeap* const resourceHeap,
+    HRESULT ResourceAllocator::CreatePlacedResource(Heap* const resourceHeap,
                                                     uint64_t resourceOffset,
                                                     const D3D12_RESOURCE_DESC* resourceDescriptor,
                                                     const D3D12_CLEAR_VALUE* clearValue,
@@ -1310,7 +1311,7 @@ namespace gpgmm::d3d12 {
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
-        IHeap** resourceHeapOut) {
+        Heap** resourceHeapOut) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateCommittedResource");
 
         HEAP_DESC resourceHeapDesc = {};
@@ -1359,7 +1360,7 @@ namespace gpgmm::d3d12 {
             *commitedResourceOut = committedResource.Detach();
         }
 
-        *resourceHeapOut = resourceHeap;
+        *resourceHeapOut = static_cast<Heap*>(resourceHeap);
 
         return S_OK;
     }

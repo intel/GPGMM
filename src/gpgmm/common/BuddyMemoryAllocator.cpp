@@ -60,7 +60,7 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
                              &mBuddyBlockAllocator, allocationSize, request.Alignment,
                              request.NeverAllocate,
-                             [&](const auto& block) -> IMemoryObject* {
+                             [&](const auto& block) -> MemoryBase* {
                                  const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
                                  MemoryAllocation memoryAllocation =
                                      mUsedPool.AcquireFromPool(memoryIndex);
@@ -78,7 +78,7 @@ namespace gpgmm {
                                      memoryAllocation = *memoryAllocationPtr;
                                  }
 
-                                 IMemoryObject* memory = memoryAllocation.GetMemory();
+                                 MemoryBase* memory = memoryAllocation.GetMemory();
                                  mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
 
                                  return memory;
@@ -113,7 +113,7 @@ namespace gpgmm {
 
         MemoryAllocation memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
 
-        IMemoryObject* memory = memoryAllocation.GetMemory();
+        MemoryBase* memory = memoryAllocation.GetMemory();
         ASSERT(memory != nullptr);
 
         if (memory->RemoveSubAllocationRef()) {

@@ -22,6 +22,7 @@
 
 namespace gpgmm {
 
+    class MemoryBase;
     struct MemoryBlock;
     class MemoryAllocator;
 
@@ -68,7 +69,7 @@ namespace gpgmm {
         @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
         */
         MemoryAllocation(MemoryAllocator* allocator,
-                         IMemoryObject* memory,
+                         MemoryBase* memory,
                          uint64_t offset,
                          AllocationMethod method,
                          MemoryBlock* block,
@@ -86,7 +87,7 @@ namespace gpgmm {
         @param mappedPointer A pointer to uint8_t which is mapped by the allocation.
         */
         MemoryAllocation(MemoryAllocator* allocator,
-                         IMemoryObject* memory,
+                         MemoryBase* memory,
                          uint64_t requestSize,
                          uint8_t* mappedPointer = nullptr);
 
@@ -107,7 +108,7 @@ namespace gpgmm {
 
         \return A pointer to the MemoryBase used by this allocation.
         */
-        IMemoryObject* GetMemory() const;
+        MemoryBase* GetMemory() const;
 
         /** \brief Get the byte addressable pointer mapped by this allocation.
 
@@ -165,7 +166,7 @@ namespace gpgmm {
         MemoryAllocator* mAllocator;
 
       private:
-        IMemoryObject* mMemory;
+        MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
         MemoryBlock* mBlock;

@@ -39,16 +39,10 @@ namespace gpgmm::d3d12 {
 
         // IHeap interface
         HEAP_INFO GetInfo() const override;
-        bool IsInResidencyLRUCacheForTesting() const override;
-        bool IsResidencyLockedForTesting() const override;
-
-        // IMemoryObject
         uint64_t GetSize() const override;
         uint64_t GetAlignment() const override;
-        void AddSubAllocationRef() override;
-        bool RemoveSubAllocationRef() override;
-        IMemoryPool* GetPool() const override;
-        void SetPool(IMemoryPool* pool) override;
+        bool IsInResidencyLRUCacheForTesting() const override;
+        bool IsResidencyLockedForTesting() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;

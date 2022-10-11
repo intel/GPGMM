@@ -252,7 +252,7 @@ namespace gpgmm {
             MemoryBlock* block = nullptr;
             GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(requestSize, alignment), block);
 
-            IMemoryObject* memory = GetOrCreateMemory(block);
+            MemoryBase* memory = GetOrCreateMemory(block);
             if (memory == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {

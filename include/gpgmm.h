@@ -24,46 +24,6 @@
 
 namespace gpgmm {
 
-    /** \brief Stores a collection of memory allocations.
-     */
-    class IMemoryPool {};
-
-    /** \brief IMemoryObject
-    Represents a memory object used for allocation.
-    */
-    class IMemoryObject {
-      public:
-        virtual ~IMemoryObject() = default;
-
-        /** \brief Return the size of the memory object.
-
-        \return Size, in bytes, of the memory object.
-        */
-        virtual uint64_t GetSize() const = 0;
-
-        /** \brief Return the alignment of the memory object.
-
-        \return Alignment, in bytes, of the memory object.
-        */
-        virtual uint64_t GetAlignment() const = 0;
-
-        /** \brief Increments the sub-allocation reference count on the heap.
-         */
-        virtual void AddSubAllocationRef() = 0;
-
-        /** \brief Decrements the sub-allocation reference count on the heap.
-         */
-        virtual bool RemoveSubAllocationRef() = 0;
-
-        /** \brief Get the pool this memory is contained in.
-         */
-        virtual IMemoryPool* GetPool() const = 0;
-
-        /** \brief Assign the pool this memory is contained in.
-         */
-        virtual void SetPool(IMemoryPool* pool) = 0;
-    };
-
     /** \struct MemoryAllocatorStats
     Additional information about the memory allocator usage.
     */

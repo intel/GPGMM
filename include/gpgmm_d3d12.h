@@ -176,11 +176,23 @@ namespace gpgmm::d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    class IHeap : public IDebugObject, public IMemoryObject {
+    class IHeap : public IDebugObject {
       public:
         virtual HEAP_INFO GetInfo() const = 0;
         virtual bool IsInResidencyLRUCacheForTesting() const = 0;
         virtual bool IsResidencyLockedForTesting() const = 0;
+
+        /** \brief Return the size of the heap.
+
+        \return Size, in bytes, of the heap.
+        */
+        virtual uint64_t GetSize() const = 0;
+
+        /** \brief Return the alignment of the heap.
+
+        \return Alignment, in bytes, of the heap.
+        */
+        virtual uint64_t GetAlignment() const = 0;
     };
 
     /** \brief  Create a heap managed by GPGMM.

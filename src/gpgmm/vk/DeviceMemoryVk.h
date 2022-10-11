@@ -21,7 +21,7 @@
 
 namespace gpgmm::vk {
 
-    class DeviceMemory final : public MemoryBase, public IMemoryObject {
+    class DeviceMemory final : public MemoryBase {
       public:
         DeviceMemory(VkDeviceMemory memory,
                      uint32_t memoryTypeIndex,
@@ -31,14 +31,6 @@ namespace gpgmm::vk {
 
         VkDeviceMemory GetDeviceMemory() const;
         uint32_t GetMemoryTypeIndex() const;
-
-        // IMemoryObject
-        uint64_t GetSize() const override;
-        uint64_t GetAlignment() const override;
-        void AddSubAllocationRef() override;
-        bool RemoveSubAllocationRef() override;
-        IMemoryPool* GetPool() const override;
-        void SetPool(IMemoryPool* pool) override;
 
       private:
         VkDeviceMemory mMemory = VK_NULL_HANDLE;

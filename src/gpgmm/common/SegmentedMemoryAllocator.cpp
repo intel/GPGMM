@@ -143,7 +143,7 @@ namespace gpgmm {
         mStats.UsedMemoryCount++;
         mStats.UsedMemoryUsage += allocation.GetSize();
 
-        IMemoryObject* memory = allocation.GetMemory();
+        MemoryBase* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
         memory->SetPool(segment);
 
@@ -162,10 +162,10 @@ namespace gpgmm {
         mStats.UsedMemoryCount--;
         mStats.UsedMemoryUsage -= allocationSize;
 
-        IMemoryObject* memory = allocation->GetMemory();
+        MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        IMemoryPool* pool = memory->GetPool();
+        MemoryPoolBase* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
         static_cast<MemorySegment*>(pool)->ReturnToPool(

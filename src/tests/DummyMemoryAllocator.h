@@ -21,34 +21,9 @@
 
 namespace gpgmm {
 
-    class DummyMemory : public IMemoryObject, public MemoryBase {
+    class DummyMemory : public MemoryBase {
       public:
         DummyMemory(uint64_t size, uint64_t alignment) : MemoryBase(size, alignment) {
-        }
-
-        // IMemoryObject
-        uint64_t GetSize() const override {
-            return MemoryBase::GetSize();
-        }
-
-        uint64_t GetAlignment() const override {
-            return MemoryBase::GetAlignment();
-        }
-
-        void AddSubAllocationRef() override {
-            return MemoryBase::AddSubAllocationRef();
-        }
-
-        bool RemoveSubAllocationRef() override {
-            return MemoryBase::RemoveSubAllocationRef();
-        }
-
-        IMemoryPool* GetPool() const override {
-            return MemoryBase::GetPool();
-        }
-
-        void SetPool(IMemoryPool* pool) override {
-            return MemoryBase::SetPool(pool);
         }
     };
 

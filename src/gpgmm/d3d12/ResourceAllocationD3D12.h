@@ -28,6 +28,7 @@ namespace gpgmm::d3d12 {
     class DebugResourceAllocator;
     class ResidencyManager;
     class ResourceAllocator;
+    class Heap;
 
     class ResourceAllocation final : public MemoryAllocation,
                                      public DebugObject,
@@ -60,7 +61,7 @@ namespace gpgmm::d3d12 {
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            IResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
-                           IHeap* resourceHeap,
+                           Heap* resourceHeap,
                            MemoryBlock* block,
                            ComPtr<ID3D12Resource> resource);
 

@@ -42,7 +42,7 @@ namespace gpgmm {
     To shrink the pool, existing allocations can removed out by AcquireFromPool() or de-allocated
     together by ReleasePool().
     */
-    class MemoryPoolBase : public IMemoryPool {
+    class MemoryPoolBase {
       public:
         /** \brief Constructs a pool for memory of the specified size.
 

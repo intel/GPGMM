@@ -18,9 +18,9 @@
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/RefCount.h"
 
-#include <gpgmm.h>
-
 namespace gpgmm {
+
+    class MemoryPoolBase;
 
     class MemoryBase : public ObjectBase {
       public:
@@ -30,8 +30,8 @@ namespace gpgmm {
         uint64_t GetSize() const;
         uint64_t GetAlignment() const;
 
-        IMemoryPool* GetPool() const;
-        void SetPool(IMemoryPool* pool);
+        MemoryPoolBase* GetPool() const;
+        void SetPool(MemoryPoolBase* pool);
 
         void AddSubAllocationRef();
         bool RemoveSubAllocationRef();
@@ -44,7 +44,7 @@ namespace gpgmm {
         const uint64_t mSize;
         const uint64_t mAlignment;
 
-        IMemoryPool* mPool = nullptr;  // nullptr means no pool is assigned.
+        MemoryPoolBase* mPool = nullptr;  // nullptr means no pool is assigned.
     };
 
 }  // namespace gpgmm

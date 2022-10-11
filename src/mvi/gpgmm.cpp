@@ -41,11 +41,11 @@ namespace gpgmm {
 
     // MemoryAllocation
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator, IMemoryObject* memory)
+    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory)
         : mAllocator(allocator), mMemory(memory) {
     }
 
-    IMemoryObject* MemoryAllocation::GetMemory() const {
+    MemoryBase* MemoryAllocation::GetMemory() const {
         return mMemory;
     }
 
