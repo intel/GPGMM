@@ -15,6 +15,11 @@
 #ifndef INCLUDE_GPGMM_H_
 #define INCLUDE_GPGMM_H_
 
+// gpgmm.h is the GMM interface implemented by GPGMM.
+// This file should not be modified by downstream GMM clients or forks of GPGMM.
+// Please consider submitting a pull-request to https://github.com/intel/gpgmm.
+#include "gpgmm_export.h"
+
 #include <cstdint>
 
 namespace gpgmm {
