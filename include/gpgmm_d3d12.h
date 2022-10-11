@@ -96,6 +96,18 @@ namespace gpgmm::d3d12 {
     Additional information about the heap.
     */
     struct HEAP_INFO {
+        /** \brief Created size, in bytes, of the heap.
+
+        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Created alignment, in bytes, of the heap.
+
+        Must be non-zero.
+        */
+        uint64_t Alignment;
+
         /** \brief Check if the heap currently locked for residency.
          */
         bool IsLocked;
@@ -183,18 +195,6 @@ namespace gpgmm::d3d12 {
         \return A HEAP_INFO struct containing the information.
         */
         virtual HEAP_INFO GetInfo() const = 0;
-
-        /** \brief Return the size of the heap.
-
-        \return Size, in bytes, of the heap.
-        */
-        virtual uint64_t GetSize() const = 0;
-
-        /** \brief Return the alignment of the heap.
-
-        \return Alignment, in bytes, of the heap.
-        */
-        virtual uint64_t GetAlignment() const = 0;
 
         virtual bool IsInResidencyLRUCacheForTesting() const = 0;
         virtual bool IsResidencyLockedForTesting() const = 0;

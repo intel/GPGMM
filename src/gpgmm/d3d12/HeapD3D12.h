@@ -39,8 +39,6 @@ namespace gpgmm::d3d12 {
 
         // IHeap interface
         HEAP_INFO GetInfo() const override;
-        uint64_t GetSize() const override;
-        uint64_t GetAlignment() const override;
         bool IsInResidencyLRUCacheForTesting() const override;
         bool IsResidencyLockedForTesting() const override;
 

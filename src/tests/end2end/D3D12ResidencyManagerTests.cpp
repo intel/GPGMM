@@ -513,13 +513,14 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
 
     // Check growth occured
     for (size_t heapIndex = 1; heapIndex < resourceHeaps.size(); heapIndex++) {
-        EXPECT_LE(resourceHeaps[heapIndex - 1]->GetSize(), resourceHeaps[heapIndex]->GetSize());
+        EXPECT_LE(resourceHeaps[heapIndex - 1]->GetInfo().SizeInBytes,
+                  resourceHeaps[heapIndex]->GetInfo().SizeInBytes);
     }
 
     // With no budget left, the last resource heap size should not increase.
     ASSERT_GT(resourceHeaps.size(), 1u);
-    EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetSize(),
-              resourceHeaps.at(allocations.size() - 2)->GetSize());
+    EXPECT_LE(resourceHeaps.at(allocations.size() - 1)->GetInfo().SizeInBytes,
+              resourceHeaps.at(allocations.size() - 2)->GetInfo().SizeInBytes);
 }
 
 // Keeps allocating until it reaches the restricted budget then over-commits to ensure locked heaps

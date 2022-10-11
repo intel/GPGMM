@@ -71,8 +71,6 @@ namespace gpgmm::d3d12 {
         HEAP_INFO GetInfo() const override;
         bool IsInResidencyLRUCacheForTesting() const override;
         bool IsResidencyLockedForTesting() const override;
-        uint64_t GetSize() const override;
-        uint64_t GetAlignment() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;

@@ -596,7 +596,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         IHeap* heap = it->second.Get();
                         ASSERT_NE(heap, nullptr);
 
-                        mCapturedMemoryStats.CurrentUsage -= heap->GetSize();
+                        mCapturedMemoryStats.CurrentUsage -= heap->GetInfo().SizeInBytes;
 
                         ASSERT_EQ(playbackContext.CreatedHeapsToID.erase(heapID), 1u);
 

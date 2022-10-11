@@ -215,7 +215,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
             {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON,
             nullptr, &bufferAllocation));
 
-        EXPECT_EQ(bufferAllocation->GetMemory()->GetSize(),
+        EXPECT_EQ(bufferAllocation->GetMemory()->GetInfo().SizeInBytes,
                   allocatorDesc.PreferredResourceHeapSize);
     }
 
@@ -228,7 +228,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
             {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &textureAllocation));
 
-        EXPECT_EQ(textureAllocation->GetMemory()->GetSize(),
+        EXPECT_EQ(textureAllocation->GetMemory()->GetInfo().SizeInBytes,
                   allocatorDesc.PreferredResourceHeapSize);
     }
 
@@ -428,7 +428,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
         // Slab allocator requires heaps to be in aligned in powers-of-two sizes.
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), GPGMM_MB_TO_BYTES(16));
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, GPGMM_MB_TO_BYTES(16));
     }
 
     // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
@@ -447,7 +447,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
         // Buddy allocator requires heaps to be in aligned in powers-of-two sizes.
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), GPGMM_MB_TO_BYTES(16));
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, GPGMM_MB_TO_BYTES(16));
     }
 
     // ALLOCATOR_ALGORITHM_DEDICATED
@@ -467,7 +467,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
 
         // Dedicated allocator ignores the preferred resource heap size and allocates exactly what
         // is needed.
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), kBufferOf4MBAllocationSize);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, kBufferOf4MBAllocationSize);
     }
 }
 
@@ -1582,7 +1582,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
             resourceAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(1),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), 64 * 65536u);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, 64 * 65536u);
     }
 
     // Force standalone buffer creation.
@@ -1599,7 +1599,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
             resourceAllocator->CreateResource(standaloneAllocationDesc, CreateBasicBufferDesc(1),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), 65536u);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, 65536u);
     }
 
     // Repeat standalone buffer creation, but using a committed resource.
@@ -1615,7 +1615,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
             commitedAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(1),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
-        EXPECT_EQ(allocation->GetMemory()->GetSize(), 65536u);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, 65536u);
     }
 }
 

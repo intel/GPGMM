@@ -94,7 +94,7 @@ namespace gpgmm::d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {};
+        return {GetSize(), GetAlignment(), false, RESIDENCY_STATUS_UNKNOWN};
     }
 
     bool Heap::IsInResidencyLRUCacheForTesting() const {
@@ -115,14 +115,6 @@ namespace gpgmm::d3d12 {
 
     ULONG STDMETHODCALLTYPE Heap::Release() {
         return IUnknownImpl::Release();
-    }
-
-    uint64_t Heap::GetSize() const {
-        return MemoryBase::GetSize();
-    }
-
-    uint64_t Heap::GetAlignment() const {
-        return MemoryBase::GetAlignment();
     }
 
     LPCWSTR Heap::GetDebugName() const {
@@ -387,7 +379,7 @@ namespace gpgmm::d3d12 {
             },
             &resourceHeap));
 
-        const uint64_t& allocationSize = resourceHeap->GetSize();
+        const uint64_t allocationSize = resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
         mStats.UsedMemoryCount++;
         mStats.UsedBlockUsage += allocationSize;
