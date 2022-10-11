@@ -66,7 +66,7 @@ namespace gpgmm {
                                      mUsedPool.AcquireFromPool(memoryIndex);
 
                                  // No existing, allocate new memory for the block.
-                                 if (memoryAllocation == GPGMM_ERROR_INVALID_ALLOCATION) {
+                                 if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
                                      MemoryAllocationRequest newRequest = request;
                                      newRequest.SizeInBytes = mMemorySize;
                                      newRequest.Alignment = mMemoryAlignment;

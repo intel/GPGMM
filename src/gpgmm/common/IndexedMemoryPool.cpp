@@ -44,7 +44,7 @@ namespace gpgmm {
     uint64_t IndexedMemoryPool::GetPoolSize() const {
         uint64_t count = 0;
         for (auto& allocation : mPool) {
-            if (allocation != GPGMM_ERROR_INVALID_ALLOCATION) {
+            if (allocation != GPGMM_INVALID_ALLOCATION) {
                 count++;
             }
         }

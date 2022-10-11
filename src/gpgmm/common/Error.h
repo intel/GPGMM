@@ -19,7 +19,7 @@
 
 namespace gpgmm {
 
-#define GPGMM_ERROR_INVALID_ALLOCATION \
+#define GPGMM_INVALID_ALLOCATION \
     MemoryAllocation {                 \
     }
 

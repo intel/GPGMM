@@ -132,7 +132,7 @@ namespace gpgmm {
         ASSERT(segment != nullptr);
 
         MemoryAllocation allocation = segment->AcquireFromPool();
-        if (allocation == GPGMM_ERROR_INVALID_ALLOCATION) {
+        if (allocation == GPGMM_INVALID_ALLOCATION) {
             std::unique_ptr<MemoryAllocation> allocationPtr;
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocationPtr);
             allocation = *allocationPtr;
