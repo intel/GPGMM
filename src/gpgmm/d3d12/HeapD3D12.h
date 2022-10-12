@@ -39,8 +39,6 @@ namespace gpgmm::d3d12 {
 
         // IHeap interface
         HEAP_INFO GetInfo() const override;
-        bool IsInResidencyLRUCacheForTesting() const override;
-        bool IsResidencyLockedForTesting() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;

@@ -112,6 +112,10 @@ namespace gpgmm::d3d12 {
          */
         bool IsLocked;
 
+        /** \brief Check if the heap is in a residency cache.
+         */
+        bool IsCachedForResidency;
+
         /** \brief Check if the heap was made resident or not.
          */
         RESIDENCY_STATUS Status;
@@ -195,9 +199,6 @@ namespace gpgmm::d3d12 {
         \return A HEAP_INFO struct containing the information.
         */
         virtual HEAP_INFO GetInfo() const = 0;
-
-        virtual bool IsInResidencyLRUCacheForTesting() const = 0;
-        virtual bool IsResidencyLockedForTesting() const = 0;
     };
 
     /** \brief  Create a heap managed by GPGMM.

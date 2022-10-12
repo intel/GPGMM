@@ -94,15 +94,7 @@ namespace gpgmm::d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), GetAlignment(), false, RESIDENCY_STATUS_UNKNOWN};
-    }
-
-    bool Heap::IsInResidencyLRUCacheForTesting() const {
-        return false;
-    }
-
-    bool Heap::IsResidencyLockedForTesting() const {
-        return false;
+        return {GetSize(), GetAlignment(), false, false, RESIDENCY_STATUS_UNKNOWN};
     }
 
     HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {

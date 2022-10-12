@@ -316,8 +316,8 @@ index 0488fce6a..88e8f9cc4 100644
  bool Buffer::CheckIsResidentForTesting() const {
 -    Heap* heap = ToBackend(mResourceAllocation.GetResourceHeap());
 -    return heap->IsInList() || heap->IsResidencyLocked();
-+    return mResourceAllocation->GetMemory()->IsInResidencyLRUCacheForTesting() ||
-+           mResourceAllocation->GetMemory()->IsResidencyLockedForTesting();
++    return mResourceAllocation->GetMemory()->GetInfo().IsCachedForResidency ||
++           mResourceAllocation->GetMemory()->GetInfo().IsLocked;
  }
  
 -bool Buffer::CheckAllocationMethodForTesting(AllocationMethod allocationMethod) const {
@@ -872,13 +872,13 @@ index fe99a63ac..6cc22c93e 100644
  
  bool ShaderVisibleDescriptorAllocator::IsShaderVisibleHeapLockedResidentForTesting() const {
 -    return mHeap->IsResidencyLocked();
-+    return mHeap->GetHeap()->IsResidencyLockedForTesting();
++    return mHeap->GetHeap()->GetInfo().IsLocked;
  }
  
  bool ShaderVisibleDescriptorAllocator::IsLastShaderVisibleHeapInLRUForTesting() const {
      ASSERT(!mPool.empty());
 -    return mPool.back().heap->IsInResidencyLRUCache();
-+    return mPool.back().heap->GetHeap()->IsInResidencyLRUCacheForTesting();
++    return mPool.back().heap->GetHeap()->GetInfo().IsCachedForResidency;
  }
  
  bool ShaderVisibleDescriptorAllocator::IsAllocationStillValid(

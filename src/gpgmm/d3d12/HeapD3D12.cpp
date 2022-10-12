@@ -179,7 +179,7 @@ namespace gpgmm::d3d12 {
     }
 
     HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), GetAlignment(), IsResidencyLocked(), mState};
+        return {GetSize(), GetAlignment(), IsResidencyLocked(), IsInList(), mState};
     }
 
     HRESULT Heap::SetDebugNameImpl(LPCWSTR name) {
@@ -200,14 +200,6 @@ namespace gpgmm::d3d12 {
 
     void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
         mState = newStatus;
-    }
-
-    bool Heap::IsInResidencyLRUCacheForTesting() const {
-        return IsInList();
-    }
-
-    bool Heap::IsResidencyLockedForTesting() const {
-        return IsResidencyLocked();
     }
 
     LPCWSTR Heap::GetDebugName() const {
