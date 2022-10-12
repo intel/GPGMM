@@ -543,14 +543,14 @@ index 214fa67f8..4f0d60c6f 100644
 +    Adapter* adapter = ToBackend(GetAdapter());
 +
 +    gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-+    allocatorDesc.Adapter = adapter->GetHardwareAdapter().Get();
++    allocatorDesc.Adapter = adapter->GetHardwareAdapter();
 +    allocatorDesc.Device = mD3d12Device.Get();
 +    allocatorDesc.ResourceHeapTier =
 +        static_cast<D3D12_RESOURCE_HEAP_TIER>(adapter->GetDeviceInfo().resourceHeapTier);
 +    allocatorDesc.PreferredResourceHeapSize = 4ll * 1024ll * 1024ll;  // 4MB
 +
 +    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
-+    residencyDesc.Adapter = adapter->GetHardwareAdapter().Get();
++    residencyDesc.Adapter = adapter->GetHardwareAdapter();
 +    residencyDesc.Device = mD3d12Device.Get();
 +    residencyDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +
