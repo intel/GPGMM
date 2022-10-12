@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['map_0',['Map',['../classgpgmm_1_1d3d12_1_1_i_resource_allocation.html#a7692dfee6dde3575fe8eb33961eb8cc1',1,'gpgmm::d3d12::IResourceAllocation']]]
+  ['operator_2b_3d_0',['operator+=',['../structgpgmm_1_1_memory_allocator_stats.html#aaa049c12ccc915eedbb9a4d502264041',1,'gpgmm::MemoryAllocatorStats']]]
 ];

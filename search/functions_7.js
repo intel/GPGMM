@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_2b_3d_0',['operator+=',['../structgpgmm_1_1_memory_allocator_stats.html#aaa049c12ccc915eedbb9a4d502264041',1,'gpgmm::MemoryAllocatorStats']]]
+  ['queryvideomemoryinfo_0',['QueryVideoMemoryInfo',['../classgpgmm_1_1d3d12_1_1_i_residency_manager.html#a2bd6ff54e6c8d7b20697838caf0c9100',1,'gpgmm::d3d12::IResidencyManager']]]
 ];
