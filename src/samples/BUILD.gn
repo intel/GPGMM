@@ -47,7 +47,7 @@ source_set("gpgmm_mvi") {
 
 executable("D3D12SampleMVI") {
   deps = [ ":gpgmm_mvi" ]
-  defines = [ "GPGMM_DX_HEADERS_ALREADY_INCLUDED" ]
+  defines = [ "GPGMM_D3D12_HEADERS_ALREADY_INCLUDED" ]
   sources = [ "D3D12Sample.cpp" ]
   include_dirs = [ "${gpgmm_root_dir}/include" ]
   libs = [

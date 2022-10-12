@@ -164,7 +164,8 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(Caps::CreateCaps(descriptor.Device, descriptor.Adapter, &ptr));
+            ReturnIfFailed(
+                Caps::CreateCaps(descriptor.Device.Get(), descriptor.Adapter.Get(), &ptr));
             caps.reset(ptr);
         }
 

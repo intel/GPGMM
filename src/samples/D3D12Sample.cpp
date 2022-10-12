@@ -57,8 +57,8 @@ HRESULT Init() {
     }
 
     gpgmm::d3d12::ALLOCATOR_DESC desc = {};
-    desc.Adapter = adapter3.Get();
-    desc.Device = device.Get();
+    desc.Adapter = adapter3;
+    desc.Device = device;
     desc.ResourceHeapTier = options.ResourceHeapTier;
 
     Microsoft::WRL::ComPtr<gpgmm::d3d12::IResourceAllocator> resourceAllocator;

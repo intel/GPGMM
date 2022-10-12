@@ -40,8 +40,6 @@
 
 #include <gpgmm_d3d12.h>
 
-#include <wrl.h>
-
 #include "gpgmm.h"
 
 namespace gpgmm::d3d12 {

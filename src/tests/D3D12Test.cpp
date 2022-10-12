@@ -100,8 +100,8 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_DESC desc = {};
 
         // Required parameters.
-        desc.Adapter = mAdapter.Get();
-        desc.Device = mDevice.Get();
+        desc.Adapter = mAdapter;
+        desc.Device = mDevice;
         desc.ResourceHeapTier = mCaps->GetMaxResourceHeapTierSupported();
 
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
@@ -127,8 +127,8 @@ namespace gpgmm::d3d12 {
     RESIDENCY_DESC D3D12TestBase::CreateBasicResidencyDesc() const {
         RESIDENCY_DESC desc = {};
         // Required
-        desc.Adapter = mAdapter.Get();
-        desc.Device = mDevice.Get();
+        desc.Adapter = mAdapter;
+        desc.Device = mDevice;
         desc.IsUMA = mCaps->IsAdapterUMA();
 
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
