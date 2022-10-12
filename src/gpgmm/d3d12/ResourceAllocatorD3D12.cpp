@@ -1223,17 +1223,15 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(ComPtr<ID3D12Resource> resource,
+    HRESULT ResourceAllocator::CreateResource(ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
         std::lock_guard<std::mutex> lock(mMutex);
 
-        if (!ppResourceAllocationOut) {
-            return E_POINTER;
-        }
-
-        if (resource == nullptr) {
+        if (pCommittedResource == nullptr) {
             return E_INVALIDARG;
         }
+
+        ComPtr<ID3D12Resource> resource(pCommittedResource);
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
@@ -1269,10 +1267,12 @@ namespace gpgmm::d3d12 {
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
-
-        *ppResourceAllocationOut =
-            new ResourceAllocation(allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap),
-                                   nullptr, std::move(resource));
+        
+        if (ppResourceAllocationOut != nullptr){
+            *ppResourceAllocationOut =
+                new ResourceAllocation(allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap),
+                                    nullptr, std::move(resource));
+        }
 
         return S_OK;
     }

@@ -388,7 +388,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocator::CreateResource(
-        Microsoft::WRL::ComPtr<ID3D12Resource> committedResource,
+        ID3D12Resource* pCommittedResource,
         IResourceAllocation** ppResourceAllocationOut) {
         return E_NOTIMPL;
     }

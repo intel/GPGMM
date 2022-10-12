@@ -1152,7 +1152,7 @@ namespace gpgmm::d3d12 {
         the resource.
         @param initialResourceState The initial state of the resource, a bitwise OR'd combination of
         D3D12_RESOURCE_STATES enumeration constants.
-        @param pClearValue A pointer tp D3D12_CLEAR_VALUE structure that describes the default value
+        @param pClearValue A pointer to D3D12_CLEAR_VALUE structure that describes the default value
         for a clear color.
         @param[out] ppResourceAllocationOut An optional pointer to a memory block that receives the
         required interface pointer to the created resource allocation object.
@@ -1165,17 +1165,17 @@ namespace gpgmm::d3d12 {
 
         /** \brief  Imports an existing D3D12 resource.
 
-        Allows externally created D3D12 resources to be used as ResourceAllocations.
+        Allows externally created D3D12 resources to be used as a ResourceAllocation.
 
         Residency is not supported for imported resources.
 
-        @param committedResource A COM managed pointer to a D3D12 committed resource.
+        @param pCommittedResource A pointer to a committed ID3D12Resource.
         @param[out] ppResourceAllocationOut Pointer to a memory block that receives a pointer to the
         resource allocation. Pass NULL to test if resource allocation creation would succeed, but
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
         */
-        virtual HRESULT CreateResource(Microsoft::WRL::ComPtr<ID3D12Resource> committedResource,
+        virtual HRESULT CreateResource(ID3D12Resource* pCommittedResource,
                                        IResourceAllocation** ppResourceAllocationOut) = 0;
 
         /** \brief Return free memory back to the OS.
