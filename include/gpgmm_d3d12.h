@@ -21,15 +21,14 @@
 #include "gpgmm.h"
 
 // User should decide to define the following macros:
-// - GPGMM_D3D12_HEADERS_ALREADY_INCLUDED: D3D12 platform headers will be already included before
+// - GPGMM_DX_HEADERS_ALREADY_INCLUDED: D3D12 platform headers will be already included before
 // this header and does not need to be re-included.
 // - GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED: Windows.h will be already included before this header
 // and does not need to be re-included.
 
-#ifndef GPGMM_D3D12_HEADERS_ALREADY_INCLUDED
+#ifndef GPGMM_DX_HEADERS_ALREADY_INCLUDED
 #    include <d3d12.h>
 #    include <dxgi1_4.h>
-#    include <wrl.h>
 #endif
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
@@ -373,7 +372,7 @@ namespace gpgmm::d3d12 {
         /** \brief Specifies the device used by this residency manager.
         Required parameter. Use CreateDevice get the device.
         */
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        ID3D12Device* Device;
 
         /** \brief Specifies the adapter used by this residency manager.
 
@@ -381,7 +380,7 @@ namespace gpgmm::d3d12 {
 
         Required parameter. Use EnumAdapters to get the adapter.
         */
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+        IDXGIAdapter3* Adapter;
 
         /** \brief Specifies if unified memory architecture (UMA) is enabled.
 
@@ -836,13 +835,13 @@ namespace gpgmm::d3d12 {
 
         Required parameter. Use CreateDevice get the device.
         */
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        ID3D12Device* Device;
 
         /** \brief Specifies the adapter used by this allocator.
 
         Required parameter. Use EnumAdapters to get the adapter.
         */
-        Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
+        IDXGIAdapter* Adapter;
 
         /** \brief Specifies allocator options.
 

@@ -306,7 +306,8 @@ namespace gpgmm::d3d12 {
                                                                      &arch, sizeof(arch)));
             residencyDesc.IsUMA = arch.UMA;
 
-            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+            ReturnIfFailed(
+                allocatorDescriptor.Adapter->QueryInterface(IID_PPV_ARGS(&residencyDesc.Adapter)));
 
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
