@@ -97,9 +97,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a51f550ec5771ea10b9be45cc14207937"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a51f550ec5771ea10b9be45cc14207937">CreateResource</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> &amp;allocationDescriptor, const D3D12_RESOURCE_DESC &amp;resourceDescriptor, D3D12_RESOURCE_STATES initialResourceState, const D3D12_CLEAR_VALUE *pClearValue, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html">IResourceAllocation</a> **ppResourceAllocationOut)=0</td></tr>
 <tr class="memdesc:a51f550ec5771ea10b9be45cc14207937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates memory and creates a D3D12 resource using it.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a51f550ec5771ea10b9be45cc14207937">More...</a><br /></td></tr>
 <tr class="separator:a51f550ec5771ea10b9be45cc14207937"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a568d37cfa8ba61dbcca4b3765c50e41e"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a568d37cfa8ba61dbcca4b3765c50e41e">CreateResource</a> (Microsoft::WRL::ComPtr&lt; ID3D12Resource &gt; committedResource, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html">IResourceAllocation</a> **ppResourceAllocationOut)=0</td></tr>
-<tr class="memdesc:a568d37cfa8ba61dbcca4b3765c50e41e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a568d37cfa8ba61dbcca4b3765c50e41e">More...</a><br /></td></tr>
-<tr class="separator:a568d37cfa8ba61dbcca4b3765c50e41e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaa14043fed9642d0d1cd28f6f46afa4"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#aeaa14043fed9642d0d1cd28f6f46afa4">CreateResource</a> (ID3D12Resource *pCommittedResource, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html">IResourceAllocation</a> **ppResourceAllocationOut)=0</td></tr>
+<tr class="memdesc:aeaa14043fed9642d0d1cd28f6f46afa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#aeaa14043fed9642d0d1cd28f6f46afa4">More...</a><br /></td></tr>
+<tr class="separator:aeaa14043fed9642d0d1cd28f6f46afa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6d074a6bef62cf5ccd87c79e4cd99386">ReleaseMemory</a> (uint64_t bytesToRelease)=0</td></tr>
 <tr class="memdesc:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#a6d074a6bef62cf5ccd87c79e4cd99386">More...</a><br /></td></tr>
 <tr class="separator:a6d074a6bef62cf5ccd87c79e4cd99386"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +229,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir"></td><td class="paramname">allocationDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> structure that provides properties for the resource allocation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">resourceDescriptor</td><td>A reference to the D3D12_RESOURCE_DESC structure that describes the resource. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">initialResourceState</td><td>The initial state of the resource, a bitwise OR'd combination of D3D12_RESOURCE_STATES enumeration constants. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">pClearValue</td><td>A pointer tp D3D12_CLEAR_VALUE structure that describes the default value for a clear color. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pClearValue</td><td>A pointer to D3D12_CLEAR_VALUE structure that describes the default value for a clear color. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>An optional pointer to a memory block that receives the required interface pointer to the created resource allocation object. </td></tr>
   </table>
   </dd>
@@ -237,8 +237,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a568d37cfa8ba61dbcca4b3765c50e41e" name="a568d37cfa8ba61dbcca4b3765c50e41e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a568d37cfa8ba61dbcca4b3765c50e41e">&#9670;&#160;</a></span>CreateResource() <span class="overload">[2/2]</span></h2>
+<a id="aeaa14043fed9642d0d1cd28f6f46afa4" name="aeaa14043fed9642d0d1cd28f6f46afa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaa14043fed9642d0d1cd28f6f46afa4">&#9670;&#160;</a></span>CreateResource() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,8 +249,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual HRESULT gpgmm::d3d12::IResourceAllocator::CreateResource </td>
           <td>(</td>
-          <td class="paramtype">Microsoft::WRL::ComPtr&lt; ID3D12Resource &gt;&#160;</td>
-          <td class="paramname"><em>committedResource</em>, </td>
+          <td class="paramtype">ID3D12Resource *&#160;</td>
+          <td class="paramname"><em>pCommittedResource</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -272,11 +272,11 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Imports an existing D3D12 resource. </p>
-<p >Allows externally created D3D12 resources to be used as ResourceAllocations.</p>
+<p >Allows externally created D3D12 resources to be used as a ResourceAllocation.</p>
 <p >Residency is not supported for imported resources.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">committedResource</td><td>A COM managed pointer to a D3D12 committed resource. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pCommittedResource</td><td>A pointer to a committed ID3D12Resource. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
