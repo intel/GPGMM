@@ -512,7 +512,7 @@ namespace gpgmm::d3d12 {
         if (pResidencyManager == nullptr &&
             newDescriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
             StartupEventTrace(allocatorDescriptor.RecordOptions.TraceFile,
-                              static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags | 0));
+                              static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags));
 
             SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
         } else {
