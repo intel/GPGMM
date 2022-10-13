@@ -33,7 +33,7 @@
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
 #    include <windows.h>  // for DEFINE_ENUM_FLAG_OPERATORS
-#    include <wrl.h> // for Microsoft::WRL::ComPtr
+#    include <wrl.h>      // for Microsoft::WRL::ComPtr
 #endif
 
 #include <functional>
