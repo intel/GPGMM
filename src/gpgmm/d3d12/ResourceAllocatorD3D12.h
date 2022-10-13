@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
                                        IResourceAllocation** ppResourceAllocationOut);
 
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                          IResidencyManager* pResidencyManager,
+                          ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 
         std::unique_ptr<MemoryAllocator> CreateResourceAllocator(
@@ -137,7 +137,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATOR_STATS GetInfoInternal() const;
 
         ComPtr<ID3D12Device> mDevice;
-        ComPtr<IResidencyManager> mResidencyManager;
+        ComPtr<ResidencyManager> mResidencyManager;
 
         std::unique_ptr<Caps> mCaps;
 

@@ -333,7 +333,8 @@ namespace gpgmm::d3d12 {
         IResidencyManager* pResidencyManager,
         IResourceAllocator** ppResourceAllocatorOut) {
         if (ppResourceAllocatorOut != nullptr) {
-            *ppResourceAllocatorOut = new ResourceAllocator(allocatorDescriptor, pResidencyManager);
+            *ppResourceAllocatorOut = new ResourceAllocator(
+                allocatorDescriptor, static_cast<ResidencyManager*>(pResidencyManager));
         }
 
         return S_OK;
@@ -408,7 +409,7 @@ namespace gpgmm::d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                                         IResidencyManager* pResidencyManager)
+                                         ResidencyManager* pResidencyManager)
         : mDevice(std::move(descriptor.Device)), mResidencyManager(pResidencyManager) {
     }
 
