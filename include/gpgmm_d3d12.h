@@ -29,11 +29,11 @@
 #ifndef GPGMM_D3D12_HEADERS_ALREADY_INCLUDED
 #    include <d3d12.h>
 #    include <dxgi1_4.h>
-#    include <wrl.h>
 #endif
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
 #    include <windows.h>  // for DEFINE_ENUM_FLAG_OPERATORS
+#    include <wrl.h> // for Microsoft::WRL::ComPtr
 #endif
 
 #include <functional>
