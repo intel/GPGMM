@@ -204,12 +204,12 @@ namespace gpgmm::d3d12 {
         ULONG STDMETHODCALLTYPE Release() override;
 
       private:
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor, IResidencyManager* pResidencyManager);
+        ResourceAllocator(const ALLOCATOR_DESC& descriptor, ResidencyManager* pResidencyManager);
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
-        Microsoft::WRL::ComPtr<IResidencyManager> mResidencyManager;
+        Microsoft::WRL::ComPtr<ResidencyManager> mResidencyManager;
     };
 
 }  // namespace gpgmm::d3d12

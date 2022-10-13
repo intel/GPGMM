@@ -26,7 +26,7 @@
 
 namespace gpgmm::d3d12 {
 
-    ResourceHeapAllocator::ResourceHeapAllocator(IResidencyManager* residencyManager,
+    ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_PROPERTIES heapProperties,
                                                  D3D12_HEAP_FLAGS heapFlags)
@@ -55,15 +55,14 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.DebugName = L"Resource heap";
         resourceHeapDesc.Flags |= (mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
-        ResidencyManager* residencyManager = static_cast<ResidencyManager*>(mResidencyManager);
-        if (residencyManager != nullptr) {
+        if (mResidencyManager != nullptr) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
-                mHeapProperties.MemoryPoolPreference, residencyManager->IsUMA());
+                mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         IHeap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(
-                resourceHeapDesc, residencyManager,
+                resourceHeapDesc, mResidencyManager,
                 [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
                     D3D12_HEAP_DESC heapDesc = {};
                     heapDesc.Properties = mHeapProperties;

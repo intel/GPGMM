@@ -38,6 +38,8 @@
 
 #include <functional>
 
+#define Interface struct
+
 namespace gpgmm::d3d12 {
 
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
@@ -45,8 +47,7 @@ namespace gpgmm::d3d12 {
     Since a single D3D object could be re-used by one or more GPGMM objects, debug information must
     be stored and retrieved seperately.
     */
-    class IDebugObject : public IUnknown {
-      public:
+    Interface IDebugObject : public IUnknown {
         /** \brief Get the debug name.
 
         \return A NULL-terminated UNICODE string that contains the name to associate with the debug
@@ -182,7 +183,7 @@ namespace gpgmm::d3d12 {
     */
     using CreateHeapFn = std::function<HRESULT(ID3D12Pageable** ppPageableOut)>;
 
-    class IResidencyManager;
+    Interface IResidencyManager;
 
     /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
     heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.
@@ -192,8 +193,7 @@ namespace gpgmm::d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    class IHeap : public IDebugObject {
-      public:
+    Interface IHeap : public IDebugObject {
         /** \brief Returns information about this heap.
 
         \return A HEAP_INFO struct containing the information.
@@ -230,8 +230,7 @@ namespace gpgmm::d3d12 {
     ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
     being executed.
     */
-    class IResidencyList : public IUnknown {
-      public:
+    Interface IResidencyList : public IUnknown {
         /** \brief  Adds a heap to the residency list.
 
         @param pHeap A pointer to Heap about to be added.
@@ -486,7 +485,7 @@ namespace gpgmm::d3d12 {
     Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
     and ID3D12Device::MakeResident to page-out or page-in heaps, respectively.
     **/
-    class IResidencyManager : public IUnknown {
+    Interface IResidencyManager : public IUnknown {
       public:
         /** \brief  Locks the specified heap.
 
@@ -625,7 +624,7 @@ namespace gpgmm::d3d12 {
     It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for perfoming D3D12
     operations with it (eg. Map, Unmap, etc).
     */
-    class IResourceAllocation : public IDebugObject {
+    Interface IResourceAllocation : public IDebugObject {
       public:
         /** \brief Maps the resource allocation.
 
@@ -1134,7 +1133,7 @@ namespace gpgmm::d3d12 {
     budget. And similarly, a smaller Heap allows for finer grained residency but could increase
     overall memory usage for allocation.
     **/
-    class IResourceAllocator : public IUnknown {
+    Interface IResourceAllocator : public IUnknown {
       public:
         /** \brief  Allocates memory and creates a D3D12 resource using it.
 

@@ -278,7 +278,7 @@ namespace gpgmm::d3d12 {
         // RAII wrapper to lock/unlock heap from the residency cache.
         class ScopedResidencyLock final {
           public:
-            ScopedResidencyLock(IResidencyManager* const residencyManager, IHeap* const heap)
+            ScopedResidencyLock(ResidencyManager* const residencyManager, Heap* const heap)
                 : mResidencyManager(residencyManager), mHeap(heap) {
                 ASSERT(heap != nullptr);
                 if (mResidencyManager != nullptr) {
@@ -293,8 +293,8 @@ namespace gpgmm::d3d12 {
             }
 
           private:
-            IResidencyManager* const mResidencyManager;
-            IHeap* const mHeap;
+            ResidencyManager* const mResidencyManager;
+            Heap* const mHeap;
         };
 
         // Combines AllocatorMemory and Create*Resource into a single call.
@@ -538,8 +538,9 @@ namespace gpgmm::d3d12 {
         }
 #endif
 
-        std::unique_ptr<ResourceAllocator> resourceAllocator = std::unique_ptr<ResourceAllocator>(
-            new ResourceAllocator(newDescriptor, pResidencyManager, std::move(caps)));
+        std::unique_ptr<ResourceAllocator> resourceAllocator =
+            std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
+                newDescriptor, static_cast<ResidencyManager*>(pResidencyManager), std::move(caps)));
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
@@ -551,7 +552,7 @@ namespace gpgmm::d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
-                                         IResidencyManager* pResidencyManager,
+                                         ResidencyManager* pResidencyManager,
                                          std::unique_ptr<Caps> caps)
         : mDevice(std::move(descriptor.Device)),
           mResidencyManager(pResidencyManager),
@@ -569,11 +570,8 @@ namespace gpgmm::d3d12 {
             mDebugAllocator = std::make_unique<DebugResourceAllocator>();
         }
 
-        ResidencyManager* residencyManager =
-            static_cast<ResidencyManager*>(mResidencyManager.Get());
-
         const bool isUMA =
-            (IsResidencyEnabled()) ? residencyManager->IsUMA() : mCaps->IsAdapterUMA();
+            (IsResidencyEnabled()) ? mResidencyManager->IsUMA() : mCaps->IsAdapterUMA();
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
@@ -1321,11 +1319,9 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.Flags |=
             (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
-        ResidencyManager* residencyManager =
-            static_cast<ResidencyManager*>(mResidencyManager.Get());
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
-                heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
+                heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
