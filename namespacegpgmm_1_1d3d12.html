@@ -78,7 +78,8 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">gpgmm::d3d12 Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -96,24 +97,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html">HEAP_INFO</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_debug_object.html">IDebugObject</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug object associates additional information for D3D objects using SetPrivateData.  <a href="classgpgmm_1_1d3d12_1_1_i_debug_object.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.  <a href="classgpgmm_1_1d3d12_1_1_i_heap.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_list.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more Heap within a residency cache.  <a href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html">IResourceAllocation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocation.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.  <a href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,21 +188,102 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">CreateHeap</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *const pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> &amp;&amp;createHeapFn, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a> **ppHeapOut)</td></tr>
+<tr class="memitem:a445f08a49a91decaacc53bc978572451"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451">SetDebugName</a> (LPCWSTR Name)=0</td></tr>
+<tr class="memdesc:a445f08a49a91decaacc53bc978572451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associate a debug name.  <a href="namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451">More...</a><br /></td></tr>
+<tr class="separator:a445f08a49a91decaacc53bc978572451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">CreateHeap</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a> &amp;descriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> *const pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#a2e8c9e657d16843e8b6f296ad94af852">CreateHeapFn</a> &amp;&amp;createHeapFn, <a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> **ppHeapOut)</td></tr>
 <tr class="memdesc:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <a href="namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa">More...</a><br /></td></tr>
 <tr class="separator:ab752b370ed612a40fbbb135a6a2d5bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39709e589e0721620d76781805fa4a07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a39709e589e0721620d76781805fa4a07">CreateResidencyList</a> (<a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> **ppResidencyList)</td></tr>
+<tr class="memitem:a6d077755fd1c26ad6399d41479d911bb"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">Reset</a> ()=0</td></tr>
+<tr class="memdesc:a6d077755fd1c26ad6399d41479d911bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets a residency list to its initial state as if a new residenct list was created.  <a href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">More...</a><br /></td></tr>
+<tr class="separator:a6d077755fd1c26ad6399d41479d911bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39709e589e0721620d76781805fa4a07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a39709e589e0721620d76781805fa4a07">CreateResidencyList</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">IResidencyList</a> **ppResidencyList)</td></tr>
 <tr class="memdesc:a39709e589e0721620d76781805fa4a07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <a href="namespacegpgmm_1_1d3d12.html#a39709e589e0721620d76781805fa4a07">More...</a><br /></td></tr>
 <tr class="separator:a39709e589e0721620d76781805fa4a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821820440ac096a41512b0008c9b6ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memitem:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad">UnlockHeap</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> *pHeap)=0</td></tr>
+<tr class="memdesc:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <a href="namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad">More...</a><br /></td></tr>
+<tr class="separator:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
+<tr class="memdesc:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <a href="namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca">More...</a><br /></td></tr>
+<tr class="separator:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf07988a22cc662db5f53c8687d69c9d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adf07988a22cc662db5f53c8687d69c9d">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
+<tr class="memdesc:adf07988a22cc662db5f53c8687d69c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <a href="namespacegpgmm_1_1d3d12.html#adf07988a22cc662db5f53c8687d69c9d">More...</a><br /></td></tr>
+<tr class="separator:adf07988a22cc662db5f53c8687d69c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45057cc59a73199c906220c7167cb740"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a45057cc59a73199c906220c7167cb740">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)=0</td></tr>
+<tr class="memdesc:a45057cc59a73199c906220c7167cb740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <a href="namespacegpgmm_1_1d3d12.html#a45057cc59a73199c906220c7167cb740">More...</a><br /></td></tr>
+<tr class="separator:a45057cc59a73199c906220c7167cb740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ec6b614f88b7394a19c0ae5df63990"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">RESIDENCY_STATS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a99ec6b614f88b7394a19c0ae5df63990">GetStats</a> () const =0</td></tr>
+<tr class="memdesc:a99ec6b614f88b7394a19c0ae5df63990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current residency manager usage.  <a href="namespacegpgmm_1_1d3d12.html#a99ec6b614f88b7394a19c0ae5df63990">More...</a><br /></td></tr>
+<tr class="separator:a99ec6b614f88b7394a19c0ae5df63990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a821820440ac096a41512b0008c9b6ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a821820440ac096a41512b0008c9b6ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">More...</a><br /></td></tr>
 <tr class="separator:a821820440ac096a41512b0008c9b6ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ababeded3a4c8d30d446d26cdaec39d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9ababeded3a4c8d30d446d26cdaec39d">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memitem:a0f55ea2c417d3efdb1711fa0084b5864"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0f55ea2c417d3efdb1711fa0084b5864">Unmap</a> (uint32_t subresource=0, const D3D12_RANGE *pWrittenRange=nullptr)=0</td></tr>
+<tr class="memdesc:a0f55ea2c417d3efdb1711fa0084b5864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#a0f55ea2c417d3efdb1711fa0084b5864">More...</a><br /></td></tr>
+<tr class="separator:a0f55ea2c417d3efdb1711fa0084b5864"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memItemLeft" align="right" valign="top">virtual ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2">GetResource</a> () const =0</td></tr>
+<tr class="memdesc:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource owned by this allocation.  <a href="namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2">More...</a><br /></td></tr>
+<tr class="separator:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a904c1177cec90316677f032d530cb146"><td class="memItemLeft" align="right" valign="top">virtual D3D12_GPU_VIRTUAL_ADDRESS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a904c1177cec90316677f032d530cb146">GetGPUVirtualAddress</a> () const =0</td></tr>
+<tr class="memdesc:a904c1177cec90316677f032d530cb146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the GPU virtual address of the resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#a904c1177cec90316677f032d530cb146">More...</a><br /></td></tr>
+<tr class="separator:a904c1177cec90316677f032d530cb146"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0a002f6eee82988c57957bd9c8d2b4a6">GetOffsetFromResource</a> () const =0</td></tr>
+<tr class="memdesc:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start of the allocation in the resource.  <a href="namespacegpgmm_1_1d3d12.html#a0a002f6eee82988c57957bd9c8d2b4a6">More...</a><br /></td></tr>
+<tr class="separator:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a260a6f663ef8bb86a09441fb159abe1e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a260a6f663ef8bb86a09441fb159abe1e">GetInfo</a> () const =0</td></tr>
+<tr class="memdesc:a260a6f663ef8bb86a09441fb159abe1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns information about this resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#a260a6f663ef8bb86a09441fb159abe1e">More...</a><br /></td></tr>
+<tr class="separator:a260a6f663ef8bb86a09441fb159abe1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5415a6a4421f6abb089bfef17105f87"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae5415a6a4421f6abb089bfef17105f87">GetMemory</a> () const =0</td></tr>
+<tr class="memdesc:ae5415a6a4421f6abb089bfef17105f87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#ae5415a6a4421f6abb089bfef17105f87">More...</a><br /></td></tr>
+<tr class="separator:ae5415a6a4421f6abb089bfef17105f87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac739d5fc673607a33e86b9361c79b2ac"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac739d5fc673607a33e86b9361c79b2ac">CreateResource</a> (ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#ad76ce813a75d1aec0d3609fc10625863">ppResourceAllocationOut</a>)=0</td></tr>
+<tr class="memdesc:ac739d5fc673607a33e86b9361c79b2ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <a href="namespacegpgmm_1_1d3d12.html#ac739d5fc673607a33e86b9361c79b2ac">More...</a><br /></td></tr>
+<tr class="separator:ac739d5fc673607a33e86b9361c79b2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dc7289d51745c7094d012d211e78bd6"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9dc7289d51745c7094d012d211e78bd6">ReleaseMemory</a> (uint64_t bytesToRelease)=0</td></tr>
+<tr class="memdesc:a9dc7289d51745c7094d012d211e78bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <a href="namespacegpgmm_1_1d3d12.html#a9dc7289d51745c7094d012d211e78bd6">More...</a><br /></td></tr>
+<tr class="separator:a9dc7289d51745c7094d012d211e78bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
+<tr class="memdesc:a6ffa8695a413186d32f9931dd8d3f6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <a href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">More...</a><br /></td></tr>
+<tr class="separator:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ababeded3a4c8d30d446d26cdaec39d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9ababeded3a4c8d30d446d26cdaec39d">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a9ababeded3a4c8d30d446d26cdaec39d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <a href="namespacegpgmm_1_1d3d12.html#a9ababeded3a4c8d30d446d26cdaec39d">More...</a><br /></td></tr>
 <tr class="separator:a9ababeded3a4c8d30d446d26cdaec39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7284f0cf647fe791faefda54399854"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *pResidencyManager, <a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
+<tr class="memitem:a3a7284f0cf647fe791faefda54399854"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> *pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
 <tr class="memdesc:a3a7284f0cf647fe791faefda54399854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator using a specified residency manager.  <a href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">More...</a><br /></td></tr>
 <tr class="separator:a3a7284f0cf647fe791faefda54399854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a41061d1f70c6d9f0ebe14737eee6e5e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41061d1f70c6d9f0ebe14737eee6e5e8">IDebugObject</a></td></tr>
+<tr class="memdesc:a41061d1f70c6d9f0ebe14737eee6e5e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug object associates additional information for D3D objects using SetPrivateData.  <a href="namespacegpgmm_1_1d3d12.html#a41061d1f70c6d9f0ebe14737eee6e5e8">More...</a><br /></td></tr>
+<tr class="separator:a41061d1f70c6d9f0ebe14737eee6e5e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7368f0e0e9bc82e8f3b92b30d16a77a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a></td></tr>
+<tr class="memdesc:af7368f0e0e9bc82e8f3b92b30d16a77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more Heap within a residency cache.  <a href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">More...</a><br /></td></tr>
+<tr class="separator:af7368f0e0e9bc82e8f3b92b30d16a77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafa56837e91da5c54160e985bf7baa72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a></td></tr>
+<tr class="memdesc:aafa56837e91da5c54160e985bf7baa72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.  <a href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">More...</a><br /></td></tr>
+<tr class="separator:aafa56837e91da5c54160e985bf7baa72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6745d749f6c79caf9b4f43d1d2c865b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">IResidencyList</a></td></tr>
+<tr class="memdesc:ae6745d749f6c79caf9b4f43d1d2c865b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <a href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">More...</a><br /></td></tr>
+<tr class="separator:ae6745d749f6c79caf9b4f43d1d2c865b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d44bdb80026e7a64eddeb61dfe23b75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">IResourceAllocation</a></td></tr>
+<tr class="memdesc:a3d44bdb80026e7a64eddeb61dfe23b75"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.  <a href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">More...</a><br /></td></tr>
+<tr class="separator:a3d44bdb80026e7a64eddeb61dfe23b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842f01bfeabd4ca38f9252f29264d87b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RANGE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a842f01bfeabd4ca38f9252f29264d87b">pReadRange</a> = nullptr</td></tr>
+<tr class="separator:a842f01bfeabd4ca38f9252f29264d87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1469ab04d974585c378c57c864111a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RANGE void **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb1469ab04d974585c378c57c864111a">ppDataOut</a> = nullptr) = 0</td></tr>
+<tr class="separator:adb1469ab04d974585c378c57c864111a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f676e4ff4d82c0d7925f5869f31691"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">IResourceAllocator</a></td></tr>
+<tr class="memdesc:ab3f676e4ff4d82c0d7925f5869f31691"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.  <a href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">More...</a><br /></td></tr>
+<tr class="separator:ab3f676e4ff4d82c0d7925f5869f31691"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae28a8f22e2e4d9b38e57668a672d043b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae28a8f22e2e4d9b38e57668a672d043b">resourceDescriptor</a></td></tr>
+<tr class="separator:ae28a8f22e2e4d9b38e57668a672d043b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb1c1045a053e11b85a2afe353eac6f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#acb1c1045a053e11b85a2afe353eac6f4">initialResourceState</a></td></tr>
+<tr class="separator:acb1c1045a053e11b85a2afe353eac6f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e9a187c459eb649e18df888739d7205"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES const D3D12_CLEAR_VALUE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8e9a187c459eb649e18df888739d7205">pClearValue</a></td></tr>
+<tr class="separator:a8e9a187c459eb649e18df888739d7205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad76ce813a75d1aec0d3609fc10625863"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES const D3D12_CLEAR_VALUE <a class="el" href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">IResourceAllocation</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad76ce813a75d1aec0d3609fc10625863">ppResourceAllocationOut</a> = 0</td></tr>
+<tr class="separator:ad76ce813a75d1aec0d3609fc10625863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a2e8c9e657d16843e8b6f296ad94af852" name="a2e8c9e657d16843e8b6f296ad94af852"></a>
@@ -590,6 +654,59 @@ mechanism can be disabled where a pull-based method is used instead.
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a6ffa8695a413186d32f9931dd8d3f6da" name="a6ffa8695a413186d32f9931dd8d3f6da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ffa8695a413186d32f9931dd8d3f6da">&#9670;&#160;</a></span>CheckFeatureSupport()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::CheckFeatureSupport </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a>&#160;</td>
+          <td class="paramname"><em>feature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>pFeatureSupportData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>featureSupportDataSize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets information about the features that are supported by the resource allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">feature</td><td>A constant from the ALLOCATOR_FEATURE enumeration describing the feature(s) that you want to query for support. </td></tr>
+    <tr><td class="paramname">pFeatureSupportData</td><td>A pointer to the data structure that corresponds to the value of the feature parameter. To determine the corresponding data structure for each constant, see FEATURE. </td></tr>
+    <tr><td class="paramname">featureSupportDataSize</td><td>The sie of the structure pointed by the pFeatureSupportData parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. Returns E_INVALIDARG if unsupported data type is passed to pFeatureSupportData or if a size mismatch is detected for the featureSupportDataSize parameter. </dd></dl>
+
+</div>
+</div>
 <a id="ab752b370ed612a40fbbb135a6a2d5bfa" name="ab752b370ed612a40fbbb135a6a2d5bfa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab752b370ed612a40fbbb135a6a2d5bfa">&#9670;&#160;</a></span>CreateHeap()</h2>
 
@@ -605,7 +722,7 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *const&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> *const&#160;</td>
           <td class="paramname"><em>pResidencyManager</em>, </td>
         </tr>
         <tr>
@@ -617,7 +734,7 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_heap.html">IHeap</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> **&#160;</td>
           <td class="paramname"><em>ppHeapOut</em>&#160;</td>
         </tr>
         <tr>
@@ -651,7 +768,7 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT gpgmm::d3d12::CreateResidencyList </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_list.html">IResidencyList</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">IResidencyList</a> **&#160;</td>
           <td class="paramname"><em>ppResidencyList</em></td><td>)</td>
           <td></td>
         </tr>
@@ -684,7 +801,7 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> **&#160;</td>
           <td class="paramname"><em>ppResidencyManagerOut</em>&#160;</td>
         </tr>
         <tr>
@@ -706,6 +823,53 @@ mechanism can be disabled where a pull-based method is used instead.
 
 </div>
 </div>
+<a id="ac739d5fc673607a33e86b9361c79b2ac" name="ac739d5fc673607a33e86b9361c79b2ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac739d5fc673607a33e86b9361c79b2ac">&#9670;&#160;</a></span>CreateResource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::CreateResource </td>
+          <td>(</td>
+          <td class="paramtype">ID3D12Resource *&#160;</td>
+          <td class="paramname"><em>pCommittedResource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">IResourceAllocation</a> **&#160;</td>
+          <td class="paramname"><em>ppResourceAllocationOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Imports an existing D3D12 resource. </p>
+<p >Allows externally created D3D12 resources to be used as a ResourceAllocation.</p>
+<p >Residency is not supported for imported resources.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">pCommittedResource</td><td>A pointer to a committed ID3D12Resource. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a3a7284f0cf647fe791faefda54399854" name="a3a7284f0cf647fe791faefda54399854"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a7284f0cf647fe791faefda54399854">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/2]</span></h2>
 
@@ -721,13 +885,13 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> *&#160;</td>
           <td class="paramname"><em>pResidencyManager</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">IResourceAllocator</a> **&#160;</td>
           <td class="paramname"><em>ppResourceAllocatorOut</em>&#160;</td>
         </tr>
         <tr>
@@ -765,13 +929,13 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_resource_allocator.html">IResourceAllocator</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab3f676e4ff4d82c0d7925f5869f31691">IResourceAllocator</a> **&#160;</td>
           <td class="paramname"><em>ppResourceAllocatorOut</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgpgmm_1_1d3d12_1_1_i_residency_manager.html">IResidencyManager</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#af7368f0e0e9bc82e8f3b92b30d16a77a">IResidencyManager</a> **&#160;</td>
           <td class="paramname"><em>ppResidencyManagerOut</em>&#160;</td>
         </tr>
         <tr>
@@ -792,6 +956,707 @@ mechanism can be disabled where a pull-based method is used instead.
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a0cccf47f2fa1cced8b6e3f88a85a13ca" name="a0cccf47f2fa1cced8b6e3f88a85a13ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cccf47f2fa1cced8b6e3f88a85a13ca">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::ExecuteCommandLists </td>
+          <td>(</td>
+          <td class="paramtype">ID3D12CommandQueue *const&#160;</td>
+          <td class="paramname"><em>pQueue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3D12CommandList *const *&#160;</td>
+          <td class="paramname"><em>ppCommandLists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae6745d749f6c79caf9b4f43d1d2c865b">IResidencyList</a> *const *&#160;</td>
+          <td class="paramname"><em>ppResidencyLists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Execute command lists using residency managed heaps. </p>
+<p >Submits an array of command lists and residency lists for the specified command queue.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pQueue</td><td>The command queue to submit to. </td></tr>
+    <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. </td></tr>
+    <tr><td class="paramname">ppResidencyLists</td><td>The array of ResidencyList residency lists to make resident. </td></tr>
+    <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a904c1177cec90316677f032d530cb146" name="a904c1177cec90316677f032d530cb146"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a904c1177cec90316677f032d530cb146">&#9670;&#160;</a></span>GetGPUVirtualAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual D3D12_GPU_VIRTUAL_ADDRESS gpgmm::d3d12::GetGPUVirtualAddress </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the GPU virtual address of the resource allocation. </p>
+<p >If sub-allocated within the resource, the GPU virtual address will start from the allocation instead of the resource.</p>
+<dl class="section return"><dt>Returns</dt><dd>A D3D12_GPU_VIRTUAL_ADDRESS, equal to UINT64, to represent a location in GPU memory. </dd></dl>
+
+</div>
+</div>
+<a id="a260a6f663ef8bb86a09441fb159abe1e" name="a260a6f663ef8bb86a09441fb159abe1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a260a6f663ef8bb86a09441fb159abe1e">&#9670;&#160;</a></span>GetInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a> gpgmm::d3d12::GetInfo </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns information about this resource allocation. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a> struct containing the information. </dd></dl>
+
+</div>
+</div>
+<a id="ae5415a6a4421f6abb089bfef17105f87" name="ae5415a6a4421f6abb089bfef17105f87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5415a6a4421f6abb089bfef17105f87">&#9670;&#160;</a></span>GetMemory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> * gpgmm::d3d12::GetMemory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the heap assigned to this resource allocation. </p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the Heap used by this resource allocation. </dd></dl>
+
+</div>
+</div>
+<a id="a0a002f6eee82988c57957bd9c8d2b4a6" name="a0a002f6eee82988c57957bd9c8d2b4a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a002f6eee82988c57957bd9c8d2b4a6">&#9670;&#160;</a></span>GetOffsetFromResource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint64_t gpgmm::d3d12::GetOffsetFromResource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the start of the allocation in the resource. </p>
+<p >If sub-allocated within the resource, the offset could be greater than zero.</p>
+<dl class="section return"><dt>Returns</dt><dd>A offset, in bytes, of the start of this allocation in the resource. </dd></dl>
+
+</div>
+</div>
+<a id="afa6f63f90f81e777ddb781a3dc01c0f2" name="afa6f63f90f81e777ddb781a3dc01c0f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6f63f90f81e777ddb781a3dc01c0f2">&#9670;&#160;</a></span>GetResource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ID3D12Resource * gpgmm::d3d12::GetResource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the resource owned by this allocation. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to ID3D12Resource, owned by this allocation. </dd></dl>
+
+</div>
+</div>
+<a id="a99ec6b614f88b7394a19c0ae5df63990" name="a99ec6b614f88b7394a19c0ae5df63990"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99ec6b614f88b7394a19c0ae5df63990">&#9670;&#160;</a></span>GetStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> gpgmm::d3d12::GetStats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the current residency manager usage. </p>
+<p >Return the current allocator usage.</p>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">RESIDENCY_STATS</a> struct.</dd></dl>
+<p >Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%. </p>
+
+</div>
+</div>
+<a id="a45057cc59a73199c906220c7167cb740" name="a45057cc59a73199c906220c7167cb740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45057cc59a73199c906220c7167cb740">&#9670;&#160;</a></span>QueryVideoMemoryInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::QueryVideoMemoryInfo </td>
+          <td>(</td>
+          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
+          <td class="paramname"><em>memorySegmentGroup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DXGI_QUERY_VIDEO_MEMORY_INFO *&#160;</td>
+          <td class="paramname"><em>pVideoMemoryInfoOut</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the current budget and memory usage. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to retrieve info from. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">pVideoMemoryInfoOut</td><td>Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value of nullptr will update but not return the current info. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9dc7289d51745c7094d012d211e78bd6" name="a9dc7289d51745c7094d012d211e78bd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dc7289d51745c7094d012d211e78bd6">&#9670;&#160;</a></span>ReleaseMemory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint64_t gpgmm::d3d12::ReleaseMemory </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>bytesToRelease</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return free memory back to the OS. </p>
+<p >When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="namespacegpgmm_1_1d3d12.html#a9dc7289d51745c7094d012d211e78bd6" title="Return free memory back to the OS.">ReleaseMemory()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A value of UINT64_MAX releases ALL memory held by the allocator.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Amount of memory, in bytes, released. The released size might be smaller then bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly total up to the amount. </dd></dl>
+
+</div>
+</div>
+<a id="a6d077755fd1c26ad6399d41479d911bb" name="a6d077755fd1c26ad6399d41479d911bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d077755fd1c26ad6399d41479d911bb">&#9670;&#160;</a></span>Reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::Reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resets a residency list to its initial state as if a new residenct list was created. </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a445f08a49a91decaacc53bc978572451" name="a445f08a49a91decaacc53bc978572451"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a445f08a49a91decaacc53bc978572451">&#9670;&#160;</a></span>SetDebugName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::SetDebugName </td>
+          <td>(</td>
+          <td class="paramtype">LPCWSTR&#160;</td>
+          <td class="paramname"><em>Name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Associate a debug name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Name</td><td>A NULL-terminated UNICODE string that contains the name to associate with the debug object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adf07988a22cc662db5f53c8687d69c9d" name="adf07988a22cc662db5f53c8687d69c9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf07988a22cc662db5f53c8687d69c9d">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::SetVideoMemoryReservation </td>
+          <td>(</td>
+          <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
+          <td class="paramname"><em>memorySegmentGroup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>availableForReservation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>pCurrentReservationOut</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets video memory reservation. </p>
+<p >A reservation is the lowest amount of physical memory the application need to continue operation safely.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to reserve. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">availableForReservation</td><td>Amount of memory to reserve, in bytes. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">pCurrentReservationOut</td><td>the amount of memory reserved, which may be less then the |reservation| when under video memory pressure. A value of nullptr will update but not return the current reservation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a89b7eaadd7c6e81676154b4656a0d7ad" name="a89b7eaadd7c6e81676154b4656a0d7ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89b7eaadd7c6e81676154b4656a0d7ad">&#9670;&#160;</a></span>UnlockHeap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::UnlockHeap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#aafa56837e91da5c54160e985bf7baa72">IHeap</a> *&#160;</td>
+          <td class="paramname"><em>pHeap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unlocks the specified heap. </p>
+<p >Unlocking a heap allows the residency manager will evict it when over budget.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pHeap</td><td>A pointer to the heap being unlocked. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0f55ea2c417d3efdb1711fa0084b5864" name="a0f55ea2c417d3efdb1711fa0084b5864"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f55ea2c417d3efdb1711fa0084b5864">&#9670;&#160;</a></span>Unmap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gpgmm::d3d12::Unmap </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>subresource</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const D3D12_RANGE *&#160;</td>
+          <td class="paramname"><em>pWrittenRange</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unmaps the resource allocation. </p>
+<p >Invalidates the CPU pointer to the specified subresource in the resource.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">subresource</td><td>Specifies the index number of the subresource. </td></tr>
+    <tr><td class="paramname">pWrittenRange</td><td>A pointer to a D3D12_RANGE structure that describes the range of memory to unmap. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a41061d1f70c6d9f0ebe14737eee6e5e8" name="a41061d1f70c6d9f0ebe14737eee6e5e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41061d1f70c6d9f0ebe14737eee6e5e8">&#9670;&#160;</a></span>IDebugObject</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IDebugObject</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Debug object associates additional information for D3D objects using SetPrivateData. </p>
+<p >Since a single D3D object could be re-used by one or more GPGMM objects, debug information must be stored and retrieved seperately. </p>
+
+</div>
+</div>
+<a id="aafa56837e91da5c54160e985bf7baa72" name="aafa56837e91da5c54160e985bf7baa72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafa56837e91da5c54160e985bf7baa72">&#9670;&#160;</a></span>IHeap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IHeap</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache. </p>
+<p >Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
+
+</div>
+</div>
+<a id="acb1c1045a053e11b85a2afe353eac6f4" name="acb1c1045a053e11b85a2afe353eac6f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb1c1045a053e11b85a2afe353eac6f4">&#9670;&#160;</a></span>initialResourceState</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES gpgmm::d3d12::initialResourceState</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6745d749f6c79caf9b4f43d1d2c865b" name="ae6745d749f6c79caf9b4f43d1d2c865b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6745d749f6c79caf9b4f43d1d2c865b">&#9670;&#160;</a></span>IResidencyList</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IResidencyList</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
+<p >A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a ResidencyList by inserting heaps, by calling ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is called, the list can be reset or cleared for the next frame or compute job.</p>
+<p >Without ResidencyList, the application would need to call ResidencyManager::LockHeap and ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list being executed. </p>
+
+</div>
+</div>
+<a id="af7368f0e0e9bc82e8f3b92b30d16a77a" name="af7368f0e0e9bc82e8f3b92b30d16a77a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7368f0e0e9bc82e8f3b92b30d16a77a">&#9670;&#160;</a></span>IResidencyManager</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IResidencyManager</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ResidencyManager tracks and maintains one or more Heap within a residency cache. </p>
+<p >A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a operation that always requires the Heap to be resident (eg. Map, Unmap).</p>
+<p >Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict and ID3D12Device::MakeResident to page-out or page-in heaps, respectively. </p>
+
+</div>
+</div>
+<a id="a3d44bdb80026e7a64eddeb61dfe23b75" name="a3d44bdb80026e7a64eddeb61dfe23b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d44bdb80026e7a64eddeb61dfe23b75">&#9670;&#160;</a></span>IResourceAllocation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IResourceAllocation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ResourceAllocation is MemoryAllocation that contains a ID3D12Resource. </p>
+<p >It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed" in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a ID3D12Heap (called a committed resource).</p>
+<p >It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for perfoming D3D12 operations with it (eg. Map, Unmap, etc). </p>
+
+</div>
+</div>
+<a id="ab3f676e4ff4d82c0d7925f5869f31691" name="ab3f676e4ff4d82c0d7925f5869f31691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f676e4ff4d82c0d7925f5869f31691">&#9670;&#160;</a></span>IResourceAllocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> gpgmm::d3d12::IResourceAllocator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation. </p>
+<p >Internally, ResourceAllocator creates a request, by determining the resource allocation requirements, then finds a MemoryAllocator able to service the request.</p>
+<p >If the first MemoryAllocator attempt fails, it will try a second MemoryAllocator, and so on. MemoryAllocator attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
+<p >ResourceAllocator also uses ResidencyManager to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger Heap could be ideal for allocation but only if there is budget. And similarly, a smaller Heap allows for finer grained residency but could increase overall memory usage for allocation. </p>
+
+</div>
+</div>
+<a id="a8e9a187c459eb649e18df888739d7205" name="a8e9a187c459eb649e18df888739d7205"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e9a187c459eb649e18df888739d7205">&#9670;&#160;</a></span>pClearValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES const D3D12_CLEAR_VALUE* gpgmm::d3d12::pClearValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb1469ab04d974585c378c57c864111a" name="adb1469ab04d974585c378c57c864111a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1469ab04d974585c378c57c864111a">&#9670;&#160;</a></span>ppDataOut</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RANGE void** gpgmm::d3d12::ppDataOut = nullptr) = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad76ce813a75d1aec0d3609fc10625863" name="ad76ce813a75d1aec0d3609fc10625863"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad76ce813a75d1aec0d3609fc10625863">&#9670;&#160;</a></span>ppResourceAllocationOut</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC D3D12_RESOURCE_STATES const D3D12_CLEAR_VALUE <a class="el" href="namespacegpgmm_1_1d3d12.html#a3d44bdb80026e7a64eddeb61dfe23b75">IResourceAllocation</a>** gpgmm::d3d12::ppResourceAllocationOut = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a842f01bfeabd4ca38f9252f29264d87b" name="a842f01bfeabd4ca38f9252f29264d87b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a842f01bfeabd4ca38f9252f29264d87b">&#9670;&#160;</a></span>pReadRange</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RANGE* gpgmm::d3d12::pReadRange = nullptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae28a8f22e2e4d9b38e57668a672d043b" name="ae28a8f22e2e4d9b38e57668a672d043b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae28a8f22e2e4d9b38e57668a672d043b">&#9670;&#160;</a></span>resourceDescriptor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a51b2ba964e566948b7542e0c670e9bb9">Interface</a> const D3D12_RESOURCE_DESC&amp; gpgmm::d3d12::resourceDescriptor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
