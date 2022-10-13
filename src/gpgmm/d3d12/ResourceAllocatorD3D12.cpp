@@ -390,14 +390,15 @@ namespace gpgmm::d3d12 {
             std::unique_ptr<Caps> caps;
             {
                 Caps* ptr = nullptr;
-                ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device.Get(),
-                                                allocatorDescriptor.Adapter.Get(), &ptr));
+                ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device,
+                                                allocatorDescriptor.Adapter, &ptr));
                 caps.reset(ptr);
             }
 
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
-            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+            ReturnIfFailed(
+                allocatorDescriptor.Adapter->QueryInterface(IID_PPV_ARGS(&residencyDesc.Adapter)));
             residencyDesc.IsUMA = caps->IsAdapterUMA();
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
@@ -433,8 +434,8 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device.Get(),
-                                            allocatorDescriptor.Adapter.Get(), &ptr));
+            ReturnIfFailed(
+                Caps::CreateCaps(allocatorDescriptor.Device, allocatorDescriptor.Adapter, &ptr));
             caps.reset(ptr);
         }
 

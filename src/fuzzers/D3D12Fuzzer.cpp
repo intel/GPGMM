@@ -29,7 +29,7 @@ HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc)
         return E_FAIL;
     }
 
-    allocatorDescOut.Device = d3dDevice;
+    allocatorDescOut.Device = d3dDevice.Get();
 
     // Populate the adapter
     LUID adapterLUID = d3dDevice->GetAdapterLuid();
@@ -48,7 +48,7 @@ HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc)
         return E_FAIL;
     }
 
-    allocatorDescOut.Adapter = dxgiAdapter;
+    allocatorDescOut.Adapter = dxgiAdapter.Get();
 
     // Configure options
     D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};

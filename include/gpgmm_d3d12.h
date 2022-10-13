@@ -33,7 +33,6 @@
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
 #    include <windows.h>  // for DEFINE_ENUM_FLAG_OPERATORS
-#    include <wrl.h>      // for Microsoft::WRL::ComPtr
 #endif
 
 #include <functional>
@@ -373,7 +372,7 @@ namespace gpgmm::d3d12 {
         /** \brief Specifies the device used by this residency manager.
         Required parameter. Use CreateDevice get the device.
         */
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        ID3D12Device* Device;
 
         /** \brief Specifies the adapter used by this residency manager.
 
@@ -381,7 +380,7 @@ namespace gpgmm::d3d12 {
 
         Required parameter. Use EnumAdapters to get the adapter.
         */
-        Microsoft::WRL::ComPtr<IDXGIAdapter3> Adapter;
+        IDXGIAdapter3* Adapter;
 
         /** \brief Specifies if unified memory architecture (UMA) is enabled.
 
@@ -836,13 +835,13 @@ namespace gpgmm::d3d12 {
 
         Required parameter. Use CreateDevice get the device.
         */
-        Microsoft::WRL::ComPtr<ID3D12Device> Device;
+        ID3D12Device* Device;
 
         /** \brief Specifies the adapter used by this allocator.
 
         Required parameter. Use EnumAdapters to get the adapter.
         */
-        Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
+        IDXGIAdapter* Adapter;
 
         /** \brief Specifies allocator options.
 

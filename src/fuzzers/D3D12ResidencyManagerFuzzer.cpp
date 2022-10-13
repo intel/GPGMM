@@ -50,11 +50,12 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
 
     ComPtr<IDXGIAdapter3> adapter3;
-    if (FAILED(allocatorDesc.Adapter.As(&adapter3))) {
+    ComPtr<IDXGIAdapter> adapter(allocatorDesc.Adapter);
+    if (FAILED(adapter.As(&adapter3))) {
         return 0;
     }
 
-    residencyDesc.Adapter = adapter3;
+    residencyDesc.Adapter = adapter3.Get();
     residencyDesc.Device = allocatorDesc.Device;
     residencyDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 

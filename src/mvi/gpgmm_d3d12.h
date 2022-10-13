@@ -38,6 +38,8 @@
 #    define GPGMM_REFCOUNT_TYPE std::atomic<uint64_t>
 #endif
 
+#include <wrl.h>  // for Microsoft::WRL::ComPtr
+
 #include <gpgmm_d3d12.h>
 
 #include "gpgmm.h"
