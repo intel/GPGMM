@@ -190,7 +190,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         baseAllocatorDesc.RecordOptions.Flags |=
             static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
         baseAllocatorDesc.RecordOptions.TraceFile = traceFile.path.c_str();
-        baseAllocatorDesc.RecordOptions.MinMessageLevel = baseAllocatorDesc.MinLogLevel;
+        baseAllocatorDesc.MinRecordLevel = baseAllocatorDesc.MinLogLevel;
 
         // Keep recording across multiple playback iterations to ensure all
         // events will be captured instead of overwritten per iteration.

@@ -38,6 +38,8 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
         JSONDict dict;
+        dict.AddItem("MinLogLevel", desc.MinLogLevel);
+        dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
@@ -88,7 +90,6 @@ namespace gpgmm::d3d12 {
     JSONDict JSONSerializer::Serialize(const EVENT_RECORD_OPTIONS& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
-        dict.AddItem("MinMessageLevel", desc.MinMessageLevel);
         return dict;
     }
 
@@ -256,6 +257,8 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const RESIDENCY_DESC& desc) {
         JSONDict dict;
+        dict.AddItem("MinLogLevel", desc.MinLogLevel);
+        dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
         dict.AddItem("IsUMA", desc.IsUMA);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));

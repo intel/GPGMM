@@ -513,7 +513,7 @@ namespace gpgmm::d3d12 {
             StartupEventTrace(allocatorDescriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags));
 
-            SetEventMessageLevel(GetLogSeverity(newDescriptor.RecordOptions.MinMessageLevel));
+            SetEventMessageLevel(GetLogSeverity(newDescriptor.MinRecordLevel));
         } else {
             // Do not override the event scope from a event trace already enabled.
             newDescriptor.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;

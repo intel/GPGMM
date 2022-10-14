@@ -318,14 +318,6 @@ namespace gpgmm::d3d12 {
         */
         EVENT_RECORD_FLAGS Flags;
 
-        /** \brief Minimum severity level to record messages.
-
-        Messages with lower severity will be ignored.
-
-        Optional parameter. By default, the minimum severity level is WARN.
-        */
-        D3D12_MESSAGE_SEVERITY MinMessageLevel;
-
         /** \brief Specifies the scope of the events.
 
         Optional parameter. By default, recording is per process.
@@ -397,6 +389,14 @@ namespace gpgmm::d3d12 {
         /** \brief Specifies residency options.
          */
         RESIDENCY_FLAGS Flags;
+
+        /** \brief Minimum severity level to record messages.
+
+        Messages with lower severity will be ignored.
+
+        Optional parameter. By default, the minimum severity level is WARN.
+        */
+        D3D12_MESSAGE_SEVERITY MinRecordLevel;
 
         /** \brief Minimum severity level to log messages to console.
 
@@ -849,6 +849,14 @@ namespace gpgmm::d3d12 {
         creation.
         */
         ALLOCATOR_FLAGS Flags;
+
+        /** \brief Minimum severity level to record messages.
+
+        Messages with lower severity will be ignored.
+
+        Optional parameter. By default, the minimum severity level is WARN.
+        */
+        D3D12_MESSAGE_SEVERITY MinRecordLevel;
 
         /** \brief Minimum severity level to log messages to console.
 
