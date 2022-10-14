@@ -29,8 +29,6 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const;
         HRESULT SetDebugName(LPCWSTR Name);
 
-        DEFINE_IUNKNOWNIMPL_OVERRIDES()
-
       protected:
         // Derived classes should override to associate the name with the containing ID3D12Object.
         virtual HRESULT SetDebugNameImpl(LPCWSTR name) = 0;
