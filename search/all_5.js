@@ -34,10 +34,11 @@ var searchData=
   ['gpgmm_5fd3d12_2eh_31',['gpgmm_d3d12.h',['../gpgmm__d3d12_8h.html',1,'']]],
   ['gpgmm_5fexport_32',['GPGMM_EXPORT',['../gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b',1,'gpgmm_export.h']]],
   ['gpgmm_5fexport_2eh_33',['gpgmm_export.h',['../gpgmm__export_8h.html',1,'']]],
-  ['gpgmm_5fvk_2eh_34',['gpgmm_vk.h',['../gpgmm__vk_8h.html',1,'']]],
-  ['gpresourceallocation_35',['GpResourceAllocation',['../struct_gp_resource_allocation.html',1,'']]],
-  ['gpresourceallocationcreateflags_36',['GpResourceAllocationCreateFlags',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879',1,'gpgmm::vk']]],
-  ['gpresourceallocationcreateinfo_37',['GpResourceAllocationCreateInfo',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html',1,'gpgmm::vk']]],
-  ['gpresourceallocator_38',['GpResourceAllocator',['../struct_gp_resource_allocator.html',1,'']]],
-  ['vk_39',['vk',['../namespacegpgmm_1_1vk.html',1,'gpgmm']]]
+  ['gpgmm_5finterface_34',['GPGMM_INTERFACE',['../gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc',1,'gpgmm_d3d12.h']]],
+  ['gpgmm_5fvk_2eh_35',['gpgmm_vk.h',['../gpgmm__vk_8h.html',1,'']]],
+  ['gpresourceallocation_36',['GpResourceAllocation',['../struct_gp_resource_allocation.html',1,'']]],
+  ['gpresourceallocationcreateflags_37',['GpResourceAllocationCreateFlags',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879',1,'gpgmm::vk']]],
+  ['gpresourceallocationcreateinfo_38',['GpResourceAllocationCreateInfo',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html',1,'gpgmm::vk']]],
+  ['gpresourceallocator_39',['GpResourceAllocator',['../struct_gp_resource_allocator.html',1,'']]],
+  ['vk_40',['vk',['../namespacegpgmm_1_1vk.html',1,'gpgmm']]]
 ];
