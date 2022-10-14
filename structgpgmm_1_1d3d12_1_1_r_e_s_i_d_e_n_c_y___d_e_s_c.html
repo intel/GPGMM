@@ -97,6 +97,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab807cc71b7d5e2de186e31dd983af3d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab807cc71b7d5e2de186e31dd983af3d9">Flags</a></td></tr>
 <tr class="memdesc:ab807cc71b7d5e2de186e31dd983af3d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies residency options.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab807cc71b7d5e2de186e31dd983af3d9">More...</a><br /></td></tr>
 <tr class="separator:ab807cc71b7d5e2de186e31dd983af3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a889ec6a8b941dda34007c1105a33786b"><td class="memItemLeft" align="right" valign="top">D3D12_MESSAGE_SEVERITY&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a889ec6a8b941dda34007c1105a33786b">MinRecordLevel</a></td></tr>
+<tr class="memdesc:a889ec6a8b941dda34007c1105a33786b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum severity level to record messages.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a889ec6a8b941dda34007c1105a33786b">More...</a><br /></td></tr>
+<tr class="separator:a889ec6a8b941dda34007c1105a33786b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abca1fe379150ea66495e118ff65043e1"><td class="memItemLeft" align="right" valign="top">D3D12_MESSAGE_SEVERITY&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#abca1fe379150ea66495e118ff65043e1">MinLogLevel</a></td></tr>
 <tr class="memdesc:abca1fe379150ea66495e118ff65043e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum severity level to log messages to console.  <a href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#abca1fe379150ea66495e118ff65043e1">More...</a><br /></td></tr>
 <tr class="separator:abca1fe379150ea66495e118ff65043e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,6 +297,24 @@ Public Attributes</h2></td></tr>
 <p>Lowest amount of budgeted memory, expressed as a percentage, that can be reserved. </p>
 <p >If SetVideoMemoryReservation is used a set a reservation larger then the budget, this amount is used instead so the application can make forward progress.</p>
 <p >Optional parameter. By default, the API restricts the residency manager reservation to never go below 50% of the budget. </p>
+
+</div>
+</div>
+<a id="a889ec6a8b941dda34007c1105a33786b" name="a889ec6a8b941dda34007c1105a33786b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a889ec6a8b941dda34007c1105a33786b">&#9670;&#160;</a></span>MinRecordLevel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">D3D12_MESSAGE_SEVERITY gpgmm::d3d12::RESIDENCY_DESC::MinRecordLevel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Minimum severity level to record messages. </p>
+<p >Messages with lower severity will be ignored.</p>
+<p >Optional parameter. By default, the minimum severity level is WARN. </p>
 
 </div>
 </div>
