@@ -197,7 +197,7 @@ namespace gpgmm::d3d12 {
             StartupEventTrace(descriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~descriptor.RecordOptions.Flags));
 
-            SetEventMessageLevel(GetLogSeverity(descriptor.RecordOptions.MinMessageLevel));
+            SetEventMessageLevel(GetLogSeverity(descriptor.MinRecordLevel));
         }
 
         SetLogMessageLevel(GetLogSeverity(descriptor.MinLogLevel));

@@ -108,7 +108,7 @@ namespace gpgmm::d3d12 {
 
         if (IsDumpEventsEnabled()) {
             desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
-            desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
+            desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
 
             // Format the output trace file as <test suite>.<test>.
@@ -135,7 +135,7 @@ namespace gpgmm::d3d12 {
 
         if (IsDumpEventsEnabled()) {
             desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
-            desc.RecordOptions.MinMessageLevel = desc.MinLogLevel;
+            desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
         }
 
