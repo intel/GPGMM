@@ -19,6 +19,7 @@
 #include "gpgmm/common/TraceEventPhase.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformTime.h"
@@ -539,25 +540,23 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                 .Get();
                         ASSERT_NE(residencyManager, nullptr);
 
+                        D3D12_HEAP_FLAGS heapFlags =
+                            static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
+
+                        D3D12_HEAP_DESC heapDesc = {};
+                        heapDesc.Properties = heapProperties;
+                        heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+                        heapDesc.Alignment = resourceHeapDesc.Alignment;
+                        heapDesc.Flags = heapFlags;
+
+                        CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(),
+                                                                            &heapDesc);
+
                         ComPtr<IHeap> resourceHeap;
-                        ASSERT_SUCCEEDED(CreateHeap(
-                            resourceHeapDesc, residencyManager,
-                            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                                D3D12_HEAP_DESC heapDesc = {};
-                                heapDesc.Properties = heapProperties;
-                                heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
-                                heapDesc.Alignment = resourceHeapDesc.Alignment;
-                                heapDesc.Flags =
-                                    static_cast<D3D12_HEAP_FLAGS>(args["Heap"]["Flags"].asInt());
-
-                                ComPtr<ID3D12Heap> heap;
-                                ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
-
-                                *ppPageableOut = heap.Detach();
-
-                                return S_OK;
-                            },
-                            &resourceHeap));
+                        ASSERT_SUCCEEDED(
+                            CreateHeap(resourceHeapDesc, residencyManager,
+                                       CreateResourceHeapCallbackContext::CreateHeapWrapper,
+                                       &createHeapContext, &resourceHeap));
 
                         playbackContext.CurrentHeapWithoutID = std::move(resourceHeap);
 

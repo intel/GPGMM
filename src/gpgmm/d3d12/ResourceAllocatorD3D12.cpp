@@ -1242,18 +1242,12 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
 
+        ImportResourceCallbackContext importResourceCallbackContext(resource);
+
         IHeap* resourceHeap = nullptr;
-        ReturnIfFailed(Heap::CreateHeap(
-            resourceHeapDesc, /*residencyManager*/ nullptr,
-            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                ComPtr<ID3D12Pageable> pageable;
-                resource.As(&pageable);
-
-                *ppPageableOut = pageable.Detach();
-
-                return S_OK;
-            },
-            &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr,
+                                        ImportResourceCallbackContext::CreateHeapWrapper,
+                                        &importResourceCallbackContext, &resourceHeap));
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
@@ -1267,9 +1261,9 @@ namespace gpgmm::d3d12 {
         allocationDesc.OffsetFromResource = 0;
         
         if (ppResourceAllocationOut != nullptr){
-            *ppResourceAllocationOut =
-                new ResourceAllocation(allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap),
-                                    nullptr, std::move(resource));
+            *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, nullptr, this,
+                                                              static_cast<Heap*>(resourceHeap),
+                                                              nullptr, std::move(resource));
         }
 
         return S_OK;
@@ -1326,30 +1320,13 @@ namespace gpgmm::d3d12 {
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         IHeap* resourceHeap = nullptr;
         ComPtr<ID3D12Resource> committedResource;
+        CreateCommittedResourceCallbackContext callbackContext(
+            mDevice.Get(), committedResource, &heapProperties, heapFlags, resourceDescriptor,
+            clearValue, initialResourceState);
 
-        ReturnIfFailed(Heap::CreateHeap(
-            resourceHeapDesc, mResidencyManager.Get(),
-            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                // Resource heap flags must be inferred by the resource descriptor and cannot be
-                // explicitly provided to CreateCommittedResource.
-                heapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
-                               D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
-
-                // Non-custom heaps are not allowed to have the pool-specified.
-                if (heapProperties.Type != D3D12_HEAP_TYPE_CUSTOM) {
-                    heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-                }
-
-                ReturnIfFailed(mDevice->CreateCommittedResource(
-                    &heapProperties, heapFlags, resourceDescriptor, initialResourceState,
-                    clearValue, IID_PPV_ARGS(&committedResource)));
-
-                ComPtr<ID3D12Pageable> pageable;
-                ReturnIfFailed(committedResource.As(&pageable));
-                *ppPageableOut = pageable.Detach();
-                return S_OK;
-            },
-            &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
+                                        CreateCommittedResourceCallbackContext::CreateHeapWrapper,
+                                        &callbackContext, &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
             *commitedResourceOut = committedResource.Detach();
@@ -1486,6 +1463,76 @@ namespace gpgmm::d3d12 {
         }
 
         return E_INVALIDARG;
+    }
+
+    ImportResourceCallbackContext::ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource)
+        : mResource(resource) {
+    }
+
+    // static
+    HRESULT ImportResourceCallbackContext::CreateHeapWrapper(void* pContext,
+                                                             ID3D12Pageable** ppPageableOut) {
+        ImportResourceCallbackContext* importResourceCallbackContext =
+            static_cast<ImportResourceCallbackContext*>(pContext);
+
+        return importResourceCallbackContext->CreateHeap(ppPageableOut);
+    }
+
+    HRESULT ImportResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+        ComPtr<ID3D12Pageable> pageable;
+        ReturnIfFailed(mResource.As(&pageable));
+
+        *ppPageableOut = pageable.Detach();
+
+        return S_OK;
+    }
+
+    CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(
+        ID3D12Device* device,
+        ComPtr<ID3D12Resource> resource,
+        D3D12_HEAP_PROPERTIES* heapProperties,
+        D3D12_HEAP_FLAGS heapFlags,
+        const D3D12_RESOURCE_DESC* resourceDescriptor,
+        const D3D12_CLEAR_VALUE* clearValue,
+        D3D12_RESOURCE_STATES initialResourceState)
+        : mClearValue(clearValue),
+          mDevice(device),
+          mInitialResourceState(initialResourceState),
+          mHeapFlags(heapFlags),
+          mHeapProperties(heapProperties),
+          mResource(resource),
+          mResourceDescriptor(resourceDescriptor) {
+    }
+
+    // static
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeapWrapper(
+        void* pContext,
+        ID3D12Pageable** ppPageableOut) {
+        CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
+            static_cast<CreateCommittedResourceCallbackContext*>(pContext);
+
+        return createCommittedResourceCallbackContext->CreateHeap(ppPageableOut);
+    }
+
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+        // Resource heap flags must be inferred by the resource descriptor and cannot be
+        // explicitly provided to CreateCommittedResource.
+        mHeapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
+                        D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES | D3D12_HEAP_FLAG_DENY_BUFFERS);
+
+        // Non-custom heaps are not allowed to have the pool-specified.
+        if (mHeapProperties->Type != D3D12_HEAP_TYPE_CUSTOM) {
+            mHeapProperties->MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        }
+
+        ReturnIfFailed(mDevice->CreateCommittedResource(mHeapProperties, mHeapFlags,
+                                                        mResourceDescriptor, mInitialResourceState,
+                                                        mClearValue, IID_PPV_ARGS(&mResource)));
+
+        ComPtr<ID3D12Pageable> pageable;
+        ReturnIfFailed(mResource.As(&pageable));
+        *ppPageableOut = pageable.Detach();
+        return S_OK;
     }
 
 }  // namespace gpgmm::d3d12

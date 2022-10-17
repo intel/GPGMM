@@ -62,29 +62,17 @@ namespace gpgmm::d3d12 {
                 mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
+        D3D12_HEAP_DESC heapDesc = {};
+        heapDesc.Properties = mHeapProperties;
+        heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
+        heapDesc.Alignment = resourceHeapDesc.Alignment;
+        heapDesc.Flags = mHeapFlags;
+
+        CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
         IHeap* resourceHeap = nullptr;
-        if (FAILED(Heap::CreateHeap(
-                resourceHeapDesc, mResidencyManager,
-                [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                    D3D12_HEAP_DESC heapDesc = {};
-                    heapDesc.Properties = mHeapProperties;
-                    heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
-                    heapDesc.Alignment = resourceHeapDesc.Alignment;
-                    heapDesc.Flags = mHeapFlags;
-
-                    // Non-custom heaps are not allowed to have the pool-specified.
-                    if (heapDesc.Properties.Type != D3D12_HEAP_TYPE_CUSTOM) {
-                        heapDesc.Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-                    }
-
-                    ComPtr<ID3D12Heap> heap;
-                    ReturnIfFailed(mDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&heap)));
-
-                    *ppPageableOut = heap.Detach();
-
-                    return S_OK;
-                },
-                &resourceHeap))) {
+        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
+                                    CreateResourceHeapCallbackContext::CreateHeapWrapper,
+                                    &createResourceHeapCallbackContext, &resourceHeap))) {
             return {};
         }
 
@@ -114,6 +102,33 @@ namespace gpgmm::d3d12 {
 
     const char* ResourceHeapAllocator::GetTypename() const {
         return "ResourceHeapAllocator";
+    }
+
+    CreateResourceHeapCallbackContext::CreateResourceHeapCallbackContext(ID3D12Device* device,
+                                                                         D3D12_HEAP_DESC* heapDesc)
+        : mDevice(device), mHeapDesc(heapDesc) {
+    }
+
+    HRESULT CreateResourceHeapCallbackContext::CreateHeapWrapper(void* pContext,
+                                                                 ID3D12Pageable** ppPageableOut) {
+        CreateResourceHeapCallbackContext* createResourceHeapCallbackContext =
+            static_cast<CreateResourceHeapCallbackContext*>(pContext);
+
+        return createResourceHeapCallbackContext->CreateHeap(ppPageableOut);
+    }
+
+    HRESULT CreateResourceHeapCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+        // Non-custom heaps are not allowed to have the pool-specified.
+        if (mHeapDesc->Properties.Type != D3D12_HEAP_TYPE_CUSTOM) {
+            mHeapDesc->Properties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        }
+
+        ComPtr<ID3D12Heap> heap;
+        ReturnIfFailed(mDevice->CreateHeap(mHeapDesc, IID_PPV_ARGS(&heap)));
+
+        *ppPageableOut = heap.Detach();
+
+        return S_OK;
     }
 
 }  // namespace gpgmm::d3d12

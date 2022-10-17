@@ -75,10 +75,11 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              IResidencyManager* const pResidencyManager,
-                             CreateHeapFn&& createHeapFn,
+                             CreateHeapFn createHeapFn,
+                             void* context,
                              IHeap** ppHeapOut) {
         Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(createHeapFn(&pageable));
+        ReturnIfFailed(createHeapFn(context, &pageable));
 
         if (ppHeapOut != nullptr) {
             *ppHeapOut = new Heap(pageable, descriptor, (pResidencyManager == nullptr));
@@ -355,22 +356,13 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
 
-        ReturnIfFailed(Heap::CreateHeap(
-            resourceHeapDesc, mResidencyManager.Get(),
-            [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-                D3D12_HEAP_PROPERTIES heapProperties = {};
-                heapProperties.Type = allocationDescriptor.HeapType;
+        CreateCommittedResourceCallbackContext callbackContext(
+            mDevice.Get(), allocationDescriptor, committedResource, &resourceDescriptor,
+            pClearValue, initialResourceState);
 
-                ReturnIfFailed(mDevice->CreateCommittedResource(
-                    &heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDescriptor,
-                    initialResourceState, pClearValue, IID_PPV_ARGS(&committedResource)));
-
-                Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
-                ReturnIfFailed(committedResource.As(&pageable));
-                *ppPageableOut = pageable.Detach();
-                return S_OK;
-            },
-            &resourceHeap));
+        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
+                                        CreateCommittedResourceCallbackContext::CreateHeapWrapper,
+                                        &callbackContext, &resourceHeap));
 
         const uint64_t allocationSize = resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
@@ -431,6 +423,43 @@ namespace gpgmm::d3d12 {
 
     ULONG STDMETHODCALLTYPE ResourceAllocator::Release() {
         return IUnknownImpl::Release();
+    }
+
+    CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(
+        ID3D12Device* device,
+        ALLOCATION_DESC allocationDescriptor,
+        Microsoft::WRL::ComPtr<ID3D12Resource> resource,
+        const D3D12_RESOURCE_DESC* resourceDescriptor,
+        const D3D12_CLEAR_VALUE* clearValue,
+        D3D12_RESOURCE_STATES initialResourceState)
+        : mDevice(device),
+          mAllocationDescriptor(allocationDescriptor),
+          mClearValue(clearValue),
+          mResource(resource),
+          mResourceDescriptor(resourceDescriptor) {
+    }
+
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = mAllocationDescriptor.HeapType;
+
+        ReturnIfFailed(mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
+                                                        mResourceDescriptor, mInitialResourceState,
+                                                        mClearValue, IID_PPV_ARGS(&mResource)));
+
+        Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
+        ReturnIfFailed(mResource.As(&pageable));
+        *ppPageableOut = pageable.Detach();
+        return S_OK;
+    }
+
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeapWrapper(
+        void* context,
+        ID3D12Pageable** ppPageableOut) {
+        CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
+            static_cast<CreateCommittedResourceCallbackContext*>(context);
+
+        return createCommittedResourceCallbackContext->CreateHeap(ppPageableOut);
     }
 
 }  // namespace gpgmm::d3d12
