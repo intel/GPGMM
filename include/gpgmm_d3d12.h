@@ -583,9 +583,7 @@ namespace gpgmm::d3d12 {
         */
         uint64_t OffsetFromResource;
 
-        /** \brief Method to describe how the allocation was created.
-
-        The Method determines how to figure out the size of the allocation.
+        /** \brief Method used to allocate memory for the resource.
         */
         AllocationMethod Method;
 
