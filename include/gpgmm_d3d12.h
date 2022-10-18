@@ -122,21 +122,21 @@ namespace gpgmm::d3d12 {
         RESIDENCY_STATUS Status;
     };
 
-    /** \enum HEAPS_FLAGS
+    /** \enum HEAP_FLAGS
     Specify creation options to configure the heap.
     */
-    enum HEAPS_FLAGS {
+    enum HEAP_FLAGS {
 
         /** \brief Disables all option flags.
          */
-        HEAPS_FLAG_NONE = 0x0,
+        HEAP_FLAG_NONE = 0x0,
 
         /** \brief Requires the heap to be created in budget.
          */
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(HEAPS_FLAGS)
+    DEFINE_ENUM_FLAG_OPERATORS(HEAP_FLAGS)
 
     /** \struct HEAP_DESC
       Specifies creation options for a residency managed heap.
@@ -156,7 +156,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Specifies heaps options.
          */
-        HEAPS_FLAGS Flags;
+        HEAP_FLAGS Flags;
 
         /** \brief Specifies the memory segment to use for residency.
 

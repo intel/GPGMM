@@ -133,7 +133,7 @@ namespace {
         HEAP_DESC newHeapDesc = heapDesc;
         newHeapDesc.SizeInBytes = heapJson["SizeInBytes"].asUInt64();
         newHeapDesc.Alignment = heapJson["Alignment"].asUInt64();
-        newHeapDesc.Flags = static_cast<HEAPS_FLAGS>(heapJson["Flags"].asInt());
+        newHeapDesc.Flags = static_cast<HEAP_FLAGS>(heapJson["Flags"].asInt());
         return newHeapDesc;
     }
 
