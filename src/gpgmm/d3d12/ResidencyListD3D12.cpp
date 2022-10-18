@@ -18,9 +18,9 @@
 
 namespace gpgmm::d3d12 {
 
-    HRESULT CreateResidencyList(IResidencyList** ppResidencyList) {
-        if (ppResidencyList != nullptr) {
-            *ppResidencyList = new ResidencyList();
+    HRESULT CreateResidencyList(IResidencyList** ppResidencyListOut) {
+        if (ppResidencyListOut != nullptr) {
+            *ppResidencyListOut = new ResidencyList();
         }
         return S_OK;
     }
