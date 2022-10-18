@@ -237,7 +237,7 @@ namespace gpgmm::d3d12 {
             JSONDict residencyListDict;
             JSONArray heapArray;
             ResidencyList* residencyList = static_cast<ResidencyList*>(desc.ResidencyLists[i]);
-            for (const auto& heap : *residencyList) {
+            for (Heap* heap : *residencyList) {
                 heapArray.AddItem(gpgmm::JSONSerializer::Serialize(heap));
             }
             if (!heapArray.IsEmpty()) {

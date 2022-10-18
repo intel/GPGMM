@@ -42,7 +42,7 @@ namespace gpgmm::d3d12 {
         friend JSONSerializer;
         friend ResidencyManager;
 
-        using UnderlyingType = std::vector<IHeap*>;
+        using UnderlyingType = std::vector<Heap*>;
 
         UnderlyingType::const_iterator begin() const;
         UnderlyingType::const_iterator end() const;

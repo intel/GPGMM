@@ -15,6 +15,7 @@
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/d3d12/HeapD3D12.h"
 
 namespace gpgmm::d3d12 {
 
@@ -38,7 +39,8 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        mList.push_back(pHeap);
+        Heap* heap = static_cast<Heap*>(pHeap);
+        mList.push_back(heap);
         return S_OK;
     }
 

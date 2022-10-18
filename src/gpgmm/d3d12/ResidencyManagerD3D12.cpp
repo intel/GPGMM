@@ -703,10 +703,7 @@ namespace gpgmm::d3d12 {
         uint64_t nonLocalSizeToMakeResident = 0;
 
         std::vector<Heap*> heapsToMakeResident;
-        for (IHeap* pHeap : *residencyList) {
-            Heap* heap = static_cast<Heap*>(pHeap);
-            ASSERT(heap != nullptr);
-
+        for (Heap* heap : *residencyList) {
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
                 continue;
