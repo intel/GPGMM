@@ -197,9 +197,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6d077755fd1c26ad6399d41479d911bb"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">Reset</a> ()=0</td></tr>
 <tr class="memdesc:a6d077755fd1c26ad6399d41479d911bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets a residency list to its initial state as if a new residenct list was created.  <a href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">More...</a><br /></td></tr>
 <tr class="separator:a6d077755fd1c26ad6399d41479d911bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39709e589e0721620d76781805fa4a07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a39709e589e0721620d76781805fa4a07">CreateResidencyList</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> **ppResidencyList)</td></tr>
-<tr class="memdesc:a39709e589e0721620d76781805fa4a07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <a href="namespacegpgmm_1_1d3d12.html#a39709e589e0721620d76781805fa4a07">More...</a><br /></td></tr>
-<tr class="separator:a39709e589e0721620d76781805fa4a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f06db116d1746109ac7333dcc3411ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee">CreateResidencyList</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> **ppResidencyListOut)</td></tr>
+<tr class="memdesc:a5f06db116d1746109ac7333dcc3411ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <a href="namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee">More...</a><br /></td></tr>
+<tr class="separator:a5f06db116d1746109ac7333dcc3411ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad">UnlockHeap</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a3c6928b4ed92938bd00de413f2630196">IHeap</a> *pHeap)=0</td></tr>
 <tr class="memdesc:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <a href="namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad">More...</a><br /></td></tr>
 <tr class="separator:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -759,8 +759,8 @@ mechanism can be disabled where a pull-based method is used instead.
 
 </div>
 </div>
-<a id="a39709e589e0721620d76781805fa4a07" name="a39709e589e0721620d76781805fa4a07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39709e589e0721620d76781805fa4a07">&#9670;&#160;</a></span>CreateResidencyList()</h2>
+<a id="a5f06db116d1746109ac7333dcc3411ee" name="a5f06db116d1746109ac7333dcc3411ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f06db116d1746109ac7333dcc3411ee">&#9670;&#160;</a></span>CreateResidencyList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -769,7 +769,7 @@ mechanism can be disabled where a pull-based method is used instead.
           <td class="memname"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT gpgmm::d3d12::CreateResidencyList </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> **&#160;</td>
-          <td class="paramname"><em>ppResidencyList</em></td><td>)</td>
+          <td class="paramname"><em>ppResidencyListOut</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -778,7 +778,7 @@ mechanism can be disabled where a pull-based method is used instead.
 <p>Create a residency list or collection of heaps to manage together for residency. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyList</td><td>An optional pointer to a memory block that receives the required interface pointer to the created residency list object.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyListOut</td><td>An optional pointer to a memory block that receives the required interface pointer to the created residency list object.</td></tr>
   </table>
   </dd>
 </dl>
