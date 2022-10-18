@@ -53,9 +53,11 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
         resourceHeapDesc.Alignment = request.Alignment;        
         resourceHeapDesc.DebugName = L"Resource heap";
-        resourceHeapDesc.Flags |= (mHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
 
-        if (mResidencyManager != nullptr) {
+        const bool isResidencyEnabled = (mResidencyManager != nullptr);
+        resourceHeapDesc.Flags |= GetHeapFlags(mHeapFlags, isResidencyEnabled);
+
+        if (isResidencyEnabled) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
                 mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }

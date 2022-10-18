@@ -1316,8 +1316,7 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.DebugName = L"Resource heap (committed)";
-        resourceHeapDesc.Flags |=
-            (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) ? HEAPS_FLAG_NONE : HEAP_FLAG_ALWAYS_IN_BUDGET;
+        resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, IsResidencyEnabled());
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
