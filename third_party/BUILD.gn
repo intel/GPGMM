@@ -20,8 +20,4 @@ group("external_tests") {
   if (gpgmm_enable_dawn) {
     deps += [ "dawn/src/dawn/tests:dawn_end2end_tests" ]
   }
-
-  if (gpgmm_enable_webnn) {
-    deps += [ "webnn_native/src/webnn/tests:webnn_end2end_tests" ]
-  }
 }
