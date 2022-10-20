@@ -11,17 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import("../build_overrides/gpgmm_features.gni")
-import("../build_overrides/gpgmm_overrides_with_defaults.gni")
 
-group("external_tests") {
-  testonly = true
-  deps = []
-  if (gpgmm_enable_dawn) {
-    deps += [ "dawn/src/dawn/tests:dawn_end2end_tests" ]
-  }
+# The paths to WebNN's dependencies
+webnn_jinja2_dir = "//third_party/webnn_native/third_party/jinja2"
 
-  if (gpgmm_enable_webnn) {
-    deps += [ "webnn_native/src/webnn/tests:webnn_end2end_tests" ]
-  }
-}
+# TODO(webnn): WebNN hard codes //third_party/dawn paths within BUILD.gn
+# files so we must use GPGMM-Dawn version instead of WebNN-Dawn version to
+# workaround.
+webnn_dawn_root = "//third_party/dawn"
+
+webnn_gpgmm_dir = "//"
