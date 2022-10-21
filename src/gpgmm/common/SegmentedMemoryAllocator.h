@@ -44,11 +44,12 @@ namespace gpgmm {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
         uint64_t GetMemoryAlignment() const override;
-        const char* GetTypename() const override;
 
         uint64_t GetSegmentSizeForTesting() const;
 
       private:
+        const char* GetTypename() const override;
+
         MemorySegment* GetOrCreateFreeSegment(uint64_t memorySize);
 
         LinkedList<MemorySegment> mFreeSegments;

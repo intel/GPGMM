@@ -36,9 +36,10 @@ namespace gpgmm {
         uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
-        const char* GetTypename() const override;
 
       private:
+        const char* GetTypename() const override;
+
         std::unique_ptr<MemoryPoolBase> mPool;
         uint64_t mMemoryAlignment;
     };

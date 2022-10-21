@@ -37,9 +37,9 @@ namespace gpgmm::d3d12 {
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
+      private:
         const char* GetTypename() const override;
 
-      private:
         ResidencyManager* const mResidencyManager;
         ID3D12Device* const mDevice;
         const D3D12_HEAP_PROPERTIES mHeapProperties;

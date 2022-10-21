@@ -50,9 +50,10 @@ namespace gpgmm {
         uint64_t GetMemorySize() const override;
         uint64_t GetMemoryAlignment() const override;
         MemoryAllocatorStats GetStats() const override;
-        const char* GetTypename() const override;
 
       private:
+        const char* GetTypename() const override;
+
         uint64_t GetMemoryIndex(uint64_t offset) const;
 
         const uint64_t mMemorySize;

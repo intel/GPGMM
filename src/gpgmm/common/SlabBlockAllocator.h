@@ -52,9 +52,9 @@ namespace gpgmm {
 
         uint64_t GetBlockCount() const;
 
+      private:
         const char* GetTypename() const override;
 
-      private:
         struct BlockList {
             SlabBlock* pHead = nullptr;  // First free block in slab.
         };

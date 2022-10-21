@@ -35,12 +35,13 @@ namespace gpgmm {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MemoryAllocatorStats GetStats() const override;
-        const char* GetTypename() const override;
 
         MemoryAllocator* GetFirstAllocatorForTesting() const;
         MemoryAllocator* GetSecondAllocatorForTesting() const;
 
       private:
+        const char* GetTypename() const override;
+
         std::unique_ptr<MemoryAllocator> mFirstAllocator;
         std::unique_ptr<MemoryAllocator> mSecondAllocator;
 

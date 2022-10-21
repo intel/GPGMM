@@ -53,8 +53,6 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
-        const char* GetTypename() const;
-
       private:
         friend ResourceAllocator;
 
@@ -72,6 +70,8 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
 
         void DeleteThis() override;
+
+        const char* GetTypename() const;
 
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;

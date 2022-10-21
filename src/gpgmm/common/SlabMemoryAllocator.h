@@ -61,9 +61,9 @@ namespace gpgmm {
 
         MemoryAllocatorStats GetStats() const override;
 
+      private:
         const char* GetTypename() const override;
 
-      private:
         uint64_t ComputeSlabSize(uint64_t requestSize,
                                  uint64_t baseSlabSize,
                                  uint64_t availableForAllocation) const;
