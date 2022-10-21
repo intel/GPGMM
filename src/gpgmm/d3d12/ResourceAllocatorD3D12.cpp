@@ -869,10 +869,7 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, pClearValue, &allocation));
 
-        // Insert a new (debug) allocator layer into the allocation so it can report details used
-        // during leak checks. Since we don't want to use it unless we are debugging, we hide it
-        // behind a macro.
-        if (mDebugAllocator) {
+        if (GPGMM_UNLIKELY(mDebugAllocator)) {
             ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
             mDebugAllocator->AddLiveAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
         }
