@@ -120,7 +120,7 @@ index 19ca4d4b8..88bab7391 100644
    deps = [
      ":headers",
      ":utils_gen",
-+    "${dawn_gpgmm_dir}/src:gpgmm",
++    "${dawn_gpgmm_dir}:gpgmm",
      "${dawn_root}/src/dawn/common",
      "${dawn_root}/src/tint:libtint",
      "${dawn_spirv_tools_dir}:spvtools_opt",

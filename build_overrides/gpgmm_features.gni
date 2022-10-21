@@ -21,10 +21,6 @@ if (!defined(checkout_dawn)) {
   checkout_dawn = false
 }
 
-if (!defined(checkout_webnn)) {
-  checkout_webnn = false
-}
-
 declare_args() {
   # Enable GPGMM's ASSERTs even in release builds
   # Sets -dGPGMM_ENABLE_ASSERTS
@@ -40,9 +36,6 @@ declare_args() {
 
   # Enables compilation of Dawn's end2end tests.
   gpgmm_enable_dawn = checkout_dawn
-
-  # Enables compilation of WebNN's end2end tests.
-  gpgmm_enable_webnn = checkout_webnn
 
   # Build GPGMM as a shared library.
   # Sets -dGPGMM_SHARED_LIBRARY
