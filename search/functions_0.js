@@ -1,7 +1,7 @@
 var searchData=
 [
   ['checkfeaturesupport_0',['CheckFeatureSupport',['../namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da',1,'gpgmm::d3d12']]],
-  ['createheap_1',['CreateHeap',['../namespacegpgmm_1_1d3d12.html#ab752b370ed612a40fbbb135a6a2d5bfa',1,'gpgmm::d3d12']]],
+  ['createheap_1',['CreateHeap',['../namespacegpgmm_1_1d3d12.html#aad821ee97af32ef90001f001682a43f0',1,'gpgmm::d3d12']]],
   ['createresidencylist_2',['CreateResidencyList',['../namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee',1,'gpgmm::d3d12']]],
   ['createresidencymanager_3',['CreateResidencyManager',['../namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7',1,'gpgmm::d3d12']]],
   ['createresource_4',['CreateResource',['../namespacegpgmm_1_1d3d12.html#ac739d5fc673607a33e86b9361c79b2ac',1,'gpgmm::d3d12']]],
