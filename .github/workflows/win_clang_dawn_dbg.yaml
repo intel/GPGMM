@@ -1,23 +1,11 @@
-name: Windows WebGPU/Dawn (Release)
+name: Windows x64 GN/Clang WebGPU/Dawn (Debug)
 
 on:
-  push:
-    branches: main
-    paths:
-      - 'src/**'
-      - 'scripts/dawn.deps'
-      - '.github/workflows/.patches/dawn.diff'
-
-  pull_request:
-    branches: main
-    paths:
-      - 'src/**'
-      - 'scripts/dawn.deps'
-      - '.github/workflows/.patches/dawn.diff'
+  workflow_dispatch:
 
 jobs:
 
-  win_dawn_rel:
+  win_dawn_dbg:
 
     runs-on: windows-2019
 
@@ -61,7 +49,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        gn gen out\Release --args="is_debug=false dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
+        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
 
     - name: Build for main branch
       shell: cmd
@@ -69,14 +57,14 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd base
-        ninja -C out\Release
+        ninja -C out\Debug
 
     - name: Run dawn_end2end_tests
       shell: cmd
       continue-on-error: true
       run: |
         cd base
-        out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
+        out\Debug\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\baseline_end2end_tests.json
 
     - name: Clean baseline directory
       shell: cmd
@@ -104,7 +92,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        gn gen out\Release --args="is_debug=false dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
+        gn gen out\Debug --args="is_debug=true dawn_enable_opengles=false gpgmm_enable_assert_on_warning=true"
 
     - name: Build for main branch (with patch)
       shell: cmd
@@ -112,14 +100,14 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
-        ninja -C out\Release
+        ninja -C out\Debug
 
     - name: Run dawn_end2end_tests (with patch)
       shell: cmd
       continue-on-error: true
       run: |
         cd test
-        out\Release\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Debug\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
 
     - name: Regression check end2end tests
       run: |
