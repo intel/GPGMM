@@ -34,7 +34,8 @@ namespace gpgmm::d3d12 {
       public:
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   IResidencyManager* const pResidencyManager,
-                                  CreateHeapFn&& createHeapFn,
+                                  CreateHeapFn createHeapFn,
+                                  void* createHeapFnContext,
                                   IHeap** ppHeapOut);
 
         ~Heap() override;

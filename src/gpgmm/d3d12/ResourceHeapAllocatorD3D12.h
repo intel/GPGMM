@@ -23,6 +23,18 @@ namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
+    class CreateResourceHeapCallbackContext {
+      public:
+        CreateResourceHeapCallbackContext(ID3D12Device* device, D3D12_HEAP_DESC* heapDesc);
+        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+
+      private:
+        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+
+        ID3D12Device* mDevice;
+        D3D12_HEAP_DESC* mHeapDesc;
+    };
+
     // Wrapper to allocate a D3D12 heap for resources of any type.
     class ResourceHeapAllocator final : public MemoryAllocator {
       public:

@@ -35,6 +35,41 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocation;
 
+    class ImportResourceCallbackContext {
+      public:
+        ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource);
+        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+
+      private:
+        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+
+        ComPtr<ID3D12Resource> mResource;
+    };
+
+    class CreateCommittedResourceCallbackContext {
+      public:
+        CreateCommittedResourceCallbackContext(ID3D12Device* device,
+                                               ComPtr<ID3D12Resource> resource,
+                                               D3D12_HEAP_PROPERTIES* heapProperties,
+                                               D3D12_HEAP_FLAGS heapFlags,
+                                               const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                               const D3D12_CLEAR_VALUE* clearValue,
+                                               D3D12_RESOURCE_STATES initialResourceState);
+
+        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+
+      private:
+        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+
+        const D3D12_CLEAR_VALUE* mClearValue;
+        ID3D12Device* mDevice;
+        D3D12_RESOURCE_STATES mInitialResourceState;
+        D3D12_HEAP_FLAGS mHeapFlags;
+        D3D12_HEAP_PROPERTIES* mHeapProperties;
+        ComPtr<ID3D12Resource> mResource;
+        const D3D12_RESOURCE_DESC* mResourceDescriptor;
+    };
+
     class ResourceAllocator final : public IUnknownImpl,
                                     public IResourceAllocator,
                                     public MemoryAllocator {

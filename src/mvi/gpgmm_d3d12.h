@@ -64,7 +64,8 @@ namespace gpgmm::d3d12 {
       public:
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   IResidencyManager* const pResidencyManager,
-                                  CreateHeapFn&& createHeapFn,
+                                  CreateHeapFn createHeapFn,
+                                  void* context,
                                   IHeap** ppHeapOut);
 
         // IHeap interface
@@ -170,6 +171,27 @@ namespace gpgmm::d3d12 {
         void DeleteThis() override;
 
         Microsoft::WRL::ComPtr<ID3D12Resource> mResource;
+    };
+
+    class CreateCommittedResourceCallbackContext {
+      public:
+        CreateCommittedResourceCallbackContext(ID3D12Device* device,
+                                               ALLOCATION_DESC allocationDescriptor,
+                                               Microsoft::WRL::ComPtr<ID3D12Resource> resource,
+                                               const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                               const D3D12_CLEAR_VALUE* clearValue,
+                                               D3D12_RESOURCE_STATES initialResourceState);
+        static HRESULT CreateHeapWrapper(void* context, ID3D12Pageable** ppPageableOut);
+
+      private:
+        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+
+        ID3D12Device* mDevice;
+        ALLOCATION_DESC mAllocationDescriptor;
+        const D3D12_CLEAR_VALUE* mClearValue;
+        D3D12_RESOURCE_STATES mInitialResourceState;
+        Microsoft::WRL::ComPtr<ID3D12Resource> mResource;
+        const D3D12_RESOURCE_DESC* mResourceDescriptor;
     };
 
     class ResourceAllocator final : public MemoryAllocator,

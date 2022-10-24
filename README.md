@@ -69,13 +69,10 @@ shaderVisibleHeap.SizeInBytes = kHeapSize;
 shaderVisibleHeap.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
 ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;
-gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager,
-  [&](ID3D12Pageable** ppPageableOut) -> HRESULT {
-      ComPtr<ID3D12DescriptorHeap> heap;
-      mDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heap));
-      *ppPageableOut = heap.Detach();
-      return S_OK;
-}, &descriptorHeap);
+CreateHeapContext createHeapContext(heapDesc);
+gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager, 
+      createHeapContext, &CreateHeapContext::CreateHeapCallbackWrapper,
+      &descriptorHeap);
 
 // Shader-visible heaps should be locked or always resident.
 residency->LockHeap(descriptorHeap.get());

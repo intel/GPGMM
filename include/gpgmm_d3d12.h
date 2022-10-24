@@ -181,7 +181,8 @@ namespace gpgmm::d3d12 {
     };
     \endcode
     */
-    using CreateHeapFn = std::function<HRESULT(ID3D12Pageable** ppPageableOut)>;
+
+    using CreateHeapFn = HRESULT (*)(void* context, ID3D12Pageable** ppPageableOut);
 
     GPGMM_INTERFACE IResidencyManager;
 
@@ -210,12 +211,38 @@ namespace gpgmm::d3d12 {
     @param descriptor A reference to HEAP_DESC structure that describes the heap.
     @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
     @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
+    @param createHeapFnContext  A pointer to a class designed to implement the actual heap creation
+    function and store any necessary variables.
     @param[out] ppHeapOut Pointer to a memory block that receives a pointer to the
     heap.
+
+    Example call showing the usage of createHeapFn and createHeapFnContext:
+
+    CreateHeap(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,
+    reinterpret_cast<void*>(callbackContext), ppHeapOut);
+
+    Example Callback Context Class:
+
+    class CallbackContext {
+        public:
+            CallbackContext(<Pass variables needed for heap creation here>);
+            CreateHeap(void *context, ID3D12Pageable** ppPageableOut);
+            static CallbackWrapper(ID3D12Pageable** ppPageableOut);
+        private:
+            (Declare variables needed for heap creation here)
+    }
+
+    Example Implementation of CallbackWrapper:
+
+    HRESULT CallbackContext:CallbackWrapper(void* context, ID3D12Pageable** ppPageableOut) {
+        CallbackContext* callbackContext = reinterpret_cast<CallbackContext*>(context);
+        return callbackContext->CreateHeap(ppPageableOut);
+    }
     */
     GPGMM_EXPORT HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                     IResidencyManager* const pResidencyManager,
-                                    CreateHeapFn&& createHeapFn,
+                                    CreateHeapFn createHeapFn,
+                                    void* createHeapFnContext,
                                     IHeap** ppHeapOut);
 
     /** \brief Represents a list of heaps which will be "made resident" upon executing a
