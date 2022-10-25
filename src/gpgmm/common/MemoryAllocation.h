@@ -26,11 +26,6 @@ namespace gpgmm {
     struct MemoryBlock;
     class MemoryAllocator;
 
-    struct MemoryAllocationInfo {
-        uint64_t SizeInBytes;
-        uint64_t Alignment;
-    };
-
     // Represents a location and range in memory.
     class MemoryAllocation {
       public:
@@ -43,14 +38,10 @@ namespace gpgmm {
                          uint64_t offset,
                          AllocationMethod method,
                          MemoryBlock* block,
-                         uint64_t requestSize,
-                         uint8_t* mappedPointer = nullptr);
+                         uint64_t requestSize);
 
         // Constructs a "standalone" memory allocation.
-        MemoryAllocation(MemoryAllocator* allocator,
-                         MemoryBase* memory,
-                         uint64_t requestSize,
-                         uint8_t* mappedPointer = nullptr);
+        MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory, uint64_t requestSize);
 
         virtual ~MemoryAllocation() = default;
 
@@ -59,9 +50,7 @@ namespace gpgmm {
         bool operator==(const MemoryAllocation&) const;
         bool operator!=(const MemoryAllocation& other) const;
 
-        MemoryAllocationInfo GetInfo() const;
         MemoryBase* GetMemory() const;
-        uint8_t* GetMappedPointer() const;
         MemoryAllocator* GetAllocator() const;
         uint64_t GetSize() const;
         uint64_t GetRequestSize() const;
@@ -79,10 +68,12 @@ namespace gpgmm {
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
-        MemoryBlock* mBlock;
 
+#ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
         uint64_t mRequestSize;
-        uint8_t* mMappedPointer;
+#endif
+
+        MemoryBlock* mBlock;
     };
 }  // namespace gpgmm
 
