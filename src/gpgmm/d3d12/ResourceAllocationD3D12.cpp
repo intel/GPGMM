@@ -109,7 +109,11 @@ namespace gpgmm::d3d12 {
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        ASSERT(subresource == 0 || GetMethod() != AllocationMethod::kSubAllocatedWithin);
+        if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+            gpgmm::ErrorLog() << "Unmap() on resource sub-allocation within cannot use "
+                                 "non-zero subresource-relative coordinates.";
+            return;
+        }
 
         if (mResidencyManager != nullptr) {
             mResidencyManager->UnlockHeap(GetMemory());
