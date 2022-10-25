@@ -36,8 +36,6 @@
 #    include <wrl.h>      // for Microsoft::WRL::ComPtr
 #endif
 
-#include <functional>
-
 #define GPGMM_INTERFACE struct
 
 namespace gpgmm::d3d12 {
