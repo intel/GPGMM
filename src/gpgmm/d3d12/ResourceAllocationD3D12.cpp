@@ -78,6 +78,8 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+            gpgmm::ErrorLog() << "Map() on resource sub-allocation within cannot use "
+                                 "non-zero subresource-relative coordinates.";
             return E_INVALIDARG;
         }
 
