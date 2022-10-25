@@ -18,85 +18,32 @@
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/utils/Limits.h"
 
-#include <gpgmm.h>
-
 #include <memory>
 
 namespace gpgmm {
 
-    /** \struct MemoryPoolInfo
-    Additional information about the memory pool.
-    */
-    struct MemoryPoolInfo {
-        /** \brief Total size of the pool, in bytes.
-         */
-        uint64_t SizeInBytes;
-    };
-
-    /** \brief Stores a collection of memory allocations.
-
-    Memory allocations stored in the pool must ALL be in the same state (ex. "free pool").
-
-    To grow the pool, created memory allocations are inserted into the pool by ReturnToPool().
-
-    To shrink the pool, existing allocations can removed out by AcquireFromPool() or de-allocated
-    together by ReleasePool().
-    */
+    // Stores a collection of memory allocations.
     class MemoryPoolBase {
       public:
-        /** \brief Constructs a pool for memory of the specified size.
-
-        @param memorySize Size, in bytes, of the memory allocation stored in the pool.
-        */
+        // Constructs a pool for memory of the specified size.
         explicit MemoryPoolBase(uint64_t memorySize);
         virtual ~MemoryPoolBase();
 
-        /** \brief Retrieves a memory allocation from the pool using an optional index.
-
-        @param indexInPool Optional index of the memory allocation to retrieve.
-        */
+        // Retrieves a memory allocation from the pool using an optional index.
         virtual MemoryAllocation AcquireFromPool(uint64_t indexInPool = kInvalidIndex) = 0;
 
-        /** \brief Returns a memory allocation back to the pool using an optional index.
-
-        @param allocation A pointer to MemoryAllocation which will be returned.
-        @param indexInPool Optional index of the memory allocation to return.
-        */
+        // Returns a memory allocation back to the pool using an optional index.
         virtual void ReturnToPool(MemoryAllocation allocation,
                                   uint64_t indexInPool = kInvalidIndex) = 0;
 
-        /** \brief Deallocate or shrink the pool.
-
-        @param bytesToRelease Optional size, in bytes, to release from the pool. If no size is
-        specified or kInvalidSize, the entire pool will be released.
-
-        \return Total amount, in bytes, released by the pool.
-        */
+        // Deallocate or shrink the pool.
         virtual uint64_t ReleasePool(uint64_t bytesToRelease = kInvalidSize) = 0;
 
-        /** \brief Get the size of the pool.
-
-        \return Number of memory allocations in the pool.
-        */
+        // Get the size of the pool.
         virtual uint64_t GetPoolSize() const = 0;
 
-        /** \brief Returns the size of the memory allocations being pooled.
-
-        \return Size, in bytes, of the memory allocation being pooled.
-        */
+        // Returns the size of the memory allocations being pooled.
         virtual uint64_t GetMemorySize() const;
-
-        /** \brief Returns information about this memory pool.
-
-        \return A MemoryPoolInfo struct containing the information.
-        */
-        MemoryPoolInfo GetStats() const;
-
-        /** \brief Returns the class name of this allocation.
-
-        \return A pointer to a C character string with data, "MemoryPool".
-        */
-        const char* GetTypename() const;
 
       protected:
         // Shrinks the size of the pool in |mMemorySize| sizes until |bytesToRelease| is reached.
@@ -123,6 +70,9 @@ namespace gpgmm {
         }
 
       private:
+        // Returns the class name of this allocation.
+        const char* GetTypename() const;
+
         uint64_t mMemorySize;
     };
 

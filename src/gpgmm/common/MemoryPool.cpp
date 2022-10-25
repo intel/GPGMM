@@ -30,10 +30,6 @@ namespace gpgmm {
         return mMemorySize;
     }
 
-    MemoryPoolInfo MemoryPoolBase::GetStats() const {
-        return {GetPoolSize() * mMemorySize};
-    }
-
     const char* MemoryPoolBase::GetTypename() const {
         return "MemoryPool";
     }
