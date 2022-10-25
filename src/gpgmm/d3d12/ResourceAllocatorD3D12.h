@@ -38,10 +38,10 @@ namespace gpgmm::d3d12 {
     class ImportResourceCallbackContext {
       public:
         ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource);
-        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
       private:
-        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+        HRESULT GetHeap(ID3D12Pageable** ppPageableOut);
 
         ComPtr<ID3D12Resource> mResource;
     };
@@ -56,10 +56,10 @@ namespace gpgmm::d3d12 {
                                                const D3D12_CLEAR_VALUE* clearValue,
                                                D3D12_RESOURCE_STATES initialResourceState);
 
-        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
       private:
-        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+        HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
 
         const D3D12_CLEAR_VALUE* mClearValue;
         ID3D12Device* mDevice;

@@ -82,7 +82,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         CreateDescHeapCallbackContext(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc)
             : mDevice(device), mDescHeapDesc(descHeapDesc) {
         }
-        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut) {
+        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut) {
             CreateDescHeapCallbackContext* createDescHeapCallbackContext =
                 static_cast<CreateDescHeapCallbackContext*>(pContext);
             return createDescHeapCallbackContext->CreateHeap(ppPageableOut);
@@ -105,7 +105,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
       public:
         BadCreateHeapCallbackContext() {
         }
-        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut) {
+        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut) {
             BadCreateHeapCallbackContext* badCreateHeapCallbackContext =
                 static_cast<BadCreateHeapCallbackContext*>(pContext);
             return badCreateHeapCallbackContext->CreateHeap(ppPageableOut);
@@ -145,8 +145,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
 
     ASSERT_FAILED(CreateHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
-                             CreateResourceHeapCallbackContext::CreateHeapWrapper,
-                             &createHeapContext, nullptr));
+                             CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                             nullptr));
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
@@ -174,18 +174,18 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     resourceHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     ASSERT_FAILED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                             BadCreateHeapCallbackContext::CreateHeapWrapper,
+                             BadCreateHeapCallbackContext::CreateHeap,
                              &badCreateHeapCallbackContext, nullptr));
 
     ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                                CreateResourceHeapCallbackContext::CreateHeapWrapper,
-                                &createHeapContext, nullptr));
+                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                                nullptr));
 
     // Create a resource heap without residency.
     ComPtr<IHeap> resourceHeap;
     ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, nullptr,
-                                CreateResourceHeapCallbackContext::CreateHeapWrapper,
-                                &createHeapContext, &resourceHeap));
+                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                                &resourceHeap));
 
     // Ensure the unmanaged resource heap state is always unknown. Even though D3D12 implicitly
     // creates heaps as resident, untrack resource heaps would never transition out from
@@ -195,8 +195,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     // Create a resource heap with residency.
     ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                                CreateResourceHeapCallbackContext::CreateHeapWrapper,
-                                &createHeapContext, &resourceHeap));
+                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                                &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
 
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
@@ -249,7 +249,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     ComPtr<IHeap> descriptorHeap;
     ASSERT_SUCCEEDED(CreateHeap(descriptorHeapDesc, residencyManager.Get(),
-                                CreateDescHeapCallbackContext::CreateHeapWrapper,
+                                CreateDescHeapCallbackContext::CreateHeap,
                                 &createDescHeapCallbackContext, &descriptorHeap));
 
     EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_UNKNOWN);

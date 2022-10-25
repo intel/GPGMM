@@ -553,10 +553,9 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                                                                             &heapDesc);
 
                         ComPtr<IHeap> resourceHeap;
-                        ASSERT_SUCCEEDED(
-                            CreateHeap(resourceHeapDesc, residencyManager,
-                                       CreateResourceHeapCallbackContext::CreateHeapWrapper,
-                                       &createHeapContext, &resourceHeap));
+                        ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager,
+                                                    CreateResourceHeapCallbackContext::CreateHeap,
+                                                    &createHeapContext, &resourceHeap));
 
                         playbackContext.CurrentHeapWithoutID = std::move(resourceHeap);
 

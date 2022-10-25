@@ -26,7 +26,7 @@ namespace gpgmm::d3d12 {
     class CreateResourceHeapCallbackContext {
       public:
         CreateResourceHeapCallbackContext(ID3D12Device* device, D3D12_HEAP_DESC* heapDesc);
-        static HRESULT CreateHeapWrapper(void* pContext, ID3D12Pageable** ppPageableOut);
+        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
       private:
         HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);

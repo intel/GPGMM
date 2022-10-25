@@ -181,10 +181,10 @@ namespace gpgmm::d3d12 {
                                                const D3D12_RESOURCE_DESC* resourceDescriptor,
                                                const D3D12_CLEAR_VALUE* clearValue,
                                                D3D12_RESOURCE_STATES initialResourceState);
-        static HRESULT CreateHeapWrapper(void* context, ID3D12Pageable** ppPageableOut);
+        static HRESULT CreateHeap(void* context, ID3D12Pageable** ppPageableOut);
 
       private:
-        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut);
+        HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
 
         ID3D12Device* mDevice;
         ALLOCATION_DESC mAllocationDescriptor;

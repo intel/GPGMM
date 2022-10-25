@@ -71,7 +71,7 @@ namespace gpgmm::d3d12 {
         CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
         IHeap* resourceHeap = nullptr;
         if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
-                                    CreateResourceHeapCallbackContext::CreateHeapWrapper,
+                                    CreateResourceHeapCallbackContext::CreateHeap,
                                     &createResourceHeapCallbackContext, &resourceHeap))) {
             return {};
         }
@@ -109,8 +109,8 @@ namespace gpgmm::d3d12 {
         : mDevice(device), mHeapDesc(heapDesc) {
     }
 
-    HRESULT CreateResourceHeapCallbackContext::CreateHeapWrapper(void* pContext,
-                                                                 ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateResourceHeapCallbackContext::CreateHeap(void* pContext,
+                                                          ID3D12Pageable** ppPageableOut) {
         CreateResourceHeapCallbackContext* createResourceHeapCallbackContext =
             static_cast<CreateResourceHeapCallbackContext*>(pContext);
 

@@ -361,7 +361,7 @@ namespace gpgmm::d3d12 {
             pClearValue, initialResourceState);
 
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
-                                        CreateCommittedResourceCallbackContext::CreateHeapWrapper,
+                                        CreateCommittedResourceCallbackContext::CreateHeap,
                                         &callbackContext, &resourceHeap));
 
         const uint64_t allocationSize = resourceHeapDesc.SizeInBytes;
@@ -439,7 +439,8 @@ namespace gpgmm::d3d12 {
           mResourceDescriptor(resourceDescriptor) {
     }
 
-    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateCommittedResource(
+        ID3D12Pageable** ppPageableOut) {
         D3D12_HEAP_PROPERTIES heapProperties = {};
         heapProperties.Type = mAllocationDescriptor.HeapType;
 
@@ -453,13 +454,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT CreateCommittedResourceCallbackContext::CreateHeapWrapper(
-        void* context,
-        ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(void* context,
+                                                               ID3D12Pageable** ppPageableOut) {
         CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
             static_cast<CreateCommittedResourceCallbackContext*>(context);
 
-        return createCommittedResourceCallbackContext->CreateHeap(ppPageableOut);
+        return createCommittedResourceCallbackContext->CreateCommittedResource(ppPageableOut);
     }
 
 }  // namespace gpgmm::d3d12

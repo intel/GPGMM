@@ -1243,7 +1243,7 @@ namespace gpgmm::d3d12 {
 
         IHeap* resourceHeap = nullptr;
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr,
-                                        ImportResourceCallbackContext::CreateHeapWrapper,
+                                        ImportResourceCallbackContext::CreateHeap,
                                         &importResourceCallbackContext, &resourceHeap));
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
@@ -1322,7 +1322,7 @@ namespace gpgmm::d3d12 {
             clearValue, initialResourceState);
 
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
-                                        CreateCommittedResourceCallbackContext::CreateHeapWrapper,
+                                        CreateCommittedResourceCallbackContext::CreateHeap,
                                         &callbackContext, &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
@@ -1467,15 +1467,15 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ImportResourceCallbackContext::CreateHeapWrapper(void* pContext,
-                                                             ID3D12Pageable** ppPageableOut) {
+    HRESULT ImportResourceCallbackContext::CreateHeap(void* pContext,
+                                                      ID3D12Pageable** ppPageableOut) {
         ImportResourceCallbackContext* importResourceCallbackContext =
             static_cast<ImportResourceCallbackContext*>(pContext);
 
-        return importResourceCallbackContext->CreateHeap(ppPageableOut);
+        return importResourceCallbackContext->GetHeap(ppPageableOut);
     }
 
-    HRESULT ImportResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+    HRESULT ImportResourceCallbackContext::GetHeap(ID3D12Pageable** ppPageableOut) {
         ComPtr<ID3D12Pageable> pageable;
         ReturnIfFailed(mResource.As(&pageable));
 
@@ -1502,16 +1502,16 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT CreateCommittedResourceCallbackContext::CreateHeapWrapper(
-        void* pContext,
-        ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(void* pContext,
+                                                               ID3D12Pageable** ppPageableOut) {
         CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
             static_cast<CreateCommittedResourceCallbackContext*>(pContext);
 
-        return createCommittedResourceCallbackContext->CreateHeap(ppPageableOut);
+        return createCommittedResourceCallbackContext->CreateCommittedResource(ppPageableOut);
     }
 
-    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateCommittedResource(
+        ID3D12Pageable** ppPageableOut) {
         // Resource heap flags must be inferred by the resource descriptor and cannot be
         // explicitly provided to CreateCommittedResource.
         mHeapFlags &= ~(D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES |
