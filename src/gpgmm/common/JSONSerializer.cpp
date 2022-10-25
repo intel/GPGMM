@@ -65,14 +65,6 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MemoryAllocationInfo& info) {
-        JSONDict dict;
-        dict.AddItem("SizeInBytes", info.SizeInBytes);
-        dict.AddItem("Alignment", info.Alignment);
-        return dict;
-    }
-
-    // static
     JSONDict JSONSerializer::Serialize(const void* objectPtr) {
         JSONDict dict;
         dict.AddItem(TraceEventID::kIdRefKey, ToString(objectPtr));

@@ -26,8 +26,10 @@ namespace gpgmm {
           mMemory(nullptr),
           mOffset(kInvalidOffset),
           mMethod(AllocationMethod::kUndefined),
-          mBlock(nullptr),
-          mMappedPointer(nullptr) {
+#ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
+          mRequestSize(kInvalidSize),
+#endif
+          mBlock(nullptr) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
@@ -35,32 +37,28 @@ namespace gpgmm {
                                        uint64_t offset,
                                        AllocationMethod method,
                                        MemoryBlock* block,
-                                       uint64_t requestSize,
-                                       uint8_t* mappedPointer)
+                                       uint64_t requestSize)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(offset),
           mMethod(method),
-          mBlock(block),
 #ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
           mRequestSize(requestSize),
 #endif
-          mMappedPointer(mappedPointer) {
+          mBlock(block) {
     }
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
                                        MemoryBase* memory,
-                                       uint64_t requestSize,
-                                       uint8_t* mappedPointer)
+                                       uint64_t requestSize)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(0),
           mMethod(AllocationMethod::kStandalone),
-          mBlock(nullptr),
 #ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
           mRequestSize(requestSize),
 #endif
-          mMappedPointer(mappedPointer) {
+          mBlock(nullptr) {
     }
 
     bool MemoryAllocation::operator==(const MemoryAllocation& other) const {
@@ -72,16 +70,8 @@ namespace gpgmm {
         return !operator==(other);
     }
 
-    MemoryAllocationInfo MemoryAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment()};
-    }
-
     MemoryBase* MemoryAllocation::GetMemory() const {
         return mMemory;
-    }
-
-    uint8_t* MemoryAllocation::GetMappedPointer() const {
-        return mMappedPointer;
     }
 
     MemoryAllocator* MemoryAllocation::GetAllocator() const {
