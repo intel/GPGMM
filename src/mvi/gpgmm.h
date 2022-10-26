@@ -45,6 +45,9 @@ namespace gpgmm {
         MemoryAllocatorStats mStats = {};
     };
 
+    // MemoryAllocation represents a range of memory. A MemoryAllocation object will be held alive
+    // until MemoryAllocator::DeallocateMemory is called on the MemoryAllocator object from which it
+    // was originally created.
     class MemoryAllocation {
       public:
         MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory);
