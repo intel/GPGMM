@@ -94,6 +94,17 @@ TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocator) {
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
+    // Creating an allocator without the resource heap tier specified should always succeed.
+    {
+        ALLOCATOR_DESC desc = {};
+        desc.Device = mDevice;
+        desc.Adapter = mAdapter;
+
+        ComPtr<IResourceAllocator> resourceAllocator;
+        EXPECT_SUCCEEDED(CreateResourceAllocator(desc, &resourceAllocator, nullptr));
+        EXPECT_NE(resourceAllocator, nullptr);
+    }
+
     // Creating an allocator with the wrong resource heap tier should always fail.
     {
         // Tier 3 doesn't exist in D3D12.

@@ -898,7 +898,7 @@ namespace gpgmm::d3d12 {
         Used to determine if resource categories (texture and buffers) can co-exist in the
         same resource heap.
 
-        Required parameter. Use CheckFeatureSupport to get supported tier.
+        Optional parameter. By default, max tier. Use CheckFeatureSupport.
         */
         D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
 
