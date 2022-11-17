@@ -475,6 +475,11 @@ namespace gpgmm::d3d12 {
             newDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
         }
 
+        // Resource heap tier is required but user didn't specify one.
+        if (newDescriptor.ResourceHeapTier == 0) {
+            newDescriptor.ResourceHeapTier = caps->GetMaxResourceHeapTierSupported();
+        }
+
         // ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
         // call ID3D12Device::MakeResident, requiring resource heaps to be "created in budget".
         // But this can be disabled if D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is supported.
