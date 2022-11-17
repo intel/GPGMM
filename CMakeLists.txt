@@ -141,7 +141,9 @@ add_library(gpgmm_public_config INTERFACE)
 target_include_directories(gpgmm_public_config INTERFACE "${GPGMM_INCLUDE_DIRS}")
 
 add_library(gpgmm_common_config INTERFACE)
-target_include_directories(gpgmm_common_config INTERFACE "${GPGMM_ROOT_DIR}/src")
+target_include_directories(gpgmm_common_config INTERFACE $<BUILD_INTERFACE:${GPGMM_ROOT_DIR}/src>)
+
+install(TARGETS gpgmm_common_config EXPORT gpgmmTargets)
 
 # Compile definitions for the common config
 if(GPGMM_ALWAYS_ASSERT)
@@ -217,8 +219,4 @@ endif()
 # ###############################################################################
 # Install GPGMM
 # ###############################################################################
-install(TARGETS gpgmm
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/install.cmake)

@@ -132,7 +132,7 @@ if (GPGMM_ENABLE_VK)
 
 endif()
 
-target_include_directories(gpgmm PUBLIC ${GPGMM_INCLUDE_DIRS})
+target_include_directories(gpgmm PUBLIC $<BUILD_INTERFACE:${GPGMM_INCLUDE_DIRS}>)
 
 ################################################################################
 # Build subdirectories

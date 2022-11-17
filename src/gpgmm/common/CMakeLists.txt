@@ -59,3 +59,5 @@ target_sources(gpgmm_common PRIVATE
 )
 
 target_link_libraries(gpgmm_common PRIVATE gpgmm_common_config)
+
+install(TARGETS gpgmm_common EXPORT gpgmmTargets)
