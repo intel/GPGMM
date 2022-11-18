@@ -49,3 +49,5 @@ if (WIN32)
 endif()
 
 target_link_libraries(gpgmm_utils PRIVATE gpgmm_common_config)
+
+install(TARGETS gpgmm_utils EXPORT gpgmmTargets)
