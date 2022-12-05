@@ -23,11 +23,11 @@ vars = {
 deps = {
   # Dependencies required to use GN/Clang in standalone
   'build': {
-    'url': '{chromium_git}/chromium/src/build@cd59f8ec35941047ea3c7ad4d713c9207abfb69b',
+    'url': '{chromium_git}/chromium/src/build@988bc9fa63ccda1efdf52aeaf7da022df38cb399',
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools@4a1666ec511da029f79a7364327b19d18848cb74',
+    'url': '{chromium_git}/chromium/src/buildtools@1547c3fe52d27e9a15c6699c77bf7e224ac91b9b',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/clang_format/script': {
@@ -61,15 +61,15 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@0488dfb230af1188de06115aaa587b09536d99e5',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@f92e1b7e4055ada4cbbaf2329a7e4d73b6fd5ad1',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@7362046cc8286cdbcefb6d11dacb3b2a88581660',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@44d54baf424cfcfdd2fa6dab88cb5e536d7d81af',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang@4f8bb52f0a7bf357f812225244a0882b2d0e3ba6',
+    'url': '{chromium_git}/chromium/src/tools/clang@dabb142daf835352d52b9176754ab34e70e457c9',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang/dsymutil': {
@@ -85,20 +85,20 @@ deps = {
 
   # Testing, GTest and GMock
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@426e0dd3d35c19bfdc2ad319c86cff0521d7e61c',
+    'url': '{chromium_git}/chromium/src/testing@a0b680597d3d0e6549f5b345d69fbfe7a3dc4519',
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
-    'url': '{chromium_git}/external/github.com/google/googletest@e68764c147ea0dac1e8811925c531d937396878e',
+    'url': '{chromium_git}/external/github.com/google/googletest@1f643f71d4151c3b364c0e9302042f7a6debd439',
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@d0ff014f90d2aa2d6c210ecaf324f8f2e824137c',
+    'url': '{chromium_git}/vulkan-deps@63dc6101459edc0d463b570ebda1db02bf4a8a39',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@07489847d9adb4d5fb5ab9348f1044acd96e523a',
+    'url': '{chromium_git}/catapult.git@41eec55d820cc7a49e8ca4e8d9edb78b5ad62386',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
