@@ -213,11 +213,12 @@ Building GPGMM for development.
 
 ## GN
 
-### Install `depot_tools`
+### Install depot_tools and visual studio
 
-GPGMM uses the Chromium build system and dependency management so you need to [install depot_tools] and add it to the PATH.
+GPGMM uses the Chromium build system and dependency management so you need to [install depot_tools] and add it to the PATH. Then [install visual studio] with the SDK and “Debugging Tools For Windows” package.
 
 [install depot_tools]: http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up
+[install visual studio]: https://chromium.googlesource.com/chromium/src/+/HEAD/docs/windows_build_instructions.md#visual-studio
 
 **Notes**:
  * On Windows, you'll need to set the environment variable `DEPOT_TOOLS_WIN_TOOLCHAIN=0`. This tells depot_tools to use your locally installed version of Visual Studio (by default, depot_tools will try to download a Google-internal version).
