@@ -218,9 +218,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a821820440ac096a41512b0008c9b6ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a821820440ac096a41512b0008c9b6ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <a href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">More...</a><br /></td></tr>
 <tr class="separator:a821820440ac096a41512b0008c9b6ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f55ea2c417d3efdb1711fa0084b5864"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0f55ea2c417d3efdb1711fa0084b5864">Unmap</a> (uint32_t subresource=0, const D3D12_RANGE *pWrittenRange=nullptr)=0</td></tr>
-<tr class="memdesc:a0f55ea2c417d3efdb1711fa0084b5864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#a0f55ea2c417d3efdb1711fa0084b5864">More...</a><br /></td></tr>
-<tr class="separator:a0f55ea2c417d3efdb1711fa0084b5864"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148">Unmap</a> (uint32_t subresource, const D3D12_RANGE *pWrittenRange)=0</td></tr>
+<tr class="memdesc:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <a href="namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148">More...</a><br /></td></tr>
+<tr class="separator:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memItemLeft" align="right" valign="top">virtual ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2">GetResource</a> () const =0</td></tr>
 <tr class="memdesc:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource owned by this allocation.  <a href="namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2">More...</a><br /></td></tr>
 <tr class="separator:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -269,9 +269,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a199143fd12adc1d2a067b51257c228f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a></td></tr>
 <tr class="memdesc:a199143fd12adc1d2a067b51257c228f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.  <a href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">More...</a><br /></td></tr>
 <tr class="separator:a199143fd12adc1d2a067b51257c228f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e58a104b6eb456c7e81ee651304159f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1e58a104b6eb456c7e81ee651304159f">pReadRange</a> = nullptr</td></tr>
+<tr class="memitem:a1e58a104b6eb456c7e81ee651304159f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1e58a104b6eb456c7e81ee651304159f">pReadRange</a></td></tr>
 <tr class="separator:a1e58a104b6eb456c7e81ee651304159f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a924abb72b724f675a0d311bf225a9fda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a924abb72b724f675a0d311bf225a9fda">ppDataOut</a> = nullptr) = 0</td></tr>
+<tr class="memitem:a924abb72b724f675a0d311bf225a9fda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a924abb72b724f675a0d311bf225a9fda">ppDataOut</a> = 0</td></tr>
 <tr class="separator:a924abb72b724f675a0d311bf225a9fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a></td></tr>
 <tr class="memdesc:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.  <a href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">More...</a><br /></td></tr>
@@ -1436,8 +1436,8 @@ reinterpret_cast&lt;void*&gt;(callbackContext), ppHeapOut);</p>
 
 </div>
 </div>
-<a id="a0f55ea2c417d3efdb1711fa0084b5864" name="a0f55ea2c417d3efdb1711fa0084b5864"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f55ea2c417d3efdb1711fa0084b5864">&#9670;&#160;</a></span>Unmap()</h2>
+<a id="a3cf28c7ae524e3045d4ef069a4d2c148" name="a3cf28c7ae524e3045d4ef069a4d2c148"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cf28c7ae524e3045d4ef069a4d2c148">&#9670;&#160;</a></span>Unmap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1449,13 +1449,13 @@ reinterpret_cast&lt;void*&gt;(callbackContext), ppHeapOut);</p>
           <td class="memname">virtual void gpgmm::d3d12::Unmap </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>subresource</em> = <code>0</code>, </td>
+          <td class="paramname"><em>subresource</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const D3D12_RANGE *&#160;</td>
-          <td class="paramname"><em>pWrittenRange</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>pWrittenRange</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1625,7 +1625,7 @@ reinterpret_cast&lt;void*&gt;(callbackContext), ppHeapOut);</p>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void** gpgmm::d3d12::ppDataOut = nullptr) = 0</td>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void** gpgmm::d3d12::ppDataOut = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1653,7 +1653,7 @@ reinterpret_cast&lt;void*&gt;(callbackContext), ppHeapOut);</p>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE* gpgmm::d3d12::pReadRange = nullptr</td>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE* gpgmm::d3d12::pReadRange</td>
         </tr>
       </table>
 </div><div class="memdoc">
