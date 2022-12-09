@@ -299,13 +299,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Callback function used to create a ID3D12Pageable. </p>
-<p >For example, to create a ID3D12Heap:</p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> callback = [heapDesc](ID3D12Pageable** ppPageableOut) -&gt; HRESULT {</div>
-<div class="line">    ComPtr&lt;ID3D12Heap&gt; heap;</div>
-<div class="line">    ReturnIfFailed(mDevice-&gt;CreateHeap(&amp;heapDesc, IID_PPV_ARGS(&amp;heap)));</div>
-<div class="line">    *ppPageableOut = heap.Detach();</div>
-<div class="line">};</div>
-</div><!-- fragment --> 
+
 </div>
 </div>
 <a id="ac5918db78a3965f1c32a88a8bdd76b86" name="ac5918db78a3965f1c32a88a8bdd76b86"></a>
@@ -764,13 +758,24 @@ mechanism can be disabled where a pull-based method is used instead.
   </dd>
 </dl>
 <p>Example call showing the usage of createHeapFn and createHeapFnContext:</p>
-<p >CreateHeap(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,
-reinterpret_cast&lt;void*&gt;(callbackContext), ppHeapOut);</p>
-<p >Example Callback Context Class:</p>
-<p >class CallbackContext { public: CallbackContext(&lt;Pass variables needed for heap creation here&gt;); CreateHeap(void *context, ID3D12Pageable** ppPageableOut); static CallbackWrapper(ID3D12Pageable** ppPageableOut); private: (Declare variables needed for heap creation here) }</p>
-<p >Example Implementation of CallbackWrapper:</p>
-<p >HRESULT CallbackContext:CallbackWrapper(void* context, ID3D12Pageable** ppPageableOut) { CallbackContext* callbackContext = reinterpret_cast&lt;CallbackContext*&gt;(context); return callbackContext-&gt;CreateHeap(ppPageableOut); } </p>
-
+<div class="fragment"><div class="line"><a class="code hl_function" href="namespacegpgmm_1_1d3d12.html#aad821ee97af32ef90001f001682a43f0">CreateHeap</a>(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,</div>
+<div class="line"><span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(callbackContext), ppHeapOut);</div>
+<div class="ttc" id="anamespacegpgmm_1_1d3d12_html_aad821ee97af32ef90001f001682a43f0"><div class="ttname"><a href="namespacegpgmm_1_1d3d12.html#aad821ee97af32ef90001f001682a43f0">gpgmm::d3d12::CreateHeap</a></div><div class="ttdeci">GPGMM_EXPORT HRESULT CreateHeap(const HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, CreateHeapFn createHeapFn, void *createHeapFnContext, IHeap **ppHeapOut)</div><div class="ttdoc">Create a heap managed by GPGMM.</div></div>
+</div><!-- fragment --><p >Example Callback Context Class:</p>
+<div class="fragment"><div class="line"><span class="keyword">class </span>CallbackContext {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        CallbackContext(&lt;Pass variables needed <span class="keywordflow">for</span> heap creation here&gt;);</div>
+<div class="line">        <a class="code hl_function" href="namespacegpgmm_1_1d3d12.html#aad821ee97af32ef90001f001682a43f0">CreateHeap</a>(<span class="keywordtype">void</span> *context, ID3D12Pageable** ppPageableOut);</div>
+<div class="line">        <span class="keyword">static</span> CallbackWrapper(ID3D12Pageable** ppPageableOut);</div>
+<div class="line">    <span class="keyword">private</span>:</div>
+<div class="line">        (Declare variables needed <span class="keywordflow">for</span> heap creation here)</div>
+<div class="line">}</div>
+</div><!-- fragment --><p >Example implementation of CallbackWrapper:</p>
+<div class="fragment"><div class="line">HRESULT CallbackContext:CallbackWrapper(<span class="keywordtype">void</span>* context, ID3D12Pageable** ppPageableOut) {</div>
+<div class="line">    CallbackContext* callbackContext = <span class="keyword">reinterpret_cast&lt;</span>CallbackContext*<span class="keyword">&gt;</span>(context);</div>
+<div class="line">    <span class="keywordflow">return</span> callbackContext-&gt;CreateHeap(ppPageableOut);</div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="a5f06db116d1746109ac7333dcc3411ee" name="a5f06db116d1746109ac7333dcc3411ee"></a>
