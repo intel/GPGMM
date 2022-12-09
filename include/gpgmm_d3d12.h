@@ -662,9 +662,8 @@ namespace gpgmm::d3d12 {
         @param[out] ppDataOut A pointer to a memory block that receives a pointer to the resource
         data.
         */
-        virtual HRESULT Map(uint32_t subresource = 0,
-                            const D3D12_RANGE* pReadRange = nullptr,
-                            void** ppDataOut = nullptr) = 0;
+        virtual HRESULT Map(uint32_t subresource, const D3D12_RANGE* pReadRange,
+                            void** ppDataOut) = 0;
 
         /** \brief Unmaps the resource allocation.
 
@@ -674,8 +673,7 @@ namespace gpgmm::d3d12 {
         @param pWrittenRange A pointer to a D3D12_RANGE structure that describes the range of memory
         to unmap.
         */
-        virtual void Unmap(uint32_t subresource = 0,
-                           const D3D12_RANGE* pWrittenRange = nullptr) = 0;
+        virtual void Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) = 0;
 
         /** \brief Returns the resource owned by this allocation.
 

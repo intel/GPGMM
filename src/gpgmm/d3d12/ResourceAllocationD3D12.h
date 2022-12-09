@@ -37,10 +37,8 @@ namespace gpgmm::d3d12 {
         ~ResourceAllocation() override;
 
         // IResourceAllocation interface
-        HRESULT Map(uint32_t subresource = 0,
-                    const D3D12_RANGE* pReadRange = nullptr,
-                    void** ppDataOut = nullptr) override;
-        void Unmap(uint32_t subresource = 0, const D3D12_RANGE* pWrittenRange = nullptr) override;
+        HRESULT Map(uint32_t subresource, const D3D12_RANGE* pReadRange, void** ppDataOut) override;
+        void Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) override;
         ID3D12Resource* GetResource() const override;
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const override;
         uint64_t GetOffsetFromResource() const override;

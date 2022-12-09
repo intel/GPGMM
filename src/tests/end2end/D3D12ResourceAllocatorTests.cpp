@@ -549,7 +549,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ASSERT_NE(allocation, nullptr);
         ASSERT_NE(allocation->GetResource(), nullptr);
 
-        ASSERT_SUCCEEDED(allocation->Map());
+        ASSERT_SUCCEEDED(allocation->Map(/*subresource*/ 0, nullptr, nullptr));
     }
 
     // Resource per heap type should always succeed if the heap type is allowed.
@@ -1155,29 +1155,29 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(smallBufferB->GetResource(), smallBufferC->GetResource());
 
     // Mapping within must use the entire resource.
-    ASSERT_FAILED(smallBufferA->Map(/*subresource*/ 1));
-    ASSERT_FAILED(smallBufferB->Map(/*subresource*/ 1));
-    ASSERT_FAILED(smallBufferC->Map(/*subresource*/ 1));
+    ASSERT_FAILED(smallBufferA->Map(/*subresource*/ 1, nullptr, nullptr));
+    ASSERT_FAILED(smallBufferB->Map(/*subresource*/ 1, nullptr, nullptr));
+    ASSERT_FAILED(smallBufferC->Map(/*subresource*/ 1, nullptr, nullptr));
 
     // Fill small buffer C with value 0xCC.
     std::vector<uint8_t> dataCC(static_cast<const size_t>(smallBufferC->GetInfo().SizeInBytes),
                                 0xCC);
     void* mappedBufferC = nullptr;
-    ASSERT_SUCCEEDED(smallBufferC->Map(0, nullptr, &mappedBufferC));
+    ASSERT_SUCCEEDED(smallBufferC->Map(/*subresource*/ 0, nullptr, &mappedBufferC));
     memcpy(mappedBufferC, dataCC.data(), dataCC.size());
 
     // Fill small buffer A with value 0xAA.
     std::vector<uint8_t> dataAA(static_cast<const size_t>(smallBufferA->GetInfo().SizeInBytes),
                                 0xAA);
     void* mappedBufferA = nullptr;
-    ASSERT_SUCCEEDED(smallBufferA->Map(0, nullptr, &mappedBufferA));
+    ASSERT_SUCCEEDED(smallBufferA->Map(/*subresource*/ 0, nullptr, &mappedBufferA));
     memcpy(mappedBufferA, dataAA.data(), dataAA.size());
 
     // Fill small buffer B with value 0xBB.
     std::vector<uint8_t> dataBB(static_cast<const size_t>(smallBufferB->GetInfo().SizeInBytes),
                                 0xBB);
     void* mappedBufferB = nullptr;
-    ASSERT_SUCCEEDED(smallBufferB->Map(0, nullptr, &mappedBufferB));
+    ASSERT_SUCCEEDED(smallBufferB->Map(/*subresource*/ 0, nullptr, &mappedBufferB));
     memcpy(mappedBufferB, dataBB.data(), dataBB.size());
 
     EXPECT_NE(mappedBufferA, mappedBufferB);
@@ -1185,7 +1185,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
 
     // Map the entire resource and check values, in-order.
     void* mappedBuffer = nullptr;
-    ASSERT_SUCCEEDED(smallBufferB->GetResource()->Map(0, nullptr, &mappedBuffer));
+    ASSERT_SUCCEEDED(smallBufferB->GetResource()->Map(/*subresource*/ 0, nullptr, &mappedBuffer));
 
     const uint8_t* mappedByte = static_cast<uint8_t*>(mappedBuffer);
     for (uint32_t i = 0; i < smallBufferA->GetInfo().SizeInBytes; i++, mappedByte++) {
