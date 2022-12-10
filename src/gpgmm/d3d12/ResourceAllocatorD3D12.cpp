@@ -329,7 +329,7 @@ namespace gpgmm::d3d12 {
                                                 D3D12_HEAP_TYPE heapType,
                                                 bool isCustomHeapDisabled) {
             ASSERT(heapType != D3D12_HEAP_TYPE_CUSTOM);
-            
+
             // Produces the corresponding properties from the corresponding heap type per this table
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getcustomheapproperties
             if (!isCustomHeapDisabled) {
@@ -1246,7 +1246,7 @@ namespace gpgmm::d3d12 {
 
         ImportResourceCallbackContext importResourceCallbackContext(resource);
 
-        IHeap* resourceHeap = nullptr;
+        ComPtr<IHeap> resourceHeap;
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr,
                                         ImportResourceCallbackContext::CreateHeap,
                                         &importResourceCallbackContext, &resourceHeap));
@@ -1261,11 +1261,11 @@ namespace gpgmm::d3d12 {
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
         allocationDesc.OffsetFromResource = 0;
-        
-        if (ppResourceAllocationOut != nullptr){
-            *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, nullptr, this,
-                                                              static_cast<Heap*>(resourceHeap),
-                                                              nullptr, std::move(resource));
+
+        if (ppResourceAllocationOut != nullptr) {
+            *ppResourceAllocationOut = new ResourceAllocation(
+                allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap.Detach()), nullptr,
+                std::move(resource));
         }
 
         return S_OK;
@@ -1320,7 +1320,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
-        IHeap* resourceHeap = nullptr;
+        ComPtr<IHeap> resourceHeap;
         ComPtr<ID3D12Resource> committedResource;
         CreateCommittedResourceCallbackContext callbackContext(
             mDevice.Get(), committedResource, &heapProperties, heapFlags, resourceDescriptor,
@@ -1334,7 +1334,9 @@ namespace gpgmm::d3d12 {
             *commitedResourceOut = committedResource.Detach();
         }
 
-        *resourceHeapOut = static_cast<Heap*>(resourceHeap);
+        if (resourceHeapOut != nullptr) {
+            *resourceHeapOut = static_cast<Heap*>(resourceHeap.Detach());
+        }
 
         return S_OK;
     }
