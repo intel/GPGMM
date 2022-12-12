@@ -780,9 +780,12 @@ namespace gpgmm::d3d12 {
     ResourceAllocator::~ResourceAllocator() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
 
-        // Give the debug allocator the first chance to report leaks.
+        // Give the debug allocator the first chance to report allocation leaks.
+        // If allocation leak exists, report then release them immediately to prevent another leak
+        // check from re-reporting the leaked allocation.
         if (mDebugAllocator) {
             mDebugAllocator->ReportLiveAllocations();
+            mDebugAllocator->ReleaseLiveAllocationsForTesting();
         }
 
         // Destroy allocators in the reverse order they were created so we can record delete events

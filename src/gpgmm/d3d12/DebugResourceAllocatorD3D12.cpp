@@ -55,6 +55,16 @@ namespace gpgmm::d3d12 {
         }
     }
 
+    void DebugResourceAllocator::ReleaseLiveAllocationsForTesting() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        for (auto allocationEntry : mLiveAllocations) {
+            allocationEntry->GetValue().GetAllocator()->DeallocateMemory(
+                std::unique_ptr<MemoryAllocation>(allocationEntry->GetValue().GetAllocation()));
+        }
+
+        mLiveAllocations.clear();
+    }
+
     void DebugResourceAllocator::AddLiveAllocation(ResourceAllocation* allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
