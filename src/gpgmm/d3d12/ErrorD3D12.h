@@ -16,19 +16,21 @@
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/Compiler.h"
+#include "gpgmm/utils/Log.h"
 
 #include <string>
 
 namespace gpgmm::d3d12 {
 
-#define ReturnIfFailed(expr)              \
-    {                                     \
-        HRESULT hr = expr;                \
-        if (GPGMM_UNLIKELY(FAILED(hr))) { \
-            return hr;                    \
-        }                                 \
-    }                                     \
-    for (;;)                              \
+#define ReturnIfFailed(expr)                                           \
+    {                                                                  \
+        HRESULT hr = expr;                                             \
+        if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
+            gpgmm::DebugLog() << #expr << ": " << GetErrorMessage(hr); \
+            return hr;                                                 \
+        }                                                              \
+    }                                                                  \
+    for (;;)                                                           \
     break
 
 #define ReturnIfSucceeded(expr)            \
@@ -42,6 +44,7 @@ namespace gpgmm::d3d12 {
     break
 
     std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
+    std::string GetErrorMessage(HRESULT error);
 
 }  // namespace gpgmm::d3d12
 
