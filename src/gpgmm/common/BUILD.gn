@@ -213,9 +213,9 @@ source_set("gpgmm_common_sources") {
     "SlabBlockAllocator.h",
     "SlabMemoryAllocator.cpp",
     "SlabMemoryAllocator.h",
+    "ThreadPool.cpp",
+    "ThreadPool.h",
     "TraceEvent.cpp",
     "TraceEvent.h",
-    "WorkerThread.cpp",
-    "WorkerThread.h",
   ]
 }

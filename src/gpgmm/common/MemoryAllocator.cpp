@@ -20,8 +20,6 @@
 
 namespace gpgmm {
 
-    static constexpr const char* kPrefetchMemoryWorkerThreadName = "GPGMM_ThreadBudgetChangeWorker";
-
     class AllocateMemoryTask : public VoidCallback {
       public:
         AllocateMemoryTask(MemoryAllocator* allocator, const MemoryAllocationRequest& request)
@@ -86,11 +84,10 @@ namespace gpgmm {
 
     // MemoryAllocator
 
-    MemoryAllocator::MemoryAllocator() : mThreadPool(ThreadPool::Create()) {
+    MemoryAllocator::MemoryAllocator() {
     }
 
-    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> next)
-        : mThreadPool(ThreadPool::Create()) {
+    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> next) {
         InsertIntoChain(std::move(next));
     }
 
@@ -126,7 +123,7 @@ namespace gpgmm {
         std::shared_ptr<AllocateMemoryTask> task =
             std::make_shared<AllocateMemoryTask>(this, request);
         return std::make_shared<MemoryAllocationEvent>(
-            ThreadPool::PostTask(mThreadPool, task, kPrefetchMemoryWorkerThreadName), task);
+            TaskScheduler::GetOrCreateInstance()->PostTask(task), task);
     }
 
     uint64_t MemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

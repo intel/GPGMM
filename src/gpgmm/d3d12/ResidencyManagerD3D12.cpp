@@ -17,8 +17,8 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/SizeClass.h"
+#include "gpgmm/common/ThreadPool.h"
 #include "gpgmm/common/TraceEvent.h"
-#include "gpgmm/common/WorkerThread.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
@@ -36,7 +36,6 @@ namespace gpgmm::d3d12 {
     static constexpr uint64_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
     static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
-    static constexpr const char* kBudgetChangeWorkerThreadName = "GPGMM_ThreadBudgetChangeWorker";
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -252,7 +251,7 @@ namespace gpgmm::d3d12 {
 
         // Dump out the initialized memory segment status.
         residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
-        if (!residencyManager->mIsUMA){
+        if (!residencyManager->mIsUMA) {
             residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
         }
 
@@ -283,8 +282,7 @@ namespace gpgmm::d3d12 {
                                         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
-          mResidencyFence(std::move(residencyFence)),
-          mThreadPool(ThreadPool::Create()) {
+          mResidencyFence(std::move(residencyFence)) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -863,7 +861,7 @@ namespace gpgmm::d3d12 {
             std::shared_ptr<BudgetUpdateTask> task =
                 std::make_shared<BudgetUpdateTask>(this, mAdapter);
             mBudgetNotificationUpdateEvent = std::make_shared<BudgetUpdateEvent>(
-                ThreadPool::PostTask(mThreadPool, task, kBudgetChangeWorkerThreadName), task);
+                TaskScheduler::GetOrCreateInstance()->PostTask(task), task);
         }
 
         ASSERT(mBudgetNotificationUpdateEvent != nullptr);
@@ -895,8 +893,9 @@ namespace gpgmm::d3d12 {
     void ResidencyManager::ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup) {
         DXGI_QUERY_VIDEO_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
         ASSERT(info != nullptr);
-        
-        gpgmm::DebugLog() << "GPU memory segment status (" << GetMemorySegmentName(segmentGroup, IsUMA()) << "):";
+
+        gpgmm::DebugLog() << "GPU memory segment status ("
+                          << GetMemorySegmentName(segmentGroup, IsUMA()) << "):";
         gpgmm::DebugLog() << "\tBudget: " << GPGMM_BYTES_TO_MB(info->Budget) << " MBs ("
                           << GPGMM_BYTES_TO_MB(info->CurrentUsage) << " used).";
         gpgmm::DebugLog() << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation)
