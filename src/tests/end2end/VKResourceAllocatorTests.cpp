@@ -80,7 +80,7 @@ TEST_F(VKResourceAllocatorTests, CreateImage) {
 
     VkImage image;
     GpResourceAllocation allocation;
-    ASSERT_SUCCESS(
+    EXPECT_SUCCEEDED(
         gpCreateImage(resourceAllocator, &imageInfo, &image, &allocationInfo, &allocation));
 
     gpDestroyImage(resourceAllocator, image, allocation);

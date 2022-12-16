@@ -22,6 +22,9 @@
 #define ASSERT_FAILED(expr) ASSERT_TRUE((expr) != VK_SUCCESS)
 #define ASSERT_SUCCESS(expr) ASSERT_TRUE((expr) == VK_SUCCESS)
 
+#define EXPECT_FAILED(expr) EXPECT_TRUE((expr) != VK_SUCCESS)
+#define EXPECT_SUCCEEDED(expr) EXPECT_TRUE((expr) == VK_SUCCESS)
+
 namespace gpgmm::vk {
 
     struct GpAllocatorCreateInfo;
