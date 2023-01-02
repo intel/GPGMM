@@ -23,11 +23,11 @@ vars = {
 deps = {
   # Dependencies required to use GN/Clang in standalone
   'build': {
-    'url': '{chromium_git}/chromium/src/build@e3bb433e5e322a10218ea84b0fb8e06c338a1fe5',
+    'url': '{chromium_git}/chromium/src/build@7ba88a00bd9bce363068803418a79da44f4fa0db',
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools@134af4c91bb9ab46fe1165ff1cf0f76900fa5a7e',
+    'url': '{chromium_git}/chromium/src/buildtools@cf8d11e41138ca777f3eaa09df41bf968c8be6ba',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/clang_format/script': {
@@ -61,7 +61,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@dfc04a3b1110b145b15b66be9da0b9f3ac1afeda',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@d619a34d30ad0fc502adf3852024c8e0bfcba463',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/third_party/libc++abi/trunk': {
@@ -85,7 +85,7 @@ deps = {
 
   # Testing, GTest and GMock
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@991e141f2b1312e1e1b5b16d138da3b0d8187699',
+    'url': '{chromium_git}/chromium/src/testing@b26bae660a27e2f84dc0b8ea0061535326d92356',
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
@@ -93,12 +93,12 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@259eec71c7c601f40d5363c5fa1fbb26f59bbcbe',
+    'url': '{chromium_git}/vulkan-deps@623e26967c697dfafb7b7cf22a9d7f2a83c727d9',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@27863274a2f25b92973c10f29b3c4e476fd01a34',
+    'url': '{chromium_git}/catapult.git@a404e6d108a230c0c4080a71705c6e6d7c30557a',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
