@@ -52,10 +52,10 @@ target_sources(gpgmm_common PRIVATE
     "SlabBlockAllocator.h"
     "SlabMemoryAllocator.cpp"
     "SlabMemoryAllocator.h"
+    "ThreadPool.cpp"
+    "ThreadPool.h"
     "TraceEvent.cpp"
     "TraceEvent.h"
-    "WorkerThread.cpp"
-    "WorkerThread.h"
 )
 
 target_link_libraries(gpgmm_common PRIVATE gpgmm_common_config)
