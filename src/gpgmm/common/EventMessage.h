@@ -43,6 +43,7 @@ namespace gpgmm {
       public:
         EventMessage(const LogSeverity& level,
                      const char* name,
+                     const void* object,
                      EventMessageId messageId = EventMessageId::kUnknown);
         ~EventMessage();
 
@@ -58,15 +59,39 @@ namespace gpgmm {
       private:
         LogSeverity mSeverity;
         const char* mName = nullptr;
+        const void* mObject = nullptr;
         EventMessageId mMessageId = EventMessageId::kUnknown;
 
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
-    EventMessage InfoEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
-    EventMessage WarnEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
-    EventMessage ErrorEvent(const char* name, EventMessageId messageId = EventMessageId::kUnknown);
+    template <typename T>
+    EventMessage DebugEvent(const char* name,
+                            const T* object,
+                            EventMessageId messageId = EventMessageId::kUnknown) {
+        return {LogSeverity::Debug, name, object, messageId};
+    }
+
+    template <typename T>
+    EventMessage InfoEvent(const char* name,
+                           const T* object,
+                           EventMessageId messageId = EventMessageId::kUnknown) {
+        return {LogSeverity::Info, name, object, messageId};
+    }
+
+    template <typename T>
+    EventMessage WarnEvent(const char* name,
+                           const T* object,
+                           EventMessageId messageId = EventMessageId::kUnknown) {
+        return {LogSeverity::Warning, name, object, messageId};
+    }
+
+    template <typename T>
+    EventMessage ErrorEvent(const char* name,
+                            T* object,
+                            EventMessageId messageId = EventMessageId::kUnknown) {
+        return {LogSeverity::Error, name, object, messageId};
+    }
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);
