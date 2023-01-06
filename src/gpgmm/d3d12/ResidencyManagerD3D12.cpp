@@ -894,8 +894,7 @@ namespace gpgmm::d3d12 {
         DXGI_QUERY_VIDEO_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
         ASSERT(info != nullptr);
 
-        gpgmm::DebugLog() << "GPU memory segment status ("
-                          << GetMemorySegmentName(segmentGroup, IsUMA()) << "):";
+        gpgmm::DebugLog() << GetMemorySegmentName(segmentGroup, IsUMA()) << " GPU memory segment:";
         gpgmm::DebugLog() << "\tBudget: " << GPGMM_BYTES_TO_MB(info->Budget) << " MBs ("
                           << GPGMM_BYTES_TO_MB(info->CurrentUsage) << " used).";
         gpgmm::DebugLog() << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation)
