@@ -120,6 +120,7 @@ test("gpgmm_unittests") {
     "unittests/SlabBlockAllocatorTests.cpp",
     "unittests/SlabMemoryAllocatorTests.cpp",
     "unittests/StableListTests.cpp",
+    "unittests/ThreadPoolTests.cpp",
     "unittests/UtilsTest.cpp",
   ]
 

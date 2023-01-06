@@ -32,6 +32,7 @@ void GPGMMTestBase::SetUp() {
 }
 
 void GPGMMTestBase::TearDown() {
+    gpgmm::TaskScheduler::ReleaseInstanceForTesting();
 }
 
 gpgmm::DebugPlatform* GPGMMTestBase::GetDebugPlatform() {
