@@ -879,10 +879,10 @@ namespace gpgmm::d3d12 {
             return;
         }
 
-        const bool success = mBudgetNotificationUpdateEvent->UnregisterAndExit();
-        ASSERT(success);
+        if (!mBudgetNotificationUpdateEvent->UnregisterAndExit()) {
+            gpgmm::WarningLog() << "Unable to unregister from budget events.";
+        }
 
-        mBudgetNotificationUpdateEvent->Wait();
         mBudgetNotificationUpdateEvent = nullptr;
     }
 
