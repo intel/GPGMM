@@ -37,8 +37,11 @@
         GetDebugPlatform()->StartMemoryCheck(); \
     } while (0)
 
+// TearDown must be called before the end check since process-wide memory
+// created by the test needs a chance to release to avoid become a false-positive.
 #define GPGMM_TEST_MEMORY_LEAK_END()                        \
     do {                                                    \
+        TearDown();                                         \
         EXPECT_FALSE(GetDebugPlatform()->EndMemoryCheck()); \
     } while (0)
 
