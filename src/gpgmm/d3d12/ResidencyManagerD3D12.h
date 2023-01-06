@@ -26,7 +26,7 @@
 #include <mutex>
 
 namespace gpgmm {
-    class TaskScheduler;
+    class ThreadPool;
 }  // namespace gpgmm
 
 namespace gpgmm::d3d12 {
@@ -135,6 +135,7 @@ namespace gpgmm::d3d12 {
         VideoMemorySegment mNonLocalVideoMemorySegment;
         RESIDENCY_STATS mStats = {};
 
+        std::shared_ptr<ThreadPool> mThreadPool;
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
     };
 

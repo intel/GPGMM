@@ -20,7 +20,7 @@
 #include "gpgmm/common/Error.h"
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/common/MemoryAllocation.h"
-#include "gpgmm/common/ThreadPool.h"
+#include "gpgmm/common/WorkerThread.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
@@ -282,6 +282,7 @@ namespace gpgmm {
         MemoryAllocatorStats mStats = {};
 
         mutable std::mutex mMutex;
+        std::shared_ptr<ThreadPool> mThreadPool;
 
       private:
         MemoryAllocator* mNext = nullptr;
