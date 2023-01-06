@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Assert.h"
+#include "gpgmm/utils/Utils.h"
 
 #include <mutex>
 
@@ -45,15 +46,18 @@ namespace gpgmm {
 
     // EventMessage
 
-    EventMessage::EventMessage(const LogSeverity& level, const char* name, EventMessageId messageId)
-        : mSeverity(level), mName(name), mMessageId(messageId) {
+    EventMessage::EventMessage(const LogSeverity& level,
+                               const char* name,
+                               const void* object,
+                               EventMessageId messageId)
+        : mSeverity(level), mName(name), mObject(object), mMessageId(messageId) {
     }
 
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity) << mName << "(" << static_cast<int>(mMessageId) << ")"
-                              << ": " << description;
+        gpgmm::Log(mSeverity) << mName << "=" << ToString(mObject) << ": " << description << " ("
+                              << static_cast<int>(mMessageId) << ")";
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(mSeverity < LogSeverity::Warning);
@@ -63,22 +67,6 @@ namespace gpgmm {
             EventMessageInfo message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
-    }
-
-    EventMessage DebugEvent(const char* name, EventMessageId messageId) {
-        return {LogSeverity::Debug, name, messageId};
-    }
-
-    EventMessage InfoEvent(const char* name, EventMessageId messageId) {
-        return {LogSeverity::Info, name, messageId};
-    }
-
-    EventMessage WarnEvent(const char* name, EventMessageId messageId) {
-        return {LogSeverity::Warning, name, messageId};
-    }
-
-    EventMessage ErrorEvent(const char* name, EventMessageId messageId) {
-        return {LogSeverity::Error, name, messageId};
     }
 
 }  // namespace gpgmm
