@@ -82,12 +82,7 @@ class GPGMMTestEnvironment : public testing::Environment {
 
   private:
     bool mIsDumpEventsEnabled = false;
-
-#if defined(NDEBUG)
-    gpgmm::LogSeverity mLogLevel = gpgmm::LogSeverity::Warning;
-#else
-    gpgmm::LogSeverity mLogLevel = gpgmm::LogSeverity::Info;
-#endif
+    gpgmm::LogSeverity mLogLevel;  // Initialized by Setup().
 };
 
 #endif  // TESTS_GPGMMTEST_H_
