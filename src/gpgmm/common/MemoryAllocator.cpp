@@ -27,10 +27,12 @@ namespace gpgmm {
         }
 
         void operator()() override {
+            std::lock_guard<std::mutex> lock(mAllocationMutex);
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
         std::unique_ptr<MemoryAllocation> AcquireAllocation() {
+            std::lock_guard<std::mutex> lock(mAllocationMutex);
             return std::move(mAllocation);
         }
 
@@ -38,6 +40,7 @@ namespace gpgmm {
         MemoryAllocator* const mAllocator;
         const MemoryAllocationRequest mRequest;
 
+        std::mutex mAllocationMutex;
         std::unique_ptr<MemoryAllocation> mAllocation;
     };
 
