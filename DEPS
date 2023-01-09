@@ -23,7 +23,7 @@ vars = {
 deps = {
   # Dependencies required to use GN/Clang in standalone
   'build': {
-    'url': '{chromium_git}/chromium/src/build@7ba88a00bd9bce363068803418a79da44f4fa0db',
+    'url': '{chromium_git}/chromium/src/build@7ab406c5da3e95de16989ec4f81c95e5b656e1c3',
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
@@ -61,7 +61,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@d619a34d30ad0fc502adf3852024c8e0bfcba463',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@0fb2a087ed35eb90bd882951bb23157526acb82b',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/third_party/libc++abi/trunk': {
@@ -69,7 +69,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang@3b54a131a94f1345579c9d92b08c2b45c43cfe77',
+    'url': '{chromium_git}/chromium/src/tools/clang@e8c31f937f2872dc18d4bd9a74f3a8d6a4c78ade',
     'condition': 'gpgmm_standalone',
   },
   'tools/clang/dsymutil': {
@@ -85,20 +85,20 @@ deps = {
 
   # Testing, GTest and GMock
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@b26bae660a27e2f84dc0b8ea0061535326d92356',
+    'url': '{chromium_git}/chromium/src/testing@809529a935a71b0cb5345c4e4501c221e3022c4f',
     'condition': 'gpgmm_standalone',
   },
   'third_party/googletest': {
-    'url': '{chromium_git}/external/github.com/google/googletest@71140c3ca7a87bb1b5b9c9f1500fea8858cce344',
+    'url': '{chromium_git}/external/github.com/google/googletest@934542165899c786cb5d8a710529c37184730183',
     'condition': 'gpgmm_standalone',
   },
   'third_party/vulkan-deps': {
-    'url': '{chromium_git}/vulkan-deps@623e26967c697dfafb7b7cf22a9d7f2a83c727d9',
+    'url': '{chromium_git}/vulkan-deps@276ba2635d3babb4aa8260d961c23e51a3533b64',
     'condition': 'gpgmm_standalone',
   },
   # Dependency of //testing
   'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@a404e6d108a230c0c4080a71705c6e6d7c30557a',
+    'url': '{chromium_git}/catapult.git@163b42131719ee189bcf1398d35e43f43fd2b0b5',
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
