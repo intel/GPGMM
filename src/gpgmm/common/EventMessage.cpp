@@ -69,4 +69,20 @@ namespace gpgmm {
         }
     }
 
+    EventMessage DebugEvent(const ObjectBase* object, EventMessageId messageId) {
+        return {LogSeverity::Debug, object->GetTypename(), object, messageId};
+    }
+
+    EventMessage InfoEvent(const ObjectBase* object, EventMessageId messageId) {
+        return {LogSeverity::Info, object->GetTypename(), object, messageId};
+    }
+
+    EventMessage WarnEvent(const ObjectBase* object, EventMessageId messageId) {
+        return {LogSeverity::Warning, object->GetTypename(), object, messageId};
+    }
+
+    EventMessage ErrorEvent(const ObjectBase* object, EventMessageId messageId) {
+        return {LogSeverity::Error, object->GetTypename(), object, messageId};
+    }
+
 }  // namespace gpgmm

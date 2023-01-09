@@ -15,6 +15,7 @@
 #ifndef GPGMM_COMMON_EVENT_MESSAGE_H_
 #define GPGMM_COMMON_EVENT_MESSAGE_H_
 
+#include "gpgmm/common/Object.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Log.h"
 
@@ -65,33 +66,17 @@ namespace gpgmm {
         std::ostringstream mStream;
     };
 
-    template <typename T>
-    EventMessage DebugEvent(const char* name,
-                            const T* object,
-                            EventMessageId messageId = EventMessageId::kUnknown) {
-        return {LogSeverity::Debug, name, object, messageId};
-    }
+    EventMessage DebugEvent(const ObjectBase* object,
+                            EventMessageId messageId = EventMessageId::kUnknown);
 
-    template <typename T>
-    EventMessage InfoEvent(const char* name,
-                           const T* object,
-                           EventMessageId messageId = EventMessageId::kUnknown) {
-        return {LogSeverity::Info, name, object, messageId};
-    }
+    EventMessage InfoEvent(const ObjectBase* object,
+                           EventMessageId messageId = EventMessageId::kUnknown);
 
-    template <typename T>
-    EventMessage WarnEvent(const char* name,
-                           const T* object,
-                           EventMessageId messageId = EventMessageId::kUnknown) {
-        return {LogSeverity::Warning, name, object, messageId};
-    }
+    EventMessage WarnEvent(const ObjectBase* object,
+                           EventMessageId messageId = EventMessageId::kUnknown);
 
-    template <typename T>
-    EventMessage ErrorEvent(const char* name,
-                            T* object,
-                            EventMessageId messageId = EventMessageId::kUnknown) {
-        return {LogSeverity::Error, name, object, messageId};
-    }
+    EventMessage ErrorEvent(const ObjectBase* object,
+                            EventMessageId messageId = EventMessageId::kUnknown);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const LogSeverity& level);

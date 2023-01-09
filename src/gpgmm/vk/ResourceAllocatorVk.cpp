@@ -17,6 +17,7 @@
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 #include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/Object.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
 #include "gpgmm/common/SizeClass.h"
@@ -352,8 +353,7 @@ namespace gpgmm::vk {
         }
 
         if (memoryAllocation == nullptr) {
-            ErrorEvent("GpResourceAllocator.TryAllocateResource", this,
-                       EventMessageId::kAllocatorFailed)
+            ErrorEvent(allocator, EventMessageId::kAllocatorFailed)
                 << "Unable to allocate memory for resource.";
 
             return VK_ERROR_UNKNOWN;

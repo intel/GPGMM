@@ -309,8 +309,7 @@ namespace gpgmm::d3d12 {
             if (allocation == nullptr) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    DebugEvent(allocator->GetTypename(), allocator,
-                               EventMessageId::kAllocatorFailed)
+                    DebugEvent(allocator, EventMessageId::kAllocatorFailed)
                         << "Unable to allocate memory for request.";
                 }
                 return E_FAIL;
@@ -318,7 +317,7 @@ namespace gpgmm::d3d12 {
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent(allocator->GetTypename(), allocator, EventMessageId::kAllocatorFailed)
+                InfoEvent(allocator, EventMessageId::kAllocatorFailed)
                     << "Failed to create resource using allocation: " +
                            GetDeviceErrorMessage(device, hr);
                 allocator->DeallocateMemory(std::move(allocation));
@@ -960,10 +959,9 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            DebugEvent(GetTypename(), this)
-                << "Required heap flags are incompatible with resource heap type ("
-                << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
-                << std::to_string(heapFlags) + ").";
+            DebugEvent(this) << "Required heap flags are incompatible with resource heap type ("
+                             << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags)
+                             << " vs " << std::to_string(heapFlags) + ").";
 
             heapFlags |= allocationDescriptor.ExtraRequiredHeapFlags;
 
@@ -1036,10 +1034,9 @@ namespace gpgmm::d3d12 {
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
                 request.AvailableForAllocation = GetInfoInternal().FreeMemoryUsage;
 
-                DebugEvent(GetTypename(), this)
-                    << "Current usage exceeded budget ("
-                    << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
-                    << std::to_string(currentVideoInfo->Budget) + " bytes).";
+                DebugEvent(this) << "Current usage exceeded budget ("
+                                 << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
+                                 << std::to_string(currentVideoInfo->Budget) + " bytes).";
 
             } else {
                 request.AvailableForAllocation =
@@ -1196,7 +1193,7 @@ namespace gpgmm::d3d12 {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
                 return E_FAIL;
             }
-            InfoEvent(GetTypename(), this, EventMessageId::kAllocatorFailed)
+            InfoEvent(this, EventMessageId::kAllocatorFailed)
                 << "Unable to allocate by using a heap, falling back to a committed resource.";
         }
 
@@ -1416,8 +1413,8 @@ namespace gpgmm::d3d12 {
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
                 case D3D12_MESSAGE_ID_LIVE_RESOURCE: {
-                    gpgmm::WarnEvent("Device", device.Get())
-                        << "Leak detected: " + std::string(message->pDescription);
+                    gpgmm::WarningLog()
+                        << "Device leak detected: " + std::string(message->pDescription);
                 } break;
                 default:
                     break;

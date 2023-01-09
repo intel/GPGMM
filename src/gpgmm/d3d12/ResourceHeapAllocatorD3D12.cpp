@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
-            DebugEvent(GetTypename(), this, EventMessageId::kAlignmentMismatch)
+            DebugEvent(this, EventMessageId::kAlignmentMismatch)
                 << "Resource heap was larger then the requested size (" +
                        std::to_string(resourceHeapDesc.SizeInBytes) + " vs " +
                        std::to_string(request.SizeInBytes) + " bytes).";
