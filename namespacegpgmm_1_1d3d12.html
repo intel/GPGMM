@@ -179,6 +179,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
+, <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe">ALLOCATION_FLAG_DISABLE_RESIDENCY</a> = 0x80
 <br />
  }</td></tr>
 <tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,9 +238,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae5415a6a4421f6abb089bfef17105f87"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegpgmm_1_1d3d12.html#a3c6928b4ed92938bd00de413f2630196">IHeap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae5415a6a4421f6abb089bfef17105f87">GetMemory</a> () const =0</td></tr>
 <tr class="memdesc:ae5415a6a4421f6abb089bfef17105f87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <br /></td></tr>
 <tr class="separator:ae5415a6a4421f6abb089bfef17105f87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac739d5fc673607a33e86b9361c79b2ac"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac739d5fc673607a33e86b9361c79b2ac">CreateResource</a> (ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#a7ae6e7dbbfc15afd46d2e3b562b36f49">ppResourceAllocationOut</a>)=0</td></tr>
-<tr class="memdesc:ac739d5fc673607a33e86b9361c79b2ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <br /></td></tr>
-<tr class="separator:ac739d5fc673607a33e86b9361c79b2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c46f070043b15d73f162e85ad07cf60"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1c46f070043b15d73f162e85ad07cf60">CreateResource</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> &amp;allocationDescriptor, ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#a7ae6e7dbbfc15afd46d2e3b562b36f49">ppResourceAllocationOut</a>)=0</td></tr>
+<tr class="memdesc:a1c46f070043b15d73f162e85ad07cf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imports an existing D3D12 resource.  <br /></td></tr>
+<tr class="separator:a1c46f070043b15d73f162e85ad07cf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dc7289d51745c7094d012d211e78bd6"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9dc7289d51745c7094d012d211e78bd6">ReleaseMemory</a> (uint64_t bytesToRelease)=0</td></tr>
 <tr class="memdesc:a9dc7289d51745c7094d012d211e78bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
 <tr class="separator:a9dc7289d51745c7094d012d211e78bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -380,6 +382,11 @@ D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag ha
 allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe" name="aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe"></a>ALLOCATION_FLAG_DISABLE_RESIDENCY&#160;</td><td class="fielddoc"><p>Disable residency management for the resource allocation. </p>
+<pre class="fragment">The flag disables residency management for the resource allocation. 
+
+Mostly used when external resources are residency managed elsewhere.
 </pre> </td></tr>
 </table>
 
@@ -842,8 +849,8 @@ mechanism can be disabled where a pull-based method is used instead.
 
 </div>
 </div>
-<a id="ac739d5fc673607a33e86b9361c79b2ac" name="ac739d5fc673607a33e86b9361c79b2ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac739d5fc673607a33e86b9361c79b2ac">&#9670;&#160;</a></span>CreateResource()</h2>
+<a id="a1c46f070043b15d73f162e85ad07cf60" name="a1c46f070043b15d73f162e85ad07cf60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c46f070043b15d73f162e85ad07cf60">&#9670;&#160;</a></span>CreateResource()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -854,6 +861,12 @@ mechanism can be disabled where a pull-based method is used instead.
         <tr>
           <td class="memname">virtual HRESULT gpgmm::d3d12::CreateResource </td>
           <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> &amp;&#160;</td>
+          <td class="paramname"><em>allocationDescriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">ID3D12Resource *&#160;</td>
           <td class="paramname"><em>pCommittedResource</em>, </td>
         </tr>
@@ -878,9 +891,9 @@ mechanism can be disabled where a pull-based method is used instead.
 
 <p>Imports an existing D3D12 resource. </p>
 <p>Allows externally created D3D12 resources to be used as a ResourceAllocation.</p>
-<p>Residency is not supported for imported resources.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">allocationDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> structure that provides properties for the resource allocation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pCommittedResource</td><td>A pointer to a committed ID3D12Resource. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
   </table>
