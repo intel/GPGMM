@@ -692,3 +692,63 @@ TEST_F(D3D12ResidencyManagerTests, ExecuteCommandListOverBudget) {
         EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
     }
 }
+
+TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
+    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+
+    ComPtr<IResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+                                             &resourceAllocator));
+
+    constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
+
+    // Keep importing externally allocated resources until we reach the budget.
+    std::vector<ComPtr<IResourceAllocation>> allocationsBelowBudget = {};
+    while (resourceAllocator->GetStats().UsedMemoryUsage + kBufferMemorySize <= kDefaultBudget) {
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+        ComPtr<ID3D12Resource> resource;
+        ASSERT_SUCCEEDED(mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
+                                                          &bufferDesc, D3D12_RESOURCE_STATE_COMMON,
+                                                          nullptr, IID_PPV_ARGS(&resource)));
+
+        ComPtr<IResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource({}, resource.Detach(), &allocation));  // import
+        allocationsBelowBudget.push_back(std::move(allocation));
+    }
+
+    // Created allocations below the budget should become resident.
+    for (auto& allocation : allocationsBelowBudget) {
+        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+    }
+
+    // Keep allocating |kMemoryOverBudget| over the budget.
+    constexpr uint64_t kMemoryOverBudget = GPGMM_MB_TO_BYTES(10);
+
+    // Allocating the same amount over budget, where older allocations will be evicted.
+    std::vector<ComPtr<IResourceAllocation>> allocationsAboveBudget = {};
+    const uint64_t currentMemoryUsage = resourceAllocator->GetStats().UsedMemoryUsage;
+
+    while (currentMemoryUsage + kMemoryOverBudget > resourceAllocator->GetStats().UsedMemoryUsage) {
+        ComPtr<IResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+        allocationsAboveBudget.push_back(std::move(allocation));
+    }
+
+    // Created allocations above the budget should become resident.
+    for (auto& allocation : allocationsAboveBudget) {
+        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+    }
+
+    // Created allocations below the budget should NOT become resident.
+    for (auto& allocation : allocationsBelowBudget) {
+        EXPECT_FALSE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+    }
+}

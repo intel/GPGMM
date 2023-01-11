@@ -1224,7 +1224,8 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(ID3D12Resource* pCommittedResource,
+    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+                                              ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -1248,9 +1249,13 @@ namespace gpgmm::d3d12 {
         ImportResourceCallbackContext importResourceCallbackContext(resource);
 
         ComPtr<IHeap> resourceHeap;
-        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, /*residencyManager*/ nullptr,
-                                        ImportResourceCallbackContext::CreateHeap,
-                                        &importResourceCallbackContext, &resourceHeap));
+        ReturnIfFailed(
+            Heap::CreateHeap(resourceHeapDesc,
+                             (allocationDescriptor.Flags & ALLOCATION_FLAG_DISABLE_RESIDENCY)
+                                 ? nullptr
+                                 : mResidencyManager.Get(),
+                             ImportResourceCallbackContext::CreateHeap,
+                             &importResourceCallbackContext, &resourceHeap));
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
@@ -1261,7 +1266,6 @@ namespace gpgmm::d3d12 {
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
-        allocationDesc.OffsetFromResource = 0;
 
         if (ppResourceAllocationOut != nullptr) {
             *ppResourceAllocationOut = new ResourceAllocation(
