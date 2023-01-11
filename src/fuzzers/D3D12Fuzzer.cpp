@@ -16,7 +16,7 @@
 
 uint64_t UInt8ToUInt64(const uint8_t* src) {
     uint64_t dst;
-    memcpy(&dst, src, sizeof(uint64_t));
+    memcpy_s(&dst, sizeof(uint64_t), src, sizeof(uint8_t));
     return dst;
 }
 
