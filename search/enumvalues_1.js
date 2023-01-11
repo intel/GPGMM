@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['event_5frecord_5fflag_5fall_5fevents_0',['EVENT_RECORD_FLAG_ALL_EVENTS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba730a5ea8249a36065778ece4350991a8',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fapi_5fcalls_1',['EVENT_RECORD_FLAG_API_CALLS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba4451b8acc017f7c049709b8ce058347d',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fapi_5fobjects_2',['EVENT_RECORD_FLAG_API_OBJECTS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba293f09f69d9f9b13f5048972e57651b5',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fapi_5ftimings_3',['EVENT_RECORD_FLAG_API_TIMINGS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba1a1f55c80e8c930949911097f3fd1519',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fcapture_4',['EVENT_RECORD_FLAG_CAPTURE',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0baad24450796adb0c726ebc90b11745b59',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fcounters_5',['EVENT_RECORD_FLAG_COUNTERS',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba5953585d1378f23825964434e4b6c49c',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fflag_5fnone_6',['EVENT_RECORD_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#aa3f15dccfce0d5328b19d533a8cfdd0ba910403bd626518aacc41a8ffb54dc34b',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fscope_5fper_5finstance_7',['EVENT_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a18074a7fc0239197b2bc5776f0bb6540',1,'gpgmm::d3d12']]],
-  ['event_5frecord_5fscope_5fper_5fprocess_8',['EVENT_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm_1_1d3d12.html#a50666648c6ef0535d4b9afed754af8c0a6ff8a84107c6df6663bde908e006f236',1,'gpgmm::d3d12']]]
+  ['event_5frecord_5fflag_5fall_5fevents_0',['EVENT_RECORD_FLAG_ALL_EVENTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fapi_5fcalls_1',['EVENT_RECORD_FLAG_API_CALLS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fapi_5fobjects_2',['EVENT_RECORD_FLAG_API_OBJECTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fapi_5ftimings_3',['EVENT_RECORD_FLAG_API_TIMINGS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fcapture_4',['EVENT_RECORD_FLAG_CAPTURE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fcounters_5',['EVENT_RECORD_FLAG_COUNTERS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471',1,'gpgmm']]],
+  ['event_5frecord_5fflag_5fnone_6',['EVENT_RECORD_FLAG_NONE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed',1,'gpgmm']]],
+  ['event_5frecord_5fscope_5fper_5finstance_7',['EVENT_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3',1,'gpgmm']]],
+  ['event_5frecord_5fscope_5fper_5fprocess_8',['EVENT_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613',1,'gpgmm']]]
 ];
