@@ -189,14 +189,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
         // Captures never store recording options, they must be always specified.
         baseAllocatorDesc.RecordOptions.Flags |=
-            static_cast<EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
+            static_cast<gpgmm::EVENT_RECORD_FLAGS>(envParams.CaptureEventMask);
         baseAllocatorDesc.RecordOptions.TraceFile = traceFile.path.c_str();
         baseAllocatorDesc.MinRecordLevel = baseAllocatorDesc.MinLogLevel;
 
         // Keep recording across multiple playback iterations to ensure all
         // events will be captured instead of overwritten per iteration.
         if (envParams.Iterations == 1) {
-            baseAllocatorDesc.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_INSTANCE;
+            baseAllocatorDesc.RecordOptions.EventScope = gpgmm::EVENT_RECORD_SCOPE_PER_INSTANCE;
         }
 
         if (!envParams.IsPrefetchAllowed) {
