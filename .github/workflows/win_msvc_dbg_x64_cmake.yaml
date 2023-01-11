@@ -39,7 +39,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake . -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+        cmake . -Ax64 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Build shared library for main branch (with patch)
       shell: cmd
@@ -64,7 +64,7 @@ jobs:
       shell: cmd
       run: |
         cd test
-        cmake . -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF -DGPGMM_DISABLE_SIZE_CACHE=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
+        cmake . -Ax64 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF -DGPGMM_DISABLE_SIZE_CACHE=ON -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Build for main branch (with patch)
       shell: cmd
