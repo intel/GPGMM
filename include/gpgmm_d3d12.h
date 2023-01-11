@@ -449,8 +449,10 @@ namespace gpgmm::d3d12 {
 
         Submits an array of command lists and residency lists for the specified command queue.
 
-        @param pQueue The command queue to submit to.
-        @param ppCommandLists The array of ID3D12CommandList command lists to be executed.
+        @param pQueue The command queue to submit to. Must be a valid queue.
+        @param ppCommandLists The array of ID3D12CommandList command lists to be executed. May be
+        nullptr. When nullptr, only residency operations are performed where
+        ID3D12CommandQueue::ExecuteCommandList should be called immediate after with the same queue.
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
         @param count The size of commandLists and residencyLists arrays.
         */

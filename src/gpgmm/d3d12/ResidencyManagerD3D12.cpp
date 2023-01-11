@@ -771,6 +771,12 @@ namespace gpgmm::d3d12 {
         // Queue and command-lists may not be specified since they are not capturable for playback.
         if (ppCommandLists != nullptr && pQueue != nullptr) {
             pQueue->ExecuteCommandLists(count, ppCommandLists);
+        }
+
+        // If the queue was only specified, it likely means the application developer wants to call
+        // ExecuteCommandLists themself. We must continue to keep the residency state of heaps
+        // synchronized with the GPU in either case.
+        if (pQueue != nullptr) {
             ReturnIfFailed(mResidencyFence->Signal(pQueue));
         }
 
