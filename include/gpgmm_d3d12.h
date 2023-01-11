@@ -38,6 +38,10 @@
 
 #define GPGMM_INTERFACE struct
 
+namespace gpgmm {
+    DEFINE_ENUM_FLAG_OPERATORS(EVENT_RECORD_FLAGS)  // Provided by <windows.h>
+}
+
 namespace gpgmm::d3d12 {
 
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
@@ -274,8 +278,6 @@ namespace gpgmm::d3d12 {
     \return Returns S_OK if successful.
      */
     GPGMM_EXPORT HRESULT CreateResidencyList(IResidencyList** ppResidencyListOut);
-
-    DEFINE_ENUM_FLAG_OPERATORS(EVENT_RECORD_FLAGS)
 
     /** \enum RESIDENCY_FLAGS
        Specify options to configure the residency manager.
