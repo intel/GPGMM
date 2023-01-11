@@ -83,6 +83,8 @@ namespace gpgmm::d3d12 {
 
         HRESULT InsertHeapInternal(Heap* heap);
 
+        RESIDENCY_STATS GetStatsInternal() const;
+
         friend BudgetUpdateTask;
         HRESULT UpdateMemorySegments();
 
@@ -128,7 +130,7 @@ namespace gpgmm::d3d12 {
         const bool mIsBudgetChangeEventsDisabled;
         const bool mFlushEventBuffersOnDestruct;
 
-        std::mutex mMutex;
+        mutable std::mutex mMutex;
 
         std::unique_ptr<Fence> mResidencyFence;
 
