@@ -87,8 +87,6 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html">EVENT_RECORD_OPTIONS</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_stats.html">MemoryAllocatorStats</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -100,22 +98,6 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00">kSubAllocatedWithin</a> = 3
  }</td></tr>
 <tr class="separator:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec62a41f5057d5a779243779e4ccbae5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5">EVENT_RECORD_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed">EVENT_RECORD_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e">EVENT_RECORD_FLAG_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4">EVENT_RECORD_FLAG_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653">EVENT_RECORD_FLAG_API_TIMINGS</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471">EVENT_RECORD_FLAG_COUNTERS</a> = 0x8
-, <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208">EVENT_RECORD_FLAG_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7">EVENT_RECORD_FLAG_ALL_EVENTS</a> = 0xFF
-<br />
- }</td></tr>
-<tr class="separator:aec62a41f5057d5a779243779e4ccbae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9037e63a972352dec9d42cc49564370e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a9037e63a972352dec9d42cc49564370e">EVENT_RECORD_SCOPE</a> { <a class="el" href="namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613">EVENT_RECORD_SCOPE_PER_PROCESS</a> = 0
-, <a class="el" href="namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3">EVENT_RECORD_SCOPE_PER_INSTANCE</a> = 1
- }</td></tr>
-<tr class="separator:a9037e63a972352dec9d42cc49564370e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a73f15de0f698ad7e9a69df91d6da1d8d" name="a73f15de0f698ad7e9a69df91d6da1d8d"></a>
@@ -151,60 +133,6 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00" name="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
 <pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
 </pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="aec62a41f5057d5a779243779e4ccbae5" name="aec62a41f5057d5a779243779e4ccbae5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec62a41f5057d5a779243779e4ccbae5">&#9670;&#160;</a></span>EVENT_RECORD_FLAGS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5">gpgmm::EVENT_RECORD_FLAGS</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Represents different event categories to record. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed" name="aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed"></a>EVENT_RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p>Record nothing. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e" name="aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e"></a>EVENT_RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p>Record lifetimes of API objects created by GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4" name="aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4"></a>EVENT_RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p>Record API calls made to GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653" name="aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653"></a>EVENT_RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p>Record duration of GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471" name="aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471"></a>EVENT_RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p>Record metrics made to GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208" name="aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208"></a>EVENT_RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p>Record events required for playback. </p>
-<pre class="fragment"> Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
- EVENT_RECORD_FLAG_API_CALLS.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7" name="aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7"></a>EVENT_RECORD_FLAG_ALL_EVENTS&#160;</td><td class="fielddoc"><p>Record everything. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a9037e63a972352dec9d42cc49564370e" name="a9037e63a972352dec9d42cc49564370e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9037e63a972352dec9d42cc49564370e">&#9670;&#160;</a></span>EVENT_RECORD_SCOPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm.html#a9037e63a972352dec9d42cc49564370e">gpgmm::EVENT_RECORD_SCOPE</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Represents recording scopes to limit event recording. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613" name="a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613"></a>EVENT_RECORD_SCOPE_PER_PROCESS&#160;</td><td class="fielddoc"><p>Scopes events per process (or multiple instances). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3" name="a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3"></a>EVENT_RECORD_SCOPE_PER_INSTANCE&#160;</td><td class="fielddoc"><p>Scopes events per instance. </p>
-</td></tr>
 </table>
 
 </div>
