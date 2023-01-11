@@ -829,29 +829,39 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_STATS ResidencyManager::GetStats() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return GetStatsInternal();
+    }
+
+    RESIDENCY_STATS ResidencyManager::GetStatsInternal() const {
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.GetStats");
+
         // Heaps inserted into the residency cache are not resident until MakeResident() is called
         // on them. This occurs if the heap was created resident, heap gets locked, or call to
         // ExecuteCommandLists().
 
         // Locked heaps are not stored in the residency cache, so usage must be tracked by the
         // residency manager on Lock/Unlock then added here to get the sum.
-        RESIDENCY_STATS info = mStats;
+        RESIDENCY_STATS result = mStats;
 
         for (const auto& entry : mLocalVideoMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                info.CurrentMemoryUsage += entry.value()->GetSize();
-                info.CurrentMemoryCount++;
+                result.CurrentMemoryUsage += entry.value()->GetSize();
+                result.CurrentMemoryCount++;
             }
         }
 
         for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                info.CurrentMemoryUsage += entry.value()->GetSize();
-                info.CurrentMemoryCount++;
+                result.CurrentMemoryUsage += entry.value()->GetSize();
+                result.CurrentMemoryCount++;
             }
         }
 
-        return info;
+        GPGMM_TRACE_EVENT_METRIC("GPU currently resident (MB)",
+                                 GPGMM_BYTES_TO_MB(result.CurrentMemoryUsage));
+
+        return result;
     }
 
     // Starts updating video memory budget from OS notifications.
