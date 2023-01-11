@@ -1166,21 +1166,21 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
                                 0xCC);
     void* mappedBufferC = nullptr;
     ASSERT_SUCCEEDED(smallBufferC->Map(/*subresource*/ 0, nullptr, &mappedBufferC));
-    memcpy(mappedBufferC, dataCC.data(), dataCC.size());
+    memcpy_s(mappedBufferC, smallBufferC->GetInfo().SizeInBytes, dataCC.data(), dataCC.size());
 
     // Fill small buffer A with value 0xAA.
     std::vector<uint8_t> dataAA(static_cast<const size_t>(smallBufferA->GetInfo().SizeInBytes),
                                 0xAA);
     void* mappedBufferA = nullptr;
     ASSERT_SUCCEEDED(smallBufferA->Map(/*subresource*/ 0, nullptr, &mappedBufferA));
-    memcpy(mappedBufferA, dataAA.data(), dataAA.size());
+    memcpy_s(mappedBufferA, smallBufferA->GetInfo().SizeInBytes, dataAA.data(), dataAA.size());
 
     // Fill small buffer B with value 0xBB.
     std::vector<uint8_t> dataBB(static_cast<const size_t>(smallBufferB->GetInfo().SizeInBytes),
                                 0xBB);
     void* mappedBufferB = nullptr;
     ASSERT_SUCCEEDED(smallBufferB->Map(/*subresource*/ 0, nullptr, &mappedBufferB));
-    memcpy(mappedBufferB, dataBB.data(), dataBB.size());
+    memcpy_s(mappedBufferB, smallBufferB->GetInfo().SizeInBytes, dataBB.data(), dataBB.size());
 
     EXPECT_NE(mappedBufferA, mappedBufferB);
     EXPECT_NE(mappedBufferB, mappedBufferC);
