@@ -779,7 +779,11 @@ namespace gpgmm::d3d12 {
 
         /** \brief Specifies the adapter used by this allocator.
 
-        Required parameter. Use EnumAdapters to get the adapter.
+        The adapter is used to detect for additional device capabilities (by GPU vendor).
+        If the adapter is left unspecified, the capabiltities will not be detected and disabled by
+        CheckFeatureSupport.
+
+        Optional parameter. Use EnumAdapters to get the adapter.
         */
         Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 

@@ -293,7 +293,7 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
                                                        IResourceAllocator** ppResourceAllocatorOut,
                                                        IResidencyManager** ppResidencyManagerOut) {
-        if (allocatorDescriptor.Device == nullptr || allocatorDescriptor.Adapter == nullptr) {
+        if (allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
 

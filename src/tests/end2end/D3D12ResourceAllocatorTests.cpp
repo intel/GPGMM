@@ -117,14 +117,15 @@ TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocator) {
         EXPECT_EQ(resourceAllocator, nullptr);
     }
 
-    // Creating an allocator without an adapter should always fail.
+    // Creating an allocator without the adapter should always succeed.
+    // Should output warning messages that some capabilities were not detected.
     {
         ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
         desc.Adapter = nullptr;
 
         ComPtr<IResourceAllocator> resourceAllocator;
-        EXPECT_FAILED(CreateResourceAllocator(desc, &resourceAllocator, nullptr));
-        EXPECT_EQ(resourceAllocator, nullptr);
+        EXPECT_SUCCEEDED(CreateResourceAllocator(desc, &resourceAllocator, nullptr));
+        EXPECT_NE(resourceAllocator, nullptr);
     }
 
     // Creating a new allocator using the defaults should always succeed.
