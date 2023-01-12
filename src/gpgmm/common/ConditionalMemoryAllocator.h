@@ -40,6 +40,7 @@ namespace gpgmm {
         MemoryAllocator* GetSecondAllocatorForTesting() const;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         std::unique_ptr<MemoryAllocator> mFirstAllocator;

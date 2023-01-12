@@ -38,7 +38,7 @@ namespace gpgmm::d3d12 {
     class ImportResourceCallbackContext {
       public:
         ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource);
-        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
+        static HRESULT GetHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
       private:
         HRESULT GetHeap(ID3D12Pageable** ppPageableOut);
@@ -101,11 +101,12 @@ namespace gpgmm::d3d12 {
 
         DEFINE_IUNKNOWNIMPL_OVERRIDES()
 
-        const char* GetTypename() const override;
-
       private:
         friend BufferAllocator;
         friend ResourceAllocation;
+
+        // ObjectBase interface
+        const char* GetTypename() const override;
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,

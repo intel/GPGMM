@@ -26,6 +26,8 @@
 
 namespace gpgmm::d3d12 {
 
+    static const wchar_t* kResourceHeapDebugName = L"GPGMM Resource Heap";
+
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_PROPERTIES heapProperties,
@@ -51,8 +53,8 @@ namespace gpgmm::d3d12 {
         // alignment to avoid wasting bytes.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
         resourceHeapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
-        resourceHeapDesc.Alignment = request.Alignment;        
-        resourceHeapDesc.DebugName = L"Resource heap";
+        resourceHeapDesc.Alignment = request.Alignment;
+        resourceHeapDesc.DebugName = kResourceHeapDebugName;
 
         const bool isResidencyEnabled = (mResidencyManager != nullptr);
         resourceHeapDesc.Flags |= GetHeapFlags(mHeapFlags, isResidencyEnabled);

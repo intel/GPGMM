@@ -50,6 +50,7 @@ namespace gpgmm::d3d12 {
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         ResidencyManager* const mResidencyManager;

@@ -49,6 +49,7 @@ namespace gpgmm {
         uint64_t ComputeTotalNumOfFreeBlocksForTesting() const;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         uint32_t ComputeLevelFromBlockSize(uint64_t blockSize) const;

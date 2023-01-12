@@ -59,8 +59,10 @@ namespace gpgmm::d3d12 {
              const HEAP_DESC& descriptor,
              bool isResidencyDisabled);
 
-        HRESULT SetDebugNameImpl(LPCWSTR name) override;
+        // ObjectBase interface
         const char* GetTypename() const override;
+
+        HRESULT SetDebugNameImpl(LPCWSTR name) override;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was

@@ -34,9 +34,10 @@ namespace gpgmm::d3d12 {
         void ReleaseLiveAllocationsForTesting();
 
       private:
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
-
+        // ObjectBase interface
         const char* GetTypename() const override;
+
+        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         class ResourceAllocationEntry {
           public:

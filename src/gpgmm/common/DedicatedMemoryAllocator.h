@@ -36,6 +36,7 @@ namespace gpgmm {
         MemoryAllocatorStats GetStats() const override;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
     };
 

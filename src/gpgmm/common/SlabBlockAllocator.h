@@ -53,6 +53,7 @@ namespace gpgmm {
         uint64_t GetBlockCount() const;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         struct BlockList {

@@ -37,6 +37,7 @@ namespace gpgmm {
         bool RemoveSubAllocationRef();
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         RefCounted mSubAllocationRefs;

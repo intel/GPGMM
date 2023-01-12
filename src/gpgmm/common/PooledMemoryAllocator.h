@@ -38,6 +38,7 @@ namespace gpgmm {
         uint64_t GetMemoryAlignment() const override;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         std::unique_ptr<MemoryPoolBase> mPool;
