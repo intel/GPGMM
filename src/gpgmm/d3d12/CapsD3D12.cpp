@@ -81,8 +81,9 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
-        DXGI_ADAPTER_DESC adapterDesc;
-        ReturnIfFailed(adapter->GetDesc(&adapterDesc));
+        if (device == nullptr) {
+            return E_INVALIDARG;
+        }
 
         std::unique_ptr<Caps> caps(new Caps());
         ReturnIfFailed(SetMaxResourceSize(device, &caps->mMaxResourceSize));
@@ -97,12 +98,23 @@ namespace gpgmm::d3d12 {
         caps->mIsAdapterUMA = arch.UMA;
         caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 
-        // D3D12 has no feature to detect support and must be set manually.
-        if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_VkVendor)) {
-            caps->mIsResourceAllocationWithinCoherent = true;
+        if (adapter != nullptr) {
+            DXGI_ADAPTER_DESC adapterDesc;
+            ReturnIfFailed(adapter->GetDesc(&adapterDesc));
+
+            // D3D12 has no feature to detect support and must be set manually.
+            if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_VkVendor)) {
+                caps->mIsResourceAllocationWithinCoherent = true;
+            }
+        } else {
+            gpgmm::WarningLog()
+                << "DXGIAdapter was left unspecified. Not device capabilities could be detected.";
         }
 
-        *capsOut = caps.release();
+        if (capsOut != nullptr) {
+            *capsOut = caps.release();
+        }
+
         return S_OK;
     }
 

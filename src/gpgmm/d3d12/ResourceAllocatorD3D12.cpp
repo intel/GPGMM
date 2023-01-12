@@ -381,23 +381,24 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
                                                        IResourceAllocator** ppResourceAllocatorOut,
                                                        IResidencyManager** ppResidencyManagerOut) {
-        if (allocatorDescriptor.Device == nullptr || allocatorDescriptor.Adapter == nullptr) {
+        if (allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
 
         ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
-            std::unique_ptr<Caps> caps;
-            {
-                Caps* ptr = nullptr;
-                ReturnIfFailed(Caps::CreateCaps(allocatorDescriptor.Device.Get(),
-                                                allocatorDescriptor.Adapter.Get(), &ptr));
-                caps.reset(ptr);
-            }
-
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
             ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+
+            std::unique_ptr<Caps> caps;
+            {
+                Caps* ptr = nullptr;
+                ReturnIfFailed(Caps::CreateCaps(residencyDesc.Device.Get(),
+                                                residencyDesc.Adapter.Get(), &ptr));
+                caps.reset(ptr);
+            }
+
             residencyDesc.IsUMA = caps->IsAdapterUMA();
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
@@ -426,7 +427,7 @@ namespace gpgmm::d3d12 {
         const ALLOCATOR_DESC& allocatorDescriptor,
         IResidencyManager* pResidencyManager,
         IResourceAllocator** ppResourceAllocatorOut) {
-        if (allocatorDescriptor.Adapter == nullptr || allocatorDescriptor.Device == nullptr) {
+        if (allocatorDescriptor.Device == nullptr) {
             return E_INVALIDARG;
         }
 
@@ -439,7 +440,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
-            gpgmm::ErrorLog() << "Resource heap tier exceeds the capabilities of the adapter "
+            gpgmm::ErrorLog() << "Resource heap tier exceeds the capabilities of the device "
                                  "(ResourceHeapTier:"
                               << allocatorDescriptor.ResourceHeapTier << " vs "
                               << caps->GetMaxResourceHeapTierSupported()
@@ -449,7 +450,7 @@ namespace gpgmm::d3d12 {
 
         if (allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
             gpgmm::DebugLog()
-                << "Resource heap tier requested was lower than what the adapter "
+                << "Resource heap tier requested was lower than what the device "
                    "supports. This is allowed but not recommended because it prevents "
                    "resources of different categories from sharing the same heap.";
         }
@@ -489,7 +490,7 @@ namespace gpgmm::d3d12 {
 
             gpgmm::DebugLog()
                 << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was not requested but enabled "
-                   "anyway because the adapter did not support creating non-resident heaps.";
+                   "anyway because the device did not support creating non-resident heaps.";
         }
 
         newDescriptor.MaxResourceHeapSize =
@@ -508,7 +509,7 @@ namespace gpgmm::d3d12 {
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             gpgmm::ErrorLog() << "Requested preferred resource heap size exceeded the capabilities "
-                                 "of the adapter. This is probably not what the developer intended "
+                                 "of the device. This is probably not what the developer intended "
                                  "to do. Please consider using a smaller resource heap size.";
             return E_INVALIDARG;
         }
