@@ -380,9 +380,9 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
-                                              ID3D12Resource* pCommittedResource,
-                                              IResourceAllocation** ppResourceAllocationOut) {
+    HRESULT ResourceAllocator::CreateResource(
+        ID3D12Resource* pCommittedResource,
+        IResourceAllocation** ppResourceAllocationOut) {
         return E_NOTIMPL;
     }
 

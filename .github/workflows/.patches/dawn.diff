@@ -581,7 +581,7 @@ index 214fa67f8..d909d4d2a 100644
 +ResultOrError<ComPtr<gpgmm::d3d12::IResourceAllocation>> Device::CreateExternalAllocation(
 +    ComPtr<ID3D12Resource> texture) {
 +    ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;
-+    DAWN_TRY(CheckHRESULT(mResourceAllocator->CreateResource({}, texture.Get(), &allocation),
++    DAWN_TRY(CheckHRESULT(mResourceAllocator->CreateResource(texture.Get(), &allocation),
 +                          "CreateResource failed"));
 +    return allocation;
 +}

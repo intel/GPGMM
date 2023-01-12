@@ -90,8 +90,7 @@ namespace gpgmm::d3d12 {
                                D3D12_RESOURCE_STATES initialResourceState,
                                const D3D12_CLEAR_VALUE* pClearValue,
                                IResourceAllocation** ppResourceAllocationOut) override;
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
-                               ID3D12Resource* pCommittedResource,
+        HRESULT CreateResource(ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease) override;
         RESOURCE_ALLOCATOR_STATS GetStats() const override;

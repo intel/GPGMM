@@ -978,14 +978,6 @@ namespace gpgmm::d3d12 {
         Mostly used for debug and testing when certain allocation methods unexpectedly fail.
         */
         ALLOCATION_FLAG_NEVER_FALLBACK = 0x40,
-
-        /** \brief Disable residency management for the resource allocation.
-
-        The flag disables residency management for the resource allocation.
-
-        Mostly used when external resources are residency managed elsewhere.
-        */
-        ALLOCATION_FLAG_DISABLE_RESIDENCY = 0x80,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)
@@ -1126,16 +1118,15 @@ namespace gpgmm::d3d12 {
 
         Allows externally created D3D12 resources to be used as a ResourceAllocation.
 
-        @param allocationDescriptor A reference to ALLOCATION_DESC structure that provides
-        properties for the resource allocation.
+        Residency is not supported for imported resources.
+
         @param pCommittedResource A pointer to a committed ID3D12Resource.
         @param[out] ppResourceAllocationOut Pointer to a memory block that receives a pointer to the
         resource allocation. Pass NULL to test if resource allocation creation would succeed, but
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
         */
-        virtual HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
-                                       ID3D12Resource* pCommittedResource,
+        virtual HRESULT CreateResource(ID3D12Resource* pCommittedResource,
                                        IResourceAllocation** ppResourceAllocationOut) = 0;
 
         /** \brief Return free memory back to the OS.
