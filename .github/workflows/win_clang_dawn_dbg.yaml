@@ -107,7 +107,7 @@ jobs:
       continue-on-error: true
       run: |
         cd test
-        out\Debug\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Debug\dawn_end2end_tests.exe --backend=d3d12 --exclusive-device-type-preference=discrete,integrated,cpu --enable-backend-validation=partial --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json
 
     - name: Regression check end2end tests
       run: |
