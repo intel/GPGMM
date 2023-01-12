@@ -135,13 +135,13 @@ jobs:
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json || true
+        out\Release\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
       run: |
         cd test
-        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json || true
+        out\Release\gpgmm_unittests.exe --gtest_output=json:${{ github.workspace }}\..\test_unittests.json
 
     - name: Run gpgmm_capture_replay_tests (with patch)
       shell: cmd
