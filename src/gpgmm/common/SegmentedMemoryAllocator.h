@@ -48,6 +48,7 @@ namespace gpgmm {
         uint64_t GetSegmentSizeForTesting() const;
 
       private:
+        // ObjectBase interface
         const char* GetTypename() const override;
 
         MemorySegment* GetOrCreateFreeSegment(uint64_t memorySize);

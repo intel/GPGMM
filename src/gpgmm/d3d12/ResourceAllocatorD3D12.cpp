@@ -1255,7 +1255,7 @@ namespace gpgmm::d3d12 {
                              (allocationDescriptor.Flags & ALLOCATION_FLAG_DISABLE_RESIDENCY)
                                  ? nullptr
                                  : mResidencyManager.Get(),
-                             ImportResourceCallbackContext::CreateHeap,
+                             ImportResourceCallbackContext::GetHeap,
                              &importResourceCallbackContext, &resourceHeap));
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
@@ -1481,12 +1481,9 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ImportResourceCallbackContext::CreateHeap(void* pContext,
+    HRESULT ImportResourceCallbackContext::GetHeap(void* pContext,
                                                       ID3D12Pageable** ppPageableOut) {
-        ImportResourceCallbackContext* importResourceCallbackContext =
-            static_cast<ImportResourceCallbackContext*>(pContext);
-
-        return importResourceCallbackContext->GetHeap(ppPageableOut);
+        return static_cast<ImportResourceCallbackContext*>(pContext)->GetHeap(ppPageableOut);
     }
 
     HRESULT ImportResourceCallbackContext::GetHeap(ID3D12Pageable** ppPageableOut) {
