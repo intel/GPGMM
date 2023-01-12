@@ -141,7 +141,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Specifies the adapter used by this allocator. </p>
-<p>Required parameter. Use EnumAdapters to get the adapter. </p>
+<p>The adapter is used to detect for additional device capabilities (by GPU vendor). If the adapter is left unspecified, the capabiltities will not be detected and disabled by CheckFeatureSupport.</p>
+<p>Optional parameter. Use EnumAdapters to get the adapter. </p>
 
 </div>
 </div>
