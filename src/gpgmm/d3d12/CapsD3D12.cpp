@@ -60,7 +60,8 @@ namespace gpgmm::d3d12 {
         *createHeapNotResidencySupported = false;
 
         // Only Windows 10 Build 20348 and later support creating non-resident heaps.
-#ifdef D3D12_FEATURE_D3D12_OPTIONS7
+        // ID3D12Device8 is required to be defined in Windows 10 Build 20348 or newer builds.
+#ifdef __ID3D12Device8_FWD_DEFINED__
         D3D12_FEATURE_DATA_D3D12_OPTIONS7 options7 = {};
         if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &options7,
                                                   sizeof(options7)))) {

@@ -24,9 +24,7 @@
 // D3D12.h versions.
 // Only once ALL builds upgrade to the newer D3D12.h version, can these defines be safely
 // removed.
-#ifndef D3D12_FEATURE_D3D12_OPTIONS7
-#    define D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT static_cast<D3D12_HEAP_FLAGS>(0x800)
-#endif
+#define D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT static_cast<D3D12_HEAP_FLAGS>(0x800)
 
 using Microsoft::WRL::ComPtr;
 
