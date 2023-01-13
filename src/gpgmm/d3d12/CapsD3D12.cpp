@@ -108,7 +108,7 @@ namespace gpgmm::d3d12 {
             }
         } else {
             gpgmm::WarningLog()
-                << "DXGIAdapter was left unspecified. Not device capabilities could be detected.";
+                << "Adapter was left unspecified. Device capabilities may not be fully detected.";
         }
 
         if (capsOut != nullptr) {
