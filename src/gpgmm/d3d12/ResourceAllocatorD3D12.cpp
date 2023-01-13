@@ -448,7 +448,8 @@ namespace gpgmm::d3d12 {
             return E_FAIL;
         }
 
-        if (allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
+        if (allocatorDescriptor.ResourceHeapTier != 0 &&
+            allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
             gpgmm::DebugLog()
                 << "Resource heap tier requested was lower than what the device "
                    "supports. This is allowed but not recommended because it prevents "
