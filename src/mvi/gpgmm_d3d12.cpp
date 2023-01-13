@@ -302,12 +302,14 @@ namespace gpgmm::d3d12 {
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
 
+            if (allocatorDescriptor.Adapter != nullptr) {
+                ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+            }
+
             D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
             ReturnIfFailed(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE,
                                                                      &arch, sizeof(arch)));
             residencyDesc.IsUMA = arch.UMA;
-
-            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
 
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));

@@ -361,6 +361,17 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
         EXPECT_NE(residencyManager, nullptr);
     }
 
+    // Create allocator with residency, seperately, but no adapter should fail.
+    {
+        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        allocatorDesc.Adapter = nullptr;
+
+        ComPtr<IResidencyManager> residencyManager;
+        ComPtr<IResourceAllocator> resourceAllocator;
+        ASSERT_FAILED(
+            CreateResourceAllocator(allocatorDesc, &resourceAllocator, &residencyManager));
+    }
+
     // Create allocator with residency, seperately.
     {
         ComPtr<IResidencyManager> residencyManager;
