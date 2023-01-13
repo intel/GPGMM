@@ -69,7 +69,7 @@ namespace gpgmm::d3d12 {
                         }
 
                         gpgmm::DebugEvent(mResidencyManager, EventMessageId::kBudgetUpdated)
-                            << "Updated budget from OS budget notification.";
+                            << "Updated budget from OS notification.";
                         break;
                     }
                     // mUnregisterAndExitEvent
@@ -82,6 +82,12 @@ namespace gpgmm::d3d12 {
                         break;
                     }
                 }
+            }
+
+            if (FAILED(hr)) {
+                gpgmm::ErrorLog() << "Unable to update budget: " +
+                                         GetDeviceErrorMessage(mResidencyManager->mDevice.Get(),
+                                                               hr);
             }
 
             SetLastError(hr);
