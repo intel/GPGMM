@@ -389,7 +389,10 @@ namespace gpgmm::d3d12 {
         if (ppResidencyManagerOut != nullptr) {
             RESIDENCY_DESC residencyDesc = {};
             residencyDesc.Device = allocatorDescriptor.Device;
-            ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+
+            if (allocatorDescriptor.Adapter != nullptr) {
+                ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+            }
 
             std::unique_ptr<Caps> caps;
             {
