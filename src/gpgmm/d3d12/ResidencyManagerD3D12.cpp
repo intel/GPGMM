@@ -919,9 +919,12 @@ namespace gpgmm::d3d12 {
         gpgmm::DebugLog() << GetMemorySegmentName(segmentGroup, IsUMA()) << " GPU memory segment:";
         gpgmm::DebugLog() << "\tBudget: " << GPGMM_BYTES_TO_MB(info->Budget) << " MBs ("
                           << GPGMM_BYTES_TO_MB(info->CurrentUsage) << " used).";
-        gpgmm::DebugLog() << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation)
-                          << " MBs (" << GPGMM_BYTES_TO_MB(info->AvailableForReservation)
-                          << " available).";
+
+        if (info->CurrentReservation == 0) {
+            gpgmm::DebugLog() << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation)
+                              << " MBs (" << GPGMM_BYTES_TO_MB(info->AvailableForReservation)
+                              << " available).";
+        }
     }
 
 }  // namespace gpgmm::d3d12
