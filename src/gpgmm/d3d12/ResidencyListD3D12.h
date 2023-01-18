@@ -15,7 +15,7 @@
 #ifndef GPGMM_D3D12_RESIDENCYLISTD3D12_H_
 #define GPGMM_D3D12_RESIDENCYLISTD3D12_H_
 
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #include <gpgmm_d3d12.h>
@@ -28,7 +28,7 @@ namespace gpgmm::d3d12 {
     class JSONSerializer;
     class ResidencyManager;
 
-    class ResidencyList final : public IResidencyList, public IUnknownImpl {
+    class ResidencyList final : public IResidencyList, public Unknown {
       public:
         ResidencyList();
         ~ResidencyList() override;
@@ -36,10 +36,9 @@ namespace gpgmm::d3d12 {
         HRESULT Add(IHeap* pHeap) override;
         HRESULT Reset() override;
 
-        DEFINE_IUNKNOWNIMPL_OVERRIDES()
+        DEFINE_Unknown_OVERRIDES()
 
-      private:
-        friend JSONSerializer;
+            private : friend JSONSerializer;
         friend ResidencyManager;
 
         using UnderlyingType = std::vector<Heap*>;

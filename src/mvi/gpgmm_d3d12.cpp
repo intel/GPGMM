@@ -30,14 +30,14 @@ namespace gpgmm::d3d12 {
 
     static constexpr uint64_t kInvalidOffset = std::numeric_limits<uint64_t>::max();
 
-    // IUnknownImpl
+    // Unknown
 
-    IUnknownImpl::IUnknownImpl() : mRefCount(1) {
+    Unknown::Unknown() : mRefCount(1) {
     }
 
-    IUnknownImpl::~IUnknownImpl() = default;
+    Unknown::~Unknown() = default;
 
-    HRESULT STDMETHODCALLTYPE IUnknownImpl::QueryInterface(REFIID riid, void** ppvObject) {
+    HRESULT STDMETHODCALLTYPE Unknown::QueryInterface(REFIID riid, void** ppvObject) {
         // Always set out parameter to nullptr, validating it first.
         if (ppvObject == nullptr) {
             return E_INVALIDARG;
@@ -54,11 +54,11 @@ namespace gpgmm::d3d12 {
         return E_NOINTERFACE;
     }
 
-    ULONG STDMETHODCALLTYPE IUnknownImpl::AddRef() {
+    ULONG STDMETHODCALLTYPE Unknown::AddRef() {
         return ++mRefCount;
     }
 
-    ULONG STDMETHODCALLTYPE IUnknownImpl::Release() {
+    ULONG STDMETHODCALLTYPE Unknown::Release() {
         const ULONG refCount = --mRefCount;
         if (refCount == 0) {
             DeleteThis();
@@ -66,7 +66,7 @@ namespace gpgmm::d3d12 {
         return refCount;
     }
 
-    void IUnknownImpl::DeleteThis() {
+    void Unknown::DeleteThis() {
         delete this;
     }
 
@@ -103,11 +103,11 @@ namespace gpgmm::d3d12 {
     }
 
     ULONG STDMETHODCALLTYPE Heap::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE Heap::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     LPCWSTR Heap::GetDebugName() const {
@@ -138,15 +138,15 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT STDMETHODCALLTYPE ResidencyList::QueryInterface(REFIID riid, void** ppvObject) {
-        return IUnknownImpl::QueryInterface(riid, ppvObject);
+        return Unknown::QueryInterface(riid, ppvObject);
     }
 
     ULONG STDMETHODCALLTYPE ResidencyList::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE ResidencyList::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     // ResidencyManager
@@ -206,15 +206,15 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT STDMETHODCALLTYPE ResidencyManager::QueryInterface(REFIID riid, void** ppvObject) {
-        return IUnknownImpl::QueryInterface(riid, ppvObject);
+        return Unknown::QueryInterface(riid, ppvObject);
     }
 
     ULONG STDMETHODCALLTYPE ResidencyManager::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE ResidencyManager::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     // ResourceAllocation
@@ -261,15 +261,15 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT STDMETHODCALLTYPE ResourceAllocation::QueryInterface(REFIID riid, void** ppvObject) {
-        return IUnknownImpl::QueryInterface(riid, ppvObject);
+        return Unknown::QueryInterface(riid, ppvObject);
     }
 
     ULONG STDMETHODCALLTYPE ResourceAllocation::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE ResourceAllocation::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     LPCWSTR ResourceAllocation::GetDebugName() const {
@@ -416,15 +416,15 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT STDMETHODCALLTYPE ResourceAllocator::QueryInterface(REFIID riid, void** ppvObject) {
-        return IUnknownImpl::QueryInterface(riid, ppvObject);
+        return Unknown::QueryInterface(riid, ppvObject);
     }
 
     ULONG STDMETHODCALLTYPE ResourceAllocator::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE ResourceAllocator::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(

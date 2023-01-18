@@ -18,7 +18,7 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #include <gpgmm_d3d12.h>
@@ -45,10 +45,10 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
         IHeap* GetMemory() const override;
 
-        DEFINE_IUNKNOWNIMPL_OVERRIDES()
+        DEFINE_Unknown_OVERRIDES()
 
-        // IDebugObject interface
-        LPCWSTR GetDebugName() const override;
+            // IDebugObject interface
+            LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:

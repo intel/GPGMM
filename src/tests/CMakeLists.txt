@@ -68,7 +68,7 @@ if (GPGMM_ENABLE_D3D12)
   target_sources(gpgmm_end2end_tests PRIVATE
       "D3D12Test.cpp"
       "D3D12Test.h"
-      "end2end/D3D12IUnknownImplTests.cpp"
+      "end2end/D3D12UnknownTests.cpp"
       "end2end/D3D12ResidencyManagerTests.cpp"
       "end2end/D3D12ResourceAllocatorTests.cpp"
   )

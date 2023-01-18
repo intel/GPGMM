@@ -15,14 +15,14 @@
 #ifndef GPGMM_D3D12_DEBUGOBJECTD3D12_H_
 #define GPGMM_D3D12_DEBUGOBJECTD3D12_H_
 
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #include <string>
 
 namespace gpgmm::d3d12 {
-    class DebugObject : public IUnknownImpl {
+    class DebugObject : public Unknown {
       public:
         virtual ~DebugObject() override = default;
 

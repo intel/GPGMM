@@ -206,11 +206,11 @@ namespace gpgmm::d3d12 {
     }
 
     ULONG STDMETHODCALLTYPE Heap::AddRef() {
-        return IUnknownImpl::AddRef();
+        return Unknown::AddRef();
     }
 
     ULONG STDMETHODCALLTYPE Heap::Release() {
-        return IUnknownImpl::Release();
+        return Unknown::Release();
     }
 
     void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {

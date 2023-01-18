@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 
 #include <gpgmm_d3d12.h>
@@ -70,7 +70,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC* mResourceDescriptor;
     };
 
-    class ResourceAllocator final : public IUnknownImpl,
+    class ResourceAllocator final : public Unknown,
                                     public IResourceAllocator,
                                     public MemoryAllocator {
       public:
@@ -99,10 +99,9 @@ namespace gpgmm::d3d12 {
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;
 
-        DEFINE_IUNKNOWNIMPL_OVERRIDES()
+        DEFINE_Unknown_OVERRIDES()
 
-      private:
-        friend BufferAllocator;
+            private : friend BufferAllocator;
         friend ResourceAllocation;
 
         // ObjectBase interface
