@@ -49,7 +49,6 @@ namespace gpgmm::d3d12 {
     class CreateCommittedResourceCallbackContext {
       public:
         CreateCommittedResourceCallbackContext(ID3D12Device* device,
-                                               ComPtr<ID3D12Resource> resource,
                                                D3D12_HEAP_PROPERTIES* heapProperties,
                                                D3D12_HEAP_FLAGS heapFlags,
                                                const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -66,7 +65,6 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES mInitialResourceState;
         D3D12_HEAP_FLAGS mHeapFlags;
         D3D12_HEAP_PROPERTIES* mHeapProperties;
-        ComPtr<ID3D12Resource> mResource;
         const D3D12_RESOURCE_DESC* mResourceDescriptor;
     };
 

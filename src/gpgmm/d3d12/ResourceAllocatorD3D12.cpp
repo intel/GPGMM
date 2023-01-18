@@ -882,6 +882,8 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
                                               initialResourceState, pClearValue, &allocation));
 
+        ASSERT(allocation->GetResource() != nullptr);
+
         if (GPGMM_UNLIKELY(mDebugAllocator)) {
             ReturnIfFailed(allocation->SetDebugName(allocationDescriptor.DebugName));
             mDebugAllocator->AddLiveAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
@@ -1331,16 +1333,18 @@ namespace gpgmm::d3d12 {
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         ComPtr<IHeap> resourceHeap;
-        ComPtr<ID3D12Resource> committedResource;
-        CreateCommittedResourceCallbackContext callbackContext(
-            mDevice.Get(), committedResource, &heapProperties, heapFlags, resourceDescriptor,
-            clearValue, initialResourceState);
+        CreateCommittedResourceCallbackContext callbackContext(mDevice.Get(), &heapProperties,
+                                                               heapFlags, resourceDescriptor,
+                                                               clearValue, initialResourceState);
 
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
                                         CreateCommittedResourceCallbackContext::CreateHeap,
                                         &callbackContext, &resourceHeap));
 
         if (commitedResourceOut != nullptr) {
+            ComPtr<ID3D12Resource> committedResource;
+            ReturnIfFailed(resourceHeap.As(&committedResource));
+
             *commitedResourceOut = committedResource.Detach();
         }
 
@@ -1501,7 +1505,6 @@ namespace gpgmm::d3d12 {
 
     CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(
         ID3D12Device* device,
-        ComPtr<ID3D12Resource> resource,
         D3D12_HEAP_PROPERTIES* heapProperties,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
@@ -1512,7 +1515,6 @@ namespace gpgmm::d3d12 {
           mInitialResourceState(initialResourceState),
           mHeapFlags(heapFlags),
           mHeapProperties(heapProperties),
-          mResource(resource),
           mResourceDescriptor(resourceDescriptor) {
     }
 
@@ -1537,13 +1539,12 @@ namespace gpgmm::d3d12 {
             mHeapProperties->MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
         }
 
-        ReturnIfFailed(mDevice->CreateCommittedResource(mHeapProperties, mHeapFlags,
-                                                        mResourceDescriptor, mInitialResourceState,
-                                                        mClearValue, IID_PPV_ARGS(&mResource)));
+        ComPtr<ID3D12Resource> committedResource;
+        ReturnIfFailed(mDevice->CreateCommittedResource(
+            mHeapProperties, mHeapFlags, mResourceDescriptor, mInitialResourceState, mClearValue,
+            IID_PPV_ARGS(&committedResource)));
 
-        ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(mResource.As(&pageable));
-        *ppPageableOut = pageable.Detach();
+        *ppPageableOut = committedResource.Detach();
         return S_OK;
     }
 
