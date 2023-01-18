@@ -889,6 +889,15 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ComPtr<IHeap> resourceHeap = allocation->GetMemory();
     ASSERT_NE(resourceHeap, nullptr);
 
+    EXPECT_NE(allocation->GetResource(), nullptr);
+
+    ComPtr<ID3D12Pageable> resourceAsPageable;
+    ASSERT_SUCCEEDED(allocation->GetResource()->QueryInterface(IID_PPV_ARGS(&resourceAsPageable)));
+
+    ComPtr<ID3D12Pageable> implicitHeap;
+    ASSERT_SUCCEEDED(resourceHeap.As(&implicitHeap));
+    EXPECT_EQ(resourceAsPageable, implicitHeap);
+
     ComPtr<ID3D12Heap> heap;
     ASSERT_FAILED(resourceHeap.As(&heap));
 
