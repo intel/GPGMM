@@ -14,33 +14,33 @@
 
 #include <gtest/gtest.h>
 
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 
 using namespace gpgmm::d3d12;
 
-class TestIUnknownImplSubClass final : public IUnknownImpl {
+class TestUnknownSubClass final : public Unknown {
   public:
-    TestIUnknownImplSubClass() {
+    TestUnknownSubClass() {
         mInstanceCount++;
     }
-    ~TestIUnknownImplSubClass() override {
+    ~TestUnknownSubClass() override {
         mInstanceCount--;
     }
     static uint32_t mInstanceCount;
 };
 
-uint32_t TestIUnknownImplSubClass::mInstanceCount = 0u;
+uint32_t TestUnknownSubClass::mInstanceCount = 0u;
 
-TEST(D3D12IUnknownImplTests, IUnknownImpl) {
-    EXPECT_EQ(TestIUnknownImplSubClass::mInstanceCount, 0u);
+TEST(D3D12UnknownTests, Unknown) {
+    EXPECT_EQ(TestUnknownSubClass::mInstanceCount, 0u);
 
-    // IUnknownImpl must be acquired/associated since it already
+    // Unknown must be acquired/associated since it already
     // refs itself upon creation.
     uint32_t refCount = 0;
-    ComPtr<TestIUnknownImplSubClass> unknownObj;
-    unknownObj.Attach(new TestIUnknownImplSubClass());
+    ComPtr<TestUnknownSubClass> unknownObj;
+    unknownObj.Attach(new TestUnknownSubClass());
 
-    EXPECT_EQ(TestIUnknownImplSubClass::mInstanceCount, 1u);
+    EXPECT_EQ(TestUnknownSubClass::mInstanceCount, 1u);
 
     refCount++;
 
@@ -61,5 +61,5 @@ TEST(D3D12IUnknownImplTests, IUnknownImpl) {
     otherUnknownObj = nullptr;
     unknownObj = nullptr;
 
-    EXPECT_EQ(TestIUnknownImplSubClass::mInstanceCount, 0u);
+    EXPECT_EQ(TestUnknownSubClass::mInstanceCount, 0u);
 }

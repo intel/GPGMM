@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
 #include "gpgmm/common/Object.h"
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
 
@@ -39,7 +39,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
-    class ResidencyManager final : public IUnknownImpl, public IResidencyManager, ObjectBase {
+    class ResidencyManager final : public Unknown, public IResidencyManager, ObjectBase {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               IResidencyManager** ppResidencyManagerOut);
@@ -63,10 +63,9 @@ namespace gpgmm::d3d12 {
 
         RESIDENCY_STATS GetStats() const override;
 
-        DEFINE_IUNKNOWNIMPL_OVERRIDES()
+        DEFINE_Unknown_OVERRIDES()
 
-      private:
-        friend Heap;
+            private : friend Heap;
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 

@@ -153,9 +153,9 @@ source_set("gpgmm_end2end_tests_sources") {
     sources += [
       "D3D12Test.cpp",
       "D3D12Test.h",
-      "end2end/D3D12IUnknownImplTests.cpp",
       "end2end/D3D12ResidencyManagerTests.cpp",
       "end2end/D3D12ResourceAllocatorTests.cpp",
+      "end2end/D3D12UnknownTests.cpp",
     ]
 
     libs += [

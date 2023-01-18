@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
-#define GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
+#ifndef GPGMM_D3D12_UnknownD3D12_H_
+#define GPGMM_D3D12_UnknownD3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/NonCopyable.h"
@@ -21,20 +21,20 @@
 #ifndef GPGMM_REFCOUNT_TYPE
 #    include "gpgmm/utils/RefCount.h"
 /** \brief Defines the atomic-type to use for ref-counting the COM object.
-*/
+ */
 #    define GPGMM_REFCOUNT_TYPE RefCounted
 #endif
 
 namespace gpgmm::d3d12 {
 
-    /** \brief IUnknownImpl is a thread-safe ref-count implementation for custom COM based objects.
+    /** \brief Unknown is a thread-safe ref-count implementation for custom COM based objects.
 
     The custom COM based object must override DeleteThis() if they require a custom-deleter.
     */
-    class IUnknownImpl : public IUnknown, public NonCopyable {
+    class Unknown : public IUnknown, public NonCopyable {
       public:
-        IUnknownImpl();
-        virtual ~IUnknownImpl() = default;
+        Unknown();
+        virtual ~Unknown() = default;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -49,14 +49,14 @@ namespace gpgmm::d3d12 {
         GPGMM_REFCOUNT_TYPE mRefCount;  // Maintains the COM ref-count of this object.
     };
 
-// Helper to provide IUnknown-based object types the required overrides to use IUnknownImpl.
-#define DEFINE_IUNKNOWNIMPL_OVERRIDES()                                                       \
+// Helper to provide IUnknown-based object types the required overrides to use Unknown.
+#define DEFINE_Unknown_OVERRIDES()                                                            \
     inline HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override { \
-        return IUnknownImpl::QueryInterface(riid, ppvObject);                                 \
+        return Unknown::QueryInterface(riid, ppvObject);                                      \
     }                                                                                         \
-    inline ULONG STDMETHODCALLTYPE AddRef() override { return IUnknownImpl::AddRef(); }       \
-    inline ULONG STDMETHODCALLTYPE Release() override { return IUnknownImpl::Release(); }
+    inline ULONG STDMETHODCALLTYPE AddRef() override { return Unknown::AddRef(); }            \
+    inline ULONG STDMETHODCALLTYPE Release() override { return Unknown::Release(); }
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_IUNKNOWNIMPLD3D12_H_
+#endif  // GPGMM_D3D12_UnknownD3D12_H_

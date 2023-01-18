@@ -18,7 +18,7 @@
 
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
-#include "gpgmm/d3d12/IUnknownImplD3D12.h"
+#include "gpgmm/d3d12/UnknownD3D12.h"
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 

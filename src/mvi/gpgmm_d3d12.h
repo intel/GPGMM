@@ -44,10 +44,10 @@
 
 namespace gpgmm::d3d12 {
 
-    class IUnknownImpl : public IUnknown {
+    class Unknown : public IUnknown {
       public:
-        IUnknownImpl();
-        virtual ~IUnknownImpl();
+        Unknown();
+        virtual ~Unknown();
 
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
         ULONG STDMETHODCALLTYPE AddRef() override;
@@ -60,7 +60,7 @@ namespace gpgmm::d3d12 {
         GPGMM_REFCOUNT_TYPE mRefCount;
     };
 
-    class Heap final : public MemoryBase, public IUnknownImpl, public IHeap {
+    class Heap final : public MemoryBase, public Unknown, public IHeap {
       public:
         static HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                   IResidencyManager* const pResidencyManager,
@@ -88,7 +88,7 @@ namespace gpgmm::d3d12 {
         Microsoft::WRL::ComPtr<ID3D12Pageable> mPageable;
     };
 
-    class ResidencyList final : public IResidencyList, public IUnknownImpl {
+    class ResidencyList final : public IResidencyList, public Unknown {
       public:
         ResidencyList();
 
@@ -101,7 +101,7 @@ namespace gpgmm::d3d12 {
         ULONG STDMETHODCALLTYPE Release() override;
     };
 
-    class ResidencyManager final : public IUnknownImpl, public IResidencyManager {
+    class ResidencyManager final : public Unknown, public IResidencyManager {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               IResidencyManager** ppResidencyManagerOut);
@@ -137,7 +137,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
 
     class ResourceAllocation final : public MemoryAllocation,
-                                     public IUnknownImpl,
+                                     public Unknown,
                                      public IResourceAllocation {
       public:
         // IResourceAllocation interface
@@ -195,7 +195,7 @@ namespace gpgmm::d3d12 {
     };
 
     class ResourceAllocator final : public MemoryAllocator,
-                                    public IUnknownImpl,
+                                    public Unknown,
                                     public IResourceAllocator {
       public:
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
