@@ -162,9 +162,8 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                                      IResidencyManager** ppResidencyManagerOut) {
-        if (descriptor.Adapter == nullptr || descriptor.Device == nullptr) {
-            return E_INVALIDARG;
-        }
+        ReturnIfNullptr(descriptor.Adapter);
+        ReturnIfNullptr(descriptor.Device);
 
         std::unique_ptr<Caps> caps;
         {
@@ -311,12 +310,12 @@ namespace gpgmm::d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
+        ReturnIfNullptr(pHeap);
+
         std::lock_guard<std::mutex> lock(mMutex);
 
         Heap* heap = static_cast<Heap*>(pHeap);
-        if (heap == nullptr) {
-            return E_INVALIDARG;
-        }
+        ASSERT(heap != nullptr);
 
         if (!heap->IsInList() && !heap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
@@ -351,11 +350,11 @@ namespace gpgmm::d3d12 {
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
     HRESULT ResidencyManager::UnlockHeap(IHeap* pHeap) {
+        ReturnIfNullptr(pHeap);
+
         std::lock_guard<std::mutex> lock(mMutex);
         Heap* heap = static_cast<Heap*>(pHeap);
-        if (heap == nullptr) {
-            return E_INVALIDARG;
-        }
+        ASSERT(heap != nullptr);
 
         if (!heap->IsResidencyLocked()) {
             return E_FAIL;

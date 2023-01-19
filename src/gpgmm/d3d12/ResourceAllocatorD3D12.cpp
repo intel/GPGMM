@@ -381,9 +381,7 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
                                                        IResourceAllocator** ppResourceAllocatorOut,
                                                        IResidencyManager** ppResidencyManagerOut) {
-        if (allocatorDescriptor.Device == nullptr) {
-            return E_INVALIDARG;
-        }
+        ReturnIfNullptr(allocatorDescriptor.Device);
 
         ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
@@ -430,9 +428,7 @@ namespace gpgmm::d3d12 {
         const ALLOCATOR_DESC& allocatorDescriptor,
         IResidencyManager* pResidencyManager,
         IResourceAllocator** ppResourceAllocatorOut) {
-        if (allocatorDescriptor.Device == nullptr) {
-            return E_INVALIDARG;
-        }
+        ReturnIfNullptr(allocatorDescriptor.Device);
 
         std::unique_ptr<Caps> caps;
         {
@@ -1234,11 +1230,9 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                               ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
-        std::lock_guard<std::mutex> lock(mMutex);
+        ReturnIfNullptr(pCommittedResource);
 
-        if (pCommittedResource == nullptr) {
-            return E_INVALIDARG;
-        }
+        std::lock_guard<std::mutex> lock(mMutex);
 
         ComPtr<ID3D12Resource> resource(pCommittedResource);
 

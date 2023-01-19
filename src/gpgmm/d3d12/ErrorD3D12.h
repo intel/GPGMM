@@ -22,6 +22,15 @@
 
 namespace gpgmm::d3d12 {
 
+#define ReturnIfNullptr(expr)                  \
+    {                                          \
+        if (GPGMM_UNLIKELY(expr == nullptr)) { \
+            return E_POINTER;                  \
+        }                                      \
+    }                                          \
+    for (;;)                                   \
+    break
+
 #define ReturnIfFailed(expr)                                           \
     {                                                                  \
         HRESULT hr = expr;                                             \
