@@ -568,7 +568,7 @@ namespace gpgmm::d3d12 {
           mResidencyManager(pResidencyManager),
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
-          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITED),
+          mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITTED),
           mIsHeapAlwaysCreatedInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
@@ -1489,8 +1489,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ImportResourceCallbackContext::GetHeap(void* pContext,
-                                                      ID3D12Pageable** ppPageableOut) {
+    HRESULT ImportResourceCallbackContext::GetHeap(void* pContext, ID3D12Pageable** ppPageableOut) {
         return static_cast<ImportResourceCallbackContext*>(pContext)->GetHeap(ppPageableOut);
     }
 

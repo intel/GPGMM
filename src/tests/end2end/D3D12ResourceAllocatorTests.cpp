@@ -387,7 +387,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
     // No sub-allocation algorithm.
     {
         ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
+        newAllocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITTED;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, &resourceAllocator, nullptr));
@@ -869,7 +869,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalid) {
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
-    desc.Flags = ALLOCATOR_FLAG_ALWAYS_COMMITED;
+    desc.Flags = ALLOCATOR_FLAG_ALWAYS_COMMITTED;
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(desc, &resourceAllocator, nullptr));
@@ -1637,7 +1637,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
 
     // Repeat standalone buffer creation, but using a committed resource.
     {
-        allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITED;
+        allocatorDesc.Flags |= ALLOCATOR_FLAG_ALWAYS_COMMITTED;
 
         ComPtr<IResourceAllocator> commitedAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, &commitedAllocator, nullptr));
