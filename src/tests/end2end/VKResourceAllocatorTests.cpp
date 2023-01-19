@@ -111,7 +111,7 @@ TEST_F(VKResourceAllocatorTests, CreateBufferManyDeallocateAtEnd) {
             continue;
         }
 
-        ASSERT_NE(allocation, VK_NULL_HANDLE);
+        ASSERT_NE(allocation, static_cast<GpResourceAllocation>(VK_NULL_HANDLE));
         EXPECT_TRUE(allocs.insert(std::make_tuple(buffer, allocation)).second);
     }
 
