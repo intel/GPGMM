@@ -33,7 +33,7 @@ namespace gpgmm {
 
     static const char kLogTag[] = "GPGMM";
 
-    LogSeverity GetDefaultLogMessageLevel() {
+    LogSeverity GetDefaultLogLevel() {
 #if defined(NDEBUG)
         return LogSeverity::Info;
 #else
@@ -42,7 +42,7 @@ namespace gpgmm {
     }
 
     // Messages with equal or greater to severity will be logged.
-    static LogSeverity gLogMessageLevel = GetDefaultLogMessageLevel();
+    static LogSeverity gLogLevel = GetDefaultLogLevel();
     static std::mutex mMutex;
 
     namespace {
@@ -83,14 +83,14 @@ namespace gpgmm {
 
     }  // anonymous namespace
 
-    void SetLogMessageLevel(const LogSeverity& newLevel) {
+    void SetLogLevel(const LogSeverity& newLevel) {
         std::lock_guard<std::mutex> lock(mMutex);
-        gLogMessageLevel = newLevel;
+        gLogLevel = newLevel;
     }
 
-    LogSeverity GetLogMessageLevel() {
+    LogSeverity GetLogLevel() {
         std::lock_guard<std::mutex> lock(mMutex);
-        return gLogMessageLevel;
+        return gLogLevel;
     }
 
     // LogMessage
@@ -126,7 +126,7 @@ namespace gpgmm {
 #endif  // defined(GPGMM_PLATFORM_WINDOWS)
 
         // If this message is below the global severity level, do not print it.
-        if (GetLogMessageLevel() > mSeverity) {
+        if (GetLogLevel() > mSeverity) {
             return;
         }
 

@@ -204,7 +204,7 @@ namespace gpgmm::d3d12 {
             SetEventMessageLevel(GetLogSeverity(descriptor.MinRecordLevel));
         }
 
-        SetLogMessageLevel(GetLogSeverity(descriptor.MinLogLevel));
+        SetLogLevel(GetLogSeverity(descriptor.MinLogLevel));
 
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, std::move(residencyFence)));

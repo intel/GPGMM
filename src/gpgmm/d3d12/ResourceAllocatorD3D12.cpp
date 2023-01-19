@@ -528,7 +528,7 @@ namespace gpgmm::d3d12 {
         // Do not override the default min. log level specified by the residency manager.
         // Only if this allocator is without residency, does the min. log level have affect.
         if (pResidencyManager == nullptr) {
-            SetLogMessageLevel(GetLogSeverity(newDescriptor.MinLogLevel));
+            SetLogLevel(GetLogSeverity(newDescriptor.MinLogLevel));
         }
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
