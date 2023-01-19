@@ -130,7 +130,7 @@ Enumerations</h2></td></tr>
 <tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897">ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb">ALLOCATOR_FLAG_ALWAYS_COMMITED</a> = 0x1
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba">ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02">ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH</a> = 0x4
 , <br />
@@ -434,7 +434,7 @@ equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
 A dedicated allocation allocates exactly what is needed for the resource and nothing more.
 
 Internally, dedicated allocations are "placed resources" which allows the heap to be
-recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivelent to a "dedicated
+recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
 allocation" but without heaps being recycled by GPGMM.
 
 Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
@@ -477,7 +477,7 @@ Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) sp
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba"></a>ALLOCATOR_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897" name="a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897"></a>ALLOCATOR_FLAG_ALWAYS_COMMITTED&#160;</td><td class="fielddoc"><p>Disable re-use of resource heap. </p>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb" name="a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb"></a>ALLOCATOR_FLAG_ALWAYS_COMMITED&#160;</td><td class="fielddoc"><p>Disable re-use of resource heap. </p>
 <pre class="fragment">A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
 for large static resources. Otherwise, this is mostly used for debugging and testing
 purposes.
