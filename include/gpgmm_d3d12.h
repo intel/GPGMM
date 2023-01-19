@@ -172,7 +172,7 @@ namespace gpgmm::d3d12 {
     };
 
     /** \brief Callback function used to create a ID3D12Pageable.
-    */
+     */
     using CreateHeapFn = HRESULT (*)(void* context, ID3D12Pageable** ppPageableOut);
 
     GPGMM_INTERFACE IResidencyManager;
@@ -215,7 +215,7 @@ namespace gpgmm::d3d12 {
     \endcode
 
     Example Callback Context Class:
-    
+
     \code
     class CallbackContext {
         public:
@@ -261,9 +261,10 @@ namespace gpgmm::d3d12 {
 
         \return S_OK if heap was added, else error.
         */
-        virtual HRESULT Add(IHeap* pHeap) = 0;
+        virtual HRESULT Add(IHeap * pHeap) = 0;
 
-        /** \brief Resets a residency list to its initial state as if a new residenct list was created.
+        /** \brief Resets a residency list to its initial state as if a new residenct list was
+        created.
 
         \return Returns S_OK if successful.
         */
@@ -435,7 +436,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to the heap being locked.
         */
-        virtual HRESULT LockHeap(IHeap* pHeap) = 0;
+        virtual HRESULT LockHeap(IHeap * pHeap) = 0;
 
         /** \brief  Unlocks the specified heap.
 
@@ -443,7 +444,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to the heap being unlocked.
         */
-        virtual HRESULT UnlockHeap(IHeap* pHeap) = 0;
+        virtual HRESULT UnlockHeap(IHeap * pHeap) = 0;
 
         /** \brief  Execute command lists using residency managed heaps.
 
@@ -456,10 +457,9 @@ namespace gpgmm::d3d12 {
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
         @param count The size of commandLists and residencyLists arrays.
         */
-        virtual HRESULT ExecuteCommandLists(ID3D12CommandQueue* const pQueue,
-                                            ID3D12CommandList* const* ppCommandLists,
-                                            IResidencyList* const* ppResidencyLists,
-                                            uint32_t count) = 0;
+        virtual HRESULT ExecuteCommandLists(
+            ID3D12CommandQueue* const pQueue, ID3D12CommandList* const* ppCommandLists,
+            IResidencyList* const* ppResidencyLists, uint32_t count) = 0;
 
         /** \brief  Sets video memory reservation.
 
@@ -473,8 +473,7 @@ namespace gpgmm::d3d12 {
         return the current reservation.
         */
         virtual HRESULT SetVideoMemoryReservation(
-            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
-            uint64_t availableForReservation,
+            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup, uint64_t availableForReservation,
             uint64_t* pCurrentReservationOut = nullptr) = 0;
 
         /** \brief  Get the current budget and memory usage.
@@ -528,7 +527,7 @@ namespace gpgmm::d3d12 {
         uint64_t OffsetFromResource;
 
         /** \brief Method used to allocate memory for the resource.
-        */
+         */
         AllocationMethod Method;
 
         /** \brief Debug name associated with the resource allocation.
@@ -645,7 +644,7 @@ namespace gpgmm::d3d12 {
         for large static resources. Otherwise, this is mostly used for debugging and testing
         purposes.
         */
-        ALLOCATOR_FLAG_ALWAYS_COMMITED = 0x1,
+        ALLOCATOR_FLAG_ALWAYS_COMMITTED = 0x1,
 
         /** \brief Creates resource within budget.
 
@@ -759,7 +758,7 @@ namespace gpgmm::d3d12 {
         A dedicated allocation allocates exactly what is needed for the resource and nothing more.
 
         Internally, dedicated allocations are "placed resources" which allows the heap to be
-        recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITED is equivelent to a "dedicated
+        recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivelent to a "dedicated
         allocation" but without heaps being recycled by GPGMM.
 
         Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
@@ -1179,8 +1178,7 @@ namespace gpgmm::d3d12 {
         to pFeatureSupportData or if a size mismatch is detected for the featureSupportDataSize
         parameter.
         */
-        virtual HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
-                                            void* pFeatureSupportData,
+        virtual HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature, void* pFeatureSupportData,
                                             uint32_t featureSupportDataSize) const = 0;
     };
 
