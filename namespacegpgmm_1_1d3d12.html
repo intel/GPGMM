@@ -122,6 +122,7 @@ Enumerations</h2></td></tr>
 <tr class="separator:a964c4ad3a4e304bf0e281459f327023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a246644ddca184dd4446f3d89c0a376cd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a246644ddca184dd4446f3d89c0a376cd">HEAP_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493">HEAP_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f">HEAP_FLAG_ALWAYS_IN_BUDGET</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc">HEAP_FLAG_ALWAYS_IN_RESIDENCY</a> = 0x2
  }</td></tr>
 <tr class="separator:a246644ddca184dd4446f3d89c0a376cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91ac0725c909f9dae91c66c3bb049c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e">RESIDENCY_FLAG_NONE</a> = 0x0
@@ -529,7 +530,13 @@ to be released, it will report details on any leaked allocations as log messages
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493" name="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493"></a>HEAP_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f" name="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires the heap to be created in budget. </p>
-</td></tr>
+<pre class="fragment">This flags allows the heap to be tracked for residency but not made resident.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc" name="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc"></a>HEAP_FLAG_ALWAYS_IN_RESIDENCY&#160;</td><td class="fielddoc"><p>Requires the heap to be tracked for residency. </p>
+<pre class="fragment">This flag is equivelent to calling LockHeap then UnlockHeap after
+creation. The flag only has effect when the heap's residency status
+cannot be determined.
+</pre> </td></tr>
 </table>
 
 </div>
