@@ -24,7 +24,7 @@ var searchData=
   ['allocator_5fdesc_21',['ALLOCATOR_DESC',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['allocator_5ffeature_22',['ALLOCATOR_FEATURE',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a',1,'gpgmm::d3d12']]],
   ['allocator_5ffeature_5fresource_5fallocation_5fsupport_23',['ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5falways_5fcommited_24',['ALLOCATOR_FLAG_ALWAYS_COMMITED',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8afd749b16482214ae9212a864555b3bfb',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5falways_5fcommitted_24',['ALLOCATOR_FLAG_ALWAYS_COMMITTED',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fin_5fbudget_25',['ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fon_5fdemand_26',['ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5fdisable_5fcustom_5fheaps_27',['ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a26ea5e0aa63dd0ec1b4789c7bb470c4f',1,'gpgmm::d3d12']]],
