@@ -747,6 +747,16 @@ namespace gpgmm::d3d12 {
             // Temporarily track which heaps will be made resident. Once MakeResident() is called
             // on them will we transition them all together.
             heapsToMakeResident.push_back(heap);
+
+            // If the heap should be already resident, calling MakeResident again will be redundant.
+            // Tell the developer the heap wasn't properly tracked by the residency manager.
+            if (heap->GetInfo().Status == RESIDENCY_STATUS_UNKNOWN) {
+                gpgmm::DebugLog()
+                    << "Residency state could not be determined for the heap (Heap="
+                    << ToHexStr(heap)
+                    << "). This likely means the developer was attempting to make a "
+                       "non-resource heap resident without calling lock/unlock first.";
+            }
         }
 
         if (localSizeToMakeResident > 0) {
