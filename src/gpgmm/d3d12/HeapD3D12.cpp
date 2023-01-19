@@ -122,6 +122,11 @@ namespace gpgmm::d3d12 {
             // residency cache.
             if (heap->mState != RESIDENCY_STATUS_UNKNOWN) {
                 ReturnIfFailed(residencyManager->InsertHeap(heap.get()));
+            } else {
+                if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
+                    ReturnIfFailed(residencyManager->LockHeap(heap.get()));
+                    ReturnIfFailed(residencyManager->UnlockHeap(heap.get()));
+                }
             }
         }
 

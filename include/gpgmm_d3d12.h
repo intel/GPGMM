@@ -134,8 +134,18 @@ namespace gpgmm::d3d12 {
         HEAP_FLAG_NONE = 0x0,
 
         /** \brief Requires the heap to be created in budget.
-         */
+
+        This flags allows the heap to be tracked for residency but not made resident.
+        */
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
+
+        /** \brief Requires the heap to be tracked for residency.
+
+        This flag is equivelent to calling LockHeap then UnlockHeap after
+        creation. The flag only has effect when the heap's residency status
+        cannot be determined.
+        */
+        HEAP_FLAG_ALWAYS_IN_RESIDENCY = 0x2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(HEAP_FLAGS)
