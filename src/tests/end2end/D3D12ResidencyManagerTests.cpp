@@ -284,6 +284,33 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     ASSERT_FAILED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 }
 
+TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
+    ComPtr<IResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    heapDesc.NumDescriptors = 1;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+    HEAP_DESC descriptorHeapDesc = {};
+    descriptorHeapDesc.SizeInBytes =
+        heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
+    descriptorHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.Flags |= HEAP_FLAG_ALWAYS_IN_RESIDENCY;
+
+    CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
+
+    ComPtr<IHeap> descriptorHeap;
+    ASSERT_SUCCEEDED(CreateHeap(descriptorHeapDesc, residencyManager.Get(),
+                                CreateDescHeapCallbackContext::CreateHeap,
+                                &createDescHeapCallbackContext, &descriptorHeap));
+
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
+}
+
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(
