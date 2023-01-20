@@ -155,7 +155,7 @@ void GPGMMTestEnvironment::SetEnvironment(GPGMMTestEnvironment* env) {
 }
 
 void GPGMMTestEnvironment::SetUp() {
-    mLogLevel = gpgmm::GetLogMessageLevel();
+    mLogLevel = gpgmm::GetLogLevel();
 }
 
 bool GPGMMTestEnvironment::IsDumpEventsEnabled() const {
