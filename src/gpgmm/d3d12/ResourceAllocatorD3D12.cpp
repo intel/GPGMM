@@ -476,6 +476,16 @@ namespace gpgmm::d3d12 {
             newDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
         }
 
+        // By default, UMA is allowed to use a single heap type. Unless it is explicitly disabled or
+        // unsupported by the device.
+        if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) &&
+            !caps->IsAdapterCacheCoherentUMA()) {
+            gpgmm::DebugLog()
+                << "ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was not requested but enabled "
+                   "anyway because the device did not support cache-coherent UMA.";
+            newDescriptor.Flags |= ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
+        }
+
         // Resource heap tier is required but user didn't specify one.
         if (newDescriptor.ResourceHeapTier == 0) {
             newDescriptor.ResourceHeapTier = caps->GetMaxResourceHeapTierSupported();
@@ -569,7 +579,7 @@ namespace gpgmm::d3d12 {
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
-          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS) {
+          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         if (descriptor.Flags & ALLOCATOR_FLAG_NEVER_LEAK_MEMORY) {
@@ -938,7 +948,7 @@ namespace gpgmm::d3d12 {
         // read-back would be inefficent since upload heaps on UMA adapters are usually
         // write-combined (vs write-back) so leave read back heaps alone.
         if (!(allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS) &&
-            mCaps->IsAdapterCacheCoherentUMA() && !mIsCustomHeapsDisabled) {
+            !mIsCustomHeapsDisabled) {
             if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
                 heapType = D3D12_HEAP_TYPE_UPLOAD;
             } else {
