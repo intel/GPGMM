@@ -227,7 +227,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(residencyManager->GetStats().CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
     EXPECT_EQ(residencyManager->GetStats().CurrentMemoryCount, 1u);
 
-    ASSERT_FAILED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
+    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
@@ -281,7 +281,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(residencyManager->GetStats().CurrentMemoryUsage, descriptorHeapDesc.SizeInBytes);
     EXPECT_EQ(residencyManager->GetStats().CurrentMemoryCount, 1u);
 
-    ASSERT_FAILED(residencyManager->UnlockHeap(descriptorHeap.Get()));
+    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {

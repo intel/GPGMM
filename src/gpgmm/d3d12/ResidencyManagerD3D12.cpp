@@ -356,11 +356,16 @@ namespace gpgmm::d3d12 {
         Heap* heap = static_cast<Heap*>(pHeap);
         ASSERT(heap != nullptr);
 
+        // If the heap was never locked, nothing further should be done.
         if (!heap->IsResidencyLocked()) {
-            return E_FAIL;
+            return S_OK;
         }
 
         if (heap->IsInList()) {
+            gpgmm::ErrorLog()
+                << "Heap was never being tracked for residency. This usually occurs when a "
+                   "non-resource heap was created by the developer and never made resident at "
+                   "creation or failure to call LockHeap beforehand.";
             return E_FAIL;
         }
 
@@ -690,11 +695,16 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         if (count == 0) {
+            gpgmm::ErrorLog() << "ExecuteCommandLists is required to have at-least one residency "
+                                 "list to be called.";
             return E_INVALIDARG;
         }
 
         // TODO: support multiple command lists.
         if (count > 1) {
+            gpgmm::ErrorLog()
+                << "ExecuteCommandLists does not support multiple residency lists at this time. "
+                   "Please call ExecuteCommandLists per residency list as a workaround, if needed.";
             return E_NOTIMPL;
         }
 
@@ -842,6 +852,10 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(
                 EvictInternal(mEvictSizeInBytes, memorySegmentGroup, &evictedSizeInBytes));
             if (evictedSizeInBytes == 0) {
+                gpgmm::ErrorLog() << "Unable to evict enough heaps to stay within budget. This "
+                                     "usually occurs when there is not enough available memory. "
+                                     "Please reduce consumption by checking allocation sizes and "
+                                     "residency usage.";
                 return E_OUTOFMEMORY;
             }
         }
