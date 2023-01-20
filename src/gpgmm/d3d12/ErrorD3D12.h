@@ -35,7 +35,7 @@ namespace gpgmm::d3d12 {
     {                                                                  \
         HRESULT hr = expr;                                             \
         if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
-            gpgmm::DebugLog() << #expr << ": " << GetErrorMessage(hr); \
+            gpgmm::ErrorLog() << #expr << ": " << GetErrorMessage(hr); \
             return hr;                                                 \
         }                                                              \
     }                                                                  \
