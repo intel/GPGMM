@@ -714,9 +714,9 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
     EXPECT_EQ(resourceAllocator->GetStats().FreeMemoryUsage, kBufferOf4MBAllocationSize * 2);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableCustomHeaps) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableUMA) {
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_CUSTOM_HEAPS;
+    allocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, &resourceAllocator, nullptr));
