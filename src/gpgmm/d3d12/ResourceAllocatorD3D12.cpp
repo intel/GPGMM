@@ -926,6 +926,8 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
         if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
+            gpgmm::ErrorLog() << "Unable to create resource allocation because the size exceeded "
+                                 "capabilities of the device.";
             return E_OUTOFMEMORY;
         }
 
@@ -962,6 +964,9 @@ namespace gpgmm::d3d12 {
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
             newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
         if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
+            gpgmm::ErrorLog()
+                << "Unable to create resource allocation because the resource type was invalid due "
+                   "to the combination of resource flags, descriptor, and resource heap tier.";
             return E_INVALIDARG;
         }
 
@@ -1193,12 +1198,15 @@ namespace gpgmm::d3d12 {
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
+            ErrorLog() << "Unable to allocate memory for resource because no memory was allowed to "
+                          "be created.";
             return E_OUTOFMEMORY;
         }
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            ErrorLog() << "A padding was specified but no resource allocator could be used.";
+            ErrorLog() << "Unable to allocate memory for resource because a padding was specified "
+                          "but no resource allocator could be used.";
             return E_FAIL;
         }
 
@@ -1207,7 +1215,8 @@ namespace gpgmm::d3d12 {
                 return E_FAIL;
             }
             InfoEvent(this, EventMessageId::kAllocatorFailed)
-                << "Unable to allocate by using a heap, falling back to a committed resource.";
+                << "Unable to allocate memory for a resource by using a heap, falling back to a "
+                   "committed resource.";
         }
 
         ComPtr<ID3D12Resource> committedResource;

@@ -77,8 +77,11 @@ namespace gpgmm::d3d12 {
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-            ReturnIfFailed(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
-                                                            descriptor.MemorySegmentGroup));
+            if (FAILED(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
+                                                        descriptor.MemorySegmentGroup))) {
+                gpgmm::ErrorLog() << "Unable to create heap because not enough budget exists.";
+                return E_OUTOFMEMORY;
+            }
         }
 
         ComPtr<ID3D12Pageable> pageable;
