@@ -71,7 +71,7 @@ namespace gpgmm::d3d12 {
         heapDesc.Flags = mHeapFlags;
 
         CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
-        IHeap* resourceHeap = nullptr;
+        ComPtr<IHeap> resourceHeap;
         if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
                                     CreateResourceHeapCallbackContext::CreateHeap,
                                     &createResourceHeapCallbackContext, &resourceHeap))) {
@@ -88,7 +88,7 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(this, static_cast<Heap*>(resourceHeap),
+        return std::make_unique<MemoryAllocation>(this, static_cast<Heap*>(resourceHeap.Detach()),
                                                   request.SizeInBytes);
     }
 
