@@ -1266,6 +1266,14 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties;
         ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
 
+        if (allocationDescriptor.HeapType != 0 &&
+            heapProperties.Type != allocationDescriptor.HeapType) {
+            ErrorLog() << "Unable to import a resource using a heap type that differs from the "
+                          "heap type used at creation. For important resources, it is recommended "
+                          "to not specify a heap type.";
+            return E_INVALIDARG;
+        }
+
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
