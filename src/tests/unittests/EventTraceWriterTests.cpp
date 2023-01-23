@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/utils/Platform.h"
 #include "tests/GPGMMTest.h"
 
 #include <thread>
@@ -35,7 +36,7 @@ class EventTraceWriterTests : public testing::Test {
 
 TEST_F(EventTraceWriterTests, SingleThreadWrites) {
     // TODO: Figure out why win_clang_[rel|dbg]_x86 builder fails.
-#ifndef GPGMM_COMPILER_IS_64_BIT
+#if defined(GPGMM_PLATFORM_IS_X86) && defined(GPGMM_PLATFORM_IS_32_BIT)
     GPGMM_SKIP_TEST_IF(true);
 #endif
 
@@ -50,7 +51,7 @@ TEST_F(EventTraceWriterTests, SingleThreadWrites) {
 
 TEST_F(EventTraceWriterTests, MultiThreadWrites) {
     // TODO: Figure out why win_clang_[rel|dbg]_x86 builder fails.
-#ifndef GPGMM_COMPILER_IS_64_BIT
+#if defined(GPGMM_PLATFORM_IS_X86) && defined(GPGMM_PLATFORM_IS_32_BIT)
     GPGMM_SKIP_TEST_IF(true);
 #endif
 

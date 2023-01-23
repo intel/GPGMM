@@ -29,17 +29,6 @@
 //  Both GPGMM_UNUSED_FUNC and GPGMM_DECLARE_UNUSED may be necessary, e.g. to suppress clang's
 //  unneeded-internal-declaration warning.
 
-// For 32-bit detection. Copied from vulkan_core.h.
-#ifndef GPGMM_COMPILER_IS_64_BIT
-#    if defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__)) || \
-        defined(_M_X64) || defined(__ia64) || defined(_M_IA64) || defined(__aarch64__) ||       \
-        defined(__powerpc64__)
-#        define GPGMM_COMPILER_IS_64_BIT 1
-#    else
-#        define GPGMM_COMPILER_IS_64_BIT 0
-#    endif
-#endif
-
 // Clang and GCC, check for __clang__ too to catch clang-cl masquarading as MSVC
 #if defined(__GNUC__) || defined(__clang__)
 #    if defined(__clang__)
