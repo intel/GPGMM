@@ -34,7 +34,7 @@ namespace gpgmm {
         mPool->ReleasePool(kInvalidSize);
     }
 
-    std::unique_ptr<MemoryAllocation> PooledMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> PooledMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "PooledMemoryAllocator.TryAllocateMemory");
 

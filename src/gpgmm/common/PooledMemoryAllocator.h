@@ -30,7 +30,7 @@ namespace gpgmm {
         ~PooledMemoryAllocator() override;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease = kInvalidSize) override;

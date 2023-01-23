@@ -24,7 +24,7 @@ namespace gpgmm {
         : MemoryAllocator(std::move(memoryAllocator)) {
     }
 
-    std::unique_ptr<MemoryAllocation> DedicatedMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> DedicatedMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "DedicatedMemoryAllocator.TryAllocateMemory");
 

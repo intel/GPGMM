@@ -41,7 +41,7 @@ namespace gpgmm {
         return static_cast<uint64_t>(SafeDivide(offset, mMemorySize));
     }
 
-    std::unique_ptr<MemoryAllocation> BuddyMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> BuddyMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "BuddyMemoryAllocator.TryAllocateMemory");
 
@@ -57,33 +57,34 @@ namespace gpgmm {
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;
-        GPGMM_TRY_ASSIGN(TrySubAllocateMemory(
-                             &mBuddyBlockAllocator, allocationSize, request.Alignment,
-                             request.NeverAllocate,
-                             [&](const auto& block) -> MemoryBase* {
-                                 const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                                 MemoryAllocation memoryAllocation =
-                                     mUsedPool.AcquireFromPool(memoryIndex);
+        GPGMM_TRY_ASSIGN(
+            TrySubAllocateMemory(
+                &mBuddyBlockAllocator, allocationSize, request.Alignment, request.NeverAllocate,
+                [&](const auto& block) -> ResultOrError<MemoryBase*> {
+                    const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
+                    MemoryAllocation memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
 
-                                 // No existing, allocate new memory for the block.
-                                 if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
-                                     MemoryAllocationRequest newRequest = request;
-                                     newRequest.SizeInBytes = mMemorySize;
-                                     newRequest.Alignment = mMemoryAlignment;
+                    // No existing, allocate new memory for the block.
+                    if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
+                        MemoryAllocationRequest newRequest = request;
+                        newRequest.SizeInBytes = mMemorySize;
+                        newRequest.Alignment = mMemoryAlignment;
 
-                                     std::unique_ptr<MemoryAllocation> memoryAllocationPtr;
-                                     GPGMM_TRY_ASSIGN(
-                                         GetNextInChain()->TryAllocateMemory(newRequest),
-                                         memoryAllocationPtr);
-                                     memoryAllocation = *memoryAllocationPtr;
-                                 }
+                        ResultOrError<std::unique_ptr<MemoryAllocation>> memoryAllocationResult =
+                            GetNextInChain()->TryAllocateMemory(newRequest);
+                        if (!memoryAllocationResult.IsSuccess()) {
+                            return memoryAllocationResult.GetErrorCode();
+                        }
 
-                                 MemoryBase* memory = memoryAllocation.GetMemory();
-                                 mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
+                        memoryAllocation = *memoryAllocationResult.AcquireResult();
+                    }
 
-                                 return memory;
-                             }),
-                         subAllocation);
+                    MemoryBase* memory = memoryAllocation.GetMemory();
+                    mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
+
+                    return memory;
+                }),
+            subAllocation);
 
         MemoryBlock* block = subAllocation->GetBlock();
         mStats.UsedBlockCount++;

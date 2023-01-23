@@ -35,7 +35,7 @@ namespace gpgmm {
             : MemoryAllocator(std::move(next)) {
         }
 
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override {
             TRACE_EVENT0(TraceEventCategory::kDefault, "DummyMemoryAllocator.TryAllocateMemory");
 

@@ -305,15 +305,19 @@ namespace gpgmm::d3d12 {
                                     MemoryAllocator* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
-            std::unique_ptr<MemoryAllocation> allocation = allocator->TryAllocateMemory(request);
-            if (allocation == nullptr) {
+            ResultOrError<std::unique_ptr<MemoryAllocation>> result =
+                allocator->TryAllocateMemory(request);
+            if (FAILED(result.GetErrorCode())) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
                     DebugEvent(allocator, EventMessageId::kAllocatorFailed)
                         << "Unable to allocate memory for request.";
                 }
-                return E_FAIL;
+                return static_cast<HRESULT>(result.GetErrorCode());
             }
+
+            std::unique_ptr<MemoryAllocation> allocation = result.AcquireResult();
+            ASSERT(allocation != nullptr);
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {

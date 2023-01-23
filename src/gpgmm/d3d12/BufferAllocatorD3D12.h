@@ -33,7 +33,7 @@ namespace gpgmm::d3d12 {
         ~BufferAllocator() override = default;
 
         // MemoryAllocator interface
-        std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 

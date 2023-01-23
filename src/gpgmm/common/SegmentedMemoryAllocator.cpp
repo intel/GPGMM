@@ -119,7 +119,7 @@ namespace gpgmm {
         return newFreeSegment;
     }
 
-    std::unique_ptr<MemoryAllocation> SegmentedMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> SegmentedMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "SegmentedMemoryAllocator.TryAllocateMemory");
 

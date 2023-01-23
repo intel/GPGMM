@@ -38,7 +38,7 @@ namespace gpgmm::d3d12 {
           mHeapFlags(heapFlags) {
     }
 
-    std::unique_ptr<MemoryAllocation> ResourceHeapAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> ResourceHeapAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceHeapAllocator.TryAllocateMemory");
 
@@ -72,10 +72,11 @@ namespace gpgmm::d3d12 {
 
         CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
         ComPtr<IHeap> resourceHeap;
-        if (FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
-                                    CreateResourceHeapCallbackContext::CreateHeap,
-                                    &createResourceHeapCallbackContext, &resourceHeap))) {
-            return {};
+        HRESULT hr = Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
+                                      CreateResourceHeapCallbackContext::CreateHeap,
+                                      &createResourceHeapCallbackContext, &resourceHeap);
+        if (FAILED(hr)) {
+            return {static_cast<ErrorCodeType>(hr)};
         }
 
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
