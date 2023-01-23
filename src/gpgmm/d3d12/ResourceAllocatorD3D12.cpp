@@ -1207,13 +1207,16 @@ namespace gpgmm::d3d12 {
         if (GPGMM_UNLIKELY(requiresPadding)) {
             ErrorLog() << "Unable to allocate memory for resource because a padding was specified "
                           "but no resource allocator could be used.";
-            return E_FAIL;
+            return E_INVALIDARG;
         }
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
-                return E_FAIL;
+                ErrorLog() << "Unable to allocate memory for resource because no memory was could "
+                              "be created and fall-back was disabled.";
+                return E_OUTOFMEMORY;
             }
+
             InfoEvent(this, EventMessageId::kAllocatorFailed)
                 << "Unable to allocate memory for a resource by using a heap, falling back to a "
                    "committed resource.";
