@@ -17,11 +17,15 @@
 
 #include <gpgmm_d3d12.h>
 
+#include <wrl.h>
+
 using Microsoft::WRL::ComPtr;
 
 uint64_t UInt8ToUInt64(const uint8_t* src);
 
-HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc);
+HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc,
+                                    ID3D12Device** ppDeviceOut,
+                                    IDXGIAdapter3** ppAdapterOut);
 
 D3D12_RESOURCE_DESC CreateBufferDesc(uint64_t width, uint64_t alignment = 0);
 

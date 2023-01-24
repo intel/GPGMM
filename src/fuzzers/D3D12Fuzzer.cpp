@@ -20,19 +20,20 @@ uint64_t UInt8ToUInt64(const uint8_t* src) {
     return dst;
 }
 
-HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc) {
+HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* pAllocatorDesc,
+                                    ID3D12Device** ppDeviceOut,
+                                    IDXGIAdapter3** ppAdapterOut) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDescOut = {};
 
     // Populate the device
-    ComPtr<ID3D12Device> d3dDevice;
-    if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3dDevice)))) {
+    if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(ppDeviceOut)))) {
         return E_FAIL;
     }
 
-    allocatorDescOut.Device = d3dDevice;
+    allocatorDescOut.Device = *ppDeviceOut;
 
     // Populate the adapter
-    LUID adapterLUID = d3dDevice->GetAdapterLuid();
+    LUID adapterLUID = allocatorDescOut.Device->GetAdapterLuid();
     ComPtr<IDXGIFactory1> dxgiFactory;
     if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)))) {
         return E_FAIL;
@@ -43,25 +44,17 @@ HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* allocatorDesc)
         return E_FAIL;
     }
 
-    ComPtr<IDXGIAdapter3> dxgiAdapter;
-    if (FAILED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&dxgiAdapter)))) {
+    if (FAILED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(ppAdapterOut)))) {
         return E_FAIL;
     }
 
-    allocatorDescOut.Adapter = dxgiAdapter;
+    allocatorDescOut.Adapter = *ppAdapterOut;
 
     // Configure options
-    D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-    if (FAILED(d3dDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options,
-                                              sizeof(options)))) {
-        return E_FAIL;
-    }
-
-    allocatorDescOut.ResourceHeapTier = options.ResourceHeapTier;
     allocatorDescOut.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 
-    if (allocatorDesc != nullptr) {
-        *allocatorDesc = allocatorDescOut;
+    if (pAllocatorDesc != nullptr) {
+        *pAllocatorDesc = allocatorDescOut;
     }
 
     return S_OK;

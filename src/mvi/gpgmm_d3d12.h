@@ -42,6 +42,8 @@
 
 #include "gpgmm.h"
 
+#include <wrl.h>  // for Microsoft::WRL::ComPtr
+
 namespace gpgmm::d3d12 {
 
     class Unknown : public IUnknown {

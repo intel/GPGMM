@@ -22,6 +22,9 @@
 
 namespace {
 
+    ComPtr<ID3D12Device> gDevice;
+    ComPtr<IDXGIAdapter3> gAdapter;
+
     ComPtr<gpgmm::d3d12::IResourceAllocator> gResourceAllocator;
     ComPtr<gpgmm::d3d12::IResidencyManager> gResidencyManager;
     std::vector<ComPtr<gpgmm::d3d12::IResourceAllocation>> gAllocationsBelowBudget = {};
@@ -41,7 +44,7 @@ namespace {
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc))) {
+    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc, &gDevice, &gAdapter))) {
         return 0;
     }
 
@@ -50,11 +53,11 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
 
     ComPtr<IDXGIAdapter3> adapter3;
-    if (FAILED(allocatorDesc.Adapter.As(&adapter3))) {
+    if (FAILED(allocatorDesc.Adapter->QueryInterface(IID_PPV_ARGS(&adapter3)))) {
         return 0;
     }
 
-    residencyDesc.Adapter = adapter3;
+    residencyDesc.Adapter = adapter3.Get();
     residencyDesc.Device = allocatorDesc.Device;
     residencyDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 
