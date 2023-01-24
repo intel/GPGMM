@@ -197,6 +197,10 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
+    HRESULT ResidencyManager::SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) {
+        return S_OK;
+    }
+
     RESIDENCY_STATS ResidencyManager::GetStats() const {
         return {0, 0};
     }

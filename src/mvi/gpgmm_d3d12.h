@@ -120,6 +120,7 @@ namespace gpgmm::d3d12 {
                                           uint64_t* pCurrentReservationOut = nullptr) override;
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
+        HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
         RESIDENCY_STATS GetStats() const override;
 
         // IUnknown interface
