@@ -495,6 +495,19 @@ namespace gpgmm::d3d12 {
         virtual HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                              DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
 
+        /** \brief  Update the residency status of a heap.
+
+        Allows the application to explicitly MakeResident/Evict without using a residency manager
+        operation. This is useful should the application already perform some residency management
+        but also want to use a residency manager. It is the application developers responsibility to
+        ensure MakeResident/Evict will be called before updating the residency status to
+        CURRENT_RESIDENT/PENDING, respectively.
+
+        @param pHeap  A pointer to the heap being updated.
+        @param state The RESIDENCY_STATUS enum of the new status.
+        */
+        virtual HRESULT SetResidencyState(IHeap * pHeap, const RESIDENCY_STATUS& state) = 0;
+
         /** \brief  Return the current residency manager usage.
 
         \return A RESIDENCY_STATS struct.

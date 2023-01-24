@@ -950,4 +950,33 @@ namespace gpgmm::d3d12 {
         }
     }
 
+    HRESULT ResidencyManager::SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) {
+        ReturnIfNullptr(pHeap);
+
+        Heap* heap = static_cast<Heap*>(pHeap);
+        if (heap->GetInfo().IsLocked) {
+            gpgmm::ErrorLog() << "Heap residency cannot be updated because it was locked. "
+                                 "Please unlock the heap before updating the state.";
+            return E_FAIL;
+        }
+
+        if (!heap->GetInfo().IsCachedForResidency) {
+            gpgmm::ErrorLog() << "Heap residency cannot be updated because no residency "
+                                 "manager was specified upon creation. The heap must be created "
+                                 "using a residency manager to update the residency status.";
+            return E_FAIL;
+        }
+
+        const RESIDENCY_STATUS oldState = heap->GetInfo().Status;
+        if (state == RESIDENCY_STATUS_UNKNOWN && oldState != RESIDENCY_STATUS_UNKNOWN) {
+            gpgmm::ErrorLog() << "Heap residency cannot be unknown when previously known by the "
+                                 "residency manager. "
+                                 "Check the status before updating the state.";
+            return E_FAIL;
+        }
+
+        heap->SetResidencyState(state);
+        return S_OK;
+    }
+
 }  // namespace gpgmm::d3d12
