@@ -1264,13 +1264,37 @@ namespace gpgmm::d3d12 {
             GetResourceAllocationInfo(mDevice.Get(), desc);
 
         D3D12_HEAP_PROPERTIES heapProperties;
-        ReturnIfFailed(resource->GetHeapProperties(&heapProperties, nullptr));
+        D3D12_HEAP_FLAGS heapFlags;
+        ReturnIfFailed(resource->GetHeapProperties(&heapProperties, &heapFlags));
 
+        // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
             heapProperties.Type != allocationDescriptor.HeapType) {
             ErrorLog() << "Unable to import a resource using a heap type that differs from the "
                           "heap type used at creation. For important resources, it is recommended "
                           "to not specify a heap type.";
+            return E_INVALIDARG;
+        }
+
+        if (!HasAllFlags(heapFlags, allocationDescriptor.Flags)) {
+            ErrorLog() << "Unable to import a resource using heap flags that differs from the "
+                          "heap flags used at creation. For important resources, it is recommended "
+                          "to not specify heap flags.";
+            return E_INVALIDARG;
+        }
+
+        if (allocationDescriptor.RequireResourceHeapPadding > 0) {
+            ErrorLog()
+                << "Unable to import a resource when using allocation flags which modify memory.";
+            return E_INVALIDARG;
+        }
+
+        const ALLOCATION_FLAGS allowMask =
+            (ALLOCATION_FLAG_DISABLE_RESIDENCY & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
+             ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
+        if (allocationDescriptor.Flags & ~allowMask) {
+            ErrorLog()
+                << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
 
