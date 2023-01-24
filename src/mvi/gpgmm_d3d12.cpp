@@ -98,6 +98,10 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment(), false, false, RESIDENCY_STATUS_UNKNOWN};
     }
 
+    HRESULT Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
+        return E_NOTIMPL;
+    }
+
     HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {
         return mPageable->QueryInterface(riid, ppvObject);
     }

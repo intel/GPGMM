@@ -221,8 +221,9 @@ namespace gpgmm::d3d12 {
         return Unknown::Release();
     }
 
-    void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
+    HRESULT Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
         mState = newStatus;
+        return S_OK;
     }
 
     LPCWSTR Heap::GetDebugName() const {
