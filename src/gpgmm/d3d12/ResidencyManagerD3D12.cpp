@@ -322,7 +322,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
             ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
                                         pageable.GetAddressOf()));
-            ReturnIfFailed(heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT));
+            heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
@@ -655,7 +655,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(mResidencyFence->WaitFor(lastUsedFenceValue));
 
             heap->RemoveFromList();
-            ReturnIfFailed(heap->SetResidencyState(RESIDENCY_STATUS_PENDING_RESIDENCY));
+            heap->SetResidencyState(RESIDENCY_STATUS_PENDING_RESIDENCY);
 
             bytesEvicted += heap->GetSize();
 
@@ -786,7 +786,7 @@ namespace gpgmm::d3d12 {
         // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
         // no way of knowing for certain.
         for (Heap* heap : heapsToMakeResident) {
-            ReturnIfFailed(heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT));
+            heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
         }
 
         GPGMM_TRACE_EVENT_METRIC(

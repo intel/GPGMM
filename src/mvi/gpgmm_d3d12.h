@@ -70,7 +70,6 @@ namespace gpgmm::d3d12 {
 
         // IHeap interface
         HEAP_INFO GetInfo() const override;
-        HRESULT SetResidencyState(RESIDENCY_STATUS newStatus) override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;

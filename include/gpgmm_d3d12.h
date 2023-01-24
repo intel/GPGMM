@@ -201,16 +201,6 @@ namespace gpgmm::d3d12 {
         \return A HEAP_INFO struct containing the information.
         */
         virtual HEAP_INFO GetInfo() const = 0;
-
-        /** \brief Specify the residency status of the heap.
-
-        Allows applications to explicitly call MakeResident/Evict on a heap without using a
-        residency manager. Use cautiously, updating the residency status to be in a mismatched state
-        could led to errors.
-
-        @param newStatus The new RESIDENCY_STATUS the heap should be in.
-        */
-        virtual HRESULT SetResidencyState(RESIDENCY_STATUS newStatus) = 0;
     };
 
     /** \brief  Create a heap managed by GPGMM.
