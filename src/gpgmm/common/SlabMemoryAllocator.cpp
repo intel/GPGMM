@@ -106,7 +106,11 @@ namespace gpgmm {
     SlabMemoryAllocator::~SlabMemoryAllocator() {
         if (mNextSlabAllocationEvent != nullptr) {
             mNextSlabAllocationEvent->Wait();
-            mMemoryAllocator->DeallocateMemory(mNextSlabAllocationEvent->AcquireAllocation());
+            ResultOrError<std::unique_ptr<MemoryAllocation>> result =
+                mNextSlabAllocationEvent->AcquireAllocation();
+            if (result.IsSuccess()) {
+                mMemoryAllocator->DeallocateMemory(result.AcquireResult());
+            }
         }
 
         for (SlabCache& cache : mCaches) {
@@ -190,7 +194,7 @@ namespace gpgmm {
         return cache;
     }
 
-    std::unique_ptr<MemoryAllocation> SlabMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> SlabMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "SlabMemoryAllocator.TryAllocateMemory");
 
@@ -256,7 +260,7 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
-                [&](const auto& block) -> MemoryBase* {
+                [&](const auto& block) -> ResultOrError<MemoryBase*> {
                     // Re-use memory from the free slab.
                     if (pFreeSlab->Allocation.GetMemory() != nullptr) {
                         return pFreeSlab->Allocation.GetMemory();
@@ -267,8 +271,14 @@ namespace gpgmm {
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
-                        std::unique_ptr<MemoryAllocation> prefetchedSlabAllocation =
+                        ResultOrError<std::unique_ptr<MemoryAllocation>> memoryAllocationResult =
                             mNextSlabAllocationEvent->AcquireAllocation();
+                        if (!memoryAllocationResult.IsSuccess()) {
+                            return memoryAllocationResult.GetErrorCode();
+                        }
+
+                        std::unique_ptr<MemoryAllocation> prefetchedSlabAllocation =
+                            memoryAllocationResult.AcquireResult();
                         mNextSlabAllocationEvent.reset();
 
                         // Assign pre-fetched memory to the slab.
@@ -295,11 +305,13 @@ namespace gpgmm {
                     newSlabRequest.SizeInBytes = slabSize;
                     newSlabRequest.Alignment = mSlabAlignment;
 
-                    std::unique_ptr<MemoryAllocation> slabAllocation;
-                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(newSlabRequest),
-                                     slabAllocation);
+                    ResultOrError<std::unique_ptr<MemoryAllocation>> slabAllocationResult =
+                        mMemoryAllocator->TryAllocateMemory(newSlabRequest);
+                    if (!slabAllocationResult.IsSuccess()) {
+                        return slabAllocationResult.GetErrorCode();
+                    }
 
-                    pFreeSlab->Allocation = *slabAllocation;
+                    pFreeSlab->Allocation = *slabAllocationResult.AcquireResult();
 
                     return pFreeSlab->Allocation.GetMemory();
                 }),
@@ -490,7 +502,7 @@ namespace gpgmm {
         mSizeCache.clear();
     }
 
-    std::unique_ptr<MemoryAllocation> SlabCacheAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> SlabCacheAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "SlabCacheAllocator.TryAllocateMemory");
 

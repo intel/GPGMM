@@ -31,7 +31,7 @@ namespace gpgmm {
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
-        std::unique_ptr<MemoryAllocation> AcquireAllocation() {
+        ResultOrError<std::unique_ptr<MemoryAllocation>> AcquireAllocation() {
             std::lock_guard<std::mutex> lock(mAllocationMutex);
             return std::move(mAllocation);
         }
@@ -41,7 +41,7 @@ namespace gpgmm {
         const MemoryAllocationRequest mRequest;
 
         std::mutex mAllocationMutex;
-        std::unique_ptr<MemoryAllocation> mAllocation;
+        ResultOrError<std::unique_ptr<MemoryAllocation>> mAllocation;
     };
 
     // MemoryAllocatorStats
@@ -81,7 +81,8 @@ namespace gpgmm {
         return mEvent->Signal();
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocationEvent::AcquireAllocation() const {
+    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocationEvent::AcquireAllocation()
+        const {
         return mTask->AcquireAllocation();
     }
 
@@ -115,10 +116,15 @@ namespace gpgmm {
         }
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         ASSERT(false);
         return {};
+    }
+
+    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemoryForTesting(
+        const MemoryAllocationRequest& request) {
+        return TryAllocateMemory(request).AcquireResult();
     }
 
     std::shared_ptr<MemoryAllocationEvent> MemoryAllocator::TryAllocateMemoryAsync(

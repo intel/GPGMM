@@ -36,7 +36,7 @@ namespace gpgmm::d3d12 {
           mInitialResourceState(initialResourceState) {
     }
 
-    std::unique_ptr<MemoryAllocation> BufferAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> BufferAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "BufferAllocator.TryAllocateMemory");
 
@@ -72,18 +72,19 @@ namespace gpgmm::d3d12 {
         resourceDescriptor.Flags = mResourceFlags;
 
         // Optimized clear is not supported for buffers.
-        Heap* resourceHeap = nullptr;
-        if (FAILED(mResourceAllocator->CreateCommittedResource(
-                mHeapProperties, mHeapFlags, info, &resourceDescriptor,
-                /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
-                &resourceHeap))) {
-            return {};
+        ComPtr<Heap> resourceHeap;
+        HRESULT hr = mResourceAllocator->CreateCommittedResource(
+            mHeapProperties, mHeapFlags, info, &resourceDescriptor,
+            /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
+            &resourceHeap);
+        if (FAILED(hr)) {
+            return {static_cast<ErrorCodeType>(hr)};
         }
 
         mStats.UsedMemoryUsage += resourceHeap->GetSize();
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(this, resourceHeap, request.SizeInBytes);
+        return std::make_unique<MemoryAllocation>(this, resourceHeap.Detach(), request.SizeInBytes);
     }
 
     void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

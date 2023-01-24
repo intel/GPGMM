@@ -56,7 +56,7 @@ namespace gpgmm {
 
         \return Pointer to MemoryAllocation that was allocated.
         */
-        std::unique_ptr<MemoryAllocation> AcquireAllocation() const;
+        ResultOrError<std::unique_ptr<MemoryAllocation>> AcquireAllocation() const;
 
       private:
         void Signal() override;
@@ -152,7 +152,12 @@ namespace gpgmm {
 
         \return A pointer to MemoryAllocation. If NULL, the request could not be full-filled.
         */
-        virtual std::unique_ptr<MemoryAllocation> TryAllocateMemory(
+        virtual ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
+            const MemoryAllocationRequest& request);
+
+        // Same as TryAllocateMemory above but leaves the result unwrapped for testing the result
+        // directly.
+        std::unique_ptr<MemoryAllocation> TryAllocateMemoryForTesting(
             const MemoryAllocationRequest& request);
 
         /** \brief Non-blocking version of TryAllocateMemory.
@@ -243,17 +248,19 @@ namespace gpgmm {
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
-        static std::unique_ptr<MemoryAllocation> TrySubAllocateMemory(
+        static ResultOrError<std::unique_ptr<MemoryAllocation>> TrySubAllocateMemory(
             BlockAllocator* allocator,
             uint64_t requestSize,
             uint64_t alignment,
             bool neverAllocate,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
-            MemoryBlock* block = nullptr;
-            GPGMM_TRY_ASSIGN(allocator->TryAllocateBlock(requestSize, alignment), block);
+            MemoryBlock* block = allocator->TryAllocateBlock(requestSize, alignment);
+            if (block == nullptr) {
+                return {};
+            }
 
-            MemoryBase* memory = GetOrCreateMemory(block);
-            if (memory == nullptr) {
+            ResultOrError<MemoryBase*> result = GetOrCreateMemory(block);
+            if (!result.IsSuccess()) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {
                     DebugLog() << std::string(allocator->GetTypename()) +
@@ -262,10 +269,12 @@ namespace gpgmm {
                                << std::to_string(block->Offset + block->Size) << ").";
                 }
                 allocator->DeallocateBlock(block);
-                return nullptr;
+                return result.GetErrorCode();
             }
 
+            MemoryBase* memory = result.AcquireResult();
             ASSERT(memory != nullptr);
+
             memory->AddSubAllocationRef();
 
             // Caller is be responsible in fully initializing the memory allocation.

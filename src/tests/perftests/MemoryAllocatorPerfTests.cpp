@@ -50,7 +50,7 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
                     const MemoryAllocationRequest& request) const {
         std::vector<std::unique_ptr<MemoryAllocation>> allocations;
         for (int i = 0; i < state.range(3); i++) {
-            auto allocation = allocator->TryAllocateMemory(request);
+            auto allocation = allocator->TryAllocateMemoryForTesting(request);
             if (allocation == nullptr) {
                 state.SkipWithError("Unable to allocate. Skipping.");
                 return;

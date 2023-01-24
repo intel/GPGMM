@@ -341,25 +341,25 @@ namespace gpgmm::vk {
         // Attempt to allocate using the most effective allocator.
         MemoryAllocator* allocator = nullptr;
 
-        std::unique_ptr<MemoryAllocation> memoryAllocation;
+        ResultOrError<std::unique_ptr<MemoryAllocation>> result;
         if (!neverSubAllocate) {
             allocator = mResourceAllocatorsPerType[memoryTypeIndex].get();
-            memoryAllocation = allocator->TryAllocateMemory(request);
+            result = allocator->TryAllocateMemory(request);
         }
 
-        if (memoryAllocation == nullptr) {
+        if (!result.IsSuccess()) {
             allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
-            memoryAllocation = allocator->TryAllocateMemory(request);
+            result = allocator->TryAllocateMemory(request);
         }
 
-        if (memoryAllocation == nullptr) {
+        if (!result.IsSuccess()) {
             ErrorEvent(allocator, EventMessageId::kAllocatorFailed)
                 << "Unable to allocate memory for resource.";
 
             return VK_ERROR_UNKNOWN;
         }
 
-        *allocationOut = new GpResourceAllocation_T(*memoryAllocation);
+        *allocationOut = new GpResourceAllocation_T(*result.AcquireResult());
 
         return VK_SUCCESS;
     }

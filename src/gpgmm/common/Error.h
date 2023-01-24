@@ -17,21 +17,82 @@
 
 #include "gpgmm/utils/Assert.h"
 
+#include <utility>
+
 namespace gpgmm {
+
+    enum class ErrorCodeType : uint32_t;
+
+    constexpr ErrorCodeType kInternalFailureResult = static_cast<ErrorCodeType>(-1);
+    constexpr ErrorCodeType kInternalSuccessResult = static_cast<ErrorCodeType>(0u);
+
+    // Wraps a backend error code with a result object.
+    // Use Result::IsSuccess then Result::AcquireResult to use or else, use Result::GetErrorCode to
+    // return the error for backend-specific handling.
+    template <typename ErrorT, typename ResultT>
+    class Result {
+      public:
+        // Empty result
+        Result() : mErrorCode(kInternalFailureResult) {
+        }
+
+        // Error only result
+        Result(ErrorT&& error) : mErrorCode(std::move(error)) {
+        }
+
+        // Result but with no error
+        Result(ResultT&& result) : mErrorCode(kInternalSuccessResult), mResult(std::move(result)) {
+        }
+
+        // Result with error.
+        Result(ErrorT&& error, ResultT&& result)
+            : mErrorCode(std::move(error)), mResult(std::move(result)) {
+        }
+
+        Result(Result<ResultT, ErrorT>&& other)
+            : mErrorCode(std::move(other.mErrorCode), mResult(std::move(other.mResult))) {
+        }
+
+        Result<ResultT, ErrorT>& operator=(Result<ResultT, ErrorT>&& other) {
+            mResult = std::move(other.mResult);
+            mErrorCode = std::move(other.mErrorCode);
+            return *this;
+        }
+
+        ErrorCodeType GetErrorCode() const {
+            return mErrorCode;
+        }
+
+        ResultT&& AcquireResult() {
+            return std::move(mResult);
+        }
+
+        bool IsSuccess() const {
+            return mErrorCode == kInternalSuccessResult;
+        }
+
+      private:
+        ErrorT mErrorCode;
+        ResultT mResult;
+    };
+
+    // Alias of Result + error code to avoid having to always specify error type.
+    template <typename ResultT>
+    using ResultOrError = Result<ErrorCodeType, ResultT>;
 
 #define GPGMM_INVALID_ALLOCATION \
     MemoryAllocation {                 \
     }
 
-#define GPGMM_TRY_ASSIGN(expr, value)            \
-    {                                            \
-        auto result = expr;                      \
-        if (GPGMM_UNLIKELY(result == nullptr)) { \
-            return {};                           \
-        }                                        \
-        value = std::move(result);               \
-    }                                            \
-    for (;;)                                     \
+#define GPGMM_TRY_ASSIGN(expr, value)              \
+    {                                              \
+        auto result = expr;                        \
+        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
+            return result;                         \
+        }                                          \
+        value = result.AcquireResult();            \
+    }                                              \
+    for (;;)                                       \
     break
 
 #define GPGMM_INVALID_IF(expr)  \

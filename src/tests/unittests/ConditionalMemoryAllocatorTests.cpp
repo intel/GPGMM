@@ -40,7 +40,7 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
     // Smaller allocation uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
-            alloc.TryAllocateMemory(CreateBasicRequest(4, 1));
+            alloc.TryAllocateMemoryForTesting(CreateBasicRequest(4, 1));
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetStats().UsedMemoryUsage, 4u);
         ASSERT_NE(allocation, nullptr);
         alloc.DeallocateMemory(std::move(allocation));
@@ -49,7 +49,7 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
     // Equal size allocation uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
-            alloc.TryAllocateMemory(CreateBasicRequest(16, 1));
+            alloc.TryAllocateMemoryForTesting(CreateBasicRequest(16, 1));
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetStats().UsedMemoryUsage, 16u);
         ASSERT_NE(allocation, nullptr);
         alloc.DeallocateMemory(std::move(allocation));
@@ -58,7 +58,7 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
     // Larger allocation uses secondAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
-            alloc.TryAllocateMemory(CreateBasicRequest(24, 1));
+            alloc.TryAllocateMemoryForTesting(CreateBasicRequest(24, 1));
         ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->GetStats().UsedMemoryUsage, 24u);
         ASSERT_NE(allocation, nullptr);
         alloc.DeallocateMemory(std::move(allocation));
@@ -67,7 +67,7 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
     // Smaller allocation again uses firstAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
-            alloc.TryAllocateMemory(CreateBasicRequest(4, 1));
+            alloc.TryAllocateMemoryForTesting(CreateBasicRequest(4, 1));
         ASSERT_EQ(alloc.GetFirstAllocatorForTesting()->GetStats().UsedMemoryUsage, 4u);
         ASSERT_NE(allocation, nullptr);
         alloc.DeallocateMemory(std::move(allocation));
@@ -76,7 +76,7 @@ TEST_F(ConditionalMemoryAllocatorTests, Basic) {
     // Larger allocation again uses secondAllocator.
     {
         std::unique_ptr<MemoryAllocation> allocation =
-            alloc.TryAllocateMemory(CreateBasicRequest(24, 1));
+            alloc.TryAllocateMemoryForTesting(CreateBasicRequest(24, 1));
         ASSERT_EQ(alloc.GetSecondAllocatorForTesting()->GetStats().UsedMemoryUsage, 24u);
         ASSERT_NE(allocation, nullptr);
         alloc.DeallocateMemory(std::move(allocation));

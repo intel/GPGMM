@@ -28,7 +28,7 @@ namespace gpgmm::vk {
         : mResourceAllocator(resourceAllocator), mMemoryTypeIndex(memoryTypeIndex) {
     }
 
-    std::unique_ptr<MemoryAllocation> DeviceMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> DeviceMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.TryAllocateMemory");
 
