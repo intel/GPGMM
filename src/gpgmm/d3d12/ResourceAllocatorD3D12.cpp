@@ -1276,7 +1276,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (!HasAllFlags(heapFlags, allocationDescriptor.Flags)) {
+        if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
             ErrorLog() << "Unable to import a resource using heap flags that differs from the "
                           "heap flags used at creation. For important resources, it is recommended "
                           "to not specify heap flags.";
