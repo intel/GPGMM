@@ -307,7 +307,8 @@ namespace gpgmm::d3d12 {
             residencyDesc.Device = allocatorDescriptor.Device;
 
             if (allocatorDescriptor.Adapter != nullptr) {
-                ReturnIfFailed(allocatorDescriptor.Adapter.As(&residencyDesc.Adapter));
+                ReturnIfFailed(allocatorDescriptor.Adapter->QueryInterface(
+                    IID_PPV_ARGS(&residencyDesc.Adapter)));
             }
 
             D3D12_FEATURE_DATA_ARCHITECTURE arch = {};

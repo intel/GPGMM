@@ -20,13 +20,16 @@
 
 namespace {
 
+    ComPtr<ID3D12Device> gDevice;
+    ComPtr<IDXGIAdapter3> gAdapter;
+
     ComPtr<gpgmm::d3d12::IResourceAllocator> gResourceAllocator;
 
 }  // namespace
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc))) {
+    if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc, &gDevice, &gAdapter))) {
         return 0;
     }
 

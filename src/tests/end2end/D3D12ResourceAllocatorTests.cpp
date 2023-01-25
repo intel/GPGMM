@@ -97,8 +97,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocator) {
     // Creating an allocator without the resource heap tier specified should always succeed.
     {
         ALLOCATOR_DESC desc = {};
-        desc.Device = mDevice;
-        desc.Adapter = mAdapter;
+        desc.Device = mDevice.Get();
+        desc.Adapter = mAdapter.Get();
 
         ComPtr<IResourceAllocator> resourceAllocator;
         EXPECT_SUCCEEDED(CreateResourceAllocator(desc, &resourceAllocator, nullptr));
