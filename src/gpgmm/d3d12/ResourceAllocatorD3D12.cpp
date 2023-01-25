@@ -442,6 +442,13 @@ namespace gpgmm::d3d12 {
             caps.reset(ptr);
         }
 
+        // Do not override the default min. log level specified by the residency manager.
+        // Only if this allocator is without residency, does the min. log level have affect.
+        // Note: the log level should be set before logging new messages.
+        if (pResidencyManager == nullptr) {
+            SetLogLevel(GetLogSeverity(allocatorDescriptor.MinLogLevel));
+        }
+
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
             gpgmm::ErrorLog() << "Resource heap tier exceeds the capabilities of the device "
                                  "(ResourceHeapTier:"
@@ -537,12 +544,6 @@ namespace gpgmm::d3d12 {
         } else {
             // Do not override the event scope from a event trace already enabled.
             newDescriptor.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;
-        }
-
-        // Do not override the default min. log level specified by the residency manager.
-        // Only if this allocator is without residency, does the min. log level have affect.
-        if (pResidencyManager == nullptr) {
-            SetLogLevel(GetLogSeverity(newDescriptor.MinLogLevel));
         }
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
