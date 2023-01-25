@@ -20,9 +20,7 @@
 namespace gpgmm::d3d12 {
 
     // static
-    HRESULT Fence::CreateFence(ComPtr<ID3D12Device> device,
-                               uint64_t initialValue,
-                               Fence** fenceOut) {
+    HRESULT Fence::CreateFence(ID3D12Device* device, uint64_t initialValue, Fence** fenceOut) {
         ComPtr<ID3D12Fence> fence;
         ReturnIfFailed(
             device->CreateFence(initialValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));

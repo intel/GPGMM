@@ -170,7 +170,7 @@ namespace gpgmm::d3d12 {
 
         RESOURCE_ALLOCATOR_STATS GetInfoInternal() const;
 
-        ComPtr<ID3D12Device> mDevice;
+        ID3D12Device* mDevice = nullptr;
         ComPtr<ResidencyManager> mResidencyManager;
 
         std::unique_ptr<Caps> mCaps;

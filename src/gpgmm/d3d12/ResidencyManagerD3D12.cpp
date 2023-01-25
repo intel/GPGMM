@@ -40,7 +40,7 @@ namespace gpgmm::d3d12 {
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
       public:
-        BudgetUpdateTask(ResidencyManager* const residencyManager, ComPtr<IDXGIAdapter3> adapter)
+        BudgetUpdateTask(ResidencyManager* const residencyManager, IDXGIAdapter3* adapter)
             : mResidencyManager(residencyManager),
               mAdapter(std::move(adapter)),
               mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
@@ -86,8 +86,7 @@ namespace gpgmm::d3d12 {
 
             if (FAILED(hr)) {
                 gpgmm::ErrorLog() << "Unable to update budget: " +
-                                         GetDeviceErrorMessage(mResidencyManager->mDevice.Get(),
-                                                               hr);
+                                         GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
             }
 
             SetLastError(hr);
@@ -111,7 +110,7 @@ namespace gpgmm::d3d12 {
         }
 
         ResidencyManager* const mResidencyManager;
-        ComPtr<IDXGIAdapter3> mAdapter;
+        IDXGIAdapter3* mAdapter = nullptr;
 
         HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;
         HANDLE mUnregisterAndExitEvent = INVALID_HANDLE_VALUE;
@@ -180,16 +179,6 @@ namespace gpgmm::d3d12 {
                    "CheckFeatureSupport instead.";
         }
 
-        // Residency manager needs it's own fence to know when heaps are no longer being used by the
-        // GPU.
-        std::unique_ptr<Fence> residencyFence;
-        {
-            Fence* fencePtr = nullptr;
-            ReturnIfFailed(
-                Fence::CreateFence(descriptor.Device, descriptor.InitialFenceValue, &fencePtr));
-            residencyFence.reset(fencePtr);
-        }
-
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
             gpgmm::ErrorLog() << "Both the OS based memory budget and restricted budget were "
                                  "specified but cannot be used at the same time.";
@@ -205,8 +194,8 @@ namespace gpgmm::d3d12 {
 
         SetLogLevel(GetLogSeverity(descriptor.MinLogLevel));
 
-        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(descriptor, std::move(residencyFence)));
+        std::unique_ptr<ResidencyManager> residencyManager =
+            std::unique_ptr<ResidencyManager>(new ResidencyManager(descriptor));
 
         // Require automatic video memory budget updates.
         if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
@@ -268,8 +257,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
-                                       std::unique_ptr<Fence> residencyFence)
+    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor)
         : mDevice(descriptor.Device),
           mAdapter(descriptor.Adapter),
           mMaxPctOfVideoMemoryToBudget(descriptor.MaxPctOfVideoMemoryToBudget == 0
@@ -286,12 +274,11 @@ namespace gpgmm::d3d12 {
                                         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
-          mResidencyFence(std::move(residencyFence)) {
+          mInitialFenceValue(descriptor.InitialFenceValue) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
         ASSERT(mAdapter != nullptr);
-        ASSERT(mResidencyFence != nullptr);
     }
 
     ResidencyManager::~ResidencyManager() {
@@ -625,6 +612,8 @@ namespace gpgmm::d3d12 {
             return S_OK;
         }
 
+        ReturnIfFailed(EnsureResidencyFenceExists());
+
         uint64_t bytesEvicted = 0;
         while (bytesEvicted < bytesNeededToBeUnderBudget) {
             // If the cache is empty, allow execution to continue. Note that fully
@@ -706,6 +695,8 @@ namespace gpgmm::d3d12 {
                    "Please call ExecuteCommandLists per residency list as a workaround, if needed.";
             return E_NOTIMPL;
         }
+
+        ReturnIfFailed(EnsureResidencyFenceExists());
 
         ResidencyList* residencyList = static_cast<ResidencyList*>(ppResidencyLists[0]);
 
@@ -835,6 +826,7 @@ namespace gpgmm::d3d12 {
         // EnqueueMakeResident fail, fall-back to using synchronous MakeResident since we may be
         // able to continue after calling Evict again.
         if (mDevice3 != nullptr) {
+            ReturnIfFailed(EnsureResidencyFenceExists());
             ReturnIfSucceeded(mDevice3->EnqueueMakeResident(
                 D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
                 mResidencyFence->GetFence(), mResidencyFence->GetLastSignaledFence() + 1));
@@ -975,6 +967,20 @@ namespace gpgmm::d3d12 {
         }
 
         heap->SetResidencyState(state);
+        return S_OK;
+    }
+
+    // Residency fence is lazily created to workaround an issue where adding another ref to the
+    // device upon CreateFence and storing |this| on that device via SetPrivateData,
+    // prevents the created device from ever being released.
+    HRESULT ResidencyManager::EnsureResidencyFenceExists() {
+        if (mResidencyFence != nullptr) {
+            return S_OK;
+        }
+
+        Fence* fencePtr = nullptr;
+        ReturnIfFailed(Fence::CreateFence(mDevice, mInitialFenceValue, &fencePtr));
+        mResidencyFence.reset(fencePtr);
         return S_OK;
     }
 
