@@ -825,9 +825,10 @@ namespace gpgmm::d3d12 {
         // asynchronous MakeResident, called EnqueueMakeResident, instead first. Should
         // EnqueueMakeResident fail, fall-back to using synchronous MakeResident since we may be
         // able to continue after calling Evict again.
-        if (mDevice3 != nullptr) {
+        ComPtr<ID3D12Device3> device3;
+        if (SUCCEEDED(mDevice->QueryInterface(IID_PPV_ARGS(&device3)))) {
             ReturnIfFailed(EnsureResidencyFenceExists());
-            ReturnIfSucceeded(mDevice3->EnqueueMakeResident(
+            ReturnIfSucceeded(device3->EnqueueMakeResident(
                 D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
                 mResidencyFence->GetFence(), mResidencyFence->GetLastSignaledFence() + 1));
         }
