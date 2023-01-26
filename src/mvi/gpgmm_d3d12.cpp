@@ -28,8 +28,6 @@
 
 namespace gpgmm::d3d12 {
 
-    static constexpr uint64_t kInvalidOffset = std::numeric_limits<uint64_t>::max();
-
     // Unknown
 
     Unknown::Unknown() : mRefCount(1) {
