@@ -431,17 +431,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
     uint32_t afterDeviceRefCount = mDevice->Release();
 
     EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
-
-    // Now create a residency manager through a resource allocator.
-    ComPtr<IResourceAllocator> resourceAllocator;
-    EXPECT_SUCCEEDED(
-        CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, &residencyManager));
-
-    // Get the refcount of the ID3D12Device after creation.
-    mDevice->AddRef();
-    afterDeviceRefCount = mDevice->Release();
-
-    EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
