@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['recordoptions_0',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a315f4eb31901ec275f927904ec8c58f2',1,'gpgmm::d3d12::RESIDENCY_DESC::RecordOptions()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3a83aa65ac3cb38e5ed6d94f6df12de2',1,'gpgmm::d3d12::ALLOCATOR_DESC::RecordOptions()']]],
-  ['requiredpropertyflags_1',['requiredPropertyFlags',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html#ab9451843785b4203a40d23cea9fbeee9',1,'gpgmm::vk::GpResourceAllocationCreateInfo']]],
-  ['requireresourceheappadding_2',['RequireResourceHeapPadding',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aed41cef6134f5552d5581f75d526683c',1,'gpgmm::d3d12::ALLOCATION_DESC']]],
-  ['resourcedescriptor_3',['resourceDescriptor',['../namespacegpgmm_1_1d3d12.html#a52f35a32b6cdbfb0a4055692343dece0',1,'gpgmm::d3d12']]],
-  ['resourceheaptier_4',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
+  ['sizecachehits_0',['SizeCacheHits',['../structgpgmm_1_1_memory_allocator_stats.html#a53c5bbe2ec007e151e6cfdc7a3c5182a',1,'gpgmm::MemoryAllocatorStats']]],
+  ['sizecachemisses_1',['SizeCacheMisses',['../structgpgmm_1_1_memory_allocator_stats.html#ae9746d6cf9d0b091e93a163c30a149e7',1,'gpgmm::MemoryAllocatorStats']]],
+  ['sizeinbytes_2',['SizeInBytes',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a097b9ed7d8b4612d359036f3b18a1cc4',1,'gpgmm::d3d12::HEAP_INFO::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f',1,'gpgmm::d3d12::HEAP_DESC::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a69a8397e54b68d7e4d816b4a3743f480',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::SizeInBytes()']]],
+  ['status_3',['Status',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#abccb4fe93b87d4e6b60bbb8a7c7742c4',1,'gpgmm::d3d12::HEAP_INFO']]],
+  ['suballocationalgorithm_4',['subAllocationAlgorithm',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aa9c9a7ecf364ca57862369e3e6e2136f',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
+  ['suballocationalgorithm_5',['SubAllocationAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
 ];

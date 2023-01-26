@@ -14,9 +14,8 @@ var searchData=
   ['residency_5fstatus_5fcurrent_5fresident_11',['RESIDENCY_STATUS_CURRENT_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2',1,'gpgmm::d3d12']]],
   ['residency_5fstatus_5fpending_5fresidency_12',['RESIDENCY_STATUS_PENDING_RESIDENCY',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a',1,'gpgmm::d3d12']]],
   ['residency_5fstatus_5funknown_13',['RESIDENCY_STATUS_UNKNOWN',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca995e849faa7ad6ae73a6d4f2f46315f0',1,'gpgmm::d3d12']]],
-  ['resource_5fallocation_5fdesc_14',['RESOURCE_ALLOCATION_DESC',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html',1,'gpgmm::d3d12']]],
-  ['resource_5fallocation_5finfo_15',['RESOURCE_ALLOCATION_INFO',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fstats_16',['RESOURCE_ALLOCATOR_STATS',['../namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86',1,'gpgmm::d3d12']]],
-  ['resourcedescriptor_17',['resourceDescriptor',['../namespacegpgmm_1_1d3d12.html#a52f35a32b6cdbfb0a4055692343dece0',1,'gpgmm::d3d12']]],
-  ['resourceheaptier_18',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
+  ['resource_5fallocation_5finfo_14',['RESOURCE_ALLOCATION_INFO',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fstats_15',['RESOURCE_ALLOCATOR_STATS',['../namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86',1,'gpgmm::d3d12']]],
+  ['resourcedescriptor_16',['resourceDescriptor',['../namespacegpgmm_1_1d3d12.html#a52f35a32b6cdbfb0a4055692343dece0',1,'gpgmm::d3d12']]],
+  ['resourceheaptier_17',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
 ];
