@@ -121,7 +121,6 @@ namespace gpgmm::d3d12 {
         HRESULT EnsureResidencyFenceExists();
 
         ID3D12Device* mDevice = nullptr;
-        ID3D12Device3* mDevice3 = nullptr;
         IDXGIAdapter3* mAdapter = nullptr;
 
         const float mMaxPctOfVideoMemoryToBudget;
