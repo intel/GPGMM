@@ -38,6 +38,14 @@ namespace gpgmm::d3d12 {
         }
     }
 
+    long GetRefCount(IUnknown* unknown) {
+        if (unknown == nullptr) {
+            return 0;
+        }
+        long refcount = unknown->AddRef();
+        return unknown->Release();
+    }
+
     void D3D12TestBase::SetUp() {
         GPGMMTestBase::SetUp();
 

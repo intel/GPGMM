@@ -1264,15 +1264,13 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        ComPtr<ID3D12Resource> resource(pCommittedResource);
-
-        D3D12_RESOURCE_DESC desc = resource->GetDesc();
+        D3D12_RESOURCE_DESC desc = pCommittedResource->GetDesc();
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice, desc);
 
         D3D12_HEAP_PROPERTIES heapProperties;
         D3D12_HEAP_FLAGS heapFlags;
-        ReturnIfFailed(resource->GetHeapProperties(&heapProperties, &heapFlags));
+        ReturnIfFailed(pCommittedResource->GetHeapProperties(&heapProperties, &heapFlags));
 
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
@@ -1305,11 +1303,15 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
+        if (ppResourceAllocationOut == nullptr) {
+            return S_FALSE;
+        }
+
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
 
-        ImportResourceCallbackContext importResourceCallbackContext(resource);
+        ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
         ComPtr<IHeap> resourceHeap;
         ReturnIfFailed(Heap::CreateHeap(
@@ -1328,13 +1330,10 @@ namespace gpgmm::d3d12 {
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
-        allocationDesc.OffsetFromResource = 0;
 
-        if (ppResourceAllocationOut != nullptr) {
-            *ppResourceAllocationOut = new ResourceAllocation(
-                allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap.Detach()), nullptr,
-                std::move(resource));
-        }
+        *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, nullptr, this,
+                                                          static_cast<Heap*>(resourceHeap.Detach()),
+                                                          nullptr, pCommittedResource);
 
         return S_OK;
     }
@@ -1540,7 +1539,7 @@ namespace gpgmm::d3d12 {
         return E_INVALIDARG;
     }
 
-    ImportResourceCallbackContext::ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource)
+    ImportResourceCallbackContext::ImportResourceCallbackContext(ID3D12Resource* resource)
         : mResource(resource) {
     }
 
@@ -1550,11 +1549,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ImportResourceCallbackContext::GetHeap(ID3D12Pageable** ppPageableOut) {
-        ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(mResource.As(&pageable));
-
-        *ppPageableOut = pageable.Detach();
-
+        *ppPageableOut = mResource;
         return S_OK;
     }
 

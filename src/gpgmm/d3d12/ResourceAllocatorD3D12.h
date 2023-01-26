@@ -37,13 +37,13 @@ namespace gpgmm::d3d12 {
 
     class ImportResourceCallbackContext {
       public:
-        ImportResourceCallbackContext(ComPtr<ID3D12Resource> resource);
+        ImportResourceCallbackContext(ID3D12Resource* resource);
         static HRESULT GetHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
       private:
         HRESULT GetHeap(ID3D12Pageable** ppPageableOut);
 
-        ComPtr<ID3D12Resource> mResource;
+        ID3D12Resource* mResource = nullptr;
     };
 
     class CreateCommittedResourceCallbackContext {

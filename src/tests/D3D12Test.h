@@ -38,6 +38,8 @@ namespace gpgmm::d3d12 {
 
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(LogSeverity logSeverity);
 
+    long GetRefCount(IUnknown* unknown);
+
     class D3D12TestBase : public GPGMMTestBase {
       public:
         void SetUp();

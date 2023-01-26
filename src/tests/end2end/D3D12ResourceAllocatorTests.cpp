@@ -848,6 +848,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferImported) {
         D3D12_RESOURCE_STATE_COMMON, nullptr, &externalAllocation));
     ASSERT_NE(externalAllocation, nullptr);
 
+    EXPECT_EQ(GetRefCount(externalAllocation->GetResource()), 1u);
+
     ComPtr<IResourceAllocation> internalAllocation;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource({}, externalAllocation->GetResource(),
                                                        &internalAllocation));
@@ -856,14 +858,22 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferImported) {
     // Underlying resource must stay the same.
     ASSERT_EQ(internalAllocation->GetResource(), externalAllocation->GetResource());
 
+    EXPECT_EQ(GetRefCount(internalAllocation->GetResource()), 2u);
+    EXPECT_EQ(GetRefCount(externalAllocation->GetResource()), 2u);
+
     // Importing a buffer without creating an allocation should always succeed.
     ASSERT_SUCCEEDED(
         resourceAllocator->CreateResource({}, externalAllocation->GetResource(), nullptr));
+
+    EXPECT_EQ(GetRefCount(externalAllocation->GetResource()), 2u);
 
     // Re-importing a buffer should create another allocation from the same resource.
     ComPtr<IResourceAllocation> internalAllocationAgain;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource({}, externalAllocation->GetResource(),
                                                        &internalAllocationAgain));
+
+    EXPECT_EQ(GetRefCount(externalAllocation->GetResource()), 3u);
+    EXPECT_EQ(GetRefCount(internalAllocationAgain->GetResource()), 3u);
 
     // Underlying resource must stay the same.
     ASSERT_EQ(internalAllocation->GetResource(), internalAllocationAgain->GetResource());
