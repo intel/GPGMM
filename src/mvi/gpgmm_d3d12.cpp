@@ -257,8 +257,7 @@ namespace gpgmm::d3d12 {
         return static_cast<Heap*>(MemoryAllocation::GetMemory());
     }
 
-    ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                                           MemoryAllocator* allocator,
+    ResourceAllocation::ResourceAllocation(MemoryAllocator* allocator,
                                            Heap* resourceHeap,
                                            Microsoft::WRL::ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator, resourceHeap), mResource(std::move(resource)) {
@@ -376,13 +375,8 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryCount++;
         mStats.UsedBlockUsage += allocationSize;
 
-        RESOURCE_ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapOffset = kInvalidOffset;
-        allocationDesc.SizeInBytes = resourceInfo.SizeInBytes;
-        allocationDesc.Method = AllocationMethod::kStandalone;
-
-        *ppResourceAllocationOut = new ResourceAllocation(
-            allocationDesc, this, static_cast<Heap*>(resourceHeap), std::move(committedResource));
+        *ppResourceAllocationOut = new ResourceAllocation(this, static_cast<Heap*>(resourceHeap),
+                                                          std::move(committedResource));
 
         return S_OK;
     }

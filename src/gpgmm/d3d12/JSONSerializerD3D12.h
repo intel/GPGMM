@@ -22,6 +22,8 @@
 
 namespace gpgmm::d3d12 {
 
+    struct RESOURCE_ALLOCATION_DESC;
+
     struct CREATE_RESOURCE_DESC {
         const ALLOCATION_DESC& allocationDescriptor;
         const D3D12_RESOURCE_DESC& resourceDescriptor;

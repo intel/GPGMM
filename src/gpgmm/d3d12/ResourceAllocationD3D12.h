@@ -30,6 +30,14 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class Heap;
 
+    struct RESOURCE_ALLOCATION_DESC {
+        uint64_t SizeInBytes;
+        uint64_t HeapOffset;
+        uint64_t OffsetFromResource;
+        AllocationMethod Method;
+        LPCWSTR DebugName;
+    };
+
     class ResourceAllocation final : public MemoryAllocation,
                                      public DebugObject,
                                      public IResourceAllocation {

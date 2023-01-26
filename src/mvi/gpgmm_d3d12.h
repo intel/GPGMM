@@ -166,8 +166,7 @@ namespace gpgmm::d3d12 {
       private:
         friend ResourceAllocator;
 
-        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
-                           MemoryAllocator* allocator,
+        ResourceAllocation(MemoryAllocator* allocator,
                            Heap* resourceHeap,
                            Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 

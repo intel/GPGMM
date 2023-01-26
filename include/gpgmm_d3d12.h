@@ -526,37 +526,6 @@ namespace gpgmm::d3d12 {
     GPGMM_EXPORT HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                                 IResidencyManager** ppResidencyManagerOut);
 
-    /** \struct RESOURCE_ALLOCATION_DESC
-    Describes a resource allocation.
-    */
-    struct RESOURCE_ALLOCATION_DESC {
-        /** \brief Requested size, in bytes, of the resource allocation.
-
-        The requested size is the non-zero allocation size before being subjected to allocator
-        alignment.
-        */
-        uint64_t SizeInBytes;
-
-        /** \brief Offset, in bytes, of the resource in the heap.
-         */
-        uint64_t HeapOffset;
-
-        /** \brief Offset, in bytes, of the allocation, from the start of the
-        resource.
-
-        Always zero when the resource is placed in a heap or created with it's own heap.
-        */
-        uint64_t OffsetFromResource;
-
-        /** \brief Method used to allocate memory for the resource.
-         */
-        AllocationMethod Method;
-
-        /** \brief Debug name associated with the resource allocation.
-         */
-        LPCWSTR DebugName;
-    };
-
     /** \struct RESOURCE_ALLOCATION_INFO
     Additional information about the resource allocation.
     */
