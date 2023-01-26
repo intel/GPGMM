@@ -413,6 +413,37 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     }
 }
 
+// Verify the residency manager will not increment the device refcount upon creation.
+TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
+    // Get the initial refcount of the ID3D12Device.
+    mDevice->AddRef();
+    uint32_t beforeDeviceRefCount = mDevice->Release();
+
+    EXPECT_EQ(beforeDeviceRefCount, 1u);
+
+    // Create a residency manager without adding a ref to the device.
+    ComPtr<IResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+
+    // Get the refcount of the ID3D12Device after creation.
+    mDevice->AddRef();
+    uint32_t afterDeviceRefCount = mDevice->Release();
+
+    EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
+
+    // Now create a residency manager through a resource allocator.
+    ComPtr<IResourceAllocator> resourceAllocator;
+    EXPECT_SUCCEEDED(
+        CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, &residencyManager));
+
+    // Get the refcount of the ID3D12Device after creation.
+    mDevice->AddRef();
+    afterDeviceRefCount = mDevice->Release();
+
+    EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
+}
+
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_START();
 

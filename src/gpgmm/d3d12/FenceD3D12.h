@@ -23,9 +23,7 @@ namespace gpgmm::d3d12 {
 
     class Fence {
       public:
-        static HRESULT CreateFence(ComPtr<ID3D12Device> device,
-                                   uint64_t initialValue,
-                                   Fence** fenceOut);
+        static HRESULT CreateFence(ID3D12Device* device, uint64_t initialValue, Fence** fenceOut);
 
         ~Fence();
 

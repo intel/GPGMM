@@ -585,6 +585,8 @@ namespace gpgmm::d3d12 {
                                        EVENT_RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
           mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
+        ASSERT(mDevice != nullptr);
+
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         if (descriptor.Flags & ALLOCATOR_FLAG_NEVER_LEAK_MEMORY) {
@@ -607,7 +609,7 @@ namespace gpgmm::d3d12 {
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags, false);
 
             D3D12_HEAP_PROPERTIES heapProperties =
-                GetHeapProperties(mDevice.Get(), heapType, mIsCustomHeapsDisabled);
+                GetHeapProperties(mDevice, heapType, mIsCustomHeapsDisabled);
             heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
             // General-purpose allocators.
@@ -750,7 +752,7 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
-            std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice.Get(),
+            std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice,
                                                     heapProperties, heapFlags);
 
         const uint64_t heapSize =
@@ -929,7 +931,7 @@ namespace gpgmm::d3d12 {
         // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice.Get(), newResourceDesc);
+            GetResourceAllocationInfo(mDevice, newResourceDesc);
         if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
             gpgmm::ErrorLog() << "Unable to create resource allocation because the size exceeded "
                                  "capabilities of the device.";
@@ -1031,7 +1033,7 @@ namespace gpgmm::d3d12 {
         }
 
         D3D12_HEAP_PROPERTIES heapProperties =
-            GetHeapProperties(mDevice.Get(), heapType, mIsCustomHeapsDisabled);
+            GetHeapProperties(mDevice, heapType, mIsCustomHeapsDisabled);
 
         // Limit available memory to unused budget when residency is enabled.
         // Available memory acts like a hint to the allocator to avoid creating new larger heaps
@@ -1097,7 +1099,7 @@ namespace gpgmm::d3d12 {
             request.AlwaysPrefetch = false;
 
             ReturnIfSucceeded(TryAllocateResource(
-                mDevice.Get(), allocator, request, [&](const auto& subAllocation) -> HRESULT {
+                mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -1133,7 +1135,7 @@ namespace gpgmm::d3d12 {
             request.Alignment = resourceInfo.Alignment;
 
             ReturnIfSucceeded(TryAllocateResource(
-                mDevice.Get(), allocator, request, [&](const auto& subAllocation) -> HRESULT {
+                mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -1176,7 +1178,7 @@ namespace gpgmm::d3d12 {
             request.Alignment = allocator->GetMemoryAlignment();
 
             ReturnIfSucceeded(TryAllocateResource(
-                mDevice.Get(), allocator, request, [&](const auto& allocation) -> HRESULT {
+                mDevice, allocator, request, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     ReturnIfFailed(CreatePlacedResource(resourceHeap, allocation.GetOffset(),
@@ -1266,7 +1268,7 @@ namespace gpgmm::d3d12 {
 
         D3D12_RESOURCE_DESC desc = resource->GetDesc();
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice.Get(), desc);
+            GetResourceAllocationInfo(mDevice, desc);
 
         D3D12_HEAP_PROPERTIES heapProperties;
         D3D12_HEAP_FLAGS heapFlags;
@@ -1387,9 +1389,9 @@ namespace gpgmm::d3d12 {
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.
         ComPtr<IHeap> resourceHeap;
-        CreateCommittedResourceCallbackContext callbackContext(mDevice.Get(), &heapProperties,
-                                                               heapFlags, resourceDescriptor,
-                                                               clearValue, initialResourceState);
+        CreateCommittedResourceCallbackContext callbackContext(mDevice, &heapProperties, heapFlags,
+                                                               resourceDescriptor, clearValue,
+                                                               initialResourceState);
 
         ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
                                         CreateCommittedResourceCallbackContext::CreateHeap,

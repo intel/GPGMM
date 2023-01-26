@@ -70,7 +70,7 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 
-        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Fence> residencyFence);
+        ResidencyManager(const RESIDENCY_DESC& descriptor);
 
         HRESULT EnsureInBudget(uint64_t bytesToEvict,
                                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
@@ -118,9 +118,11 @@ namespace gpgmm::d3d12 {
 
         void ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup);
 
-        ComPtr<ID3D12Device> mDevice;
-        ComPtr<IDXGIAdapter3> mAdapter;
-        ComPtr<ID3D12Device3> mDevice3;
+        HRESULT EnsureResidencyFenceExists();
+
+        ID3D12Device* mDevice = nullptr;
+        ID3D12Device3* mDevice3 = nullptr;
+        IDXGIAdapter3* mAdapter = nullptr;
 
         const float mMaxPctOfVideoMemoryToBudget;
         const float mMinPctOfBudgetToReserve;
@@ -129,6 +131,7 @@ namespace gpgmm::d3d12 {
         const bool mIsUMA;
         const bool mIsBudgetChangeEventsDisabled;
         const bool mFlushEventBuffersOnDestruct;
+        const uint64_t mInitialFenceValue;
 
         mutable std::mutex mMutex;
 
