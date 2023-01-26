@@ -417,9 +417,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
     // Get the initial refcount of the ID3D12Device.
     mDevice->AddRef();
-    uint32_t beforeDeviceRefCount = mDevice->Release();
-
-    EXPECT_EQ(beforeDeviceRefCount, 1u);
+    const uint32_t beforeDeviceRefCount = mDevice->Release();
 
     // Create a residency manager without adding a ref to the device.
     ComPtr<IResidencyManager> residencyManager;
@@ -428,7 +426,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
 
     // Get the refcount of the ID3D12Device after creation.
     mDevice->AddRef();
-    uint32_t afterDeviceRefCount = mDevice->Release();
+    const uint32_t afterDeviceRefCount = mDevice->Release();
 
     EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
 }

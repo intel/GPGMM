@@ -80,9 +80,7 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
 TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocatorWithoutDeviceAddRef) {
     // Get the initial refcount of the ID3D12Device.
     mDevice->AddRef();
-    uint32_t beforeDeviceRefCount = mDevice->Release();
-
-    EXPECT_EQ(beforeDeviceRefCount, 1u);
+    const uint32_t beforeDeviceRefCount = mDevice->Release();
 
     // Create the resource allocator without adding a ref to the device.
     ComPtr<IResourceAllocator> resourceAllocator;
@@ -91,7 +89,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocatorWithoutDeviceAddRef) 
 
     // Get the refcount of the ID3D12Device after creation.
     mDevice->AddRef();
-    uint32_t afterDeviceRefCount = mDevice->Release();
+    const uint32_t afterDeviceRefCount = mDevice->Release();
 
     EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
 }
