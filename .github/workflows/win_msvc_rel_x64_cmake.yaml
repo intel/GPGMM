@@ -72,11 +72,17 @@ jobs:
         cd test
         cmake --build . --config Release
 
+    - name: Run gpgmm_end2end_tests leak tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        bin\Release\gpgmm_end2end_tests.exe --gtest_filter=*NoLeak --check-device-leaks 2>&1
+
     - name: Run gpgmm_end2end_tests (with patch)
       shell: cmd
       run: |
         cd test
-        bin\Release\gpgmm_end2end_tests.exe 2>&1
+        bin\Release\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --check-device-leaks 2>&1
 
     - name: Run gpgmm_unittests (with patch)
       shell: cmd
@@ -88,4 +94,4 @@ jobs:
       shell: cmd
       run: |
         cd test
-        bin\Release\gpgmm_capture_replay_tests.exe
+        bin\Release\gpgmm_capture_replay_tests.exe --check-device-leaks 2>&1
