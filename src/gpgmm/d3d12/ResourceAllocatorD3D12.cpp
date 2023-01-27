@@ -874,7 +874,7 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            GetInfoInternal();
+            GetStatsInternal();
         }
 
         return bytesReleased;
@@ -904,7 +904,7 @@ namespace gpgmm::d3d12 {
 
         // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
-            GetInfoInternal();
+            GetStatsInternal();
         }
 
 #if defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS)
@@ -1055,9 +1055,9 @@ namespace gpgmm::d3d12 {
                 residencyManager->GetVideoMemoryInfo(segment);
 
             // If over-budget, only free memory is considered available.
-            // TODO: Consider optimizing GetInfoInternal().
+            // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
-                request.AvailableForAllocation = GetInfoInternal().FreeMemoryUsage;
+                request.AvailableForAllocation = GetStatsInternal().FreeMemoryUsage;
 
                 DebugEvent(this) << "Current usage exceeded budget ("
                                  << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
@@ -1413,10 +1413,10 @@ namespace gpgmm::d3d12 {
 
     RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
-        return GetInfoInternal();
+        return GetStatsInternal();
     }
 
-    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetInfoInternal() const {
+    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStatsInternal() const {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.GetInfo");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.

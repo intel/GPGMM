@@ -168,7 +168,7 @@ namespace gpgmm::d3d12 {
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
-        RESOURCE_ALLOCATOR_STATS GetInfoInternal() const;
+        RESOURCE_ALLOCATOR_STATS GetStatsInternal() const;
 
         ID3D12Device* mDevice = nullptr;
         ComPtr<ResidencyManager> mResidencyManager;
