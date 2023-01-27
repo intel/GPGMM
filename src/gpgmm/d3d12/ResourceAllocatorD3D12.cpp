@@ -1305,6 +1305,11 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
+        // If no resource allocation is to be created then only validate by returning early.
+        if (ppResourceAllocationOut == nullptr) {
+            return S_FALSE;
+        }
+
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
@@ -1328,13 +1333,10 @@ namespace gpgmm::d3d12 {
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Method = AllocationMethod::kStandalone;
-        allocationDesc.OffsetFromResource = 0;
 
-        if (ppResourceAllocationOut != nullptr) {
-            *ppResourceAllocationOut = new ResourceAllocation(
-                allocationDesc, nullptr, this, static_cast<Heap*>(resourceHeap.Detach()), nullptr,
-                std::move(resource));
-        }
+        *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, nullptr, this,
+                                                          static_cast<Heap*>(resourceHeap.Detach()),
+                                                          nullptr, std::move(resource));
 
         return S_OK;
     }

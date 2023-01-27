@@ -1113,11 +1113,11 @@ namespace gpgmm::d3d12 {
                                        const D3D12_CLEAR_VALUE* pClearValue,
                                        IResourceAllocation** ppResourceAllocationOut) = 0;
 
-        /** \brief  Imports an existing D3D12 resource.
+        /** \brief  Use existing D3D12 resource as a resource allocation.
 
-        Allows externally created D3D12 resources to be used as a ResourceAllocation.
+        Returns a ResourceAllocation which represents an existing resource with a resource heap.
 
-        @param allocationDescriptor A reference to ALLOCATION_DESC structure that provides
+        @param allocationDescriptor A reference to ALLOCATION_DESC structure that provides.
         properties for the resource allocation.
         @param pCommittedResource A pointer to a committed ID3D12Resource.
         @param[out] ppResourceAllocationOut Pointer to a memory block that receives a pointer to the
