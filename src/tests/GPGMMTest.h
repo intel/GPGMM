@@ -81,10 +81,12 @@ class GPGMMTestEnvironment : public testing::Environment {
     void SetUp() override;
 
     bool IsDumpEventsEnabled() const;
+    bool IsReportMemoryLeaksEnabled() const;
     gpgmm::LogSeverity GetLogLevel() const;
 
   private:
     bool mIsDumpEventsEnabled = false;
+    bool mIsReportMemoryLeaksEnabled = false;
     gpgmm::LogSeverity mLogLevel;  // Initialized by Setup().
 };
 

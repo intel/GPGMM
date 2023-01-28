@@ -76,7 +76,13 @@ jobs:
         cd test
         ninja -C out\Release
 
-    - name: Run gpgmm_end2end_tests leak tests (with patch)
+    - name: Run gpgmm_end2end_tests runtime leak checks (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Release\gpgmm_end2end_tests.exe --no-leaks 2>&1
+
+    - name: Run gpgmm_end2end_tests no leak tests (with patch)
       shell: cmd
       run: |
         cd test

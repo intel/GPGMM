@@ -27,7 +27,9 @@ GPGMMTestBase::~GPGMMTestBase() {
 
 void GPGMMTestBase::SetUp() {
     if (mDebugPlatform != nullptr) {
-        mDebugPlatform->ReportMemoryLeaks();
+        if (gTestEnv->IsReportMemoryLeaksEnabled()) {
+            mDebugPlatform->ReportMemoryLeaks();
+        }
     }
 }
 
@@ -108,6 +110,11 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             continue;
         }
 
+        if (strcmp("--no-leaks", argv[i]) == 0) {
+            mIsReportMemoryLeaksEnabled = true;
+            continue;
+        }
+
         constexpr const char kDebugMode[] = "--debug";
         size_t arglen = sizeof(kDebugMode) - 1;
         if (strncmp(argv[i], kDebugMode, arglen) == 0) {
@@ -142,8 +149,9 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             gpgmm::InfoLog() << "Global options:\n"
                              << " --dump: Record all events to disk.\n"
                              << " --debug: Shortcut for --log-level=DEBUG.\n"
-                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log severity "
-                                "level for log messages.\n";
+                             << " --log-level=[DEBUG|INFO|WARN|ERROR]: Log "
+                                "level for log messages.\n"
+                             << " --no-leaks: Report memory leaks.\n";
             continue;
         }
     }
@@ -160,6 +168,10 @@ void GPGMMTestEnvironment::SetUp() {
 
 bool GPGMMTestEnvironment::IsDumpEventsEnabled() const {
     return mIsDumpEventsEnabled;
+}
+
+bool GPGMMTestEnvironment::IsReportMemoryLeaksEnabled() const {
+    return mIsReportMemoryLeaksEnabled;
 }
 
 gpgmm::LogSeverity GPGMMTestEnvironment::GetLogLevel() const {
