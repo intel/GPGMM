@@ -57,10 +57,6 @@ declare_args() {
   # Sets -dGPGMM_ENABLE_DEVICE_LEAK_CHECKS
   gpgmm_enable_device_leak_checks = false
 
-  # Enables checking of memory leaks.
-  # Sets -dGPGMM_ENABLE_MEMORY_LEAK_CHECKS
-  gpgmm_enable_memory_leak_checks = is_debug
-
   # Enables checking of resource alignment.
   # Sets -dGPGMM_ENABLE_MEMORY_ALIGN_CHECKS
   gpgmm_enable_memory_align_checks = is_debug
