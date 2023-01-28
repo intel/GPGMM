@@ -61,12 +61,6 @@ jobs:
         cd base
         ninja -C out\Debug
 
-    - name: Run gpgmm_end2end_tests leak tests
-      shell: cmd
-      run: |
-        cd base
-        out\Debug\gpgmm_end2end_tests.exe --gtest_filter=*NoLeak
-
     - name: Run gpgmm_end2end_tests
       shell: cmd
       run: |
@@ -130,6 +124,12 @@ jobs:
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd test
         ninja -C out\Debug
+
+    - name: Run gpgmm_end2end_tests leak tests (with patch)
+      shell: cmd
+      run: |
+        cd test
+        out\Debug\gpgmm_end2end_tests.exe --gtest_filter=*NoLeak --check-device-leaks 2>&1
 
     - name: Run gpgmm_end2end_tests (with patch)
       shell: cmd
