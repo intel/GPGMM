@@ -123,9 +123,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:abdad89ada60fe0ff753062bf90695782"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abdad89ada60fe0ff753062bf90695782">gpgmm::d3d12::CreateHeapFn</a> = HRESULT(*)(void *context, ID3D12Pageable **ppPageableOut)</td></tr>
-<tr class="memdesc:abdad89ada60fe0ff753062bf90695782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <br /></td></tr>
-<tr class="separator:abdad89ada60fe0ff753062bf90695782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3e40b4972a3aab0c61cc965fc1023f9d">gpgmm::d3d12::CreateHeapFn</a> = HRESULT(*)(void *pCreateHeapContext, ID3D12Pageable **ppPageableOut)</td></tr>
+<tr class="memdesc:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <br /></td></tr>
+<tr class="separator:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a> = MemoryAllocatorStats</td></tr>
 <tr class="separator:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -192,9 +192,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a445f08a49a91decaacc53bc978572451"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451">gpgmm::d3d12::SetDebugName</a> (LPCWSTR Name)=0</td></tr>
 <tr class="memdesc:a445f08a49a91decaacc53bc978572451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associate a debug name.  <br /></td></tr>
 <tr class="separator:a445f08a49a91decaacc53bc978572451"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad821ee97af32ef90001f001682a43f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aad821ee97af32ef90001f001682a43f0">gpgmm::d3d12::CreateHeap</a> (const HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, CreateHeapFn createHeapFn, void *createHeapFnContext, IHeap **ppHeapOut)</td></tr>
-<tr class="memdesc:aad821ee97af32ef90001f001682a43f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <br /></td></tr>
-<tr class="separator:aad821ee97af32ef90001f001682a43f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d27ce78a6be5b40ac9ad4c37b789b20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3d27ce78a6be5b40ac9ad4c37b789b20">gpgmm::d3d12::CreateHeap</a> (const HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, CreateHeapFn createHeapFn, void *pCreateHeapContext, IHeap **ppHeapOut)</td></tr>
+<tr class="memdesc:a3d27ce78a6be5b40ac9ad4c37b789b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a heap managed by GPGMM.  <br /></td></tr>
+<tr class="separator:a3d27ce78a6be5b40ac9ad4c37b789b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d077755fd1c26ad6399d41479d911bb"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">gpgmm::d3d12::Reset</a> ()=0</td></tr>
 <tr class="memdesc:a6d077755fd1c26ad6399d41479d911bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets a residency list to its initial state as if a new residenct list was created.  <br /></td></tr>
 <tr class="separator:a6d077755fd1c26ad6399d41479d911bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
