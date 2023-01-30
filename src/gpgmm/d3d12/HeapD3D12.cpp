@@ -59,9 +59,9 @@ namespace gpgmm::d3d12 {
     HRESULT CreateHeap(const HEAP_DESC& descriptor,
                        IResidencyManager* const pResidencyManager,
                        CreateHeapFn createHeapFn,
-                       void* createHeapFnContext,
+                       void* pCreateHeapContext,
                        IHeap** ppHeapOut) {
-        return Heap::CreateHeap(descriptor, pResidencyManager, createHeapFn, createHeapFnContext,
+        return Heap::CreateHeap(descriptor, pResidencyManager, createHeapFn, pCreateHeapContext,
                                 ppHeapOut);
     }
 
@@ -69,7 +69,7 @@ namespace gpgmm::d3d12 {
     HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
                              IResidencyManager* const pResidencyManager,
                              CreateHeapFn createHeapFn,
-                             void* createHeapFnContext,
+                             void* pCreateHeapContext,
                              IHeap** ppHeapOut) {
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
@@ -85,7 +85,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(createHeapFn(createHeapFnContext, &pageable));
+        ReturnIfFailed(createHeapFn(pCreateHeapContext, &pageable));
 
         // Pageable-based type is required for residency-managed heaps.
         if (pageable == nullptr) {

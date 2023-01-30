@@ -182,7 +182,7 @@ namespace gpgmm::d3d12 {
 
     /** \brief Callback function used to create a ID3D12Pageable.
      */
-    using CreateHeapFn = HRESULT (*)(void* context, ID3D12Pageable** ppPageableOut);
+    using CreateHeapFn = HRESULT (*)(void* pCreateHeapContext, ID3D12Pageable** ppPageableOut);
 
     GPGMM_INTERFACE IResidencyManager;
 
@@ -211,12 +211,12 @@ namespace gpgmm::d3d12 {
     @param descriptor A reference to HEAP_DESC structure that describes the heap.
     @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
     @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
-    @param createHeapFnContext  A pointer to a class designed to implement the actual heap creation
+    @param pCreateHeapContext  A pointer to a class designed to implement the actual heap creation
     function and store any necessary variables.
     @param[out] ppHeapOut Pointer to a memory block that receives a pointer to the
     heap.
 
-    Example call showing the usage of createHeapFn and createHeapFnContext:
+    Example call showing the usage of createHeapFn and pCreateHeapContext:
 
     \code
     CreateHeap(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,
@@ -248,7 +248,7 @@ namespace gpgmm::d3d12 {
     GPGMM_EXPORT HRESULT CreateHeap(const HEAP_DESC& descriptor,
                                     IResidencyManager* const pResidencyManager,
                                     CreateHeapFn createHeapFn,
-                                    void* createHeapFnContext,
+                                    void* pCreateHeapContext,
                                     IHeap** ppHeapOut);
 
     /** \brief Represents a list of heaps which will be "made resident" upon executing a
