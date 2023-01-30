@@ -415,18 +415,14 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
 
 // Verify the residency manager will not increment the device refcount upon creation.
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
-    // Get the initial refcount of the ID3D12Device.
-    mDevice->AddRef();
-    const uint32_t beforeDeviceRefCount = mDevice->Release();
+    const uint32_t beforeDeviceRefCount = GetRefCount(mDevice.Get());
 
     // Create a residency manager without adding a ref to the device.
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
         CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
 
-    // Get the refcount of the ID3D12Device after creation.
-    mDevice->AddRef();
-    const uint32_t afterDeviceRefCount = mDevice->Release();
+    const uint32_t afterDeviceRefCount = GetRefCount(mDevice.Get());
 
     EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
 }

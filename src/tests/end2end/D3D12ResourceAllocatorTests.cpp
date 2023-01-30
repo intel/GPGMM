@@ -78,18 +78,14 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
 
 // Verify the resource allocator will not increment the device refcount upon creation.
 TEST_F(D3D12ResourceAllocatorTests, CreateResourceAllocatorWithoutDeviceAddRef) {
-    // Get the initial refcount of the ID3D12Device.
-    mDevice->AddRef();
-    const uint32_t beforeDeviceRefCount = mDevice->Release();
+    const uint32_t beforeDeviceRefCount = GetRefCount(mDevice.Get());
 
     // Create the resource allocator without adding a ref to the device.
     ComPtr<IResourceAllocator> resourceAllocator;
     EXPECT_SUCCEEDED(
         CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, nullptr));
 
-    // Get the refcount of the ID3D12Device after creation.
-    mDevice->AddRef();
-    const uint32_t afterDeviceRefCount = mDevice->Release();
+    const uint32_t afterDeviceRefCount = GetRefCount(mDevice.Get());
 
     EXPECT_EQ(beforeDeviceRefCount, afterDeviceRefCount);
 }
