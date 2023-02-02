@@ -62,14 +62,6 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     residencyDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 
     // Create ResidencyManager
-    D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-    if (FAILED(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch,
-                                                         sizeof(arch)))) {
-        return 0;
-    }
-
-    residencyDesc.IsUMA = arch.UMA;
-
     if (FAILED(gpgmm::d3d12::CreateResidencyManager(residencyDesc, &gResidencyManager))) {
         return 0;
     }

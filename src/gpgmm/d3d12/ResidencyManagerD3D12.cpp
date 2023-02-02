@@ -171,12 +171,9 @@ namespace gpgmm::d3d12 {
             caps.reset(ptr);
         }
 
-        if (descriptor.IsUMA != caps->IsAdapterUMA()) {
-            gpgmm::WarningLog()
-                << "Memory architecture did not match capabilities of the adapter (IsUMA:"
-                << descriptor.IsUMA << " vs " << caps->IsAdapterUMA()
-                << "). This is probably not what the developer intended. Please use "
-                   "CheckFeatureSupport instead.";
+        if ((descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY) && caps->IsAdapterUMA()) {
+            gpgmm::WarningLog() << "RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY flag was specified but "
+                                   "did not match the architecture of the adapter.";
         }
 
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
@@ -195,7 +192,7 @@ namespace gpgmm::d3d12 {
         SetLogLevel(GetLogSeverity(descriptor.MinLogLevel));
 
         std::unique_ptr<ResidencyManager> residencyManager =
-            std::unique_ptr<ResidencyManager>(new ResidencyManager(descriptor));
+            std::unique_ptr<ResidencyManager>(new ResidencyManager(descriptor, std::move(caps)));
 
         // Require automatic video memory budget updates.
         if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
@@ -257,7 +254,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor)
+    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Caps> caps)
         : mDevice(descriptor.Device),
           mAdapter(descriptor.Adapter),
           mMaxPctOfVideoMemoryToBudget(descriptor.MaxPctOfVideoMemoryToBudget == 0
@@ -269,7 +266,8 @@ namespace gpgmm::d3d12 {
           mIsBudgetRestricted(descriptor.MaxBudgetInBytes > 0),
           mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
                                                              : descriptor.EvictSizeInBytes),
-          mIsUMA(descriptor.IsUMA),
+          mIsUMA(caps->IsAdapterUMA() &&
+                 !(descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY)),
           mIsBudgetChangeEventsDisabled(descriptor.Flags &
                                         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &

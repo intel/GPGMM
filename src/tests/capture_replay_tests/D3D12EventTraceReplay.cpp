@@ -108,7 +108,6 @@ namespace {
     RESIDENCY_DESC ConvertAndApplyToResidencyDesc(const Json::Value& residencyDescJson,
                                                   const RESIDENCY_DESC& residencyDesc) {
         RESIDENCY_DESC newResidencyDesc = residencyDesc;
-        newResidencyDesc.IsUMA = residencyDescJson["IsUMA"].asBool();
         newResidencyDesc.Flags |= static_cast<RESIDENCY_FLAGS>(residencyDescJson["Flags"].asInt());
         newResidencyDesc.MaxPctOfVideoMemoryToBudget =
             residencyDescJson["MaxPctOfVideoMemoryToBudget"].asFloat();

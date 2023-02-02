@@ -34,6 +34,7 @@ namespace gpgmm::d3d12 {
 
     class BudgetUpdateTask;
     class BudgetUpdateEvent;
+    class Caps;
     class Fence;
     class Heap;
     class ResourceAllocator;
@@ -70,7 +71,7 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 
-        ResidencyManager(const RESIDENCY_DESC& descriptor);
+        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Caps> caps);
 
         HRESULT EnsureInBudget(uint64_t bytesToEvict,
                                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);

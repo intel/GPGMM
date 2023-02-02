@@ -137,7 +137,6 @@ namespace gpgmm::d3d12 {
         // Required
         desc.Adapter = mAdapter.Get();
         desc.Device = mDevice.Get();
-        desc.IsUMA = mCaps->IsAdapterUMA();
 
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 

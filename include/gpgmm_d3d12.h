@@ -305,6 +305,15 @@ namespace gpgmm::d3d12 {
         mechanism can be disabled where a pull-based method is used instead.
         */
         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD = 0x1,
+
+        /** \brief Specifies if unified memory architecture (UMA) is always disabled.
+
+        By default, UMA is enabled when the adapter supports the architecture.
+        UMA allows the residency manager to budget using a single memory segment.
+        Otherwise, the residency manager will have two budgets for local and non-local
+        memory segments, respectively.
+        */
+        RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY = 0x2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
@@ -325,18 +334,6 @@ namespace gpgmm::d3d12 {
         Required parameter. Use EnumAdapters to get the adapter.
         */
         IDXGIAdapter3* Adapter;
-
-        /** \brief Specifies if unified memory architecture (UMA) is enabled.
-
-        When UMA is enabled, the residency manager will budget using a single memory segment.
-        Else, when UMA is false, the residency manager will have two budgets for local and non-local
-        memory segments, respectively. If IsUMA is false and the adapter is discrete, this will
-        effectively double the amount of memory bandwidth. If IsUMA is true and the adapter is UMA,
-        using a single budget can reduce residency and memory overhead.
-
-        Required parameter. Use CheckFeatureSupport to determine if supported.
-        */
-        bool IsUMA;
 
         /** \brief Specifies residency options.
          */

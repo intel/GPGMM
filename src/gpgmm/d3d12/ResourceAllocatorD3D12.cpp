@@ -397,14 +397,6 @@ namespace gpgmm::d3d12 {
                     IID_PPV_ARGS(&residencyDesc.Adapter)));
             }
 
-            std::unique_ptr<Caps> caps;
-            {
-                Caps* ptr = nullptr;
-                ReturnIfFailed(Caps::CreateCaps(residencyDesc.Device, residencyDesc.Adapter, &ptr));
-                caps.reset(ptr);
-            }
-
-            residencyDesc.IsUMA = caps->IsAdapterUMA();
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
 

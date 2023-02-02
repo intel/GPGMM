@@ -499,7 +499,6 @@ index 214fa67f8..d909d4d2a 100644
 +    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
 +    residencyDesc.Adapter = adapter->GetHardwareAdapter();
 +    residencyDesc.Device = mD3d12Device.Get();
-+    residencyDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
 +        residencyDesc.Flags |= gpgmm::d3d12::RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
