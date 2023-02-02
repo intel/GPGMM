@@ -308,11 +308,6 @@ namespace gpgmm::d3d12 {
                     IID_PPV_ARGS(&residencyDesc.Adapter)));
             }
 
-            D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-            ReturnIfFailed(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE,
-                                                                     &arch, sizeof(arch)));
-            residencyDesc.IsUMA = arch.UMA;
-
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
         }

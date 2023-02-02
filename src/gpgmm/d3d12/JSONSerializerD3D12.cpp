@@ -259,7 +259,6 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
-        dict.AddItem("IsUMA", desc.IsUMA);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
