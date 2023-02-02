@@ -71,14 +71,20 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         return 0;
     }
 
+    D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
+    if (FAILED(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch,
+                                                         sizeof(arch)))) {
+        return 0;
+    }
+
     gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     D3D12_HEAP_PROPERTIES heapProperties =
         residencyDesc.Device->GetCustomHeapProperties(0, allocationDesc.HeapType);
 
-    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment = gpgmm::d3d12::GetMemorySegmentGroup(
-        heapProperties.MemoryPoolPreference, residencyDesc.IsUMA);
+    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
+        gpgmm::d3d12::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, arch.UMA);
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBufferDesc(kBufferMemorySize);
