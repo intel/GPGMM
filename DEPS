@@ -18,6 +18,10 @@ vars = {
 
   # GN CIPD package version.
   'gpgmm_gn_version': 'git_revision:bd99dbf98cbdefe18a4128189665c5761263bcfb',
+
+  # ninja CIPD package version.
+  # https://chrome-infra-packages.appspot.com/p/infra/3pp/tools/ninja
+  'gpgmm_ninja_version': 'version:2@1.8.2.chromium.3',
 }
 
 deps = {
@@ -82,7 +86,13 @@ deps = {
     'condition': 'checkout_mac or checkout_ios',
     'dep_type': 'cipd',
   },
-
+ 'third_party/ninja': {
+    'packages': [{
+        'package': 'infra/3pp/tools/ninja/${{platform}}',
+        'version': Var('gpgmm_ninja_version'),
+      }],
+    'dep_type': 'cipd',
+  },
   # Testing, GTest and GMock
   'testing': {
     'url': '{chromium_git}/chromium/src/testing@427915c5f68fc7e1eb6b031375e376254c761416',
