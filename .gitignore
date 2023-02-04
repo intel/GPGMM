@@ -13,6 +13,7 @@
 /third_party/googletest*
 /third_party/jsoncpp*
 /third_party/llvm-build
+/third_party/ninja
 /third_party/vulkan*
 /third_party/libFuzzer
 /third_party/*benchmark*
