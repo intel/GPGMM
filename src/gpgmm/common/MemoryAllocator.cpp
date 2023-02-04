@@ -147,10 +147,6 @@ namespace gpgmm {
         return kInvalidSize;
     }
 
-     uint64_t MemoryAllocator::GetMaxMemorySize() const {
-        return kInvalidSize;
-     }
-
     uint64_t MemoryAllocator::GetMemoryAlignment() const {
         return kNoRequiredAlignment;
     }
