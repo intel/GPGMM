@@ -198,6 +198,14 @@ namespace gpgmm {
         */
         virtual uint64_t GetMemorySize() const;
 
+        /** \brief Get the maximum memory size allowed by the MemoryAllocator.
+
+        If this allocator has no limit, kInvalidSize is returned;
+
+        \return Size of memory, in bytes.
+        */
+        virtual uint64_t GetMaxMemorySize() const;
+
         /** \brief Get the fixed-memory alignment of the MemoryAllocator.
 
         If this allocator only allocates memory using the same alignment, this value
