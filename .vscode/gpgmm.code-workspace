@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "git.autoRepositoryDetection": "openEditors",
+    // Forbid gclient DEPS appearing under source control.
+    "git.ignoredRepositories": [
+      "../buildtools",
+      "../build",
+      "../testing"
+    ]
+  }
+}
