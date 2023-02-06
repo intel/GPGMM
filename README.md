@@ -1,7 +1,7 @@
 | Build Config | Build Status |
 ---------------|--------------|
-| GN/Clang     | [![win_clang_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_rel_x64.yaml)[![win_clang_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_clang_dbg_x64.yaml)[![win_msvc_dbg_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64.yaml)[![win_msvc_rel_x64](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64.yaml) |
-| CMake/MSVC   | [![win_msvc_dbg_x64_cmake](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64_cmake.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_dbg_x64_cmake.yaml)[![win_msvc_rel_x64_cmake](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64_cmake.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_msvc_rel_x64_cmake.yaml)  |
+| GN/Clang     | [![win_x64_gn_clang_rel](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_rel.yaml)[![win_x64_gn_clang_dbg](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_dbg.yaml)[![win_x64_gn_msvc_dbg](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_dbg.yaml)[![win_x64_gn_msvc_rel](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_rel.yaml) |
+| CMake/MSVC   | [![win_x64_cmake_msvc_dbg](https://github.com/intel/GPGMM/actions/workflows/win_x64_cmake_msvc_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_cmake_msvc_dbg.yaml)[![win_x64_cmake_msvc_rel](https://github.com/intel/GPGMM/actions/workflows/win_x64_cmake_msvc_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_cmake_msvc_rel.yaml)  |
 
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/intel/gpgmm.svg)](http://isitmaintained.com/project/intel/gpgmm "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/intel/gpgmm.svg)](http://isitmaintained.com/project/intel/gpgmm "Percentage of issues still open")
 
@@ -70,7 +70,7 @@ shaderVisibleHeap.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
 ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;
 CreateHeapContext createHeapContext(heapDesc);
-gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager, 
+gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager,
       createHeapContext, &CreateHeapContext::CreateHeapCallbackWrapper,
       &descriptorHeap);
 
