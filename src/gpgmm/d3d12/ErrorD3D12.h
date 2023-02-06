@@ -22,13 +22,14 @@
 
 namespace gpgmm::d3d12 {
 
-#define ReturnIfNullptr(expr)                  \
-    {                                          \
-        if (GPGMM_UNLIKELY(expr == nullptr)) { \
-            return E_POINTER;                  \
-        }                                      \
-    }                                          \
-    for (;;)                                   \
+#define ReturnIfNullptr(expr)                                                 \
+    {                                                                         \
+        if (GPGMM_UNLIKELY(expr == nullptr)) {                                \
+            gpgmm::ErrorLog() << #expr << ": " << GetErrorMessage(E_POINTER); \
+            return E_POINTER;                                                 \
+        }                                                                     \
+    }                                                                         \
+    for (;;)                                                                  \
     break
 
 #define ReturnIfFailed(expr)                                           \

@@ -88,10 +88,7 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(createHeapFn(pCreateHeapContext, &pageable));
 
         // Pageable-based type is required for residency-managed heaps.
-        if (pageable == nullptr) {
-            gpgmm::ErrorLog() << "Unable to create heap because memory does not exist.";
-            return E_POINTER;
-        }
+        ReturnIfNullptr(pageable);
 
         GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
