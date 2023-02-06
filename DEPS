@@ -47,14 +47,6 @@ deps = {
     'dep_type': 'cipd',
     'condition': 'gpgmm_standalone and host_os == "linux"',
   },
-  'buildtools/mac': {
-    'packages': [{
-      'package': 'gn/gn/mac-${{arch}}',
-      'version': Var('gpgmm_gn_version'),
-    }],
-    'dep_type': 'cipd',
-    'condition': 'gpgmm_standalone and host_os == "mac"',
-  },
   'buildtools/win': {
     'packages': [{
       'package': 'gn/gn/windows-amd64',
@@ -75,16 +67,6 @@ deps = {
   'tools/clang': {
     'url': '{chromium_git}/chromium/src/tools/clang@44e5e39a90511e079e4b9bc2f753059f2fe6ac4b',
     'condition': 'gpgmm_standalone',
-  },
-  'tools/clang/dsymutil': {
-    'packages': [
-      {
-        'package': 'chromium/llvm-build-tools/dsymutil',
-        'version': 'M56jPzDv1620Rnm__jTMYS62Zi8rxHVq7yw0qeBFEgkC',
-      }
-    ],
-    'condition': 'checkout_mac or checkout_ios',
-    'dep_type': 'cipd',
   },
  'third_party/ninja': {
     'packages': [{
@@ -143,14 +125,6 @@ hooks = [
                '--arch=x64'],
   },
   {
-    # Update the Mac toolchain if possible, this makes builders use "hermetic XCode" which is
-    # is more consistent (only changes when rolling build/) and is cached.
-    'name': 'mac_toolchain',
-    'pattern': '.',
-    'condition': 'checkout_mac',
-    'action': ['python3', 'build/mac_toolchain.py'],
-  },
-  {
     # Update the Windows toolchain if necessary. Must run before 'clang' below.
     'name': 'win_toolchain',
     'pattern': '.',
@@ -186,17 +160,6 @@ hooks = [
                 '--no_auth',
                 '--bucket', 'chromium-clang-format',
                 '-s', 'buildtools/win/clang-format.exe.sha1',
-    ],
-  },
-  {
-    'name': 'clang_format_mac',
-    'pattern': '.',
-    'condition': 'host_os == "mac"',
-    'action': [ 'download_from_google_storage',
-                '--no_resume',
-                '--no_auth',
-                '--bucket', 'chromium-clang-format',
-                '-s', 'buildtools/mac/clang-format.sha1',
     ],
   },
   {
