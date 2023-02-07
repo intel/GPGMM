@@ -12,27 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_JSONSERIALIZER_H_
-#define GPGMM_COMMON_JSONSERIALIZER_H_
+#ifndef GPGMM_COMMON_MESSAGE_H_
+#define GPGMM_COMMON_MESSAGE_H_
 
-#include "gpgmm/utils/JSONEncoder.h"
+#include <string>
 
 namespace gpgmm {
 
-    // Forward declare common types.
-    struct MemoryAllocatorStats;
-    struct MemoryAllocationRequest;
-    struct MessageInfo;
+    enum class MessageId {
+        kUnknown,
+        kSizeExceeded,
+        kAlignmentMismatch,
+        kAllocatorFailed,
+        kPrefetchFailed,
+        kBudgetExceeded,
+        kBudgetUpdated,
+        kBudgetInvalid,
+    };
 
-    class JSONSerializer {
-      public:
-        static JSONDict Serialize();
-        static JSONDict Serialize(const MessageInfo& info);
-        static JSONDict Serialize(const MemoryAllocatorStats& info);
-        static JSONDict Serialize(const MemoryAllocationRequest& desc);
-        static JSONDict Serialize(const void* objectPtr);
+    struct MessageInfo {
+        std::string Description;
+        MessageId ID;
+    };
+
+    enum class MessageSeverity {
+        Debug,
+        Info,
+        Warning,
+        Error,
     };
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_JSONSERIALIZER_H_
+#endif  // GPGMM_COMMON_MESSAGE_H_

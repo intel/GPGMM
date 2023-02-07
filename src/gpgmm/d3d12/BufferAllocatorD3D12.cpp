@@ -48,7 +48,7 @@ namespace gpgmm::d3d12 {
 
         const uint64_t heapSize = AlignTo(request.SizeInBytes, request.Alignment);
         if (heapSize > request.SizeInBytes) {
-            DebugEvent(this, EventMessageId::kAlignmentMismatch)
+            DebugEvent(this, MessageId::kAlignmentMismatch)
                 << "Resource heap size is larger then the requested size (" +
                        std::to_string(heapSize) + " vs " + std::to_string(request.SizeInBytes) +
                        " bytes).";

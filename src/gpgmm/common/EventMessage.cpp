@@ -22,34 +22,34 @@
 
 namespace gpgmm {
 
-    LogSeverity GetDefaultEventMessageLevel() {
+    MessageSeverity GetDefaultEventMessageLevel() {
 #if defined(NDEBUG)
-        return LogSeverity::Info;
+        return MessageSeverity::Info;
 #else
-        return LogSeverity::Debug;
+        return MessageSeverity::Debug;
 #endif  // defined(NDEBUG)
     }
 
     // Messages with equal or greater to severity will be logged.
-    static LogSeverity gRecordEventLevel = GetDefaultEventMessageLevel();
+    static MessageSeverity gRecordEventLevel = GetDefaultEventMessageLevel();
     static std::mutex mMutex;
 
-    void SetEventMessageLevel(const LogSeverity& newLevel) {
+    void SetEventMessageLevel(const MessageSeverity& newLevel) {
         std::lock_guard<std::mutex> lock(mMutex);
         gRecordEventLevel = newLevel;
     }
 
-    LogSeverity GetEventMessageLevel() {
+    MessageSeverity GetEventMessageLevel() {
         std::lock_guard<std::mutex> lock(mMutex);
         return gRecordEventLevel;
     }
 
     // EventMessage
 
-    EventMessage::EventMessage(const LogSeverity& level,
+    EventMessage::EventMessage(const MessageSeverity& level,
                                const char* name,
                                const void* object,
-                               EventMessageId messageId)
+                               MessageId messageId)
         : mSeverity(level), mName(name), mObject(object), mMessageId(messageId) {
     }
 
@@ -60,29 +60,29 @@ namespace gpgmm {
                               << static_cast<int>(mMessageId) << ")";
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
-        ASSERT(mSeverity < LogSeverity::Warning);
+        ASSERT(mSeverity < MessageSeverity::Warning);
 #endif
 
         if (mSeverity >= GetEventMessageLevel()) {
-            EventMessageInfo message{description, mMessageId};
+            MessageInfo message{description, mMessageId};
             GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
         }
     }
 
-    EventMessage DebugEvent(const ObjectBase* object, EventMessageId messageId) {
-        return {LogSeverity::Debug, object->GetTypename(), object, messageId};
+    EventMessage DebugEvent(const ObjectBase* object, MessageId messageId) {
+        return {MessageSeverity::Debug, object->GetTypename(), object, messageId};
     }
 
-    EventMessage InfoEvent(const ObjectBase* object, EventMessageId messageId) {
-        return {LogSeverity::Info, object->GetTypename(), object, messageId};
+    EventMessage InfoEvent(const ObjectBase* object, MessageId messageId) {
+        return {MessageSeverity::Info, object->GetTypename(), object, messageId};
     }
 
-    EventMessage WarnEvent(const ObjectBase* object, EventMessageId messageId) {
-        return {LogSeverity::Warning, object->GetTypename(), object, messageId};
+    EventMessage WarnEvent(const ObjectBase* object, MessageId messageId) {
+        return {MessageSeverity::Warning, object->GetTypename(), object, messageId};
     }
 
-    EventMessage ErrorEvent(const ObjectBase* object, EventMessageId messageId) {
-        return {LogSeverity::Error, object->GetTypename(), object, messageId};
+    EventMessage ErrorEvent(const ObjectBase* object, MessageId messageId) {
+        return {MessageSeverity::Error, object->GetTypename(), object, messageId};
     }
 
 }  // namespace gpgmm

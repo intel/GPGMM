@@ -33,29 +33,29 @@ namespace gpgmm {
 
     static const char kLogTag[] = "GPGMM";
 
-    LogSeverity GetDefaultLogLevel() {
+    MessageSeverity GetDefaultLogLevel() {
 #if defined(NDEBUG)
-        return LogSeverity::Info;
+        return MessageSeverity::Info;
 #else
-        return LogSeverity::Debug;
+        return MessageSeverity::Debug;
 #endif  // defined(NDEBUG)
     }
 
     // Messages with equal or greater to severity will be logged.
-    static LogSeverity gLogLevel = GetDefaultLogLevel();
+    static MessageSeverity gLogLevel = GetDefaultLogLevel();
     static std::mutex mMutex;
 
     namespace {
 
-        const char* SeverityName(LogSeverity severity) {
+        const char* SeverityName(MessageSeverity severity) {
             switch (severity) {
-                case LogSeverity::Debug:
+                case MessageSeverity::Debug:
                     return "Debug";
-                case LogSeverity::Info:
+                case MessageSeverity::Info:
                     return "Info";
-                case LogSeverity::Warning:
+                case MessageSeverity::Warning:
                     return "Warning";
-                case LogSeverity::Error:
+                case MessageSeverity::Error:
                     return "Error";
                 default:
                     UNREACHABLE();
@@ -64,15 +64,15 @@ namespace gpgmm {
         }
 
 #if defined(GPGMM_PLATFORM_ANDROID)
-        android_LogPriority AndroidLogPriority(LogSeverity severity) {
+        android_LogPriority AndroidLogPriority(MessageSeverity severity) {
             switch (severity) {
-                case LogSeverity::Debug:
+                case MessageSeverity::Debug:
                     return ANDROID_LOG_INFO;
-                case LogSeverity::Info:
+                case MessageSeverity::Info:
                     return ANDROID_LOG_INFO;
-                case LogSeverity::Warning:
+                case MessageSeverity::Warning:
                     return ANDROID_LOG_WARN;
-                case LogSeverity::Error:
+                case MessageSeverity::Error:
                     return ANDROID_LOG_ERROR;
                 default:
                     UNREACHABLE();
@@ -83,19 +83,19 @@ namespace gpgmm {
 
     }  // anonymous namespace
 
-    void SetLogLevel(const LogSeverity& newLevel) {
+    void SetLogLevel(const MessageSeverity& newLevel) {
         std::lock_guard<std::mutex> lock(mMutex);
         gLogLevel = newLevel;
     }
 
-    LogSeverity GetLogLevel() {
+    MessageSeverity GetLogLevel() {
         std::lock_guard<std::mutex> lock(mMutex);
         return gLogLevel;
     }
 
     // LogMessage
 
-    LogMessage::LogMessage(LogSeverity severity) : mSeverity(severity) {
+    LogMessage::LogMessage(MessageSeverity severity) : mSeverity(severity) {
     }
 
     LogMessage::~LogMessage() {
@@ -109,7 +109,7 @@ namespace gpgmm {
         const char* severityName = SeverityName(mSeverity);
 
         FILE* outputStream = stdout;
-        if (mSeverity == LogSeverity::Warning || mSeverity == LogSeverity::Error) {
+        if (mSeverity == MessageSeverity::Warning || mSeverity == MessageSeverity::Error) {
             outputStream = stderr;
         }
 
@@ -143,19 +143,19 @@ namespace gpgmm {
     }
 
     LogMessage DebugLog() {
-        return {LogSeverity::Debug};
+        return {MessageSeverity::Debug};
     }
 
     LogMessage InfoLog() {
-        return {LogSeverity::Info};
+        return {MessageSeverity::Info};
     }
 
     LogMessage WarningLog() {
-        return {LogSeverity::Warning};
+        return {MessageSeverity::Warning};
     }
 
     LogMessage ErrorLog() {
-        return {LogSeverity::Error};
+        return {MessageSeverity::Error};
     }
 
     LogMessage DebugLog(const char* file, const char* function, int line) {
@@ -164,15 +164,15 @@ namespace gpgmm {
         return message;
     }
 
-    LogMessage Log(const LogSeverity& level) {
+    LogMessage Log(const MessageSeverity& level) {
         switch (level) {
-            case LogSeverity::Debug:
+            case MessageSeverity::Debug:
                 return DebugLog();
-            case LogSeverity::Info:
+            case MessageSeverity::Info:
                 return InfoLog();
-            case LogSeverity::Warning:
+            case MessageSeverity::Warning:
                 return WarningLog();
-            case LogSeverity::Error:
+            case MessageSeverity::Error:
                 return ErrorLog();
             default:
                 UNREACHABLE();

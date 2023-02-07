@@ -44,27 +44,20 @@
 //   // Get more information
 //   GPGMM_DEBUG() << texture.GetFormat();
 
+#include "gpgmm/common/Message.h"
+
 #include <sstream>
 
 namespace gpgmm {
 
-    // Log levels mostly used to signal intent where the log message is produced and used to route
-    // the message to the correct output.
-    enum class LogSeverity {
-        Debug,
-        Info,
-        Warning,
-        Error,
-    };
-
     // Messages of a given severity to be logged.
-    void SetLogLevel(const LogSeverity& level);
-    LogSeverity GetLogLevel();
+    void SetLogLevel(const MessageSeverity& level);
+    MessageSeverity GetLogLevel();
 
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
       public:
-        LogMessage(LogSeverity severity);
+        LogMessage(MessageSeverity severity);
         ~LogMessage();
 
         LogMessage(LogMessage&& other) = default;
@@ -80,7 +73,7 @@ namespace gpgmm {
         LogMessage(const LogMessage& other) = delete;
         LogMessage& operator=(const LogMessage& other) = delete;
 
-        LogSeverity mSeverity;
+        MessageSeverity mSeverity;
         std::ostringstream mStream;
     };
 
@@ -91,7 +84,7 @@ namespace gpgmm {
     LogMessage ErrorLog();
 
     // Create a LogMessage based on severity.
-    LogMessage Log(const LogSeverity& level);
+    LogMessage Log(const MessageSeverity& level);
 
     // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information
@@ -101,7 +94,7 @@ namespace gpgmm {
     // RAII helper to set the global log severity level.
     class ScopedLogLevel {
       public:
-        explicit ScopedLogLevel(const LogSeverity& newLevel) : mPrevLevel(GetLogLevel()) {
+        explicit ScopedLogLevel(const MessageSeverity& newLevel) : mPrevLevel(GetLogLevel()) {
             SetLogLevel(newLevel);
         }
 
@@ -110,7 +103,7 @@ namespace gpgmm {
         }
 
       private:
-        const LogSeverity mPrevLevel;
+        const MessageSeverity mPrevLevel;
     };
 
 }  // namespace gpgmm

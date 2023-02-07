@@ -19,20 +19,20 @@
 
 namespace gpgmm::d3d12 {
 
-    LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity) {
+    MessageSeverity GetMessageSeverity(D3D12_MESSAGE_SEVERITY messageSeverity) {
         switch (messageSeverity) {
             case D3D12_MESSAGE_SEVERITY_CORRUPTION:
             case D3D12_MESSAGE_SEVERITY_ERROR:
-                return LogSeverity::Error;
+                return MessageSeverity::Error;
             case D3D12_MESSAGE_SEVERITY_WARNING:
-                return LogSeverity::Warning;
+                return MessageSeverity::Warning;
             case D3D12_MESSAGE_SEVERITY_INFO:
-                return LogSeverity::Info;
+                return MessageSeverity::Info;
             case D3D12_MESSAGE_SEVERITY_MESSAGE:
-                return LogSeverity::Debug;
+                return MessageSeverity::Debug;
             default:
                 UNREACHABLE();
-                return LogSeverity::Debug;
+                return MessageSeverity::Debug;
         }
     }
 

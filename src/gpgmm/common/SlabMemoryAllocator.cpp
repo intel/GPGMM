@@ -290,7 +290,7 @@ namespace gpgmm {
                         }
 
                         if (prefetchedSlabAllocation != nullptr) {
-                            DebugEvent(this, EventMessageId::kPrefetchFailed)
+                            DebugEvent(this, MessageId::kPrefetchFailed)
                                 << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
                                 << prefetchedSlabAllocation->GetSize() << " bytes.";
                         }
@@ -469,7 +469,7 @@ namespace gpgmm {
             SafeDivide(mStats.PrefetchedMemoryMissesEliminated,
                        mStats.PrefetchedMemoryMissesEliminated + mStats.PrefetchedMemoryMisses);
         if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-            WarnEvent(this, EventMessageId::kPrefetchFailed)
+            WarnEvent(this, MessageId::kPrefetchFailed)
                 << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
                 << kPrefetchCoverageWarnMinThreshold * 100;
             return false;

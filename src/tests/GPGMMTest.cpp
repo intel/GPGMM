@@ -45,7 +45,7 @@ bool GPGMMTestBase::IsDumpEventsEnabled() const {
     return gTestEnv->IsDumpEventsEnabled();
 }
 
-gpgmm::LogSeverity GPGMMTestBase::GetLogLevel() const {
+gpgmm::MessageSeverity GPGMMTestBase::GetLogLevel() const {
     return gTestEnv->GetLogLevel();
 }
 
@@ -118,7 +118,7 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
         constexpr const char kDebugMode[] = "--debug";
         size_t arglen = sizeof(kDebugMode) - 1;
         if (strncmp(argv[i], kDebugMode, arglen) == 0) {
-            mLogLevel = gpgmm::LogSeverity::Debug;
+            mLogLevel = gpgmm::MessageSeverity::Debug;
             continue;
         }
 
@@ -128,19 +128,19 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             const char* level = argv[i] + arglen;
             if (level[0] != '\0') {
                 if (strcmp(level, "=DEBUG") == 0) {
-                    mLogLevel = gpgmm::LogSeverity::Debug;
+                    mLogLevel = gpgmm::MessageSeverity::Debug;
                 } else if (strcmp(level, "=INFO") == 0) {
-                    mLogLevel = gpgmm::LogSeverity::Info;
+                    mLogLevel = gpgmm::MessageSeverity::Info;
                 } else if (strcmp(level, "=WARN") == 0) {
-                    mLogLevel = gpgmm::LogSeverity::Warning;
+                    mLogLevel = gpgmm::MessageSeverity::Warning;
                 } else if (strcmp(level, "=ERROR") == 0) {
-                    mLogLevel = gpgmm::LogSeverity::Error;
+                    mLogLevel = gpgmm::MessageSeverity::Error;
                 } else {
                     gpgmm::ErrorLog() << "Invalid log level " << level << ".\n";
                     UNREACHABLE();
                 }
             } else {
-                mLogLevel = gpgmm::LogSeverity::Warning;
+                mLogLevel = gpgmm::MessageSeverity::Warning;
             }
             continue;
         }
@@ -174,6 +174,6 @@ bool GPGMMTestEnvironment::IsReportMemoryLeaksEnabled() const {
     return mIsReportMemoryLeaksEnabled;
 }
 
-gpgmm::LogSeverity GPGMMTestEnvironment::GetLogLevel() const {
+gpgmm::MessageSeverity GPGMMTestEnvironment::GetLogLevel() const {
     return mLogLevel;
 }
