@@ -310,7 +310,7 @@ namespace gpgmm::d3d12 {
             if (FAILED(result.GetErrorCode())) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    DebugEvent(allocator, EventMessageId::kAllocatorFailed)
+                    DebugEvent(allocator, MessageId::kAllocatorFailed)
                         << "Unable to allocate memory for request.";
                 }
                 return static_cast<HRESULT>(result.GetErrorCode());
@@ -321,7 +321,7 @@ namespace gpgmm::d3d12 {
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent(allocator, EventMessageId::kAllocatorFailed)
+                InfoEvent(allocator, MessageId::kAllocatorFailed)
                     << "Failed to create resource using allocation: " +
                            GetDeviceErrorMessage(device, hr);
                 allocator->DeallocateMemory(std::move(allocation));
@@ -438,7 +438,7 @@ namespace gpgmm::d3d12 {
         // Only if this allocator is without residency, does the min. log level have affect.
         // Note: the log level should be set before logging new messages.
         if (pResidencyManager == nullptr) {
-            SetLogLevel(GetLogSeverity(allocatorDescriptor.MinLogLevel));
+            SetLogLevel(GetMessageSeverity(allocatorDescriptor.MinLogLevel));
         }
 
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
@@ -532,7 +532,7 @@ namespace gpgmm::d3d12 {
             StartupEventTrace(allocatorDescriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags));
 
-            SetEventMessageLevel(GetLogSeverity(newDescriptor.MinRecordLevel));
+            SetEventMessageLevel(GetMessageSeverity(newDescriptor.MinRecordLevel));
         } else {
             // Do not override the event scope from a event trace already enabled.
             newDescriptor.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;
@@ -637,7 +637,7 @@ namespace gpgmm::d3d12 {
 #if !defined(GPGMM_DISABLE_SIZE_CACHE)
             {
                 // Temporary suppress log messages emitted from internal cache-miss requests.
-                ScopedLogLevel scopedLogLevel(LogSeverity::Info);
+                ScopedLogLevel scopedLogLevel(MessageSeverity::Info);
 
                 MemoryAllocationRequest cacheRequest = {};
                 cacheRequest.NeverAllocate = true;
@@ -1216,7 +1216,7 @@ namespace gpgmm::d3d12 {
                 return E_OUTOFMEMORY;
             }
 
-            InfoEvent(this, EventMessageId::kAllocatorFailed)
+            InfoEvent(this, MessageId::kAllocatorFailed)
                 << "Unable to allocate memory for a resource by using a heap, falling back to a "
                    "committed resource.";
         }

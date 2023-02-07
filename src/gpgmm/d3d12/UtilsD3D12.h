@@ -22,7 +22,7 @@
 
 namespace gpgmm::d3d12 {
 
-    LogSeverity GetLogSeverity(D3D12_MESSAGE_SEVERITY messageSeverity);
+    MessageSeverity GetMessageSeverity(D3D12_MESSAGE_SEVERITY messageSeverity);
     bool IsDepthFormat(DXGI_FORMAT format);
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
     HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name);

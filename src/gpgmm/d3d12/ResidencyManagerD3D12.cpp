@@ -68,7 +68,7 @@ namespace gpgmm::d3d12 {
                             break;
                         }
 
-                        gpgmm::DebugEvent(mResidencyManager, EventMessageId::kBudgetUpdated)
+                        gpgmm::DebugEvent(mResidencyManager, MessageId::kBudgetUpdated)
                             << "Updated budget from OS notification.";
                         break;
                     }
@@ -186,10 +186,10 @@ namespace gpgmm::d3d12 {
             StartupEventTrace(descriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~descriptor.RecordOptions.Flags));
 
-            SetEventMessageLevel(GetLogSeverity(descriptor.MinRecordLevel));
+            SetEventMessageLevel(GetMessageSeverity(descriptor.MinRecordLevel));
         }
 
-        SetLogLevel(GetLogSeverity(descriptor.MinLogLevel));
+        SetLogLevel(GetMessageSeverity(descriptor.MinLogLevel));
 
         std::unique_ptr<ResidencyManager> residencyManager =
             std::unique_ptr<ResidencyManager>(new ResidencyManager(descriptor, std::move(caps)));
@@ -514,7 +514,7 @@ namespace gpgmm::d3d12 {
         // Ignore when no budget was specified.
         if (pVideoMemoryInfo->Budget > 0 &&
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
-            WarnEvent(this, EventMessageId::kBudgetExceeded)
+            WarnEvent(this, MessageId::kBudgetExceeded)
                 << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                 << " GPU memory exceeds budget: "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
@@ -584,7 +584,7 @@ namespace gpgmm::d3d12 {
         // If a budget wasn't provided, it not possible to evict. This is because either the budget
         // update event has not happened yet or was invalid.
         if (pVideoMemoryInfo->Budget == 0) {
-            WarnEvent(this, EventMessageId::kBudgetInvalid)
+            WarnEvent(this, MessageId::kBudgetInvalid)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, IsUMA())
                 << ") was unable to evict memory because a budget was not specified.";
@@ -657,7 +657,7 @@ namespace gpgmm::d3d12 {
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
 
-            DebugEvent(this, EventMessageId::kBudgetExceeded)
+            DebugEvent(this, MessageId::kBudgetExceeded)
                 << "GPU page-out. Number of allocations: " << objectsToEvict.size() << " ("
                 << bytesEvicted << " bytes).";
         }
@@ -815,7 +815,7 @@ namespace gpgmm::d3d12 {
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
 
-        DebugEvent(this, EventMessageId::kBudgetExceeded)
+        DebugEvent(this, MessageId::kBudgetExceeded)
             << "GPU page-in. Number of allocations: " << numberOfObjectsToMakeResident << " ("
             << sizeToMakeResident << " bytes).";
 

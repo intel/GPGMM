@@ -15,6 +15,7 @@
 #ifndef GPGMM_COMMON_EVENT_MESSAGE_H_
 #define GPGMM_COMMON_EVENT_MESSAGE_H_
 
+#include "gpgmm/common/Message.h"
 #include "gpgmm/common/Object.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Log.h"
@@ -24,28 +25,12 @@
 
 namespace gpgmm {
 
-    enum class EventMessageId {
-        kUnknown,
-        kSizeExceeded,
-        kAlignmentMismatch,
-        kAllocatorFailed,
-        kPrefetchFailed,
-        kBudgetExceeded,
-        kBudgetUpdated,
-        kBudgetInvalid,
-    };
-
-    struct EventMessageInfo {
-        std::string Description;
-        EventMessageId ID;
-    };
-
     class EventMessage {
       public:
-        EventMessage(const LogSeverity& level,
+        EventMessage(const MessageSeverity& level,
                      const char* name,
                      const void* object,
-                     EventMessageId messageId = EventMessageId::kUnknown);
+                     MessageId messageId = MessageId::kUnknown);
         ~EventMessage();
 
         EventMessage(EventMessage&& other) = default;
@@ -58,28 +43,24 @@ namespace gpgmm {
         }
 
       private:
-        LogSeverity mSeverity;
+        MessageSeverity mSeverity;
         const char* mName = nullptr;
         const void* mObject = nullptr;
-        EventMessageId mMessageId = EventMessageId::kUnknown;
+        MessageId mMessageId = MessageId::kUnknown;
 
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const ObjectBase* object,
-                            EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage DebugEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
 
-    EventMessage InfoEvent(const ObjectBase* object,
-                           EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage InfoEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
 
-    EventMessage WarnEvent(const ObjectBase* object,
-                           EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage WarnEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
 
-    EventMessage ErrorEvent(const ObjectBase* object,
-                            EventMessageId messageId = EventMessageId::kUnknown);
+    EventMessage ErrorEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
 
     // Messages of a given severity to be recorded.
-    void SetEventMessageLevel(const LogSeverity& level);
+    void SetEventMessageLevel(const MessageSeverity& level);
 
 }  // namespace gpgmm
 
