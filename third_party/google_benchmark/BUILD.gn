@@ -1,89 +1,98 @@
-# Copyright 2019 The Chromium Authors. All rights reserved.
-# Use of this source code is governed by a BSD-style license that can be
-# found in the LICENSE file.
+# Copyright 2022 The GPGMM Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-import("buildconfig.gni")
+import("//build/config/gclient_args.gni")
+import("//build_overrides/build.gni")
 
-if (enable_google_benchmarks) {
-  config("benchmark_config") {
-    include_dirs = [ "src/include" ]
+config("benchmark_config") {
+  include_dirs = [ "src/include" ]
 
-    cflags = []
-    if (is_clang) {
-      # benchmark/benchmark.h emits clang "enumerator value is not representable" warning
-      # over the statement: "kInvert = 1U << 31U".
-      cflags += [ "-Wno-microsoft-enum-value" ]
+  cflags = []
+  if (is_clang) {
+    # benchmark/benchmark.h emits clang "enumerator value is not representable" warning
+    # over the statement: "kInvert = 1U << 31U".
+    cflags += [ "-Wno-microsoft-enum-value" ]
 
-      # benchmark/benchmark.cc emits clang "CSVReporter' is deprecated" warning over the
-      # statement "class BENCHMARK_DEPRECATED_MSG".
-      cflags += [ "-Wno-deprecated-declarations" ]
-    }
+    # benchmark/benchmark.cc emits clang "CSVReporter' is deprecated" warning over the
+    # statement "class BENCHMARK_DEPRECATED_MSG".
+    cflags += [ "-Wno-deprecated-declarations" ]
   }
+}
 
-  source_set("google_benchmark") {
-    testonly = true
+source_set("google_benchmark") {
+  testonly = true
 
-    public = [ "src/include/benchmark/benchmark.h" ]
+  public = [ "src/include/benchmark/benchmark.h" ]
 
-    sources = [
-      "src/src/arraysize.h",
-      "src/src/benchmark.cc",
-      "src/src/benchmark_api_internal.cc",
-      "src/src/benchmark_api_internal.h",
-      "src/src/benchmark_name.cc",
-      "src/src/benchmark_register.cc",
-      "src/src/benchmark_register.h",
-      "src/src/benchmark_runner.cc",
-      "src/src/benchmark_runner.h",
-      "src/src/check.h",
-      "src/src/colorprint.cc",
-      "src/src/colorprint.h",
-      "src/src/commandlineflags.cc",
-      "src/src/commandlineflags.h",
-      "src/src/complexity.cc",
-      "src/src/complexity.h",
-      "src/src/console_reporter.cc",
-      "src/src/counter.cc",
-      "src/src/counter.h",
-      "src/src/csv_reporter.cc",
-      "src/src/cycleclock.h",
-      "src/src/internal_macros.h",
-      "src/src/json_reporter.cc",
-      "src/src/log.h",
-      "src/src/mutex.h",
-      "src/src/perf_counters.cc",
-      "src/src/perf_counters.h",
-      "src/src/re.h",
-      "src/src/reporter.cc",
-      "src/src/sleep.cc",
-      "src/src/sleep.h",
-      "src/src/statistics.cc",
-      "src/src/statistics.h",
-      "src/src/string_util.cc",
-      "src/src/string_util.h",
-      "src/src/sysinfo.cc",
-      "src/src/thread_manager.h",
-      "src/src/thread_timer.h",
-      "src/src/timers.cc",
-      "src/src/timers.h",
-    ]
+  sources = [
+    "src/src/arraysize.h",
+    "src/src/benchmark.cc",
+    "src/src/benchmark_api_internal.cc",
+    "src/src/benchmark_api_internal.h",
+    "src/src/benchmark_name.cc",
+    "src/src/benchmark_register.cc",
+    "src/src/benchmark_register.h",
+    "src/src/benchmark_runner.cc",
+    "src/src/benchmark_runner.h",
+    "src/src/check.h",
+    "src/src/colorprint.cc",
+    "src/src/colorprint.h",
+    "src/src/commandlineflags.cc",
+    "src/src/commandlineflags.h",
+    "src/src/complexity.cc",
+    "src/src/complexity.h",
+    "src/src/console_reporter.cc",
+    "src/src/counter.cc",
+    "src/src/counter.h",
+    "src/src/csv_reporter.cc",
+    "src/src/cycleclock.h",
+    "src/src/internal_macros.h",
+    "src/src/json_reporter.cc",
+    "src/src/log.h",
+    "src/src/mutex.h",
+    "src/src/perf_counters.cc",
+    "src/src/perf_counters.h",
+    "src/src/re.h",
+    "src/src/reporter.cc",
+    "src/src/sleep.cc",
+    "src/src/sleep.h",
+    "src/src/statistics.cc",
+    "src/src/statistics.h",
+    "src/src/string_util.cc",
+    "src/src/string_util.h",
+    "src/src/sysinfo.cc",
+    "src/src/thread_manager.h",
+    "src/src/thread_timer.h",
+    "src/src/timers.cc",
+    "src/src/timers.h",
+  ]
 
-    all_dependent_configs = [ ":benchmark_config" ]
+  all_dependent_configs = [ ":benchmark_config" ]
 
-    configs -= [ "//build/config/compiler:chromium_code" ]
-    configs += [ "//build/config/compiler:no_chromium_code" ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
 
-    defines = [
-      # Tell gtest to always use standard regular expressions.
-      "HAVE_GNU_POSIX_REGEX=0",
-      "HAVE_POSIX_REGEX=0",
-      "HAVE_STD_REGEX=1",
-    ]
-  }
+  defines = [
+    # Tell gtest to always use standard regular expressions.
+    "HAVE_GNU_POSIX_REGEX=0",
+    "HAVE_POSIX_REGEX=0",
+    "HAVE_STD_REGEX=1",
+  ]
+}
 
-  source_set("benchmark_main") {
-    testonly = true
-    sources = [ "src/src/benchmark_main.cc" ]
-    deps = [ ":google_benchmark" ]
-  }
+source_set("benchmark_main") {
+  testonly = true
+  sources = [ "src/src/benchmark_main.cc" ]
+  deps = [ ":google_benchmark" ]
 }
