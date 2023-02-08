@@ -1,12 +1,16 @@
 var searchData=
 [
-  ['event_5frecord_5fflag_5fall_5fevents_0',['EVENT_RECORD_FLAG_ALL_EVENTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5fcalls_1',['EVENT_RECORD_FLAG_API_CALLS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5fobjects_2',['EVENT_RECORD_FLAG_API_OBJECTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5ftimings_3',['EVENT_RECORD_FLAG_API_TIMINGS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fcapture_4',['EVENT_RECORD_FLAG_CAPTURE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fcounters_5',['EVENT_RECORD_FLAG_COUNTERS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fnone_6',['EVENT_RECORD_FLAG_NONE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed',1,'gpgmm']]],
-  ['event_5frecord_5fscope_5fper_5finstance_7',['EVENT_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3',1,'gpgmm']]],
-  ['event_5frecord_5fscope_5fper_5fprocess_8',['EVENT_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613',1,'gpgmm']]]
+  ['gp_5fallocation_5fcreate_5falways_5fprefetch_5fmemory_0',['GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a3fcb49e1c85363cbbf59f0d3023ed97f',1,'gpgmm::vk']]],
+  ['gp_5fallocation_5fcreate_5fnever_5fallocate_5fmemory_1',['GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879aa7d68fef0e42f5e38dea75cd4258a392',1,'gpgmm::vk']]],
+  ['gp_5fallocation_5fcreate_5fnever_5fsuballocate_5fmemory_2',['GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a1628e2a0aae1b470e5c3a656b96a06ad',1,'gpgmm::vk']]],
+  ['gp_5fallocation_5fcreate_5fnone_3',['GP_ALLOCATION_CREATE_NONE',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a659bc5049b8287ce7553855539f4277a',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5falgorithm_5fbuddy_5fsystem_4',['GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea5de2117df95c59919ce8963d49b0f4de',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5falgorithm_5fdefault_5',['GP_ALLOCATOR_ALGORITHM_DEFAULT',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea570dcf26ea6b691771d84efd3fd5ebff',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5falgorithm_5ffixed_5fpool_6',['GP_ALLOCATOR_ALGORITHM_FIXED_POOL',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787eacdef595920add93787422ca014ae5aaf',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5falgorithm_5fsegmented_5fpool_7',['GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea9869547137c9b4bae14485fec1b4243d',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5falgorithm_5fslab_8',['GP_ALLOCATOR_ALGORITHM_SLAB',['../namespacegpgmm_1_1vk.html#a59e276245b71c30952b1e8b14c65787ea266566240e02692c3a84e320a9f864ec',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5falways_5fin_5fbudget_9',['GP_ALLOCATOR_CREATE_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a2235b2b471afa3fef190680ab74e1e0f',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5falways_5fon_5fdemand_10',['GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a664ff79da77a56b4216620ca7668bbde',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5fdisable_5fmemory_5fprefetch_11',['GP_ALLOCATOR_CREATE_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6ac334c08000f123197b4920083c5af7a7',1,'gpgmm::vk']]],
+  ['gp_5fallocator_5fcreate_5fnone_12',['GP_ALLOCATOR_CREATE_NONE',['../namespacegpgmm_1_1vk.html#acbd246f80e3453eadf5bc945f88a44b6a6eedcff4846b79716a6ea0720996ab34',1,'gpgmm::vk']]]
 ];

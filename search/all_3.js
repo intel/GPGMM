@@ -1,19 +1,12 @@
 var searchData=
 [
-  ['event_5frecord_5fflag_5fall_5fevents_0',['EVENT_RECORD_FLAG_ALL_EVENTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ae6ad71b1f78bb022637ddc29c61533d7',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5fcalls_1',['EVENT_RECORD_FLAG_API_CALLS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5ab103c9405a60646c5693ba7bd6968cf4',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5fobjects_2',['EVENT_RECORD_FLAG_API_OBJECTS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4b31b39d046561520405273aa4cd072e',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fapi_5ftimings_3',['EVENT_RECORD_FLAG_API_TIMINGS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a86166813c8156ba75a4cdd04bb468653',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fcapture_4',['EVENT_RECORD_FLAG_CAPTURE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a4f9093fd63d5b00e8c341f1f0deb8208',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fcounters_5',['EVENT_RECORD_FLAG_COUNTERS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a0f824bb8c631c41a49ac87574522a471',1,'gpgmm']]],
-  ['event_5frecord_5fflag_5fnone_6',['EVENT_RECORD_FLAG_NONE',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5a85d02c833ac5b3f3ae9374d0421c8bed',1,'gpgmm']]],
-  ['event_5frecord_5fflags_7',['EVENT_RECORD_FLAGS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5',1,'gpgmm']]],
-  ['event_5frecord_5foptions_8',['EVENT_RECORD_OPTIONS',['../structgpgmm_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html',1,'gpgmm']]],
-  ['event_5frecord_5fscope_9',['EVENT_RECORD_SCOPE',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370e',1,'gpgmm']]],
-  ['event_5frecord_5fscope_5fper_5finstance_10',['EVENT_RECORD_SCOPE_PER_INSTANCE',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eae8eae4a9218c08669020eabc4fa65fa3',1,'gpgmm']]],
-  ['event_5frecord_5fscope_5fper_5fprocess_11',['EVENT_RECORD_SCOPE_PER_PROCESS',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370eac821253072bebdbf1bd5ad9b7ee25613',1,'gpgmm']]],
-  ['eventscope_12',['EventScope',['../structgpgmm_1_1_e_v_e_n_t___r_e_c_o_r_d___o_p_t_i_o_n_s.html#a5611498b3b9e49c783e111511bdd0a94',1,'gpgmm::EVENT_RECORD_OPTIONS']]],
-  ['evictsizeinbytes_13',['EvictSizeInBytes',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab114ef99d3f1af9c49f493c1004b315f',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
-  ['executecommandlists_14',['ExecuteCommandLists',['../namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca',1,'gpgmm::d3d12']]],
-  ['extrarequiredheapflags_15',['ExtraRequiredHeapFlags',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd',1,'gpgmm::d3d12::ALLOCATION_DESC']]]
+  ['event_5frecord_5fflags_0',['EVENT_RECORD_FLAGS',['../namespacegpgmm_1_1d3d12.html#a1f163248588e3c8b50aa7f0573df60ed',1,'gpgmm::d3d12']]],
+  ['event_5frecord_5foptions_1',['EVENT_RECORD_OPTIONS',['../namespacegpgmm_1_1d3d12.html#a3a3c46bbf11c31a5c4bf6b480a275189',1,'gpgmm::d3d12']]],
+  ['eventrecordflags_2',['EventRecordFlags',['../namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122a',1,'gpgmm']]],
+  ['eventrecordoptions_3',['EventRecordOptions',['../structgpgmm_1_1_event_record_options.html',1,'gpgmm']]],
+  ['eventrecordscope_4',['EventRecordScope',['../namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19',1,'gpgmm']]],
+  ['eventscope_5',['EventScope',['../structgpgmm_1_1_event_record_options.html#a077ffd44a45c62a7ceba888474450414',1,'gpgmm::EventRecordOptions']]],
+  ['evictsizeinbytes_6',['EvictSizeInBytes',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab114ef99d3f1af9c49f493c1004b315f',1,'gpgmm::d3d12::RESIDENCY_DESC']]],
+  ['executecommandlists_7',['ExecuteCommandLists',['../namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca',1,'gpgmm::d3d12']]],
+  ['extrarequiredheapflags_8',['ExtraRequiredHeapFlags',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd',1,'gpgmm::d3d12::ALLOCATION_DESC']]]
 ];
