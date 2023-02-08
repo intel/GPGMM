@@ -118,7 +118,7 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
         constexpr const char kDebugMode[] = "--debug";
         size_t arglen = sizeof(kDebugMode) - 1;
         if (strncmp(argv[i], kDebugMode, arglen) == 0) {
-            mLogLevel = gpgmm::MessageSeverity::Debug;
+            mLogLevel = gpgmm::MessageSeverity::kDebug;
             continue;
         }
 
@@ -128,19 +128,19 @@ GPGMMTestEnvironment::GPGMMTestEnvironment(int argc, char** argv) {
             const char* level = argv[i] + arglen;
             if (level[0] != '\0') {
                 if (strcmp(level, "=DEBUG") == 0) {
-                    mLogLevel = gpgmm::MessageSeverity::Debug;
+                    mLogLevel = gpgmm::MessageSeverity::kDebug;
                 } else if (strcmp(level, "=INFO") == 0) {
-                    mLogLevel = gpgmm::MessageSeverity::Info;
+                    mLogLevel = gpgmm::MessageSeverity::kInfo;
                 } else if (strcmp(level, "=WARN") == 0) {
-                    mLogLevel = gpgmm::MessageSeverity::Warning;
+                    mLogLevel = gpgmm::MessageSeverity::kWarning;
                 } else if (strcmp(level, "=ERROR") == 0) {
-                    mLogLevel = gpgmm::MessageSeverity::Error;
+                    mLogLevel = gpgmm::MessageSeverity::kError;
                 } else {
                     gpgmm::ErrorLog() << "Invalid log level " << level << ".\n";
                     UNREACHABLE();
                 }
             } else {
-                mLogLevel = gpgmm::MessageSeverity::Warning;
+                mLogLevel = gpgmm::MessageSeverity::kWarning;
             }
             continue;
         }

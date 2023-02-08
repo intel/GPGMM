@@ -15,8 +15,6 @@
 #ifndef GPGMM_COMMON_MESSAGE_H_
 #define GPGMM_COMMON_MESSAGE_H_
 
-#include <string>
-
 namespace gpgmm {
 
     enum class MessageId {
@@ -30,16 +28,17 @@ namespace gpgmm {
         kBudgetInvalid,
     };
 
-    struct MessageInfo {
-        std::string Description;
-        MessageId ID;
+    enum class MessageSeverity {
+        kDebug,
+        kInfo,
+        kWarning,
+        kError,
     };
 
-    enum class MessageSeverity {
-        Debug,
-        Info,
-        Warning,
-        Error,
+    struct MessageInfo {
+        const char* Description;
+        MessageId ID;
+        MessageSeverity Severity;
     };
 
 }  // namespace gpgmm

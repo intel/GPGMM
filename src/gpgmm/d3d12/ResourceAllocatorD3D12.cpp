@@ -637,7 +637,7 @@ namespace gpgmm::d3d12 {
 #if !defined(GPGMM_DISABLE_SIZE_CACHE)
             {
                 // Temporary suppress log messages emitted from internal cache-miss requests.
-                ScopedLogLevel scopedLogLevel(MessageSeverity::Info);
+                ScopedLogLevel scopedLogLevel(MessageSeverity::kInfo);
 
                 MemoryAllocationRequest cacheRequest = {};
                 cacheRequest.NeverAllocate = true;

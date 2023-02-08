@@ -57,7 +57,7 @@ namespace gpgmm {
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
       public:
-        LogMessage(MessageSeverity severity);
+        LogMessage(MessageSeverity severity, MessageId messageId);
         ~LogMessage();
 
         LogMessage(LogMessage&& other) = default;
@@ -74,17 +74,18 @@ namespace gpgmm {
         LogMessage& operator=(const LogMessage& other) = delete;
 
         MessageSeverity mSeverity;
+        MessageId mMessageId;
         std::ostringstream mStream;
     };
 
     // Short-hands to create a LogMessage with the respective severity.
-    LogMessage DebugLog();
-    LogMessage InfoLog();
-    LogMessage WarningLog();
-    LogMessage ErrorLog();
+    LogMessage DebugLog(MessageId messageId = MessageId::kUnknown);
+    LogMessage InfoLog(MessageId messageId = MessageId::kUnknown);
+    LogMessage WarningLog(MessageId messageId = MessageId::kUnknown);
+    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown);
 
     // Create a LogMessage based on severity.
-    LogMessage Log(const MessageSeverity& level);
+    LogMessage Log(MessageSeverity severity, MessageId messageId);
 
     // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information
