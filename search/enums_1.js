@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['eventrecordflags_0',['EventRecordFlags',['../namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122a',1,'gpgmm']]],
-  ['eventrecordscope_1',['EventRecordScope',['../namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19',1,'gpgmm']]]
+  ['event_5frecord_5fflags_0',['EVENT_RECORD_FLAGS',['../namespacegpgmm.html#aec62a41f5057d5a779243779e4ccbae5',1,'gpgmm']]],
+  ['event_5frecord_5fscope_1',['EVENT_RECORD_SCOPE',['../namespacegpgmm.html#a9037e63a972352dec9d42cc49564370e',1,'gpgmm']]]
 ];
