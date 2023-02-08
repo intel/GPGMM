@@ -24,9 +24,9 @@ namespace gpgmm {
 
     MessageSeverity GetDefaultEventMessageLevel() {
 #if defined(NDEBUG)
-        return MessageSeverity::Info;
+        return MessageSeverity::kInfo;
 #else
-        return MessageSeverity::Debug;
+        return MessageSeverity::kDebug;
 #endif  // defined(NDEBUG)
     }
 
@@ -56,33 +56,33 @@ namespace gpgmm {
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity) << mName << "=" << ToString(mObject) << ": " << description << " ("
-                              << static_cast<int>(mMessageId) << ")";
+        gpgmm::Log(mSeverity, mMessageId)
+            << mName << "=" << ToString(mObject) << ": " << description;
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
-        ASSERT(mSeverity < MessageSeverity::Warning);
+        ASSERT(mSeverity < MessageSeverity::kWarning);
 #endif
 
         if (mSeverity >= GetEventMessageLevel()) {
-            MessageInfo message{description, mMessageId};
-            GPGMM_TRACE_EVENT_OBJECT_CALL(mName, message);
+            GPGMM_TRACE_EVENT_OBJECT_CALL(
+                mName, MessageInfo({description.c_str(), mMessageId, mSeverity}));
         }
     }
 
     EventMessage DebugEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::Debug, object->GetTypename(), object, messageId};
+        return {MessageSeverity::kDebug, object->GetTypename(), object, messageId};
     }
 
     EventMessage InfoEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::Info, object->GetTypename(), object, messageId};
+        return {MessageSeverity::kInfo, object->GetTypename(), object, messageId};
     }
 
     EventMessage WarnEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::Warning, object->GetTypename(), object, messageId};
+        return {MessageSeverity::kWarning, object->GetTypename(), object, messageId};
     }
 
     EventMessage ErrorEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::Error, object->GetTypename(), object, messageId};
+        return {MessageSeverity::kError, object->GetTypename(), object, messageId};
     }
 
 }  // namespace gpgmm

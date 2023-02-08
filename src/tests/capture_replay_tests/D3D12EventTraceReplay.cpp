@@ -383,7 +383,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
                         ASSERT_FALSE(snapshot.empty());
 
-                        if (GetLogLevel() <= gpgmm::MessageSeverity::Warning &&
+                        if (GetLogLevel() <= gpgmm::MessageSeverity::kWarning &&
                             mCaps->IsAdapterUMA() != snapshot["IsUMA"].asBool() &&
                             iterationIndex == 0) {
                             gpgmm::WarningLog()
@@ -441,7 +441,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         const Json::Value& snapshot = event["args"]["snapshot"];
                         ASSERT_FALSE(snapshot.empty());
 
-                        if (GetLogLevel() <= gpgmm::MessageSeverity::Warning &&
+                        if (GetLogLevel() <= gpgmm::MessageSeverity::kWarning &&
                             mCaps->GetMaxResourceHeapTierSupported() <
                                 snapshot["ResourceHeapTier"].asInt() &&
                             iterationIndex == 0) {

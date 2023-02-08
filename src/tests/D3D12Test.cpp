@@ -24,13 +24,13 @@ namespace gpgmm::d3d12 {
 
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(MessageSeverity MessageSeverity) {
         switch (MessageSeverity) {
-            case MessageSeverity::Error:
+            case MessageSeverity::kError:
                 return D3D12_MESSAGE_SEVERITY_ERROR;
-            case MessageSeverity::Warning:
+            case MessageSeverity::kWarning:
                 return D3D12_MESSAGE_SEVERITY_WARNING;
-            case MessageSeverity::Info:
+            case MessageSeverity::kInfo:
                 return D3D12_MESSAGE_SEVERITY_INFO;
-            case MessageSeverity::Debug:
+            case MessageSeverity::kDebug:
                 return D3D12_MESSAGE_SEVERITY_MESSAGE;
             default:
                 UNREACHABLE();

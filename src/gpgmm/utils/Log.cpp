@@ -35,9 +35,9 @@ namespace gpgmm {
 
     MessageSeverity GetDefaultLogLevel() {
 #if defined(NDEBUG)
-        return MessageSeverity::Info;
+        return MessageSeverity::kInfo;
 #else
-        return MessageSeverity::Debug;
+        return MessageSeverity::kDebug;
 #endif  // defined(NDEBUG)
     }
 
@@ -49,13 +49,13 @@ namespace gpgmm {
 
         const char* SeverityName(MessageSeverity severity) {
             switch (severity) {
-                case MessageSeverity::Debug:
+                case MessageSeverity::kDebug:
                     return "Debug";
-                case MessageSeverity::Info:
+                case MessageSeverity::kInfo:
                     return "Info";
-                case MessageSeverity::Warning:
+                case MessageSeverity::kWarning:
                     return "Warning";
-                case MessageSeverity::Error:
+                case MessageSeverity::kError:
                     return "Error";
                 default:
                     UNREACHABLE();
@@ -66,13 +66,13 @@ namespace gpgmm {
 #if defined(GPGMM_PLATFORM_ANDROID)
         android_LogPriority AndroidLogPriority(MessageSeverity severity) {
             switch (severity) {
-                case MessageSeverity::Debug:
+                case MessageSeverity::kDebug:
                     return ANDROID_LOG_INFO;
-                case MessageSeverity::Info:
+                case MessageSeverity::kInfo:
                     return ANDROID_LOG_INFO;
-                case MessageSeverity::Warning:
+                case MessageSeverity::kWarning:
                     return ANDROID_LOG_WARN;
-                case MessageSeverity::Error:
+                case MessageSeverity::kError:
                     return ANDROID_LOG_ERROR;
                 default:
                     UNREACHABLE();
@@ -95,7 +95,8 @@ namespace gpgmm {
 
     // LogMessage
 
-    LogMessage::LogMessage(MessageSeverity severity) : mSeverity(severity) {
+    LogMessage::LogMessage(MessageSeverity severity, MessageId messageId)
+        : mSeverity(severity), mMessageId(messageId) {
     }
 
     LogMessage::~LogMessage() {
@@ -109,7 +110,7 @@ namespace gpgmm {
         const char* severityName = SeverityName(mSeverity);
 
         FILE* outputStream = stdout;
-        if (mSeverity == MessageSeverity::Warning || mSeverity == MessageSeverity::Error) {
+        if (mSeverity == MessageSeverity::kWarning || mSeverity == MessageSeverity::kError) {
             outputStream = stderr;
         }
 
@@ -120,7 +121,8 @@ namespace gpgmm {
         if (IsDebuggerPresent()) {
             const std::string outputString =
                 std::string(kLogTag) + " " + std::string(severityName) +
-                "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage + "\n";
+                "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage + "(" +
+                ToString(static_cast<uint32_t>(mMessageId)) + ")" + "\n";
             OutputDebugStringA(outputString.c_str());
         }
 #endif  // defined(GPGMM_PLATFORM_WINDOWS)
@@ -136,26 +138,26 @@ namespace gpgmm {
                             fullMessage.c_str());
 #else  // defined(GPGMM_PLATFORM_ANDROID)
        // Note: we use fprintf because <iostream> includes static initializers.
-        fprintf(outputStream, "%s %s (tid:%s): %s\n", kLogTag, severityName,
-                ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str());
+        fprintf(outputStream, "%s %s (tid:%s): %s (%d)\n", kLogTag, severityName,
+                ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str(), mMessageId);
         fflush(outputStream);
 #endif
     }
 
-    LogMessage DebugLog() {
-        return {MessageSeverity::Debug};
+    LogMessage DebugLog(MessageId messageId) {
+        return {MessageSeverity::kDebug, messageId};
     }
 
-    LogMessage InfoLog() {
-        return {MessageSeverity::Info};
+    LogMessage InfoLog(MessageId messageId) {
+        return {MessageSeverity::kInfo, messageId};
     }
 
-    LogMessage WarningLog() {
-        return {MessageSeverity::Warning};
+    LogMessage WarningLog(MessageId messageId) {
+        return {MessageSeverity::kWarning, messageId};
     }
 
-    LogMessage ErrorLog() {
-        return {MessageSeverity::Error};
+    LogMessage ErrorLog(MessageId messageId) {
+        return {MessageSeverity::kError, messageId};
     }
 
     LogMessage DebugLog(const char* file, const char* function, int line) {
@@ -164,19 +166,19 @@ namespace gpgmm {
         return message;
     }
 
-    LogMessage Log(const MessageSeverity& level) {
-        switch (level) {
-            case MessageSeverity::Debug:
-                return DebugLog();
-            case MessageSeverity::Info:
-                return InfoLog();
-            case MessageSeverity::Warning:
-                return WarningLog();
-            case MessageSeverity::Error:
-                return ErrorLog();
+    LogMessage Log(MessageSeverity severity, MessageId messageId) {
+        switch (severity) {
+            case MessageSeverity::kDebug:
+                return DebugLog(messageId);
+            case MessageSeverity::kInfo:
+                return InfoLog(messageId);
+            case MessageSeverity::kWarning:
+                return WarningLog(messageId);
+            case MessageSeverity::kError:
+                return ErrorLog(messageId);
             default:
                 UNREACHABLE();
-                return {level};
+                return {severity, messageId};
         }
     }
 
