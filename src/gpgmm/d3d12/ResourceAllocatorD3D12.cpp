@@ -528,14 +528,14 @@ namespace gpgmm::d3d12 {
         }
 
         if (pResidencyManager == nullptr &&
-            newDescriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
+            newDescriptor.RecordOptions.Flags != EventRecordFlags::kNone) {
             StartupEventTrace(allocatorDescriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags));
 
             SetEventMessageLevel(GetMessageSeverity(newDescriptor.MinRecordLevel));
         } else {
             // Do not override the event scope from a event trace already enabled.
-            newDescriptor.RecordOptions.EventScope = EVENT_RECORD_SCOPE_PER_PROCESS;
+            newDescriptor.RecordOptions.EventScope = EventRecordScope::kPerProcess;
         }
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
@@ -574,7 +574,7 @@ namespace gpgmm::d3d12 {
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITTED),
           mIsHeapAlwaysCreatedInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
-                                       EVENT_RECORD_SCOPE_PER_INSTANCE),
+                                       EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
           mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
         ASSERT(mDevice != nullptr);

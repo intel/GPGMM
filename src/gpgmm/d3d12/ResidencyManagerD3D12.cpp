@@ -182,7 +182,7 @@ namespace gpgmm::d3d12 {
             return E_UNEXPECTED;
         }
 
-        if (descriptor.RecordOptions.Flags != EVENT_RECORD_FLAG_NONE) {
+        if (descriptor.RecordOptions.Flags != EventRecordFlags::kNone) {
             StartupEventTrace(descriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~descriptor.RecordOptions.Flags));
 
@@ -271,7 +271,7 @@ namespace gpgmm::d3d12 {
           mIsBudgetChangeEventsDisabled(descriptor.Flags &
                                         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
-                                       EVENT_RECORD_SCOPE_PER_INSTANCE),
+                                       EventRecordScope::kPerInstance),
           mInitialFenceValue(descriptor.InitialFenceValue) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 

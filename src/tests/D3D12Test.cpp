@@ -115,7 +115,7 @@ namespace gpgmm::d3d12 {
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {
-            desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
+            desc.RecordOptions.Flags |= EventRecordFlags::kAll;
             desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
 
@@ -141,7 +141,7 @@ namespace gpgmm::d3d12 {
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {
-            desc.RecordOptions.Flags |= EVENT_RECORD_FLAG_ALL_EVENTS;
+            desc.RecordOptions.Flags |= EventRecordFlags::kAll;
             desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
         }

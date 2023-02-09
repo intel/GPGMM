@@ -99,72 +99,72 @@ namespace gpgmm {
         kSubAllocatedWithin = 3,
     };
 
-   /** \enum EVENT_RECORD_FLAGS
-    Represents different event categories to record.
-    */
-    enum EVENT_RECORD_FLAGS {
+    /** \enum EventRecordFlags
+     Represents different event categories to record.
+     */
+    enum EventRecordFlags {
 
         /** \brief Record nothing.
          */
-        EVENT_RECORD_FLAG_NONE = 0x0,
+        kNone = 0x0,
 
         /** \brief Record lifetimes of API objects created by GPGMM.
          */
-        EVENT_RECORD_FLAG_API_OBJECTS = 0x1,
+        kApiObjects = 0x1,
 
         /** \brief Record API calls made to GPGMM.
          */
-        EVENT_RECORD_FLAG_API_CALLS = 0x2,
+        kApiCalls = 0x2,
 
         /** \brief Record duration of GPGMM API calls.
          */
-        EVENT_RECORD_FLAG_API_TIMINGS = 0x4,
+        kApiTimings = 0x4,
 
         /** \brief Record metrics made to GPGMM API calls.
          */
-        EVENT_RECORD_FLAG_COUNTERS = 0x8,
+        kCounters = 0x8,
 
         /** \brief Record events required for playback.
 
-         Bitwise OR'd combination of EVENT_RECORD_FLAG_API_OBJECTS and
-         EVENT_RECORD_FLAG_API_CALLS.
+         Bitwise OR'd combination of kApiObjects and
+         kApiCalls.
          */
-        EVENT_RECORD_FLAG_CAPTURE = 0x3,
+        kCapture = 0x3,
 
         /** \brief Record everything.
          */
-        EVENT_RECORD_FLAG_ALL_EVENTS = 0xFF,
+        kAll = 0xFF,
     };
 
-    /** \enum EVENT_RECORD_SCOPE
+    /** \enum EventRecordScope
     Represents recording scopes to limit event recording.
     */
-    enum EVENT_RECORD_SCOPE {
+    enum EventRecordScope {
 
         /** \brief Scopes events per process (or multiple instances).
          */
-        EVENT_RECORD_SCOPE_PER_PROCESS = 0,
+        kPerProcess = 0,
 
         /** \brief Scopes events per instance.
          */
-        EVENT_RECORD_SCOPE_PER_INSTANCE = 1,
+        kPerInstance = 1,
     };
 
-    /** \struct EVENT_RECORD_OPTIONS
+    /** \struct EventRecordOptions
     Represents additional controls for recording.
     */
-    struct EVENT_RECORD_OPTIONS {
+    struct EventRecordOptions {
         /** \brief Flags used to decide what to record.
 
         Optional parameter. By default, nothing is recorded.
         */
-        EVENT_RECORD_FLAGS Flags;
+        EventRecordFlags Flags;
 
         /** \brief Specifies the scope of the events.
 
         Optional parameter. By default, recording is per process.
         */
-        EVENT_RECORD_SCOPE EventScope;
+        EventRecordScope EventScope;
 
         /** \brief Record detailed timing events.
 

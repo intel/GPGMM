@@ -509,8 +509,8 @@ index 214fa67f8..d909d4d2a 100644
 +    }
 +
 +    if (IsToggleEnabled(Toggle::DumpResourceAllocator)) {
-+        residencyDesc.RecordOptions.Flags |= gpgmm::EVENT_RECORD_FLAG_ALL_EVENTS;
-+        residencyDesc.RecordOptions.EventScope = gpgmm::EVENT_RECORD_SCOPE_PER_INSTANCE;
++        residencyDesc.RecordOptions.Flags |= gpgmm::EventRecordFlags::kAll;
++        residencyDesc.RecordOptions.EventScope = gpgmm::EventRecordScope::kPerInstance;
 +        residencyDesc.RecordOptions.TraceFile = "dawn_resource_allocator_dump.json";
 +    }
 +
