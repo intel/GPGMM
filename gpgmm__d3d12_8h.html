@@ -98,7 +98,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">gpgmm::d3d12::RESIDENCY_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html">gpgmm::d3d12::RESIDENCY_MANAGER_STATS</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html">gpgmm::d3d12::RESIDENCY_STATS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">gpgmm::d3d12::RESOURCE_ALLOCATION_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,6 +126,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3e40b4972a3aab0c61cc965fc1023f9d">gpgmm::d3d12::CreateHeapFn</a> = HRESULT(*)(void *pCreateHeapContext, ID3D12Pageable **ppPageableOut)</td></tr>
 <tr class="memdesc:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function used to create a ID3D12Pageable.  <br /></td></tr>
 <tr class="separator:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f163248588e3c8b50aa7f0573df60ed"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1f163248588e3c8b50aa7f0573df60ed">gpgmm::d3d12::EVENT_RECORD_FLAGS</a> = EventRecordFlags</td></tr>
+<tr class="separator:a1f163248588e3c8b50aa7f0573df60ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a3c46bbf11c31a5c4bf6b480a275189">gpgmm::d3d12::EVENT_RECORD_OPTIONS</a> = EventRecordOptions</td></tr>
+<tr class="separator:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a> = MemoryAllocatorStats</td></tr>
 <tr class="separator:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -217,9 +221,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae167bcbc0de3174b47fb49d61872a460"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae167bcbc0de3174b47fb49d61872a460">gpgmm::d3d12::SetResidencyState</a> (IHeap *pHeap, const RESIDENCY_STATUS &amp;state)=0</td></tr>
 <tr class="memdesc:ae167bcbc0de3174b47fb49d61872a460"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the residency status of a heap.  <br /></td></tr>
 <tr class="separator:ae167bcbc0de3174b47fb49d61872a460"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1912b5f127166830ad430c966ce5dfd3"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1912b5f127166830ad430c966ce5dfd3">gpgmm::d3d12::QueryStats</a> (RESIDENCY_MANAGER_STATS *pResidencyManagerStats)=0</td></tr>
-<tr class="memdesc:a1912b5f127166830ad430c966ce5dfd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current residency usage.  <br /></td></tr>
-<tr class="separator:a1912b5f127166830ad430c966ce5dfd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ec6b614f88b7394a19c0ae5df63990"><td class="memItemLeft" align="right" valign="top">virtual RESIDENCY_STATS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a99ec6b614f88b7394a19c0ae5df63990">gpgmm::d3d12::GetStats</a> () const =0</td></tr>
+<tr class="memdesc:a99ec6b614f88b7394a19c0ae5df63990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current residency manager usage.  <br /></td></tr>
+<tr class="separator:a99ec6b614f88b7394a19c0ae5df63990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a821820440ac096a41512b0008c9b6ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">gpgmm::d3d12::CreateResidencyManager</a> (const RESIDENCY_DESC &amp;descriptor, IResidencyManager **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a821820440ac096a41512b0008c9b6ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <br /></td></tr>
 <tr class="separator:a821820440ac096a41512b0008c9b6ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,9 +251,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a9dc7289d51745c7094d012d211e78bd6"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9dc7289d51745c7094d012d211e78bd6">gpgmm::d3d12::ReleaseMemory</a> (uint64_t bytesToRelease)=0</td></tr>
 <tr class="memdesc:a9dc7289d51745c7094d012d211e78bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
 <tr class="separator:a9dc7289d51745c7094d012d211e78bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">gpgmm::d3d12::QueryStats</a> (RESOURCE_ALLOCATOR_STATS *pResourceAllocatorStats)=0</td></tr>
-<tr class="memdesc:a8c629ea6a1ef674642afb0519170c5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
-<tr class="separator:a8c629ea6a1ef674642afb0519170c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">gpgmm::d3d12::CheckFeatureSupport</a> (ALLOCATOR_FEATURE feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
 <tr class="memdesc:a6ffa8695a413186d32f9931dd8d3f6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
 <tr class="separator:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memSeparator" colspan="2">&#160;</td></tr>

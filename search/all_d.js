@@ -10,7 +10,7 @@ var searchData=
   ['residency_5fflag_5fnever_5fupdate_5fbudget_5fon_5fworker_5fthread_7',['RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fnone_8',['RESIDENCY_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e',1,'gpgmm::d3d12']]],
   ['residency_5fflags_9',['RESIDENCY_FLAGS',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73',1,'gpgmm::d3d12']]],
-  ['residency_5fmanager_5fstats_10',['RESIDENCY_MANAGER_STATS',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]],
+  ['residency_5fstats_10',['RESIDENCY_STATS',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html',1,'gpgmm::d3d12']]],
   ['residency_5fstatus_11',['RESIDENCY_STATUS',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c',1,'gpgmm::d3d12']]],
   ['residency_5fstatus_5fcurrent_5fresident_12',['RESIDENCY_STATUS_CURRENT_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2',1,'gpgmm::d3d12']]],
   ['residency_5fstatus_5fpending_5fresidency_13',['RESIDENCY_STATUS_PENDING_RESIDENCY',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a',1,'gpgmm::d3d12']]],
