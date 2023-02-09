@@ -123,7 +123,7 @@ namespace gpgmm::d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
-        RESIDENCY_STATS GetStats() const override;
+        HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -218,7 +218,7 @@ namespace gpgmm::d3d12 {
                                ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         uint64_t ReleaseMemory(uint64_t bytesToRelease) override;
-        RESOURCE_ALLOCATOR_STATS GetStats() const override;
+        HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) override;
         HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;

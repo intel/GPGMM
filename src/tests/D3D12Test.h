@@ -19,6 +19,7 @@
 
 #include <vector>
 
+#include <gpgmm_d3d12.h>
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
@@ -36,8 +37,14 @@ namespace gpgmm::d3d12 {
 
     class Caps;
 
+    GPGMM_INTERFACE IResourceAllocator;
+    GPGMM_INTERFACE IResidencyManager;
+
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(MessageSeverity MessageSeverity);
     long GetRefCount(IUnknown* unknown);
+
+    RESOURCE_ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator);
+    RESIDENCY_MANAGER_STATS GetStats(ComPtr<IResidencyManager> residencyManager);
 
     class D3D12TestBase : public GPGMMTestBase {
       public:

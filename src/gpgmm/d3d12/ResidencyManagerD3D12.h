@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
 
-        RESIDENCY_STATS GetStats() const override;
+        HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 
         DEFINE_Unknown_OVERRIDES()
 
@@ -84,7 +84,7 @@ namespace gpgmm::d3d12 {
 
         HRESULT InsertHeapInternal(Heap* heap);
 
-        RESIDENCY_STATS GetStatsInternal() const;
+        HRESULT QueryStatsInternal(RESIDENCY_MANAGER_STATS* pResidencyManagerStats);
 
         friend BudgetUpdateTask;
         HRESULT UpdateMemorySegments();
@@ -139,7 +139,7 @@ namespace gpgmm::d3d12 {
 
         VideoMemorySegment mLocalVideoMemorySegment;
         VideoMemorySegment mNonLocalVideoMemorySegment;
-        RESIDENCY_STATS mStats = {};
+        RESIDENCY_MANAGER_STATS mStats = {};
 
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
     };

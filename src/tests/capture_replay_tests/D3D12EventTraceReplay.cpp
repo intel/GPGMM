@@ -301,7 +301,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             playbackContext.currentAllocatorID);
                         ASSERT_TRUE(it != playbackContext.CreatedAllocatorsToID.end());
 
-                        IResourceAllocator* resourceAllocator =
+                        ComPtr<IResourceAllocator> resourceAllocator =
                             playbackContext
                                 .CreatedAllocatorsToID[playbackContext.currentAllocatorID]
                                 .Get();
@@ -330,7 +330,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         mReplayedMemoryStats.PeakUsage =
-                            std::max(resourceAllocator->GetStats().UsedMemoryUsage,
+                            std::max(GetStats(resourceAllocator).UsedMemoryUsage,
                                      mReplayedMemoryStats.PeakUsage);
 
                     } break;
