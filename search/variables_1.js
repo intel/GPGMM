@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['currentmemorycount_0',['CurrentMemoryCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html#ad01b4b74f7bd33e0fe403edfdcbdb28a',1,'gpgmm::d3d12::RESIDENCY_STATS']]],
-  ['currentmemoryusage_1',['CurrentMemoryUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___s_t_a_t_s.html#aacf21f154fb7a4b4bc717b5dd74a63e7',1,'gpgmm::d3d12::RESIDENCY_STATS']]]
+  ['currentmemorycount_0',['CurrentMemoryCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html#af570674ff491d0e73fd3f4b7b2527492',1,'gpgmm::d3d12::RESIDENCY_MANAGER_STATS']]],
+  ['currentmemoryusage_1',['CurrentMemoryUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html#a9f34f84b57f6c77c09ed77894cd21430',1,'gpgmm::d3d12::RESIDENCY_MANAGER_STATS']]]
 ];
