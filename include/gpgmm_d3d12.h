@@ -37,6 +37,10 @@
 
 #define GPGMM_INTERFACE struct
 
+namespace gpgmm {
+    DEFINE_ENUM_FLAG_OPERATORS(EventRecordFlags)  // Provided by <windows.h>
+}
+
 namespace gpgmm::d3d12 {
 
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
@@ -276,10 +280,7 @@ namespace gpgmm::d3d12 {
         virtual HRESULT Reset() = 0;
     };
 
-    using EVENT_RECORD_FLAGS = EventRecordFlags;
     using EVENT_RECORD_OPTIONS = EventRecordOptions;
-
-    DEFINE_ENUM_FLAG_OPERATORS(EVENT_RECORD_FLAGS)
 
     /** \brief  Create a residency list or collection of heaps to manage together for residency.
 
