@@ -199,8 +199,8 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESIDENCY_STATS ResidencyManager::GetStats() const {
-        return {0, 0};
+    HRESULT ResidencyManager::QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) {
+        return E_NOTIMPL;
     }
 
     ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor)
@@ -384,8 +384,8 @@ namespace gpgmm::d3d12 {
         return 0;
     }
 
-    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStats() const {
-        return mStats;
+    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
+        return E_NOTIMPL;
     }
 
     HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,

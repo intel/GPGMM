@@ -413,10 +413,10 @@ namespace gpgmm::d3d12 {
         uint64_t InitialFenceValue;
     };
 
-    /** \struct RESIDENCY_STATS
+    /** \struct RESIDENCY_MANAGER_STATS
     Additional information about residency manager usage.
     */
-    struct RESIDENCY_STATS {
+    struct RESIDENCY_MANAGER_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
          */
         uint64_t CurrentMemoryUsage;
@@ -506,11 +506,15 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT SetResidencyState(IHeap * pHeap, const RESIDENCY_STATUS& state) = 0;
 
-        /** \brief  Return the current residency manager usage.
+        /** \brief  Query the current residency usage.
 
-        \return A RESIDENCY_STATS struct.
+        @param pResidencyManagerStats A pointer to a RESIDENCY_MANAGER_STATS structure or NULL if
+        statistics information should only be gathered for recording.
+
+        \return Returns S_OK if successful. Returns S_FALSE if statistics information was only
+        gathered for recording.
         */
-        virtual RESIDENCY_STATS GetStats() const = 0;
+        virtual HRESULT QueryStats(RESIDENCY_MANAGER_STATS * pResidencyManagerStats) = 0;
     };
 
     /** \brief  Create residency residency manager to manage video memory.
@@ -1145,15 +1149,20 @@ namespace gpgmm::d3d12 {
         */
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease) = 0;
 
-        /** \brief  Return the current allocator usage.
+        /** \brief  Query the current allocator usage.
 
         Returned info can be used to monitor memory usage per allocator.
         For example, the amount of internal fragmentation is equal to UsedBlockUsage /
         UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage /
         (UsedMemoryUsage + FreeMemoryUsage) * 100%.
 
+        @param pResourceAllocatorStats A pointer to a RESOURCE_ALLOCATOR_STATS structure or NULL if
+        statistics information should only be gathered for recording.
+
+        \return Returns S_OK if successful. Returns S_FALSE if statistics information was only
+        gathered for recording.
         */
-        virtual RESOURCE_ALLOCATOR_STATS GetStats() const = 0;
+        virtual HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS * pResourceAllocatorStats) = 0;
 
         /** \brief Gets information about the features that are supported by the resource allocator.
 

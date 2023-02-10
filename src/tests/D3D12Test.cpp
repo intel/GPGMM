@@ -18,6 +18,8 @@
 
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
+#include "gpgmm/d3d12/ResidencyManagerD3D12.h"
+#include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm::d3d12 {
@@ -44,6 +46,18 @@ namespace gpgmm::d3d12 {
         }
         unknown->AddRef();
         return unknown->Release();
+    }
+
+    RESOURCE_ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator) {
+        RESOURCE_ALLOCATOR_STATS stats = {};
+        resourceAllocator->QueryStats(&stats);
+        return stats;
+    }
+
+    RESIDENCY_MANAGER_STATS GetStats(ComPtr<IResidencyManager> residencyManager) {
+        RESIDENCY_MANAGER_STATS stats = {};
+        residencyManager->QueryStats(&stats);
+        return stats;
     }
 
     void D3D12TestBase::SetUp() {

@@ -866,7 +866,7 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            GetStatsInternal();
+            QueryStatsInternal(nullptr);
         }
 
         return bytesReleased;
@@ -896,7 +896,7 @@ namespace gpgmm::d3d12 {
 
         // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
-            GetStatsInternal();
+            ReturnIfFailed(QueryStatsInternal(nullptr));
         }
 
 #if defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS)
@@ -1049,7 +1049,10 @@ namespace gpgmm::d3d12 {
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
-                request.AvailableForAllocation = GetStatsInternal().FreeMemoryUsage;
+                RESOURCE_ALLOCATOR_STATS allocationStats = {};
+                ReturnIfFailed(QueryStatsInternal(&allocationStats));
+
+                request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
                 DebugEvent(this) << "Current usage exceeded budget ("
                                  << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
@@ -1403,12 +1406,13 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStats() const {
+    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return GetStatsInternal();
+        return QueryStatsInternal(pResourceAllocatorStats);
     }
 
-    RESOURCE_ALLOCATOR_STATS ResourceAllocator::GetStatsInternal() const {
+    HRESULT ResourceAllocator::QueryStatsInternal(
+        RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.GetInfo");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
@@ -1443,7 +1447,13 @@ namespace gpgmm::d3d12 {
             "GPU allocation size cache hits (%)",
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
-        return result;
+        if (pResourceAllocatorStats != nullptr) {
+            *pResourceAllocatorStats = result;
+        } else {
+            return S_FALSE;
+        }
+
+        return S_OK;
     }
 
     // static
