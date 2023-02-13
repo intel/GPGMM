@@ -165,18 +165,22 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief Specifies heaps options.
-         */
-        HEAP_FLAGS Flags;
-
         /** \brief Specifies the memory segment to use for residency.
 
-        Allows any heap to specify a segment which does not have a attributed heap type.
+        Required parameter.
         */
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
 
+        /** \brief Specifies heaps options.
+
+        Optional parameter. By default, no flags are specified or HEAP_FLAG_NONE.
+        */
+        HEAP_FLAGS Flags;
+
         /** \brief Debug name associated with the heap.
-         */
+
+        Optional parameter. By default, no name is associated.
+        */
         LPCWSTR DebugName;
     };
 
@@ -268,7 +272,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to Heap about to be added.
 
-        \return S_OK if heap was added, else error.
+        \return Returns S_OK if successfull.
         */
         virtual HRESULT Add(IHeap * pHeap) = 0;
 
@@ -338,7 +342,9 @@ namespace gpgmm::d3d12 {
         IDXGIAdapter3* Adapter;
 
         /** \brief Specifies residency options.
-         */
+
+        Optional parameter. By default, no flags are specified or RESIDENCY_FLAG_NONE.
+        */
         RESIDENCY_FLAGS Flags;
 
         /** \brief Minimum severity level to record messages.
@@ -919,8 +925,8 @@ namespace gpgmm::d3d12 {
         ResourceAllocation::GetOffsetFromResource().
 
         The app developer must either check if the allocator supports sub-allocation within resource
-        beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a command
-        single queue is used since not all devices guarentee command queue accesses are coherent
+        beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a single
+        command queue is used since not all devices guarentee command queue accesses are coherent
         between sub-allocations within the same resource.
         */
         ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
@@ -954,7 +960,7 @@ namespace gpgmm::d3d12 {
 
         With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
         This enables better resource optimization during allocation. However, certain heap flags or
-        access-patterns may require or beneifit from D3D12_HEAP_TYPE. For example,
+        access-patterns may beneifit specifying D3D12_HEAP_TYPE. For example,
         D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
         as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
         properties are always write-combined.
@@ -1137,19 +1143,20 @@ namespace gpgmm::d3d12 {
         When pooling is enabled, the allocator will retain resource heaps in order to speed-up
         subsequent resource allocation requests. These resource allocations count against the
         app's memory usage and in general, will lead to increased memory usage by the overall
-        system. Apps should call ReleaseResourceHeaps() when going idle for a period of time since there is
-        a brief performance hit when the internal resource heaps get reallocated by the OS.
+        system. Apps should call ReleaseResourceHeaps() when going idle for a period of time since
+        there is a brief performance hit when the internal resource heaps get reallocated by the OS.
 
         @param bytesToRelease Amount of memory to release, in bytes. A value of UINT64_MAX
         releases ALL memory held by the allocator.
-        @param pBytesReleased Optional pointer to integer which recieves the amount of memory released, in
-        bytes.
+        @param pBytesReleased Optional pointer to integer which recieves the amount of memory
+        released, in bytes.
 
         \return Returns S_OK if successfully released equal to or greater than the memory amount
         specified. Or S_FALSE if the released size was smaller, there was not enough memory or
         larger if releasable memory doesn't exactly total up to the amount.
         */
-        virtual HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t * pBytesReleased) = 0;
+        virtual HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease,
+                                             uint64_t * pBytesReleased) = 0;
 
         /** \brief  Query the current allocator usage.
 
