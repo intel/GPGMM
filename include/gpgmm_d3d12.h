@@ -1137,17 +1137,19 @@ namespace gpgmm::d3d12 {
         When pooling is enabled, the allocator will retain resource heaps in order to speed-up
         subsequent resource allocation requests. These resource allocations count against the
         app's memory usage and in general, will lead to increased memory usage by the overall
-        system. Apps should call ReleaseMemory() when going idle for a period of time since there is
+        system. Apps should call ReleaseResourceHeaps() when going idle for a period of time since there is
         a brief performance hit when the internal resource heaps get reallocated by the OS.
 
         @param bytesToRelease Amount of memory to release, in bytes. A value of UINT64_MAX
         releases ALL memory held by the allocator.
+        @param pBytesReleased Optional pointer to integer which recieves the amount of memory released, in
+        bytes.
 
-        \return Amount of memory, in bytes, released. The released size might be smaller then
-        bytesToRelease if there was not enough memory or larger if releasable memory doesn't exactly
-        total up to the amount.
+        \return Returns S_OK if successfully released equal to or greater than the memory amount
+        specified. Or S_FALSE if the released size was smaller, there was not enough memory or
+        larger if releasable memory doesn't exactly total up to the amount.
         */
-        virtual uint64_t ReleaseMemory(uint64_t bytesToRelease) = 0;
+        virtual HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t * pBytesReleased) = 0;
 
         /** \brief  Query the current allocator usage.
 

@@ -755,7 +755,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableUMA) {
     }
 
     // Abandonment of heap type attribution is disallowed when custom heaps are disabled.
-    resourceAllocator->ReleaseMemory(kReleaseAllMemory);
+    ASSERT_SUCCEEDED(resourceAllocator->ReleaseResourceHeaps(kReleaseAllMemory, nullptr));
     {
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
@@ -1378,7 +1378,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
 
     EXPECT_EQ(GetStats(poolAllocator).FreeMemoryUsage, bufferSize + bufferSize / 2);
 
-    EXPECT_EQ(poolAllocator->ReleaseMemory(kReleaseAllMemory), bufferSize + bufferSize / 2);
+    uint64_t releasedMemory = 0;
+    ASSERT_SUCCEEDED(poolAllocator->ReleaseResourceHeaps(kReleaseAllMemory, &releasedMemory));
+
+    EXPECT_EQ(releasedMemory, bufferSize + bufferSize / 2);
 
     EXPECT_EQ(GetStats(poolAllocator).FreeMemoryUsage, 0u);
 

@@ -822,7 +822,7 @@ namespace gpgmm::d3d12 {
         return "ResourceAllocator";
     }
 
-    uint64_t ResourceAllocator::ReleaseMemory(uint64_t bytesToRelease) {
+    HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) {
         std::lock_guard<std::mutex> lock(mMutex);
         uint64_t bytesReleased = 0;
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
@@ -866,10 +866,18 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            QueryStatsInternal(nullptr);
+            ReturnIfFailed(QueryStatsInternal(nullptr));
         }
 
-        return bytesReleased;
+        if (pBytesReleased != nullptr) {
+            *pBytesReleased = bytesReleased;
+        }
+
+        if (bytesToRelease > bytesReleased) {
+            return S_FALSE;
+        }
+
+        return S_OK;
     }
 
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
