@@ -380,8 +380,8 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
-    uint64_t ResourceAllocator::ReleaseMemory(uint64_t bytesToRelease) {
-        return 0;
+    HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) {
+        return E_NOTIMPL;
     }
 
     HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
