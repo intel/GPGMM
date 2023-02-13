@@ -228,9 +228,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1c46f070043b15d73f162e85ad07cf60"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1c46f070043b15d73f162e85ad07cf60">CreateResource</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> &amp;allocationDescriptor, ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#a7ae6e7dbbfc15afd46d2e3b562b36f49">ppResourceAllocationOut</a>)=0</td></tr>
 <tr class="memdesc:a1c46f070043b15d73f162e85ad07cf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use existing D3D12 resource as a resource allocation.  <br /></td></tr>
 <tr class="separator:a1c46f070043b15d73f162e85ad07cf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a207c4b1488008518f0304784582cf52a"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a207c4b1488008518f0304784582cf52a">ReleaseMemory</a> (uint64_t bytesToRelease, uint64_t *pBytesReleased)=0</td></tr>
-<tr class="memdesc:a207c4b1488008518f0304784582cf52a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
-<tr class="separator:a207c4b1488008518f0304784582cf52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06cd29b01b8c7a94760d503ca7282022"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022">ReleaseResourceHeaps</a> (uint64_t bytesToRelease, uint64_t *pBytesReleased)=0</td></tr>
+<tr class="memdesc:a06cd29b01b8c7a94760d503ca7282022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
+<tr class="separator:a06cd29b01b8c7a94760d503ca7282022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">QueryStats</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
 <tr class="memdesc:a8c629ea6a1ef674642afb0519170c5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
 <tr class="separator:a8c629ea6a1ef674642afb0519170c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1270,8 +1270,8 @@ memory segments, respectively.
 
 </div>
 </div>
-<a id="a207c4b1488008518f0304784582cf52a" name="a207c4b1488008518f0304784582cf52a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a207c4b1488008518f0304784582cf52a">&#9670;&#160;</a></span>ReleaseMemory()</h2>
+<a id="a06cd29b01b8c7a94760d503ca7282022" name="a06cd29b01b8c7a94760d503ca7282022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06cd29b01b8c7a94760d503ca7282022">&#9670;&#160;</a></span>ReleaseResourceHeaps()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1280,7 +1280,7 @@ memory segments, respectively.
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual HRESULT gpgmm::d3d12::ReleaseMemory </td>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::ReleaseResourceHeaps </td>
           <td>(</td>
           <td class="paramtype">uint64_t&#160;</td>
           <td class="paramname"><em>bytesToRelease</em>, </td>
@@ -1305,11 +1305,11 @@ memory segments, respectively.
 </div><div class="memdoc">
 
 <p>Return free memory back to the OS. </p>
-<p>When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="namespacegpgmm_1_1d3d12.html#a207c4b1488008518f0304784582cf52a" title="Return free memory back to the OS.">ReleaseMemory()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
+<p>When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022" title="Return free memory back to the OS.">ReleaseResourceHeaps()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A value of UINT64_MAX releases ALL memory held by the allocator. </td></tr>
-    <tr><td class="paramname">pBytesReleased</td><td>Pointer to integer which recieves the amount of memory released, in bytes.</td></tr>
+    <tr><td class="paramname">pBytesReleased</td><td>Optional pointer to integer which recieves the amount of memory released, in bytes.</td></tr>
   </table>
   </dd>
 </dl>
