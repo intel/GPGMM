@@ -1101,7 +1101,7 @@ namespace gpgmm::d3d12 {
             // CreateResource().
             request.AlwaysPrefetch = false;
 
-            ReturnIfSucceeded(TryAllocateResource(
+            ReturnIfSucceededOrFatal(TryAllocateResource(
                 mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
@@ -1137,7 +1137,7 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = resourceInfo.Alignment;
 
-            ReturnIfSucceeded(TryAllocateResource(
+            ReturnIfSucceededOrFatal(TryAllocateResource(
                 mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
@@ -1180,7 +1180,7 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = allocator->GetMemoryAlignment();
 
-            ReturnIfSucceeded(TryAllocateResource(
+            ReturnIfSucceededOrFatal(TryAllocateResource(
                 mDevice, allocator, request, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
