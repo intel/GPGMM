@@ -14,6 +14,7 @@
 #ifndef GPGMM_D3D12_ERRORD3D12_H_
 #define GPGMM_D3D12_ERRORD3D12_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
 #include "gpgmm/utils/Compiler.h"
 #include "gpgmm/utils/Log.h"
@@ -51,6 +52,19 @@ namespace gpgmm::d3d12 {
         }                                  \
     }                                      \
     for (;;)                               \
+    break
+
+// Same as ReturnIfSucceeded but also returns if error is lethal.
+// Non-internal errors are always fatal and should not run re-attempt logic.
+#define ReturnIfSucceededOrFatal(expr)                                            \
+    {                                                                             \
+        HRESULT hr = expr;                                                        \
+        if (GPGMM_LIKELY(SUCCEEDED(hr)) ||                                        \
+            GPGMM_UNLIKELY(hr != static_cast<HRESULT>(kInternalFailureResult))) { \
+            return hr;                                                            \
+        }                                                                         \
+    }                                                                             \
+    for (;;)                                                                      \
     break
 
 #define AssertIfFailed(expr) ASSERT(SUCCEEDED(expr));

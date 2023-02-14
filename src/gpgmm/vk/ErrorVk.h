@@ -14,6 +14,7 @@
 #ifndef GPGMM_VK_ERRORVK_H_
 #define GPGMM_VK_ERRORVK_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/vk/vk_platform.h"
 
 namespace gpgmm::vk {
@@ -28,14 +29,27 @@ namespace gpgmm::vk {
     for (;;)                        \
     break
 
-#define ReturnIfSuccess(expr)       \
-    {                               \
-        VkResult result = expr;     \
-        if (result == VK_SUCCESS) { \
-            return result;          \
-        }                           \
-    }                               \
-    for (;;)                        \
+#define ReturnIfSuccess(expr)                     \
+    {                                             \
+        VkResult result = expr;                   \
+        if (GPGMM_LIKELY(result == VK_SUCCESS)) { \
+            return result;                        \
+        }                                         \
+    }                                             \
+    for (;;)                                      \
+    break
+
+// Same as ReturnIfSuccess but also returns if error is lethal.
+// Non-internal errors are always fatal and should not run re-attempt logic.
+#define ReturnIfSuccessOrFatal(expr)                                              \
+    {                                                                             \
+        VkResult result = expr;                                                   \
+        if (GPGMM_LIKELY(result == VK_SUCCESS) ||                                 \
+            GPGMM_UNLIKELY(hr != static_cast<HRESULT>(kInternalFailureResult))) { \
+            return result;                                                        \
+        }                                                                         \
+    }                                                                             \
+    for (;;)                                                                      \
     break
 
 }  // namespace gpgmm::vk
