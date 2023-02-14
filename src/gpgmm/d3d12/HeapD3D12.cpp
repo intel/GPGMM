@@ -15,6 +15,7 @@
 
 #include "gpgmm/d3d12/HeapD3D12.h"
 
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
@@ -79,7 +80,19 @@ namespace gpgmm::d3d12 {
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             if (FAILED(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                         descriptor.MemorySegmentGroup))) {
-                gpgmm::ErrorLog() << "Unable to create heap because not enough budget exists.";
+                DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
+                ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(descriptor.MemorySegmentGroup,
+                                                                      &currentVideoInfo));
+
+                gpgmm::ErrorLog(MessageId::kBudgetExceeded)
+                    << "Unable to create heap because not enough budget exists ("
+                    << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
+                    << GPGMM_BYTES_TO_MB((currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
+                                             ? currentVideoInfo.Budget -
+                                                   currentVideoInfo.CurrentUsage
+                                             : 0)
+                    << " MBs) and HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
+
                 return E_OUTOFMEMORY;
             }
         }
