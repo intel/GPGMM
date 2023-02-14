@@ -85,8 +85,9 @@ namespace gpgmm::d3d12 {
             }
 
             if (FAILED(hr)) {
-                gpgmm::ErrorLog() << "Unable to update budget: " +
-                                         GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
+                gpgmm::ErrorLog(MessageId::kBudgetInvalid)
+                    << "Unable to update budget: " +
+                           GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
             }
 
             SetLastError(hr);
@@ -172,13 +173,15 @@ namespace gpgmm::d3d12 {
         }
 
         if ((descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY) && caps->IsAdapterUMA()) {
-            gpgmm::WarningLog() << "RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY flag was specified but "
-                                   "did not match the architecture of the adapter.";
+            gpgmm::WarningLog(MessageId::kInvalidArgument)
+                << "RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY flag was specified but "
+                   "did not match the architecture of the adapter.";
         }
 
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
-            gpgmm::ErrorLog() << "Both the OS based memory budget and restricted budget were "
-                                 "specified but cannot be used at the same time.";
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                << "Both the OS based memory budget and restricted budget were "
+                   "specified but cannot be used at the same time.";
             return E_UNEXPECTED;
         }
 
@@ -224,18 +227,19 @@ namespace gpgmm::d3d12 {
         // Emit a warning if the budget was initialized to zero.
         // This means nothing will be ever evicted, which will lead to device lost.
         if (localVideoMemorySegmentInfo->Budget == 0) {
-            gpgmm::WarningLog()
+            gpgmm::WarningLog(MessageId::kBudgetInvalid)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, residencyManager->mIsUMA)
                 << ") did not initialize a budget. This means either a restricted budget was not "
                    "used or the first OS budget update hasn't occured.";
             if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
-                gpgmm::WarningLog() << "GPU memory segment ("
-                                    << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
-                                                            residencyManager->mIsUMA)
-                                    << ") did not initialize a budget. This means either a "
-                                       "restricted budget was not "
-                                       "used or the first OS budget update hasn't occured.";
+                gpgmm::WarningLog(MessageId::kBudgetInvalid)
+                    << "GPU memory segment ("
+                    << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
+                                            residencyManager->mIsUMA)
+                    << ") did not initialize a budget. This means either a "
+                       "restricted budget was not "
+                       "used or the first OS budget update hasn't occured.";
             }
         }
 
@@ -346,7 +350,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (heap->IsInList()) {
-            gpgmm::ErrorLog()
+            gpgmm::ErrorLog(MessageId::kBadOperation)
                 << "Heap was never being tracked for residency. This usually occurs when a "
                    "non-resource heap was created by the developer and never made resident at "
                    "creation or failure to call LockHeap beforehand.";
@@ -681,14 +685,15 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         if (count == 0) {
-            gpgmm::ErrorLog() << "ExecuteCommandLists is required to have at-least one residency "
-                                 "list to be called.";
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                << "ExecuteCommandLists is required to have at-least one residency "
+                   "list to be called.";
             return E_INVALIDARG;
         }
 
         // TODO: support multiple command lists.
         if (count > 1) {
-            gpgmm::ErrorLog()
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
                 << "ExecuteCommandLists does not support multiple residency lists at this time. "
                    "Please call ExecuteCommandLists per residency list as a workaround, if needed.";
             return E_NOTIMPL;
@@ -842,10 +847,11 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(
                 EvictInternal(mEvictSizeInBytes, memorySegmentGroup, &evictedSizeInBytes));
             if (evictedSizeInBytes == 0) {
-                gpgmm::ErrorLog() << "Unable to evict enough heaps to stay within budget. This "
-                                     "usually occurs when there is not enough available memory. "
-                                     "Please reduce consumption by checking allocation sizes and "
-                                     "residency usage.";
+                gpgmm::ErrorLog(MessageId::kBudgetInvalid)
+                    << "Unable to evict enough heaps to stay within budget. This "
+                       "usually occurs when there is not enough available memory. "
+                       "Please reduce consumption by checking allocation sizes and "
+                       "residency usage.";
                 return E_OUTOFMEMORY;
             }
         }
@@ -951,23 +957,26 @@ namespace gpgmm::d3d12 {
 
         Heap* heap = static_cast<Heap*>(pHeap);
         if (heap->GetInfo().IsLocked) {
-            gpgmm::ErrorLog() << "Heap residency cannot be updated because it was locked. "
-                                 "Please unlock the heap before updating the state.";
+            gpgmm::ErrorLog(MessageId::kBadOperation)
+                << "Heap residency cannot be updated because it was locked. "
+                   "Please unlock the heap before updating the state.";
             return E_FAIL;
         }
 
         if (!heap->GetInfo().IsCachedForResidency) {
-            gpgmm::ErrorLog() << "Heap residency cannot be updated because no residency "
-                                 "manager was specified upon creation. The heap must be created "
-                                 "using a residency manager to update the residency status.";
+            gpgmm::ErrorLog(MessageId::kBadOperation)
+                << "Heap residency cannot be updated because no residency "
+                   "manager was specified upon creation. The heap must be created "
+                   "using a residency manager to update the residency status.";
             return E_FAIL;
         }
 
         const RESIDENCY_STATUS oldState = heap->GetInfo().Status;
         if (state == RESIDENCY_STATUS_UNKNOWN && oldState != RESIDENCY_STATUS_UNKNOWN) {
-            gpgmm::ErrorLog() << "Heap residency cannot be unknown when previously known by the "
-                                 "residency manager. "
-                                 "Check the status before updating the state.";
+            gpgmm::ErrorLog(MessageId::kBadOperation)
+                << "Heap residency cannot be unknown when previously known by the "
+                   "residency manager. "
+                   "Check the status before updating the state.";
             return E_FAIL;
         }
 

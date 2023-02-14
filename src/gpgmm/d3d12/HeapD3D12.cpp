@@ -111,8 +111,9 @@ namespace gpgmm::d3d12 {
             // Heap created not resident requires no budget to be created.
             if (heap->mState == RESIDENCY_STATUS_PENDING_RESIDENCY &&
                 (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-                gpgmm::ErrorLog() << "Creating a heap always in budget cannot be used with "
-                                     "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
+                gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                    << "Creating a heap always in budget cannot be used with "
+                       "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
                 return E_INVALIDARG;
             }
 
