@@ -75,6 +75,7 @@ TEST_F(VKResourceAllocatorTests, CreateImage) {
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.flags = 0;
+    imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
     GpResourceAllocationCreateInfo allocationInfo = {};
 
