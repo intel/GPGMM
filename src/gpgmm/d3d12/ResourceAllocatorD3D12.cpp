@@ -442,27 +442,29 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
-            gpgmm::ErrorLog() << "Resource heap tier exceeds the capabilities of the device "
-                                 "(ResourceHeapTier:"
-                              << allocatorDescriptor.ResourceHeapTier << " vs "
-                              << caps->GetMaxResourceHeapTierSupported()
-                              << "). Please consider using a lower resource heap tier.";
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                << "Resource heap tier exceeds the capabilities of the device "
+                   "(ResourceHeapTier:"
+                << allocatorDescriptor.ResourceHeapTier << " vs "
+                << caps->GetMaxResourceHeapTierSupported()
+                << "). Please consider using a lower resource heap tier.";
             return E_FAIL;
         }
 
         if (allocatorDescriptor.ResourceHeapTier != 0 &&
             allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
-            gpgmm::DebugLog()
+            gpgmm::DebugLog(MessageId::kInvalidArgument)
                 << "Resource heap tier requested was lower than what the device "
                    "supports. This is allowed but not recommended because it prevents "
                    "resources of different categories from sharing the same heap.";
         }
 
         if (allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
-            gpgmm::WarningLog() << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
-                                   "management does not exist. This is probably not what the "
-                                   "developer intended to do. Please consider creating a residency "
-                                   "manager with this resource allocator before using this flag.";
+            gpgmm::WarningLog(MessageId::kInvalidArgument)
+                << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
+                   "management does not exist. This is probably not what the "
+                   "developer intended to do. Please consider creating a residency "
+                   "manager with this resource allocator before using this flag.";
         }
 
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
@@ -483,7 +485,7 @@ namespace gpgmm::d3d12 {
         // unsupported by the device.
         if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) &&
             !caps->IsAdapterCacheCoherentUMA()) {
-            gpgmm::DebugLog()
+            gpgmm::DebugLog(MessageId::kInvalidArgument)
                 << "ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was not requested but enabled "
                    "anyway because the device did not support cache-coherent UMA.";
             newDescriptor.Flags |= ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
@@ -501,7 +503,7 @@ namespace gpgmm::d3d12 {
             !caps->IsCreateHeapNotResidentSupported()) {
             newDescriptor.Flags |= ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 
-            gpgmm::DebugLog()
+            gpgmm::DebugLog(MessageId::kInvalidArgument)
                 << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was not requested but enabled "
                    "anyway because the device did not support creating non-resident heaps.";
         }
@@ -521,9 +523,10 @@ namespace gpgmm::d3d12 {
                                                      : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
-            gpgmm::ErrorLog() << "Requested preferred resource heap size exceeded the capabilities "
-                                 "of the device. This is probably not what the developer intended "
-                                 "to do. Please consider using a smaller resource heap size.";
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                << "Requested preferred resource heap size exceeded the capabilities "
+                   "of the device. This is probably not what the developer intended "
+                   "to do. Please consider using a smaller resource heap size.";
             return E_INVALIDARG;
         }
 
@@ -544,7 +547,7 @@ namespace gpgmm::d3d12 {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
             ReturnIfFailed(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
-            gpgmm::WarningLog()
+            gpgmm::WarningLog(MessageId::kInvalidArgument)
                 << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has no effect because the D3D12 debug "
                    "layer was either not installed or enabled. Please call "
                    "ID3D12Debug::EnableDebugLayer before using this flag.";
@@ -822,7 +825,8 @@ namespace gpgmm::d3d12 {
         return "ResourceAllocator";
     }
 
-    HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) {
+    HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease,
+                                                    uint64_t* pBytesReleased) {
         std::lock_guard<std::mutex> lock(mMutex);
         uint64_t bytesReleased = 0;
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
@@ -933,8 +937,9 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice, newResourceDesc);
         if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
-            gpgmm::ErrorLog() << "Unable to create resource allocation because the size exceeded "
-                                 "capabilities of the device.";
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                << "Unable to create resource allocation because the size exceeded "
+                   "capabilities of the device.";
             return E_OUTOFMEMORY;
         }
 
@@ -971,7 +976,7 @@ namespace gpgmm::d3d12 {
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
             newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
         if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
-            gpgmm::ErrorLog()
+            gpgmm::ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
             return E_INVALIDARG;
@@ -984,9 +989,10 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            DebugEvent(this) << "Required heap flags are incompatible with resource heap type ("
-                             << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags)
-                             << " vs " << std::to_string(heapFlags) + ").";
+            DebugEvent(this, MessageId::kInvalidArgument)
+                << "Required heap flags are incompatible with resource heap type ("
+                << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
+                << std::to_string(heapFlags) + ").";
 
             heapFlags |= allocationDescriptor.ExtraRequiredHeapFlags;
 
