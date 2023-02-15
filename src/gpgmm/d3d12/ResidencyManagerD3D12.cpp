@@ -570,7 +570,7 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
         uint64_t bytesEvicted = bytesInBudget;
         ReturnIfFailed(EvictInternal(bytesInBudget, memorySegmentGroup, &bytesEvicted));
-        return (bytesEvicted >= bytesInBudget) ? S_OK : E_FAIL;
+        return (bytesEvicted >= bytesInBudget) ? S_OK : E_OUTOFMEMORY;
     }
 
     // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
