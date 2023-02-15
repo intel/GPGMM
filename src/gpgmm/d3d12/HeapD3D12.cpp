@@ -78,9 +78,8 @@ namespace gpgmm::d3d12 {
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-            HRESULT hr = residencyManager->EnsureInBudget(descriptor.SizeInBytes,
-                                                          descriptor.MemorySegmentGroup);
-            if (FAILED(hr)) {
+            if (FAILED(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
+                                                        descriptor.MemorySegmentGroup))) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
                 ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(descriptor.MemorySegmentGroup,
                                                                       &currentVideoInfo));
@@ -94,7 +93,7 @@ namespace gpgmm::d3d12 {
                                              : 0)
                     << " MBs) and HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
 
-                return hr;
+                return E_OUTOFMEMORY;
             }
         }
 
