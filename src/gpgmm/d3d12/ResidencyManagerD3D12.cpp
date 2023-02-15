@@ -479,38 +479,42 @@ namespace gpgmm::d3d12 {
             static_cast<uint64_t>(queryVideoMemoryInfoOut.Budget * mMinPctOfBudgetToReserve),
             pVideoMemoryInfo->AvailableForReservation);
 
-        const uint64_t oldUsage = pVideoMemoryInfo->CurrentUsage;
+        const uint64_t previousUsage = pVideoMemoryInfo->CurrentUsage;
         pVideoMemoryInfo->CurrentUsage =
             queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
 
-        if (oldUsage > pVideoMemoryInfo->CurrentUsage) {
+        if (previousUsage > pVideoMemoryInfo->CurrentUsage &&
+            GPGMM_BYTES_TO_MB(previousUsage - pVideoMemoryInfo->CurrentUsage) > 0) {
             gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went down by "
-                              << GPGMM_BYTES_TO_MB(oldUsage - pVideoMemoryInfo->CurrentUsage)
+                              << GPGMM_BYTES_TO_MB(previousUsage - pVideoMemoryInfo->CurrentUsage)
                               << " MBs.";
-        } else if (oldUsage < pVideoMemoryInfo->CurrentUsage) {
+        } else if (previousUsage < pVideoMemoryInfo->CurrentUsage &&
+                   GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - previousUsage) > 0) {
             gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                               << " GPU memory usage went up by "
-                              << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - oldUsage)
+                              << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - previousUsage)
                               << " MBs.";
         }
 
         // If we're restricting the budget, leave the budget as is.
         if (!mIsBudgetRestricted) {
-            const uint64_t oldBudget = pVideoMemoryInfo->Budget;
+            const uint64_t previousBudget = pVideoMemoryInfo->Budget;
             pVideoMemoryInfo->Budget = static_cast<uint64_t>(
                 (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
                 mMaxPctOfVideoMemoryToBudget);
 
-            if (oldBudget > pVideoMemoryInfo->Budget) {
+            if (previousBudget > pVideoMemoryInfo->Budget &&
+                GPGMM_BYTES_TO_MB(previousBudget - pVideoMemoryInfo->Budget) > 0) {
                 gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                                   << " GPU memory budget went down by "
-                                  << GPGMM_BYTES_TO_MB(oldBudget - pVideoMemoryInfo->Budget)
+                                  << GPGMM_BYTES_TO_MB(previousBudget - pVideoMemoryInfo->Budget)
                                   << " MBs.";
-            } else if (oldBudget < pVideoMemoryInfo->Budget) {
+            } else if (previousBudget < pVideoMemoryInfo->Budget &&
+                       GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - previousBudget) > 0) {
                 gpgmm::DebugLog() << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                                   << " GPU memory budget went up by "
-                                  << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - oldBudget)
+                                  << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - previousBudget)
                                   << " MBs.";
             }
         }
