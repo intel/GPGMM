@@ -253,7 +253,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:a826dccb5826564820e0671bb7b86b165"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more Heap within a residency cache.  <br /></td></tr>
 <tr class="separator:a826dccb5826564820e0671bb7b86b165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c6928b4ed92938bd00de413f2630196"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3c6928b4ed92938bd00de413f2630196">IHeap</a></td></tr>
-<tr class="memdesc:a3c6928b4ed92938bd00de413f2630196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.  <br /></td></tr>
+<tr class="memdesc:a3c6928b4ed92938bd00de413f2630196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap represents a residency-managed ID3D12Pageable object.  <br /></td></tr>
 <tr class="separator:a3c6928b4ed92938bd00de413f2630196"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09e5c02e9225b2fbfcbb11c26356024a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a></td></tr>
 <tr class="memdesc:a09e5c02e9225b2fbfcbb11c26356024a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <br /></td></tr>
@@ -1589,7 +1589,8 @@ memory segments, respectively.
       </table>
 </div><div class="memdoc">
 
-<p>Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache. </p>
+<p>Heap represents a residency-managed ID3D12Pageable object. </p>
+<p>For example, a Heap could represent a "resource heap" (ID3D12Heap or committed ID3D12Resource) or ID3D12DescriptorHeap and so on.</p>
 <p>Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
 
 </div>
