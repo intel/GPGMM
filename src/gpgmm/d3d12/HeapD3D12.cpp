@@ -81,17 +81,17 @@ namespace gpgmm::d3d12 {
             if (FAILED(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
                                                         descriptor.MemorySegmentGroup))) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
-                ReturnIfFailed(residencyManager->QueryVideoMemoryInfo(descriptor.MemorySegmentGroup,
-                                                                      &currentVideoInfo));
-
-                gpgmm::ErrorLog(MessageId::kBudgetExceeded)
-                    << "Unable to create heap because not enough budget exists ("
-                    << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
-                    << GPGMM_BYTES_TO_MB((currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
-                                             ? currentVideoInfo.Budget -
-                                                   currentVideoInfo.CurrentUsage
-                                             : 0)
-                    << " MBs) and HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
+                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.MemorySegmentGroup,
+                                                                     &currentVideoInfo))) {
+                    gpgmm::ErrorLog(MessageId::kBudgetExceeded)
+                        << "Unable to create heap because not enough budget exists ("
+                        << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
+                        << GPGMM_BYTES_TO_MB(
+                               (currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
+                                   ? currentVideoInfo.Budget - currentVideoInfo.CurrentUsage
+                                   : 0)
+                        << " MBs) and HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
+                }
 
                 return E_OUTOFMEMORY;
             }
