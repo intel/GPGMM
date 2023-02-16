@@ -1214,22 +1214,25 @@ namespace gpgmm::d3d12 {
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
-            ErrorLog() << "Unable to allocate memory for resource because no memory was allowed to "
-                          "be created.";
+            ErrorLog(MessageId::kAllocatorFailed)
+                << "Unable to allocate memory for resource because no memory was allowed to "
+                   "be created.";
             return E_OUTOFMEMORY;
         }
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            ErrorLog() << "Unable to allocate memory for resource because a padding was specified "
-                          "but no resource allocator could be used.";
+            ErrorLog(MessageId::kAllocatorFailed)
+                << "Unable to allocate memory for resource because a padding was specified "
+                   "but no resource allocator could be used.";
             return E_INVALIDARG;
         }
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
-                ErrorLog() << "Unable to allocate memory for resource because no memory was could "
-                              "be created and fall-back was disabled.";
+                ErrorLog(MessageId::kAllocatorFailed)
+                    << "Unable to allocate memory for resource because no memory was could "
+                       "be created and fall-back was disabled.";
                 return E_OUTOFMEMORY;
             }
 
@@ -1284,21 +1287,21 @@ namespace gpgmm::d3d12 {
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
             heapProperties.Type != allocationDescriptor.HeapType) {
-            ErrorLog() << "Unable to import a resource using a heap type that differs from the "
+            ErrorLog(MessageId::kInvalidArgument) << "Unable to import a resource using a heap type that differs from the "
                           "heap type used at creation. For important resources, it is recommended "
                           "to not specify a heap type.";
             return E_INVALIDARG;
         }
 
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            ErrorLog() << "Unable to import a resource using heap flags that differs from the "
+            ErrorLog(MessageId::kInvalidArgument) << "Unable to import a resource using heap flags that differs from the "
                           "heap flags used at creation. For important resources, it is recommended "
                           "to not specify heap flags.";
             return E_INVALIDARG;
         }
 
         if (allocationDescriptor.RequireResourceHeapPadding > 0) {
-            ErrorLog()
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
@@ -1307,7 +1310,7 @@ namespace gpgmm::d3d12 {
             (ALLOCATION_FLAG_DISABLE_RESIDENCY & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
              ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
         if (allocationDescriptor.Flags & ~allowMask) {
-            ErrorLog()
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
