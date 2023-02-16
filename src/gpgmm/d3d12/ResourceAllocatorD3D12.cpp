@@ -1068,9 +1068,10 @@ namespace gpgmm::d3d12 {
 
                 request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
-                DebugEvent(this) << "Current usage exceeded budget ("
-                                 << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
-                                 << std::to_string(currentVideoInfo->Budget) + " bytes).";
+                DebugEvent(this, MessageId::kBudgetExceeded)
+                    << "Current usage exceeded budget ("
+                    << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
+                    << std::to_string(currentVideoInfo->Budget) + " bytes).";
 
             } else {
                 request.AvailableForAllocation =
@@ -1287,16 +1288,18 @@ namespace gpgmm::d3d12 {
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
             heapProperties.Type != allocationDescriptor.HeapType) {
-            ErrorLog(MessageId::kInvalidArgument) << "Unable to import a resource using a heap type that differs from the "
-                          "heap type used at creation. For important resources, it is recommended "
-                          "to not specify a heap type.";
+            ErrorLog(MessageId::kInvalidArgument)
+                << "Unable to import a resource using a heap type that differs from the "
+                   "heap type used at creation. For important resources, it is recommended "
+                   "to not specify a heap type.";
             return E_INVALIDARG;
         }
 
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            ErrorLog(MessageId::kInvalidArgument) << "Unable to import a resource using heap flags that differs from the "
-                          "heap flags used at creation. For important resources, it is recommended "
-                          "to not specify heap flags.";
+            ErrorLog(MessageId::kInvalidArgument)
+                << "Unable to import a resource using heap flags that differs from the "
+                   "heap flags used at creation. For important resources, it is recommended "
+                   "to not specify heap flags.";
             return E_INVALIDARG;
         }
 

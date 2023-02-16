@@ -148,8 +148,9 @@ namespace gpgmm {
         if (availableForAllocation < slabSize) {
             const uint64_t slabSizeUnderBudget = FindNextFreeSlabOfSize(requestSize);
             if (slabSizeUnderBudget == kInvalidSize) {
-                DebugEvent(this) << "Slab size exceeds available memory: " << slabSize << " vs "
-                                 << availableForAllocation << " bytes.";
+                DebugEvent(this, MessageId::kSizeExceeded)
+                    << "Slab size exceeds available memory: " << slabSize << " vs "
+                    << availableForAllocation << " bytes.";
                 return kInvalidSize;
             }
 
