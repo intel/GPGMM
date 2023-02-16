@@ -190,8 +190,10 @@ namespace gpgmm::d3d12 {
 
     GPGMM_INTERFACE IResidencyManager;
 
-    /** \brief Heap is used to represent managed ID3D12Heap or ID3D12Resource that has an implicit
-    heap (owned by D3D) for a committed resource, in the ResidencyManager's residency cache.
+    /** \brief Heap represents a residency-managed ID3D12Pageable object.
+
+    For example, a Heap could represent a "resource heap" (ID3D12Heap or committed ID3D12Resource)
+    or ID3D12DescriptorHeap and so on.
 
     Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into
     the cache when it is first created, and any time it is scheduled to be used by the GPU. This
