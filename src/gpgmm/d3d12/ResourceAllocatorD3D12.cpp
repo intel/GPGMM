@@ -937,7 +937,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice, newResourceDesc);
         if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
-            gpgmm::ErrorLog(MessageId::kInvalidArgument)
+            gpgmm::ErrorLog(MessageId::kSizeExceeded)
                 << "Unable to create resource allocation because the size exceeded "
                    "capabilities of the device.";
             return E_OUTOFMEMORY;
@@ -989,10 +989,9 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            DebugEvent(this, MessageId::kInvalidArgument)
-                << "Required heap flags are incompatible with resource heap type ("
-                << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
-                << std::to_string(heapFlags) + ").";
+            DebugLog() << "Required heap flags are incompatible with resource heap type ("
+                       << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
+                       << std::to_string(heapFlags) + ").";
 
             heapFlags |= allocationDescriptor.ExtraRequiredHeapFlags;
 
@@ -1068,7 +1067,7 @@ namespace gpgmm::d3d12 {
 
                 request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
-                DebugEvent(this, MessageId::kBudgetExceeded)
+                DebugLog(MessageId::kBudgetExceeded)
                     << "Current usage exceeded budget ("
                     << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
                     << std::to_string(currentVideoInfo->Budget) + " bytes).";
