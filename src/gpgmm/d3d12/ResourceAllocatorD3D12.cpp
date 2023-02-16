@@ -1432,7 +1432,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocator::QueryStatsInternal(
         RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.GetInfo");
+        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
         RESOURCE_ALLOCATOR_STATS result = mStats;
