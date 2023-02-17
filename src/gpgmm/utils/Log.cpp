@@ -119,10 +119,18 @@ namespace gpgmm {
         // where users could see it, since users don't understand these messages anyway.
 #if defined(GPGMM_PLATFORM_WINDOWS)
         if (IsDebuggerPresent()) {
-            const std::string outputString =
-                std::string(kLogTag) + " " + std::string(severityName) +
-                "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage + "(" +
-                ToString(static_cast<uint32_t>(mMessageId)) + ")" + "\n";
+            std::string outputString;
+            if (mMessageId != MessageId::kUnknown) {
+                outputString =
+                    std::string(kLogTag) + " " + std::string(severityName) +
+                    "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage +
+                    "(MessageId=" + ToString(static_cast<uint32_t>(mMessageId)) + ")" + "\n";
+            } else {
+                outputString = std::string(kLogTag) + " " + std::string(severityName) +
+                               "(tid: " + ToString(std::this_thread::get_id()) +
+                               "): " + fullMessage + "\n";
+            }
+
             OutputDebugStringA(outputString.c_str());
         }
 #endif  // defined(GPGMM_PLATFORM_WINDOWS)
@@ -138,8 +146,13 @@ namespace gpgmm {
                             fullMessage.c_str());
 #else  // defined(GPGMM_PLATFORM_ANDROID)
        // Note: we use fprintf because <iostream> includes static initializers.
-        fprintf(outputStream, "%s %s (tid:%s): %s (%d)\n", kLogTag, severityName,
-                ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str(), mMessageId);
+        if (mMessageId != MessageId::kUnknown) {
+            fprintf(outputStream, "%s %s (tid:%s): %s (MessageId=%d)\n", kLogTag, severityName,
+                    ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str(), mMessageId);
+        } else {
+            fprintf(outputStream, "%s %s (tid:%s): %s\n", kLogTag, severityName,
+                    ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str());
+        }
         fflush(outputStream);
 #endif
     }
