@@ -15,13 +15,9 @@
 #ifndef GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
 #define GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
 
-#include "gpgmm/common/MemoryAllocator.h"
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/ResourceAllocatorVk.h"
 
 namespace gpgmm::vk {
-
-    VK_DEFINE_HANDLE(GpResourceAllocator)
-
     class DeviceMemoryAllocator final : public MemoryAllocator {
       public:
         DeviceMemoryAllocator(GpResourceAllocator resourceAllocator, uint32_t memoryTypeIndex);
