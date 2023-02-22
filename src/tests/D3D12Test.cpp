@@ -105,8 +105,8 @@ namespace gpgmm::d3d12 {
         DebugLog() << "Unified memory: " << ((mCaps->IsAdapterUMA()) ? "yes" : "no")
                    << ((mCaps->IsAdapterCacheCoherentUMA()) ? " (cache-coherent)" : "");
 
-        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_MB(mCaps->GetMaxResourceSize())
-                   << " MBs";
+        DebugLog() << "Max resource size: " << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceSize())
+                   << " GBs";
         DebugLog() << "Max resource heap tier: " << mCaps->GetMaxResourceHeapTierSupported();
         DebugLog() << "Max resource heap size: "
                    << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceHeapSize()) << " GBs";
