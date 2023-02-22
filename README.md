@@ -105,8 +105,7 @@ gpgmm::vk::gpDestroyResourceAllocator(resourceAllocator);
 ```
 
 # Project integration
-
-It is recommended to use the built-in GN or CMake build targets. Otherwise, a shared library can be used for other build systems.
+Aside from DirectX or Vulkan libraries, **GPGMM has no additional dependencies** when deployed. GPGMM is distributed for use as source-only. It is recommended to use the built-in GN or CMake build targets. Alternatively, a shared library can be built to enable other build systems.
 
 ## Source based builds
 
