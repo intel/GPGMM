@@ -33,15 +33,17 @@ namespace gpgmm::d3d12 {
     for (;;)                                                                  \
     break
 
-#define ReturnIfFailed(expr)                                           \
-    {                                                                  \
-        HRESULT hr = expr;                                             \
-        if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
-            gpgmm::ErrorLog() << #expr << ": " << GetErrorMessage(hr); \
-            return hr;                                                 \
-        }                                                              \
-    }                                                                  \
-    for (;;)                                                           \
+#define ReturnIfFailed(expr) ReturnIfFailedDevice(expr, nullptr)
+
+#define ReturnIfFailedDevice(expr, device)                                           \
+    {                                                                                \
+        HRESULT hr = expr;                                                           \
+        if (GPGMM_UNLIKELY(FAILED(hr))) {                                            \
+            gpgmm::ErrorLog() << #expr << ": " << GetDeviceErrorMessage(device, hr); \
+            return hr;                                                               \
+        }                                                                            \
+    }                                                                                \
+    for (;;)                                                                         \
     break
 
 #define ReturnIfSucceeded(expr)            \

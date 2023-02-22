@@ -322,8 +322,7 @@ namespace gpgmm::d3d12 {
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
                 InfoEvent(allocator, MessageId::kAllocatorFailed)
-                    << "Failed to create resource using allocation: " +
-                           GetDeviceErrorMessage(device, hr);
+                    << "Failed to create resource using allocation.";
                 allocator->DeallocateMemory(std::move(allocation));
             }
             return hr;
@@ -896,8 +895,9 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
         ComPtr<IResourceAllocation> allocation;
-        ReturnIfFailed(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
-                                              initialResourceState, pClearValue, &allocation));
+        ReturnIfFailedDevice(CreateResourceInternal(allocationDescriptor, resourceDescriptor,
+                                                    initialResourceState, pClearValue, &allocation),
+                             mDevice);
 
         ASSERT(allocation->GetResource() != nullptr);
 
@@ -1338,12 +1338,14 @@ namespace gpgmm::d3d12 {
         ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
         ComPtr<IHeap> resourceHeap;
-        ReturnIfFailed(Heap::CreateHeap(
-            resourceHeapDesc,
-            (allocationDescriptor.Flags & ALLOCATION_FLAG_DISABLE_RESIDENCY)
-                ? nullptr
-                : mResidencyManager.Get(),
-            ImportResourceCallbackContext::GetHeap, &importResourceCallbackContext, &resourceHeap));
+        ReturnIfFailedDevice(
+            Heap::CreateHeap(resourceHeapDesc,
+                             (allocationDescriptor.Flags & ALLOCATION_FLAG_DISABLE_RESIDENCY)
+                                 ? nullptr
+                                 : mResidencyManager.Get(),
+                             ImportResourceCallbackContext::GetHeap, &importResourceCallbackContext,
+                             &resourceHeap),
+            mDevice);
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
