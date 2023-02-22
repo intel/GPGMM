@@ -308,8 +308,9 @@ namespace gpgmm::d3d12 {
         if (!heap->IsInList() && !heap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
             ReturnIfFailed(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
-            ReturnIfFailed(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
-                                        pageable.GetAddressOf()));
+            ReturnIfFailedDevice(MakeResident(heap->GetMemorySegmentGroup(), heap->GetSize(), 1,
+                                              pageable.GetAddressOf()),
+                                 mDevice);
             heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
@@ -573,7 +574,8 @@ namespace gpgmm::d3d12 {
                                              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
         std::lock_guard<std::mutex> lock(mMutex);
         uint64_t bytesEvicted = bytesInBudget;
-        ReturnIfFailed(EvictInternal(bytesInBudget, memorySegmentGroup, &bytesEvicted));
+        ReturnIfFailedDevice(EvictInternal(bytesInBudget, memorySegmentGroup, &bytesEvicted),
+                             mDevice);
         return (bytesEvicted >= bytesInBudget) ? S_OK : E_FAIL;
     }
 
@@ -769,15 +771,17 @@ namespace gpgmm::d3d12 {
         if (localSizeToMakeResident > 0) {
             const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(localHeapsToMakeResident.size());
-            ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
-                                        numberOfObjectsToMakeResident,
-                                        localHeapsToMakeResident.data()));
+            ReturnIfFailedDevice(
+                MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
+                             numberOfObjectsToMakeResident, localHeapsToMakeResident.data()),
+                mDevice);
         } else if (nonLocalSizeToMakeResident > 0) {
             const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
-            ReturnIfFailed(MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
-                                        nonLocalSizeToMakeResident, numberOfObjectsToMakeResident,
-                                        nonLocalHeapsToMakeResident.data()));
+            ReturnIfFailedDevice(
+                MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, nonLocalSizeToMakeResident,
+                             numberOfObjectsToMakeResident, nonLocalHeapsToMakeResident.data()),
+                mDevice);
         }
 
         // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
