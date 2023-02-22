@@ -30,9 +30,6 @@ gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
 allocatorDesc.Device = Device;
 allocatorDesc.Adapter = Adapter;
 
-// Use CheckFeatureSupport
-allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
-
 ComPtr<gpgmm::d3d12::IResidencyManager> residency; // Optional
 ComPtr<gpgmm::d3d12::IResourceAllocator> allocator;
 gpgmm::d3d12::CreateResourceAllocator(desc, &allocator, &residency);
