@@ -53,10 +53,10 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
         IHeap* GetMemory() const override;
 
-        DEFINE_Unknown_OVERRIDES()
+        DEFINE_UNKNOWN_OVERRIDES()
 
-            // IDebugObject interface
-            LPCWSTR GetDebugName() const override;
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:

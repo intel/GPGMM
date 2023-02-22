@@ -64,9 +64,10 @@ namespace gpgmm::d3d12 {
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;
 
-        DEFINE_Unknown_OVERRIDES()
+        DEFINE_UNKNOWN_OVERRIDES()
 
-            private : friend BufferAllocator;
+      private:
+        friend BufferAllocator;
         friend ResourceAllocation;
 
         // ObjectBase interface

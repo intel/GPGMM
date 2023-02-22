@@ -36,9 +36,10 @@ namespace gpgmm::d3d12 {
         HRESULT Add(IHeap* pHeap) override;
         HRESULT Reset() override;
 
-        DEFINE_Unknown_OVERRIDES()
+        DEFINE_UNKNOWN_OVERRIDES()
 
-            private : friend JSONSerializer;
+      private:
+        friend JSONSerializer;
         friend ResidencyManager;
 
         using UnderlyingType = std::vector<Heap*>;

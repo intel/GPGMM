@@ -65,9 +65,10 @@ namespace gpgmm::d3d12 {
 
         HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 
-        DEFINE_Unknown_OVERRIDES()
+        DEFINE_UNKNOWN_OVERRIDES()
 
-            private : friend Heap;
+      private:
+        friend Heap;
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 

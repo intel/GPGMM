@@ -50,12 +50,16 @@ namespace gpgmm::d3d12 {
     };
 
 // Helper to provide IUnknown-based object types the required overrides to use Unknown.
-#define DEFINE_Unknown_OVERRIDES()                                                            \
+#define DEFINE_UNKNOWN_OVERRIDES()                                                            \
     inline HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override { \
         return Unknown::QueryInterface(riid, ppvObject);                                      \
     }                                                                                         \
-    inline ULONG STDMETHODCALLTYPE AddRef() override { return Unknown::AddRef(); }            \
-    inline ULONG STDMETHODCALLTYPE Release() override { return Unknown::Release(); }
+    inline ULONG STDMETHODCALLTYPE AddRef() override {                                        \
+        return Unknown::AddRef();                                                             \
+    }                                                                                         \
+    inline ULONG STDMETHODCALLTYPE Release() override {                                       \
+        return Unknown::Release();                                                            \
+    }
 
 }  // namespace gpgmm::d3d12
 
