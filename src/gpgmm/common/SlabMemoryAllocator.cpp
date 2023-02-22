@@ -149,8 +149,8 @@ namespace gpgmm {
             const uint64_t slabSizeUnderBudget = FindNextFreeSlabOfSize(requestSize);
             if (slabSizeUnderBudget == kInvalidSize) {
                 DebugEvent(this, MessageId::kSizeExceeded)
-                    << "Slab size exceeds available memory: " << slabSize << " vs "
-                    << availableForAllocation << " bytes.";
+                    << "Slab size exceeded available memory: " << GPGMM_BYTES_TO_MB(slabSize)
+                    << " vs " << GPGMM_BYTES_TO_MB(availableForAllocation) << " MBs.";
                 return kInvalidSize;
             }
 
@@ -209,7 +209,11 @@ namespace gpgmm {
 
         // Slab cannot exceed memory size.
         if (slabSize > mMaxSlabSize) {
-            gpgmm::DebugEvent(this) << "Slab allocation was disabled because the size was invalid.";
+            gpgmm::DebugEvent(this, MessageId::kSizeExceeded)
+                << "Slab allocation was disabled because the slab size exceeded the max slab size "
+                   "allowed: "
+                << GPGMM_BYTES_TO_MB(slabSize) << " vs " << GPGMM_BYTES_TO_MB(mMaxSlabSize)
+                << " MBs.";
             return {};
         }
 
@@ -292,8 +296,10 @@ namespace gpgmm {
 
                         if (prefetchedSlabAllocation != nullptr) {
                             DebugEvent(this, MessageId::kPrefetchFailed)
-                                << "Pre-fetch slab memory is incompatible (" << slabSize << " vs "
-                                << prefetchedSlabAllocation->GetSize() << " bytes.";
+                                << "Pre-fetching failed because the slab size did not match: "
+                                << GPGMM_BYTES_TO_MB(slabSize) << " vs "
+                                << GPGMM_BYTES_TO_MB(prefetchedSlabAllocation->GetSize())
+                                << " MBs.";
                         }
 
                         mStats.PrefetchedMemoryMisses++;
