@@ -364,6 +364,39 @@ namespace gpgmm::d3d12 {
             }
         }
 
+        class ImportResourceCallbackContext {
+          public:
+            ImportResourceCallbackContext(ID3D12Resource* resource);
+            static HRESULT GetHeap(void* pContext, ID3D12Pageable** ppPageableOut);
+
+          private:
+            HRESULT GetHeap(ID3D12Pageable** ppPageableOut);
+
+            ID3D12Resource* mResource = nullptr;
+        };
+
+        class CreateCommittedResourceCallbackContext {
+          public:
+            CreateCommittedResourceCallbackContext(ID3D12Device* device,
+                                                   D3D12_HEAP_PROPERTIES* heapProperties,
+                                                   D3D12_HEAP_FLAGS heapFlags,
+                                                   const D3D12_RESOURCE_DESC* resourceDescriptor,
+                                                   const D3D12_CLEAR_VALUE* clearValue,
+                                                   D3D12_RESOURCE_STATES initialResourceState);
+
+            static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
+
+          private:
+            HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
+
+            const D3D12_CLEAR_VALUE* mClearValue;
+            ID3D12Device* mDevice;
+            D3D12_RESOURCE_STATES mInitialResourceState;
+            D3D12_HEAP_FLAGS mHeapFlags;
+            D3D12_HEAP_PROPERTIES* mHeapProperties;
+            const D3D12_RESOURCE_DESC* mResourceDescriptor;
+        };
+
     }  // namespace
 
     HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
