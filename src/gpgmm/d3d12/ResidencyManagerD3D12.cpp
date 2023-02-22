@@ -68,7 +68,7 @@ namespace gpgmm::d3d12 {
                             break;
                         }
 
-                        gpgmm::DebugEvent(mResidencyManager, MessageId::kBudgetUpdated)
+                        gpgmm::DebugLog(MessageId::kBudgetUpdated)
                             << "Updated budget from OS notification.";
                         break;
                     }
