@@ -575,7 +575,7 @@ namespace gpgmm::d3d12 {
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
           mIsAlwaysCommitted(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_COMMITTED),
-          mIsHeapAlwaysCreatedInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
+          mIsAlwaysCreatedInBudget(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
@@ -1059,22 +1059,31 @@ namespace gpgmm::d3d12 {
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 residencyManager->GetVideoMemoryInfo(segment);
 
-            // If over-budget, only free memory is considered available.
-            // TODO: Consider optimizing GetStatsInternal().
-            if (currentVideoInfo->CurrentUsage > currentVideoInfo->Budget) {
-                RESOURCE_ALLOCATOR_STATS allocationStats = {};
-                ReturnIfFailed(QueryStatsInternal(&allocationStats));
+            // If the allocation must be created within the budget, restrict the amount of memory
+            // to prevent OOM to free memory only or to the amount of budget left. The allocator
+            // checks this amount to determine if its appropriate to pre-allocate more memory or
+            // not.
+            if (!IsCreateHeapNotResident()) {
+                // If over-budget, only free memory is considered available.
+                // TODO: Consider optimizing GetStatsInternal().
+                if (currentVideoInfo->CurrentUsage + request.SizeInBytes >
+                    currentVideoInfo->Budget) {
+                    RESOURCE_ALLOCATOR_STATS allocationStats = {};
+                    ReturnIfFailed(QueryStatsInternal(&allocationStats));
 
-                request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
+                    request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
-                DebugLog(MessageId::kBudgetExceeded)
-                    << "Current usage exceeded budget ("
-                    << std::to_string(currentVideoInfo->CurrentUsage) << " vs "
-                    << std::to_string(currentVideoInfo->Budget) + " bytes).";
+                    DebugLog(MessageId::kBudgetExceeded)
+                        << "Current usage exceeded budget: "
+                        << GPGMM_BYTES_TO_MB(currentVideoInfo->CurrentUsage) << " vs "
+                        << GPGMM_BYTES_TO_MB(currentVideoInfo->Budget) << " MBs ("
+                        << GPGMM_BYTES_TO_MB(request.AvailableForAllocation) << " MBs free).";
 
-            } else {
-                request.AvailableForAllocation =
-                    currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
+                    // Otherwise, only memory in budget is considered available.
+                } else {
+                    request.AvailableForAllocation =
+                        currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
+                }
             }
         }
 
@@ -1529,7 +1538,7 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && !mIsHeapAlwaysCreatedInBudget;
+        return IsResidencyEnabled() && !mIsAlwaysCreatedInBudget;
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {

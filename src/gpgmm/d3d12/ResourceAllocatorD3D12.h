@@ -177,7 +177,7 @@ namespace gpgmm::d3d12 {
 
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
         const bool mIsAlwaysCommitted;
-        const bool mIsHeapAlwaysCreatedInBudget;
+        const bool mIsAlwaysCreatedInBudget;
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
         const bool mIsCustomHeapsDisabled;
