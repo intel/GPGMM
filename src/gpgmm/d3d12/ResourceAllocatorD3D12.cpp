@@ -971,8 +971,10 @@ namespace gpgmm::d3d12 {
             GetResourceAllocationInfo(mDevice, newResourceDesc);
         if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
             gpgmm::ErrorLog(MessageId::kSizeExceeded)
-                << "Unable to create resource allocation because the size exceeded "
-                   "capabilities of the device.";
+                << "Unable to create resource allocation because the resource size exceeded "
+                   "the capabilities of the device: "
+                << GPGMM_BYTES_TO_GB(resourceInfo.SizeInBytes) << " vs "
+                << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceSize()) << " GBs.";
             return E_OUTOFMEMORY;
         }
 
@@ -1065,7 +1067,9 @@ namespace gpgmm::d3d12 {
         if (GPGMM_UNLIKELY(requiresPadding)) {
             request.SizeInBytes += allocationDescriptor.RequireResourceHeapPadding;
             if (!neverSubAllocate) {
-                DebugLog() << "Sub-allocation disabled when padding is requested.";
+                WarningLog()
+                    << "Sub-allocation was enabled but has no effect when padding is requested: "
+                    << allocationDescriptor.RequireResourceHeapPadding << " bytes.";
                 neverSubAllocate = true;
             }
         }
