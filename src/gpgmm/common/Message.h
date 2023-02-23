@@ -43,6 +43,8 @@ namespace gpgmm {
         MessageSeverity Severity;
     };
 
+    const char* GetMessageFromID(MessageId messageId);
+
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_MESSAGE_H_

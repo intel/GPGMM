@@ -121,10 +121,10 @@ namespace gpgmm {
         if (IsDebuggerPresent()) {
             std::string outputString;
             if (mMessageId != MessageId::kUnknown) {
-                outputString =
-                    std::string(kLogTag) + " " + std::string(severityName) +
-                    "(tid: " + ToString(std::this_thread::get_id()) + "): " + fullMessage +
-                    "(MessageId=" + ToString(static_cast<uint32_t>(mMessageId)) + ")" + "\n";
+                outputString = std::string(kLogTag) + " " + std::string(severityName) +
+                               "(tid: " + ToString(std::this_thread::get_id()) +
+                               "): " + fullMessage + "[" + GetMessageFromID(mMessageId) + "]" +
+                               "\n";
             } else {
                 outputString = std::string(kLogTag) + " " + std::string(severityName) +
                                "(tid: " + ToString(std::this_thread::get_id()) +
@@ -147,8 +147,9 @@ namespace gpgmm {
 #else  // defined(GPGMM_PLATFORM_ANDROID)
        // Note: we use fprintf because <iostream> includes static initializers.
         if (mMessageId != MessageId::kUnknown) {
-            fprintf(outputStream, "%s %s (tid:%s): %s (MessageId=%d)\n", kLogTag, severityName,
-                    ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str(), mMessageId);
+            fprintf(outputStream, "%s %s (tid:%s): %s [%s]\n", kLogTag, severityName,
+                    ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str(),
+                    GetMessageFromID(mMessageId));
         } else {
             fprintf(outputStream, "%s %s (tid:%s): %s\n", kLogTag, severityName,
                     ToString(std::this_thread::get_id()).c_str(), fullMessage.c_str());

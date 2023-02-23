@@ -201,6 +201,7 @@ source_set("gpgmm_common_sources") {
     "MemoryCache.h",
     "MemoryPool.cpp",
     "MemoryPool.h",
+    "Message.cpp",
     "Message.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
