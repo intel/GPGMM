@@ -112,6 +112,14 @@ namespace gpgmm::d3d12 {
                    << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceHeapSize()) << " GBs";
         DebugLog() << "Creation of non-resident heaps: "
                    << ((mCaps->IsCreateHeapNotResidentSupported()) ? "Supported" : "Not supported");
+
+        // Format the output trace file as <test suite>.<test>.
+        const testing::TestInfo* const testInfoPtr =
+            ::testing::UnitTest::GetInstance()->current_test_info();
+        ASSERT_TRUE(testInfoPtr != nullptr);
+
+        mTraceFile = std::string(std::string(testInfoPtr->test_suite_name()) + "_" +
+                                 std::string(testInfoPtr->name()) + ".json");
     }
 
     void D3D12TestBase::TearDown() {
@@ -132,15 +140,7 @@ namespace gpgmm::d3d12 {
             desc.RecordOptions.Flags |= EventRecordFlags::kAll;
             desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
-
-            // Format the output trace file as <test suite>.<test>.
-            const testing::TestInfo* const testInfoPtr =
-                ::testing::UnitTest::GetInstance()->current_test_info();
-            ASSERT(testInfoPtr != nullptr);
-            desc.RecordOptions.TraceFile =
-                std::string(std::string(testInfoPtr->test_suite_name()) + "_" +
-                            std::string(testInfoPtr->name()) + ".json")
-                    .c_str();
+            desc.RecordOptions.TraceFile = mTraceFile.c_str();
         }
 
         return desc;

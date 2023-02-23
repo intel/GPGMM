@@ -17,6 +17,7 @@
 
 #include "tests/GPGMMTest.h"
 
+#include <string>
 #include <vector>
 
 #include <gpgmm_d3d12.h>
@@ -72,6 +73,7 @@ namespace gpgmm::d3d12 {
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;
         std::unique_ptr<Caps> mCaps;
+        std::string mTraceFile;
     };
 
 }  // namespace gpgmm::d3d12
