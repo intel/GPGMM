@@ -37,6 +37,10 @@
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 namespace gpgmm::d3d12 {
+
+    static constexpr uint64_t kMinBlockToMemoryCountReportingThreshold = 8u;
+    static constexpr double kMinAllocationUsageReportingThreshold = 0.5;
+
     namespace {
 
         // Combines heap type and flags used to allocate memory for resources into a single type for
@@ -1496,10 +1500,32 @@ namespace gpgmm::d3d12 {
             result += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
         }
 
-        GPGMM_TRACE_EVENT_METRIC(
-            "GPU allocation utilization (%)",
+        // Dedicated allocations always have 1 block per heap so only check >1 blocks or when
+        // sub-allocation is used.
+        const double blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
+        if (blocksPerHeap > 1 && blocksPerHeap < kMinBlockToMemoryCountReportingThreshold) {
+            gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
+                << "Average number of resource allocations per heap is below threshold: "
+                << blocksPerHeap << " blocks per heap (vs "
+                << kMinBlockToMemoryCountReportingThreshold
+                << "). This usually means the heap has insufficent space and "
+                   "could beneifit from larger MemoryGrowthFactor and/or "
+                   "PreferredResourceHeapSize.";
+        }
+
+        const uint64_t allocationUsagePct =
             SafeDivide(result.UsedBlockUsage, result.UsedMemoryUsage + result.FreeMemoryUsage) *
-                100);
+            100;
+        if (allocationUsagePct > 0 &&
+            allocationUsagePct < kMinAllocationUsageReportingThreshold * 100) {
+            gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
+                << "Average resource allocation usage is below threshold: " << allocationUsagePct
+                << "% vs " << kMinAllocationUsageReportingThreshold * 100
+                << "%. This either means memory has become fragmented or the working set has "
+                   "changed significantly.";
+        }
+
+        GPGMM_TRACE_EVENT_METRIC("GPU allocation utilization (%)", allocationUsagePct);
 
         GPGMM_TRACE_EVENT_METRIC("GPU allocation free (MB)",
                                  GPGMM_BYTES_TO_MB(result.FreeMemoryUsage));

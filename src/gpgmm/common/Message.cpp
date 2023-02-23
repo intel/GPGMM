@@ -40,6 +40,8 @@ namespace gpgmm {
                 return "INVALID_ARGUMENT";
             case MessageId::kBadOperation:
                 return "BAD_OPERATION";
+            case MessageId::kPerformanceWarning:
+                return "PERFORMANCE_WARNING";
             default:
                 UNREACHABLE();
                 return "";
