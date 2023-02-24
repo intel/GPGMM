@@ -16,6 +16,7 @@
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -81,9 +82,9 @@ namespace gpgmm::d3d12 {
 
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
             DebugEvent(this, MessageId::kAlignmentMismatch)
-                << "Resource heap was larger then the requested size (" +
-                       std::to_string(resourceHeapDesc.SizeInBytes) + " vs " +
-                       std::to_string(request.SizeInBytes) + " bytes).";
+                << "Resource heap was larger then the requested size: "
+                << GPGMM_BYTES_TO_MB(resourceHeapDesc.SizeInBytes) << " vs "
+                << GPGMM_BYTES_TO_MB(request.SizeInBytes) << " bytes.";
         }
 
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
