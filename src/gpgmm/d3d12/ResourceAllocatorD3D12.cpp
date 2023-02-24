@@ -98,7 +98,8 @@ namespace gpgmm::d3d12 {
                 resourceDescriptor.Alignment != resourceInfo.Alignment) {
                 DebugLog(MessageId::kPerformanceWarning)
                     << "ID3D12Device::GetResourceAllocationInfo re-aligned: "
-                    << resourceDescriptor.Alignment + " vs " + resourceInfo.Alignment << " bytes.";
+                    << resourceDescriptor.Alignment << " vs " << resourceInfo.Alignment
+                    << " bytes.";
 
                 resourceDescriptor.Alignment = 0;
                 resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
