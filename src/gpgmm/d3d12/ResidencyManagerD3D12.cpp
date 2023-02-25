@@ -36,6 +36,7 @@ namespace gpgmm::d3d12 {
     static constexpr uint64_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
     static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
     static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
+    static constexpr float kMinCurrentUsageOfBudgetReportingThreshold = 0.90f;
 
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
@@ -525,9 +526,35 @@ namespace gpgmm::d3d12 {
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
             WarnEvent(this, MessageId::kBudgetExceeded)
                 << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
-                << " GPU memory exceeds budget: "
+                << " GPU memory usage exceeds budget: "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget) << " MBs.";
+        } else {
+            const float currentUsageOfBudget =
+                SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget);
+            if (pVideoMemoryInfo->Budget > 0 &&
+                currentUsageOfBudget > kMinCurrentUsageOfBudgetReportingThreshold) {
+                EventMessage message = WarnEvent(this, MessageId::kBudgetExceeded);
+                message << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
+                        << " GPU memory usage is above budget threshold: "
+                        << currentUsageOfBudget * 100 << "% vs "
+                        << kMinCurrentUsageOfBudgetReportingThreshold * 100 << "%";
+
+                // Check if even evicting resident heaps would get us back below the budget or not.
+                // Otherwise, warn the developer that E_OUTOFMEMORY is likely unavoidable.
+                if (pVideoMemoryInfo->CurrentUsage > mStats.CurrentMemoryUsage &&
+                    (pVideoMemoryInfo->CurrentUsage - mStats.CurrentMemoryUsage >
+                     pVideoMemoryInfo->Budget)) {
+                    message
+                        << "There is not enough memory to page-out to get below the budget. This "
+                           "likely means there are more external than internal heaps that cannot "
+                           "be "
+                           "evicted because they are unmanaged by GPGMM. Consider using CreateHeap "
+                           "to import them: "
+                        << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
+                        << GPGMM_BYTES_TO_MB(mStats.CurrentMemoryUsage) << " MBs.";
+                }
+            }
         }
 
         // Not all segments could be used.
