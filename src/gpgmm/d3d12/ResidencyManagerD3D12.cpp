@@ -868,7 +868,7 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(EnsureResidencyFenceExists());
             ReturnIfSucceeded(device3->EnqueueMakeResident(
                 D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
-                mResidencyFence->GetFence(), mResidencyFence->GetLastSignaledFence() + 1));
+                mResidencyFence->GetFence(), mResidencyFence->GetCurrentFence()));
         }
 
         // A MakeResident call can fail if there's not enough available memory. This
