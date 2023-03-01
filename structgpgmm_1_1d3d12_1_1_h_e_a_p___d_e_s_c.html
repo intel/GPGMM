@@ -85,15 +85,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a235c2130bf71698d851998abd57f94dc"><td class="memItemLeft" align="right" valign="top">DXGI_MEMORY_SEGMENT_GROUP&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc">MemorySegmentGroup</a></td></tr>
+<tr class="memdesc:a235c2130bf71698d851998abd57f94dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the memory segment to use for residency.  <br /></td></tr>
+<tr class="separator:a235c2130bf71698d851998abd57f94dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2389164925b57ec3d13631a8e659dc2f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f">SizeInBytes</a></td></tr>
 <tr class="memdesc:a2389164925b57ec3d13631a8e659dc2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created size of the heap, in bytes.  <br /></td></tr>
 <tr class="separator:a2389164925b57ec3d13631a8e659dc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#aad452e7c7a2ddd7bb683403bf50d3dec">Alignment</a></td></tr>
 <tr class="memdesc:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created alignment of the heap, in bytes.  <br /></td></tr>
 <tr class="separator:aad452e7c7a2ddd7bb683403bf50d3dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a235c2130bf71698d851998abd57f94dc"><td class="memItemLeft" align="right" valign="top">DXGI_MEMORY_SEGMENT_GROUP&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a235c2130bf71698d851998abd57f94dc">MemorySegmentGroup</a></td></tr>
-<tr class="memdesc:a235c2130bf71698d851998abd57f94dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the memory segment to use for residency.  <br /></td></tr>
-<tr class="separator:a235c2130bf71698d851998abd57f94dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fd3a3d0b659aa232e64e6c04355ff14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a246644ddca184dd4446f3d89c0a376cd">HEAP_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a3fd3a3d0b659aa232e64e6c04355ff14">Flags</a></td></tr>
 <tr class="memdesc:a3fd3a3d0b659aa232e64e6c04355ff14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies heaps options.  <br /></td></tr>
 <tr class="separator:a3fd3a3d0b659aa232e64e6c04355ff14"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,7 +117,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Created alignment of the heap, in bytes. </p>
-<p>Must be non-zero. </p>
+<p>Optional parameter. Must be non-zero. </p>
 
 </div>
 </div>
@@ -185,7 +185,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Created size of the heap, in bytes. </p>
-<p>Must be non-zero. SizeInBytes is always a multiple of the alignment. </p>
+<p>Optional parameter. Must be non-zero. Always a multiple of the alignment. </p>
 
 </div>
 </div>
