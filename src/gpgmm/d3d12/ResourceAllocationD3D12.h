@@ -18,8 +18,6 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
-#include "gpgmm/d3d12/UnknownD3D12.h"
-#include "gpgmm/d3d12/d3d12_platform.h"
 
 #include <gpgmm_d3d12.h>
 

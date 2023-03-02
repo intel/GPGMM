@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESOURCEALLOCATORD3D12_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
-#include "gpgmm/d3d12/UnknownD3D12.h"
+#include "gpgmm/d3d12/DebugObjectD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 
 #include <gpgmm_d3d12.h>
@@ -35,7 +35,7 @@ namespace gpgmm::d3d12 {
     class ResidencyManager;
     class ResourceAllocation;
 
-    class ResourceAllocator final : public Unknown,
+    class ResourceAllocator final : public DebugObject,
                                     public IResourceAllocator,
                                     public MemoryAllocator {
       public:
@@ -72,6 +72,10 @@ namespace gpgmm::d3d12 {
 
         // ObjectBase interface
         const char* GetTypename() const override;
+
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,

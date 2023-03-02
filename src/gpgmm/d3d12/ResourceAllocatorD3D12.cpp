@@ -1638,6 +1638,14 @@ namespace gpgmm::d3d12 {
         return E_INVALIDARG;
     }
 
+    LPCWSTR ResourceAllocator::GetDebugName() const {
+        return DebugObject::GetDebugName();
+    }
+
+    HRESULT ResourceAllocator::SetDebugName(LPCWSTR Name) {
+        return DebugObject::SetDebugNameImpl(Name);
+    }
+
     ImportResourceCallbackContext::ImportResourceCallbackContext(ID3D12Resource* resource)
         : mResource(resource) {
     }

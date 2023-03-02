@@ -444,7 +444,7 @@ namespace gpgmm::d3d12 {
     Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
     and ID3D12Device::MakeResident to page-out or page-in heaps, respectively.
     **/
-    GPGMM_INTERFACE IResidencyManager : public IUnknown {
+    GPGMM_INTERFACE IResidencyManager : public IDebugObject {
       public:
         /** \brief  Locks the specified heap.
 
@@ -1105,7 +1105,7 @@ namespace gpgmm::d3d12 {
     budget. And similarly, a smaller Heap allows for finer grained residency but could increase
     overall memory usage for allocation.
     **/
-    GPGMM_INTERFACE IResourceAllocator : public IUnknown {
+    GPGMM_INTERFACE IResourceAllocator : public IDebugObject {
       public:
         /** \brief  Allocates memory and creates a D3D12 resource using it.
 

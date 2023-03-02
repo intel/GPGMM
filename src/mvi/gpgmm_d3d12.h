@@ -130,6 +130,10 @@ namespace gpgmm::d3d12 {
         ULONG STDMETHODCALLTYPE AddRef() override;
         ULONG STDMETHODCALLTYPE Release() override;
 
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
+
       private:
         ResidencyManager(const RESIDENCY_DESC& descriptor);
 
@@ -227,6 +231,10 @@ namespace gpgmm::d3d12 {
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
         ULONG STDMETHODCALLTYPE AddRef() override;
         ULONG STDMETHODCALLTYPE Release() override;
+
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
         ResourceAllocator(const ALLOCATOR_DESC& descriptor, ResidencyManager* pResidencyManager);
