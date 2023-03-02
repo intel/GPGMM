@@ -165,7 +165,6 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
 , <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe">ALLOCATION_FLAG_DISABLE_RESIDENCY</a> = 0x80
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a">ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH</a> = 0x100
 <br />
  }</td></tr>
 <tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -392,13 +391,6 @@ Mostly used for debug and testing when certain allocation methods unexpectedly f
 <pre class="fragment">The flag disables residency management for the resource allocation.
 
 Mostly used when external resources are residency managed elsewhere.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a" name="aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a"></a>ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH&#160;</td><td class="fielddoc"><p>Report alignment mismatches upon successful resource creation. </p>
-<pre class="fragment">Flag is used to report when requested size does not match the allocation size due to
-resource or allocation alignment requirements.
-
-Must compile with GPGMM_ENABLE_MEMORY_ALIGN_CHECKS to use as the request size
-is normally not tracked.
 </pre> </td></tr>
 </table>
 
