@@ -126,18 +126,21 @@ jobs:
         ninja -C out\Debug
 
     - name: Run gpgmm_end2end_tests (with patch)
+      timeout-minutes: 10
       shell: cmd
       run: |
         cd test
         out\Debug\gpgmm_end2end_tests.exe --gtest_filter=-*NoLeak --gtest_output=json:${{ github.workspace }}\..\test_end2end_tests.json 2>&1
 
     - name: Run gpgmm_end2end_tests runtime leak checks (with patch)
+      timeout-minutes: 10
       shell: cmd
       run: |
         cd test
         out\Debug\gpgmm_end2end_tests.exe --no-leaks 2>&1
 
     - name: Run gpgmm_end2end_tests no leak tests (with patch)
+      timeout-minutes: 10
       shell: cmd
       run: |
         cd test
