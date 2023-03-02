@@ -210,8 +210,8 @@ namespace gpgmm {
 
     void MemoryAllocator::CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
-            DebugEvent(this, MessageId::kAlignmentMismatch)
-                << "Resource allocation is larger then the requested size (" +
+            WarningLog(MessageId::kAlignmentMismatch)
+                << "Allocation is larger then the requested size (" +
                        std::to_string(allocation.GetSize()) + " vs " +
                        std::to_string(allocation.GetRequestSize()) + " bytes).";
         }
