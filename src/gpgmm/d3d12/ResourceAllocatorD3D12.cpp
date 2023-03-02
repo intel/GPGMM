@@ -949,10 +949,10 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(QueryStatsInternal(nullptr));
         }
 
-#if defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS)
-        // Allocation is subject to alignment requirements per allocator or allocation method.
-        CheckAndReportAllocationMisalignment(*static_cast<ResourceAllocation*>(allocation.Get()));
-#endif
+        if (allocationDescriptor.Flags & ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH) {
+            CheckAndReportAllocationMisalignment(
+                *static_cast<ResourceAllocation*>(allocation.Get()));
+        }
 
         if (ppResourceAllocationOut != nullptr) {
             *ppResourceAllocationOut = allocation.Detach();
