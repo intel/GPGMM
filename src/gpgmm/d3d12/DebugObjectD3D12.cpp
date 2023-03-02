@@ -31,4 +31,9 @@ namespace gpgmm::d3d12 {
         return SetDebugNameImpl(Name);
     }
 
+    HRESULT DebugObject::SetDebugNameImpl(LPCWSTR name) {
+        mDebugName = name;
+        return S_OK;
+    }
+
 }  // namespace gpgmm::d3d12

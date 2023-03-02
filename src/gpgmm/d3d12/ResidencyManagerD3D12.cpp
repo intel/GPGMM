@@ -1033,4 +1033,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
+    LPCWSTR ResidencyManager::GetDebugName() const {
+        return DebugObject::GetDebugName();
+    }
+
+    HRESULT ResidencyManager::SetDebugName(LPCWSTR Name) {
+        return DebugObject::SetDebugNameImpl(Name);
+    }
+
 }  // namespace gpgmm::d3d12

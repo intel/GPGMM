@@ -17,7 +17,7 @@
 #define GPGMM_D3D12_RESIDENCYMANAGERD3D12_H_
 
 #include "gpgmm/common/Object.h"
-#include "gpgmm/d3d12/UnknownD3D12.h"
+#include "gpgmm/d3d12/DebugObjectD3D12.h"
 #include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
 
@@ -40,7 +40,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
-    class ResidencyManager final : public Unknown, public IResidencyManager, ObjectBase {
+    class ResidencyManager final : public DebugObject, public IResidencyManager, public ObjectBase {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
                                               IResidencyManager** ppResidencyManagerOut);
@@ -92,7 +92,12 @@ namespace gpgmm::d3d12 {
 
         bool IsUMA() const;
 
+        // ObjectBase interface
         const char* GetTypename() const override;
+
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
 
         using LRUCache = LinkedList<Heap>;
 

@@ -219,6 +219,14 @@ namespace gpgmm::d3d12 {
         return Unknown::Release();
     }
 
+    LPCWSTR ResidencyManager::GetDebugName() const {
+        return L"";
+    }
+
+    HRESULT ResidencyManager::SetDebugName(LPCWSTR Name) {
+        return S_OK;
+    }
+
     // ResourceAllocation
 
     void ResourceAllocation::DeleteThis() {
@@ -417,6 +425,14 @@ namespace gpgmm::d3d12 {
 
     ULONG STDMETHODCALLTYPE ResourceAllocator::Release() {
         return Unknown::Release();
+    }
+
+    LPCWSTR ResourceAllocator::GetDebugName() const {
+        return L"";
+    }
+
+    HRESULT ResourceAllocator::SetDebugName(LPCWSTR Name) {
+        return S_OK;
     }
 
     CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(
