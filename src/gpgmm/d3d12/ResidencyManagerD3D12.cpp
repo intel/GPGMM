@@ -537,8 +537,8 @@ namespace gpgmm::d3d12 {
                 EventMessage message = WarnEvent(this, MessageId::kBudgetExceeded);
                 message << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                         << " GPU memory usage is above budget threshold: "
-                        << currentUsageOfBudget * 100 << "% vs "
-                        << kMinCurrentUsageOfBudgetReportingThreshold * 100 << "%";
+                        << uint64_t(currentUsageOfBudget * 100) << "% vs "
+                        << uint64_t(kMinCurrentUsageOfBudgetReportingThreshold * 100) << "%";
 
                 // Check if even evicting resident heaps would get us back below the budget or not.
                 // Otherwise, warn the developer that E_OUTOFMEMORY is likely unavoidable.

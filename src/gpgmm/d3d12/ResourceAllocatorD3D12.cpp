@@ -1524,7 +1524,7 @@ namespace gpgmm::d3d12 {
             allocationUsagePct < kMinAllocationUsageReportingThreshold * 100) {
             gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
                 << "Average resource allocation usage is below threshold: " << allocationUsagePct
-                << "% vs " << kMinAllocationUsageReportingThreshold * 100
+                << "% vs " << uint64_t(kMinAllocationUsageReportingThreshold * 100)
                 << "%. This either means memory has become fragmented or the working set has "
                    "changed significantly.";
         }
