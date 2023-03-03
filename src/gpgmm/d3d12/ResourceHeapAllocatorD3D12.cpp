@@ -32,11 +32,13 @@ namespace gpgmm::d3d12 {
     ResourceHeapAllocator::ResourceHeapAllocator(ResidencyManager* residencyManager,
                                                  ID3D12Device* device,
                                                  D3D12_HEAP_PROPERTIES heapProperties,
-                                                 D3D12_HEAP_FLAGS heapFlags)
+                                                 D3D12_HEAP_FLAGS heapFlags,
+                                                 bool isOverBudgetEnabled)
         : mResidencyManager(residencyManager),
           mDevice(device),
           mHeapProperties(heapProperties),
-          mHeapFlags(heapFlags) {
+          mHeapFlags(heapFlags),
+          mIsOverBudgetEnabled(isOverBudgetEnabled) {
     }
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> ResourceHeapAllocator::TryAllocateMemory(
@@ -59,6 +61,10 @@ namespace gpgmm::d3d12 {
 
         const bool isResidencyEnabled = (mResidencyManager != nullptr);
         resourceHeapDesc.Flags |= GetHeapFlags(mHeapFlags, isResidencyEnabled);
+
+        if (mIsOverBudgetEnabled) {
+            resourceHeapDesc.Flags &= ~(HEAP_FLAG_ALWAYS_IN_BUDGET);  // clear
+        }
 
         if (isResidencyEnabled) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(

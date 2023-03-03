@@ -616,7 +616,8 @@ namespace gpgmm::d3d12 {
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
-          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
+          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY),
+          mIsOverBudgetEnabled(descriptor.Flags & ALLOCATOR_FLAG_ALLOW_OVER_BUDGET) {
         ASSERT(mDevice != nullptr);
 
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -784,8 +785,8 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
-            std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice,
-                                                    heapProperties, heapFlags);
+            std::make_unique<ResourceHeapAllocator>(
+                mResidencyManager.Get(), mDevice, heapProperties, heapFlags, mIsOverBudgetEnabled);
 
         const uint64_t heapSize =
             std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
@@ -1451,6 +1452,10 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.DebugName = L"Resource heap (committed)";
         resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, IsResidencyEnabled());
+
+        if (mIsOverBudgetEnabled) {
+            resourceHeapDesc.Flags &= ~(HEAP_FLAG_ALWAYS_IN_BUDGET);  // clear
+        }
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
