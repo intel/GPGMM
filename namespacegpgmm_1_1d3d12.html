@@ -139,6 +139,7 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32">ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY</a> = 0x10
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a136d5d2c03f84883605eddd2653f6d3d">ALLOCATOR_FLAG_ALWAYS_RESIDENT</a> = 0x40
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -532,6 +533,12 @@ corruption of heaps.
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4" name="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p>Report leaks of resource allocations. </p>
 <pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
 to be released, it will report details on any leaked allocations as log messages.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a136d5d2c03f84883605eddd2653f6d3d" name="a41e5f9a1d561e4bc68c1e2965f8860b8a136d5d2c03f84883605eddd2653f6d3d"></a>ALLOCATOR_FLAG_ALWAYS_RESIDENT&#160;</td><td class="fielddoc"><p>Requires resource allocation to be created resident. </p>
+<pre class="fragment">With this flag, resource heaps created by this resource allocator will never specify
+D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT, when supported, to avoid unnecessary GPU paging
+operations at resource creation, and instead, reverts back to the default behavior of D3D12
+of always making heaps implicitly resident on creation.
 </pre> </td></tr>
 </table>
 

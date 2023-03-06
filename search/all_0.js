@@ -28,9 +28,10 @@ var searchData=
   ['allocator_5fflag_5falways_5fcommitted_25',['ALLOCATOR_FLAG_ALWAYS_COMMITTED',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fin_5fbudget_26',['ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5falways_5fon_5fdemand_27',['ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fdisable_5fmemory_5fprefetch_28',['ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fdisable_5funified_5fmemory_29',['ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnever_5fleak_5fmemory_30',['ALLOCATOR_FLAG_NEVER_LEAK_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnone_31',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]],
-  ['allocator_5fflags_32',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]]
+  ['allocator_5fflag_5falways_5fresident_28',['ALLOCATOR_FLAG_ALWAYS_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a136d5d2c03f84883605eddd2653f6d3d',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fdisable_5fmemory_5fprefetch_29',['ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fdisable_5funified_5fmemory_30',['ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fnever_5fleak_5fmemory_31',['ALLOCATOR_FLAG_NEVER_LEAK_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4',1,'gpgmm::d3d12']]],
+  ['allocator_5fflag_5fnone_32',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]],
+  ['allocator_5fflags_33',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]]
 ];
