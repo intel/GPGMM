@@ -45,16 +45,12 @@ namespace gpgmm::d3d12 {
         }
     }  // namespace
 
-    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool isResidencyEnabled) {
-        if (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) {
-            return HEAP_FLAG_NONE | HEAP_FLAG_ALWAYS_IN_RESIDENCY;
-        }
-
-        if (isResidencyEnabled) {
+    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget) {
+        if (alwaysCreatedInBudget) {
             return HEAP_FLAG_ALWAYS_IN_BUDGET | HEAP_FLAG_ALWAYS_IN_RESIDENCY;
         }
 
-        return HEAP_FLAG_NONE;
+        return HEAP_FLAG_ALWAYS_IN_RESIDENCY;
     }
 
     HRESULT CreateHeap(const HEAP_DESC& descriptor,

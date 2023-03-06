@@ -134,7 +134,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Requires the heap to be created in budget.
 
-        This flags allows the heap to be tracked for residency but not made resident.
+        This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
         */
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
 
@@ -648,14 +648,9 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATOR_FLAG_ALWAYS_COMMITTED = 0x1,
 
-        /** \brief Creates resource within budget.
+        /** \brief Requires resource allocation to be created within budget.
 
-        By default (and when residency is used), resources will not be created resident unless an
-        operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-        resource will become resident once ExecuteCommandList() is called. However, this flag can be
-        used to change this behavior by requiring resource heaps to be always resident at resource
-        creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-        through the GPU/driver instead of explicitly through GPGMM.
+        Always use HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource allocator.
         */
         ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
@@ -690,14 +685,6 @@ namespace gpgmm::d3d12 {
         to be released, it will report details on any leaked allocations as log messages.
         */
         ALLOCATOR_FLAG_NEVER_LEAK_MEMORY = 0x20,
-
-        /** \brief Allows resources to be created over budget.
-
-        Used when GPGMM is unable to manage enough budget (external heaps, multiple GMMs per
-        process) and instead relies on the default OS/kernel behavior. This should be considered a
-        temporary measure and should not replace implementing good budget management.
-        */
-        ALLOCATOR_FLAG_ALLOW_OVER_BUDGET = 0x40,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_FLAGS)

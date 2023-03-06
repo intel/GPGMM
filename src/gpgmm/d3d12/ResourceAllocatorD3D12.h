@@ -153,7 +153,6 @@ namespace gpgmm::d3d12 {
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
         const bool mIsCustomHeapsDisabled;
-        const bool mIsOverBudgetEnabled;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 

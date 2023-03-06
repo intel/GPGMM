@@ -533,18 +533,6 @@ namespace gpgmm::d3d12 {
             newDescriptor.ResourceHeapTier = caps->GetMaxResourceHeapTierSupported();
         }
 
-        // ID3D12Device::CreateCommittedResource and ID3D12Device::CreateHeap implicity
-        // call ID3D12Device::MakeResident, requiring resource heaps to be "created in budget".
-        // But this can be disabled if D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT is supported.
-        if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET) &&
-            !caps->IsCreateHeapNotResidentSupported()) {
-            newDescriptor.Flags |= ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
-
-            DebugLog(MessageId::kInvalidArgument)
-                << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET was not requested but enabled "
-                   "anyway because the device did not support creating non-resident heaps.";
-        }
-
         newDescriptor.MaxResourceHeapSize =
             (allocatorDescriptor.MaxResourceHeapSize > 0)
                 ? std::min(allocatorDescriptor.MaxResourceHeapSize, caps->GetMaxResourceHeapSize())
@@ -616,8 +604,7 @@ namespace gpgmm::d3d12 {
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
-          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY),
-          mIsOverBudgetEnabled(descriptor.Flags & ALLOCATOR_FLAG_ALLOW_OVER_BUDGET) {
+          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
         ASSERT(mDevice != nullptr);
 
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -785,8 +772,9 @@ namespace gpgmm::d3d12 {
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment) {
         std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
-            std::make_unique<ResourceHeapAllocator>(
-                mResidencyManager.Get(), mDevice, heapProperties, heapFlags, mIsOverBudgetEnabled);
+            std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice,
+                                                    heapProperties, heapFlags,
+                                                    mIsAlwaysCreatedInBudget);
 
         const uint64_t heapSize =
             std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
@@ -1451,13 +1439,9 @@ namespace gpgmm::d3d12 {
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.Alignment = info.Alignment;
         resourceHeapDesc.DebugName = L"Resource heap (committed)";
-        resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, IsResidencyEnabled());
-
-        if (mIsOverBudgetEnabled) {
-            resourceHeapDesc.Flags &= ~(HEAP_FLAG_ALWAYS_IN_BUDGET);  // clear
-        }
 
         if (IsResidencyEnabled()) {
+            resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, mIsAlwaysCreatedInBudget);
             resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
                 heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
@@ -1611,7 +1595,7 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && !mIsAlwaysCreatedInBudget;
+        return IsResidencyEnabled() && mCaps->IsCreateHeapNotResidentSupported();
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {
