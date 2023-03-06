@@ -604,7 +604,8 @@ namespace gpgmm::d3d12 {
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
-          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) {
+          mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY),
+          mIsAlwaysCreateResident(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_RESIDENT) {
         ASSERT(mDevice != nullptr);
 
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -1595,7 +1596,8 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && mCaps->IsCreateHeapNotResidentSupported();
+        return IsResidencyEnabled() && mCaps->IsCreateHeapNotResidentSupported() &&
+               !mIsAlwaysCreateResident;
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {
