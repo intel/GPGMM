@@ -27,7 +27,7 @@ namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
-    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool isResidencyEnabled);
+    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget);
 
     class Heap final : public MemoryBase, public DebugObject, public LinkNode<Heap>, public IHeap {
       public:

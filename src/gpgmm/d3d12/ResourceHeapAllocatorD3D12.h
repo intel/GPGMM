@@ -58,7 +58,7 @@ namespace gpgmm::d3d12 {
         ID3D12Device* const mDevice;
         const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;
-        const bool mIsOverBudgetEnabled;
+        const bool mIsAlwaysCreatedInBudget;
     };
 
 }  // namespace gpgmm::d3d12
