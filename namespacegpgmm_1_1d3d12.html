@@ -139,7 +139,6 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663">ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32">ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY</a> = 0x10
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4">ALLOCATOR_FLAG_NEVER_LEAK_MEMORY</a> = 0x20
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8ab84f8f7ee833f4f3788abb7e4871b836">ALLOCATOR_FLAG_ALLOW_OVER_BUDGET</a> = 0x40
 <br />
  }</td></tr>
 <tr class="separator:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -513,13 +512,8 @@ Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) sp
 for large static resources. Otherwise, this is mostly used for debugging and testing
 purposes.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Creates resource within budget. </p>
-<pre class="fragment">By default (and when residency is used), resources will not be created resident unless an
-operation is performed on the allocation that requires them to be (ex. Map). Otherwise, the
-resource will become resident once ExecuteCommandList() is called. However, this flag can be
-used to change this behavior by requiring resource heaps to be always resident at resource
-creation. When residency is not used, ALLOCATOR_FLAG_ALWAYS_IN_BUDGET is implicitly enabled
-through the GPU/driver instead of explicitly through GPGMM.
+<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba" name="a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba"></a>ALLOCATOR_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires resource allocation to be created within budget. </p>
+<pre class="fragment">Always use HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource allocator.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02" name="a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02"></a>ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH&#160;</td><td class="fielddoc"><p>Disables pre-fetching of GPU memory. </p>
 <pre class="fragment">Should be only used for debugging and testing purposes.
@@ -538,11 +532,6 @@ corruption of heaps.
 <tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4" name="a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4"></a>ALLOCATOR_FLAG_NEVER_LEAK_MEMORY&#160;</td><td class="fielddoc"><p>Report leaks of resource allocations. </p>
 <pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
 to be released, it will report details on any leaked allocations as log messages.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a41e5f9a1d561e4bc68c1e2965f8860b8ab84f8f7ee833f4f3788abb7e4871b836" name="a41e5f9a1d561e4bc68c1e2965f8860b8ab84f8f7ee833f4f3788abb7e4871b836"></a>ALLOCATOR_FLAG_ALLOW_OVER_BUDGET&#160;</td><td class="fielddoc"><p>Allows resources to be created over budget. </p>
-<pre class="fragment">Used when GPGMM is unable to manage enough budget (external heaps, multiple GMMs per
-process) and instead relies on the default OS/kernel behavior. This should be considered a
-temporary measure and should not replace implementing good budget management.
 </pre> </td></tr>
 </table>
 
@@ -564,7 +553,7 @@ temporary measure and should not replace implementing good budget management.
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493" name="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493"></a>HEAP_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f" name="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires the heap to be created in budget. </p>
-<pre class="fragment">This flags allows the heap to be tracked for residency but not made resident.
+<pre class="fragment">This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc" name="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc"></a>HEAP_FLAG_ALWAYS_IN_RESIDENCY&#160;</td><td class="fielddoc"><p>Requires the heap to be tracked for residency. </p>
 <pre class="fragment">This flag is equivelent to calling LockHeap then UnlockHeap after
