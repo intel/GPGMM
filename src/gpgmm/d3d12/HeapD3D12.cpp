@@ -47,11 +47,11 @@ namespace gpgmm::d3d12 {
 
     HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool isResidencyEnabled) {
         if (heapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT) {
-            return HEAP_FLAG_NONE;
+            return HEAP_FLAG_NONE | HEAP_FLAG_ALWAYS_IN_RESIDENCY;
         }
 
         if (isResidencyEnabled) {
-            return HEAP_FLAG_ALWAYS_IN_BUDGET;
+            return HEAP_FLAG_ALWAYS_IN_BUDGET | HEAP_FLAG_ALWAYS_IN_RESIDENCY;
         }
 
         return HEAP_FLAG_NONE;
@@ -140,7 +140,15 @@ namespace gpgmm::d3d12 {
                 if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
                     ReturnIfFailed(residencyManager->LockHeap(heap.get()));
                     ReturnIfFailed(residencyManager->UnlockHeap(heap.get()));
+                    ASSERT(heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT);
                 }
+            }
+        } else {
+            if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
+                gpgmm::WarningLog(MessageId::kInvalidArgument)
+                    << "HEAP_FLAG_ALWAYS_IN_RESIDENCY was specified but had no effect becauase "
+                       "residency management is "
+                       "not being used.";
             }
         }
 
