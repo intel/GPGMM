@@ -1365,12 +1365,9 @@ namespace gpgmm::d3d12 {
             return S_FALSE;
         }
 
-        HEAP_DESC resourceHeapDesc = {};
-        resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
-        resourceHeapDesc.Alignment = resourceInfo.Alignment;
-
         ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
+        HEAP_DESC resourceHeapDesc = {};
         ComPtr<IHeap> resourceHeap;
         ReturnIfFailedDevice(
             Heap::CreateHeap(resourceHeapDesc,

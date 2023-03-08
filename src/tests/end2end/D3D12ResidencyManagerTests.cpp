@@ -132,7 +132,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
     HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
-    resourceHeapAlwaysInBudgetDesc.SizeInBytes = kHeapSize;
     resourceHeapAlwaysInBudgetDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     resourceHeapAlwaysInBudgetDesc.Flags |= HEAP_FLAG_ALWAYS_IN_BUDGET;
 
@@ -170,7 +169,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     BadCreateHeapCallbackContext badCreateHeapCallbackContext;
 
     HEAP_DESC resourceHeapDesc = {};
-    resourceHeapDesc.SizeInBytes = kHeapSize;
     resourceHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     ASSERT_FAILED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
@@ -203,7 +201,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Residency status of resource heap types is always known.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeap->GetInfo().SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
 
     ComPtr<ID3D12Heap> heap;
@@ -215,7 +213,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeap->GetInfo().SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
@@ -224,7 +222,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeap->GetInfo().SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
@@ -241,8 +239,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
     HEAP_DESC descriptorHeapDesc = {};
-    descriptorHeapDesc.SizeInBytes =
-        heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
     descriptorHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
@@ -269,7 +265,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeap->GetInfo().SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
@@ -278,7 +274,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeap->GetInfo().SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
@@ -295,8 +291,6 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
     HEAP_DESC descriptorHeapDesc = {};
-    descriptorHeapDesc.SizeInBytes =
-        heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
     descriptorHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     descriptorHeapDesc.Flags |= HEAP_FLAG_ALWAYS_IN_RESIDENCY;
 

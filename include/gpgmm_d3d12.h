@@ -153,23 +153,23 @@ namespace gpgmm::d3d12 {
       Specifies creation options for a residency managed heap.
       */
     struct HEAP_DESC {
-        /** \brief Created size of the heap, in bytes.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
-        */
-        uint64_t SizeInBytes;
-
-        /** \brief Created alignment of the heap, in bytes.
-
-        Must be non-zero.
-        */
-        uint64_t Alignment;
-
         /** \brief Specifies the memory segment to use for residency.
 
         Required parameter.
         */
         DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+
+        /** \brief Created size of the heap, in bytes.
+
+        Optional parameter. Must be non-zero. Always a multiple of the alignment.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Created alignment of the heap, in bytes.
+
+        Optional parameter. Must be non-zero.
+        */
+        uint64_t Alignment;
 
         /** \brief Specifies heaps options.
 

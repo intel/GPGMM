@@ -52,11 +52,6 @@ namespace gpgmm::d3d12 {
         }
 
         HEAP_DESC resourceHeapDesc = {};
-        // D3D12 requests (but not requires) the heap size be always a multiple of
-        // alignment to avoid wasting bytes.
-        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
-        resourceHeapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
-        resourceHeapDesc.Alignment = request.Alignment;
         resourceHeapDesc.DebugName = kResourceHeapDebugName;
 
         const bool isResidencyEnabled = (mResidencyManager != nullptr);
@@ -68,8 +63,13 @@ namespace gpgmm::d3d12 {
 
         D3D12_HEAP_DESC heapDesc = {};
         heapDesc.Properties = mHeapProperties;
-        heapDesc.SizeInBytes = resourceHeapDesc.SizeInBytes;
-        heapDesc.Alignment = resourceHeapDesc.Alignment;
+
+        // D3D12 requests (but not requires) the heap size be always a multiple of
+        // alignment to avoid wasting bytes.
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
+        heapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
+
+        heapDesc.Alignment = request.Alignment;
         heapDesc.Flags = mHeapFlags;
 
         CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
@@ -81,14 +81,14 @@ namespace gpgmm::d3d12 {
             return {static_cast<ErrorCodeType>(hr)};
         }
 
-        if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
+        if (heapDesc.SizeInBytes > request.SizeInBytes) {
             DebugEvent(this, MessageId::kAlignmentMismatch)
                 << "Resource heap was larger then the requested size: "
-                << GPGMM_BYTES_TO_MB(resourceHeapDesc.SizeInBytes) << " vs "
+                << GPGMM_BYTES_TO_MB(heapDesc.SizeInBytes ) << " vs "
                 << GPGMM_BYTES_TO_MB(request.SizeInBytes) << " bytes.";
         }
 
-        mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
+        mStats.UsedMemoryUsage += heapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
 
         return std::make_unique<MemoryAllocation>(this, static_cast<Heap*>(resourceHeap.Detach()),
