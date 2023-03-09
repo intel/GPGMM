@@ -1496,7 +1496,7 @@ namespace gpgmm::d3d12 {
 
         // Dedicated allocations always have 1 block per heap so only check >1 blocks or when
         // sub-allocation is used.
-        const double blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
+        const uint64_t blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
         if (blocksPerHeap > 1 && blocksPerHeap < kMinBlockToMemoryCountReportingThreshold) {
             gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
                 << "Average number of resource allocations per heap is below threshold: "
