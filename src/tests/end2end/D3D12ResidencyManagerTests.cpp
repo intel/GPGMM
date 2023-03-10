@@ -649,7 +649,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
 // Creates two sets of heaps, first set is below the budget, second set is above the budget, then
 // swaps the residency status using ExecuteCommandList: first set gets paged-in again, second set
 // gets paged-out.
-TEST_F(D3D12ResidencyManagerTests, ExecuteCommandListOverBudget) {
+TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
         CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
