@@ -42,6 +42,8 @@ namespace gpgmm {
                 return "BAD_OPERATION";
             case MessageId::kPerformanceWarning:
                 return "PERFORMANCE_WARNING";
+            case MessageId::kMemoryUsageUpdated:
+                return "MEMORY_USAGE_UPDATED";
             default:
                 UNREACHABLE();
                 return "";
