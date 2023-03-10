@@ -29,6 +29,7 @@ namespace gpgmm {
         kInvalidArgument,
         kBadOperation,
         kPerformanceWarning,
+        kMemoryUsageUpdated,
     };
 
     enum class MessageSeverity {
