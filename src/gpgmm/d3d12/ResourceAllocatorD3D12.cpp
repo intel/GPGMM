@@ -1308,6 +1308,8 @@ namespace gpgmm::d3d12 {
             *ppResourceAllocationOut = new ResourceAllocation(
                 allocationDesc, mResidencyManager.Get(), this, resourceHeap.Detach(), nullptr,
                 std::move(committedResource));
+        } else {
+            return S_FALSE;
         }
 
         return S_OK;
