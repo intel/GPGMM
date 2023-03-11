@@ -42,7 +42,7 @@ namespace gpgmm::d3d12 {
                               ID3D12Device* device,
                               D3D12_HEAP_PROPERTIES heapProperties,
                               D3D12_HEAP_FLAGS heapFlags,
-                              bool isOverBudgetEnabled);
+                              bool alwaysCreatedInBudget);
         ~ResourceHeapAllocator() override = default;
 
         // MemoryAllocator interface
