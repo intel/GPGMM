@@ -84,8 +84,7 @@ namespace gpgmm::d3d12 {
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
             DebugEvent(this, MessageId::kAlignmentMismatch)
                 << "Resource heap was larger then the requested size: "
-                << GPGMM_BYTES_TO_MB(resourceHeapDesc.SizeInBytes) << " vs "
-                << GPGMM_BYTES_TO_MB(request.SizeInBytes) << " bytes.";
+                << resourceHeapDesc.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
         }
 
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
