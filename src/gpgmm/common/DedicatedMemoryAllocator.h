@@ -25,7 +25,8 @@ namespace gpgmm {
     // memory to be tracked.
     class DedicatedMemoryAllocator final : public MemoryAllocator {
       public:
-        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator);
+        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
+                                 uint64_t memoryAlignment);
 
         // MemoryAllocator interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
@@ -38,6 +39,8 @@ namespace gpgmm {
       private:
         // ObjectBase interface
         const char* GetTypename() const override;
+
+        const uint64_t mMemoryAlignment;
     };
 
 }  // namespace gpgmm

@@ -777,13 +777,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableUMA) {
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
-    ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(
-        CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, nullptr));
-    ASSERT_NE(resourceAllocator, nullptr);
-
     // DXGI_FORMAT_R8G8B8A8_UNORM
     {
+        ComPtr<IResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(
+            CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, nullptr));
+        ASSERT_NE(resourceAllocator, nullptr);
+
         ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
@@ -795,6 +795,31 @@ TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
         EXPECT_TRUE(
             gpgmm::IsAligned(allocation->GetInfo().SizeInBytes,
                              static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)));
+    }
+
+    {
+        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        allocatorDesc.Flags = ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
+        allocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+
+        ComPtr<IResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, &resourceAllocator, nullptr));
+
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ComPtr<IResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
+
+        ASSERT_NE(allocation, nullptr);
+        EXPECT_TRUE(
+            gpgmm::IsAligned(allocation->GetInfo().SizeInBytes,
+                             static_cast<uint32_t>(D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)));
+        EXPECT_TRUE(
+            gpgmm::IsAligned(allocation->GetMemory()->GetInfo().SizeInBytes,
+                             static_cast<uint32_t>(D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT)));
     }
 }
 
