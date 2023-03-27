@@ -79,9 +79,9 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
 };
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::State& state) {
-    SlabCacheAllocator allocator(
-        state.range(1), state.range(0), kMemoryAlignment, kMemoryAlignment, /*allowPrefetch*/ false,
-        kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
+    SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment, kMemoryAlignment,
+                                 /*allowPrefetch*/ false, kDisableSlabGrowth,
+                                 std::make_unique<DummyMemoryAllocator>());
 
     // Below is effectively equivelent to STL's reserve(size=1).
     {
@@ -99,8 +99,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::Sta
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Cold)(benchmark::State& state) {
     SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
                                  /*slabFragmentationLimit*/ 1, /*allowPrefetch*/ false,
-                                 kDisableSlabGrowth,
-                                 std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
@@ -129,7 +128,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, BuddySystem)(benchmark::State&
 }
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Standalone)(benchmark::State& state) {
-    DedicatedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>());
+    DedicatedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(), kMemoryAlignment);
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));

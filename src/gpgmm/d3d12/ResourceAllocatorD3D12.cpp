@@ -758,7 +758,7 @@ namespace gpgmm::d3d12 {
             }
             case ALLOCATOR_ALGORITHM_DEDICATED: {
                 return std::make_unique<DedicatedMemoryAllocator>(
-                    /*memoryAllocator*/ std::move(underlyingAllocator));
+                    /*memoryAllocator*/ std::move(underlyingAllocator), memoryAlignment);
             }
             default: {
                 UNREACHABLE();

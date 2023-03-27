@@ -16,12 +16,14 @@
 
 #include "gpgmm/common/MemoryBlock.h"
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/utils/Math.h"
 
 namespace gpgmm {
 
     DedicatedMemoryAllocator::DedicatedMemoryAllocator(
-        std::unique_ptr<MemoryAllocator> memoryAllocator)
-        : MemoryAllocator(std::move(memoryAllocator)) {
+        std::unique_ptr<MemoryAllocator> memoryAllocator,
+        uint64_t memoryAlignment)
+        : MemoryAllocator(std::move(memoryAllocator)), mMemoryAlignment(memoryAlignment) {
     }
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> DedicatedMemoryAllocator::TryAllocateMemory(
@@ -32,8 +34,11 @@ namespace gpgmm {
 
         GPGMM_INVALID_IF(!ValidateRequest(request));
 
+        MemoryAllocationRequest memoryRequest = request;
+        memoryRequest.Alignment = mMemoryAlignment;
+
         std::unique_ptr<MemoryAllocation> allocation;
-        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocation);
+        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
 
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
@@ -64,7 +69,7 @@ namespace gpgmm {
     }
 
     uint64_t DedicatedMemoryAllocator::GetMemoryAlignment() const {
-        return GetNextInChain()->GetMemoryAlignment();
+        return mMemoryAlignment;
     }
 
     const char* DedicatedMemoryAllocator::GetTypename() const {
