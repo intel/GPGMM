@@ -697,7 +697,7 @@ namespace gpgmm::d3d12 {
             GPGMM_TRACE_EVENT_METRIC("GPU memory page-out (MB)", GPGMM_BYTES_TO_MB(bytesEvicted));
 
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
-            ReturnIfFailed(mDevice->Evict(objectEvictCount, objectsToEvict.data()));
+            ReturnIfFailedDevice(mDevice->Evict(objectEvictCount, objectsToEvict.data()), mDevice);
 
             DebugEvent(this, MessageId::kBudgetExceeded)
                 << "GPU page-out. Number of allocations: " << objectsToEvict.size() << " ("

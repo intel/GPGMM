@@ -27,9 +27,10 @@ namespace gpgmm::d3d12 {
 
     HRESULT SetMaxResourceSize(ID3D12Device* device, uint64_t* sizeOut) {
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
-        ReturnIfFailed(
+        ReturnIfFailedDevice(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
-                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
+            device);
         // Check for overflow.
         if (feature.MaxGPUVirtualAddressBitsPerResource == 0 ||
             feature.MaxGPUVirtualAddressBitsPerResource > GetNumOfBits<uint64_t>()) {
@@ -42,9 +43,10 @@ namespace gpgmm::d3d12 {
 
     HRESULT SetMaxResourceHeapSize(ID3D12Device* device, uint64_t* sizeOut) {
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
-        ReturnIfFailed(
+        ReturnIfFailedDevice(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
-                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)));
+                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
+            device);
         // Check for overflow.
         if (feature.MaxGPUVirtualAddressBitsPerProcess == 0 ||
             feature.MaxGPUVirtualAddressBitsPerProcess > GetNumOfBits<uint64_t>()) {
@@ -74,8 +76,9 @@ namespace gpgmm::d3d12 {
     HRESULT SetMaxResourceHeapTierSupported(ID3D12Device* device,
                                             D3D12_RESOURCE_HEAP_TIER* maxResourceHeapTierOut) {
         D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-        ReturnIfFailed(
-            device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)));
+        ReturnIfFailedDevice(
+            device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)),
+            device);
         *maxResourceHeapTierOut = options.ResourceHeapTier;
         return S_OK;
     }
@@ -94,8 +97,8 @@ namespace gpgmm::d3d12 {
             SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
         D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-        ReturnIfFailed(
-            device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+        ReturnIfFailedDevice(
+            device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)), device);
         caps->mIsAdapterUMA = arch.UMA;
         caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 

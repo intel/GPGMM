@@ -1417,9 +1417,11 @@ namespace gpgmm::d3d12 {
             ReturnIfFailed(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)));
 
             ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
-            ReturnIfFailed(mDevice->CreatePlacedResource(
-                heap.Get(), resourceOffset, resourceDescriptor, initialResourceState, clearValue,
-                IID_PPV_ARGS(&placedResource)));
+            ReturnIfFailedDevice(
+                mDevice->CreatePlacedResource(heap.Get(), resourceOffset, resourceDescriptor,
+                                              initialResourceState, clearValue,
+                                              IID_PPV_ARGS(&placedResource)),
+                mDevice);
         }
 
         *placedResourceOut = placedResource.Detach();
@@ -1689,9 +1691,11 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        ReturnIfFailed(mDevice->CreateCommittedResource(
-            mHeapProperties, mHeapFlags, mResourceDescriptor, mInitialResourceState, mClearValue,
-            IID_PPV_ARGS(&committedResource)));
+        ReturnIfFailedDevice(
+            mDevice->CreateCommittedResource(mHeapProperties, mHeapFlags, mResourceDescriptor,
+                                             mInitialResourceState, mClearValue,
+                                             IID_PPV_ARGS(&committedResource)),
+            mDevice);
 
         *ppPageableOut = committedResource.Detach();
         return S_OK;
