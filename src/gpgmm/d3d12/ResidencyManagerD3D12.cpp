@@ -277,7 +277,8 @@ namespace gpgmm::d3d12 {
                                         RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
-          mInitialFenceValue(descriptor.InitialFenceValue) {
+          mInitialFenceValue(descriptor.InitialFenceValue),
+          mIsAlwaysInBudget(descriptor.Flags & RESIDENCY_FLAG_ALWAYS_IN_BUDGET) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         ASSERT(mDevice != nullptr);
@@ -872,8 +873,10 @@ namespace gpgmm::d3d12 {
         if (SUCCEEDED(mDevice->QueryInterface(IID_PPV_ARGS(&device3)))) {
             ReturnIfFailed(EnsureResidencyFenceExists());
             ReturnIfSucceeded(device3->EnqueueMakeResident(
-                D3D12_RESIDENCY_FLAG_NONE, numberOfObjectsToMakeResident, allocations,
-                mResidencyFence->GetFence(), mResidencyFence->GetCurrentFence()));
+                (mIsAlwaysInBudget) ? D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET
+                                    : D3D12_RESIDENCY_FLAG_NONE,
+                numberOfObjectsToMakeResident, allocations, mResidencyFence->GetFence(),
+                mResidencyFence->GetCurrentFence()));
         }
 
         // A MakeResident call can fail if there's not enough available memory. This
@@ -892,7 +895,7 @@ namespace gpgmm::d3d12 {
                        "usually occurs when there is not enough available memory. "
                        "Please reduce consumption by checking allocation sizes and "
                        "residency usage.";
-                return E_OUTOFMEMORY;
+                return (mIsAlwaysInBudget) ? E_OUTOFMEMORY : S_FALSE;
             }
         }
 
