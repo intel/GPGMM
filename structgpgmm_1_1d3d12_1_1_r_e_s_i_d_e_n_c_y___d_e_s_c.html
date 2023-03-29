@@ -85,6 +85,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:ad5ad466d8ffcea463f807bbe791f8502"><td class="memItemLeft" align="right" valign="top">ID3D12Device *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ad5ad466d8ffcea463f807bbe791f8502">Device</a></td></tr>
+<tr class="memdesc:ad5ad466d8ffcea463f807bbe791f8502"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the device used by this residency manager. Required parameter. Use CreateDevice get the device.  <br /></td></tr>
+<tr class="separator:ad5ad466d8ffcea463f807bbe791f8502"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc17fbd10471426bfff2908e7ba0e399"><td class="memItemLeft" align="right" valign="top">IDXGIAdapter3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#adc17fbd10471426bfff2908e7ba0e399">Adapter</a></td></tr>
+<tr class="memdesc:adc17fbd10471426bfff2908e7ba0e399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the adapter used by this residency manager.  <br /></td></tr>
+<tr class="separator:adc17fbd10471426bfff2908e7ba0e399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab807cc71b7d5e2de186e31dd983af3d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73">RESIDENCY_FLAGS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#ab807cc71b7d5e2de186e31dd983af3d9">Flags</a></td></tr>
 <tr class="memdesc:ab807cc71b7d5e2de186e31dd983af3d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies residency options.  <br /></td></tr>
 <tr class="separator:ab807cc71b7d5e2de186e31dd983af3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,6 +122,40 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Specify parameters when creating a residency manager. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="adc17fbd10471426bfff2908e7ba0e399" name="adc17fbd10471426bfff2908e7ba0e399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc17fbd10471426bfff2908e7ba0e399">&#9670;&#160;</a></span>Adapter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IDXGIAdapter3* gpgmm::d3d12::RESIDENCY_DESC::Adapter</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Specifies the adapter used by this residency manager. </p>
+<p>Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.</p>
+<p>Required parameter. Use EnumAdapters to get the adapter. </p>
+
+</div>
+</div>
+<a id="ad5ad466d8ffcea463f807bbe791f8502" name="ad5ad466d8ffcea463f807bbe791f8502"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5ad466d8ffcea463f807bbe791f8502">&#9670;&#160;</a></span>Device</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ID3D12Device* gpgmm::d3d12::RESIDENCY_DESC::Device</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Specifies the device used by this residency manager. Required parameter. Use CreateDevice get the device. </p>
+
+</div>
+</div>
 <a id="ab114ef99d3f1af9c49f493c1004b315f" name="ab114ef99d3f1af9c49f493c1004b315f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab114ef99d3f1af9c49f493c1004b315f">&#9670;&#160;</a></span>EvictSizeInBytes</h2>
 
