@@ -37,7 +37,6 @@ source_set("libfuzzer") {
     "src/FuzzerIOPosix.cpp",
     "src/FuzzerIOWindows.cpp",
     "src/FuzzerLoop.cpp",
-    "src/FuzzerMain.cpp",
     "src/FuzzerMerge.cpp",
     "src/FuzzerMutate.cpp",
     "src/FuzzerSHA1.cpp",
@@ -50,13 +49,14 @@ source_set("libfuzzer") {
     "src/FuzzerUtilWindows.cpp",
   ]
 
-  configs -= [
-    "//build/config/coverage:default_coverage",
-    "//build/config/sanitizers:default_sanitizer_flags",
-  ]
+  configs -= fuzzing_engine_remove_configs
+  configs += fuzzing_engine_add_configs
+  configs += [ ":libfuzzer_flags" ]
+}
 
-  configs += [
-    "//build/config/sanitizers:default_sanitizer_flags_but_coverage",
-    ":libfuzzer_flags",
-  ]
+source_set("libfuzzer_main") {
+  deps = [ ":libfuzzer" ]
+  configs -= fuzzing_engine_remove_configs
+  configs += fuzzing_engine_add_configs
+  sources = [ "src/FuzzerMain.cpp" ]
 }
