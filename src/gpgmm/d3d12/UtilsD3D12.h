@@ -17,6 +17,7 @@
 #include "gpgmm/d3d12/d3d12_platform.h"
 
 #include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/WindowsUtils.h"
 
 #include <string>
 

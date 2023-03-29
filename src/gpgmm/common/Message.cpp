@@ -44,6 +44,8 @@ namespace gpgmm {
                 return "PERFORMANCE_WARNING";
             case MessageId::kMemoryUsageUpdated:
                 return "MEMORY_USAGE_UPDATED";
+            case MessageId::kMemoryAllocated:
+                return "MEMORY_CREATED";
             default:
                 UNREACHABLE();
                 return "";

@@ -148,6 +148,13 @@ namespace gpgmm::d3d12 {
             }
         }
 
+        const std::string debugName =
+            (heap->GetDebugName() == nullptr) ? WCharToUTF8(heap->GetDebugName()) : "'Unknown'";
+        gpgmm::InfoLog(MessageId::kMemoryAllocated)
+            << "Created heap (" << debugName << "=" << ToHexStr(heap.get())
+            << "), Size=" << heap->GetInfo().SizeInBytes
+            << ", ID3D12Pageable=" << ToHexStr(heap->mPageable);
+
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
