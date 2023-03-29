@@ -11,6 +11,10 @@
       "../buildtools",
       "../build",
       "../testing"
-    ]
+    ],
+    // Do not default to a Google-internal version of VS toolchain.
+    "terminal.integrated.env.windows": {
+      "DEPOT_TOOLS_WIN_TOOLCHAIN": "0"
+    }
   }
 }
