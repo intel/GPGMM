@@ -466,4 +466,13 @@ namespace gpgmm::d3d12 {
         }
     }
 
+    ID3D12Device* GetDevice(ID3D12DeviceChild* pDeviceChild) {
+        if (pDeviceChild == nullptr) {
+            return {};
+        }
+        ID3D12Device* pDevice = nullptr;
+        pDeviceChild->GetDevice(IID_PPV_ARGS(&pDevice));
+        return pDevice;
+    }
+
 }  // namespace gpgmm::d3d12

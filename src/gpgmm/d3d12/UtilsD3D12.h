@@ -29,6 +29,7 @@ namespace gpgmm::d3d12 {
     HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name);
     DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool, bool isUMA);
     const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup, bool isUMA);
+    ID3D12Device* GetDevice(ID3D12DeviceChild* pDeviceChild);
 
 }  // namespace gpgmm::d3d12
 

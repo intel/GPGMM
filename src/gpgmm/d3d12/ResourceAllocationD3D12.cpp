@@ -100,7 +100,8 @@ namespace gpgmm::d3d12 {
         }
 
         void* mappedData = nullptr;
-        ReturnIfFailed(mResource->Map(subresource, newReadRangePtr, &mappedData));
+        ReturnIfFailedDevice(mResource->Map(subresource, newReadRangePtr, &mappedData),
+                             GetDevice(mResource.Get()));
 
         if (ppDataOut != nullptr) {
             *ppDataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;
