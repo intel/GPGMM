@@ -1617,8 +1617,9 @@ namespace gpgmm::d3d12 {
                 }
                 data.IsResourceAllocationWithinCoherent =
                     mCaps->IsResourceAllocationWithinCoherent();
-                memcpy_s(pFeatureSupportData, sizeof(pFeatureSupportData), &data,
-                         featureSupportDataSize);
+                FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT* pFeatureData =
+                    static_cast<FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT*>(pFeatureSupportData);
+                memcpy_s(pFeatureData, featureSupportDataSize, &data, sizeof(data));
                 return S_OK;
             }
             default: {

@@ -37,9 +37,9 @@ namespace gpgmm::d3d12 {
                 return "Device was not found but removed " + GetErrorMessage(error);
             }
 
-            HRESULT removedReason = device->GetDeviceRemovedReason();
-            std::string removedReasonStr;
-            switch (error) {
+            const HRESULT removedReason = device->GetDeviceRemovedReason();
+            std::string removedReasonStr = "Unknown.";
+            switch (removedReason) {
                 case DXGI_ERROR_DEVICE_HUNG: {
                     removedReasonStr = "HUNG";
                     break;

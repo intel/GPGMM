@@ -57,6 +57,7 @@ namespace gpgmm {
       public:
         JSONArray();
         JSONArray(const JSONArray& other);
+        JSONArray& operator=(const JSONArray& other);
 
         std::string ToString() const;
         bool IsEmpty() const;

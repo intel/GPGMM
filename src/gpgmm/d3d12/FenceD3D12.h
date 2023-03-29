@@ -16,12 +16,13 @@
 #define GPGMM_D3D12_FENCED3D12_H_
 
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/NonCopyable.h"
 
 #include <cstdint>
 
 namespace gpgmm::d3d12 {
 
-    class Fence {
+    class Fence : public NonCopyable {
       public:
         static HRESULT CreateFence(ID3D12Device* device, uint64_t initialValue, Fence** fenceOut);
 

@@ -52,7 +52,7 @@ namespace gpgmm::d3d12 {
 
         uint64_t mMaxResourceSize = 0;
         uint64_t mMaxResourceHeapSize = 0;
-        D3D12_RESOURCE_HEAP_TIER mMaxResourceHeapTier;
+        D3D12_RESOURCE_HEAP_TIER mMaxResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
         bool mIsCreateHeapNotResidentSupported = false;
         bool mIsResourceAllocationWithinCoherent = false;
         bool mIsAdapterUMA = false;

@@ -17,11 +17,12 @@
 
 #include "gpgmm/common/MemoryBlock.h"
 #include "gpgmm/common/Object.h"
+#include "gpgmm/utils/NonCopyable.h"
 
 namespace gpgmm {
 
     // Allocates a sub-range [offset, offset + size) in usually a byte-addressable range.
-    class BlockAllocator : public ObjectBase {
+    class BlockAllocator : public ObjectBase, public NonCopyable {
       public:
         ~BlockAllocator() override = default;
 
