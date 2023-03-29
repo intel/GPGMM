@@ -206,9 +206,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1912b5f127166830ad430c966ce5dfd3"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1912b5f127166830ad430c966ce5dfd3">QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html">RESIDENCY_MANAGER_STATS</a> *pResidencyManagerStats)=0</td></tr>
 <tr class="memdesc:a1912b5f127166830ad430c966ce5dfd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current residency usage.  <br /></td></tr>
 <tr class="separator:a1912b5f127166830ad430c966ce5dfd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821820440ac096a41512b0008c9b6ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a821820440ac096a41512b0008c9b6ce7">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
-<tr class="memdesc:a821820440ac096a41512b0008c9b6ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <br /></td></tr>
-<tr class="separator:a821820440ac096a41512b0008c9b6ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb18da09c13453d3f9024a68f43da3fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adb18da09c13453d3f9024a68f43da3fd">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;descriptor, ID3D12Device *pDevice, IDXGIAdapter3 *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memdesc:adb18da09c13453d3f9024a68f43da3fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <br /></td></tr>
+<tr class="separator:adb18da09c13453d3f9024a68f43da3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148">Unmap</a> (uint32_t subresource, const D3D12_RANGE *pWrittenRange)=0</td></tr>
 <tr class="memdesc:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <br /></td></tr>
 <tr class="separator:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,12 +239,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
 <tr class="memdesc:a6ffa8695a413186d32f9931dd8d3f6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
 <tr class="separator:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ababeded3a4c8d30d446d26cdaec39d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a9ababeded3a4c8d30d446d26cdaec39d">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
-<tr class="memdesc:a9ababeded3a4c8d30d446d26cdaec39d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <br /></td></tr>
-<tr class="separator:a9ababeded3a4c8d30d446d26cdaec39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7284f0cf647fe791faefda54399854"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a7284f0cf647fe791faefda54399854">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> *pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
-<tr class="memdesc:a3a7284f0cf647fe791faefda54399854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator using a specified residency manager.  <br /></td></tr>
-<tr class="separator:a3a7284f0cf647fe791faefda54399854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a347ae2b2328b1cb3020a3d354ff6c2d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a347ae2b2328b1cb3020a3d354ff6c2d3">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, ID3D12Device *pDevice, IDXGIAdapter *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
+<tr class="memdesc:a347ae2b2328b1cb3020a3d354ff6c2d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <br /></td></tr>
+<tr class="separator:a347ae2b2328b1cb3020a3d354ff6c2d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee8aef833ec670d1fce4535b3627d059"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__export_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aee8aef833ec670d1fce4535b3627d059">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;allocatorDescriptor, ID3D12Device *pDevice, IDXGIAdapter *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> *pResidencyManager, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
+<tr class="memdesc:aee8aef833ec670d1fce4535b3627d059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator using a specified residency manager.  <br /></td></tr>
+<tr class="separator:aee8aef833ec670d1fce4535b3627d059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -783,8 +783,8 @@ memory segments, respectively.
 
 </div>
 </div>
-<a id="a821820440ac096a41512b0008c9b6ce7" name="a821820440ac096a41512b0008c9b6ce7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a821820440ac096a41512b0008c9b6ce7">&#9670;&#160;</a></span>CreateResidencyManager()</h2>
+<a id="adb18da09c13453d3f9024a68f43da3fd" name="adb18da09c13453d3f9024a68f43da3fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb18da09c13453d3f9024a68f43da3fd">&#9670;&#160;</a></span>CreateResidencyManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -794,6 +794,18 @@ memory segments, respectively.
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> &amp;&#160;</td>
           <td class="paramname"><em>descriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3D12Device *&#160;</td>
+          <td class="paramname"><em>pDevice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IDXGIAdapter3 *&#160;</td>
+          <td class="paramname"><em>pAdapter</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -813,6 +825,8 @@ memory segments, respectively.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html">RESIDENCY_DESC</a> structure that describes the residency manager. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pDevice</td><td>device used by this allocator. Required parameter. Use CreateDevice get the device. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pAdapter</td><td>DXGI adapter used to create the device. Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo. Use EnumAdapters to get the adapter. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that receives a pointer to the residency manager. Pass NULL to test if residency Manager creation would succeed, but not actually create the residency Manager. If NULL is passed and residency manager creating would succeed, S_FALSE is returned. </td></tr>
   </table>
   </dd>
@@ -873,8 +887,8 @@ memory segments, respectively.
 
 </div>
 </div>
-<a id="a3a7284f0cf647fe791faefda54399854" name="a3a7284f0cf647fe791faefda54399854"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a7284f0cf647fe791faefda54399854">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/2]</span></h2>
+<a id="aee8aef833ec670d1fce4535b3627d059" name="aee8aef833ec670d1fce4535b3627d059"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee8aef833ec670d1fce4535b3627d059">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -884,6 +898,18 @@ memory segments, respectively.
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;&#160;</td>
           <td class="paramname"><em>allocatorDescriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3D12Device *&#160;</td>
+          <td class="paramname"><em>pDevice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IDXGIAdapter *&#160;</td>
+          <td class="paramname"><em>pAdapter</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -909,6 +935,8 @@ memory segments, respectively.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pDevice</td><td>device used by this allocator. Required parameter. Use CreateDevice get the device. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pAdapter</td><td>DXGI adapter used to create the device. Used to detect for additional device capabilities (by GPU vendor). Optional parameter. Use EnumAdapters to get the adapter. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>Pointer to a memory block that receives a pointer to the residency manager. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
   </table>
@@ -917,8 +945,8 @@ memory segments, respectively.
 
 </div>
 </div>
-<a id="a9ababeded3a4c8d30d446d26cdaec39d" name="a9ababeded3a4c8d30d446d26cdaec39d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ababeded3a4c8d30d446d26cdaec39d">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[2/2]</span></h2>
+<a id="a347ae2b2328b1cb3020a3d354ff6c2d3" name="a347ae2b2328b1cb3020a3d354ff6c2d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a347ae2b2328b1cb3020a3d354ff6c2d3">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -928,6 +956,18 @@ memory segments, respectively.
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> &amp;&#160;</td>
           <td class="paramname"><em>allocatorDescriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3D12Device *&#160;</td>
+          <td class="paramname"><em>pDevice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IDXGIAdapter *&#160;</td>
+          <td class="paramname"><em>pAdapter</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -954,6 +994,8 @@ memory segments, respectively.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pDevice</td><td>device used by this allocator. Required parameter. Use CreateDevice get the device. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pAdapter</td><td>DXGI adapter used to create the device. Used to detect for additional device capabilities (by GPU vendor). Optional parameter. Use EnumAdapters to get the adapter. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that receives a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency. </td></tr>
   </table>
