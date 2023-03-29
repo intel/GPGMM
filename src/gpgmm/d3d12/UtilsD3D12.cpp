@@ -15,7 +15,6 @@
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include "gpgmm/utils/Math.h"
-#include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm::d3d12 {
 
