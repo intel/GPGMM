@@ -537,6 +537,14 @@ namespace gpgmm::d3d12 {
             newDescriptor.Flags |= ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
         }
 
+        if (!(allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_RESIDENT) &&
+            !caps->IsCreateHeapNotResidentSupported()) {
+            DebugLog(MessageId::kInvalidArgument)
+                << "ALLOCATOR_FLAG_ALWAYS_RESIDENT was not requested but enabled "
+                   "anyway because the device did not support creation of non-resident heaps.";
+            newDescriptor.Flags |= ALLOCATOR_FLAG_ALWAYS_RESIDENT;
+        }
+
         // Resource heap tier is required but user didn't specify one.
         if (newDescriptor.ResourceHeapTier == 0) {
             newDescriptor.ResourceHeapTier = caps->GetMaxResourceHeapTierSupported();
@@ -1617,8 +1625,7 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && mCaps->IsCreateHeapNotResidentSupported() &&
-               !mIsAlwaysCreateResident;
+        return IsResidencyEnabled() && !mIsAlwaysCreateResident;
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {
