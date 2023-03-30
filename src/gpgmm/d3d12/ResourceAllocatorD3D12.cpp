@@ -405,35 +405,39 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                    ID3D12Device* pDevice,
+                                    IDXGIAdapter* pAdapter,
                                     IResourceAllocator** ppResourceAllocatorOut,
                                     IResidencyManager** ppResidencyManagerOut = nullptr) {
         return ResourceAllocator::CreateResourceAllocator(
-            allocatorDescriptor, ppResourceAllocatorOut, ppResidencyManagerOut);
+            allocatorDescriptor, pDevice, pAdapter, ppResourceAllocatorOut, ppResidencyManagerOut);
     }
 
     HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                    ID3D12Device* pDevice,
+                                    IDXGIAdapter* pAdapter,
                                     IResidencyManager* pResidencyManager,
                                     IResourceAllocator** ppResourceAllocatorOut) {
-        return ResourceAllocator::CreateResourceAllocator(allocatorDescriptor, pResidencyManager,
-                                                          ppResourceAllocatorOut);
+        return ResourceAllocator::CreateResourceAllocator(
+            allocatorDescriptor, pDevice, pAdapter, pResidencyManager, ppResourceAllocatorOut);
     }
 
     // static
     HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                                       ID3D12Device* pDevice,
+                                                       IDXGIAdapter* pAdapter,
                                                        IResourceAllocator** ppResourceAllocatorOut,
                                                        IResidencyManager** ppResidencyManagerOut) {
-        ReturnIfNullptr(allocatorDescriptor.Device);
+        ReturnIfNullptr(pDevice);
 
         ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
-            RESIDENCY_DESC residencyDesc = {};
-            residencyDesc.Device = allocatorDescriptor.Device;
-
-            if (allocatorDescriptor.Adapter != nullptr) {
-                ReturnIfFailed(allocatorDescriptor.Adapter->QueryInterface(
-                    IID_PPV_ARGS(&residencyDesc.Adapter)));
+            ComPtr<IDXGIAdapter3> adapter3;
+            if (pAdapter != nullptr) {
+                ReturnIfFailed(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)));
             }
 
+            RESIDENCY_DESC residencyDesc = {};
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
 
@@ -441,13 +445,13 @@ namespace gpgmm::d3d12 {
                 residencyDesc.Flags |= RESIDENCY_FLAG_ALWAYS_IN_BUDGET;
             }
 
-            ReturnIfFailed(
-                ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
+            ReturnIfFailed(ResidencyManager::CreateResidencyManager(
+                residencyDesc, pDevice, adapter3.Get(), &residencyManager));
         }
 
         ComPtr<IResourceAllocator> resourceAllocator;
-        ReturnIfFailed(CreateResourceAllocator(allocatorDescriptor, residencyManager.Get(),
-                                               &resourceAllocator));
+        ReturnIfFailed(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
+                                               residencyManager.Get(), &resourceAllocator));
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -463,15 +467,16 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT ResourceAllocator::CreateResourceAllocator(
         const ALLOCATOR_DESC& allocatorDescriptor,
+        ID3D12Device* pDevice,
+        IDXGIAdapter* pAdapter,
         IResidencyManager* pResidencyManager,
         IResourceAllocator** ppResourceAllocatorOut) {
-        ReturnIfNullptr(allocatorDescriptor.Device);
+        ReturnIfNullptr(pDevice);
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(
-                Caps::CreateCaps(allocatorDescriptor.Device, allocatorDescriptor.Adapter, &ptr));
+            ReturnIfFailed(Caps::CreateCaps(pDevice, pAdapter, &ptr));
             caps.reset(ptr);
         }
 
@@ -585,7 +590,8 @@ namespace gpgmm::d3d12 {
 
         std::unique_ptr<ResourceAllocator> resourceAllocator =
             std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
-                newDescriptor, static_cast<ResidencyManager*>(pResidencyManager), std::move(caps)));
+                newDescriptor, pDevice, static_cast<ResidencyManager*>(pResidencyManager),
+                std::move(caps)));
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
@@ -597,9 +603,10 @@ namespace gpgmm::d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+                                         ID3D12Device* pDevice,
                                          ResidencyManager* pResidencyManager,
                                          std::unique_ptr<Caps> caps)
-        : mDevice(std::move(descriptor.Device)),
+        : mDevice(pDevice),
           mResidencyManager(pResidencyManager),
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),

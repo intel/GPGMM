@@ -25,14 +25,11 @@ First create an allocator then create allocations from it:
 ```cpp
 #include <gpgmm_d3d12.h>
 
-// Required
 gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
-allocatorDesc.Device = Device;
-allocatorDesc.Adapter = Adapter;
 
 ComPtr<gpgmm::d3d12::IResidencyManager> residency; // Optional
 ComPtr<gpgmm::d3d12::IResourceAllocator> allocator;
-gpgmm::d3d12::CreateResourceAllocator(desc, &allocator, &residency);
+gpgmm::d3d12::CreateResourceAllocator(desc, device, adapter, &allocator, &residency);
 ```
 
 ```cpp

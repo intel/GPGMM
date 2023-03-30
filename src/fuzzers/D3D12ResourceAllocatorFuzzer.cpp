@@ -33,8 +33,8 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         return 0;
     }
 
-    if (FAILED(
-            gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, &gResourceAllocator, nullptr))) {
+    if (FAILED(gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, gDevice.Get(), gAdapter.Get(),
+                                                     &gResourceAllocator, nullptr))) {
         return 0;
     }
 

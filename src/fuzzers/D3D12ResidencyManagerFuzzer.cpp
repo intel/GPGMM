@@ -57,30 +57,28 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
 
     allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 
-    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
-
     ComPtr<IDXGIAdapter3> adapter3;
-    if (FAILED(allocatorDesc.Adapter->QueryInterface(IID_PPV_ARGS(&adapter3)))) {
+    if (FAILED(gAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)))) {
         return 0;
     }
 
-    residencyDesc.Adapter = adapter3.Get();
-    residencyDesc.Device = allocatorDesc.Device;
+    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
     residencyDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 
     // Create ResidencyManager
-    if (FAILED(gpgmm::d3d12::CreateResidencyManager(residencyDesc, &gResidencyManager))) {
+    if (FAILED(gpgmm::d3d12::CreateResidencyManager(residencyDesc, gDevice.Get(), adapter3.Get(),
+                                                    &gResidencyManager))) {
         return 0;
     }
 
-    if (FAILED(gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, gResidencyManager.Get(),
+    if (FAILED(gpgmm::d3d12::CreateResourceAllocator(allocatorDesc, gDevice.Get(), gAdapter.Get(),
+                                                     gResidencyManager.Get(),
                                                      &gResourceAllocator))) {
         return 0;
     }
 
     D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-    if (FAILED(residencyDesc.Device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch,
-                                                         sizeof(arch)))) {
+    if (FAILED(gDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)))) {
         return 0;
     }
 
@@ -88,7 +86,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     D3D12_HEAP_PROPERTIES heapProperties =
-        residencyDesc.Device->GetCustomHeapProperties(0, allocationDesc.HeapType);
+        gDevice->GetCustomHeapProperties(0, allocationDesc.HeapType);
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
         gpgmm::d3d12::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, arch.UMA);

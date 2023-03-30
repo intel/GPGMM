@@ -398,8 +398,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ConvertAndApplyToResidencyDesc(snapshot, newResidencyDesc);
 
                         ComPtr<IResidencyManager> residencyManager;
-                        ASSERT_SUCCEEDED(
-                            CreateResidencyManager(newResidencyDesc, &residencyManager));
+                        ASSERT_SUCCEEDED(CreateResidencyManager(newResidencyDesc, mDevice.Get(),
+                                                                mAdapter.Get(), &residencyManager));
 
                         ASSERT_TRUE(playbackContext.CreatedResidencyManagersToID
                                         .insert({residencyManagerID, std::move(residencyManager)})
@@ -482,7 +482,8 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 
                         ComPtr<IResourceAllocator> resourceAllocator;
                         ASSERT_SUCCEEDED(CreateResourceAllocator(
-                            allocatorDescOfProfile, residencyManager.Get(), &resourceAllocator));
+                            allocatorDescOfProfile, mDevice.Get(), mAdapter.Get(),
+                            residencyManager.Get(), &resourceAllocator));
 
                         ASSERT_TRUE(playbackContext.CreatedAllocatorsToID
                                         .insert({allocatorID, std::move(resourceAllocator)})

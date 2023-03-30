@@ -43,6 +43,8 @@ namespace gpgmm::d3d12 {
     class ResidencyManager final : public DebugObject, public IResidencyManager, public ObjectBase {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                              ID3D12Device* pDevice,
+                                              IDXGIAdapter3* pAdapter,
                                               IResidencyManager** ppResidencyManagerOut);
 
         ~ResidencyManager() override;
@@ -72,7 +74,10 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 
-        ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Caps> caps);
+        ResidencyManager(const RESIDENCY_DESC& descriptor,
+                         ID3D12Device* pDevice,
+                         IDXGIAdapter3* pAdapter,
+                         std::unique_ptr<Caps> caps);
 
         HRESULT EnsureInBudget(uint64_t bytesToEvict,
                                const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);

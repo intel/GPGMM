@@ -123,8 +123,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     GPGMM_SKIP_TEST_IF(!mCaps->IsCreateHeapNotResidentSupported());
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     constexpr uint64_t kHeapSize = GPGMM_MB_TO_BYTES(10);
 
@@ -151,8 +151,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     constexpr uint64_t kHeapSize = GPGMM_MB_TO_BYTES(10);
 
@@ -232,8 +232,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -286,8 +286,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -313,8 +313,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
 
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(
-        CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, nullptr));
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), &resourceAllocator, nullptr));
 
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
@@ -358,31 +358,29 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
 TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     // Create residency without adapter must always fail.
     {
-        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
-        residencyDesc.Adapter = nullptr;
-
-        ASSERT_FAILED(CreateResidencyManager(residencyDesc, nullptr));
+        ASSERT_FAILED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget),
+                                             mDevice.Get(), nullptr, nullptr));
     }
 
     // Create residency without device must always fail.
     {
-        RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
-        residencyDesc.Device = nullptr;
-
-        ASSERT_FAILED(CreateResidencyManager(residencyDesc, nullptr));
+        ASSERT_FAILED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), nullptr,
+                                             mAdapter.Get(), nullptr));
     }
 
     // Create residency alone.
     {
         ComPtr<IResidencyManager> residencyManager;
-        ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), nullptr));
+        ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget),
+                                                mDevice.Get(), mAdapter.Get(), nullptr));
     }
 
     // Create allocator with residency support, together.
     {
         ComPtr<IResidencyManager> residencyManager;
         ComPtr<IResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator,
+        ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                                 mAdapter.Get(), &resourceAllocator,
                                                  &residencyManager));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
@@ -391,22 +389,22 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
     // Create allocator with residency, seperately, but no adapter should fail.
     {
         ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-        allocatorDesc.Adapter = nullptr;
 
         ComPtr<IResidencyManager> residencyManager;
         ComPtr<IResourceAllocator> resourceAllocator;
-        ASSERT_FAILED(
-            CreateResourceAllocator(allocatorDesc, &resourceAllocator, &residencyManager));
+        ASSERT_FAILED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), nullptr,
+                                              &resourceAllocator, &residencyManager));
     }
 
     // Create allocator with residency, seperately.
     {
         ComPtr<IResidencyManager> residencyManager;
-        ASSERT_SUCCEEDED(
-            CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+        ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget),
+                                                mDevice.Get(), mAdapter.Get(), &residencyManager));
 
         ComPtr<IResourceAllocator> resourceAllocator;
-        ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+        ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                                 mAdapter.Get(), residencyManager.Get(),
                                                  &resourceAllocator));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
@@ -419,8 +417,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerWithoutDeviceAddRef) {
 
     // Create a residency manager without adding a ref to the device.
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     const uint32_t afterDeviceRefCount = GetRefCount(mDevice.Get());
 
@@ -434,17 +432,19 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
     {
         ComPtr<IResidencyManager> residencyManager;
         ComPtr<IResourceAllocator> resourceAllocator;
-        CreateResourceAllocator(CreateBasicAllocatorDesc(), &resourceAllocator, &residencyManager);
+        CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(), mAdapter.Get(),
+                                &resourceAllocator, &residencyManager);
     }
 
     // Create allocator with residency, seperately.
     {
         ComPtr<IResidencyManager> residencyManager;
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager);
+        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                               mAdapter.Get(), &residencyManager);
 
         ComPtr<IResourceAllocator> resourceAllocator;
-        CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
-                                &resourceAllocator);
+        CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(), mAdapter.Get(),
+                                residencyManager.Get(), &resourceAllocator);
     }
 
     GPGMM_TEST_MEMORY_LEAK_END();
@@ -456,10 +456,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -514,10 +516,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     residencyDesc.Flags ^= RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -558,13 +562,15 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
     allocatorDesc.MemoryGrowthFactor = 2;
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     std::vector<ComPtr<IResourceAllocation>> allocations = {};
@@ -603,10 +609,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -651,11 +659,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
 // gets paged-out.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(
-        CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), &residencyManager));
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
@@ -749,10 +758,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
     RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
-    ASSERT_SUCCEEDED(CreateResidencyManager(residencyDesc, &residencyManager));
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
                                              &resourceAllocator));
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
