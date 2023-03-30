@@ -137,6 +137,7 @@ namespace gpgmm::d3d12 {
         const bool mIsUMA;
         const bool mFlushEventBuffersOnDestruct;
         const uint64_t mInitialFenceValue;
+        const bool mIsAlwaysInBudget;
 
         mutable std::mutex mMutex;
 

@@ -437,6 +437,10 @@ namespace gpgmm::d3d12 {
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
 
+            if (allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET) {
+                residencyDesc.Flags |= RESIDENCY_FLAG_ALWAYS_IN_BUDGET;
+            }
+
             ReturnIfFailed(
                 ResidencyManager::CreateResidencyManager(residencyDesc, &residencyManager));
         }

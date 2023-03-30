@@ -322,6 +322,13 @@ namespace gpgmm::d3d12 {
         memory segments, respectively.
         */
         RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY = 0x2,
+
+        /** \brief Requires heaps to be in budget or E_OUTOFMEMORY.
+
+        With this flag, heaps created for this residency manager will effectively never
+        specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
+        */
+        RESIDENCY_FLAG_ALWAYS_IN_BUDGET = 0x4,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
