@@ -38,10 +38,10 @@ namespace gpgmm::d3d12 {
     // static
     JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
         JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
-        dict.AddItem("Flags", desc.Flags);
-        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
+        dict.AddItem("RecordOptions", gpgmm::JSONSerializer::Serialize(desc.RecordOptions));
         dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
         dict.AddItem("SubAllocationAlgorithm", desc.SubAllocationAlgorithm);
         dict.AddItem("PoolAlgorithm", desc.PoolAlgorithm);
@@ -67,6 +67,11 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("HeapType", desc.HeapType);
+        dict.AddItem("ExtraRequiredHeapFlags", desc.ExtraRequiredHeapFlags);
+        dict.AddItem("RequireResourceHeapPadding", desc.RequireResourceHeapPadding);
+        if (desc.DebugName != nullptr) {
+            dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
+        }
         return dict;
     }
 
@@ -82,13 +87,6 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Format", desc.Format);
         dict.AddItem("Layout", desc.Layout);
         dict.AddItem("SampleDesc", Serialize(desc.SampleDesc));
-        dict.AddItem("Flags", desc.Flags);
-        return dict;
-    }
-
-    // static
-    JSONDict JSONSerializer::Serialize(const EventRecordOptions& desc) {
-        JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         return dict;
     }
@@ -169,8 +167,8 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
+        dict.AddItem("Flags", desc.Flags);
         if (desc.DebugName != nullptr) {
             dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
         }
@@ -260,7 +258,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
         dict.AddItem("Flags", desc.Flags);
-        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
+        dict.AddItem("RecordOptions", gpgmm::JSONSerializer::Serialize(desc.RecordOptions));
         dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
         dict.AddItem("MinPctOfBudgetToReserve", desc.MinPctOfBudgetToReserve);
         dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);

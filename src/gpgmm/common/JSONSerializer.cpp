@@ -64,4 +64,11 @@ namespace gpgmm {
         return dict;
     }
 
+    // static
+    JSONDict JSONSerializer::Serialize(const EventRecordOptions& desc) {
+        JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
+        return dict;
+    }
+
 }  // namespace gpgmm

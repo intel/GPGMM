@@ -58,7 +58,6 @@ namespace gpgmm::d3d12 {
         static JSONDict Serialize(const RESIDENCY_DESC& desc);
 
       private:
-        static JSONDict Serialize(const EventRecordOptions& desc);
         static JSONDict Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue);
         static JSONDict Serialize(const FLOAT rgba[4]);
         static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);
