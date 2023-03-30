@@ -1,32 +1,39 @@
 # Documentation
 # https://github.com/actions/labeler
 
-# Add 'D3D12' label to any D3D12 backend code changes.
 D3D12:
 - src/gpgmm/d3d12/**/*
 
-# Add 'Vulkan' label to any Vulkan backend code changes.
 Vulkan:
 - src/gpgmm/vk/**/*
 
-# Add 'DEPS' label to any third_party sub-package changes.
 DEPS:
 - DEPS
 - third_party/**/*
 
-# Add 'Frontend' label to front-end code changes.
+breaking-change:
+- src/include/*
+
+Documentation:
+- Doxyfile
+- docs/**/*
+- '**/*.md'
+
 Frontend:
 - src/gpgmm/common/**/*
 - src/gpgmm/utils/**/*
 
-# Add 'Build' label to any build file changes.
 Build:
 - build_overrides/**/*
-- '**/BUILD.gn'
+- '**/*.gn'
 - '**/CMakeLists.txt'
+- cmake/**/*
+- '**/*.cmake'
 
-# Add 'Test' label to any test code changes.
+Infra:
+- .github/**/*
+
 Test:
-- .github/workflows/**/*
 - src/fuzzers/**/*
 - src/tests/**/*
+- examples/**/*
