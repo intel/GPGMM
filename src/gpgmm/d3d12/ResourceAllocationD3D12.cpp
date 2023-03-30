@@ -15,8 +15,8 @@
 
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 
+#include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/MemoryAllocator.h"
-#include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
-            gpgmm::ErrorLog(MessageId::kBadOperation)
+            gpgmm::ErrorEvent(this, MessageId::kBadOperation)
                 << "Map() on resource sub-allocation within cannot use "
                    "non-zero subresource-relative coordinates.";
             return E_INVALIDARG;
@@ -114,7 +114,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
-            gpgmm::ErrorLog(MessageId::kBadOperation)
+            gpgmm::ErrorEvent(this, MessageId::kBadOperation)
                 << "Unmap() on resource sub-allocation within cannot use "
                    "non-zero subresource-relative coordinates.";
             return;
