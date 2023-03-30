@@ -18,7 +18,7 @@ namespace gpgmm {
 
     // JSONDict
 
-    JSONDict::JSONDict() {
+    JSONDict::JSONDict() noexcept {
         mSS << "{ ";
     }
 
@@ -106,7 +106,7 @@ namespace gpgmm {
 
     // JSONArray
 
-    JSONArray::JSONArray() {
+    JSONArray::JSONArray() noexcept {
         mSS << "[ ";
     }
 

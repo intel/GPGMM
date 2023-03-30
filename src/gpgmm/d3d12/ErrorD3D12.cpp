@@ -23,7 +23,7 @@
 
 namespace gpgmm::d3d12 {
 
-    std::string GetErrorMessage(HRESULT error) {
+    std::string GetErrorMessage(HRESULT error) noexcept {
         std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
         std::stringstream ss;
         ss << WCharToUTF8(wstring.c_str()) << " (0x" << std::hex << std::uppercase

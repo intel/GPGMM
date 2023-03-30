@@ -95,7 +95,7 @@ namespace gpgmm {
 
     // LogMessage
 
-    LogMessage::LogMessage(MessageSeverity severity, MessageId messageId)
+    LogMessage::LogMessage(MessageSeverity severity, MessageId messageId) noexcept
         : mSeverity(severity), mMessageId(messageId) {
     }
 

@@ -57,14 +57,14 @@ namespace gpgmm {
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
       public:
-        LogMessage(MessageSeverity severity, MessageId messageId);
+        LogMessage(MessageSeverity severity, MessageId messageId) noexcept;
         ~LogMessage();
 
         LogMessage(LogMessage&& other) = default;
         LogMessage& operator=(LogMessage&& other) = default;
 
         template <typename T>
-        LogMessage& operator<<(T&& value) {
+        LogMessage& operator<<(T&& value) noexcept {
             mStream << value;
             return *this;
         }

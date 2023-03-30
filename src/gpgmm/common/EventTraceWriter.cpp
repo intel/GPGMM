@@ -64,7 +64,7 @@ namespace gpgmm {
         std::vector<TraceEvent> mBuffer;
     };
 
-    EventTraceWriter::EventTraceWriter()
+    EventTraceWriter::EventTraceWriter() noexcept
         : mTraceFile(kDefaultTraceFile),
           mIgnoreMask(TraceEventPhase::None),
           mPlatformTime(CreatePlatformTime()) {
@@ -95,7 +95,7 @@ namespace gpgmm {
         }
     }
 
-    void EventTraceWriter::FlushQueuedEventsToDisk() {
+    void EventTraceWriter::FlushQueuedEventsToDisk() noexcept {
         std::unique_lock<std::mutex> lock(mMutex);
 
         JSONArray traceEvents;
