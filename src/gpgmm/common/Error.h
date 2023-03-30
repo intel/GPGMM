@@ -34,10 +34,12 @@ namespace gpgmm {
       public:
         // Empty result
         Result() : mErrorCode(kInternalFailureResult) {
+            mResult = {};
         }
 
         // Error only result
         Result(ErrorT&& error) : mErrorCode(std::move(error)) {
+            mResult = {};
         }
 
         // Result but with no error

@@ -22,7 +22,7 @@ namespace gpgmm {
 
     class WindowsTime final : public PlatformTime {
       public:
-        WindowsTime() : PlatformTime(), mFrequency(0) {
+        WindowsTime() : PlatformTime(), mFrequency(0), mCounterStart(0) {
         }
 
         double GetAbsoluteTime() override {

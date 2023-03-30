@@ -33,8 +33,10 @@ namespace gpgmm {
     }
 
     JSONDict& JSONDict::operator=(const JSONDict& other) {
-        mSS = std::stringstream(other.mSS.str());
-        mHasItem = other.mHasItem;
+        if (this != &other) {
+            mSS = std::stringstream(other.mSS.str());
+            mHasItem = other.mHasItem;
+        }
         return *this;
     }
 
@@ -111,6 +113,14 @@ namespace gpgmm {
     JSONArray::JSONArray(const JSONArray& other) {
         mSS = std::stringstream(other.mSS.str());
         mHasItem = other.mHasItem;
+    }
+
+    JSONArray& JSONArray::operator=(const JSONArray& other) {
+        if (this != &other) {
+            mSS = std::stringstream(other.mSS.str());
+            mHasItem = other.mHasItem;
+        }
+        return *this;
     }
 
     bool JSONArray::IsEmpty() const {

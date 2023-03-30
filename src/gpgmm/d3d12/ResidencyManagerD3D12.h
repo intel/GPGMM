@@ -135,7 +135,6 @@ namespace gpgmm::d3d12 {
         const bool mIsBudgetRestricted;
         const uint64_t mEvictSizeInBytes;
         const bool mIsUMA;
-        const bool mIsBudgetChangeEventsDisabled;
         const bool mFlushEventBuffersOnDestruct;
         const uint64_t mInitialFenceValue;
 

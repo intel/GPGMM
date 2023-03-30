@@ -65,7 +65,9 @@ namespace gpgmm {
     };
 
     EventTraceWriter::EventTraceWriter()
-        : mTraceFile(kDefaultTraceFile), mPlatformTime(CreatePlatformTime()) {
+        : mTraceFile(kDefaultTraceFile),
+          mIgnoreMask(TraceEventPhase::None),
+          mPlatformTime(CreatePlatformTime()) {
     }
 
     void EventTraceWriter::SetConfiguration(const char* traceFile,

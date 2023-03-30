@@ -117,6 +117,26 @@ namespace gpgmm {
             }
         }
 
+        LinkNode& operator=(LinkNode<T>&& rhs) {
+            if (this == &rhs) {
+                return *this;
+            }
+
+            next_ = rhs.next_;
+            rhs.next_ = nullptr;
+            previous_ = rhs.previous_;
+            rhs.previous_ = nullptr;
+
+            // If the node belongs to a list, next_ and previous_ are both non-null.
+            // Otherwise, they are both null.
+            if (next_) {
+                next_->previous_ = this;
+                previous_->next_ = this;
+            }
+
+            return *this;
+        }
+
         // Insert |this| into the linked list, before |e|.
         void InsertBefore(LinkNode<T>* e) {
             this->next_ = e;
@@ -239,6 +259,13 @@ namespace gpgmm {
         LinkedList(LinkedList&& other) noexcept : root_(std::move(other.root_)) {
         }
 
+        LinkedList& operator=(LinkedList&& rhs) {
+            if (this != &rhs) {
+                root_ = std::move(rhs.root_);
+            }
+            return *this;
+        }
+
         LinkNode<T>* head() const {
             return root_.next();
         }
@@ -255,10 +282,16 @@ namespace gpgmm {
         // ~T must check if IsInList and call RemoveFromList to unlink itself or clear
         // will ASSERT to indicate programmer error.
         void clear() {
-            for (auto& curr : *this) {
-                SafeDelete(curr.value());
+            iterator curr = begin();
+            while (curr != end()) {
+                curr = erase(curr);
             }
             ASSERT(empty());
+        }
+
+        iterator erase(iterator i) {
+            SafeDelete(i->value());
+            return ++i;
         }
 
         iterator begin() {

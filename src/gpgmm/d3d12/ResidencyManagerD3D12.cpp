@@ -52,6 +52,11 @@ namespace gpgmm::d3d12 {
                 mBudgetNotificationUpdateEvent, &mCookie);
         }
 
+        ~BudgetUpdateTask() override {
+            CloseHandle(mUnregisterAndExitEvent);
+            CloseHandle(mBudgetNotificationUpdateEvent);
+        }
+
         void operator()() override {
             HRESULT hr = GetLastError();
             bool isExiting = false;
@@ -273,8 +278,6 @@ namespace gpgmm::d3d12 {
                                                              : descriptor.EvictSizeInBytes),
           mIsUMA(caps->IsAdapterUMA() &&
                  !(descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY)),
-          mIsBudgetChangeEventsDisabled(descriptor.Flags &
-                                        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        EventRecordScope::kPerInstance),
           mInitialFenceValue(descriptor.InitialFenceValue) {
@@ -956,9 +959,8 @@ namespace gpgmm::d3d12 {
     }
 
     bool ResidencyManager::IsBudgetNotificationUpdatesDisabled() const {
-        return mIsBudgetChangeEventsDisabled ||
-               (mBudgetNotificationUpdateEvent != nullptr &&
-                FAILED(mBudgetNotificationUpdateEvent->GetLastError()));
+        return (mBudgetNotificationUpdateEvent == nullptr) ||
+               FAILED(mBudgetNotificationUpdateEvent->GetLastError());
     }
 
     void ResidencyManager::StopBudgetNotificationUpdates() {
