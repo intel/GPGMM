@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['residency_5fflag_5falways_5fresident_0',['RESIDENCY_FLAG_ALWAYS_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73ab6fe233541a0ca28298d543673cb4773',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5falways_5fin_5fbudget_0',['RESIDENCY_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a2ee02832ba8b10ec421c65658ac92b93',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fdisable_5funified_5fmemory_1',['RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73af2c600fc2565eb4af7a626efb44c60bc',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fnever_5fupdate_5fbudget_5fon_5fworker_5fthread_2',['RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fnone_3',['RESIDENCY_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e',1,'gpgmm::d3d12']]],
