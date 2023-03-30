@@ -616,7 +616,8 @@ namespace gpgmm::d3d12 {
                                        EventRecordScope::kPerInstance),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
           mIsCustomHeapsDisabled(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY),
-          mIsAlwaysCreateResident(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_RESIDENT) {
+          mIsAlwaysCreateResident(descriptor.Flags & ALLOCATOR_FLAG_ALWAYS_RESIDENT),
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         ASSERT(mDevice != nullptr);
 
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -745,12 +746,11 @@ namespace gpgmm::d3d12 {
         double memoryGrowthFactor,
         bool isPrefetchAllowed,
         std::unique_ptr<MemoryAllocator> underlyingAllocator) {
-        const uint64_t maxResourceHeapSize = mCaps->GetMaxResourceHeapSize();
         switch (algorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
                 // System and memory size must be aligned at creation-time.
                 return std::make_unique<BuddyMemoryAllocator>(
-                    /*systemSize*/ PrevPowerOfTwo(maxResourceHeapSize),
+                    /*systemSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
                     /*memorySize*/ NextPowerOfTwo(memorySize),
                     /*memoryAlignment*/ memoryAlignment,
                     /*memoryAllocator*/ std::move(underlyingAllocator));
@@ -759,7 +759,7 @@ namespace gpgmm::d3d12 {
                 // Min slab size is always equal to the memory size because the
                 // slab allocator aligns the slab size at allocate-time.
                 return std::make_unique<SlabCacheAllocator>(
-                    /*maxSlabSize*/ PrevPowerOfTwo(maxResourceHeapSize),
+                    /*maxSlabSize*/ PrevPowerOfTwo(mMaxResourceHeapSize),
                     /*minSlabSize*/ memorySize,
                     /*slabAlignment*/ memoryAlignment,
                     /*slabFragmentationLimit*/ memoryFragmentationLimit,
@@ -975,12 +975,12 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(mDevice, newResourceDesc);
-        if (resourceInfo.SizeInBytes > mCaps->GetMaxResourceSize()) {
+        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             ErrorLog(MessageId::kSizeExceeded)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the device: "
                 << GPGMM_BYTES_TO_GB(resourceInfo.SizeInBytes) << " vs "
-                << GPGMM_BYTES_TO_GB(mCaps->GetMaxResourceSize()) << " GBs.";
+                << GPGMM_BYTES_TO_GB(mMaxResourceHeapSize) << " GBs.";
             return E_OUTOFMEMORY;
         }
 
@@ -1069,7 +1069,7 @@ namespace gpgmm::d3d12 {
         request.AlwaysPrefetch =
             (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY);
         request.AlwaysCacheSize = (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
-        request.AvailableForAllocation = mCaps->GetMaxResourceHeapSize();
+        request.AvailableForAllocation = mMaxResourceHeapSize;
 
         // Apply extra padding to the resource heap size, if specified.
         // Padding can only be applied to standalone non-committed resources.

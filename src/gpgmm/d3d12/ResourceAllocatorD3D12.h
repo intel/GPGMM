@@ -159,6 +159,7 @@ namespace gpgmm::d3d12 {
         const bool mUseDetailedTimingEvents;
         const bool mIsCustomHeapsDisabled;
         const bool mIsAlwaysCreateResident;
+        const uint64_t mMaxResourceHeapSize;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 

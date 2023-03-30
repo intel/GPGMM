@@ -689,6 +689,20 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, &allocation));
     }
+
+    // Create a buffer that exceeds the max size should always fail.
+    {
+        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        allocatorDesc.MaxResourceHeapSize = kBufferOf4MBAllocationSize;
+
+        ComPtr<IResourceAllocator> resourceAllocatorLimitedTo4MB;
+        ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),
+                                                 &resourceAllocatorLimitedTo4MB, nullptr));
+
+        ASSERT_FAILED(resourceAllocatorLimitedTo4MB->CreateResource(
+            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize + 1),
+            D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, nullptr));
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
