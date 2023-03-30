@@ -140,6 +140,11 @@ namespace gpgmm {
             return;
         }
 
+        // Do not dump anything below info level messages to STDOUT.
+        if (mSeverity < MessageSeverity::kInfo) {
+            return;
+        }
+
 #if defined(GPGMM_PLATFORM_ANDROID)
         android_LogPriority androidPriority = AndroidLogPriority(mSeverity);
         __android_log_print(androidPriority, "GPGMM", "%s: %s\n", severityName,
