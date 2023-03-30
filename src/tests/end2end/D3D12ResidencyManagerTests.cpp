@@ -77,6 +77,11 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
                                                        : 0;
     }
 
+    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const {
+        D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
+        return ::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+    }
+
     class CreateDescHeapCallbackContext {
       public:
         CreateDescHeapCallbackContext(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc)
@@ -498,6 +503,13 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
         allocationsAboveBudget.push_back(std::move(allocation));
     }
 
+    // Budget updates are not occuring frequently enough to detect going over budget will evict the
+    // same amount.
+    if (GetBudgetLeft(residencyManager.Get(),
+                      GetMemorySegmentGroup(bufferAllocationDesc.HeapType)) > 0) {
+        return;
+    }
+
     // Created allocations above the budget should become resident.
     for (auto& allocation : allocationsAboveBudget) {
         EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
@@ -530,11 +542,8 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    D3D12_HEAP_PROPERTIES heapProperties =
-        mDevice->GetCustomHeapProperties(0, bufferAllocationDesc.HeapType);
-
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+        GetMemorySegmentGroup(bufferAllocationDesc.HeapType);
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
@@ -640,6 +649,13 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         EXPECT_EQ(allocation->GetMemory()->GetInfo().IsLocked, true);
     }
 
+    // Budget updates are not occuring frequently enough to detect going over budget will evict the
+    // same amount.
+    if (GetBudgetLeft(residencyManager.Get(),
+                      GetMemorySegmentGroup(bufferAllocationDesc.HeapType)) > 0) {
+        return;
+    }
+
     // Since locked heaps are ineligable for eviction and HEAP_FLAG_ALWAYS_IN_BUDGET is true,
     // CreateResource should always fail since there is not enough budget.
     ASSERT_FAILED(resourceAllocator->CreateResource(bufferAllocationDesc, bufferDesc,
@@ -688,6 +704,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
         secondSetOfHeaps.push_back(std::move(allocation));
+    }
+
+    // Budget updates are not occuring frequently enough to detect going over budget will evict the
+    // same amount.
+    if (GetBudgetLeft(residencyManager.Get(), GetMemorySegmentGroup(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
+        return;
     }
 
     // Page-in the first set of heaps using ExecuteCommandLists (and page-out the second set).
@@ -808,6 +830,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
     // Created allocations above the budget should become resident.
     for (auto& allocation : allocationsAboveBudget) {
         EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+    }
+
+    // Budget updates are not occuring frequently enough to detect going over budget will evict the
+    // same amount.
+    if (GetBudgetLeft(residencyManager.Get(), GetMemorySegmentGroup(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
+        return;
     }
 
     // Created allocations below the budget should NOT become resident.
