@@ -44,7 +44,7 @@ namespace gpgmm {
     std::string ToString(const void* object);
 
     template <typename T>
-    std::string ToString(T object) {
+    std::string ToString(T object) noexcept {
         std::stringstream output;
         output << object;
         return output.str();
@@ -52,7 +52,7 @@ namespace gpgmm {
 
     // Converts T to a hexadecimal string.
     template <typename T>
-    std::string ToHexStr(T object) {
+    std::string ToHexStr(T object) noexcept {
         std::stringstream stream;
         stream << "0x" << std::hex << object;
         return stream.str();

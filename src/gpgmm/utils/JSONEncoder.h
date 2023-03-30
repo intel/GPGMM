@@ -24,7 +24,7 @@ namespace gpgmm {
 
     class JSONDict {
       public:
-        JSONDict();
+        JSONDict() noexcept;
         JSONDict(const std::string& name, const JSONDict& object);
         JSONDict(const JSONDict& other);
         JSONDict& operator=(const JSONDict& other);
@@ -55,7 +55,7 @@ namespace gpgmm {
 
     class JSONArray {
       public:
-        JSONArray();
+        JSONArray() noexcept;
         JSONArray(const JSONArray& other);
         JSONArray& operator=(const JSONArray& other);
 

@@ -73,7 +73,7 @@ namespace gpgmm::d3d12 {
 #define AssertIfSucceded(expr) ASSERT(FAILED(expr));
 
     std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
-    std::string GetErrorMessage(HRESULT error);
+    std::string GetErrorMessage(HRESULT error) noexcept;
 
 }  // namespace gpgmm::d3d12
 

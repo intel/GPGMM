@@ -29,7 +29,7 @@ namespace gpgmm {
 
     class EventTraceWriter {
       public:
-        EventTraceWriter();
+        EventTraceWriter() noexcept;
         ~EventTraceWriter();
 
         void SetConfiguration(const char* traceFile, const TraceEventPhase& ignoreMask);
@@ -42,7 +42,7 @@ namespace gpgmm {
                                uint32_t flags,
                                const JSONDict& args);
 
-        void FlushQueuedEventsToDisk();
+        void FlushQueuedEventsToDisk() noexcept;
 
         void FlushAndRemoveBufferEntry(std::vector<TraceEvent>* buffer);
 
