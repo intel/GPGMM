@@ -161,20 +161,25 @@ namespace gpgmm::d3d12 {
     };
 
     HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                   ID3D12Device* pDevice,
+                                   IDXGIAdapter3* pAdapter,
                                    IResidencyManager** ppResidencyManagerOut) {
-        return ResidencyManager::CreateResidencyManager(descriptor, ppResidencyManagerOut);
+        return ResidencyManager::CreateResidencyManager(descriptor, pDevice, pAdapter,
+                                                        ppResidencyManagerOut);
     }
 
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                                     ID3D12Device* pDevice,
+                                                     IDXGIAdapter3* pAdapter,
                                                      IResidencyManager** ppResidencyManagerOut) {
-        ReturnIfNullptr(descriptor.Adapter);
-        ReturnIfNullptr(descriptor.Device);
+        ReturnIfNullptr(pAdapter);
+        ReturnIfNullptr(pDevice);
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(Caps::CreateCaps(descriptor.Device, descriptor.Adapter, &ptr));
+            ReturnIfFailed(Caps::CreateCaps(pDevice, pAdapter, &ptr));
             caps.reset(ptr);
         }
 
@@ -200,8 +205,8 @@ namespace gpgmm::d3d12 {
 
         SetLogLevel(GetMessageSeverity(descriptor.MinLogLevel));
 
-        std::unique_ptr<ResidencyManager> residencyManager =
-            std::unique_ptr<ResidencyManager>(new ResidencyManager(descriptor, std::move(caps)));
+        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
+            new ResidencyManager(descriptor, pDevice, pAdapter, std::move(caps)));
 
         // Require automatic video memory budget updates.
         if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
@@ -264,9 +269,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor, std::unique_ptr<Caps> caps)
-        : mDevice(descriptor.Device),
-          mAdapter(descriptor.Adapter),
+    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
+                                       ID3D12Device* pDevice,
+                                       IDXGIAdapter3* pAdapter,
+                                       std::unique_ptr<Caps> caps)
+        : mDevice(pDevice),
+          mAdapter(pAdapter),
           mMaxPctOfVideoMemoryToBudget(descriptor.MaxPctOfVideoMemoryToBudget == 0
                                            ? kDefaultMaxPctOfVideoMemoryToBudget
                                            : descriptor.MaxPctOfVideoMemoryToBudget),

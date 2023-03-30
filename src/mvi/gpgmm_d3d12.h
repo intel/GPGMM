@@ -106,6 +106,8 @@ namespace gpgmm::d3d12 {
     class ResidencyManager final : public Unknown, public IResidencyManager {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                              ID3D12Device* pDevice,
+                                              IDXGIAdapter3* pAdapter,
                                               IResidencyManager** ppResidencyManagerOut);
 
         ~ResidencyManager() override;
@@ -135,7 +137,9 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        ResidencyManager(const RESIDENCY_DESC& descriptor);
+        ResidencyManager(const RESIDENCY_DESC& descriptor,
+                         ID3D12Device* pDevice,
+                         IDXGIAdapter3* pAdapter);
 
         Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
         Microsoft::WRL::ComPtr<IDXGIAdapter3> mAdapter;
@@ -205,10 +209,14 @@ namespace gpgmm::d3d12 {
                                     public IResourceAllocator {
       public:
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ID3D12Device* pDevice,
+                                               IDXGIAdapter* pAdapter,
                                                IResourceAllocator** ppResourceAllocatorOut,
                                                IResidencyManager** ppResidencyManagerOut);
 
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ID3D12Device* pDevice,
+                                               IDXGIAdapter* pAdapter,
                                                IResidencyManager* pResidencyManager,
                                                IResourceAllocator** ppResourceAllocatorOut);
 
@@ -237,7 +245,9 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor, ResidencyManager* pResidencyManager);
+        ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+                          ID3D12Device* pDevice,
+                          ResidencyManager* pResidencyManager);
 
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 

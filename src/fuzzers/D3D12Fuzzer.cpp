@@ -30,10 +30,8 @@ HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* pAllocatorDesc
         return E_FAIL;
     }
 
-    allocatorDescOut.Device = *ppDeviceOut;
-
     // Populate the adapter
-    LUID adapterLUID = allocatorDescOut.Device->GetAdapterLuid();
+    LUID adapterLUID = (*ppDeviceOut)->GetAdapterLuid();
     ComPtr<IDXGIFactory1> dxgiFactory;
     if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)))) {
         return E_FAIL;
@@ -47,8 +45,6 @@ HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* pAllocatorDesc
     if (FAILED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(ppAdapterOut)))) {
         return E_FAIL;
     }
-
-    allocatorDescOut.Adapter = *ppAdapterOut;
 
     // Configure options
     allocatorDescOut.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;

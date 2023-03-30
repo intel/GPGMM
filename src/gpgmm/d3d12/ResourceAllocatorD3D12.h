@@ -40,10 +40,14 @@ namespace gpgmm::d3d12 {
                                     public MemoryAllocator {
       public:
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ID3D12Device* pDevice,
+                                               IDXGIAdapter* pAdapter,
                                                IResourceAllocator** ppResourceAllocatorOut,
                                                IResidencyManager** ppResidencyManagerOut);
 
         static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                               ID3D12Device* pDevice,
+                                               IDXGIAdapter* pAdapter,
                                                IResidencyManager* pResidencyManager,
                                                IResourceAllocator** ppResourceAllocatorOut);
 
@@ -84,6 +88,7 @@ namespace gpgmm::d3d12 {
                                        IResourceAllocation** ppResourceAllocationOut);
 
         ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+                          ID3D12Device* pDevice,
                           ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 

@@ -128,12 +128,7 @@ namespace gpgmm::d3d12 {
 
     ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
         ALLOCATOR_DESC desc = {};
-
-        // Required parameters.
-        desc.Adapter = mAdapter.Get();
-        desc.Device = mDevice.Get();
         desc.ResourceHeapTier = mCaps->GetMaxResourceHeapTierSupported();
-
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {
@@ -148,10 +143,6 @@ namespace gpgmm::d3d12 {
 
     RESIDENCY_DESC D3D12TestBase::CreateBasicResidencyDesc() const {
         RESIDENCY_DESC desc = {};
-        // Required
-        desc.Adapter = mAdapter.Get();
-        desc.Device = mDevice.Get();
-
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {

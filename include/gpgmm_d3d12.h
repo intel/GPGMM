@@ -337,19 +337,6 @@ namespace gpgmm::d3d12 {
      Specify parameters when creating a residency manager.
      */
     struct RESIDENCY_DESC {
-        /** \brief Specifies the device used by this residency manager.
-        Required parameter. Use CreateDevice get the device.
-        */
-        ID3D12Device* Device;
-
-        /** \brief Specifies the adapter used by this residency manager.
-
-        Requires DXGI 1.4 due to IDXGIAdapter3::QueryVideoMemoryInfo.
-
-        Required parameter. Use EnumAdapters to get the adapter.
-        */
-        IDXGIAdapter3* Adapter;
-
         /** \brief Specifies residency options.
 
         Optional parameter. By default, no flags are specified or RESIDENCY_FLAG_NONE.
@@ -536,12 +523,18 @@ namespace gpgmm::d3d12 {
 
     @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
     manager.
+    @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
+    device.
+    @param pAdapter DXGI adapter used to create the device.  Requires DXGI 1.4 due to
+    IDXGIAdapter3::QueryVideoMemoryInfo. Use EnumAdapters to get the adapter.
     @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
     residency manager. Pass NULL to test if residency Manager creation would succeed, but not
     actually create the residency Manager. If NULL is passed and residency manager creating
     would succeed, S_FALSE is returned.
     */
     GPGMM_EXPORT HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+                                                ID3D12Device* pDevice,
+                                                IDXGIAdapter3* pAdapter,
                                                 IResidencyManager** ppResidencyManagerOut);
 
     /** \struct RESOURCE_ALLOCATION_INFO
@@ -784,22 +777,6 @@ namespace gpgmm::d3d12 {
     Specify parameters for creating allocators.
     */
     struct ALLOCATOR_DESC {
-        /** \brief Specifies the device used by this allocator.
-
-        Required parameter. Use CreateDevice get the device.
-        */
-        ID3D12Device* Device;
-
-        /** \brief Specifies the adapter used by this allocator.
-
-        The adapter is used to detect for additional device capabilities (by GPU vendor).
-        If the adapter is left unspecified, the capabiltities will not be detected and disabled by
-        CheckFeatureSupport.
-
-        Optional parameter. Use EnumAdapters to get the adapter.
-        */
-        IDXGIAdapter* Adapter;
-
         /** \brief Specifies allocator options.
 
         For example, whether the allocator can reuse memory, or resources should be resident upon
@@ -1220,6 +1197,10 @@ namespace gpgmm::d3d12 {
 
     @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
     allocator.
+    @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
+    device.
+    @param pAdapter DXGI adapter used to create the device. Used to detect for additional device
+    capabilities (by GPU vendor). Optional parameter. Use EnumAdapters to get the adapter.
     @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator.
@@ -1228,6 +1209,8 @@ namespace gpgmm::d3d12 {
     residency.
     */
     GPGMM_EXPORT HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                                 ID3D12Device* pDevice,
+                                                 IDXGIAdapter* pAdapter,
                                                  IResourceAllocator** ppResourceAllocatorOut,
                                                  IResidencyManager** ppResidencyManagerOut);
 
@@ -1235,6 +1218,10 @@ namespace gpgmm::d3d12 {
 
     @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
     allocator.
+    @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
+    device.
+    @param pAdapter DXGI adapter used to create the device. Used to detect for additional device
+    capabilities (by GPU vendor). Optional parameter. Use EnumAdapters to get the adapter.
     @param pResidencyManager Pointer to a memory block that receives a pointer to the
     residency manager.
     @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
@@ -1242,6 +1229,8 @@ namespace gpgmm::d3d12 {
     create the allocator.
     */
     GPGMM_EXPORT HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+                                                 ID3D12Device* pDevice,
+                                                 IDXGIAdapter* pAdapter,
                                                  IResidencyManager* pResidencyManager,
                                                  IResourceAllocator** ppResourceAllocatorOut);
 
