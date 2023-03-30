@@ -46,16 +46,8 @@ namespace gpgmm::d3d12 {
             return {};
         }
 
-        const uint64_t heapSize = AlignTo(request.SizeInBytes, request.Alignment);
-        if (heapSize > request.SizeInBytes) {
-            DebugEvent(this, MessageId::kAlignmentMismatch)
-                << "Resource heap size is larger then the requested size (" +
-                       std::to_string(heapSize) + " vs " + std::to_string(request.SizeInBytes) +
-                       " bytes).";
-        }
-
         D3D12_RESOURCE_ALLOCATION_INFO info = {};
-        info.SizeInBytes = heapSize;
+        info.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
         info.Alignment = request.Alignment;
 
         D3D12_RESOURCE_DESC resourceDescriptor;
@@ -77,8 +69,15 @@ namespace gpgmm::d3d12 {
             mHeapProperties, mHeapFlags, info, &resourceDescriptor,
             /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
             &resourceHeap);
+
         if (FAILED(hr)) {
             return {static_cast<ErrorCodeType>(hr)};
+        }
+
+        if (info.SizeInBytes > request.SizeInBytes) {
+            DebugLog(MessageId::kAlignmentMismatch)
+                << "Memory allocation size was larger then the requested size: " << info.SizeInBytes
+                << " vs " << request.SizeInBytes << " bytes.";
         }
 
         mStats.UsedMemoryUsage += resourceHeap->GetSize();
