@@ -36,9 +36,16 @@ namespace gpgmm {
 
         MemoryAllocationRequest memoryRequest = request;
         memoryRequest.Alignment = mMemoryAlignment;
+        memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
 
         std::unique_ptr<MemoryAllocation> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
+
+        if (memoryRequest.SizeInBytes > request.SizeInBytes) {
+            DebugLog(MessageId::kAlignmentMismatch)
+                << "Memory allocation was larger then the requested size: "
+                << memoryRequest.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
+        }
 
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
