@@ -165,11 +165,11 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief Specifies the memory segment to use for residency.
+        /** \brief Specifies the memory segment the heap will reside in.
 
         Required parameter.
         */
-        DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup;
+        DXGI_MEMORY_SEGMENT_GROUP HeapSegmentGroup;
 
         /** \brief Specifies heaps options.
 
@@ -852,24 +852,24 @@ namespace gpgmm::d3d12 {
         */
         uint64_t MaxResourceHeapSize;
 
-        /** \brief Memory fragmentation limit, expressed as a percentage of the resource heap size,
-        that is acceptable to be wasted due to fragmentation.
+        /** \brief Resource heap fragmentation limit, expressed as a percentage of the resource heap
+        size, that is acceptable to be wasted due to fragmentation.
 
         Fragmentation occurs when the allocation is larger then the resource size.
         This occurs when the type of resource (buffer or texture) and allocator have different
         alignment requirements. For example, a 192KB resource may need to allocate 256KB of
         allocated space, which is equivalent to a fragmentation limit of 33%.
 
-        When PreferredResourceHeapSize is non-zero, the MemoryFragmentationLimit could be
-        exceeded. Also, the MemoryFragmentationLimit should never be zero, as some fragmentation
-        can occur.
+        When PreferredResourceHeapSize is non-zero, the ResourceHeapFragmentationLimit could be
+        exceeded. Also, the ResourceHeapFragmentationLimit should never be zero, as some
+        fragmentation can occur.
 
         Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
         resource heap size.
         */
-        double MemoryFragmentationLimit;
+        double ResourceHeapFragmentationLimit;
 
-        /** \brief Memory growth factor, expressed as a multipler of the resource heap size
+        /** \brief Resource heap growth factor, expressed as a multipler of the resource heap size
         that will monotonically increase.
 
         A factor value of 1.0 specifies no growth, where the resource heap size is always determined
@@ -884,7 +884,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
-        double MemoryGrowthFactor;
+        double ResourceHeapGrowthFactor;
     };
 
     /** \enum ALLOCATION_FLAGS

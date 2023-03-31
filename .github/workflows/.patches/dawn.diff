@@ -765,7 +765,7 @@ index fe99a63ac..353e47b82 100644
 -
 -    return std::move(descriptorHeap);
 +    heapDesc.SizeInBytes = mSizeIncrement * descriptorCount;
-+    heapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
++    heapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 +
 +    CreateHeapCallback callback(mDevice->GetD3D12Device(), descriptorCount, mHeapType);
 +    ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;

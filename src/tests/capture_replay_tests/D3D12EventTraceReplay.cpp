@@ -99,9 +99,10 @@ namespace {
         newAllocatorDesc.PreferredResourceHeapSize =
             allocatorDescJson["PreferredResourceHeapSize"].asUInt64();
         newAllocatorDesc.MaxResourceHeapSize = allocatorDescJson["MaxResourceHeapSize"].asUInt64();
-        newAllocatorDesc.MemoryFragmentationLimit =
-            allocatorDescJson["MemoryFragmentationLimit"].asDouble();
-        newAllocatorDesc.MemoryGrowthFactor = allocatorDescJson["MemoryGrowthFactor"].asDouble();
+        newAllocatorDesc.ResourceHeapFragmentationLimit =
+            allocatorDescJson["ResourceHeapFragmentationLimit"].asDouble();
+        newAllocatorDesc.ResourceHeapGrowthFactor =
+            allocatorDescJson["ResourceHeapGrowthFactor"].asDouble();
         return newAllocatorDesc;
     }
 
@@ -464,11 +465,11 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_MAX_PERFORMANCE) {
                             // Any amount of (internal) fragmentation is acceptable.
-                            allocatorDescOfProfile.MemoryFragmentationLimit = 1.0f;
+                            allocatorDescOfProfile.ResourceHeapFragmentationLimit = 1.0f;
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
                             allocatorDescOfProfile.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
-                            allocatorDescOfProfile.MemoryFragmentationLimit =
+                            allocatorDescOfProfile.ResourceHeapFragmentationLimit =
                                 0.125;  // 1/8th of 4MB
                         }
 
@@ -529,7 +530,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ConvertToD3D12HeapProperties(args["Heap"]["Properties"]);
 
                         HEAP_DESC resourceHeapDesc = {};
-                        resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
+                        resourceHeapDesc.HeapSegmentGroup = GetMemorySegmentGroup(
                             heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
                         resourceHeapDesc =
                             ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);

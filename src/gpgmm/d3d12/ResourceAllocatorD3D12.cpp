@@ -514,9 +514,10 @@ namespace gpgmm::d3d12 {
         }
 
         ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
-        newDescriptor.MemoryGrowthFactor = (allocatorDescriptor.MemoryGrowthFactor >= 1.0)
-                                               ? allocatorDescriptor.MemoryGrowthFactor
-                                               : kDefaultMemoryGrowthFactor;
+        newDescriptor.ResourceHeapGrowthFactor =
+            (allocatorDescriptor.ResourceHeapGrowthFactor >= 1.0)
+                ? allocatorDescriptor.ResourceHeapGrowthFactor
+                : kDefaultMemoryGrowthFactor;
 
         // By default, slab-allocate from a sorted segmented list.
         if (newDescriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_DEFAULT) {
@@ -560,9 +561,10 @@ namespace gpgmm::d3d12 {
                 ? kNoRequiredAlignment
                 : allocatorDescriptor.PreferredResourceHeapSize;
 
-        newDescriptor.MemoryFragmentationLimit = (allocatorDescriptor.MemoryFragmentationLimit > 0)
-                                                     ? allocatorDescriptor.MemoryFragmentationLimit
-                                                     : kDefaultFragmentationLimit;
+        newDescriptor.ResourceHeapFragmentationLimit =
+            (allocatorDescriptor.ResourceHeapFragmentationLimit > 0)
+                ? allocatorDescriptor.ResourceHeapFragmentationLimit
+                : kDefaultFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             ErrorLog(MessageId::kInvalidArgument)
@@ -805,7 +807,7 @@ namespace gpgmm::d3d12 {
 
         return CreateSubAllocator(
             descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
-            descriptor.MemoryFragmentationLimit, descriptor.MemoryGrowthFactor,
+            descriptor.ResourceHeapFragmentationLimit, descriptor.ResourceHeapGrowthFactor,
             /*allowSlabPrefetch*/ !(descriptor.Flags & ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH),
             std::move(pooledOrNonPooledAllocator));
     }
@@ -830,10 +832,10 @@ namespace gpgmm::d3d12 {
 
         // Any amount of fragmentation must be allowed for small buffers since the allocation can
         // be smaller then the resource heap alignment.
-        return CreateSubAllocator(descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
-                                  /*memoryFragmentationLimit*/ 1, descriptor.MemoryGrowthFactor,
-                                  /*allowSlabPrefetch*/ false,
-                                  std::move(pooledOrNonPooledAllocator));
+        return CreateSubAllocator(
+            descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
+            /*memoryFragmentationLimit*/ 1, descriptor.ResourceHeapGrowthFactor,
+            /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
     }
 
     ResourceAllocator::~ResourceAllocator() {
@@ -1472,7 +1474,7 @@ namespace gpgmm::d3d12 {
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, mIsAlwaysCreatedInBudget);
-            resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
+            resourceHeapDesc.HeapSegmentGroup = GetMemorySegmentGroup(
                 heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
@@ -1532,7 +1534,7 @@ namespace gpgmm::d3d12 {
                 << blocksPerHeap << " blocks per heap (vs "
                 << kMinBlockToMemoryCountReportingThreshold
                 << "). This usually means the heap has insufficent space and "
-                   "could beneifit from larger MemoryGrowthFactor and/or "
+                   "could beneifit from larger ResourceHeapGrowthFactor and/or "
                    "PreferredResourceHeapSize.";
         }
 

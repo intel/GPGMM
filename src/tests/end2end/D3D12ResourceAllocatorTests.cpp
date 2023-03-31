@@ -1671,7 +1671,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
 // fragmentation limit.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.MemoryFragmentationLimit = 0.0265;  // or 2.65%
+    allocatorDesc.ResourceHeapFragmentationLimit = 0.0265;  // or 2.65%
 
     ALLOCATION_DESC baseAllocationDesc = {};
     baseAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
