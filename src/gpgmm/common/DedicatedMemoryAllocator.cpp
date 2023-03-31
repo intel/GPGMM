@@ -36,7 +36,7 @@ namespace gpgmm {
 
         MemoryAllocationRequest memoryRequest = request;
         memoryRequest.Alignment = mMemoryAlignment;
-        memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
+        memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
         std::unique_ptr<MemoryAllocation> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);

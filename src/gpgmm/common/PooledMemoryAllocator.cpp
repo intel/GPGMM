@@ -44,8 +44,12 @@ namespace gpgmm {
 
         MemoryAllocation allocation = mPool->AcquireFromPool();
         if (allocation == GPGMM_INVALID_ALLOCATION) {
+            MemoryAllocationRequest memoryRequest = request;
+            memoryRequest.Alignment = mMemoryAlignment;
+            memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
+
             std::unique_ptr<MemoryAllocation> allocationPtr;
-            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(request), allocationPtr);
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
             allocation = *allocationPtr;
         } else {
             mStats.FreeMemoryUsage -= allocation.GetSize();
