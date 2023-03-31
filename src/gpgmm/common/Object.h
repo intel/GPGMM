@@ -21,6 +21,10 @@ namespace gpgmm {
       public:
         ObjectBase() = default;
         virtual ~ObjectBase() = default;
+
+        ObjectBase(const ObjectBase&) = default;
+        ObjectBase& operator=(const ObjectBase&) = default;
+
         virtual const char* GetTypename() const = 0;
     };
 

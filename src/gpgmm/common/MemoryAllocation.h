@@ -16,6 +16,7 @@
 #ifndef GPGMM_COMMON_MEMORYALLOCATION_H_
 #define GPGMM_COMMON_MEMORYALLOCATION_H_
 
+#include "gpgmm/common/Object.h"
 #include "gpgmm/utils/Limits.h"
 
 #include <gpgmm.h>
@@ -27,7 +28,7 @@ namespace gpgmm {
     class MemoryAllocator;
 
     // Represents a location and range in memory.
-    class MemoryAllocation {
+    class MemoryAllocation : public ObjectBase {
       public:
         // Contructs an invalid memory allocation.
         MemoryAllocation();
@@ -43,7 +44,7 @@ namespace gpgmm {
         // Constructs a "standalone" memory allocation.
         MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory, uint64_t requestSize);
 
-        virtual ~MemoryAllocation() = default;
+        virtual ~MemoryAllocation() override = default;
 
         MemoryAllocation(const MemoryAllocation&) = default;
         MemoryAllocation& operator=(const MemoryAllocation&) = default;
@@ -65,6 +66,9 @@ namespace gpgmm {
         MemoryAllocator* mAllocator;
 
       private:
+        // ObjectBase interface
+        const char* GetTypename() const override;
+
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
