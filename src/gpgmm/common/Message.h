@@ -30,7 +30,7 @@ namespace gpgmm {
         kBadOperation,
         kPerformanceWarning,
         kMemoryUsageUpdated,
-        kMemoryAllocated,
+        kObjectCreated,
     };
 
     enum class MessageSeverity {

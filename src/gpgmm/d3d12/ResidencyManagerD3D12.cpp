@@ -262,6 +262,10 @@ namespace gpgmm::d3d12 {
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
 
+        gpgmm::DebugLog(MessageId::kObjectCreated, residencyManager.get())
+            << "Created residency manager (" << WCharToUTF8(residencyManager->GetDebugName()) << "="
+            << ToHexStr(residencyManager.get()) << ")";
+
         if (ppResidencyManagerOut != nullptr) {
             *ppResidencyManagerOut = residencyManager.release();
         }

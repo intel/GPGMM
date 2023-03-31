@@ -154,7 +154,7 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
-        gpgmm::DebugLog(MessageId::kMemoryAllocated)
+        gpgmm::DebugLog(MessageId::kObjectCreated, heap.get())
             << "Created heap (" << WCharToUTF8(heap->GetDebugName()) << "=" << ToHexStr(heap.get())
             << "), Size=" << heap->GetInfo().SizeInBytes
             << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());

@@ -605,6 +605,10 @@ namespace gpgmm::d3d12 {
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
+        gpgmm::DebugLog(MessageId::kObjectCreated, resourceAllocator.get())
+            << "Created resource allocator (" << WCharToUTF8(resourceAllocator->GetDebugName())
+            << "=" << ToHexStr(resourceAllocator.get()) << ")";
+
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.release();
         }
