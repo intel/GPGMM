@@ -62,7 +62,7 @@ namespace gpgmm::d3d12 {
         const bool isResidencyEnabled = (mResidencyManager != nullptr);
         if (isResidencyEnabled) {
             resourceHeapDesc.Flags |= GetHeapFlags(mHeapFlags, mIsAlwaysCreatedInBudget);
-            resourceHeapDesc.MemorySegmentGroup = GetMemorySegmentGroup(
+            resourceHeapDesc.HeapSegmentGroup = GetMemorySegmentGroup(
                 mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 

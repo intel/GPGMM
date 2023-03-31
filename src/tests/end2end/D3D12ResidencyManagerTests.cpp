@@ -50,7 +50,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
         // Disable memory growth so older heap being paged out are the same size as newer heaps
         // being paged-in, and the test expectation based on these sizes is easy to determine.
-        desc.MemoryGrowthFactor = 1.0;
+        desc.ResourceHeapGrowthFactor = 1.0;
 
         return desc;
     }
@@ -138,7 +138,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
     resourceHeapAlwaysInBudgetDesc.SizeInBytes = kHeapSize;
-    resourceHeapAlwaysInBudgetDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapAlwaysInBudgetDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     resourceHeapAlwaysInBudgetDesc.Flags |= HEAP_FLAG_ALWAYS_IN_BUDGET;
 
     D3D12_HEAP_DESC heapDesc;
@@ -176,7 +176,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
-    resourceHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     ASSERT_FAILED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
                              BadCreateHeapCallbackContext::CreateHeap,
@@ -248,7 +248,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
@@ -302,7 +302,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.MemorySegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     descriptorHeapDesc.Flags |= HEAP_FLAG_ALWAYS_IN_RESIDENCY;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
@@ -575,7 +575,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
         CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.MemoryGrowthFactor = 2;
+    allocatorDesc.ResourceHeapGrowthFactor = 2;
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),

@@ -47,8 +47,8 @@ namespace gpgmm::d3d12 {
         dict.AddItem("PoolAlgorithm", desc.PoolAlgorithm);
         dict.AddItem("PreferredResourceHeapSize", desc.PreferredResourceHeapSize);
         dict.AddItem("MaxResourceHeapSize", desc.MaxResourceHeapSize);
-        dict.AddItem("MemoryFragmentationLimit", desc.MemoryFragmentationLimit);
-        dict.AddItem("MemoryGrowthFactor", desc.MemoryGrowthFactor);
+        dict.AddItem("ResourceHeapFragmentationLimit", desc.ResourceHeapFragmentationLimit);
+        dict.AddItem("ResourceHeapGrowthFactor", desc.ResourceHeapGrowthFactor);
         return dict;
     }
 
@@ -167,7 +167,7 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("MemorySegmentGroup", desc.MemorySegmentGroup);
+        dict.AddItem("HeapSegmentGroup", desc.HeapSegmentGroup);
         dict.AddItem("Flags", desc.Flags);
         if (desc.DebugName != nullptr) {
             dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));

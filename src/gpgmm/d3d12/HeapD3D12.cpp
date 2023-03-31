@@ -77,9 +77,9 @@ namespace gpgmm::d3d12 {
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             if (FAILED(residencyManager->EnsureInBudget(descriptor.SizeInBytes,
-                                                        descriptor.MemorySegmentGroup))) {
+                                                        descriptor.HeapSegmentGroup))) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
-                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.MemorySegmentGroup,
+                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegmentGroup,
                                                                      &currentVideoInfo))) {
                     gpgmm::ErrorLog(MessageId::kBudgetExceeded)
                         << "Unable to create heap because not enough budget exists ("
@@ -171,7 +171,7 @@ namespace gpgmm::d3d12 {
                bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
           mPageable(std::move(pageable)),
-          mMemorySegmentGroup(descriptor.MemorySegmentGroup),
+          mMemorySegmentGroup(descriptor.HeapSegmentGroup),
           mResidencyLock(0),
           mIsResidencyDisabled(isResidencyDisabled),
           mState(RESIDENCY_STATUS_UNKNOWN) {
