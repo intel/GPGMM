@@ -68,6 +68,8 @@ namespace gpgmm::d3d12 {
                              CreateHeapFn createHeapFn,
                              void* pCreateHeapContext,
                              IHeap** ppHeapOut) {
+        ReturnIfNullptr(pCreateHeapContext);
+
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
         ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
@@ -94,7 +96,8 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(createHeapFn(pCreateHeapContext, &pageable));
+        ReturnIfFailedDevice(createHeapFn(pCreateHeapContext, &pageable),
+                             GetDevice(pageable.Get()));
 
         // Pageable-based type is required for residency-managed heaps.
         ReturnIfNullptr(pageable);
@@ -148,15 +151,13 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        const std::string debugName =
-            (heap->GetDebugName() == nullptr) ? WCharToUTF8(heap->GetDebugName()) : "'Unknown'";
-        gpgmm::DebugLog(MessageId::kMemoryAllocated)
-            << "Created heap (" << debugName << "=" << ToHexStr(heap.get())
-            << "), Size=" << heap->GetInfo().SizeInBytes
-            << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
-
         ReturnIfFailed(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
+
+        gpgmm::DebugLog(MessageId::kMemoryAllocated)
+            << "Created heap (" << WCharToUTF8(heap->GetDebugName()) << "=" << ToHexStr(heap.get())
+            << "), Size=" << heap->GetInfo().SizeInBytes
+            << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
 
         if (ppHeapOut != nullptr) {
             *ppHeapOut = heap.release();
