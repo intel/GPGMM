@@ -19,6 +19,10 @@
 namespace gpgmm::d3d12 {
 
     LPCWSTR DebugObject::GetDebugName() const {
+        if (mDebugName.empty()) {
+            return L"'Unknown'";
+        }
+
         return mDebugName.c_str();
     }
 
