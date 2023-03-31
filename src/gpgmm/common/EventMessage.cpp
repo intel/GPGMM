@@ -46,43 +46,41 @@ namespace gpgmm {
 
     // EventMessage
 
-    EventMessage::EventMessage(const MessageSeverity& level,
-                               const char* name,
-                               const void* object,
-                               MessageId messageId)
-        : mSeverity(level), mName(name), mObject(object), mMessageId(messageId) {
+    EventMessage::EventMessage(const MessageSeverity& severity,
+                               MessageId messageId,
+                               const ObjectBase* object)
+        : mSeverity(severity), mMessageId(messageId), mObject(object) {
     }
 
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity, mMessageId)
-            << mName << "=" << ToString(mObject) << ": " << description;
+        gpgmm::Log(mSeverity, mMessageId, mObject) << ": " << description;
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(mSeverity < MessageSeverity::kWarning);
 #endif
 
-        if (mSeverity >= GetEventMessageLevel()) {
+        if (mSeverity >= GetEventMessageLevel() && mObject != nullptr) {
             GPGMM_TRACE_EVENT_OBJECT_CALL(
-                mName, MessageInfo({description.c_str(), mMessageId, mSeverity}));
+                mObject->GetTypename(), MessageInfo({description.c_str(), mMessageId, mSeverity}));
         }
     }
 
-    EventMessage DebugEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::kDebug, object->GetTypename(), object, messageId};
+    EventMessage DebugEvent(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kDebug, messageId, object};
     }
 
-    EventMessage InfoEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::kInfo, object->GetTypename(), object, messageId};
+    EventMessage InfoEvent(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kInfo, messageId, object};
     }
 
-    EventMessage WarnEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::kWarning, object->GetTypename(), object, messageId};
+    EventMessage WarnEvent(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kWarning, messageId, object};
     }
 
-    EventMessage ErrorEvent(const ObjectBase* object, MessageId messageId) {
-        return {MessageSeverity::kError, object->GetTypename(), object, messageId};
+    EventMessage ErrorEvent(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kError, messageId, object};
     }
 
 }  // namespace gpgmm

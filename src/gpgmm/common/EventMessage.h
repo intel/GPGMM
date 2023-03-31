@@ -27,10 +27,9 @@ namespace gpgmm {
 
     class EventMessage {
       public:
-        EventMessage(const MessageSeverity& level,
-                     const char* name,
-                     const void* object,
-                     MessageId messageId = MessageId::kUnknown);
+        EventMessage(const MessageSeverity& severity,
+                     MessageId messageId,
+                     const ObjectBase* object);
         ~EventMessage();
 
         EventMessage(EventMessage&& other) = default;
@@ -44,20 +43,21 @@ namespace gpgmm {
 
       private:
         MessageSeverity mSeverity;
-        const char* mName = nullptr;
-        const void* mObject = nullptr;
         MessageId mMessageId = MessageId::kUnknown;
+        const ObjectBase* mObject = nullptr;
 
         std::ostringstream mStream;
     };
 
-    EventMessage DebugEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
-
-    EventMessage InfoEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
-
-    EventMessage WarnEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
-
-    EventMessage ErrorEvent(const ObjectBase* object, MessageId messageId = MessageId::kUnknown);
+    // Short-hands to create a EventMessage with the respective severity.
+    EventMessage DebugEvent(MessageId messageId = MessageId::kUnknown,
+                            const ObjectBase* object = nullptr);
+    EventMessage InfoEvent(MessageId messageId = MessageId::kUnknown,
+                           const ObjectBase* object = nullptr);
+    EventMessage WarnEvent(MessageId messageId = MessageId::kUnknown,
+                           const ObjectBase* object = nullptr);
+    EventMessage ErrorEvent(MessageId messageId = MessageId::kUnknown,
+                            const ObjectBase* object = nullptr);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const MessageSeverity& level);

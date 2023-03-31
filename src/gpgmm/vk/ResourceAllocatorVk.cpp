@@ -353,7 +353,7 @@ namespace gpgmm::vk {
         }
 
         if (!result.IsSuccess()) {
-            ErrorEvent(allocator, MessageId::kAllocatorFailed)
+            ErrorEvent(MessageId::kAllocatorFailed, allocator)
                 << "Unable to allocate memory for resource.";
 
             return VK_ERROR_UNKNOWN;

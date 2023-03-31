@@ -541,7 +541,7 @@ namespace gpgmm::d3d12 {
         // Ignore when no budget was specified.
         if (pVideoMemoryInfo->Budget > 0 &&
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
-            WarnEvent(this, MessageId::kBudgetExceeded)
+            WarnEvent(MessageId::kBudgetExceeded, this)
                 << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                 << " GPU memory usage exceeds budget: "
                 << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
@@ -551,7 +551,7 @@ namespace gpgmm::d3d12 {
                 SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget);
             if (pVideoMemoryInfo->Budget > 0 &&
                 currentUsageOfBudget > kMinCurrentUsageOfBudgetReportingThreshold) {
-                EventMessage message = WarnEvent(this, MessageId::kBudgetExceeded);
+                EventMessage message = WarnEvent(MessageId::kBudgetExceeded, this);
                 message << GetMemorySegmentName(memorySegmentGroup, mIsUMA)
                         << " GPU memory usage is above budget threshold: "
                         << uint64_t(currentUsageOfBudget * 100) << "% vs "
@@ -638,7 +638,7 @@ namespace gpgmm::d3d12 {
         // If a budget wasn't provided, it not possible to evict. This is because either the budget
         // update event has not happened yet or was invalid.
         if (pVideoMemoryInfo->Budget == 0) {
-            WarnEvent(this, MessageId::kBudgetInvalid)
+            WarnEvent(MessageId::kBudgetInvalid, this)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, IsUMA())
                 << ") was unable to evict memory because a budget was not specified.";
@@ -711,7 +711,7 @@ namespace gpgmm::d3d12 {
             const uint32_t objectEvictCount = static_cast<uint32_t>(objectsToEvict.size());
             ReturnIfFailedDevice(mDevice->Evict(objectEvictCount, objectsToEvict.data()), mDevice);
 
-            DebugEvent(this, MessageId::kBudgetExceeded)
+            DebugEvent(MessageId::kBudgetExceeded, this)
                 << "GPU page-out. Number of allocations: " << objectsToEvict.size() << " ("
                 << bytesEvicted << " bytes).";
         }
@@ -872,7 +872,7 @@ namespace gpgmm::d3d12 {
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, memorySegmentGroup, nullptr));
 
-        DebugEvent(this, MessageId::kBudgetExceeded)
+        DebugEvent(MessageId::kBudgetExceeded, this)
             << "GPU page-in. Number of allocations: " << numberOfObjectsToMakeResident << " ("
             << sizeToMakeResident << " bytes).";
 
