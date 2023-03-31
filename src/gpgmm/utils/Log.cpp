@@ -95,8 +95,10 @@ namespace gpgmm {
 
     // LogMessage
 
-    LogMessage::LogMessage(MessageSeverity severity, MessageId messageId) noexcept
-        : mSeverity(severity), mMessageId(messageId) {
+    LogMessage::LogMessage(MessageSeverity severity,
+                           MessageId messageId,
+                           const ObjectBase* object) noexcept
+        : mSeverity(severity), mMessageId(messageId), mObject(object) {
     }
 
     LogMessage::~LogMessage() {
@@ -121,14 +123,21 @@ namespace gpgmm {
         if (IsDebuggerPresent()) {
             std::string outputString;
             if (mMessageId != MessageId::kUnknown) {
-                outputString = std::string(kLogTag) + " " + std::string(severityName) +
-                               "(tid: " + ToString(std::this_thread::get_id()) +
-                               "): " + fullMessage + "[" + GetMessageFromID(mMessageId) + "]" +
-                               "\n";
+                outputString =
+                    std::string(kLogTag) + " " + std::string(severityName) +
+                    "(tid: " + ToString(std::this_thread::get_id()) + "): " +
+                    ((mObject != nullptr)
+                         ? ((std::string(mObject->GetTypename()) + "=") + ToString(mObject) + ", ")
+                         : "") +
+                    fullMessage + "[" + GetMessageFromID(mMessageId) + "]" + "\n";
             } else {
-                outputString = std::string(kLogTag) + " " + std::string(severityName) +
-                               "(tid: " + ToString(std::this_thread::get_id()) +
-                               "): " + fullMessage + "\n";
+                outputString =
+                    std::string(kLogTag) + " " + std::string(severityName) +
+                    "(tid: " + ToString(std::this_thread::get_id()) + "): " +
+                    ((mObject != nullptr)
+                         ? ((std::string(mObject->GetTypename()) + "=") + ToString(mObject) + ", ")
+                         : "") +
+                    fullMessage + "\n";
             }
 
             OutputDebugStringA(outputString.c_str());
@@ -163,41 +172,41 @@ namespace gpgmm {
 #endif
     }
 
-    LogMessage DebugLog(MessageId messageId) {
-        return {MessageSeverity::kDebug, messageId};
+    LogMessage DebugLog(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kDebug, messageId, object};
     }
 
-    LogMessage InfoLog(MessageId messageId) {
-        return {MessageSeverity::kInfo, messageId};
+    LogMessage InfoLog(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kInfo, messageId, object};
     }
 
-    LogMessage WarningLog(MessageId messageId) {
-        return {MessageSeverity::kWarning, messageId};
+    LogMessage WarningLog(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kWarning, messageId, object};
     }
 
-    LogMessage ErrorLog(MessageId messageId) {
-        return {MessageSeverity::kError, messageId};
+    LogMessage ErrorLog(MessageId messageId, const ObjectBase* object) {
+        return {MessageSeverity::kError, messageId, object};
     }
 
     LogMessage DebugLog(const char* file, const char* function, int line) {
-        LogMessage message = DebugLog();
+        LogMessage message = DebugLog(MessageId::kUnknown, nullptr);
         message << file << ":" << line << "(" << function << ")";
         return message;
     }
 
-    LogMessage Log(MessageSeverity severity, MessageId messageId) {
+    LogMessage Log(MessageSeverity severity, MessageId messageId, const ObjectBase* object) {
         switch (severity) {
             case MessageSeverity::kDebug:
-                return DebugLog(messageId);
+                return DebugLog(messageId, object);
             case MessageSeverity::kInfo:
-                return InfoLog(messageId);
+                return InfoLog(messageId, object);
             case MessageSeverity::kWarning:
-                return WarningLog(messageId);
+                return WarningLog(messageId, object);
             case MessageSeverity::kError:
-                return ErrorLog(messageId);
+                return ErrorLog(messageId, object);
             default:
                 UNREACHABLE();
-                return {severity, messageId};
+                return {severity, messageId, object};
         }
     }
 

@@ -45,6 +45,7 @@
 //   GPGMM_DEBUG() << texture.GetFormat();
 
 #include "gpgmm/common/Message.h"
+#include "gpgmm/common/Object.h"
 
 #include <sstream>
 
@@ -57,7 +58,9 @@ namespace gpgmm {
     // Essentially an ostringstream that will print itself in its destructor.
     class LogMessage {
       public:
-        LogMessage(MessageSeverity severity, MessageId messageId) noexcept;
+        LogMessage(MessageSeverity severity,
+                   MessageId messageId,
+                   const ObjectBase* object) noexcept;
         ~LogMessage();
 
         LogMessage(LogMessage&& other) = default;
@@ -74,18 +77,25 @@ namespace gpgmm {
         LogMessage& operator=(const LogMessage& other) = delete;
 
         MessageSeverity mSeverity;
-        MessageId mMessageId;
+        MessageId mMessageId = MessageId::kUnknown;
+        const ObjectBase* mObject = nullptr;
         std::ostringstream mStream;
     };
 
     // Short-hands to create a LogMessage with the respective severity.
-    LogMessage DebugLog(MessageId messageId = MessageId::kUnknown);
-    LogMessage InfoLog(MessageId messageId = MessageId::kUnknown);
-    LogMessage WarningLog(MessageId messageId = MessageId::kUnknown);
-    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown);
+    LogMessage DebugLog(MessageId messageId = MessageId::kUnknown,
+                        const ObjectBase* object = nullptr);
+    LogMessage InfoLog(MessageId messageId = MessageId::kUnknown,
+                       const ObjectBase* object = nullptr);
+    LogMessage WarningLog(MessageId messageId = MessageId::kUnknown,
+                          const ObjectBase* object = nullptr);
+    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
+                        const ObjectBase* object = nullptr);
 
     // Create a LogMessage based on severity.
-    LogMessage Log(MessageSeverity severity, MessageId messageId);
+    LogMessage Log(MessageSeverity severity,
+                   MessageId messageId = MessageId::kUnknown,
+                   const ObjectBase* object = nullptr);
 
     // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information

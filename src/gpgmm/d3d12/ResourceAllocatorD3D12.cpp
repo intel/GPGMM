@@ -315,7 +315,7 @@ namespace gpgmm::d3d12 {
             if (FAILED(result.GetErrorCode())) {
                 // NeverAllocate always fails, so suppress it.
                 if (!request.NeverAllocate) {
-                    DebugEvent(allocator, MessageId::kAllocatorFailed)
+                    DebugEvent(MessageId::kAllocatorFailed, allocator)
                         << "Unable to allocate memory for request.";
                 }
                 return static_cast<HRESULT>(result.GetErrorCode());
@@ -326,7 +326,7 @@ namespace gpgmm::d3d12 {
 
             HRESULT hr = createResourceFn(*allocation);
             if (FAILED(hr)) {
-                InfoEvent(allocator, MessageId::kAllocatorFailed)
+                InfoEvent(MessageId::kAllocatorFailed, allocator)
                     << "Failed to create resource using allocation.";
                 allocator->DeallocateMemory(std::move(allocation));
             }
@@ -1301,7 +1301,7 @@ namespace gpgmm::d3d12 {
                 return E_OUTOFMEMORY;
             }
 
-            InfoEvent(this, MessageId::kAllocatorFailed)
+            InfoEvent(MessageId::kAllocatorFailed, this)
                 << "Unable to allocate memory for a resource by using a heap, falling back to a "
                    "committed resource.";
         }
@@ -1529,7 +1529,7 @@ namespace gpgmm::d3d12 {
         // sub-allocation is used.
         const uint64_t blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
         if (blocksPerHeap > 1 && blocksPerHeap < kMinBlockToMemoryCountReportingThreshold) {
-            gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
+            gpgmm::WarnEvent(MessageId::kPerformanceWarning, this)
                 << "Average number of resource allocations per heap is below threshold: "
                 << blocksPerHeap << " blocks per heap (vs "
                 << kMinBlockToMemoryCountReportingThreshold
@@ -1543,7 +1543,7 @@ namespace gpgmm::d3d12 {
             100;
         if (allocationUsagePct > 0 &&
             allocationUsagePct < kMinAllocationUsageReportingThreshold * 100) {
-            gpgmm::WarnEvent(this, MessageId::kPerformanceWarning)
+            gpgmm::WarnEvent(MessageId::kPerformanceWarning, this)
                 << "Average resource allocation usage is below threshold: " << allocationUsagePct
                 << "% vs " << uint64_t(kMinAllocationUsageReportingThreshold * 100)
                 << "%. This either means memory has become fragmented or the working set has "
