@@ -79,7 +79,7 @@ namespace gpgmm::d3d12 {
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
             gpgmm::ErrorEvent(this, MessageId::kBadOperation)
-                << "Map() on resource sub-allocation within cannot use "
+                << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return E_INVALIDARG;
         }
@@ -115,7 +115,7 @@ namespace gpgmm::d3d12 {
         // subresource-relative coordinates.
         if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
             gpgmm::ErrorEvent(this, MessageId::kBadOperation)
-                << "Unmap() on resource sub-allocation within cannot use "
+                << "Unmapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return;
         }
