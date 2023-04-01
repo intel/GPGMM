@@ -112,12 +112,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a78af20a2888ae8d89880b0a6554c9cb7"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a78af20a2888ae8d89880b0a6554c9cb7">MaxResourceHeapSize</a></td></tr>
 <tr class="memdesc:a78af20a2888ae8d89880b0a6554c9cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum size of the resource heap allowed.  <br /></td></tr>
 <tr class="separator:a78af20a2888ae8d89880b0a6554c9cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36cb20617dbbf08adb0419c4af3b1ddf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a36cb20617dbbf08adb0419c4af3b1ddf">ResourceHeapFragmentationLimit</a></td></tr>
-<tr class="memdesc:a36cb20617dbbf08adb0419c4af3b1ddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to fragmentation.  <br /></td></tr>
-<tr class="separator:a36cb20617dbbf08adb0419c4af3b1ddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a073bc183b145a6bc3363299c0de6399b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a073bc183b145a6bc3363299c0de6399b">ResourceHeapGrowthFactor</a></td></tr>
-<tr class="memdesc:a073bc183b145a6bc3363299c0de6399b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap growth factor, expressed as a multipler of the resource heap size that will monotonically increase.  <br /></td></tr>
-<tr class="separator:a073bc183b145a6bc3363299c0de6399b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add08ae68e081a9159ffac3b2dde676d7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#add08ae68e081a9159ffac3b2dde676d7">MemoryFragmentationLimit</a></td></tr>
+<tr class="memdesc:add08ae68e081a9159ffac3b2dde676d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to fragmentation.  <br /></td></tr>
+<tr class="separator:add08ae68e081a9159ffac3b2dde676d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#aacc7ad0f5e83b2fc409ecdb32a9de228">MemoryGrowthFactor</a></td></tr>
+<tr class="memdesc:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory growth factor, expressed as a multipler of the resource heap size that will monotonically increase.  <br /></td></tr>
+<tr class="separator:aacc7ad0f5e83b2fc409ecdb32a9de228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Specify parameters for creating allocators. </p>
@@ -154,6 +154,44 @@ Public Attributes</h2></td></tr>
 <p>Maximum size of the resource heap allowed. </p>
 <p>The maximum resource heap size is equal to the total virtual address range of memory available to the allocator.</p>
 <p>Optional parameter. When 0 is specified, the API will automatically set the max resource heap size based on the adapter's GPU virtual address range. If the max resource size exceeds the adapter's GPU virtual address range, it will default to the smaller range. </p>
+
+</div>
+</div>
+<a id="add08ae68e081a9159ffac3b2dde676d7" name="add08ae68e081a9159ffac3b2dde676d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add08ae68e081a9159ffac3b2dde676d7">&#9670;&#160;</a></span>MemoryFragmentationLimit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double gpgmm::d3d12::ALLOCATOR_DESC::MemoryFragmentationLimit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Memory fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to fragmentation. </p>
+<p>Fragmentation occurs when the allocation is larger then the resource size. This occurs when the type of resource (buffer or texture) and allocator have different alignment requirements. For example, a 192KB resource may need to allocate 256KB of allocated space, which is equivalent to a fragmentation limit of 33%.</p>
+<p>When PreferredResourceHeapSize is non-zero, the MemoryFragmentationLimit could be exceeded. Also, the MemoryFragmentationLimit should never be zero, as some fragmentation can occur.</p>
+<p>Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the resource heap size. </p>
+
+</div>
+</div>
+<a id="aacc7ad0f5e83b2fc409ecdb32a9de228" name="aacc7ad0f5e83b2fc409ecdb32a9de228"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacc7ad0f5e83b2fc409ecdb32a9de228">&#9670;&#160;</a></span>MemoryGrowthFactor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double gpgmm::d3d12::ALLOCATOR_DESC::MemoryGrowthFactor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Memory growth factor, expressed as a multipler of the resource heap size that will monotonically increase. </p>
+<p>A factor value of 1.0 specifies no growth, where the resource heap size is always determined by other limits or constraints. If no factor gets specified (or a value less than 1 is specified), GPGMM will allocate a resource heap size with enough space to fit exactly one resource.</p>
+<p>Memory growth avoids the need to specify |PreferredResourceHeapSize|, which especially helps in situations where the resource size cannot be predicated (eg. user-defined), by allowing the resource heap size to gradually increase in size per demand to achieve a balance of memory usage and performance.</p>
+<p>Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth). </p>
 
 </div>
 </div>
@@ -242,44 +280,6 @@ Public Attributes</h2></td></tr>
 
 <p>Specifies recording options. </p>
 <p>For example, what events to record, and where to record them. </p>
-
-</div>
-</div>
-<a id="a36cb20617dbbf08adb0419c4af3b1ddf" name="a36cb20617dbbf08adb0419c4af3b1ddf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36cb20617dbbf08adb0419c4af3b1ddf">&#9670;&#160;</a></span>ResourceHeapFragmentationLimit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double gpgmm::d3d12::ALLOCATOR_DESC::ResourceHeapFragmentationLimit</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Resource heap fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to fragmentation. </p>
-<p>Fragmentation occurs when the allocation is larger then the resource size. This occurs when the type of resource (buffer or texture) and allocator have different alignment requirements. For example, a 192KB resource may need to allocate 256KB of allocated space, which is equivalent to a fragmentation limit of 33%.</p>
-<p>When PreferredResourceHeapSize is non-zero, the ResourceHeapFragmentationLimit could be exceeded. Also, the ResourceHeapFragmentationLimit should never be zero, as some fragmentation can occur.</p>
-<p>Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the resource heap size. </p>
-
-</div>
-</div>
-<a id="a073bc183b145a6bc3363299c0de6399b" name="a073bc183b145a6bc3363299c0de6399b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a073bc183b145a6bc3363299c0de6399b">&#9670;&#160;</a></span>ResourceHeapGrowthFactor</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double gpgmm::d3d12::ALLOCATOR_DESC::ResourceHeapGrowthFactor</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Resource heap growth factor, expressed as a multipler of the resource heap size that will monotonically increase. </p>
-<p>A factor value of 1.0 specifies no growth, where the resource heap size is always determined by other limits or constraints. If no factor gets specified (or a value less than 1 is specified), GPGMM will allocate a resource heap size with enough space to fit exactly one resource.</p>
-<p>Memory growth avoids the need to specify |PreferredResourceHeapSize|, which especially helps in situations where the resource size cannot be predicated (eg. user-defined), by allowing the resource heap size to gradually increase in size per demand to achieve a balance of memory usage and performance.</p>
-<p>Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth). </p>
 
 </div>
 </div>
