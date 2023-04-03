@@ -494,7 +494,7 @@ namespace gpgmm::d3d12 {
                 << allocatorDescriptor.ResourceHeapTier << " vs "
                 << caps->GetMaxResourceHeapTierSupported()
                 << "). Please consider using a lower resource heap tier.";
-            return E_FAIL;
+            return E_INVALIDARG;
         }
 
         if (allocatorDescriptor.ResourceHeapTier != 0 &&
@@ -547,7 +547,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Resource heap tier is required but user didn't specify one.
-        if (newDescriptor.ResourceHeapTier == 0) {
+        if (allocatorDescriptor.ResourceHeapTier == 0) {
             newDescriptor.ResourceHeapTier = caps->GetMaxResourceHeapTierSupported();
         }
 
@@ -559,7 +559,8 @@ namespace gpgmm::d3d12 {
         newDescriptor.PreferredResourceHeapSize =
             (allocatorDescriptor.PreferredResourceHeapSize == 0)
                 ? kNoRequiredAlignment
-                : allocatorDescriptor.PreferredResourceHeapSize;
+                : std::min(allocatorDescriptor.PreferredResourceHeapSize,
+                           caps->GetMaxResourceSize());
 
         newDescriptor.ResourceHeapFragmentationLimit =
             (allocatorDescriptor.ResourceHeapFragmentationLimit > 0)
