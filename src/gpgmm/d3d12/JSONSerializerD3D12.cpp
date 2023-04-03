@@ -41,7 +41,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
-        dict.AddItem("RecordOptions", gpgmm::JSONSerializer::Serialize(desc.RecordOptions));
+        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("ResourceHeapTier", desc.ResourceHeapTier);
         dict.AddItem("SubAllocationAlgorithm", desc.SubAllocationAlgorithm);
         dict.AddItem("PoolAlgorithm", desc.PoolAlgorithm);
@@ -258,12 +258,19 @@ namespace gpgmm::d3d12 {
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
         dict.AddItem("Flags", desc.Flags);
-        dict.AddItem("RecordOptions", gpgmm::JSONSerializer::Serialize(desc.RecordOptions));
+        dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
         dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
         dict.AddItem("MinPctOfBudgetToReserve", desc.MinPctOfBudgetToReserve);
         dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);
         dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
         dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
+        return dict;
+    }
+
+    // static
+    JSONDict JSONSerializer::Serialize(const RECORD_OPTIONS& desc) {
+        JSONDict dict;
+        dict.AddItem("Flags", desc.Flags);
         return dict;
     }
 
