@@ -82,6 +82,11 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         return ::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
     }
 
+    bool IsResident(IResourceAllocation* pAllocation) const {
+        ASSERT(pAllocation != nullptr);
+        return pAllocation->GetMemory()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT;
+    }
+
     class CreateDescHeapCallbackContext {
       public:
         CreateDescHeapCallbackContext(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc)
@@ -486,7 +491,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     // Created allocations below the budget should become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_TRUE(IsResident(allocation.Get()));
     }
 
     // Keep allocating |kMemoryOverBudget| over the budget.
@@ -512,12 +517,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     // Created allocations above the budget should become resident.
     for (auto& allocation : allocationsAboveBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_TRUE(IsResident(allocation.Get()));
     }
 
     // Created allocations below the budget should NOT become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_FALSE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_FALSE(IsResident(allocation.Get()));
     }
 }
 
@@ -561,7 +566,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
 
     // All allocations should become resident.
     for (auto& allocation : allocations) {
-        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_TRUE(IsResident(allocation.Get()));
     }
 }
 
@@ -810,7 +815,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
 
     // Created allocations below the budget should become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_TRUE(IsResident(allocation.Get()));
     }
 
     // Keep allocating |kMemoryOverBudget| over the budget.
@@ -829,7 +834,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
 
     // Created allocations above the budget should become resident.
     for (auto& allocation : allocationsAboveBudget) {
-        EXPECT_TRUE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_TRUE(IsResident(allocation.Get()));
     }
 
     // Budget updates are not occuring frequently enough to detect going over budget will evict the
@@ -840,6 +845,6 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
 
     // Created allocations below the budget should NOT become resident.
     for (auto& allocation : allocationsBelowBudget) {
-        EXPECT_FALSE(allocation->GetMemory()->GetInfo().IsCachedForResidency);
+        EXPECT_FALSE(IsResident(allocation.Get()));
     }
 }
