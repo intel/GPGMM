@@ -193,7 +193,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <br /></td></tr>
 <tr class="separator:a89b7eaadd7c6e81676154b4656a0d7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
-<tr class="memdesc:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps.  <br /></td></tr>
+<tr class="memdesc:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps or E_OUTOFMEMORY.  <br /></td></tr>
 <tr class="separator:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf07988a22cc662db5f53c8687d69c9d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adf07988a22cc662db5f53c8687d69c9d">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
 <tr class="memdesc:adf07988a22cc662db5f53c8687d69c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
@@ -1055,12 +1055,12 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 </table>
 </div><div class="memdoc">
 
-<p>Execute command lists using residency managed heaps. </p>
-<p>Submits an array of command lists and residency lists for the specified command queue.</p>
+<p>Execute command lists using residency managed heaps or E_OUTOFMEMORY. </p>
+<p>Submits an array of command lists and residency lists for the specified command queue. Unlike calling ExecuteCommandLists directly, errors will be returned should memory be exhausted.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pQueue</td><td>The command queue to submit to. Must be a valid queue. </td></tr>
-    <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. May be nullptr. When nullptr, only residency operations are performed where ID3D12CommandQueue::ExecuteCommandList should be called immediate after with the same queue. </td></tr>
+    <tr><td class="paramname">pQueue</td><td>The command queue to submit to. May be nullptr. When nullptr, only residency operations are peformed. </td></tr>
+    <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. May be nullptr. When nullptr, only residency operations are performed. </td></tr>
     <tr><td class="paramname">ppResidencyLists</td><td>The array of ResidencyList residency lists to make resident. </td></tr>
     <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays. </td></tr>
   </table>
