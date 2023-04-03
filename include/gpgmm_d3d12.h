@@ -440,7 +440,7 @@ namespace gpgmm::d3d12 {
     **/
     GPGMM_INTERFACE IResidencyManager : public IDebugObject {
       public:
-        /** \brief  Locks the specified heap.
+        /** \brief Locks the specified heap.
 
         Locking a heap means the residency manager will never evict it when over budget.
 
@@ -448,7 +448,7 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT LockHeap(IHeap * pHeap) = 0;
 
-        /** \brief  Unlocks the specified heap.
+        /** \brief Unlocks the specified heap.
 
         Unlocking a heap allows the residency manager will evict it when over budget.
 
@@ -456,14 +456,16 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT UnlockHeap(IHeap * pHeap) = 0;
 
-        /** \brief  Execute command lists using residency managed heaps.
+        /** \brief Execute command lists using residency managed heaps or E_OUTOFMEMORY.
 
         Submits an array of command lists and residency lists for the specified command queue.
+        Unlike calling ExecuteCommandLists directly, errors will be returned should memory be
+        exhausted.
 
-        @param pQueue The command queue to submit to. Must be a valid queue.
+        @param pQueue The command queue to submit to. May be nullptr. When nullptr, only residency
+        operations are peformed.
         @param ppCommandLists The array of ID3D12CommandList command lists to be executed. May be
-        nullptr. When nullptr, only residency operations are performed where
-        ID3D12CommandQueue::ExecuteCommandList should be called immediate after with the same queue.
+        nullptr. When nullptr, only residency operations are performed.
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
         @param count The size of commandLists and residencyLists arrays.
         */
@@ -471,7 +473,7 @@ namespace gpgmm::d3d12 {
             ID3D12CommandQueue* const pQueue, ID3D12CommandList* const* ppCommandLists,
             IResidencyList* const* ppResidencyLists, uint32_t count) = 0;
 
-        /** \brief  Sets video memory reservation.
+        /** \brief Sets video memory reservation.
 
         A reservation is the lowest amount of physical memory the application need to continue
         operation safely.
@@ -486,7 +488,7 @@ namespace gpgmm::d3d12 {
             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup, uint64_t availableForReservation,
             uint64_t* pCurrentReservationOut = nullptr) = 0;
 
-        /** \brief  Get the current budget and memory usage.
+        /** \brief Get the current budget and memory usage.
 
         @param memorySegmentGroup Memory segment to retrieve info from.
         @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
@@ -495,7 +497,7 @@ namespace gpgmm::d3d12 {
         virtual HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                                              DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
 
-        /** \brief  Update the residency status of a heap.
+        /** \brief Update the residency status of a heap.
 
         Allows the application to explicitly MakeResident/Evict without using a residency manager
         operation. This is useful should the application already perform some residency management
@@ -503,12 +505,12 @@ namespace gpgmm::d3d12 {
         ensure MakeResident/Evict will be called before updating the residency status to
         CURRENT_RESIDENT/PENDING, respectively.
 
-        @param pHeap  A pointer to the heap being updated.
+        @param pHeap A pointer to the heap being updated.
         @param state The RESIDENCY_STATUS enum of the new status.
         */
         virtual HRESULT SetResidencyState(IHeap * pHeap, const RESIDENCY_STATUS& state) = 0;
 
-        /** \brief  Query the current residency usage.
+        /** \brief Query the current residency usage.
 
         @param pResidencyManagerStats A pointer to a RESIDENCY_MANAGER_STATS structure or NULL if
         statistics information should only be gathered for recording.
