@@ -79,9 +79,6 @@ namespace gpgmm::d3d12 {
                          IDXGIAdapter3* pAdapter,
                          std::unique_ptr<Caps> caps);
 
-        HRESULT EnsureInBudget(uint64_t bytesToEvict,
-                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
-
         HRESULT EvictInternal(uint64_t bytesToEvict,
                               const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
                               uint64_t* bytesEvictedOut = nullptr);
