@@ -618,15 +618,6 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::EnsureInBudget(uint64_t bytesInBudget,
-                                             const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
-        std::lock_guard<std::mutex> lock(mMutex);
-        uint64_t bytesEvicted = bytesInBudget;
-        ReturnIfFailedDevice(EvictInternal(bytesInBudget, memorySegmentGroup, &bytesEvicted),
-                             mDevice);
-        return (bytesEvicted >= bytesInBudget) ? S_OK : E_FAIL;
-    }
-
     // Evicts |evictSizeInBytes| bytes of memory in |memorySegmentGroup| and returns the number of
     // bytes evicted.
     HRESULT ResidencyManager::EvictInternal(uint64_t bytesToEvict,
