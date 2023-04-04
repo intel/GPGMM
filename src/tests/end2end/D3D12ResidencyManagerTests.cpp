@@ -213,8 +213,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Residency status of resource heap types is always known.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ComPtr<ID3D12Heap> heap;
     ASSERT_SUCCEEDED(resourceHeap.As(&heap));
@@ -225,8 +225,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
 
@@ -234,8 +234,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, resourceHeapDesc.SizeInBytes);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
 }
@@ -271,16 +271,16 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     // Residency status of non-resource heap types is unknown, there is no residency usage
     // yet.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, 0u);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 0u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, 0u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 0u);
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(descriptorHeap.Get()));
 
     EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeapDesc.SizeInBytes);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 
@@ -288,8 +288,8 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryUsage, descriptorHeapDesc.SizeInBytes);
-    EXPECT_EQ(GetStats(residencyManager).CurrentMemoryCount, 1u);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 }
@@ -499,9 +499,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     // Allocating the same amount over budget, where older allocations will be evicted.
     std::vector<ComPtr<IResourceAllocation>> allocationsAboveBudget = {};
-    const uint64_t currentMemoryUsage = GetStats(resourceAllocator).UsedHeapUsage;
+    const uint64_t CurrentHeapUsage = GetStats(resourceAllocator).UsedHeapUsage;
 
-    while (currentMemoryUsage + kMemoryOverBudget > GetStats(resourceAllocator).UsedHeapUsage) {
+    while (CurrentHeapUsage + kMemoryOverBudget > GetStats(resourceAllocator).UsedHeapUsage) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
@@ -823,9 +823,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
 
     // Allocating the same amount over budget, where older allocations will be evicted.
     std::vector<ComPtr<IResourceAllocation>> allocationsAboveBudget = {};
-    const uint64_t currentMemoryUsage = GetStats(resourceAllocator).UsedHeapUsage;
+    const uint64_t CurrentHeapUsage = GetStats(resourceAllocator).UsedHeapUsage;
 
-    while (currentMemoryUsage + kMemoryOverBudget > GetStats(resourceAllocator).UsedHeapUsage) {
+    while (CurrentHeapUsage + kMemoryOverBudget > GetStats(resourceAllocator).UsedHeapUsage) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));

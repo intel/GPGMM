@@ -336,8 +336,8 @@ namespace gpgmm::d3d12 {
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
-            mStats.CurrentMemoryCount++;
-            mStats.CurrentMemoryUsage += heap->GetSize();
+            mStats.CurrentHeapCount++;
+            mStats.CurrentHeapUsage += heap->GetSize();
         }
 
         // Since we can't evict the heap, it's unnecessary to track the heap in the LRU Cache.
@@ -347,8 +347,8 @@ namespace gpgmm::d3d12 {
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
             if (heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                mStats.CurrentMemoryCount++;
-                mStats.CurrentMemoryUsage += heap->GetSize();
+                mStats.CurrentHeapCount++;
+                mStats.CurrentHeapUsage += heap->GetSize();
             }
         }
 
@@ -391,8 +391,8 @@ namespace gpgmm::d3d12 {
         ReturnIfFailed(InsertHeapInternal(heap));
 
         // Heaps inserted into the residency cache are already attributed in residency usage.
-        mStats.CurrentMemoryCount--;
-        mStats.CurrentMemoryUsage -= heap->GetSize();
+        mStats.CurrentHeapCount--;
+        mStats.CurrentHeapUsage -= heap->GetSize();
 
         return S_OK;
     }
@@ -567,8 +567,8 @@ namespace gpgmm::d3d12 {
 
                 // Check if even evicting resident heaps would get us back below the budget or not.
                 // Otherwise, warn the developer that E_OUTOFMEMORY is likely unavoidable.
-                if (pVideoMemoryInfo->CurrentUsage > mStats.CurrentMemoryUsage &&
-                    (pVideoMemoryInfo->CurrentUsage - mStats.CurrentMemoryUsage >
+                if (pVideoMemoryInfo->CurrentUsage > mStats.CurrentHeapUsage &&
+                    (pVideoMemoryInfo->CurrentUsage - mStats.CurrentHeapUsage >
                      pVideoMemoryInfo->Budget)) {
                     message
                         << "There is not enough memory to page-out to get below the budget. This "
@@ -577,7 +577,7 @@ namespace gpgmm::d3d12 {
                            "evicted because they are unmanaged by GPGMM. Consider using CreateHeap "
                            "to import them: "
                         << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
-                        << GPGMM_BYTES_TO_MB(mStats.CurrentMemoryUsage) << " MBs.";
+                        << GPGMM_BYTES_TO_MB(mStats.CurrentHeapUsage) << " MBs.";
                 }
             }
         }
@@ -929,20 +929,20 @@ namespace gpgmm::d3d12 {
 
         for (const auto& entry : mLocalVideoMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                result.CurrentMemoryUsage += entry.value()->GetSize();
-                result.CurrentMemoryCount++;
+                result.CurrentHeapUsage += entry.value()->GetSize();
+                result.CurrentHeapCount++;
             }
         }
 
         for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
-                result.CurrentMemoryUsage += entry.value()->GetSize();
-                result.CurrentMemoryCount++;
+                result.CurrentHeapUsage += entry.value()->GetSize();
+                result.CurrentHeapCount++;
             }
         }
 
         GPGMM_TRACE_EVENT_METRIC("GPU currently resident (MB)",
-                                 GPGMM_BYTES_TO_MB(result.CurrentMemoryUsage));
+                                 GPGMM_BYTES_TO_MB(result.CurrentHeapUsage));
 
         if (pResidencyManagerStats != nullptr) {
             *pResidencyManagerStats = result;
