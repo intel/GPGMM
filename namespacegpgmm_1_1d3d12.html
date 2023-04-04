@@ -217,12 +217,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
 <tr class="memdesc:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps or E_OUTOFMEMORY.  <br /></td></tr>
 <tr class="separator:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a837c0dacd846fb62153e3ed4e343365f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a837c0dacd846fb62153e3ed4e343365f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
-<tr class="memdesc:a837c0dacd846fb62153e3ed4e343365f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
-<tr class="separator:a837c0dacd846fb62153e3ed4e343365f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a347909514fa574f72b2f299cf1f54f7a"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a347909514fa574f72b2f299cf1f54f7a">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)=0</td></tr>
-<tr class="memdesc:a347909514fa574f72b2f299cf1f54f7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <br /></td></tr>
-<tr class="separator:a347909514fa574f72b2f299cf1f54f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf07988a22cc662db5f53c8687d69c9d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adf07988a22cc662db5f53c8687d69c9d">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
+<tr class="memdesc:adf07988a22cc662db5f53c8687d69c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
+<tr class="separator:adf07988a22cc662db5f53c8687d69c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45057cc59a73199c906220c7167cb740"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a45057cc59a73199c906220c7167cb740">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;memorySegmentGroup, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)=0</td></tr>
+<tr class="memdesc:a45057cc59a73199c906220c7167cb740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <br /></td></tr>
+<tr class="separator:a45057cc59a73199c906220c7167cb740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae167bcbc0de3174b47fb49d61872a460"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae167bcbc0de3174b47fb49d61872a460">SetResidencyState</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a3c6928b4ed92938bd00de413f2630196">IHeap</a> *pHeap, const <a class="el" href="namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c">RESIDENCY_STATUS</a> &amp;state)=0</td></tr>
 <tr class="memdesc:ae167bcbc0de3174b47fb49d61872a460"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the residency status of a heap.  <br /></td></tr>
 <tr class="separator:ae167bcbc0de3174b47fb49d61872a460"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1359,8 +1359,8 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 
 </div>
 </div>
-<a id="a347909514fa574f72b2f299cf1f54f7a" name="a347909514fa574f72b2f299cf1f54f7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a347909514fa574f72b2f299cf1f54f7a">&#9670;&#160;</a></span>QueryVideoMemoryInfo()</h2>
+<a id="a45057cc59a73199c906220c7167cb740" name="a45057cc59a73199c906220c7167cb740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45057cc59a73199c906220c7167cb740">&#9670;&#160;</a></span>QueryVideoMemoryInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1372,7 +1372,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
           <td class="memname">virtual HRESULT gpgmm::d3d12::QueryVideoMemoryInfo </td>
           <td>(</td>
           <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>heapSegment</em>, </td>
+          <td class="paramname"><em>memorySegmentGroup</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1396,7 +1396,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 <p>Get the current budget and memory usage. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">heapSegment</td><td>Memory segment to retrieve info from. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to retrieve info from. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">pVideoMemoryInfoOut</td><td>Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value of nullptr will update but not return the current info. </td></tr>
   </table>
   </dd>
@@ -1559,8 +1559,8 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 
 </div>
 </div>
-<a id="a837c0dacd846fb62153e3ed4e343365f" name="a837c0dacd846fb62153e3ed4e343365f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a837c0dacd846fb62153e3ed4e343365f">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
+<a id="adf07988a22cc662db5f53c8687d69c9d" name="adf07988a22cc662db5f53c8687d69c9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf07988a22cc662db5f53c8687d69c9d">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1572,7 +1572,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
           <td class="memname">virtual HRESULT gpgmm::d3d12::SetVideoMemoryReservation </td>
           <td>(</td>
           <td class="paramtype">const DXGI_MEMORY_SEGMENT_GROUP &amp;&#160;</td>
-          <td class="paramname"><em>heapSegment</em>, </td>
+          <td class="paramname"><em>memorySegmentGroup</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1603,7 +1603,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 <p>A reservation is the lowest amount of physical memory the application need to continue operation safely.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">heapSegment</td><td>Memory segment to reserve. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">memorySegmentGroup</td><td>Memory segment to reserve. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">availableForReservation</td><td>Amount of memory to reserve, in bytes. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">pCurrentReservationOut</td><td>the amount of memory reserved, which may be less then the |reservation| when under video memory pressure. A value of nullptr will update but not return the current reservation. </td></tr>
   </table>
