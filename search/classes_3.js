@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['gpallocatorcreateinfo_0',['GpAllocatorCreateInfo',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html',1,'gpgmm::vk']]],
-  ['gpresourceallocation_1',['GpResourceAllocation',['../struct_gp_resource_allocation.html',1,'']]],
-  ['gpresourceallocationcreateinfo_2',['GpResourceAllocationCreateInfo',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html',1,'gpgmm::vk']]],
-  ['gpresourceallocator_3',['GpResourceAllocator',['../struct_gp_resource_allocator.html',1,'']]]
+  ['heap_5fdesc_0',['HEAP_DESC',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html',1,'gpgmm::d3d12']]],
+  ['heap_5finfo_1',['HEAP_INFO',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html',1,'gpgmm::d3d12']]]
 ];

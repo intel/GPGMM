@@ -87,79 +87,52 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_event_record_options.html">EventRecordOptions</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_stats.html">MemoryAllocatorStats</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a3711a91511b2c0d45cee47f5b72a122a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122a">EventRecordFlags</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa0b9b86a5086e164add1be4243798bcc8">kNone</a> = 0x0
-, <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa3e6eb5009d939cbd76473ba1198ef253">kApiObjects</a> = 0x1
-, <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa9ba5344e9b8d6fea31e47f69fd79bef2">kApiCalls</a> = 0x2
-, <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aadba82af8e6b8e8f36eafabac01817112">kApiTimings</a> = 0x4
-, <br />
-&#160;&#160;<a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa60c2b56530d404867969cb51421bc83b">kCounters</a> = 0x8
-, <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa498f71aede3811d4fe9fb2968bdae992">kCapture</a> = 0x3
-, <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122aa5e7b2a8441811dcfd9594696c9c6f9c9">kAll</a> = 0xFF
-<br />
+<tr class="memitem:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a> { <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66">kUndefined</a> = 0
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545">kStandalone</a> = 1
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d">kSubAllocated</a> = 2
+, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00">kSubAllocatedWithin</a> = 3
  }</td></tr>
-<tr class="separator:a3711a91511b2c0d45cee47f5b72a122a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9daa5c143c4edacad74b78b198d5c19"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19">EventRecordScope</a> { <a class="el" href="namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19aff1dc448f8f7d670e3310edd9f24fa46">kPerProcess</a> = 0
-, <a class="el" href="namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19ace9cfeb4306299f8ea5452da9bac375c">kPerInstance</a> = 1
- }</td></tr>
-<tr class="separator:ad9daa5c143c4edacad74b78b198d5c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a3711a91511b2c0d45cee47f5b72a122a" name="a3711a91511b2c0d45cee47f5b72a122a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3711a91511b2c0d45cee47f5b72a122a">&#9670;&#160;</a></span>EventRecordFlags</h2>
+<a id="a73f15de0f698ad7e9a69df91d6da1d8d" name="a73f15de0f698ad7e9a69df91d6da1d8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73f15de0f698ad7e9a69df91d6da1d8d">&#9670;&#160;</a></span>AllocationMethod</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm.html#a3711a91511b2c0d45cee47f5b72a122a">gpgmm::EventRecordFlags</a></td>
+          <td class="memname">enum class <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">gpgmm::AllocationMethod</a></td>
         </tr>
       </table>
-</div><div class="memdoc">
-<p>Represents different event categories to record. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa0b9b86a5086e164add1be4243798bcc8" name="a3711a91511b2c0d45cee47f5b72a122aa0b9b86a5086e164add1be4243798bcc8"></a>kNone&#160;</td><td class="fielddoc"><p>Record nothing. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa3e6eb5009d939cbd76473ba1198ef253" name="a3711a91511b2c0d45cee47f5b72a122aa3e6eb5009d939cbd76473ba1198ef253"></a>kApiObjects&#160;</td><td class="fielddoc"><p>Record lifetimes of API objects created by GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa9ba5344e9b8d6fea31e47f69fd79bef2" name="a3711a91511b2c0d45cee47f5b72a122aa9ba5344e9b8d6fea31e47f69fd79bef2"></a>kApiCalls&#160;</td><td class="fielddoc"><p>Record API calls made to GPGMM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aadba82af8e6b8e8f36eafabac01817112" name="a3711a91511b2c0d45cee47f5b72a122aadba82af8e6b8e8f36eafabac01817112"></a>kApiTimings&#160;</td><td class="fielddoc"><p>Record duration of GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa60c2b56530d404867969cb51421bc83b" name="a3711a91511b2c0d45cee47f5b72a122aa60c2b56530d404867969cb51421bc83b"></a>kCounters&#160;</td><td class="fielddoc"><p>Record metrics made to GPGMM API calls. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa498f71aede3811d4fe9fb2968bdae992" name="a3711a91511b2c0d45cee47f5b72a122aa498f71aede3811d4fe9fb2968bdae992"></a>kCapture&#160;</td><td class="fielddoc"><p>Record events required for playback. </p>
-<pre class="fragment"> Bitwise OR'd combination of kApiObjects and
- kApiCalls.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a3711a91511b2c0d45cee47f5b72a122aa5e7b2a8441811dcfd9594696c9c6f9c9" name="a3711a91511b2c0d45cee47f5b72a122aa5e7b2a8441811dcfd9594696c9c6f9c9"></a>kAll&#160;</td><td class="fielddoc"><p>Record everything. </p>
-</td></tr>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
 </table>
-
-</div>
-</div>
-<a id="ad9daa5c143c4edacad74b78b198d5c19" name="ad9daa5c143c4edacad74b78b198d5c19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9daa5c143c4edacad74b78b198d5c19">&#9670;&#160;</a></span>EventRecordScope</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm.html#ad9daa5c143c4edacad74b78b198d5c19">gpgmm::EventRecordScope</a></td>
-        </tr>
-      </table>
 </div><div class="memdoc">
-<p>Represents recording scopes to limit event recording. </p>
+<p>Represents how memory was allocated. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad9daa5c143c4edacad74b78b198d5c19aff1dc448f8f7d670e3310edd9f24fa46" name="ad9daa5c143c4edacad74b78b198d5c19aff1dc448f8f7d670e3310edd9f24fa46"></a>kPerProcess&#160;</td><td class="fielddoc"><p>Scopes events per process (or multiple instances). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ad9daa5c143c4edacad74b78b198d5c19ace9cfeb4306299f8ea5452da9bac375c" name="ad9daa5c143c4edacad74b78b198d5c19ace9cfeb4306299f8ea5452da9bac375c"></a>kPerInstance&#160;</td><td class="fielddoc"><p>Scopes events per instance. </p>
-</td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66" name="a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66"></a>kUndefined&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
+<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545" name="a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545"></a>kStandalone&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
+<pre class="fragment">One and only one allocation exists for the memory.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d" name="a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d"></a>kSubAllocated&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
+<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00" name="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
+<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
+</pre> </td></tr>
 </table>
 
 </div>
