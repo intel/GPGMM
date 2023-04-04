@@ -388,7 +388,7 @@ namespace gpgmm::d3d12 {
         the OS does not support push notifications or budget updates are not frequent enough, this
         mechanism can be disabled where a pull-based method is used instead.
         */
-        RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD = 0x1,
+        RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD = 0x1,
 
         /** \brief Specifies if unified memory architecture (UMA) is always disabled.
 

@@ -209,7 +209,7 @@ namespace gpgmm::d3d12 {
             new ResidencyManager(descriptor, pDevice, pAdapter, std::move(caps)));
 
         // Require automatic video memory budget updates.
-        if (!(descriptor.Flags & RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD)) {
+        if (!(descriptor.Flags & RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD)) {
             ReturnIfFailed(residencyManager->StartBudgetNotificationUpdates());
             gpgmm::DebugLog() << "OS based memory budget updates were successfully enabled.";
         }
