@@ -188,14 +188,14 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyManager::SetVideoMemoryReservation(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
         uint64_t availableForReservation,
         uint64_t* pCurrentReservationOut) {
         return S_OK;
     }
 
     HRESULT ResidencyManager::QueryVideoMemoryInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
         return S_OK;
     }

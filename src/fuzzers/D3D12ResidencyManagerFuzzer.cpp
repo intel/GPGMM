@@ -30,12 +30,12 @@ namespace {
     std::vector<ComPtr<gpgmm::d3d12::IResourceAllocation>> gAllocationsBelowBudget = {};
 
     uint64_t GetBudgetLeft(gpgmm::d3d12::IResidencyManager* const residencyManager,
-                           const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+                           const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
         if (residencyManager == nullptr) {
             return 0;
         }
         DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
-        gResidencyManager->QueryVideoMemoryInfo(memorySegmentGroup, &segment);
+        gResidencyManager->QueryVideoMemoryInfo(heapSegment, &segment);
         return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
                                                        : 0;
     }
@@ -89,7 +89,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         gDevice->GetCustomHeapProperties(0, allocationDesc.HeapType);
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        gpgmm::d3d12::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, arch.UMA);
+        gpgmm::d3d12::GetHeapSegment(heapProperties.MemoryPoolPreference, arch.UMA);
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBufferDesc(kBufferMemorySize);

@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
         bool IsExternal() const override;
 
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;
+        DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at
@@ -84,7 +84,7 @@ namespace gpgmm::d3d12 {
 
         // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
         uint64_t mLastUsedFenceValue = 0;
-        DXGI_MEMORY_SEGMENT_GROUP mMemorySegmentGroup;
+        DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
         RefCounted mResidencyLock;
         bool mIsResidencyDisabled;
         RESIDENCY_STATUS mState;

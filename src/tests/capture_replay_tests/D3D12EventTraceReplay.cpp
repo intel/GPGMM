@@ -530,7 +530,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                             ConvertToD3D12HeapProperties(args["Heap"]["Properties"]);
 
                         HEAP_DESC resourceHeapDesc = {};
-                        resourceHeapDesc.HeapSegmentGroup = GetMemorySegmentGroup(
+                        resourceHeapDesc.HeapSegment = GetHeapSegment(
                             heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
                         resourceHeapDesc =
                             ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);

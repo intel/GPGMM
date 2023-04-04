@@ -1118,8 +1118,8 @@ namespace gpgmm::d3d12 {
             heapProperties.MemoryPoolPreference =
                 GetMemoryPool(heapProperties, residencyManager->IsUMA());
 
-            const DXGI_MEMORY_SEGMENT_GROUP segment = GetMemorySegmentGroup(
-                heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
+            const DXGI_MEMORY_SEGMENT_GROUP segment =
+                GetHeapSegment(heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
 
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 residencyManager->GetVideoMemoryInfo(segment);
@@ -1484,8 +1484,8 @@ namespace gpgmm::d3d12 {
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, mIsAlwaysCreatedInBudget);
-            resourceHeapDesc.HeapSegmentGroup = GetMemorySegmentGroup(
-                heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
+            resourceHeapDesc.HeapSegment =
+                GetHeapSegment(heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.

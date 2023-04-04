@@ -77,12 +77,12 @@ namespace gpgmm::d3d12 {
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             uint64_t bytesEvicted = descriptor.SizeInBytes;
-            ReturnIfFailed(residencyManager->EvictInternal(
-                descriptor.SizeInBytes, descriptor.HeapSegmentGroup, &bytesEvicted));
+            ReturnIfFailed(residencyManager->EvictInternal(descriptor.SizeInBytes,
+                                                           descriptor.HeapSegment, &bytesEvicted));
 
             if (bytesEvicted < descriptor.SizeInBytes) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
-                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegmentGroup,
+                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
                                                                      &currentVideoInfo))) {
                     gpgmm::ErrorLog(MessageId::kBudgetExceeded)
                         << "Unable to create heap because not enough budget exists ("
@@ -173,7 +173,7 @@ namespace gpgmm::d3d12 {
                bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
           mPageable(std::move(pageable)),
-          mMemorySegmentGroup(descriptor.HeapSegmentGroup),
+          mHeapSegment(descriptor.HeapSegment),
           mResidencyLock(0),
           mIsResidencyDisabled(isResidencyDisabled),
           mState(RESIDENCY_STATUS_UNKNOWN) {
@@ -214,8 +214,8 @@ namespace gpgmm::d3d12 {
         mLastUsedFenceValue = fenceValue;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP Heap::GetMemorySegmentGroup() const {
-        return mMemorySegmentGroup;
+    DXGI_MEMORY_SEGMENT_GROUP Heap::GetHeapSegment() const {
+        return mHeapSegment;
     }
 
     void Heap::AddResidencyLockRef() {
