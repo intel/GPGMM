@@ -1,5 +1,25 @@
 var searchData=
 [
-  ['querystats_0',['QueryStats',['../namespacegpgmm_1_1d3d12.html#a1912b5f127166830ad430c966ce5dfd3',1,'gpgmm::d3d12::QueryStats(RESIDENCY_MANAGER_STATS *pResidencyManagerStats)=0'],['../namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd',1,'gpgmm::d3d12::QueryStats(RESOURCE_ALLOCATOR_STATS *pResourceAllocatorStats)=0']]],
-  ['queryvideomemoryinfo_1',['QueryVideoMemoryInfo',['../namespacegpgmm_1_1d3d12.html#a45057cc59a73199c906220c7167cb740',1,'gpgmm::d3d12']]]
+  ['recordoptions_0',['RecordOptions',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html#a315f4eb31901ec275f927904ec8c58f2',1,'gpgmm::d3d12::RESIDENCY_DESC::RecordOptions()'],['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a3a83aa65ac3cb38e5ed6d94f6df12de2',1,'gpgmm::d3d12::ALLOCATOR_DESC::RecordOptions()']]],
+  ['releaseresourceheaps_1',['ReleaseResourceHeaps',['../namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022',1,'gpgmm::d3d12']]],
+  ['requiredpropertyflags_2',['requiredPropertyFlags',['../structgpgmm_1_1vk_1_1_gp_resource_allocation_create_info.html#ab9451843785b4203a40d23cea9fbeee9',1,'gpgmm::vk::GpResourceAllocationCreateInfo']]],
+  ['requireresourceheappadding_3',['RequireResourceHeapPadding',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aed41cef6134f5552d5581f75d526683c',1,'gpgmm::d3d12::ALLOCATION_DESC']]],
+  ['reset_4',['Reset',['../namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb',1,'gpgmm::d3d12']]],
+  ['residency_5fdesc_5',['RESIDENCY_DESC',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___d_e_s_c.html',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5falways_5fin_5fbudget_6',['RESIDENCY_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a2ee02832ba8b10ec421c65658ac92b93',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5fdisable_5funified_5fmemory_7',['RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73af2c600fc2565eb4af7a626efb44c60bc',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5fnever_5fupdate_5fbudget_5fon_5fworker_5fthread_8',['RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a73b00631a7a99bbf4ac43ceeab6ff029',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5fnone_9',['RESIDENCY_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a1639083caa3293e398a7375a55bb904e',1,'gpgmm::d3d12']]],
+  ['residency_5fflags_10',['RESIDENCY_FLAGS',['../namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73',1,'gpgmm::d3d12']]],
+  ['residency_5fmanager_5fstats_11',['RESIDENCY_MANAGER_STATS',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]],
+  ['residency_5fstatus_12',['RESIDENCY_STATUS',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023c',1,'gpgmm::d3d12']]],
+  ['residency_5fstatus_5fcurrent_5fresident_13',['RESIDENCY_STATUS_CURRENT_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca2c8863249995b0c5af27445b94472fc2',1,'gpgmm::d3d12']]],
+  ['residency_5fstatus_5fpending_5fresidency_14',['RESIDENCY_STATUS_PENDING_RESIDENCY',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca7d21c83a7a87e9604a03e96a15ac590a',1,'gpgmm::d3d12']]],
+  ['residency_5fstatus_5funknown_15',['RESIDENCY_STATUS_UNKNOWN',['../namespacegpgmm_1_1d3d12.html#a964c4ad3a4e304bf0e281459f327023ca995e849faa7ad6ae73a6d4f2f46315f0',1,'gpgmm::d3d12']]],
+  ['resource_5fallocation_5finfo_16',['RESOURCE_ALLOCATION_INFO',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fstats_17',['RESOURCE_ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]],
+  ['resourcedescriptor_18',['resourceDescriptor',['../namespacegpgmm_1_1d3d12.html#a52f35a32b6cdbfb0a4055692343dece0',1,'gpgmm::d3d12']]],
+  ['resourceheapfragmentationlimit_19',['ResourceHeapFragmentationLimit',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a36cb20617dbbf08adb0419c4af3b1ddf',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['resourceheapgrowthfactor_20',['ResourceHeapGrowthFactor',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a073bc183b145a6bc3363299c0de6399b',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
+  ['resourceheaptier_21',['ResourceHeapTier',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ae0c7b503a3e988ac74abb235514b53af',1,'gpgmm::d3d12::ALLOCATOR_DESC']]]
 ];

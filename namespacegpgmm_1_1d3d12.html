@@ -102,6 +102,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -110,8 +112,6 @@ Typedefs</h2></td></tr>
 <tr class="separator:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a3c46bbf11c31a5c4bf6b480a275189">EVENT_RECORD_OPTIONS</a> = <a class="el" href="structgpgmm_1_1_event_record_options.html">EventRecordOptions</a></td></tr>
 <tr class="separator:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> = <a class="el" href="structgpgmm_1_1_memory_allocator_stats.html">MemoryAllocatorStats</a></td></tr>
-<tr class="separator:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -131,6 +131,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a2ee02832ba8b10ec421c65658ac92b93">RESIDENCY_FLAG_ALWAYS_IN_BUDGET</a> = 0x4
  }</td></tr>
 <tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a647374552c2db5cfd4583865f2ad9e96"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96">ALLOCATION_METHOD</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116">ALLOCATION_METHOD_UNKNOWN</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22">ALLOCATION_METHOD_STANDALONE</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5">ALLOCATION_METHOD_SUBALLOCATED</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d">ALLOCATION_METHOD_SUBALLOCATED_WITHIN</a> = 3
+ }</td></tr>
+<tr class="separator:a647374552c2db5cfd4583865f2ad9e96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897">ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
@@ -234,7 +240,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a06cd29b01b8c7a94760d503ca7282022"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022">ReleaseResourceHeaps</a> (uint64_t bytesToRelease, uint64_t *pBytesReleased)=0</td></tr>
 <tr class="memdesc:a06cd29b01b8c7a94760d503ca7282022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
 <tr class="separator:a06cd29b01b8c7a94760d503ca7282022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">QueryStats</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
+<tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
 <tr class="memdesc:a8c629ea6a1ef674642afb0519170c5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
 <tr class="separator:a8c629ea6a1ef674642afb0519170c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
@@ -305,20 +311,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#a3a3c46bbf11c31a5c4bf6b480a275189">gpgmm::d3d12::EVENT_RECORD_OPTIONS</a> = typedef <a class="el" href="structgpgmm_1_1_event_record_options.html">EventRecordOptions</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac5918db78a3965f1c32a88a8bdd76b86" name="ac5918db78a3965f1c32a88a8bdd76b86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5918db78a3965f1c32a88a8bdd76b86">&#9670;&#160;</a></span>RESOURCE_ALLOCATOR_STATS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a> = typedef <a class="el" href="structgpgmm_1_1_memory_allocator_stats.html">MemoryAllocatorStats</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -401,6 +393,35 @@ resource or allocation alignment requirements.
 
 Must compile with GPGMM_ENABLE_MEMORY_ALIGN_CHECKS to use as the request size
 is normally not tracked.
+</pre> </td></tr>
+</table>
+
+</div>
+</div>
+<a id="a647374552c2db5cfd4583865f2ad9e96" name="a647374552c2db5cfd4583865f2ad9e96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a647374552c2db5cfd4583865f2ad9e96">&#9670;&#160;</a></span>ALLOCATION_METHOD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96">gpgmm::d3d12::ALLOCATION_METHOD</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Represents how memory was allocated. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116" name="a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116"></a>ALLOCATION_METHOD_UNKNOWN&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
+<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22" name="a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22"></a>ALLOCATION_METHOD_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
+<pre class="fragment">One and only one allocation exists for the memory.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5" name="a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5"></a>ALLOCATION_METHOD_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
+<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d" name="a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d"></a>ALLOCATION_METHOD_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
+<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
 </pre> </td></tr>
 </table>
 
@@ -1258,7 +1279,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
         <tr>
           <td class="memname">virtual HRESULT gpgmm::d3d12::QueryStats </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">RESOURCE_ALLOCATOR_STATS</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> *&#160;</td>
           <td class="paramname"><em>pResourceAllocatorStats</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1274,7 +1295,7 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 <p>Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pResourceAllocatorStats</td><td>A pointer to a RESOURCE_ALLOCATOR_STATS structure or NULL if statistics information should only be gathered for recording.</td></tr>
+    <tr><td class="paramname">pResourceAllocatorStats</td><td>A pointer to a <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> structure or NULL if statistics information should only be gathered for recording.</td></tr>
   </table>
   </dd>
 </dl>

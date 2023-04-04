@@ -108,6 +108,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">gpgmm::d3d12::FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -128,8 +130,6 @@ Typedefs</h2></td></tr>
 <tr class="separator:a3e40b4972a3aab0c61cc965fc1023f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3a3c46bbf11c31a5c4bf6b480a275189">gpgmm::d3d12::EVENT_RECORD_OPTIONS</a> = EventRecordOptions</td></tr>
 <tr class="separator:a3a3c46bbf11c31a5c4bf6b480a275189"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac5918db78a3965f1c32a88a8bdd76b86">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a> = MemoryAllocatorStats</td></tr>
-<tr class="separator:ac5918db78a3965f1c32a88a8bdd76b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -149,6 +149,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a91ac0725c909f9dae91c66c3bb049c73a2ee02832ba8b10ec421c65658ac92b93">gpgmm::d3d12::RESIDENCY_FLAG_ALWAYS_IN_BUDGET</a> = 0x4
  }</td></tr>
 <tr class="separator:a91ac0725c909f9dae91c66c3bb049c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a647374552c2db5cfd4583865f2ad9e96"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96">gpgmm::d3d12::ALLOCATION_METHOD</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116">gpgmm::d3d12::ALLOCATION_METHOD_UNKNOWN</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22">gpgmm::d3d12::ALLOCATION_METHOD_STANDALONE</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5">gpgmm::d3d12::ALLOCATION_METHOD_SUBALLOCATED</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d">gpgmm::d3d12::ALLOCATION_METHOD_SUBALLOCATED_WITHIN</a> = 3
+ }</td></tr>
+<tr class="separator:a647374552c2db5cfd4583865f2ad9e96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e5f9a1d561e4bc68c1e2965f8860b8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8">gpgmm::d3d12::ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba">gpgmm::d3d12::ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897">gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
