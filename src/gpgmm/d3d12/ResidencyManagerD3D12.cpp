@@ -313,6 +313,10 @@ namespace gpgmm::d3d12 {
         return "ResidencyManager";
     }
 
+    bool ResidencyManager::IsExternal() const {
+        return true;
+    }
+
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
         ReturnIfNullptr(pHeap);

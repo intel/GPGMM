@@ -79,6 +79,10 @@ config("gpgmm_common_config") {
     defines += [ "GPGMM_ENABLE_MEMORY_ALIGN_CHECKS" ]
   }
 
+  if (gpgmm_enable_logging_internal_objects) {
+    defines += [ "GPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS" ]
+  }
+
   # Only internal build targets can use this config, this means only targets in
   # this BUILD.gn file and related subdirs.
   visibility = [ "../../*" ]
@@ -203,6 +207,8 @@ source_set("gpgmm_common_sources") {
     "MemoryPool.h",
     "Message.cpp",
     "Message.h",
+    "Object.cpp",
+    "Object.h",
     "PooledMemoryAllocator.cpp",
     "PooledMemoryAllocator.h",
     "SegmentedMemoryAllocator.cpp",

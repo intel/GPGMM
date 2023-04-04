@@ -202,6 +202,10 @@ namespace gpgmm::d3d12 {
         return "Heap";
     }
 
+    bool Heap::IsExternal() const {
+        return true;
+    }
+
     uint64_t Heap::GetLastUsedFenceValue() const {
         return mLastUsedFenceValue;
     }

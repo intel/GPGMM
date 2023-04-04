@@ -60,6 +60,7 @@ namespace gpgmm::d3d12 {
 
         // ObjectBase interface
         const char* GetTypename() const override;
+        bool IsExternal() const override;
 
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
         DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup() const;

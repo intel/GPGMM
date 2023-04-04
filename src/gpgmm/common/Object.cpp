@@ -12,25 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_OBJECT_H_
-#define GPGMM_COMMON_OBJECT_H_
+#include "gpgmm/common/Object.h"
 
 namespace gpgmm {
-
-    class ObjectBase {
-      public:
-        ObjectBase() = default;
-        virtual ~ObjectBase() = default;
-
-        ObjectBase(const ObjectBase&) = default;
-        ObjectBase& operator=(const ObjectBase&) = default;
-
-        virtual const char* GetTypename() const = 0;
-
-        // Overridden for objects that are API exposed.
-        virtual bool IsExternal() const;
-    };
-
+    bool ObjectBase::IsExternal() const {
+        return false;
+    }
 }  // namespace gpgmm
-
-#endif  // GPGMM_COMMON_OBJECT_H_
