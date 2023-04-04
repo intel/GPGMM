@@ -310,7 +310,7 @@ namespace gpgmm::d3d12 {
     }
 
     const char* ResidencyManager::GetTypename() const {
-        return "ResidencyManager";
+        return "IResidencyManager";
     }
 
     bool ResidencyManager::IsExternal() const {

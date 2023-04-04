@@ -150,7 +150,7 @@ namespace gpgmm::d3d12 {
     }
 
     const char* ResourceAllocation::GetTypename() const {
-        return "ResourceAllocation";
+        return "IResourceAllocation";
     }
 
     bool ResourceAllocation::IsExternal() const {

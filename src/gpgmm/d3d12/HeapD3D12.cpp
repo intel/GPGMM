@@ -199,7 +199,7 @@ namespace gpgmm::d3d12 {
     }
 
     const char* Heap::GetTypename() const {
-        return "Heap";
+        return "IHeap";
     }
 
     bool Heap::IsExternal() const {
