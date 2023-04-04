@@ -580,8 +580,7 @@ namespace gpgmm::d3d12 {
 
         // Not all segments could be used.
         GPGMM_TRACE_EVENT_METRIC(
-            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA),
-                     " GPU memory utilization (%)")
+            ToString(GetMemorySegmentName(memorySegmentGroup, mIsUMA), " GPU memory usage (%)")
                 .c_str(),
             (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
                 ? 100

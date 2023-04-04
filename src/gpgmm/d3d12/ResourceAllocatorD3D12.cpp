@@ -1555,7 +1555,7 @@ namespace gpgmm::d3d12 {
                    "changed significantly.";
         }
 
-        GPGMM_TRACE_EVENT_METRIC("GPU allocation utilization (%)", allocationUsagePct);
+        GPGMM_TRACE_EVENT_METRIC("GPU allocation usage (%)", allocationUsagePct);
 
         GPGMM_TRACE_EVENT_METRIC("GPU allocation free (MB)",
                                  GPGMM_BYTES_TO_MB(result.FreeMemoryUsage));
@@ -1567,7 +1567,7 @@ namespace gpgmm::d3d12 {
                 100);
 
         GPGMM_TRACE_EVENT_METRIC(
-            "GPU allocation size cache hits (%)",
+            "GPU allocation cache hits (%)",
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
         if (pResourceAllocatorStats != nullptr) {

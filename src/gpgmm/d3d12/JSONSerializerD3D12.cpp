@@ -263,7 +263,6 @@ namespace gpgmm::d3d12 {
         dict.AddItem("MinPctOfBudgetToReserve", desc.MinPctOfBudgetToReserve);
         dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);
         dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
-        dict.AddItem("InitialFenceValue", desc.InitialFenceValue);
         return dict;
     }
 
