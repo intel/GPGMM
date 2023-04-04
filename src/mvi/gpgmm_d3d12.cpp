@@ -383,11 +383,6 @@ namespace gpgmm::d3d12 {
                                         CreateCommittedResourceCallbackContext::CreateHeap,
                                         &callbackContext, &resourceHeap));
 
-        const uint64_t allocationSize = resourceHeapDesc.SizeInBytes;
-        mStats.UsedMemoryUsage += allocationSize;
-        mStats.UsedMemoryCount++;
-        mStats.UsedBlockUsage += allocationSize;
-
         *ppResourceAllocationOut = new ResourceAllocation(this, static_cast<Heap*>(resourceHeap),
                                                           std::move(committedResource));
 
@@ -421,10 +416,6 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        const uint64_t& allocationSize = allocation->GetSize();
-        mStats.UsedMemoryUsage -= allocationSize;
-        mStats.UsedMemoryCount--;
-        mStats.UsedBlockUsage -= allocationSize;
         delete allocation->GetMemory();
     }
 

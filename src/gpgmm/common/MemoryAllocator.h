@@ -110,6 +110,51 @@ namespace gpgmm {
         uint64_t AvailableForAllocation;
     };
 
+    /** \struct MemoryAllocatorStats
+    Additional information about the memory allocator usage.
+    */
+    struct MemoryAllocatorStats {
+        /** \brief Number of used sub-allocated blocks within the same memory.
+         */
+        uint32_t UsedBlockCount;
+
+        /** \brief Total size, in bytes, of used sub-allocated blocks.
+         */
+        uint64_t UsedBlockUsage;
+
+        /** \brief Number of used memory allocations.
+         */
+        uint32_t UsedMemoryCount;
+
+        /** \brief Total size, in bytes, of used memory.
+         */
+        uint64_t UsedMemoryUsage;
+
+        /** \brief Total size, in bytes, of free memory.
+         */
+        uint64_t FreeMemoryUsage;
+
+        /** \brief Cache misses not eliminated by prefetching.
+         */
+        uint64_t PrefetchedMemoryMisses;
+
+        /** \brief Cache misses eliminated because of prefetching.
+         */
+        uint64_t PrefetchedMemoryMissesEliminated;
+
+        /** \brief Requested size was NOT cached.
+         */
+        uint64_t SizeCacheMisses;
+
+        /** \brief Requested size was cached.
+         */
+        uint64_t SizeCacheHits;
+
+        /** \brief Adds or sums together two infos.
+         */
+        MemoryAllocatorStats& operator+=(const MemoryAllocatorStats& rhs);
+    };
+
     class BlockAllocator;
 
     /** \brief MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.

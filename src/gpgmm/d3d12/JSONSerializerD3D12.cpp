@@ -31,11 +31,6 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATOR_STATS& info) {
-        return gpgmm::JSONSerializer::Serialize(info);
-    }
-
-    // static
     JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);

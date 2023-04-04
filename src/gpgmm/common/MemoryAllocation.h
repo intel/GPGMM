@@ -23,6 +23,36 @@
 
 namespace gpgmm {
 
+    /** \enum AllocationMethod
+    Represents how memory was allocated.
+    */
+    enum class AllocationMethod {
+
+        /** \brief Not yet allocated or invalid.
+
+        This is an invalid state that assigned temporary before the actual method is known.
+        */
+        kUndefined = 0,
+
+        /** \brief Not sub-divided.
+
+        One and only one allocation exists for the memory.
+        */
+        kStandalone = 1,
+
+        /** \brief Sub-divided using one or more allocations.
+
+        Underlying memory will be broken up into one or more memory allocations.
+        */
+        kSubAllocated = 2,
+
+        /** \brief Sub-divided within a single memory allocation.
+
+        A single memory allocation will be broken into one or more sub-allocations.
+        */
+        kSubAllocatedWithin = 3,
+    };
+
     class MemoryBase;
     struct MemoryBlock;
     class MemoryAllocator;
