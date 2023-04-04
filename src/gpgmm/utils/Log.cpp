@@ -126,17 +126,17 @@ namespace gpgmm {
                 outputString =
                     std::string(kLogTag) + " " + std::string(severityName) +
                     "(tid: " + ToString(std::this_thread::get_id()) + "): " +
-                    ((mObject != nullptr)
-                         ? ((std::string(mObject->GetTypename()) + "=") + ToString(mObject) + ", ")
-                         : "") +
-                    fullMessage + "[" + GetMessageFromID(mMessageId) + "]" + "\n";
+                    ((mObject != nullptr) ? ((std::string(mObject->GetTypename()) + ": Addr=") +
+                                             ToString(mObject) + ", ")
+                                          : "") +
+                    fullMessage + " [" + GetMessageFromID(mMessageId) + "]" + "\n";
             } else {
                 outputString =
                     std::string(kLogTag) + " " + std::string(severityName) +
                     "(tid: " + ToString(std::this_thread::get_id()) + "): " +
-                    ((mObject != nullptr)
-                         ? ((std::string(mObject->GetTypename()) + "=") + ToString(mObject) + ", ")
-                         : "") +
+                    ((mObject != nullptr) ? ((std::string(mObject->GetTypename()) + ": Addr=") +
+                                             ToString(mObject) + ", ")
+                                          : "") +
                     fullMessage + "\n";
             }
 
