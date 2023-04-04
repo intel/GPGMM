@@ -1,12 +1,10 @@
 var searchData=
 [
-  ['setdebugname_0',['SetDebugName',['../namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451',1,'gpgmm::d3d12']]],
-  ['setresidencystate_1',['SetResidencyState',['../namespacegpgmm_1_1d3d12.html#ae167bcbc0de3174b47fb49d61872a460',1,'gpgmm::d3d12']]],
-  ['setvideomemoryreservation_2',['SetVideoMemoryReservation',['../namespacegpgmm_1_1d3d12.html#adf07988a22cc662db5f53c8687d69c9d',1,'gpgmm::d3d12']]],
-  ['sizecachehits_3',['SizeCacheHits',['../structgpgmm_1_1_memory_allocator_stats.html#a53c5bbe2ec007e151e6cfdc7a3c5182a',1,'gpgmm::MemoryAllocatorStats']]],
-  ['sizecachemisses_4',['SizeCacheMisses',['../structgpgmm_1_1_memory_allocator_stats.html#ae9746d6cf9d0b091e93a163c30a149e7',1,'gpgmm::MemoryAllocatorStats']]],
-  ['sizeinbytes_5',['SizeInBytes',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#a097b9ed7d8b4612d359036f3b18a1cc4',1,'gpgmm::d3d12::HEAP_INFO::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html#a2389164925b57ec3d13631a8e659dc2f',1,'gpgmm::d3d12::HEAP_DESC::SizeInBytes()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a69a8397e54b68d7e4d816b4a3743f480',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::SizeInBytes()']]],
-  ['status_6',['Status',['../structgpgmm_1_1d3d12_1_1_h_e_a_p___i_n_f_o.html#abccb4fe93b87d4e6b60bbb8a7c7742c4',1,'gpgmm::d3d12::HEAP_INFO']]],
-  ['suballocationalgorithm_7',['SubAllocationAlgorithm',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#ad243d65ad29d052d9081094c6e608cbd',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['suballocationalgorithm_8',['subAllocationAlgorithm',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#aa9c9a7ecf364ca57862369e3e6e2136f',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
+  ['unlockheap_0',['UnlockHeap',['../namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad',1,'gpgmm::d3d12']]],
+  ['unmap_1',['Unmap',['../namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148',1,'gpgmm::d3d12']]],
+  ['usedblockcount_2',['UsedBlockCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ab32aa4270acd72f44a9c434e363233b0',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['usedblockusage_3',['UsedBlockUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ad5448c6150e0a69df97f42067e595c99',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['usedetailedtimingevents_4',['UseDetailedTimingEvents',['../structgpgmm_1_1d3d12_1_1_r_e_c_o_r_d___o_p_t_i_o_n_s.html#a2a2bd9a23c8ad85cd7241f32ee21e66b',1,'gpgmm::d3d12::RECORD_OPTIONS']]],
+  ['usedheapcount_5',['UsedHeapCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a08db35d877456a92c75b1219bc4b8bd6',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['usedheapusage_6',['UsedHeapUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ab9a75758ed2a1043e1cd7feba2e879f9',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]]
 ];
