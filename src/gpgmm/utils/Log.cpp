@@ -109,6 +109,13 @@ namespace gpgmm {
             return;
         }
 
+        // Ignore internal objects being logged unless the build is enabled for it.
+#if !defined(GPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS)
+        if (mObject != nullptr && !mObject->IsExternal()) {
+            return;
+        }
+#endif
+
         const char* severityName = SeverityName(mSeverity);
 
         FILE* outputStream = stdout;

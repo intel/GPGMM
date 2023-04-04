@@ -66,4 +66,8 @@ declare_args() {
 
   # Configures Vulkan functions by dynamically importing them (ie. using vkGetInstanceProcAddr and vkGetDeviceProcAddr).
   gpgmm_vk_dynamic_functions = false
+
+  # Enables log messages for internal objects.
+  # Sets -dGPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS
+  gpgmm_enable_logging_internal_objects = false
 }

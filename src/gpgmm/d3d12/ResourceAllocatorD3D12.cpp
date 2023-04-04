@@ -878,6 +878,10 @@ namespace gpgmm::d3d12 {
         return "ResourceAllocator";
     }
 
+    bool ResourceAllocator::IsExternal() const {
+        return true;
+    }
+
     HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease,
                                                     uint64_t* pBytesReleased) {
         std::lock_guard<std::mutex> lock(mMutex);

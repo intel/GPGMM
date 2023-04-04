@@ -153,6 +153,10 @@ namespace gpgmm::d3d12 {
         return "ResourceAllocation";
     }
 
+    bool ResourceAllocation::IsExternal() const {
+        return true;
+    }
+
     IHeap* ResourceAllocation::GetMemory() const {
         return static_cast<Heap*>(MemoryAllocation::GetMemory());
     }
