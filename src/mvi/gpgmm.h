@@ -15,8 +15,7 @@
 #ifndef MVI_GPGMM_H_
 #define MVI_GPGMM_H_
 
-#include <gpgmm.h>
-
+#include <cstdint>
 #include <memory>
 
 namespace gpgmm {

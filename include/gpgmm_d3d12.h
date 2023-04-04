@@ -18,7 +18,9 @@
 // gpgmm_d3d12.h is the GMM interface implemented by GPGMM for D3D12.
 // This file should not be modified by downstream GMM clients or forks of GPGMM.
 // Please consider submitting a pull-request to https://github.com/intel/gpgmm.
-#include "gpgmm.h"
+#include "gpgmm_export.h"
+
+#include <cstdint>
 
 // User should decide to define the following macros:
 // - GPGMM_D3D12_HEADERS_ALREADY_INCLUDED: D3D12 platform headers will be already included before

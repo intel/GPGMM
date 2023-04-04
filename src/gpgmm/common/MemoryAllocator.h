@@ -26,8 +26,6 @@
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Log.h"
 
-#include <gpgmm.h>
-
 #include <memory>
 #include <mutex>
 

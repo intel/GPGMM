@@ -19,8 +19,6 @@
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/Limits.h"
 
-#include <gpgmm.h>
-
 namespace gpgmm {
 
     /** \enum AllocationMethod
