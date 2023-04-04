@@ -50,7 +50,7 @@ namespace gpgmm::d3d12 {
         : MemoryAllocation(allocator,
                            resourceHeap,
                            desc.HeapOffset,
-                           desc.Method,
+                           static_cast<AllocationMethod>(desc.Method),
                            block,
                            desc.SizeInBytes),
           mResidencyManager(residencyManager),
@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
                                     void** ppDataOut) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+        if (subresource > 0 && GetInfo().Method == ALLOCATION_METHOD_SUBALLOCATED_WITHIN) {
             gpgmm::ErrorEvent(MessageId::kBadOperation, this)
                 << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
@@ -113,7 +113,7 @@ namespace gpgmm::d3d12 {
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        if (subresource > 0 && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+        if (subresource > 0 && GetInfo().Method == ALLOCATION_METHOD_SUBALLOCATED_WITHIN) {
             gpgmm::ErrorEvent(MessageId::kBadOperation, this)
                 << "Unmapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
@@ -146,7 +146,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment(), GetMethod()};
+        return {GetSize(), GetAlignment(), static_cast<ALLOCATION_METHOD>(GetMethod())};
     }
 
     const char* ResourceAllocation::GetTypename() const {
@@ -167,7 +167,8 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocation::SetDebugNameImpl(LPCWSTR name) {
         // D3D name is set per resource.
-        if (GetDebugName() != nullptr && GetMethod() == AllocationMethod::kSubAllocatedWithin) {
+        if (GetDebugName() != nullptr &&
+            GetInfo().Method == ALLOCATION_METHOD_SUBALLOCATED_WITHIN) {
             return S_FALSE;
         }
 

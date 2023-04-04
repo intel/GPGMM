@@ -35,17 +35,6 @@ namespace gpgmm {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const MemoryAllocatorStats& info) {
-        JSONDict dict;
-        dict.AddItem("UsedBlockCount", info.UsedBlockCount);
-        dict.AddItem("UsedMemoryCount", info.UsedMemoryCount);
-        dict.AddItem("UsedBlockUsage", info.UsedBlockUsage);
-        dict.AddItem("FreeMemoryUsage", info.FreeMemoryUsage);
-        dict.AddItem("UsedMemoryUsage", info.UsedMemoryUsage);
-        return dict;
-    }
-
-    // static
     JSONDict JSONSerializer::Serialize(const MemoryAllocationRequest& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);

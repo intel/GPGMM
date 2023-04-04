@@ -35,10 +35,6 @@ namespace gpgmm {
         return 0;
     }
 
-    MemoryAllocatorStats MemoryAllocator::GetStats() const {
-        return mStats;
-    }
-
     // MemoryAllocation
 
     MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory)

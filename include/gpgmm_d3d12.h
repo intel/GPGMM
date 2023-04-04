@@ -504,6 +504,35 @@ namespace gpgmm::d3d12 {
         uint64_t CurrentMemoryCount;
     };
 
+    /** \enum ALLOCATION_METHOD
+    Represents how memory was allocated.
+    */
+    enum ALLOCATION_METHOD {
+        /** \brief Not yet allocated or invalid.
+
+        This is an invalid state that assigned temporary before the actual method is known.
+        */
+        ALLOCATION_METHOD_UNKNOWN = 0,
+
+        /** \brief Not sub-divided.
+
+        One and only one allocation exists for the memory.
+        */
+        ALLOCATION_METHOD_STANDALONE = 1,
+
+        /** \brief Sub-divided using one or more allocations.
+
+        Underlying memory will be broken up into one or more memory allocations.
+        */
+        ALLOCATION_METHOD_SUBALLOCATED = 2,
+
+        /** \brief Sub-divided within a single memory allocation.
+
+        A single memory allocation will be broken into one or more sub-allocations.
+        */
+        ALLOCATION_METHOD_SUBALLOCATED_WITHIN = 3,
+    };
+
     /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
 
     A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
@@ -633,7 +662,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Method used to allocate memory for the resource.
          */
-        AllocationMethod Method;
+        ALLOCATION_METHOD Method;
     };
 
     /** \brief ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.
@@ -1152,7 +1181,46 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
     };
 
-    using RESOURCE_ALLOCATOR_STATS = MemoryAllocatorStats;
+    /** \struct RESOURCE_ALLOCATOR_STATS
+    Additional information about the resource allocator usage.
+    */
+    struct RESOURCE_ALLOCATOR_STATS {
+        /** \brief Number of used sub-allocated blocks within the same memory.
+         */
+        uint32_t UsedBlockCount;
+
+        /** \brief Total size, in bytes, of used sub-allocated blocks.
+         */
+        uint64_t UsedBlockUsage;
+
+        /** \brief Number of used memory allocations.
+         */
+        uint32_t UsedHeapCount;
+
+        /** \brief Total size, in bytes, of used memory.
+         */
+        uint64_t UsedHeapUsage;
+
+        /** \brief Total size, in bytes, of free memory.
+         */
+        uint64_t FreeHeapUsage;
+
+        /** \brief Cache misses not eliminated by prefetching.
+         */
+        uint64_t PrefetchedHeapMisses;
+
+        /** \brief Cache misses eliminated because of prefetching.
+         */
+        uint64_t PrefetchedHeapMissesEliminated;
+
+        /** \brief Requested size was NOT cached.
+         */
+        uint64_t SizeCacheMisses;
+
+        /** \brief Requested size was cached.
+         */
+        uint64_t SizeCacheHits;
+    };
 
     /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
     ResourceAllocation.

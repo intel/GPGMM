@@ -331,7 +331,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                         }
 
                         mReplayedMemoryStats.PeakUsage =
-                            std::max(GetStats(resourceAllocator).UsedMemoryUsage,
+                            std::max(GetStats(resourceAllocator).UsedHeapUsage,
                                      mReplayedMemoryStats.PeakUsage);
 
                     } break;

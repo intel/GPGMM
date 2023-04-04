@@ -1136,7 +1136,7 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATOR_STATS allocationStats = {};
                     ReturnIfFailed(QueryStatsInternal(&allocationStats));
 
-                    request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
+                    request.AvailableForAllocation = allocationStats.FreeHeapUsage;
 
                     DebugLog(MessageId::kBudgetExceeded)
                         << "Current usage exceeded budget: "
@@ -1192,7 +1192,7 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = resourceDescriptor.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
-                    allocationDesc.Method = AllocationMethod::kSubAllocatedWithin;
+                    allocationDesc.Method = ALLOCATION_METHOD_SUBALLOCATED_WITHIN;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1231,7 +1231,8 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = request.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
-                    allocationDesc.Method = subAllocation.GetMethod();
+                    allocationDesc.Method =
+                        static_cast<ALLOCATION_METHOD>(subAllocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1271,7 +1272,7 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = request.SizeInBytes;
                     allocationDesc.HeapOffset = allocation.GetOffset();
-                    allocationDesc.Method = allocation.GetMethod();
+                    allocationDesc.Method = static_cast<ALLOCATION_METHOD>(allocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1337,7 +1338,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
         allocationDesc.SizeInBytes = request.SizeInBytes;
-        allocationDesc.Method = AllocationMethod::kStandalone;
+        allocationDesc.Method = ALLOCATION_METHOD_STANDALONE;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
 
         if (ppResourceAllocationOut != nullptr) {
@@ -1428,7 +1429,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
-        allocationDesc.Method = AllocationMethod::kStandalone;
+        allocationDesc.Method = ALLOCATION_METHOD_STANDALONE;
 
         *ppResourceAllocationOut = new ResourceAllocation(allocationDesc, nullptr, this,
                                                           static_cast<Heap*>(resourceHeap.Detach()),
@@ -1521,7 +1522,7 @@ namespace gpgmm::d3d12 {
         TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
-        RESOURCE_ALLOCATOR_STATS result = mStats;
+        MemoryAllocatorStats result = mStats;
 
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
@@ -1575,7 +1576,16 @@ namespace gpgmm::d3d12 {
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
         if (pResourceAllocatorStats != nullptr) {
-            *pResourceAllocatorStats = result;
+            pResourceAllocatorStats->UsedBlockCount = result.UsedBlockCount;
+            pResourceAllocatorStats->UsedBlockUsage = result.UsedBlockUsage;
+            pResourceAllocatorStats->UsedHeapCount = result.UsedMemoryCount;
+            pResourceAllocatorStats->UsedHeapUsage = result.UsedMemoryUsage;
+            pResourceAllocatorStats->FreeHeapUsage = result.FreeMemoryUsage;
+            pResourceAllocatorStats->PrefetchedHeapMisses = result.PrefetchedMemoryMisses;
+            pResourceAllocatorStats->PrefetchedHeapMissesEliminated =
+                result.PrefetchedMemoryMissesEliminated;
+            pResourceAllocatorStats->SizeCacheMisses = result.SizeCacheMisses;
+            pResourceAllocatorStats->SizeCacheHits = result.SizeCacheHits;
         } else {
             return S_FALSE;
         }
