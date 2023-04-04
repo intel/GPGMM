@@ -37,10 +37,6 @@
 
 #define GPGMM_INTERFACE struct
 
-namespace gpgmm {
-    DEFINE_ENUM_FLAG_OPERATORS(EventRecordFlags)  // Provided by <windows.h>
-}
-
 namespace gpgmm::d3d12 {
 
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
@@ -286,7 +282,87 @@ namespace gpgmm::d3d12 {
         virtual HRESULT Reset() = 0;
     };
 
-    using EVENT_RECORD_OPTIONS = EventRecordOptions;
+    /** \enum RECORD_FLAGS
+      Represents different event categories to record.
+      */
+    enum RECORD_FLAGS {
+
+        /** \brief Record nothing.
+         */
+        RECORD_FLAGS_NONE = 0x0,
+
+        /** \brief Record lifetimes of API objects created by GPGMM.
+         */
+        RECORD_FLAGS_API_OBJECTS = 0x1,
+
+        /** \brief Record API calls made to GPGMM.
+         */
+        RECORD_FLAGS_API_CALLS = 0x2,
+
+        /** \brief Record duration of GPGMM API calls.
+         */
+        RECORD_FLAGS_API_TIMINGS = 0x4,
+
+        /** \brief Record metrics made to GPGMM API calls.
+         */
+        RECORD_FLAGS_COUNTERS = 0x8,
+
+        /** \brief Record events required for playback.
+
+         Bitwise OR'd combination of kApiObjects and
+         kApiCalls.
+         */
+        RECORD_FLAGS_CAPTURE = 0x3,
+
+        /** \brief Record everything.
+         */
+        RECORD_FLAGS_ALL = 0xFF,
+    };
+
+    DEFINE_ENUM_FLAG_OPERATORS(RECORD_FLAGS)
+
+    /** \enum RECORD_SCOPE
+    Represents recording scopes to limit event recording.
+    */
+    enum RECORD_SCOPE {
+
+        /** \brief Scopes events per process (or multiple instances).
+         */
+        EVENT_RECORD_PER_PROCESS = 0,
+
+        /** \brief Scopes events per instance.
+         */
+        EVENT_RECORD_PER_INSTANCE = 1,
+    };
+
+    /** \struct RECORD_OPTIONS
+    Represents additional controls for recording.
+    */
+    struct RECORD_OPTIONS {
+        /** \brief Flags used to decide what to record.
+
+        Optional parameter. By default, nothing is recorded.
+        */
+        RECORD_FLAGS Flags;
+
+        /** \brief Specifies the scope of the events.
+
+        Optional parameter. By default, recording is per process.
+        */
+        RECORD_SCOPE EventScope;
+
+        /** \brief Record detailed timing events.
+
+        Optional parameter. By default, detailed timing events are disabled.
+        */
+        bool UseDetailedTimingEvents;
+
+        /** \brief Path to trace file.
+
+        Optional parameter. By default, a trace file is created for you.
+        */
+        const char* TraceFile;
+    };
 
     /** \brief  Create a residency list or collection of heaps to manage together for residency.
 
@@ -365,7 +441,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, no options are specified for recording.
         */
-        EVENT_RECORD_OPTIONS RecordOptions;
+        RECORD_OPTIONS RecordOptions;
 
         /** \brief Maximum amount of budgeted memory, expressed as a percentage of video memory,
         that can be budgeted.
@@ -804,7 +880,7 @@ namespace gpgmm::d3d12 {
 
         For example, what events to record, and where to record them.
         */
-        EVENT_RECORD_OPTIONS RecordOptions;
+        RECORD_OPTIONS RecordOptions;
 
         /** \brief Specifies the adapter's tier of resource heap support.
 
