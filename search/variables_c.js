@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['usedblockcount_0',['UsedBlockCount',['../structgpgmm_1_1_memory_allocator_stats.html#af2852fcd1fc395a8f6d58cd7e5972e94',1,'gpgmm::MemoryAllocatorStats']]],
-  ['usedblockusage_1',['UsedBlockUsage',['../structgpgmm_1_1_memory_allocator_stats.html#aa6d375754fd50004ed5a6da5340db653',1,'gpgmm::MemoryAllocatorStats']]],
+  ['usedblockcount_0',['UsedBlockCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ab32aa4270acd72f44a9c434e363233b0',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['usedblockusage_1',['UsedBlockUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ad5448c6150e0a69df97f42067e595c99',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
   ['usedetailedtimingevents_2',['UseDetailedTimingEvents',['../structgpgmm_1_1d3d12_1_1_r_e_c_o_r_d___o_p_t_i_o_n_s.html#a2a2bd9a23c8ad85cd7241f32ee21e66b',1,'gpgmm::d3d12::RECORD_OPTIONS']]],
-  ['usedmemorycount_3',['UsedMemoryCount',['../structgpgmm_1_1_memory_allocator_stats.html#a11bd21bacec54bd989c7974ab428f8e1',1,'gpgmm::MemoryAllocatorStats']]],
-  ['usedmemoryusage_4',['UsedMemoryUsage',['../structgpgmm_1_1_memory_allocator_stats.html#abb58fda10c080339690079f6bd7c22a6',1,'gpgmm::MemoryAllocatorStats']]]
+  ['usedheapcount_3',['UsedHeapCount',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a08db35d877456a92c75b1219bc4b8bd6',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['usedheapusage_4',['UsedHeapUsage',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ab9a75758ed2a1043e1cd7feba2e879f9',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]]
 ];

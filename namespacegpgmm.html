@@ -71,9 +71,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">gpgmm Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -84,59 +82,7 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacegpgmm_1_1vk"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1vk.html">vk</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1_memory_allocator_stats.html">MemoryAllocatorStats</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">AllocationMethod</a> { <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66">kUndefined</a> = 0
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545">kStandalone</a> = 1
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d">kSubAllocated</a> = 2
-, <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00">kSubAllocatedWithin</a> = 3
- }</td></tr>
-<tr class="separator:a73f15de0f698ad7e9a69df91d6da1d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a73f15de0f698ad7e9a69df91d6da1d8d" name="a73f15de0f698ad7e9a69df91d6da1d8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73f15de0f698ad7e9a69df91d6da1d8d">&#9670;&#160;</a></span>AllocationMethod</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="namespacegpgmm.html#a73f15de0f698ad7e9a69df91d6da1d8d">gpgmm::AllocationMethod</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Represents how memory was allocated. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66" name="a73f15de0f698ad7e9a69df91d6da1d8da7934d40c7c17315d892e8d5d745b1c66"></a>kUndefined&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
-<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545" name="a73f15de0f698ad7e9a69df91d6da1d8daeed6b7dae0ed8027da3585bcae740545"></a>kStandalone&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
-<pre class="fragment">One and only one allocation exists for the memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d" name="a73f15de0f698ad7e9a69df91d6da1d8dabfd4fd225f53e3b21d6dddbdbb48f19d"></a>kSubAllocated&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
-<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00" name="a73f15de0f698ad7e9a69df91d6da1d8da21772e10f2c685c1f2aa1ebc4aec8f00"></a>kSubAllocatedWithin&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
-<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
