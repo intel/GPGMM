@@ -162,7 +162,7 @@ namespace gpgmm::d3d12 {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
-        dict.AddItem("HeapSegmentGroup", desc.HeapSegmentGroup);
+        dict.AddItem("HeapSegment", desc.HeapSegment);
         dict.AddItem("Flags", desc.Flags);
         if (desc.DebugName != nullptr) {
             dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));

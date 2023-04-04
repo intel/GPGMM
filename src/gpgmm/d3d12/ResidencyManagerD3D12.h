@@ -57,11 +57,11 @@ namespace gpgmm::d3d12 {
                                     IResidencyList* const* ppResidencyLists,
                                     uint32_t count) override;
 
-        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                           uint64_t availableForReservation,
                                           uint64_t* pCurrentReservationOut = nullptr) override;
 
-        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
 
@@ -80,7 +80,7 @@ namespace gpgmm::d3d12 {
                          std::unique_ptr<Caps> caps);
 
         HRESULT EvictInternal(uint64_t bytesToEvict,
-                              const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+                              const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                               uint64_t* bytesEvictedOut = nullptr);
 
         HRESULT InsertHeap(Heap* heap);
@@ -109,17 +109,17 @@ namespace gpgmm::d3d12 {
             DXGI_QUERY_VIDEO_MEMORY_INFO Info = {};
         };
 
-        HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup,
+        HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP heapSegment,
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
-            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+            const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
 
-        HRESULT UpdateMemorySegmentInternal(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup);
+        HRESULT UpdateMemorySegmentInternal(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
 
         HRESULT StartBudgetNotificationUpdates();
         void StopBudgetNotificationUpdates();

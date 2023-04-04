@@ -165,7 +165,7 @@ namespace gpgmm::d3d12 {
 
         Required parameter.
         */
-        DXGI_MEMORY_SEGMENT_GROUP HeapSegmentGroup;
+        DXGI_MEMORY_SEGMENT_GROUP HeapSegment;
 
         /** \brief Specifies heaps options.
 
@@ -583,23 +583,23 @@ namespace gpgmm::d3d12 {
         A reservation is the lowest amount of physical memory the application need to continue
         operation safely.
 
-        @param memorySegmentGroup Memory segment to reserve.
+        @param heapSegment Memory segment to reserve.
         @param availableForReservation Amount of memory to reserve, in bytes.
         @param[out] pCurrentReservationOut the amount of memory reserved, which may be less then the
         |reservation| when under video memory pressure. A value of nullptr will update but not
         return the current reservation.
         */
-        virtual HRESULT SetVideoMemoryReservation(
-            const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup, uint64_t availableForReservation,
-            uint64_t* pCurrentReservationOut = nullptr) = 0;
+        virtual HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+                                                  uint64_t availableForReservation,
+                                                  uint64_t* pCurrentReservationOut = nullptr) = 0;
 
         /** \brief Get the current budget and memory usage.
 
-        @param memorySegmentGroup Memory segment to retrieve info from.
+        @param heapSegment Memory segment to retrieve info from.
         @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
         of nullptr will update but not return the current info.
         */
-        virtual HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        virtual HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                              DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
 
         /** \brief Update the residency status of a heap.

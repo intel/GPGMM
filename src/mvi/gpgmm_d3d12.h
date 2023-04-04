@@ -119,10 +119,10 @@ namespace gpgmm::d3d12 {
                                     ID3D12CommandList* const* ppCommandLists,
                                     IResidencyList* const* ppResidencyLists,
                                     uint32_t count) override;
-        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                           uint64_t availableForReservation,
                                           uint64_t* pCurrentReservationOut = nullptr) override;
-        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup,
+        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
         HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;

@@ -70,16 +70,16 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 
     uint64_t GetBudgetLeft(IResidencyManager* residencyManager,
-                           const DXGI_MEMORY_SEGMENT_GROUP& memorySegmentGroup) {
+                           const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
         DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
-        residencyManager->QueryVideoMemoryInfo(memorySegmentGroup, &segment);
+        residencyManager->QueryVideoMemoryInfo(heapSegment, &segment);
         return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
                                                        : 0;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_HEAP_TYPE heapType) const {
+    DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment(D3D12_HEAP_TYPE heapType) const {
         D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
-        return ::GetMemorySegmentGroup(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
+        return ::GetHeapSegment(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
     }
 
     bool IsResident(IResourceAllocation* pAllocation) const {
@@ -143,7 +143,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
     resourceHeapAlwaysInBudgetDesc.SizeInBytes = kHeapSize;
-    resourceHeapAlwaysInBudgetDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapAlwaysInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     resourceHeapAlwaysInBudgetDesc.Flags |= HEAP_FLAG_ALWAYS_IN_BUDGET;
 
     D3D12_HEAP_DESC heapDesc;
@@ -181,7 +181,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
-    resourceHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     ASSERT_FAILED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
                              BadCreateHeapCallbackContext::CreateHeap,
@@ -253,7 +253,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
@@ -307,7 +307,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.HeapSegmentGroup = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     descriptorHeapDesc.Flags |= HEAP_FLAG_ALWAYS_IN_RESIDENCY;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
@@ -510,8 +510,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
     // Budget updates are not occuring frequently enough to detect going over budget will evict the
     // same amount.
-    if (GetBudgetLeft(residencyManager.Get(),
-                      GetMemorySegmentGroup(bufferAllocationDesc.HeapType)) > 0) {
+    if (GetBudgetLeft(residencyManager.Get(), GetHeapSegment(bufferAllocationDesc.HeapType)) > 0) {
         return;
     }
 
@@ -548,7 +547,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        GetMemorySegmentGroup(bufferAllocationDesc.HeapType);
+        GetHeapSegment(bufferAllocationDesc.HeapType);
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);
 
@@ -656,8 +655,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
 
     // Budget updates are not occuring frequently enough to detect going over budget will evict the
     // same amount.
-    if (GetBudgetLeft(residencyManager.Get(),
-                      GetMemorySegmentGroup(bufferAllocationDesc.HeapType)) > 0) {
+    if (GetBudgetLeft(residencyManager.Get(), GetHeapSegment(bufferAllocationDesc.HeapType)) > 0) {
         return;
     }
 
@@ -713,7 +711,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
 
     // Budget updates are not occuring frequently enough to detect going over budget will evict the
     // same amount.
-    if (GetBudgetLeft(residencyManager.Get(), GetMemorySegmentGroup(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
+    if (GetBudgetLeft(residencyManager.Get(), GetHeapSegment(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
         return;
     }
 
@@ -839,7 +837,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
 
     // Budget updates are not occuring frequently enough to detect going over budget will evict the
     // same amount.
-    if (GetBudgetLeft(residencyManager.Get(), GetMemorySegmentGroup(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
+    if (GetBudgetLeft(residencyManager.Get(), GetHeapSegment(D3D12_HEAP_TYPE_DEFAULT)) > 0) {
         return;
     }
 

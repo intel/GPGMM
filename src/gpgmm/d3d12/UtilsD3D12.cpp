@@ -436,7 +436,7 @@ namespace gpgmm::d3d12 {
         return object->SetName(name);
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegmentGroup(D3D12_MEMORY_POOL memoryPool, bool isUMA) {
+    DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment(D3D12_MEMORY_POOL memoryPool, bool isUMA) {
         if (isUMA) {
             return DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
         }
@@ -448,12 +448,12 @@ namespace gpgmm::d3d12 {
         return DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL;
     }
 
-    const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP memorySegmentGroup, bool isUMA) {
+    const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP heapSegment, bool isUMA) {
         if (isUMA) {
             return "Shared";
         }
 
-        switch (memorySegmentGroup) {
+        switch (heapSegment) {
             case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
                 return "Dedicated";
 
