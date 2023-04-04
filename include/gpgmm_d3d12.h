@@ -497,11 +497,11 @@ namespace gpgmm::d3d12 {
     struct RESIDENCY_MANAGER_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
          */
-        uint64_t CurrentMemoryUsage;
+        uint64_t CurrentHeapUsage;
 
         /** \brief Number of heaps, currently resident.
          */
-        uint64_t CurrentMemoryCount;
+        uint64_t CurrentHeapCount;
     };
 
     /** \enum ALLOCATION_METHOD
