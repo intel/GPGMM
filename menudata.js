@@ -45,7 +45,6 @@ var menudata={children:[
 {text:"Enumerations",url:"namespacemembers_enum.html"},
 {text:"Enumerator",url:"namespacemembers_eval.html",children:[
 {text:"a",url:"namespacemembers_eval.html#index_a"},
-{text:"e",url:"namespacemembers_eval.html#index_e"},
 {text:"g",url:"namespacemembers_eval.html#index_g"},
 {text:"h",url:"namespacemembers_eval.html#index_h"},
 {text:"r",url:"namespacemembers_eval.html#index_r"}]}]}]},
