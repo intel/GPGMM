@@ -330,11 +330,11 @@ namespace gpgmm::d3d12 {
 
         /** \brief Scopes events per process (or multiple instances).
          */
-        EVENT_RECORD_PER_PROCESS = 0,
+        RECORD_SCOPE_PER_PROCESS = 0,
 
         /** \brief Scopes events per instance.
          */
-        EVENT_RECORD_PER_INSTANCE = 1,
+        RECORD_SCOPE_PER_INSTANCE = 1,
     };
 
     /** \struct RECORD_OPTIONS

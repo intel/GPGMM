@@ -196,7 +196,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
         // Keep recording across multiple playback iterations to ensure all
         // events will be captured instead of overwritten per iteration.
         if (envParams.Iterations == 1) {
-            baseAllocatorDesc.RecordOptions.EventScope = EVENT_RECORD_PER_INSTANCE;
+            baseAllocatorDesc.RecordOptions.EventScope = RECORD_SCOPE_PER_INSTANCE;
         }
 
         if (!envParams.IsPrefetchAllowed) {

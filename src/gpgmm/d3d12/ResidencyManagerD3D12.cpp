@@ -291,7 +291,7 @@ namespace gpgmm::d3d12 {
           mIsUMA(caps->IsAdapterUMA() &&
                  !(descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY)),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
-                                       EVENT_RECORD_PER_INSTANCE),
+                                       RECORD_SCOPE_PER_INSTANCE),
           mInitialFenceValue(descriptor.InitialFenceValue),
           mIsAlwaysInBudget(descriptor.Flags & RESIDENCY_FLAG_ALWAYS_IN_BUDGET) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
