@@ -502,7 +502,7 @@ index 214fa67f8..d909d4d2a 100644
 +    // residencyDesc.IsUMA = adapter->GetDeviceInfo().isUMA;
 +
 +    if (IsToggleEnabled(Toggle::UseD3D12SmallResidencyBudgetForTesting)) {
-+        residencyDesc.Flags |= gpgmm::d3d12::RESIDENCY_FLAG_NEVER_UPDATE_BUDGET_ON_WORKER_THREAD;
++        residencyDesc.Flags |= gpgmm::d3d12::RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD;
 +        residencyDesc.MaxBudgetInBytes = 100ll * 1024ll * 1024ll;  // 100MB
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
 +        allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
