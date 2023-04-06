@@ -218,13 +218,19 @@ namespace gpgmm {
 
     ScopedTraceBufferInTLS* EventTraceWriter::GetOrCreateBufferFromTLS(
         std::shared_ptr<EventTraceWriter> writer) {
-        thread_local std::unique_ptr<ScopedTraceBufferInTLS> bufferInTLS;
-        if (bufferInTLS == nullptr) {
-            bufferInTLS.reset(new ScopedTraceBufferInTLS(std::move(writer)));
+        std::lock_guard<std::mutex> mutex(mMutex);
 
-            std::lock_guard<std::mutex> mutex(mMutex);
+        // Prevent |bufferInTLS| from being accessed after destruction by checking if it was removed
+        // from the thread id cache then always relinquishing ownership before creation to avoid a
+        // double delete. This was because the thread storage for |bufferInTLS| was found to be
+        // reused and never re-initialized to nullptr.
+        thread_local std::unique_ptr<ScopedTraceBufferInTLS> bufferInTLS;
+        if (mBufferPerThread.find(std::this_thread::get_id()) == mBufferPerThread.end()) {
+            bufferInTLS.release();
+            bufferInTLS = std::make_unique<ScopedTraceBufferInTLS>(std::move(writer));
             mBufferPerThread[std::this_thread::get_id()] = bufferInTLS.get();
         }
+
         ASSERT(bufferInTLS != nullptr);
         return bufferInTLS.get();
     }
