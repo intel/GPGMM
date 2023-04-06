@@ -32,6 +32,9 @@ args = parser.parse_args()
 
 
 def main():
+    if not os.path.exists(args.traces_dir):
+        return
+
     traceFileIndexData = {'traceFiles': []}
     for traceFilename in os.listdir(args.traces_dir):
 
