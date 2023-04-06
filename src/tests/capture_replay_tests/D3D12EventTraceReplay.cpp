@@ -339,7 +339,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "ResourceAllocation") {
+            } else if (event["name"].asString() == "IResourceAllocation") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (playbackContext.CurrentAllocationWithoutID == nullptr) {
@@ -372,7 +372,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "ResidencyManager") {
+            } else if (event["name"].asString() == "IResidencyManager") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& residencyManagerID = event["id"].asString();
@@ -430,7 +430,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "ResourceAllocator") {
+            } else if (event["name"].asString() == "IResourceAllocator") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_SNAPSHOT_OBJECT: {
                         const std::string& allocatorID = event["id"].asString();
@@ -569,7 +569,7 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "Heap") {
+            } else if (event["name"].asString() == "IHeap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (playbackContext.CurrentHeapWithoutID == nullptr) {
