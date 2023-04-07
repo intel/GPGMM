@@ -19,6 +19,10 @@
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/Limits.h"
 
+#define GPGMM_INVALID_ALLOCATION \
+    MemoryAllocation {           \
+    }
+
 namespace gpgmm {
 
     /** \enum AllocationMethod

@@ -67,10 +67,14 @@ namespace gpgmm {
 
     MemoryBlock* SlabBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
         // Requested cannot exceed block size.
-        GPGMM_INVALID_IF(requestSize > mBlockSize);
+        if (requestSize > mBlockSize) {
+            return nullptr;
+        }
 
         // Offset must be equal to a multiple of |mBlockSize|.
-        GPGMM_INVALID_IF(!IsAligned(mBlockSize, alignment));
+        if (!IsAligned(mBlockSize, alignment)) {
+            return nullptr;
+        }
 
         // Pop off HEAD in the free-list.
         SlabBlock* head = mFreeList.pHead;
