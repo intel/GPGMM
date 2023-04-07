@@ -76,7 +76,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (info.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kAlignmentMismatch)
+            DebugLog(MessageId::kAlignmentMismatch, false, GetTypename(), this)
                 << "Memory allocation size was larger then the requested size: " << info.SizeInBytes
                 << " vs " << request.SizeInBytes << " bytes.";
         }

@@ -148,7 +148,7 @@ namespace gpgmm {
         if (availableForAllocation < slabSize) {
             const uint64_t slabSizeUnderBudget = FindNextFreeSlabOfSize(requestSize);
             if (slabSizeUnderBudget == kInvalidSize) {
-                DebugLog(MessageId::kSizeExceeded, this)
+                DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
                     << "Slab size exceeded available memory: " << GPGMM_BYTES_TO_MB(slabSize)
                     << " vs " << GPGMM_BYTES_TO_MB(availableForAllocation) << " MBs.";
                 return kInvalidSize;
@@ -210,7 +210,7 @@ namespace gpgmm {
 
         // Slab cannot exceed memory size.
         if (slabSize > mMaxSlabSize) {
-            gpgmm::DebugLog(MessageId::kSizeExceeded, this)
+            DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
                 << "Slab allocation was disabled because the slab size exceeded the max slab size "
                    "allowed: "
                 << GPGMM_BYTES_TO_MB(slabSize) << " vs " << GPGMM_BYTES_TO_MB(mMaxSlabSize)
@@ -296,7 +296,7 @@ namespace gpgmm {
                         }
 
                         if (prefetchedSlabAllocation != nullptr) {
-                            DebugLog(MessageId::kPrefetchFailed, this)
+                            DebugLog(MessageId::kPrefetchFailed, false, GetTypename(), this)
                                 << "Pre-fetching failed because the slab size did not match: "
                                 << GPGMM_BYTES_TO_MB(slabSize) << " vs "
                                 << GPGMM_BYTES_TO_MB(prefetchedSlabAllocation->GetSize())
@@ -478,7 +478,7 @@ namespace gpgmm {
             SafeDivide(mStats.PrefetchedMemoryMissesEliminated,
                        mStats.PrefetchedMemoryMissesEliminated + mStats.PrefetchedMemoryMisses);
         if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-            WarnEvent(MessageId::kPrefetchFailed, this)
+            WarnEvent(MessageId::kPrefetchFailed, false, GetTypename(), this)
                 << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
                 << kPrefetchCoverageWarnMinThreshold * 100;
             return false;

@@ -45,8 +45,7 @@ namespace gpgmm {
 
     void StartupEventTrace(const char* traceFile, const TraceEventPhase& ignoreMask) {
 #if defined(GPGMM_DISABLE_TRACING)
-        gpgmm::WarningLog()
-            << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
+        WarningLog() << "Event tracing enabled but unable to record due to GPGMM_DISABLE_TRACING.";
 #endif
 
         GetInstance()->SetConfiguration(traceFile, ignoreMask);

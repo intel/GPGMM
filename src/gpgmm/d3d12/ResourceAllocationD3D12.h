@@ -77,7 +77,6 @@ namespace gpgmm::d3d12 {
 
         // ObjectBase interface
         const char* GetTypename() const override;
-        bool IsExternal() const override;
 
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;

@@ -306,10 +306,11 @@ namespace gpgmm {
             if (!result.IsSuccess()) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {
-                    DebugLog() << std::string(allocator->GetTypename()) +
-                                      " failed to sub-allocate memory range = ["
-                               << std::to_string(block->Offset) << ", "
-                               << std::to_string(block->Offset + block->Size) << ").";
+                    DebugLog(MessageId::kAllocatorFailed, false, allocator->GetTypename(),
+                             allocator)
+                        << "Failed to sub-allocate memory range = ["
+                        << std::to_string(block->Offset) << ", "
+                        << std::to_string(block->Offset + block->Size) << ").";
                 }
                 allocator->DeallocateBlock(block);
                 return result.GetErrorCode();

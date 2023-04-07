@@ -60,6 +60,8 @@ namespace gpgmm {
       public:
         LogMessage(MessageSeverity severity,
                    MessageId messageId,
+                   bool isExternal,
+                   const std::string& name,
                    const ObjectBase* object) noexcept;
         ~LogMessage();
 
@@ -78,24 +80,36 @@ namespace gpgmm {
 
         MessageSeverity mSeverity;
         MessageId mMessageId = MessageId::kUnknown;
+        bool mIsExternal = false;
+        std::string mName;
         const ObjectBase* mObject = nullptr;
         std::ostringstream mStream;
     };
 
     // Short-hands to create a LogMessage with the respective severity.
     LogMessage DebugLog(MessageId messageId = MessageId::kUnknown,
-                        const ObjectBase* object = nullptr);
+                        bool isExternal = false,
+                        const std::string& name = "",
+                        const ObjectBase* mObject = nullptr);
     LogMessage InfoLog(MessageId messageId = MessageId::kUnknown,
-                       const ObjectBase* object = nullptr);
+                       bool isExternal = false,
+                       const std::string& name = "",
+                       const ObjectBase* mObject = nullptr);
     LogMessage WarningLog(MessageId messageId = MessageId::kUnknown,
-                          const ObjectBase* object = nullptr);
+                          bool isExternal = false,
+                          const std::string& name = "",
+                          const ObjectBase* mObject = nullptr);
     LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
-                        const ObjectBase* object = nullptr);
+                        bool isExternal = false,
+                        const std::string& name = "",
+                        const ObjectBase* mObject = nullptr);
 
     // Create a LogMessage based on severity.
     LogMessage Log(MessageSeverity severity,
                    MessageId messageId = MessageId::kUnknown,
-                   const ObjectBase* object = nullptr);
+                   bool isExternal = false,
+                   const std::string& name = "",
+                   const ObjectBase* mObject = nullptr);
 
     // GPGMM_DEBUG is a helper macro that creates a DebugLog and outputs file/line/function
     // information

@@ -97,8 +97,14 @@ namespace gpgmm {
 
     LogMessage::LogMessage(MessageSeverity severity,
                            MessageId messageId,
+                           bool isExternal,
+                           const std::string& name,
                            const ObjectBase* object) noexcept
-        : mSeverity(severity), mMessageId(messageId), mObject(object) {
+        : mSeverity(severity),
+          mMessageId(messageId),
+          mIsExternal(isExternal),
+          mName(name),
+          mObject(object) {
     }
 
     LogMessage::~LogMessage() {
@@ -111,7 +117,7 @@ namespace gpgmm {
 
         // Ignore internal objects being logged unless the build is enabled for it.
 #if !defined(GPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS)
-        if (mObject != nullptr && !mObject->IsExternal()) {
+        if (!mIsExternal) {
             return;
         }
 #endif
@@ -133,17 +139,13 @@ namespace gpgmm {
                 outputString =
                     std::string(kLogTag) + " " + std::string(severityName) +
                     "(tid: " + ToString(std::this_thread::get_id()) + "): " +
-                    ((mObject != nullptr) ? ((std::string(mObject->GetTypename()) + ": Addr=") +
-                                             ToString(mObject) + ", ")
-                                          : "") +
+                    ((mObject != nullptr) ? ((mName + ": Addr=") + ToString(mObject) + ", ") : "") +
                     fullMessage + " [" + GetMessageFromID(mMessageId) + "]" + "\n";
             } else {
                 outputString =
                     std::string(kLogTag) + " " + std::string(severityName) +
                     "(tid: " + ToString(std::this_thread::get_id()) + "): " +
-                    ((mObject != nullptr) ? ((std::string(mObject->GetTypename()) + ": Addr=") +
-                                             ToString(mObject) + ", ")
-                                          : "") +
+                    ((mObject != nullptr) ? ((mName + ": Addr=") + ToString(mObject) + ", ") : "") +
                     fullMessage + "\n";
             }
 
@@ -179,41 +181,57 @@ namespace gpgmm {
 #endif
     }
 
-    LogMessage DebugLog(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kDebug, messageId, object};
+    LogMessage DebugLog(MessageId messageId,
+                        bool isExternal,
+                        const std::string& name,
+                        const ObjectBase* object) {
+        return {MessageSeverity::kDebug, messageId, isExternal, name, object};
     }
 
-    LogMessage InfoLog(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kInfo, messageId, object};
+    LogMessage InfoLog(MessageId messageId,
+                       bool isExternal,
+                       const std::string& name,
+                       const ObjectBase* object) {
+        return {MessageSeverity::kInfo, messageId, isExternal, name, object};
     }
 
-    LogMessage WarningLog(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kWarning, messageId, object};
+    LogMessage WarningLog(MessageId messageId,
+                          bool isExternal,
+                          const std::string& name,
+                          const ObjectBase* object) {
+        return {MessageSeverity::kWarning, messageId, isExternal, name, object};
     }
 
-    LogMessage ErrorLog(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kError, messageId, object};
+    LogMessage ErrorLog(MessageId messageId,
+                        bool isExternal,
+                        const std::string& name,
+                        const ObjectBase* object) {
+        return {MessageSeverity::kError, messageId, isExternal, name, object};
     }
 
     LogMessage DebugLog(const char* file, const char* function, int line) {
-        LogMessage message = DebugLog(MessageId::kUnknown, nullptr);
+        LogMessage message = DebugLog(MessageId::kUnknown, false, "", nullptr);
         message << file << ":" << line << "(" << function << ")";
         return message;
     }
 
-    LogMessage Log(MessageSeverity severity, MessageId messageId, const ObjectBase* object) {
+    LogMessage Log(MessageSeverity severity,
+                   MessageId messageId,
+                   bool isExternal,
+                   const std::string& name,
+                   const ObjectBase* object) {
         switch (severity) {
             case MessageSeverity::kDebug:
-                return DebugLog(messageId, object);
+                return DebugLog(messageId, isExternal, name, object);
             case MessageSeverity::kInfo:
-                return InfoLog(messageId, object);
+                return InfoLog(messageId, isExternal, name, object);
             case MessageSeverity::kWarning:
-                return WarningLog(messageId, object);
+                return WarningLog(messageId, isExternal, name, object);
             case MessageSeverity::kError:
-                return ErrorLog(messageId, object);
+                return ErrorLog(messageId, isExternal, name, object);
             default:
                 UNREACHABLE();
-                return {severity, messageId, object};
+                return {severity, messageId, isExternal, name, object};
         }
     }
 

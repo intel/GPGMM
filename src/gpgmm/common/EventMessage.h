@@ -29,6 +29,8 @@ namespace gpgmm {
       public:
         EventMessage(const MessageSeverity& severity,
                      MessageId messageId,
+                     bool isExternal,
+                     const std::string& name,
                      const ObjectBase* object);
         ~EventMessage();
 
@@ -44,20 +46,32 @@ namespace gpgmm {
       private:
         MessageSeverity mSeverity;
         MessageId mMessageId = MessageId::kUnknown;
+        bool mIsExternal = false;
+        std::string mName;
         const ObjectBase* mObject = nullptr;
-
         std::ostringstream mStream;
     };
 
     // Short-hands to create a EventMessage with the respective severity.
     EventMessage DebugEvent(MessageId messageId = MessageId::kUnknown,
-                            const ObjectBase* object = nullptr);
+                            bool isExternal = false,
+                            const std::string& name = "",
+                            const ObjectBase* mObject = nullptr);
+
     EventMessage InfoEvent(MessageId messageId = MessageId::kUnknown,
-                           const ObjectBase* object = nullptr);
+                           bool isExternal = false,
+                           const std::string& name = "",
+                           const ObjectBase* mObject = nullptr);
+
     EventMessage WarnEvent(MessageId messageId = MessageId::kUnknown,
-                           const ObjectBase* object = nullptr);
+                           bool isExternal = false,
+                           const std::string& name = "",
+                           const ObjectBase* mObject = nullptr);
+
     EventMessage ErrorEvent(MessageId messageId = MessageId::kUnknown,
-                            const ObjectBase* object = nullptr);
+                            bool isExternal = false,
+                            const std::string& name = "",
+                            const ObjectBase* mObject = nullptr);
 
     // Messages of a given severity to be recorded.
     void SetEventMessageLevel(const MessageSeverity& level);

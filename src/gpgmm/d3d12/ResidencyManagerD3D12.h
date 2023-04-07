@@ -96,7 +96,6 @@ namespace gpgmm::d3d12 {
 
         // ObjectBase interface
         const char* GetTypename() const override;
-        bool IsExternal() const override;
 
         // IDebugObject interface
         LPCWSTR GetDebugName() const override;

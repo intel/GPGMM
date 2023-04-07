@@ -83,7 +83,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (resourceHeapDesc.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kAlignmentMismatch)
+            DebugLog(MessageId::kAlignmentMismatch, true, GetTypename(), this)
                 << "Resource heap was larger then the requested size: "
                 << resourceHeapDesc.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
         }

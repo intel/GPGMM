@@ -24,8 +24,8 @@ namespace gpgmm {
                                 const char* function,
                                 int line,
                                 const char* condition) {
-        gpgmm::ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
-                          << "): " << condition;
+        ErrorLog() << "Assertion failure at " << file << ":" << line << " (" << function
+                   << "): " << condition;
 #if defined(GPGMM_ABORT_ON_ASSERT)
         abort();
 #else

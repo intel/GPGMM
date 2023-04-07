@@ -48,14 +48,20 @@ namespace gpgmm {
 
     EventMessage::EventMessage(const MessageSeverity& severity,
                                MessageId messageId,
+                               bool isExternal,
+                               const std::string& name,
                                const ObjectBase* object)
-        : mSeverity(severity), mMessageId(messageId), mObject(object) {
+        : mSeverity(severity),
+          mMessageId(messageId),
+          mIsExternal(isExternal),
+          mName(name),
+          mObject(object) {
     }
 
     EventMessage::~EventMessage() {
         const std::string description = mStream.str();
 
-        gpgmm::Log(mSeverity, mMessageId, mObject) << description;
+        gpgmm::Log(mSeverity, mMessageId, mIsExternal, mName, mObject) << description;
 
 #if defined(GPGMM_ENABLE_ASSERT_ON_WARNING)
         ASSERT(mSeverity < MessageSeverity::kWarning);
@@ -67,20 +73,32 @@ namespace gpgmm {
         }
     }
 
-    EventMessage DebugEvent(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kDebug, messageId, object};
+    EventMessage DebugEvent(MessageId messageId,
+                            bool isExternal,
+                            const std::string& name,
+                            const ObjectBase* object) {
+        return {MessageSeverity::kDebug, messageId, isExternal, name, object};
     }
 
-    EventMessage InfoEvent(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kInfo, messageId, object};
+    EventMessage InfoEvent(MessageId messageId,
+                           bool isExternal,
+                           const std::string& name,
+                           const ObjectBase* object) {
+        return {MessageSeverity::kInfo, messageId, isExternal, name, object};
     }
 
-    EventMessage WarnEvent(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kWarning, messageId, object};
+    EventMessage WarnEvent(MessageId messageId,
+                           bool isExternal,
+                           const std::string& name,
+                           const ObjectBase* object) {
+        return {MessageSeverity::kWarning, messageId, isExternal, name, object};
     }
 
-    EventMessage ErrorEvent(MessageId messageId, const ObjectBase* object) {
-        return {MessageSeverity::kError, messageId, object};
+    EventMessage ErrorEvent(MessageId messageId,
+                            bool isExternal,
+                            const std::string& name,
+                            const ObjectBase* object) {
+        return {MessageSeverity::kError, messageId, isExternal, name, object};
     }
 
 }  // namespace gpgmm

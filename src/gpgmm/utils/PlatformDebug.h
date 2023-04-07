@@ -32,7 +32,7 @@ namespace gpgmm {
 
         // Output or dump leak detection to console.
         virtual void ReportMemoryLeaks() {
-            gpgmm::ErrorLog() << "Reporting of memory leaks is not supported by this platform.";
+            ErrorLog() << "Reporting of memory leaks is not supported by this platform.";
         }
 
         virtual ~DebugPlatform() = default;
