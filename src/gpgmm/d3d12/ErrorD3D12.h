@@ -23,7 +23,7 @@
 
 namespace gpgmm::d3d12 {
 
-#define ReturnIfNullptr(expr)                                                 \
+#define GPGMM_RETURN_IF_NULLPTR(expr)                                         \
     {                                                                         \
         if (GPGMM_UNLIKELY(expr == nullptr)) {                                \
             gpgmm::ErrorLog() << #expr << ": " << GetErrorMessage(E_POINTER); \
@@ -33,9 +33,9 @@ namespace gpgmm::d3d12 {
     for (;;)                                                                  \
     break
 
-#define ReturnIfFailed(expr) ReturnIfFailedDevice(expr, nullptr)
+#define GPGMM_RETURN_IF_FAILED(expr) GPGMM_RETURN_IF_FAILED_ON_DEVICE(expr, nullptr)
 
-#define ReturnIfFailedDevice(expr, device)                                           \
+#define GPGMM_RETURN_IF_FAILED_ON_DEVICE(expr, device)                               \
     {                                                                                \
         HRESULT hr = expr;                                                           \
         if (GPGMM_UNLIKELY(FAILED(hr))) {                                            \
@@ -46,7 +46,7 @@ namespace gpgmm::d3d12 {
     for (;;)                                                                         \
     break
 
-#define ReturnIfSucceeded(expr)            \
+#define GPGMM_RETURN_IF_SUCCEEDED(expr)    \
     {                                      \
         HRESULT hr = expr;                 \
         if (GPGMM_LIKELY(SUCCEEDED(hr))) { \
@@ -56,9 +56,9 @@ namespace gpgmm::d3d12 {
     for (;;)                               \
     break
 
-// Same as ReturnIfSucceeded but also returns if error is lethal.
+// Same as GPGMM_RETURN_IF_SUCCEEDED but also returns if error is lethal.
 // Non-internal errors are always fatal and should not run re-attempt logic.
-#define ReturnIfSucceededOrFatal(expr)                                            \
+#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                                  \
     {                                                                             \
         HRESULT hr = expr;                                                        \
         if (GPGMM_LIKELY(SUCCEEDED(hr)) ||                                        \
@@ -69,8 +69,8 @@ namespace gpgmm::d3d12 {
     for (;;)                                                                      \
     break
 
-#define AssertIfFailed(expr) ASSERT(SUCCEEDED(expr));
-#define AssertIfSucceded(expr) ASSERT(FAILED(expr));
+#define GPGMM_ASSERT_IF_FAILED(expr) ASSERT(SUCCEEDED(expr));
+#define GPGMM_ASSERT_IF_SUCCEEDED(expr) ASSERT(FAILED(expr));
 
     std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
     std::string GetErrorMessage(HRESULT error) noexcept;

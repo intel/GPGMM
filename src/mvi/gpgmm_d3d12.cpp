@@ -16,14 +16,14 @@
 
 #include <limits>
 
-#define ReturnIfFailed(expr) \
-    {                        \
-        HRESULT hr = expr;   \
-        if (FAILED(hr)) {    \
-            return hr;       \
-        }                    \
-    }                        \
-    for (;;)                 \
+#define GPGMM_RETURN_IF_FAILED(expr) \
+    {                                \
+        HRESULT hr = expr;           \
+        if (FAILED(hr)) {            \
+            return hr;               \
+        }                            \
+    }                                \
+    for (;;)                         \
     break
 
 namespace gpgmm::d3d12 {
@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
                              void* context,
                              IHeap** ppHeapOut) {
         Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(createHeapFn(context, &pageable));
+        GPGMM_RETURN_IF_FAILED(createHeapFn(context, &pageable));
 
         if (ppHeapOut != nullptr) {
             *ppHeapOut = new Heap(pageable, descriptor, (pResidencyManager == nullptr));
@@ -323,16 +323,16 @@ namespace gpgmm::d3d12 {
 
             Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
             if (pAdapter != nullptr) {
-                ReturnIfFailed(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)));
+                GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)));
             }
 
-            ReturnIfFailed(ResidencyManager::CreateResidencyManager(
+            GPGMM_RETURN_IF_FAILED(ResidencyManager::CreateResidencyManager(
                 residencyDesc, pDevice, adapter3.Get(), &residencyManager));
         }
 
         Microsoft::WRL::ComPtr<IResourceAllocator> resourceAllocator;
-        ReturnIfFailed(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
-                                               residencyManager.Get(), &resourceAllocator));
+        GPGMM_RETURN_IF_FAILED(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
+                                                       residencyManager.Get(), &resourceAllocator));
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -379,9 +379,9 @@ namespace gpgmm::d3d12 {
             mDevice.Get(), allocationDescriptor, committedResource, &resourceDescriptor,
             pClearValue, initialResourceState);
 
-        ReturnIfFailed(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
-                                        CreateCommittedResourceCallbackContext::CreateHeap,
-                                        &callbackContext, &resourceHeap));
+        GPGMM_RETURN_IF_FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
+                                                CreateCommittedResourceCallbackContext::CreateHeap,
+                                                &callbackContext, &resourceHeap));
 
         *ppResourceAllocationOut = new ResourceAllocation(this, static_cast<Heap*>(resourceHeap),
                                                           std::move(committedResource));
@@ -458,12 +458,12 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties = {};
         heapProperties.Type = mAllocationDescriptor.HeapType;
 
-        ReturnIfFailed(mDevice->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE,
-                                                        mResourceDescriptor, mInitialResourceState,
-                                                        mClearValue, IID_PPV_ARGS(&mResource)));
+        GPGMM_RETURN_IF_FAILED(mDevice->CreateCommittedResource(
+            &heapProperties, D3D12_HEAP_FLAG_NONE, mResourceDescriptor, mInitialResourceState,
+            mClearValue, IID_PPV_ARGS(&mResource)));
 
         Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
-        ReturnIfFailed(mResource.As(&pageable));
+        GPGMM_RETURN_IF_FAILED(mResource.As(&pageable));
         *ppPageableOut = pageable.Detach();
         return S_OK;
     }
