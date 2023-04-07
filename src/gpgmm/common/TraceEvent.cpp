@@ -22,15 +22,25 @@
 
 namespace gpgmm {
 
-    static std::shared_ptr<EventTraceWriter> gEventTrace;
+    static std::shared_ptr<EventTraceWriter> gEventTraceWriter;
     static std::mutex mMutex;
+
+    void OnFlushAtExit() {
+        std::lock_guard<std::mutex> lock(mMutex);
+        if (gEventTraceWriter != nullptr) {
+            gEventTraceWriter->FlushQueuedEventsToDisk();
+        }
+    }
 
     static EventTraceWriter* GetInstance() {
         std::lock_guard<std::mutex> lock(mMutex);
-        if (gEventTrace == nullptr) {
-            gEventTrace = std::make_shared<EventTraceWriter>();
+        if (gEventTraceWriter == nullptr) {
+            gEventTraceWriter = std::make_shared<EventTraceWriter>();
+
+            // Unmerged events never merge if all threads using the writer never terminate.
+            std::atexit(OnFlushAtExit);
         }
-        return gEventTrace.get();
+        return gEventTraceWriter.get();
     }
 
     void StartupEventTrace(const char* traceFile, const TraceEventPhase& ignoreMask) {
@@ -53,7 +63,7 @@ namespace gpgmm {
 
     bool IsEventTraceEnabled() {
         std::lock_guard<std::mutex> lock(mMutex);
-        return gEventTrace != nullptr;
+        return gEventTraceWriter != nullptr;
     }
 
     size_t GetQueuedEventsForTesting() {
@@ -88,7 +98,8 @@ namespace gpgmm {
                                     uint32_t flags,
                                     const JSONDict& args) {
         if (IsEventTraceEnabled()) {
-            GetInstance()->EnqueueTraceEvent(gEventTrace, phase, category, name, id, flags, args);
+            GetInstance()->EnqueueTraceEvent(gEventTraceWriter, phase, category, name, id, flags,
+                                             args);
         }
     }
 }  // namespace gpgmm
