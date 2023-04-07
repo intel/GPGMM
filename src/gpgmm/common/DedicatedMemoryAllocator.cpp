@@ -33,7 +33,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(!ValidateRequest(request));
+        GPGMM_RETURN_INVALID_IF(!ValidateRequest(request));
 
         MemoryAllocationRequest memoryRequest = request;
         memoryRequest.Alignment = mMemoryAlignment;

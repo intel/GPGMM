@@ -19,6 +19,24 @@
 
 #include <utility>
 
+#define GPGMM_TRY_ASSIGN(expr, value)              \
+    {                                              \
+        auto result = expr;                        \
+        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
+            return result;                         \
+        }                                          \
+        value = result.AcquireResult();            \
+    }                                              \
+    for (;;)                                       \
+    break
+
+#define GPGMM_RETURN_INVALID_IF(expr) \
+    if (GPGMM_UNLIKELY(expr)) {       \
+        return {};                    \
+    }                                 \
+    for (;;)                          \
+    break
+
 namespace gpgmm {
 
     enum class ErrorCodeType : uint32_t;
@@ -81,28 +99,6 @@ namespace gpgmm {
     // Alias of Result + error code to avoid having to always specify error type.
     template <typename ResultT>
     using ResultOrError = Result<ErrorCodeType, ResultT>;
-
-#define GPGMM_INVALID_ALLOCATION \
-    MemoryAllocation {                 \
-    }
-
-#define GPGMM_TRY_ASSIGN(expr, value)              \
-    {                                              \
-        auto result = expr;                        \
-        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
-            return result;                         \
-        }                                          \
-        value = result.AcquireResult();            \
-    }                                              \
-    for (;;)                                       \
-    break
-
-#define GPGMM_INVALID_IF(expr)  \
-    if (GPGMM_UNLIKELY(expr)) { \
-        return {};              \
-    }                           \
-    for (;;)                    \
-    break
 
 }  // namespace gpgmm
 

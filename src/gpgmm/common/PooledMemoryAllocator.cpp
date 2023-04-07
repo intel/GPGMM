@@ -41,7 +41,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(!ValidateRequest(request));
+        GPGMM_RETURN_INVALID_IF(!ValidateRequest(request));
 
         MemoryAllocation allocation = mPool->AcquireFromPool();
         if (allocation == GPGMM_INVALID_ALLOCATION) {

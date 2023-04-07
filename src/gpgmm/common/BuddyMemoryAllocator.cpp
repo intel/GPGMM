@@ -48,13 +48,13 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(!ValidateRequest(request));
+        GPGMM_RETURN_INVALID_IF(!ValidateRequest(request));
 
         // Round allocation size to nearest power-of-two.
         const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
 
         // Request cannot exceed memory size.
-        GPGMM_INVALID_IF(allocationSize > mMemorySize);
+        GPGMM_RETURN_INVALID_IF(allocationSize > mMemorySize);
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocation> subAllocation;
