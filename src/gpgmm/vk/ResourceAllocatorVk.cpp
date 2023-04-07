@@ -56,7 +56,7 @@ namespace gpgmm::vk {
 
         // Create the buffer.
         VkBuffer buffer = VK_NULL_HANDLE;
-        ReturnIfFailed(
+        GPGMM_RETURN_IF_FAILED(
             allocator->GetFunctions().CreateBuffer(allocator->GetDevice(), pBufferCreateInfo,
                                                    /*allocationCallbacks*/ nullptr, &buffer));
 
@@ -125,7 +125,7 @@ namespace gpgmm::vk {
 
         // Create the image.
         VkImage image = VK_NULL_HANDLE;
-        ReturnIfFailed(
+        GPGMM_RETURN_IF_FAILED(
             allocator->GetFunctions().CreateImage(allocator->GetDevice(), pImageCreateInfo,
                                                   /*allocationCallbacks*/ nullptr, &image));
 
@@ -217,7 +217,7 @@ namespace gpgmm::vk {
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            ReturnIfFailed(
+            GPGMM_RETURN_IF_FAILED(
                 Caps::CreateCaps(info.physicalDevice, vkFunctions, info.vulkanApiVersion, &ptr));
             caps.reset(ptr);
         }
@@ -326,7 +326,8 @@ namespace gpgmm::vk {
                                                       const GpResourceAllocationCreateInfo& info,
                                                       GpResourceAllocation* allocationOut) {
         uint32_t memoryTypeIndex;
-        ReturnIfFailed(FindMemoryTypeIndex(requirements.memoryTypeBits, info, &memoryTypeIndex));
+        GPGMM_RETURN_IF_FAILED(
+            FindMemoryTypeIndex(requirements.memoryTypeBits, info, &memoryTypeIndex));
 
         const bool neverSubAllocate = info.flags & GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY;
 

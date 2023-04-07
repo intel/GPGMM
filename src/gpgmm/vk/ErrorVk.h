@@ -19,14 +19,14 @@
 
 namespace gpgmm::vk {
 
-#define ReturnIfFailed(expr)        \
-    {                               \
-        VkResult result = expr;     \
-        if (result != VK_SUCCESS) { \
-            return result;          \
-        }                           \
-    }                               \
-    for (;;)                        \
+#define GPGMM_RETURN_IF_FAILED(expr) \
+    {                                \
+        VkResult result = expr;      \
+        if (result != VK_SUCCESS) {  \
+            return result;           \
+        }                            \
+    }                                \
+    for (;;)                         \
     break
 
 #define ReturnIfSuccess(expr)                     \
