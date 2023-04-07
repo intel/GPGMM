@@ -30,7 +30,8 @@ namespace gpgmm::vk {
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> DeviceMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.TryAllocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "DeviceMemoryAllocator.TryAllocateMemory");
 
         if (request.NeverAllocate) {
             return {};
@@ -72,7 +73,8 @@ namespace gpgmm::vk {
     }
 
     void DeviceMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "DeviceMemoryAllocator.DeallocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "DeviceMemoryAllocator.DeallocateMemory");
 
         VkDeviceMemory deviceMemory =
             static_cast<DeviceMemory*>(allocation->GetMemory())->GetDeviceMemory();

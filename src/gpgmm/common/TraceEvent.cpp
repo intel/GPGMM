@@ -50,8 +50,7 @@ namespace gpgmm {
 #endif
 
         GetInstance()->SetConfiguration(traceFile, ignoreMask);
-        TRACE_EVENT_METADATA1(TraceEventCategory::kMetadata, "thread_name", "name",
-                              "GPGMM_MainThread");
+        GPGMM_TRACE_EVENT_THREAD_NEW("GPGMM_MainThread");
     }
 
     void FlushEventTraceToDisk() {

@@ -460,7 +460,8 @@ namespace gpgmm::d3d12 {
         const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
         uint64_t availableForReservation,
         uint64_t* pCurrentReservationOut) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.SetVideoMemoryReservation");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResidencyManager.SetVideoMemoryReservation");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -618,7 +619,7 @@ namespace gpgmm::d3d12 {
     HRESULT ResidencyManager::EvictInternal(uint64_t bytesToEvict,
                                             const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                             uint64_t* bytesEvictedOut) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.Evict");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.Evict");
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
         if (IsBudgetNotificationUpdatesDisabled()) {
@@ -720,7 +721,8 @@ namespace gpgmm::d3d12 {
                                                   ID3D12CommandList* const* ppCommandLists,
                                                   IResidencyList* const* ppResidencyLists,
                                                   uint32_t count) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.ExecuteCommandLists");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResidencyManager.ExecuteCommandLists");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -858,7 +860,7 @@ namespace gpgmm::d3d12 {
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.MakeResident");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.MakeResident");
 
         ReturnIfFailed(EvictInternal(sizeToMakeResident, heapSegment, nullptr));
 
@@ -908,7 +910,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyManager::QueryStatsInternal(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResidencyManager.GetStats");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.GetStats");
 
         // Heaps inserted into the residency cache are not resident until MakeResident() is called
         // on them. This occurs if the heap was created resident, heap gets locked, or call to

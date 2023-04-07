@@ -38,17 +38,16 @@
 
 #ifdef GPGMM_DISABLE_TRACING
 
-#define TRACE_EVENT0(category_group, name) TRACE_EMPTY
-#define TRACE_EVENT_INSTANT0(category_group, name) TRACE_EMPTY
-#define TRACE_EVENT_INSTANT1(category_group, name, args) TRACE_EMPTY
-#define TRACE_COUNTER1(category_group, name, value) TRACE_EMPTY
-#define TRACE_EVENT_METADATA1(category_group, name, arg1_name, arg1_value) TRACE_EMPTY
-
 #define GPGMM_TRACE_EVENT_OBJECT_NEW(objPtr) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_OBJECT_DESTROY(objPtr) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(objPtr, desc) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_OBJECT_CALL(name, desc) TRACE_EMPTY
 #define GPGMM_TRACE_EVENT_METRIC(name, value) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_DURATION(name, value) TRACE_EMPTY
+#define GPGMM_TRACE_EVENT_THREAD_NEW(name) TRACE_EMPTY
+
+// For testing purposes only
+#define TRACE_EVENT_INSTANT0(category_group, name) TRACE_EMPTY
 
 #else // !GPGMM_DISABLE_TRACING
 
@@ -154,6 +153,9 @@ const uint64_t kNoId = 0;
         if (value == 0) break;                                    \
         TRACE_COUNTER1(TraceEventCategory::kDefault, name, value); \
     } while (false)
+
+#define GPGMM_TRACE_EVENT_DURATION(category_group, name) TRACE_EVENT0(category_group, name)
+#define GPGMM_TRACE_EVENT_THREAD_NEW(name) TRACE_EVENT_METADATA1(TraceEventCategory::kMetadata, "thread_name", "name", name)
 
 #endif
 

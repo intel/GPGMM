@@ -197,7 +197,8 @@ namespace gpgmm {
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> SlabMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabMemoryAllocator.TryAllocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "SlabMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -400,7 +401,8 @@ namespace gpgmm {
     }
 
     void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabMemoryAllocator.DeallocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "SlabMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -511,7 +513,8 @@ namespace gpgmm {
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> SlabCacheAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabCacheAllocator.TryAllocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "SlabCacheAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -545,7 +548,8 @@ namespace gpgmm {
     }
 
     void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "SlabCacheAllocator.DeallocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "SlabCacheAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
