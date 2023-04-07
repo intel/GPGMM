@@ -46,7 +46,6 @@ target_sources(gpgmm_common PRIVATE
     "MemoryPool.h"
     "Message.cpp"
     "Message.h"
-    "Object.cpp"
     "Object.h"
     "PooledMemoryAllocator.cpp"
     "PooledMemoryAllocator.h"

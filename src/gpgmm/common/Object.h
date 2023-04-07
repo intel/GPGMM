@@ -26,9 +26,6 @@ namespace gpgmm {
         ObjectBase& operator=(const ObjectBase&) = default;
 
         virtual const char* GetTypename() const = 0;
-
-        // Overridden for objects that are API exposed.
-        virtual bool IsExternal() const;
     };
 
 }  // namespace gpgmm

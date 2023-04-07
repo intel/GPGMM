@@ -84,7 +84,7 @@ namespace gpgmm::d3d12 {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
                 if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
                                                                      &currentVideoInfo))) {
-                    gpgmm::ErrorLog(MessageId::kBudgetExceeded)
+                    ErrorLog(MessageId::kBudgetExceeded)
                         << "Unable to create heap because not enough budget exists ("
                         << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
                         << GPGMM_BYTES_TO_MB(
@@ -125,7 +125,7 @@ namespace gpgmm::d3d12 {
             // Heap created not resident requires no budget to be created.
             if (heap->mState == RESIDENCY_STATUS_PENDING_RESIDENCY &&
                 (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-                gpgmm::ErrorLog(MessageId::kInvalidArgument)
+                ErrorLog(MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
                 return E_INVALIDARG;
@@ -146,7 +146,8 @@ namespace gpgmm::d3d12 {
             }
         } else {
             if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
-                gpgmm::WarningLog(MessageId::kInvalidArgument)
+                WarningLog(MessageId::kInvalidArgument, true, WCharToUTF8(heap->GetDebugName()),
+                           heap.get())
                     << "HEAP_FLAG_ALWAYS_IN_RESIDENCY was specified but had no effect becauase "
                        "residency management is "
                        "not being used.";
@@ -156,9 +157,8 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
-        gpgmm::DebugLog(MessageId::kObjectCreated, heap.get())
-            << "Created heap (" << WCharToUTF8(heap->GetDebugName()) << "=" << ToHexStr(heap.get())
-            << "), Size=" << heap->GetInfo().SizeInBytes
+        DebugLog(MessageId::kObjectCreated, true, WCharToUTF8(heap->GetDebugName()), heap.get())
+            << "Created heap, Size=" << heap->GetInfo().SizeInBytes
             << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
 
         if (ppHeapOut != nullptr) {
@@ -200,10 +200,6 @@ namespace gpgmm::d3d12 {
 
     const char* Heap::GetTypename() const {
         return "IHeap";
-    }
-
-    bool Heap::IsExternal() const {
-        return true;
     }
 
     uint64_t Heap::GetLastUsedFenceValue() const {

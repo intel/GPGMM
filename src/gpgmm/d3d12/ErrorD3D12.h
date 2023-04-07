@@ -21,8 +21,6 @@
 
 #include <string>
 
-namespace gpgmm::d3d12 {
-
 #define GPGMM_RETURN_IF_NULLPTR(expr)                                         \
     {                                                                         \
         if (GPGMM_UNLIKELY(expr == nullptr)) {                                \
@@ -71,6 +69,8 @@ namespace gpgmm::d3d12 {
 
 #define GPGMM_ASSERT_IF_FAILED(expr) ASSERT(SUCCEEDED(expr));
 #define GPGMM_ASSERT_IF_SUCCEEDED(expr) ASSERT(FAILED(expr));
+
+namespace gpgmm::d3d12 {
 
     std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
     std::string GetErrorMessage(HRESULT error) noexcept;

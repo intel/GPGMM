@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Method == ALLOCATION_METHOD_SUBALLOCATED_WITHIN) {
-            gpgmm::ErrorEvent(MessageId::kBadOperation, this)
+            gpgmm::ErrorEvent(MessageId::kBadOperation, true, WCharToUTF8(GetDebugName()), this)
                 << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return E_INVALIDARG;
@@ -114,7 +114,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Method == ALLOCATION_METHOD_SUBALLOCATED_WITHIN) {
-            gpgmm::ErrorEvent(MessageId::kBadOperation, this)
+            gpgmm::ErrorEvent(MessageId::kBadOperation, true, WCharToUTF8(GetDebugName()), this)
                 << "Unmapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return;
@@ -151,10 +151,6 @@ namespace gpgmm::d3d12 {
 
     const char* ResourceAllocation::GetTypename() const {
         return "IResourceAllocation";
-    }
-
-    bool ResourceAllocation::IsExternal() const {
-        return true;
     }
 
     IHeap* ResourceAllocation::GetMemory() const {
