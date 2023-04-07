@@ -144,7 +144,7 @@ namespace {
 
 }  // namespace
 
-class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
+class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWithParams {
   protected:
     void SetUp() override {
         D3D12TestBase::SetUp();
@@ -619,14 +619,14 @@ class D3D12EventTraceReplay : public D3D12TestBase, public CaptureReplayTestWith
 };
 
 // Playback the captured trace as-is.
-TEST_P(D3D12EventTraceReplay, Replay) {
+TEST_P(D3D12MemoryTraceReplay, Replay) {
     TestEnviromentParams forceParams = {};
 
     RunSingleTest(forceParams);
 }
 
 // Verify that playback of a captured trace does not exceed peak usage.
-TEST_P(D3D12EventTraceReplay, PeakUsage) {
+TEST_P(D3D12MemoryTraceReplay, PeakUsage) {
     TestEnviromentParams forceParams = {};
     RunSingleTest(forceParams);
 
@@ -634,7 +634,7 @@ TEST_P(D3D12EventTraceReplay, PeakUsage) {
 }
 
 // Verify that playback with pre-fetching enabled will succeed.
-TEST_P(D3D12EventTraceReplay, AllowPrefetch) {
+TEST_P(D3D12MemoryTraceReplay, AllowPrefetch) {
     TestEnviromentParams forceParams = {};
     forceParams.IsPrefetchAllowed = true;
 
@@ -642,7 +642,7 @@ TEST_P(D3D12EventTraceReplay, AllowPrefetch) {
 }
 
 // Verify no heap re-use through sub-allocation will succeed.
-TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
+TEST_P(D3D12MemoryTraceReplay, DisableSuballocation) {
     TestEnviromentParams forceParams = {};
     forceParams.IsSuballocationDisabled = true;
 
@@ -652,7 +652,7 @@ TEST_P(D3D12EventTraceReplay, DisableSuballocation) {
 }
 
 // Verify that playback no memory created will succeed.
-TEST_P(D3D12EventTraceReplay, NeverAllocate) {
+TEST_P(D3D12MemoryTraceReplay, NeverAllocate) {
     TestEnviromentParams forceParams = {};
     forceParams.IsNeverAllocate = true;
 
@@ -661,4 +661,4 @@ TEST_P(D3D12EventTraceReplay, NeverAllocate) {
     EXPECT_LE(mReplayedMemoryStats.PeakUsage, 0u);
 }
 
-GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12EventTraceReplay);
+GPGMM_INSTANTIATE_CAPTURE_REPLAY_TEST(D3D12MemoryTraceReplay);

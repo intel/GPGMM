@@ -127,7 +127,7 @@ if (GPGMM_ENABLE_D3D12)
   target_sources(gpgmm_capture_replay_tests PRIVATE
       "D3D12Test.cpp"
       "D3D12Test.h"
-      "capture_replay_tests/D3D12EventTraceReplay.cpp"
+      "capture_replay_tests/D3D12MemoryTraceReplay.cpp"
   )
 
   target_link_libraries(gpgmm_capture_replay_tests PRIVATE
