@@ -988,7 +988,8 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
         IResourceAllocation** ppResourceAllocationOut) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateResource");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResourceAllocator.CreateResource");
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
@@ -1446,7 +1447,8 @@ namespace gpgmm::d3d12 {
                                                     const D3D12_CLEAR_VALUE* clearValue,
                                                     D3D12_RESOURCE_STATES initialResourceState,
                                                     ID3D12Resource** placedResourceOut) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreatePlacedResource");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResourceAllocator.CreatePlacedResource");
 
         // Before calling CreatePlacedResource, we must ensure the target heap is resident or
         // CreatePlacedResource will fail.
@@ -1477,7 +1479,8 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_STATES initialResourceState,
         ID3D12Resource** commitedResourceOut,
         Heap** resourceHeapOut) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.CreateCommittedResource");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResourceAllocator.CreateCommittedResource");
 
         HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
@@ -1521,7 +1524,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocator::QueryStatsInternal(
         RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
         MemoryAllocatorStats result = mStats;
@@ -1635,7 +1638,8 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "ResourceAllocator.DeallocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "ResourceAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 

@@ -28,7 +28,8 @@ namespace gpgmm {
 
     ResultOrError<std::unique_ptr<MemoryAllocation>> DedicatedMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "DedicatedMemoryAllocator.TryAllocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "DedicatedMemoryAllocator.TryAllocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -56,7 +57,8 @@ namespace gpgmm {
     }
 
     void DedicatedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
-        TRACE_EVENT0(TraceEventCategory::kDefault, "DedicatedMemoryAllocator.DeallocateMemory");
+        GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
+                                   "DedicatedMemoryAllocator.DeallocateMemory");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
