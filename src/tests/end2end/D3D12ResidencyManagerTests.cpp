@@ -146,7 +146,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     resourceHeapAlwaysInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
     resourceHeapAlwaysInBudgetDesc.Flags |= HEAP_FLAG_ALWAYS_IN_BUDGET;
 
-    D3D12_HEAP_DESC heapDesc;
+    D3D12_HEAP_DESC heapDesc = {};
     heapDesc.Properties = heapProperties;
     heapDesc.SizeInBytes = kHeapSize;
     heapDesc.Flags |= D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
@@ -154,9 +154,9 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
 
-    ASSERT_FAILED(CreateHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
-                             CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
-                             nullptr));
+    ASSERT_SUCCEEDED(CreateHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
+                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                                nullptr));
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
