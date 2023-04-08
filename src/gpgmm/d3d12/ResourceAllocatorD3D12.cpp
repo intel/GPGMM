@@ -1104,50 +1104,53 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_PROPERTIES heapProperties =
             GetHeapProperties(mDevice, heapType, mIsCustomHeapsDisabled);
 
-        // Limit available memory to unused budget when residency is enabled.
-        // Available memory acts like a hint to the allocator to avoid creating new larger heaps
-        // then the budget allows where older, small heaps would get immediately evicited to make
-        // room.
-        if (IsResidencyEnabled()) {
-            ResidencyManager* residencyManager =
-                static_cast<ResidencyManager*>(mResidencyManager.Get());
-            // Memory pool maps to the memory segment the allocation will belong to.
-            // But since D3D12 requires the pool to be specified for the given heap type at
-            // allocation-time, it must be set here and again, when a resource heap is created.
-            heapProperties.MemoryPoolPreference =
-                GetMemoryPool(heapProperties, residencyManager->IsUMA());
+        const bool isUMA =
+            (IsResidencyEnabled()) ? mResidencyManager->IsUMA() : mCaps->IsAdapterUMA();
 
-            const DXGI_MEMORY_SEGMENT_GROUP segment =
-                GetHeapSegment(heapProperties.MemoryPoolPreference, residencyManager->IsUMA());
+        // Memory pool maps to the memory segment the allocation will belong to.
+        // But since D3D12 requires the pool to be specified for the given heap type at
+        // allocation-time, it must be set here and again, when a resource heap is created.
+        heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
+        const DXGI_MEMORY_SEGMENT_GROUP heapSegment =
+            GetHeapSegment(heapProperties.MemoryPoolPreference, isUMA);
+
+        const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);
+        if (request.SizeInBytes > maxSegmentSize) {
+            ErrorLog(MessageId::kSizeExceeded, true, WCharToUTF8(GetDebugName()), this)
+                << "Unable to create resource allocation because the resource size exceeded "
+                   "the capabilities of the adapter: "
+                << GPGMM_BYTES_TO_GB(request.SizeInBytes) << " vs "
+                << GPGMM_BYTES_TO_GB(maxSegmentSize) << " GBs.";
+            return E_OUTOFMEMORY;
+        }
+
+        // If the allocation must be created within the budget, restrict the amount of memory
+        // to prevent OOM to free memory only or to the amount of budget left. The allocator
+        // checks this amount to determine if its appropriate to pre-allocate more memory or
+        // not.
+        if (IsResidencyEnabled() && !IsCreateHeapNotResident()) {
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
-                residencyManager->GetVideoMemoryInfo(segment);
+                mResidencyManager->GetVideoMemoryInfo(heapSegment);
 
-            // If the allocation must be created within the budget, restrict the amount of memory
-            // to prevent OOM to free memory only or to the amount of budget left. The allocator
-            // checks this amount to determine if its appropriate to pre-allocate more memory or
-            // not.
-            if (!IsCreateHeapNotResident()) {
-                // If over-budget, only free memory is considered available.
-                // TODO: Consider optimizing GetStatsInternal().
-                if (currentVideoInfo->CurrentUsage + request.SizeInBytes >
-                    currentVideoInfo->Budget) {
-                    RESOURCE_ALLOCATOR_STATS allocationStats = {};
-                    GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats));
+            // If over-budget, only free memory is considered available.
+            // TODO: Consider optimizing GetStatsInternal().
+            if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
+                RESOURCE_ALLOCATOR_STATS allocationStats = {};
+                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats));
 
-                    request.AvailableForAllocation = allocationStats.FreeHeapUsage;
+                request.AvailableForAllocation = allocationStats.FreeHeapUsage;
 
-                    DebugLog(MessageId::kBudgetExceeded, true, WCharToUTF8(GetDebugName()), this)
-                        << "Current usage exceeded budget: "
-                        << GPGMM_BYTES_TO_MB(currentVideoInfo->CurrentUsage) << " vs "
-                        << GPGMM_BYTES_TO_MB(currentVideoInfo->Budget) << " MBs ("
-                        << GPGMM_BYTES_TO_MB(request.AvailableForAllocation) << " MBs free).";
+                DebugLog(MessageId::kBudgetExceeded, true, WCharToUTF8(GetDebugName()), this)
+                    << "Current usage exceeded budget: "
+                    << GPGMM_BYTES_TO_MB(currentVideoInfo->CurrentUsage) << " vs "
+                    << GPGMM_BYTES_TO_MB(currentVideoInfo->Budget) << " MBs ("
+                    << GPGMM_BYTES_TO_MB(request.AvailableForAllocation) << " MBs free).";
 
-                    // Otherwise, only memory in budget is considered available.
-                } else {
-                    request.AvailableForAllocation =
-                        currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
-                }
+            } else {
+                // Otherwise, only memory in budget is considered available.
+                request.AvailableForAllocation =
+                    currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
             }
         }
 
