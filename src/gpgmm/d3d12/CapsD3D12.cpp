@@ -105,6 +105,9 @@ namespace gpgmm::d3d12 {
             DXGI_ADAPTER_DESC adapterDesc;
             GPGMM_RETURN_IF_FAILED(adapter->GetDesc(&adapterDesc));
 
+            caps->mSharedSegmentSize = adapterDesc.SharedSystemMemory;
+            caps->mDedicatedSegmentSize = adapterDesc.DedicatedVideoMemory;
+
             // D3D12 has no feature to detect support and must be set manually.
             if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_VkVendor)) {
                 caps->mIsResourceAllocationWithinCoherent = true;
@@ -127,6 +130,24 @@ namespace gpgmm::d3d12 {
 
     uint64_t Caps::GetMaxResourceHeapSize() const {
         return mMaxResourceHeapSize;
+    }
+
+    uint64_t Caps::GetMaxSegmentSize(DXGI_MEMORY_SEGMENT_GROUP heapSegment) const {
+        if (mIsAdapterUMA) {
+            return mSharedSegmentSize;
+        }
+
+        switch (heapSegment) {
+            case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
+                return mDedicatedSegmentSize;
+
+            case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
+                return mSharedSegmentSize;
+
+            default:
+                UNREACHABLE();
+                return kInvalidSize;
+        }
     }
 
     bool Caps::IsCreateHeapNotResidentSupported() const {

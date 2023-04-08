@@ -269,12 +269,15 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
                                              mAdapter.Get(), &resourceAllocator, nullptr));
     ASSERT_NE(resourceAllocator, nullptr);
 
-    constexpr uint64_t kOversizedBuffer = GPGMM_GB_TO_BYTES(32);
-    ComPtr<IResourceAllocation> allocation;
-    ASSERT_FAILED(resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kOversizedBuffer + 1),
-                                                    D3D12_RESOURCE_STATE_COMMON, nullptr,
-                                                    &allocation));
-    ASSERT_EQ(allocation, nullptr);
+    // Exceeds adapter limit
+    EXPECT_FAILED(resourceAllocator->CreateResource({},
+                                                    CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(32)),
+                                                    D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+
+    // Exceeds device limit
+    EXPECT_FAILED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(1024 * 1024)),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {

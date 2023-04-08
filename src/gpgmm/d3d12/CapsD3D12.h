@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/GPUInfo.h"
 #include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/utils/Limits.h"
 
 #include <cstdint>
 
@@ -47,11 +48,15 @@ namespace gpgmm::d3d12 {
         // Specifies if a texture and buffer can belong in the same heap.
         D3D12_RESOURCE_HEAP_TIER GetMaxResourceHeapTierSupported() const;
 
+        uint64_t GetMaxSegmentSize(DXGI_MEMORY_SEGMENT_GROUP heapSegment) const;
+
       private:
         Caps() = default;
 
-        uint64_t mMaxResourceSize = 0;
-        uint64_t mMaxResourceHeapSize = 0;
+        uint64_t mMaxResourceSize = kInvalidSize;
+        uint64_t mMaxResourceHeapSize = kInvalidSize;
+        uint64_t mSharedSegmentSize = kInvalidSize;
+        uint64_t mDedicatedSegmentSize = kInvalidSize;
         D3D12_RESOURCE_HEAP_TIER mMaxResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
         bool mIsCreateHeapNotResidentSupported = false;
         bool mIsResourceAllocationWithinCoherent = false;
