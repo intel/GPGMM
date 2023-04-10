@@ -17,7 +17,7 @@
 
 #include "gpgmm/d3d12/UnknownD3D12.h"
 
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/D3D12Platform.h"
 
 #include <string>
 

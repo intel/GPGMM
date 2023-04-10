@@ -15,7 +15,7 @@
 #ifndef GPGMM_D3D12_FENCED3D12_H_
 #define GPGMM_D3D12_FENCED3D12_H_
 
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/D3D12Platform.h"
 #include "gpgmm/utils/NonCopyable.h"
 
 #include <cstdint>

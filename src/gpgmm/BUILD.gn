@@ -117,6 +117,7 @@ source_set("gpgmm_sources") {
       "d3d12/BufferAllocatorD3D12.h",
       "d3d12/CapsD3D12.cpp",
       "d3d12/CapsD3D12.h",
+      "d3d12/D3D12Platform.h",
       "d3d12/DebugObjectD3D12.cpp",
       "d3d12/DebugObjectD3D12.h",
       "d3d12/DebugResourceAllocatorD3D12.cpp",
@@ -144,7 +145,6 @@ source_set("gpgmm_sources") {
       "d3d12/UnknownD3D12.h",
       "d3d12/UtilsD3D12.cpp",
       "d3d12/UtilsD3D12.h",
-      "d3d12/d3d12_platform.h",
     ]
   }
 

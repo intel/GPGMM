@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/VKPlatform.h"
 
 namespace gpgmm::vk {
 

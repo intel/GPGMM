@@ -15,7 +15,7 @@
 #define GPGMM_VK_ERRORVK_H_
 
 #include "gpgmm/common/Error.h"
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/VKPlatform.h"
 
 namespace gpgmm::vk {
 

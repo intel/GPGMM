@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_VK_VKPLATFORM_H_
-#define GPGMM_VK_VKPLATFORM_H_
+#ifndef GPGMM_VK_VKPlatform_H_
+#define GPGMM_VK_VKPlatform_H_
 
 #include <vulkan/vulkan.h>
 
-#endif  // GPGMM_VK_VKPLATFORM_H_
+#endif  // GPGMM_VK_VKPlatform_H_

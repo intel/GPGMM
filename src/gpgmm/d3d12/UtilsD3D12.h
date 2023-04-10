@@ -14,7 +14,7 @@
 #ifndef GPGMM_D3D12_UTILSD3D12_H_
 #define GPGMM_D3D12_UTILSD3D12_H_
 
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/D3D12Platform.h"
 
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/WindowsUtils.h"
