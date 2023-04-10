@@ -561,7 +561,7 @@ namespace gpgmm::d3d12 {
             (allocatorDescriptor.PreferredResourceHeapSize == 0)
                 ? kNoRequiredAlignment
                 : std::min(allocatorDescriptor.PreferredResourceHeapSize,
-                           caps->GetMaxResourceSize());
+                           newDescriptor.MaxResourceHeapSize);
 
         newDescriptor.ResourceHeapFragmentationLimit =
             (allocatorDescriptor.ResourceHeapFragmentationLimit > 0)
@@ -995,8 +995,8 @@ namespace gpgmm::d3d12 {
             GetResourceAllocationInfo(mDevice, newResourceDesc);
         if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             ErrorLog(MessageId::kSizeExceeded, true, WCharToUTF8(GetDebugName()), this)
-                << "Unable to create resource allocation because the resource size exceeded "
-                   "the capabilities of the device: "
+                << "Unable to create resource allocation because the size exceeded the max "
+                   "resource heap size allowed:"
                 << GPGMM_BYTES_TO_GB(resourceInfo.SizeInBytes) << " vs "
                 << GPGMM_BYTES_TO_GB(mMaxResourceHeapSize) << " GBs.";
             return E_OUTOFMEMORY;

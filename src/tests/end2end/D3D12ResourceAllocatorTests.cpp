@@ -450,6 +450,25 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
     ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
+    // ALLOCATOR_ALGORITHM_DEFAULT
+    {
+        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.PreferredResourceHeapSize = kBufferOf4MBAllocationSize * 2;
+        newAllocatorDesc.MaxResourceHeapSize = kBufferOf4MBAllocationSize;
+
+        ComPtr<IResourceAllocator> resourceAllocator;
+        ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
+                                                 &resourceAllocator, nullptr));
+
+        ComPtr<IResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(
+            resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+                                              D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes,
+                  newAllocatorDesc.MaxResourceHeapSize);
+    }
+
     // ALLOCATOR_ALGORITHM_SLAB
     {
         ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
