@@ -17,6 +17,7 @@
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/utils/Math.h"
 #include "tests/D3D12Test.h"
 
@@ -221,6 +222,47 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSameHeap) {
     }
 
     EXPECT_EQ(GetStats(resourceAllocator).FreeHeapUsage, kBufferOf4MBAllocationSize);
+}
+
+TEST_F(D3D12ResourceAllocatorTests, CreateResourceHeap) {
+    constexpr uint64_t kHeapSize = GPGMM_MB_TO_BYTES(10);
+
+    D3D12_HEAP_PROPERTIES heapProperties = {};
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+    D3D12_HEAP_DESC heapDesc = {};
+    heapDesc.Properties = heapProperties;
+    heapDesc.SizeInBytes = kHeapSize;
+
+    // Assume tier 1, which all adapters support.
+    heapDesc.Flags |= D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
+
+    CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
+
+    // Specifying a heap size once should always suceed.
+    {
+        HEAP_DESC resourceHeapDesc = {};
+        resourceHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+
+        ComPtr<IHeap> resourceHeap;
+        ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, nullptr,
+                                    CreateResourceHeapCallbackContext::CreateHeap,
+                                    &createHeapContext, &resourceHeap));
+
+        EXPECT_EQ(resourceHeap->GetInfo().SizeInBytes, kHeapSize);
+    }
+
+    // Specifying a heap size that doesn't match should always fail.
+    {
+        HEAP_DESC resourceHeapDesc = {};
+        resourceHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+        resourceHeapDesc.SizeInBytes = kHeapSize * 2;
+
+        ComPtr<IHeap> resourceHeap;
+        ASSERT_FAILED(CreateHeap(resourceHeapDesc, nullptr,
+                                 CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
+                                 &resourceHeap));
+    }
 }
 
 // Exceeding the max resource heap size should always fail.

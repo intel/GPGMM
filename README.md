@@ -59,7 +59,6 @@ Residency also works for non-resources too:
 
 ```cpp
 gpgmm::d3d12::HEAP_DESC shaderVisibleHeap = {};
-shaderVisibleHeap.SizeInBytes = kHeapSize;
 shaderVisibleHeap.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
 ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;

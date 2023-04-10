@@ -132,6 +132,8 @@ namespace gpgmm::d3d12 {
 
         /** \brief Requires the heap to be created in budget.
 
+        Must specify a non-zero size and alignment.
+
         This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
         */
         HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
@@ -151,23 +153,23 @@ namespace gpgmm::d3d12 {
       Specifies creation options for a residency managed heap.
       */
     struct HEAP_DESC {
-        /** \brief Created size of the heap, in bytes.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
-        */
-        uint64_t SizeInBytes;
-
-        /** \brief Created alignment of the heap, in bytes.
-
-        Must be non-zero.
-        */
-        uint64_t Alignment;
-
         /** \brief Specifies the memory segment the heap will reside in.
 
         Required parameter.
         */
         DXGI_MEMORY_SEGMENT_GROUP HeapSegment;
+
+        /** \brief Created size of the heap, in bytes.
+
+        Optional parameter. Must be non-zero. Always a multiple of the alignment.
+        */
+        uint64_t SizeInBytes;
+
+        /** \brief Created alignment of the heap, in bytes.
+
+        Optional parameter. Must be non-zero.
+        */
+        uint64_t Alignment;
 
         /** \brief Specifies heaps options.
 
