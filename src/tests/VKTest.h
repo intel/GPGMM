@@ -17,7 +17,7 @@
 
 #include "tests/GPGMMTest.h"
 
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/VKPlatform.h"
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE((expr) != VK_SUCCESS)
 #define ASSERT_SUCCESS(expr) ASSERT_TRUE((expr) == VK_SUCCESS)

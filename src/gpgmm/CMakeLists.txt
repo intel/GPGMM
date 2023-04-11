@@ -85,7 +85,7 @@ if (GPGMM_ENABLE_D3D12)
         "d3d12/UnknownD3D12.h"
         "d3d12/UtilsD3D12.cpp"
         "d3d12/UtilsD3D12.h"
-        "d3d12/d3d12_platform.h"
+        "d3d12/D3D12Platform.h"
     )
     target_link_libraries(gpgmm PRIVATE dxguid.lib)
 endif()
@@ -108,7 +108,7 @@ if (GPGMM_ENABLE_VK)
         "vk/ResourceAllocatorVk.h"
         "vk/FunctionsVk.cpp"
         "vk/FunctionsVk.h"
-        "vk/vk_platform.h"
+        "vk/VKPlatform.h"
     )
 
     # Only link to Vulkan if static linking is used

@@ -15,7 +15,7 @@
 #ifndef GPGMM_VK_CAPSVK_H_
 #define GPGMM_VK_CAPSVK_H_
 
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/VKPlatform.h"
 
 #include <cstdint>
 

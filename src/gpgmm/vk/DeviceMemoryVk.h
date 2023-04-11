@@ -17,7 +17,7 @@
 
 #include "gpgmm/common/Memory.h"
 
-#include "gpgmm/vk/vk_platform.h"
+#include "gpgmm/vk/VKPlatform.h"
 
 namespace gpgmm::vk {
 

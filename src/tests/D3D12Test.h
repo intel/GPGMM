@@ -21,7 +21,7 @@
 #include <vector>
 
 #include <gpgmm_d3d12.h>
-#include "gpgmm/d3d12/d3d12_platform.h"
+#include "gpgmm/d3d12/D3D12Platform.h"
 
 #define ASSERT_FAILED(expr) ASSERT_TRUE(FAILED(expr))
 #define ASSERT_SUCCEEDED(expr) ASSERT_TRUE(SUCCEEDED(expr))
