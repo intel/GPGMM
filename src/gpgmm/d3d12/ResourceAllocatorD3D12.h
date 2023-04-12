@@ -137,7 +137,7 @@ namespace gpgmm::d3d12 {
                                         ID3D12Resource** commitedResourceOut,
                                         Heap** resourceHeapOut);
 
-        static HRESULT ReportLiveDeviceObjects(ComPtr<ID3D12Device> device);
+        HRESULT ReportLiveDeviceObjects() const;
 
         bool IsCreateHeapNotResident() const;
         bool IsResidencyEnabled() const;
