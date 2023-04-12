@@ -130,6 +130,7 @@ source_set("gpgmm_sources") {
       "d3d12/HeapD3D12.h",
       "d3d12/JSONSerializerD3D12.cpp",
       "d3d12/JSONSerializerD3D12.h",
+      "d3d12/LogD3D12.h",
       "d3d12/ResidencyListD3D12.cpp",
       "d3d12/ResidencyListD3D12.h",
       "d3d12/ResidencyManagerD3D12.cpp",

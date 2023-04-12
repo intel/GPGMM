@@ -19,6 +19,7 @@
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
+#include "gpgmm/d3d12/LogD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
@@ -84,7 +85,7 @@ namespace gpgmm::d3d12 {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
                 if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
                                                                      &currentVideoInfo))) {
-                    ErrorLog(MessageId::kBudgetExceeded)
+                    ErrorLog(MessageId::kBudgetExceeded, true)
                         << "Unable to create heap because not enough budget exists ("
                         << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
                         << GPGMM_BYTES_TO_MB(
@@ -125,7 +126,7 @@ namespace gpgmm::d3d12 {
             // Heap created not resident requires no budget to be created.
             if (heap->mState == RESIDENCY_STATUS_PENDING_RESIDENCY &&
                 (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-                ErrorLog(MessageId::kInvalidArgument)
+                ErrorLog(heap.get(), MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
                 return E_INVALIDARG;
@@ -146,8 +147,7 @@ namespace gpgmm::d3d12 {
             }
         } else {
             if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
-                WarningLog(MessageId::kInvalidArgument, true, WCharToUTF8(heap->GetDebugName()),
-                           heap.get())
+                WarningLog(heap.get(), MessageId::kInvalidArgument)
                     << "HEAP_FLAG_ALWAYS_IN_RESIDENCY was specified but had no effect becauase "
                        "residency management is "
                        "not being used.";
@@ -157,7 +157,7 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
-        DebugLog(MessageId::kObjectCreated, true, WCharToUTF8(heap->GetDebugName()), heap.get())
+        DebugLog(heap.get(), MessageId::kObjectCreated)
             << "Created heap, Size=" << heap->GetInfo().SizeInBytes
             << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
 

@@ -30,6 +30,7 @@
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
+#include "gpgmm/d3d12/LogD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
@@ -69,48 +70,6 @@ namespace gpgmm::d3d12 {
 
             RESOURCE_HEAP_TYPE_INVALID,
         };
-
-        D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
-            ID3D12Device* device,
-            D3D12_RESOURCE_DESC& resourceDescriptor) {
-            // Small textures can take advantage of smaller alignments. For example,
-            // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
-            // Must be non-depth or without render-target to use small resource alignment.
-            // This also applies to MSAA textures (4MB => 64KB).
-            // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
-            if ((resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
-                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
-                 resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) &&
-                IsAllowedToUseSmallAlignment(resourceDescriptor) &&
-                (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
-                                             D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
-                resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
-                                                   ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
-                                                   : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-            }
-
-            D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-                device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
-
-            // If the requested resource alignment was rejected, let D3D tell us what the
-            // required alignment is for this resource.
-            if (resourceDescriptor.Alignment != 0 &&
-                resourceDescriptor.Alignment != resourceInfo.Alignment) {
-                DebugLog(MessageId::kPerformanceWarning, true)
-                    << "ID3D12Device::GetResourceAllocationInfo re-aligned: "
-                    << resourceDescriptor.Alignment << " vs " << resourceInfo.Alignment
-                    << " bytes.";
-
-                resourceDescriptor.Alignment = 0;
-                resourceInfo = device->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
-            }
-
-            if (resourceInfo.SizeInBytes == 0) {
-                resourceInfo.SizeInBytes = kInvalidSize;
-            }
-
-            return resourceInfo;
-        }
 
         D3D12_HEAP_TYPE GetHeapType(RESOURCE_HEAP_TYPE resourceHeapType) {
             switch (resourceHeapType) {
@@ -606,8 +565,7 @@ namespace gpgmm::d3d12 {
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
-        DebugLog(MessageId::kObjectCreated, true, WCharToUTF8(resourceAllocator->GetDebugName()),
-                 resourceAllocator.get())
+        DebugLog(resourceAllocator.get(), MessageId::kObjectCreated)
             << "Created resource allocator.";
 
         if (ppResourceAllocatorOut != nullptr) {
@@ -937,6 +895,46 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
+    D3D12_RESOURCE_ALLOCATION_INFO ResourceAllocator::GetResourceAllocationInfo(
+        D3D12_RESOURCE_DESC& resourceDescriptor) const {
+        // Small textures can take advantage of smaller alignments. For example,
+        // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
+        // Must be non-depth or without render-target to use small resource alignment.
+        // This also applies to MSAA textures (4MB => 64KB).
+        // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
+        if ((resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
+             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
+             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) &&
+            IsAllowedToUseSmallAlignment(resourceDescriptor) &&
+            (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
+                                         D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
+            resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
+                                               ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
+                                               : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+        }
+
+        D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+            mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+
+        // If the requested resource alignment was rejected, let D3D tell us what the
+        // required alignment is for this resource.
+        if (resourceDescriptor.Alignment != 0 &&
+            resourceDescriptor.Alignment != resourceInfo.Alignment) {
+            DebugLog(this, MessageId::kPerformanceWarning)
+                << "Re-aligned: " << resourceDescriptor.Alignment << " vs "
+                << resourceInfo.Alignment << " bytes.";
+
+            resourceDescriptor.Alignment = 0;
+            resourceInfo = mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+        }
+
+        if (resourceInfo.SizeInBytes == 0) {
+            resourceInfo.SizeInBytes = kInvalidSize;
+        }
+
+        return resourceInfo;
+    }
+
     HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialResourceState,
@@ -991,9 +989,9 @@ namespace gpgmm::d3d12 {
         // Otherwise, creating a very large resource could overflow the allocator.
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice, newResourceDesc);
+            GetResourceAllocationInfo(newResourceDesc);
         if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
-            ErrorLog(MessageId::kSizeExceeded, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(this, MessageId::kSizeExceeded)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the device: "
                 << GPGMM_BYTES_TO_GB(resourceInfo.SizeInBytes) << " vs "
@@ -1024,7 +1022,7 @@ namespace gpgmm::d3d12 {
             if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
                 heapType = D3D12_HEAP_TYPE_UPLOAD;
             } else {
-                DebugLog(MessageId::kPerformanceWarning, true, WCharToUTF8(GetDebugName()), this)
+                DebugLog(this, MessageId::kPerformanceWarning)
                     << "Unable to optimize resource allocation for supported UMA adapter "
                        "due to D3D12_HEAP_TYPE_READBACK being specified. Please consider "
                        "using an unspecified heap type if CPU read-back efficency is "
@@ -1035,7 +1033,7 @@ namespace gpgmm::d3d12 {
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
             newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
         if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
-            ErrorLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(this, MessageId::kInvalidArgument)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
             return E_INVALIDARG;
@@ -1048,7 +1046,7 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            WarningLog(MessageId::kPerformanceWarning, true, WCharToUTF8(GetDebugName()), this)
+            WarningLog(this, MessageId::kPerformanceWarning)
                 << "ALLOCATOR_FLAG_ALWAYS_COMMITTED was not requested but enabled anyway because "
                    "the required heap flags were incompatible with resource heap type ("
                 << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
@@ -1093,7 +1091,7 @@ namespace gpgmm::d3d12 {
         if (GPGMM_UNLIKELY(requiresPadding)) {
             request.SizeInBytes += allocationDescriptor.RequireResourceHeapPadding;
             if (!neverSubAllocate) {
-                WarningLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+                WarningLog(this, MessageId::kInvalidArgument)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
                     << allocationDescriptor.RequireResourceHeapPadding << " bytes.";
                 neverSubAllocate = true;
@@ -1116,7 +1114,7 @@ namespace gpgmm::d3d12 {
 
         const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);
         if (request.SizeInBytes > maxSegmentSize) {
-            ErrorLog(MessageId::kSizeExceeded, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(this, MessageId::kSizeExceeded)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the adapter: "
                 << GPGMM_BYTES_TO_GB(request.SizeInBytes) << " vs "
@@ -1140,7 +1138,7 @@ namespace gpgmm::d3d12 {
 
                 request.AvailableForAllocation = allocationStats.FreeHeapUsage;
 
-                DebugLog(MessageId::kBudgetExceeded, true, WCharToUTF8(GetDebugName()), this)
+                DebugLog(this, MessageId::kBudgetExceeded)
                     << "Current usage exceeded budget: "
                     << GPGMM_BYTES_TO_MB(currentVideoInfo->CurrentUsage) << " vs "
                     << GPGMM_BYTES_TO_MB(currentVideoInfo->Budget) << " MBs ("
@@ -1291,7 +1289,7 @@ namespace gpgmm::d3d12 {
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
-            ErrorLog(MessageId::kAllocatorFailed, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(this, MessageId::kAllocatorFailed)
                 << "Unable to allocate memory for resource because no memory was allowed to "
                    "be created.";
             return E_OUTOFMEMORY;
@@ -1299,7 +1297,7 @@ namespace gpgmm::d3d12 {
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            ErrorLog(MessageId::kAllocatorFailed, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(this, MessageId::kAllocatorFailed)
                 << "Unable to allocate memory for resource because a padding was specified "
                    "but no resource allocator could be used.";
             return E_INVALIDARG;
@@ -1307,13 +1305,13 @@ namespace gpgmm::d3d12 {
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
-                ErrorLog(MessageId::kAllocatorFailed, true, WCharToUTF8(GetDebugName()), this)
+                ErrorLog(this, MessageId::kAllocatorFailed)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and fall-back was disabled.";
                 return E_OUTOFMEMORY;
             }
 
-            InfoEvent(MessageId::kAllocatorFailed, true, WCharToUTF8(GetDebugName()), this)
+            InfoEvent(this, MessageId::kAllocatorFailed)
                 << "Unable to allocate memory for a resource by using a heap, falling back to a "
                    "committed resource.";
         }
@@ -1325,7 +1323,7 @@ namespace gpgmm::d3d12 {
             initialResourceState, &committedResource, &resourceHeap));
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kAlignmentMismatch, true, WCharToUTF8(GetDebugName()), this)
+            DebugLog(this, MessageId::kAlignmentMismatch)
                 << "Resource heap size is larger then the requested size: "
                 << resourceInfo.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
         }
@@ -1362,8 +1360,7 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         D3D12_RESOURCE_DESC desc = pCommittedResource->GetDesc();
-        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(mDevice, desc);
+        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo = GetResourceAllocationInfo(desc);
 
         D3D12_HEAP_PROPERTIES heapProperties;
         D3D12_HEAP_FLAGS heapFlags;
@@ -1372,7 +1369,7 @@ namespace gpgmm::d3d12 {
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
             heapProperties.Type != allocationDescriptor.HeapType) {
-            ErrorLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource using a heap type that differs from the "
                    "heap type used at creation. For important resources, it is recommended "
                    "to not specify a heap type.";
@@ -1380,7 +1377,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            ErrorLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource using heap flags that differs from the "
                    "heap flags used at creation. For important resources, it is recommended "
                    "to not specify heap flags.";
@@ -1388,7 +1385,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocationDescriptor.RequireResourceHeapPadding > 0) {
-            ErrorLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
@@ -1397,7 +1394,7 @@ namespace gpgmm::d3d12 {
             (ALLOCATION_FLAG_DISABLE_RESIDENCY & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
              ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
         if (allocationDescriptor.Flags & ~allowMask) {
-            ErrorLog(MessageId::kInvalidArgument, true, WCharToUTF8(GetDebugName()), this)
+            ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
@@ -1543,8 +1540,7 @@ namespace gpgmm::d3d12 {
         // sub-allocation is used.
         const uint64_t blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
         if (blocksPerHeap > 1 && blocksPerHeap < kMinBlockToMemoryCountReportingThreshold) {
-            gpgmm::WarnEvent(MessageId::kPerformanceWarning, true, WCharToUTF8(GetDebugName()),
-                             this)
+            WarnEvent(this, MessageId::kPerformanceWarning)
                 << "Average number of resource allocations per heap is below threshold: "
                 << blocksPerHeap << " blocks per heap (vs "
                 << kMinBlockToMemoryCountReportingThreshold
@@ -1558,8 +1554,7 @@ namespace gpgmm::d3d12 {
             100;
         if (allocationUsagePct > 0 &&
             allocationUsagePct < kMinAllocationUsageReportingThreshold * 100) {
-            gpgmm::WarnEvent(MessageId::kPerformanceWarning, true, WCharToUTF8(GetDebugName()),
-                             this)
+            WarnEvent(this, MessageId::kPerformanceWarning)
                 << "Average resource allocation usage is below threshold: " << allocationUsagePct
                 << "% vs " << uint64_t(kMinAllocationUsageReportingThreshold * 100)
                 << "%. This either means memory has become fragmented or the working set has "
@@ -1626,7 +1621,8 @@ namespace gpgmm::d3d12 {
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
                 case D3D12_MESSAGE_ID_LIVE_RESOURCE: {
-                    WarningLog() << "Device leak detected: " + std::string(message->pDescription);
+                    WarningLog(this, MessageId::kPerformanceWarning)
+                        << "Device leak detected: " + std::string(message->pDescription);
                 } break;
                 default:
                     break;
@@ -1676,8 +1672,9 @@ namespace gpgmm::d3d12 {
                 return S_OK;
             }
             default: {
-                WarningLog() << "CheckFeatureSupport does not support feature (" +
-                                    std::to_string(feature) + ").";
+                WarningLog(this, MessageId::kBadOperation)
+                    << "CheckFeatureSupport does not support feature (" + std::to_string(feature) +
+                           ").";
                 return E_INVALIDARG;
             }
         }

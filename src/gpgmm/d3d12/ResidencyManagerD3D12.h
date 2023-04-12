@@ -69,6 +69,10 @@ namespace gpgmm::d3d12 {
 
         DEFINE_UNKNOWN_OVERRIDES()
 
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
+
       private:
         friend Heap;
         friend ResourceAllocator;
@@ -96,10 +100,6 @@ namespace gpgmm::d3d12 {
 
         // ObjectBase interface
         const char* GetTypename() const override;
-
-        // IDebugObject interface
-        LPCWSTR GetDebugName() const override;
-        HRESULT SetDebugName(LPCWSTR Name) override;
 
         using LRUCache = LinkedList<Heap>;
 
