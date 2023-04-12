@@ -306,8 +306,7 @@ namespace gpgmm::d3d12 {
         // If the memory allocation was successful, the resource will be created using it.
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
-        HRESULT TryAllocateResource(ID3D12Device* device,
-                                    MemoryAllocator* allocator,
+        HRESULT TryAllocateResource(MemoryAllocator* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
             ResultOrError<std::unique_ptr<MemoryAllocation>> result =
@@ -1183,8 +1182,8 @@ namespace gpgmm::d3d12 {
             // CreateResource().
             request.AlwaysPrefetch = false;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
-                mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
+                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -1220,8 +1219,8 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = resourceInfo.Alignment;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
-                mDevice, allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
+                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -1264,8 +1263,8 @@ namespace gpgmm::d3d12 {
 
             request.Alignment = allocator->GetMemoryAlignment();
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
-                mDevice, allocator, request, [&](const auto& allocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
+                TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
                     Heap* resourceHeap = static_cast<Heap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     GPGMM_RETURN_IF_FAILED(
@@ -1600,11 +1599,10 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    // static
-    HRESULT ResourceAllocator::ReportLiveDeviceObjects(ComPtr<ID3D12Device> device) {
+    HRESULT ResourceAllocator::ReportLiveDeviceObjects() const {
         // Debug layer was never enabled.
         ComPtr<ID3D12DebugDevice> debugDevice;
-        if (FAILED(device.As(&debugDevice))) {
+        if (FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&debugDevice)))) {
             return S_OK;
         }
 
@@ -1612,7 +1610,7 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(debugDevice->ReportLiveDeviceObjects(rldoFlags));
 
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
-        GPGMM_RETURN_IF_FAILED(device.As(&leakMessageQueue));
+        GPGMM_RETURN_IF_FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&leakMessageQueue)));
 
         // Report live device objects that could be created by GPGMM by checking the global filter.
         // This is because the allowList filter cannot easily be made exclusive to these IDs.
