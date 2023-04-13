@@ -188,8 +188,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe">ALLOCATION_FLAG_DISABLE_RESIDENCY</a> = 0x80
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a">ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH</a> = 0x100
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487">ALLOCATION_FLAG_NEVER_RESIDENT</a> = 0x80
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a56d66d479605475e9571f89d36dfccf5">ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH</a> = 0x100
 <br />
  }</td></tr>
 <tr class="separator:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -384,12 +384,12 @@ allocator (CreateCommittedResource) when resource allocation fails.
 
 Mostly used for debug and testing when certain allocation methods unexpectedly fail.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe" name="aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe"></a>ALLOCATION_FLAG_DISABLE_RESIDENCY&#160;</td><td class="fielddoc"><p>Disable residency management for the resource allocation. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487" name="aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487"></a>ALLOCATION_FLAG_NEVER_RESIDENT&#160;</td><td class="fielddoc"><p>Disable residency management for the resource allocation. </p>
 <pre class="fragment">The flag disables residency management for the resource allocation.
 
 Mostly used when external resources are residency managed elsewhere.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a" name="aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a"></a>ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH&#160;</td><td class="fielddoc"><p>Report alignment mismatches upon successful resource creation. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a56d66d479605475e9571f89d36dfccf5" name="aec66b5dc9f1b55002d33c5c75ac2f122a56d66d479605475e9571f89d36dfccf5"></a>ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH&#160;</td><td class="fielddoc"><p>Report alignment mismatches upon successful resource creation. </p>
 <pre class="fragment">Flag is used to report when requested size does not match the allocation size due to
 resource or allocation alignment requirements.
 
