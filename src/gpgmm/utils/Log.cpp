@@ -195,10 +195,10 @@ namespace gpgmm {
         return {MessageSeverity::kInfo, messageId, isExternal, name, object};
     }
 
-    LogMessage WarningLog(MessageId messageId,
-                          bool isExternal,
-                          const std::string& name,
-                          const ObjectBase* object) {
+    LogMessage WarnLog(MessageId messageId,
+                       bool isExternal,
+                       const std::string& name,
+                       const ObjectBase* object) {
         return {MessageSeverity::kWarning, messageId, isExternal, name, object};
     }
 
@@ -226,7 +226,7 @@ namespace gpgmm {
             case MessageSeverity::kInfo:
                 return InfoLog(messageId, isExternal, name, object);
             case MessageSeverity::kWarning:
-                return WarningLog(messageId, isExternal, name, object);
+                return WarnLog(messageId, isExternal, name, object);
             case MessageSeverity::kError:
                 return ErrorLog(messageId, isExternal, name, object);
             default:

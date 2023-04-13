@@ -203,7 +203,7 @@ namespace gpgmm {
         // Open the file but do not create it.
         outFile.open(mTraceFile, std::ios_base::out | std::ios_base::in);
         if (outFile.is_open()) {
-            WarningLog() << mTraceFile + " exists and will be overwritten.";
+            WarnLog() << mTraceFile + " exists and will be overwritten.";
         }
         outFile.close();
 

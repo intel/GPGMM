@@ -147,7 +147,7 @@ namespace gpgmm::d3d12 {
             }
         } else {
             if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
-                WarningLog(heap.get(), MessageId::kInvalidArgument)
+                WarnLog(heap.get(), MessageId::kInvalidArgument)
                     << "HEAP_FLAG_ALWAYS_IN_RESIDENCY was specified but had no effect becauase "
                        "residency management is "
                        "not being used.";
