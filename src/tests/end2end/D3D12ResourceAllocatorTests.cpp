@@ -1505,7 +1505,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Method, ALLOCATION_METHOD_STANDALONE);
 
-        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, kBufferOf4MBAllocationSize);
     }
@@ -1530,7 +1530,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Method, ALLOCATION_METHOD_STANDALONE);
 
-        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, kBufferOf4MBAllocationSize);
 
@@ -1568,7 +1568,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         // TODO: Consider testing counts by allocator type.
         GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Method != ALLOCATION_METHOD_SUBALLOCATED);
 
-        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_GE(stats.UsedHeapUsage, stats.UsedBlockUsage);
         EXPECT_EQ(stats.UsedBlockCount, 1u);
@@ -1608,7 +1608,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Method, ALLOCATION_METHOD_SUBALLOCATED_WITHIN);
 
-        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, 64u * 1024u);
         EXPECT_EQ(stats.UsedBlockCount, 1u);

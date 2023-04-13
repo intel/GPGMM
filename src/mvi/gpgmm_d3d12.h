@@ -230,7 +230,7 @@ namespace gpgmm::d3d12 {
                                ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) override;
-        HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) override;
+        HRESULT QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) override;
         HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;

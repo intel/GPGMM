@@ -48,8 +48,8 @@ namespace gpgmm::d3d12 {
         return unknown->Release();
     }
 
-    RESOURCE_ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator) {
-        RESOURCE_ALLOCATOR_STATS stats = {};
+    ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator) {
+        ALLOCATOR_STATS stats = {};
         resourceAllocator->QueryStats(&stats);
         return stats;
     }

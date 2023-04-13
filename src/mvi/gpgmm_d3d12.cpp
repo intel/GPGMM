@@ -399,7 +399,7 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
-    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) {
         return E_NOTIMPL;
     }
 
