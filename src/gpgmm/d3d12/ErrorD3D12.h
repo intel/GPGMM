@@ -31,9 +31,7 @@
     for (;;)                                                                  \
     break
 
-#define GPGMM_RETURN_IF_FAILED(expr) GPGMM_RETURN_IF_FAILED_ON_DEVICE(expr, nullptr)
-
-#define GPGMM_RETURN_IF_FAILED_ON_DEVICE(expr, device)                               \
+#define GPGMM_RETURN_IF_FAILED(expr, device)                                         \
     {                                                                                \
         HRESULT hr = expr;                                                           \
         if (GPGMM_UNLIKELY(FAILED(hr))) {                                            \
