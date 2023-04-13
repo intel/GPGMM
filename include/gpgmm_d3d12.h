@@ -1084,7 +1084,7 @@ namespace gpgmm::d3d12 {
 
         Mostly used when external resources are residency managed elsewhere.
         */
-        ALLOCATION_FLAG_DISABLE_RESIDENCY = 0x80,
+        ALLOCATION_FLAG_NEVER_RESIDENT = 0x80,
 
         /** \brief Report alignment mismatches upon successful resource creation.
 
@@ -1094,7 +1094,7 @@ namespace gpgmm::d3d12 {
         Must compile with GPGMM_ENABLE_MEMORY_ALIGN_CHECKS to use as the request size
         is normally not tracked.
         */
-        ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH = 0x100,
+        ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH = 0x100,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)
