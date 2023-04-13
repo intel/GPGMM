@@ -70,16 +70,16 @@ namespace gpgmm::d3d12 {
 
         DEFINE_UNKNOWN_OVERRIDES()
 
+        // IDebugObject interface
+        LPCWSTR GetDebugName() const override;
+        HRESULT SetDebugName(LPCWSTR Name) override;
+
       private:
         friend BufferAllocator;
         friend ResourceAllocation;
 
         // ObjectBase interface
         const char* GetTypename() const override;
-
-        // IDebugObject interface
-        LPCWSTR GetDebugName() const override;
-        HRESULT SetDebugName(LPCWSTR Name) override;
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
@@ -141,6 +141,9 @@ namespace gpgmm::d3d12 {
 
         bool IsCreateHeapNotResident() const;
         bool IsResidencyEnabled() const;
+
+        D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
+            D3D12_RESOURCE_DESC& resourceDescriptor) const;
 
         // MemoryAllocator interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
