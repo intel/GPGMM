@@ -6,12 +6,12 @@ var searchData=
   ['allocation_5fflag_5falways_5fattribute_5fheaps_3',['ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fcache_5fsize_4',['ALLOCATION_FLAG_ALWAYS_CACHE_SIZE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fprefetch_5fmemory_5',['ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5falways_5fwarn_5fon_5falignment_5fmismatch_6',['ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a56d66d479605475e9571f89d36dfccf5',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fdisable_5fresidency_6',['ALLOCATION_FLAG_DISABLE_RESIDENCY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122abbc5e29fde9d1983063a8eab77e94ffe',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnever_5fallocate_5fmemory_7',['ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnever_5ffallback_8',['ALLOCATION_FLAG_NEVER_FALLBACK',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5fnever_5fresident_9',['ALLOCATION_FLAG_NEVER_RESIDENT',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5fnever_5fsuballocate_5fmemory_10',['ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5fnone_11',['ALLOCATION_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fnever_5fsuballocate_5fmemory_9',['ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fnone_10',['ALLOCATION_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fwarn_5fon_5falignment_5fmismatch_11',['ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3296f1386d2c00d3fb1db17ea2492c7a',1,'gpgmm::d3d12']]],
   ['allocation_5fflags_12',['ALLOCATION_FLAGS',['../struct_a_l_l_o_c_a_t_i_o_n___f_l_a_g_s.html',1,'ALLOCATION_FLAGS'],['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122',1,'gpgmm::d3d12::ALLOCATION_FLAGS()']]],
   ['allocation_5fmethod_13',['ALLOCATION_METHOD',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96',1,'gpgmm::d3d12']]],
   ['allocation_5fmethod_5fstandalone_14',['ALLOCATION_METHOD_STANDALONE',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22',1,'gpgmm::d3d12']]],
@@ -36,5 +36,6 @@ var searchData=
   ['allocator_5fflag_5fdisable_5funified_5fmemory_33',['ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5fnever_5fleak_5fmemory_34',['ALLOCATOR_FLAG_NEVER_LEAK_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5fnone_35',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]],
-  ['allocator_5fflags_36',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]]
+  ['allocator_5fflags_36',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]],
+  ['allocator_5fstats_37',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
 ];
