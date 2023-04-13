@@ -584,9 +584,7 @@ of always making heaps implicitly resident on creation.
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493" name="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493"></a>HEAP_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f" name="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires the heap to be created in budget. </p>
-<pre class="fragment">Must specify a non-zero size and alignment.
-
-This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
+<pre class="fragment">This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc" name="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc"></a>HEAP_FLAG_ALWAYS_IN_RESIDENCY&#160;</td><td class="fielddoc"><p>Requires the heap to be tracked for residency. </p>
 <pre class="fragment">This flag is equivelent to calling LockHeap then UnlockHeap after
