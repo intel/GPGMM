@@ -964,7 +964,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr));
         }
 
-        if (allocationDescriptor.Flags & ALLOCATION_FLAG_WARN_ON_ALIGNMENT_MISMATCH) {
+        if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
             CheckAndReportAllocationMisalignment(
                 *static_cast<ResourceAllocation*>(allocation.Get()));
         }
@@ -1391,7 +1391,7 @@ namespace gpgmm::d3d12 {
         }
 
         const ALLOCATION_FLAGS allowMask =
-            (ALLOCATION_FLAG_DISABLE_RESIDENCY & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
+            (ALLOCATION_FLAG_NEVER_RESIDENT & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
              ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY);
         if (allocationDescriptor.Flags & ~allowMask) {
             ErrorLog(MessageId::kInvalidArgument)
@@ -1413,7 +1413,7 @@ namespace gpgmm::d3d12 {
         ComPtr<IHeap> resourceHeap;
         GPGMM_RETURN_IF_FAILED_ON_DEVICE(
             Heap::CreateHeap(resourceHeapDesc,
-                             (allocationDescriptor.Flags & ALLOCATION_FLAG_DISABLE_RESIDENCY)
+                             (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_RESIDENT)
                                  ? nullptr
                                  : mResidencyManager.Get(),
                              ImportResourceCallbackContext::GetHeap, &importResourceCallbackContext,
