@@ -90,8 +90,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html">ALLOCATOR_DESC</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_h_e_a_p___d_e_s_c.html">HEAP_DESC</a></td></tr>
@@ -105,6 +103,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html">RESIDENCY_MANAGER_STATS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -256,9 +256,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a06cd29b01b8c7a94760d503ca7282022"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022">ReleaseResourceHeaps</a> (uint64_t bytesToRelease, uint64_t *pBytesReleased)=0</td></tr>
 <tr class="memdesc:a06cd29b01b8c7a94760d503ca7282022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
 <tr class="separator:a06cd29b01b8c7a94760d503ca7282022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a893abe2943b14c899b78980d5048f05f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a893abe2943b14c899b78980d5048f05f">QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
-<tr class="memdesc:a893abe2943b14c899b78980d5048f05f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
-<tr class="separator:a893abe2943b14c899b78980d5048f05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
+<tr class="memdesc:a8c629ea6a1ef674642afb0519170c5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
+<tr class="separator:a8c629ea6a1ef674642afb0519170c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
 <tr class="memdesc:a6ffa8695a413186d32f9931dd8d3f6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
 <tr class="separator:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -584,7 +584,9 @@ of always making heaps implicitly resident on creation.
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493" name="a246644ddca184dd4446f3d89c0a376cdacd9ce89cfa86dcc087dd56fb8d983493"></a>HEAP_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f" name="a246644ddca184dd4446f3d89c0a376cda076caccb5ec2fb9e005afeeac13d171f"></a>HEAP_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires the heap to be created in budget. </p>
-<pre class="fragment">This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
+<pre class="fragment">Must specify a non-zero size and alignment.
+
+This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc" name="a246644ddca184dd4446f3d89c0a376cda8d4499dbc9fda6fed48ab163b70cf1dc"></a>HEAP_FLAG_ALWAYS_IN_RESIDENCY&#160;</td><td class="fielddoc"><p>Requires the heap to be tracked for residency. </p>
 <pre class="fragment">This flag is equivelent to calling LockHeap then UnlockHeap after
@@ -1288,44 +1290,8 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 
 </div>
 </div>
-<a id="a893abe2943b14c899b78980d5048f05f" name="a893abe2943b14c899b78980d5048f05f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a893abe2943b14c899b78980d5048f05f">&#9670;&#160;</a></span>QueryStats() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual HRESULT gpgmm::d3d12::QueryStats </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a> *&#160;</td>
-          <td class="paramname"><em>pResourceAllocatorStats</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Query the current allocator usage. </p>
-<p>Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pResourceAllocatorStats</td><td>A pointer to a <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a> structure or NULL if statistics information should only be gathered for recording.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. Returns S_FALSE if statistics information was only gathered for recording. </dd></dl>
-
-</div>
-</div>
 <a id="a1912b5f127166830ad430c966ce5dfd3" name="a1912b5f127166830ad430c966ce5dfd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1912b5f127166830ad430c966ce5dfd3">&#9670;&#160;</a></span>QueryStats() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1912b5f127166830ad430c966ce5dfd3">&#9670;&#160;</a></span>QueryStats() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1352,6 +1318,42 @@ specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pResidencyManagerStats</td><td>A pointer to a <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html">RESIDENCY_MANAGER_STATS</a> structure or NULL if statistics information should only be gathered for recording.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. Returns S_FALSE if statistics information was only gathered for recording. </dd></dl>
+
+</div>
+</div>
+<a id="a8c629ea6a1ef674642afb0519170c5dd" name="a8c629ea6a1ef674642afb0519170c5dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c629ea6a1ef674642afb0519170c5dd">&#9670;&#160;</a></span>QueryStats() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::QueryStats </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> *&#160;</td>
+          <td class="paramname"><em>pResourceAllocatorStats</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query the current allocator usage. </p>
+<p>Returned info can be used to monitor memory usage per allocator. For example, the amount of internal fragmentation is equal to UsedBlockUsage / UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage / (UsedMemoryUsage + FreeMemoryUsage) * 100%.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pResourceAllocatorStats</td><td>A pointer to a <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> structure or NULL if statistics information should only be gathered for recording.</td></tr>
   </table>
   </dd>
 </dl>
