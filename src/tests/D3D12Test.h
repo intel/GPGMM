@@ -44,7 +44,7 @@ namespace gpgmm::d3d12 {
     D3D12_MESSAGE_SEVERITY GetMessageSeverity(MessageSeverity MessageSeverity);
     long GetRefCount(IUnknown* unknown);
 
-    RESOURCE_ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator);
+    ALLOCATOR_STATS GetStats(ComPtr<IResourceAllocator> resourceAllocator);
     RESIDENCY_MANAGER_STATS GetStats(ComPtr<IResidencyManager> residencyManager);
 
     class D3D12TestBase : public GPGMMTestBase {

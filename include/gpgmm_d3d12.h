@@ -1183,10 +1183,10 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
     };
 
-    /** \struct RESOURCE_ALLOCATOR_STATS
-    Additional information about the resource allocator usage.
+    /** \struct ALLOCATOR_STATS
+    Additional information about allocator usage.
     */
-    struct RESOURCE_ALLOCATOR_STATS {
+    struct ALLOCATOR_STATS {
         /** \brief Number of used sub-allocated blocks within the same memory.
          */
         uint32_t UsedBlockCount;
@@ -1313,13 +1313,13 @@ namespace gpgmm::d3d12 {
         UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage /
         (UsedMemoryUsage + FreeMemoryUsage) * 100%.
 
-        @param pResourceAllocatorStats A pointer to a RESOURCE_ALLOCATOR_STATS structure or NULL if
+        @param pResourceAllocatorStats A pointer to a ALLOCATOR_STATS structure or NULL if
         statistics information should only be gathered for recording.
 
         \return Returns S_OK if successful. Returns S_FALSE if statistics information was only
         gathered for recording.
         */
-        virtual HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS * pResourceAllocatorStats) = 0;
+        virtual HRESULT QueryStats(ALLOCATOR_STATS * pResourceAllocatorStats) = 0;
 
         /** \brief Gets information about the features that are supported by the resource allocator.
 

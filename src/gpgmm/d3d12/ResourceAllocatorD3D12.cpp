@@ -1133,7 +1133,7 @@ namespace gpgmm::d3d12 {
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
-                RESOURCE_ALLOCATOR_STATS allocationStats = {};
+                ALLOCATOR_STATS allocationStats = {};
                 GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats));
 
                 request.AvailableForAllocation = allocationStats.FreeHeapUsage;
@@ -1513,13 +1513,12 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) {
         std::lock_guard<std::mutex> lock(mMutex);
         return QueryStatsInternal(pResourceAllocatorStats);
     }
 
-    HRESULT ResourceAllocator::QueryStatsInternal(
-        RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
