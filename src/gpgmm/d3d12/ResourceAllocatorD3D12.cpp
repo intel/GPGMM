@@ -1567,13 +1567,13 @@ namespace gpgmm::d3d12 {
                                  GPGMM_BYTES_TO_MB(result.FreeMemoryUsage));
 
         GPGMM_TRACE_EVENT_METRIC(
-            "GPU allocation prefetch coverage (%)",
+            "GPU allocation prefetch (%)",
             SafeDivide(result.PrefetchedMemoryMissesEliminated,
                        result.PrefetchedMemoryMisses + result.PrefetchedMemoryMissesEliminated) *
                 100);
 
         GPGMM_TRACE_EVENT_METRIC(
-            "GPU allocation cache hits (%)",
+            "GPU allocation cache-hits (%)",
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
         if (pResourceAllocatorStats != nullptr) {
