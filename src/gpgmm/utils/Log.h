@@ -95,10 +95,10 @@ namespace gpgmm {
                        bool isExternal = false,
                        const std::string& name = "",
                        const ObjectBase* mObject = nullptr);
-    LogMessage WarningLog(MessageId messageId = MessageId::kUnknown,
-                          bool isExternal = false,
-                          const std::string& name = "",
-                          const ObjectBase* mObject = nullptr);
+    LogMessage WarnLog(MessageId messageId = MessageId::kUnknown,
+                       bool isExternal = false,
+                       const std::string& name = "",
+                       const ObjectBase* mObject = nullptr);
     LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
                         bool isExternal = false,
                         const std::string& name = "",

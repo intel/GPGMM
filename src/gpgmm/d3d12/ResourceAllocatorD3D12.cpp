@@ -465,7 +465,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocatorDescriptor.Flags & ALLOCATOR_FLAG_ALWAYS_IN_BUDGET && !pResidencyManager) {
-            WarningLog(MessageId::kInvalidArgument, true)
+            WarnLog(MessageId::kInvalidArgument, true)
                 << "ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
                    "management does not exist. This is probably not what the "
                    "developer intended to do. Please consider creating a residency "
@@ -551,7 +551,7 @@ namespace gpgmm::d3d12 {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
             GPGMM_RETURN_IF_FAILED(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
         } else {
-            WarningLog(MessageId::kInvalidArgument, true)
+            WarnLog(MessageId::kInvalidArgument, true)
                 << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has no effect because the D3D12 debug "
                    "layer was either not installed or enabled. Please call "
                    "ID3D12Debug::EnableDebugLayer before using this flag.";
@@ -1046,7 +1046,7 @@ namespace gpgmm::d3d12 {
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            WarningLog(this, MessageId::kPerformanceWarning)
+            WarnLog(this, MessageId::kPerformanceWarning)
                 << "ALLOCATOR_FLAG_ALWAYS_COMMITTED was not requested but enabled anyway because "
                    "the required heap flags were incompatible with resource heap type ("
                 << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "
@@ -1091,7 +1091,7 @@ namespace gpgmm::d3d12 {
         if (GPGMM_UNLIKELY(requiresPadding)) {
             request.SizeInBytes += allocationDescriptor.RequireResourceHeapPadding;
             if (!neverSubAllocate) {
-                WarningLog(this, MessageId::kInvalidArgument)
+                WarnLog(this, MessageId::kInvalidArgument)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
                     << allocationDescriptor.RequireResourceHeapPadding << " bytes.";
                 neverSubAllocate = true;
@@ -1620,7 +1620,7 @@ namespace gpgmm::d3d12 {
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
                 case D3D12_MESSAGE_ID_LIVE_RESOURCE: {
-                    WarningLog(this, MessageId::kPerformanceWarning)
+                    WarnLog(this, MessageId::kPerformanceWarning)
                         << "Device leak detected: " + std::string(message->pDescription);
                 } break;
                 default:
@@ -1671,7 +1671,7 @@ namespace gpgmm::d3d12 {
                 return S_OK;
             }
             default: {
-                WarningLog(this, MessageId::kBadOperation)
+                WarnLog(this, MessageId::kBadOperation)
                     << "CheckFeatureSupport does not support feature (" + std::to_string(feature) +
                            ").";
                 return E_INVALIDARG;

@@ -113,7 +113,7 @@ namespace gpgmm::d3d12 {
                 caps->mIsResourceAllocationWithinCoherent = true;
             }
         } else {
-            WarningLog()
+            WarnLog()
                 << "Adapter was left unspecified. Device capabilities may not be fully detected.";
         }
 

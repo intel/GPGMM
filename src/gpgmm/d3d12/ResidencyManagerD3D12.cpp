@@ -185,7 +185,7 @@ namespace gpgmm::d3d12 {
         }
 
         if ((descriptor.Flags & RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY) && caps->IsAdapterUMA()) {
-            WarningLog(MessageId::kInvalidArgument, true)
+            WarnLog(MessageId::kInvalidArgument, true)
                 << "RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY flag was specified but "
                    "did not match the architecture of the adapter.";
         }
@@ -240,13 +240,13 @@ namespace gpgmm::d3d12 {
         // Emit a warning if the budget was initialized to zero.
         // This means nothing will be ever evicted, which will lead to device lost.
         if (localVideoMemorySegmentInfo->Budget == 0) {
-            WarningLog(residencyManager.get(), MessageId::kBudgetInvalid)
+            WarnLog(residencyManager.get(), MessageId::kBudgetInvalid)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, residencyManager->mIsUMA)
                 << ") did not initialize a budget. This means either a restricted budget was not "
                    "used or the first OS budget update hasn't occured.";
             if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
-                WarningLog(residencyManager.get(), MessageId::kBudgetInvalid)
+                WarnLog(residencyManager.get(), MessageId::kBudgetInvalid)
                     << "GPU memory segment ("
                     << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
                                             residencyManager->mIsUMA)

@@ -31,9 +31,8 @@ namespace gpgmm::d3d12 {
     }
 
     template <typename BackendT>
-    LogMessage WarningLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::WarningLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
-                                 object);
+    LogMessage WarnLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
+        return gpgmm::WarnLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
     }
 
     template <typename BackendT>

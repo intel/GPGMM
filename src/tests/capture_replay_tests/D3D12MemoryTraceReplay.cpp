@@ -387,7 +387,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                         if (GetLogLevel() <= gpgmm::MessageSeverity::kWarning &&
                             mCaps->IsAdapterUMA() != snapshot["IsUMA"].asBool() &&
                             iterationIndex == 0) {
-                            gpgmm::WarningLog()
+                            gpgmm::WarnLog()
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
                                        std::to_string(mCaps->IsAdapterUMA()) + ").";
@@ -446,7 +446,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             mCaps->GetMaxResourceHeapTierSupported() <
                                 snapshot["ResourceHeapTier"].asInt() &&
                             iterationIndex == 0) {
-                            gpgmm::WarningLog()
+                            gpgmm::WarnLog()
                                 << "Captured device exceeds capabilities of playback device "
                                    "(ResourceHeapTier: " +
                                        std::to_string(snapshot["ResourceHeapTier"].asInt()) +
