@@ -3,7 +3,7 @@ var searchData=
   ['d3d12_0',['d3d12',['../namespacegpgmm_1_1d3d12.html',1,'gpgmm']]],
   ['getgpuvirtualaddress_1',['GetGPUVirtualAddress',['../namespacegpgmm_1_1d3d12.html#a904c1177cec90316677f032d530cb146',1,'gpgmm::d3d12']]],
   ['getinfo_2',['GetInfo',['../namespacegpgmm_1_1d3d12.html#a260a6f663ef8bb86a09441fb159abe1e',1,'gpgmm::d3d12']]],
-  ['getmemory_3',['GetMemory',['../namespacegpgmm_1_1d3d12.html#ae5415a6a4421f6abb089bfef17105f87',1,'gpgmm::d3d12']]],
+  ['getmemory_3',['GetMemory',['../namespacegpgmm_1_1d3d12.html#adb90c75c67c0355bca69397d8411438d',1,'gpgmm::d3d12']]],
   ['getoffsetfromresource_4',['GetOffsetFromResource',['../namespacegpgmm_1_1d3d12.html#a0a002f6eee82988c57957bd9c8d2b4a6',1,'gpgmm::d3d12']]],
   ['getresource_5',['GetResource',['../namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2',1,'gpgmm::d3d12']]],
   ['gp_5fallocation_5fcreate_5falways_5fprefetch_5fmemory_6',['GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY',['../namespacegpgmm_1_1vk.html#a3b98f42e0a18412e618eb4e0cc709879a3fcb49e1c85363cbbf59f0d3023ed97f',1,'gpgmm::vk']]],

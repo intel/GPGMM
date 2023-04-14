@@ -2,7 +2,7 @@ var searchData=
 [
   ['getgpuvirtualaddress_0',['GetGPUVirtualAddress',['../namespacegpgmm_1_1d3d12.html#a904c1177cec90316677f032d530cb146',1,'gpgmm::d3d12']]],
   ['getinfo_1',['GetInfo',['../namespacegpgmm_1_1d3d12.html#a260a6f663ef8bb86a09441fb159abe1e',1,'gpgmm::d3d12']]],
-  ['getmemory_2',['GetMemory',['../namespacegpgmm_1_1d3d12.html#ae5415a6a4421f6abb089bfef17105f87',1,'gpgmm::d3d12']]],
+  ['getmemory_2',['GetMemory',['../namespacegpgmm_1_1d3d12.html#adb90c75c67c0355bca69397d8411438d',1,'gpgmm::d3d12']]],
   ['getoffsetfromresource_3',['GetOffsetFromResource',['../namespacegpgmm_1_1d3d12.html#a0a002f6eee82988c57957bd9c8d2b4a6',1,'gpgmm::d3d12']]],
   ['getresource_4',['GetResource',['../namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2',1,'gpgmm::d3d12']]],
   ['gpcreatebuffer_5',['gpCreateBuffer',['../namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4',1,'gpgmm::vk']]],
