@@ -52,10 +52,6 @@ namespace gpgmm {
         return result;
     }
 
-    const char* ConditionalMemoryAllocator::GetTypename() const {
-        return "ConditionalMemoryAllocator";
-    }
-
     MemoryAllocator* ConditionalMemoryAllocator::GetFirstAllocatorForTesting() const {
         return mFirstAllocator.get();
     }

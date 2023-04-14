@@ -59,7 +59,7 @@ namespace gpgmm::d3d12 {
              bool isResidencyDisabled);
 
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(IHeap)
 
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
         DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment() const;

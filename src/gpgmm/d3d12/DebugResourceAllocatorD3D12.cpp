@@ -89,8 +89,4 @@ namespace gpgmm::d3d12 {
         entry->GetValue().GetAllocator()->DeallocateMemory(std::move(allocation));
     }
 
-    const char* DebugResourceAllocator::GetTypename() const {
-        return "DebugResourceAllocator";
-    }
-
 }  // namespace gpgmm::d3d12

@@ -134,8 +134,4 @@ namespace gpgmm {
         return mBlock;
     }
 
-    const char* MemoryAllocation::GetTypename() const {
-        return "Allocation";
-    }
-
 }  // namespace gpgmm

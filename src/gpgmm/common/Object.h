@@ -28,6 +28,11 @@ namespace gpgmm {
         virtual const char* GetTypename() const = 0;
     };
 
+// Helper to provide ObjectBase-based object types the type name based on class name.
+#define DEFINE_OBJECT_BASE_OVERRIDES(type)            \
+    inline const char* GetTypename() const override { \
+        return #type;                                 \
+    }
 }  // namespace gpgmm
 
 #endif  // GPGMM_COMMON_OBJECT_H_

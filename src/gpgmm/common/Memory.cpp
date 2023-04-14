@@ -53,8 +53,4 @@ namespace gpgmm {
         return mSubAllocationRefs.Unref();
     }
 
-    const char* MemoryBase::GetTypename() const {
-        return "Memory";
-    }
-
 }  // namespace gpgmm

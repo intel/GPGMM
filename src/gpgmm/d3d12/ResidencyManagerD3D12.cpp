@@ -309,10 +309,6 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    const char* ResidencyManager::GetTypename() const {
-        return "IResidencyManager";
-    }
-
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
         GPGMM_RETURN_IF_NULLPTR(pHeap);

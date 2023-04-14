@@ -41,7 +41,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(ConditionalMemoryAllocator)
 
         std::unique_ptr<MemoryAllocator> mFirstAllocator;
         std::unique_ptr<MemoryAllocator> mSecondAllocator;

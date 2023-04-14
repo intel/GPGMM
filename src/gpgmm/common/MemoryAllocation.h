@@ -99,7 +99,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocation)
 
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.

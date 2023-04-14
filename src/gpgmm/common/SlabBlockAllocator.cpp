@@ -109,8 +109,4 @@ namespace gpgmm {
         return mBlockCount;
     }
 
-    const char* SlabBlockAllocator::GetTypename() const {
-        return "SlabBlockAllocator";
-    }
-
 }  // namespace gpgmm

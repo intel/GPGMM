@@ -204,10 +204,6 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    const char* Heap::GetTypename() const {
-        return "IHeap";
-    }
-
     uint64_t Heap::GetLastUsedFenceValue() const {
         return mLastUsedFenceValue;
     }

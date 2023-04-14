@@ -146,8 +146,4 @@ namespace gpgmm {
         return result;
     }
 
-    const char* BuddyMemoryAllocator::GetTypename() const {
-        return "BuddyMemoryAllocator";
-    }
-
 }  // namespace gpgmm

@@ -97,8 +97,4 @@ namespace gpgmm {
         return mMemoryAlignment;
     }
 
-    const char* PooledMemoryAllocator::GetTypename() const {
-        return "PooledMemoryAllocator";
-    }
-
 }  // namespace gpgmm
