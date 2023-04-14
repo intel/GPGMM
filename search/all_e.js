@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['unlockheap_0',['UnlockHeap',['../namespacegpgmm_1_1d3d12.html#aefca0a22a15bdc66cebf9eecc5aa4c43',1,'gpgmm::d3d12']]],
+  ['unlockheap_0',['UnlockHeap',['../namespacegpgmm_1_1d3d12.html#a89b7eaadd7c6e81676154b4656a0d7ad',1,'gpgmm::d3d12']]],
   ['unmap_1',['Unmap',['../namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148',1,'gpgmm::d3d12']]],
   ['usedblockcount_2',['UsedBlockCount',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a645ab3672f922f7147fa8e5c287ab129',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
   ['usedblockusage_3',['UsedBlockUsage',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a54c8d4605cba24a44315529194fc5f7a',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
