@@ -54,7 +54,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(SlabBlockAllocator)
 
         struct BlockList {
             SlabBlock* pHead = nullptr;  // First free block in slab.

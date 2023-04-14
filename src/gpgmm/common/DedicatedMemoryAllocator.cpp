@@ -80,8 +80,4 @@ namespace gpgmm {
     uint64_t DedicatedMemoryAllocator::GetMemoryAlignment() const {
         return mMemoryAlignment;
     }
-
-    const char* DedicatedMemoryAllocator::GetTypename() const {
-        return "DedicatedMemoryAllocator";
-    }
 }  // namespace gpgmm

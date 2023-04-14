@@ -53,7 +53,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(BuddyMemoryAllocator)
 
         uint64_t GetMemoryIndex(uint64_t offset) const;
 

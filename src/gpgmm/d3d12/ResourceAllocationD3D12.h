@@ -76,7 +76,7 @@ namespace gpgmm::d3d12 {
         void DeleteThis() override;
 
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocation)
 
         ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;

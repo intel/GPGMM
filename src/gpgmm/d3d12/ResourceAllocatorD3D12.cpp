@@ -834,10 +834,6 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    const char* ResourceAllocator::GetTypename() const {
-        return "IResourceAllocator";
-    }
-
     HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease,
                                                     uint64_t* pBytesReleased) {
         std::lock_guard<std::mutex> lock(mMutex);

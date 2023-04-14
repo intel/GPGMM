@@ -79,7 +79,7 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocation;
 
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,

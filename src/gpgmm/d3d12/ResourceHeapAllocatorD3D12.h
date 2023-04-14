@@ -52,7 +52,7 @@ namespace gpgmm::d3d12 {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(ResourceHeapAllocator)
 
         ResidencyManager* const mResidencyManager;
         ID3D12Device* const mDevice;

@@ -99,7 +99,7 @@ namespace gpgmm::d3d12 {
         bool IsUMA() const;
 
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(IResidencyManager)
 
         using LRUCache = LinkedList<Heap>;
 

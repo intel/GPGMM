@@ -156,10 +156,6 @@ namespace gpgmm {
         return mStats;
     }
 
-    const char* MemoryAllocator::GetTypename() const {
-        return "MemoryAllocator";
-    }
-
     bool MemoryAllocator::ValidateRequest(const MemoryAllocationRequest& request) const {
         ASSERT(request.SizeInBytes > 0 && request.Alignment > 0);
 

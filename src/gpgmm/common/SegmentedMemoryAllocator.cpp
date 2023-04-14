@@ -207,8 +207,4 @@ namespace gpgmm {
         return std::distance(mFreeSegments.begin(), mFreeSegments.end());
     }
 
-    const char* SegmentedMemoryAllocator::GetTypename() const {
-        return "SegmentedMemoryAllocator";
-    }
-
 }  // namespace gpgmm

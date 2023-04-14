@@ -151,10 +151,6 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment(), static_cast<ALLOCATION_METHOD>(GetMethod())};
     }
 
-    const char* ResourceAllocation::GetTypename() const {
-        return "IResourceAllocation";
-    }
-
     IHeap* ResourceAllocation::GetMemory() const {
         return static_cast<Heap*>(MemoryAllocation::GetMemory());
     }

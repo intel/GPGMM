@@ -98,10 +98,6 @@ namespace gpgmm::d3d12 {
         SafeRelease(allocation);
     }
 
-    const char* ResourceHeapAllocator::GetTypename() const {
-        return "ResourceHeapAllocator";
-    }
-
     CreateResourceHeapCallbackContext::CreateResourceHeapCallbackContext(ID3D12Device* device,
                                                                          D3D12_HEAP_DESC* heapDesc)
         : mDevice(device), mHeapDesc(heapDesc) {

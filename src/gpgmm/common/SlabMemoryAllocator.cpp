@@ -465,10 +465,6 @@ namespace gpgmm {
         return result;
     }
 
-    const char* SlabMemoryAllocator::GetTypename() const {
-        return "SlabMemoryAllocator";
-    }
-
     bool SlabMemoryAllocator::IsPrefetchCoverageBelowThreshold() const {
         if (mStats.PrefetchedMemoryMissesEliminated >= mStats.PrefetchedMemoryMisses) {
             return true;
@@ -593,10 +589,6 @@ namespace gpgmm {
 
     uint64_t SlabCacheAllocator::GetMemorySize() const {
         return GetNextInChain()->GetMemorySize();
-    }
-
-    const char* SlabCacheAllocator::GetTypename() const {
-        return "SlabCacheAllocator";
     }
 
 }  // namespace gpgmm

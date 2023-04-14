@@ -264,7 +264,7 @@ namespace gpgmm {
 
         The type is used for profiling and debugging purposes only.
         */
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocator)
 
         /** \brief Checks if the request is valid.
 

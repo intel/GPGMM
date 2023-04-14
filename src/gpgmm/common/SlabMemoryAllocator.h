@@ -63,7 +63,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(SlabMemoryAllocator)
 
         uint64_t ComputeSlabSize(uint64_t requestSize,
                                  uint64_t baseSlabSize,
@@ -132,7 +132,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(SlabCacheAllocator)
 
         class SlabAllocatorCacheEntry : public NonCopyable {
           public:

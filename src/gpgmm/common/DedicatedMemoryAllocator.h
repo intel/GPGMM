@@ -38,7 +38,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        const char* GetTypename() const override;
+        DEFINE_OBJECT_BASE_OVERRIDES(DedicatedMemoryAllocator)
 
         const uint64_t mMemoryAlignment;
     };
