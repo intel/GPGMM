@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
+#include "gpgmm/d3d12/ResourceAllocationTrackingAllocatorD3D12.h"
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
@@ -23,30 +23,32 @@
 
 namespace gpgmm::d3d12 {
 
-    DebugResourceAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
+    ResourceAllocationTrackingAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
         ResourceAllocation* allocation)
         : mAllocation(allocation) {
     }
 
-    DebugResourceAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
+    ResourceAllocationTrackingAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
         ResourceAllocation* allocation,
         MemoryAllocator* allocator)
         : mAllocation(allocation), mAllocator(allocator) {
     }
 
-    MemoryAllocator* DebugResourceAllocator::ResourceAllocationEntry::GetAllocator() const {
+    MemoryAllocator* ResourceAllocationTrackingAllocator::ResourceAllocationEntry::GetAllocator()
+        const {
         return mAllocator;
     }
 
-    ResourceAllocation* DebugResourceAllocator::ResourceAllocationEntry::GetAllocation() const {
+    ResourceAllocation*
+    ResourceAllocationTrackingAllocator::ResourceAllocationEntry::GetAllocation() const {
         return mAllocation;
     }
 
-    size_t DebugResourceAllocator::ResourceAllocationEntry::GetKey() const {
+    size_t ResourceAllocationTrackingAllocator::ResourceAllocationEntry::GetKey() const {
         return reinterpret_cast<uintptr_t>(mAllocation);
     }
 
-    void DebugResourceAllocator::ReportLiveAllocations() const {
+    void ResourceAllocationTrackingAllocator::ReportLiveAllocations() const {
         std::lock_guard<std::mutex> lock(mMutex);
         for (auto allocationEntry : mLiveAllocations) {
             const ResourceAllocation* allocation = allocationEntry->GetValue().GetAllocation();
@@ -55,7 +57,7 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    void DebugResourceAllocator::ReleaseLiveAllocationsForTesting() {
+    void ResourceAllocationTrackingAllocator::ReleaseLiveAllocationsForTesting() {
         std::lock_guard<std::mutex> lock(mMutex);
         for (auto allocationEntry : mLiveAllocations) {
             allocationEntry->GetValue().GetAllocator()->DeallocateMemory(
@@ -65,7 +67,7 @@ namespace gpgmm::d3d12 {
         mLiveAllocations.clear();
     }
 
-    void DebugResourceAllocator::AddLiveAllocation(ResourceAllocation* allocation) {
+    void ResourceAllocationTrackingAllocator::TrackAllocation(ResourceAllocation* allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         mLiveAllocations.GetOrCreate(
@@ -75,11 +77,12 @@ namespace gpgmm::d3d12 {
         allocation->SetDebugAllocator(this);
     }
 
-    void DebugResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void ResourceAllocationTrackingAllocator::DeallocateMemory(
+        std::unique_ptr<MemoryAllocation> allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         // KeepAlive must be false so |mLiveAllocations| cache will shrink by 1 entry once |entry|
-        // falls out of scope below since AddLiveAllocation() adds one (and only one) ref.
+        // falls out of scope below since TrackAllocation() adds one (and only one) ref.
         auto entry = mLiveAllocations.GetOrCreate(
             ResourceAllocationEntry(ToBackend(allocation.get())), false);
 

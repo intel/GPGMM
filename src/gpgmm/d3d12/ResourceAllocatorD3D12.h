@@ -31,7 +31,7 @@ namespace gpgmm::d3d12 {
     class BufferAllocator;
     class Caps;
     class ResidencyHeap;
-    class DebugResourceAllocator;
+    class ResourceAllocationTrackingAllocator;
     class ResidencyManager;
     class ResourceAllocation;
 
@@ -179,7 +179,7 @@ namespace gpgmm::d3d12 {
         std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
             mSmallBufferAllocatorOfType;
 
-        std::unique_ptr<DebugResourceAllocator> mDebugAllocator;
+        std::unique_ptr<ResourceAllocationTrackingAllocator> mTrackingAllocator;
     };
 
 }  // namespace gpgmm::d3d12

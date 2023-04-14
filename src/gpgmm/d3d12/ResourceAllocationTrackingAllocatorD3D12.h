@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_
-#define GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_
+#ifndef GPGMM_D3D12_RESOURCEALLOCATIONTRACKINGALLOCATORD3D12_H_
+#define GPGMM_D3D12_RESOURCEALLOCATIONTRACKINGALLOCATORD3D12_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryCache.h"
@@ -22,14 +22,14 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocation;
 
-    // DebugResourceAllocator tracks "live" allocations so they can be reported if leaked.
-    // A "live" allocation means the allocation was created (allocated) but not released
+    // ResourceAllocationTrackingAllocator tracks "live" allocations so they can be reported if
+    // leaked. A "live" allocation means the allocation was created (allocated) but not released
     // (de-allocated).
-    class DebugResourceAllocator final : public MemoryAllocator {
+    class ResourceAllocationTrackingAllocator final : public MemoryAllocator {
       public:
-        DebugResourceAllocator() = default;
+        ResourceAllocationTrackingAllocator() = default;
 
-        void AddLiveAllocation(ResourceAllocation* allocation);
+        void TrackAllocation(ResourceAllocation* allocation);
         void ReportLiveAllocations() const;
         void ReleaseLiveAllocationsForTesting();
 
@@ -58,4 +58,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_DEBUGRESOURCEALLOCATORD3D12_H_
+#endif  // GPGMM_D3D12_RESOURCEALLOCATIONTRACKINGALLOCATORD3D12_H_
