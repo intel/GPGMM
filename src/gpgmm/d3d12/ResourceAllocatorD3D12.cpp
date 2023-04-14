@@ -393,7 +393,7 @@ namespace gpgmm::d3d12 {
         if (ppResidencyManagerOut != nullptr) {
             ComPtr<IDXGIAdapter3> adapter3;
             if (pAdapter != nullptr) {
-                GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)));
+                GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)), pDevice);
             }
 
             RESIDENCY_DESC residencyDesc = {};
@@ -405,12 +405,14 @@ namespace gpgmm::d3d12 {
             }
 
             GPGMM_RETURN_IF_FAILED(ResidencyManager::CreateResidencyManager(
-                residencyDesc, pDevice, adapter3.Get(), &residencyManager));
+                                       residencyDesc, pDevice, adapter3.Get(), &residencyManager),
+                                   pDevice);
         }
 
         ComPtr<IResourceAllocator> resourceAllocator;
         GPGMM_RETURN_IF_FAILED(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
-                                                       residencyManager.Get(), &resourceAllocator));
+                                                       residencyManager.Get(), &resourceAllocator),
+                               pDevice);
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -435,7 +437,7 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            GPGMM_RETURN_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr));
+            GPGMM_RETURN_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr), pDevice);
             caps.reset(ptr);
         }
 
@@ -549,7 +551,7 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
         if (SUCCEEDED(newDescriptor.Device.As(&leakMessageQueue))) {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->PushRetrievalFilter(&emptyFilter));
+            GPGMM_RETURN_IF_FAILED(leakMessageQueue->PushRetrievalFilter(&emptyFilter), mDevice);
         } else {
             WarnLog(MessageId::kInvalidArgument, true)
                 << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has no effect because the D3D12 debug "
@@ -881,7 +883,7 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr));
+            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
         }
 
         if (pBytesReleased != nullptr) {
@@ -947,7 +949,7 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
         ComPtr<IResourceAllocation> allocation;
-        GPGMM_RETURN_IF_FAILED_ON_DEVICE(
+        GPGMM_RETURN_IF_FAILED(
             CreateResourceInternal(allocationDescriptor, resourceDescriptor, initialResourceState,
                                    pClearValue, &allocation),
             mDevice);
@@ -955,13 +957,14 @@ namespace gpgmm::d3d12 {
         ASSERT(allocation->GetResource() != nullptr);
 
         if (GPGMM_UNLIKELY(mDebugAllocator)) {
-            GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName));
+            GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
+                                   mDevice);
             mDebugAllocator->AddLiveAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
         }
 
         // Update the current usage counters.
         if (mUseDetailedTimingEvents) {
-            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr));
+            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
         }
 
         if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
@@ -1002,7 +1005,7 @@ namespace gpgmm::d3d12 {
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
         if (heapType == 0 || heapType == D3D12_HEAP_TYPE_CUSTOM) {
-            GPGMM_RETURN_IF_FAILED(GetHeapType(initialResourceState, &heapType));
+            GPGMM_RETURN_IF_FAILED(GetHeapType(initialResourceState, &heapType), mDevice);
         }
 
         // Attribution of heaps may be abandoned but the original heap type is needed to
@@ -1134,7 +1137,7 @@ namespace gpgmm::d3d12 {
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
                 ALLOCATOR_STATS allocationStats = {};
-                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats));
+                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats), mDevice);
 
                 request.AvailableForAllocation = allocationStats.FreeHeapUsage;
 
@@ -1187,7 +1190,7 @@ namespace gpgmm::d3d12 {
                     ComPtr<ID3D12Resource> committedResource;
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
                     GPGMM_RETURN_IF_FAILED(
-                        resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)));
+                        resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)), mDevice);
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = resourceDescriptor.Width;
@@ -1224,9 +1227,11 @@ namespace gpgmm::d3d12 {
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
                     Heap* resourceHeap = static_cast<Heap*>(subAllocation.GetMemory());
-                    GPGMM_RETURN_IF_FAILED(CreatePlacedResource(
-                        resourceHeap, subAllocation.GetOffset(), &newResourceDesc, clearValue,
-                        initialResourceState, &placedResource));
+                    GPGMM_RETURN_IF_FAILED(
+                        CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
+                                             &newResourceDesc, clearValue, initialResourceState,
+                                             &placedResource),
+                        mDevice);
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = request.SizeInBytes;
@@ -1267,7 +1272,8 @@ namespace gpgmm::d3d12 {
                     ComPtr<ID3D12Resource> placedResource;
                     GPGMM_RETURN_IF_FAILED(
                         CreatePlacedResource(resourceHeap, allocation.GetOffset(), &newResourceDesc,
-                                             clearValue, initialResourceState, &placedResource));
+                                             clearValue, initialResourceState, &placedResource),
+                        mDevice);
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = request.SizeInBytes;
@@ -1318,9 +1324,11 @@ namespace gpgmm::d3d12 {
 
         ComPtr<ID3D12Resource> committedResource;
         ComPtr<Heap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED(CreateCommittedResource(
-            heapProperties, heapFlags, resourceInfo, &newResourceDesc, clearValue,
-            initialResourceState, &committedResource, &resourceHeap));
+        GPGMM_RETURN_IF_FAILED(
+            CreateCommittedResource(heapProperties, heapFlags, resourceInfo, &newResourceDesc,
+                                    clearValue, initialResourceState, &committedResource,
+                                    &resourceHeap),
+            mDevice);
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             DebugLog(this, MessageId::kAlignmentMismatch)
@@ -1364,7 +1372,8 @@ namespace gpgmm::d3d12 {
 
         D3D12_HEAP_PROPERTIES heapProperties;
         D3D12_HEAP_FLAGS heapFlags;
-        GPGMM_RETURN_IF_FAILED(pCommittedResource->GetHeapProperties(&heapProperties, &heapFlags));
+        GPGMM_RETURN_IF_FAILED(pCommittedResource->GetHeapProperties(&heapProperties, &heapFlags),
+                               mDevice);
 
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
@@ -1411,7 +1420,7 @@ namespace gpgmm::d3d12 {
         ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
         ComPtr<IHeap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED_ON_DEVICE(
+        GPGMM_RETURN_IF_FAILED(
             Heap::CreateHeap(resourceHeapDesc,
                              (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_RESIDENT)
                                  ? nullptr
@@ -1451,10 +1460,10 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12Resource> placedResource;
         {
             ComPtr<ID3D12Heap> heap;
-            GPGMM_RETURN_IF_FAILED(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)));
+            GPGMM_RETURN_IF_FAILED(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)), mDevice);
 
             ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
-            GPGMM_RETURN_IF_FAILED_ON_DEVICE(
+            GPGMM_RETURN_IF_FAILED(
                 mDevice->CreatePlacedResource(heap.Get(), resourceOffset, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               IID_PPV_ARGS(&placedResource)),
@@ -1497,11 +1506,12 @@ namespace gpgmm::d3d12 {
 
         GPGMM_RETURN_IF_FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
                                                 CreateCommittedResourceCallbackContext::CreateHeap,
-                                                &callbackContext, &resourceHeap));
+                                                &callbackContext, &resourceHeap),
+                               mDevice);
 
         if (commitedResourceOut != nullptr) {
             ComPtr<ID3D12Resource> committedResource;
-            GPGMM_RETURN_IF_FAILED(resourceHeap.As(&committedResource));
+            GPGMM_RETURN_IF_FAILED(resourceHeap.As(&committedResource), mDevice);
 
             *commitedResourceOut = committedResource.Detach();
         }
@@ -1601,21 +1611,23 @@ namespace gpgmm::d3d12 {
         }
 
         const D3D12_RLDO_FLAGS rldoFlags = D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL;
-        GPGMM_RETURN_IF_FAILED(debugDevice->ReportLiveDeviceObjects(rldoFlags));
+        GPGMM_RETURN_IF_FAILED(debugDevice->ReportLiveDeviceObjects(rldoFlags), mDevice);
 
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
-        GPGMM_RETURN_IF_FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&leakMessageQueue)));
+        GPGMM_RETURN_IF_FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&leakMessageQueue)), mDevice);
 
         // Report live device objects that could be created by GPGMM by checking the global filter.
         // This is because the allowList filter cannot easily be made exclusive to these IDs.
         for (uint64_t i = 0; i < leakMessageQueue->GetNumStoredMessagesAllowedByRetrievalFilter();
              ++i) {
             SIZE_T messageLength = 0;
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, nullptr, &messageLength));
+            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, nullptr, &messageLength),
+                                   mDevice);
 
             std::unique_ptr<uint8_t[]> messageData(new uint8_t[messageLength]);
             D3D12_MESSAGE* message = reinterpret_cast<D3D12_MESSAGE*>(messageData.get());
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, message, &messageLength));
+            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, message, &messageLength),
+                                   mDevice);
 
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
@@ -1739,7 +1751,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        GPGMM_RETURN_IF_FAILED_ON_DEVICE(
+        GPGMM_RETURN_IF_FAILED(
             mDevice->CreateCommittedResource(mHeapProperties, mHeapFlags, mResourceDescriptor,
                                              mInitialResourceState, mClearValue,
                                              IID_PPV_ARGS(&committedResource)),

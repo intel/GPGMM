@@ -38,7 +38,8 @@ namespace gpgmm::d3d12 {
 
             ComPtr<ID3D12Resource> committedResource;
             if (SUCCEEDED(pageable.As(&committedResource))) {
-                GPGMM_RETURN_IF_FAILED(committedResource->GetHeapProperties(nullptr, heapFlags));
+                GPGMM_RETURN_IF_FAILED(committedResource->GetHeapProperties(nullptr, heapFlags),
+                                       GetDevice(committedResource.Get()));
                 return S_OK;
             }
 
@@ -78,8 +79,10 @@ namespace gpgmm::d3d12 {
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             uint64_t bytesEvicted = descriptor.SizeInBytes;
-            GPGMM_RETURN_IF_FAILED(residencyManager->EvictInternal(
-                descriptor.SizeInBytes, descriptor.HeapSegment, &bytesEvicted));
+            GPGMM_RETURN_IF_FAILED(
+                residencyManager->EvictInternal(descriptor.SizeInBytes, descriptor.HeapSegment,
+                                                &bytesEvicted),
+                residencyManager->mDevice);
 
             if (bytesEvicted < descriptor.SizeInBytes) {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
@@ -99,8 +102,8 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Pageable> pageable;
-        GPGMM_RETURN_IF_FAILED_ON_DEVICE(createHeapFn(pCreateHeapContext, &pageable),
-                                         GetDevice(pageable.Get()));
+        GPGMM_RETURN_IF_FAILED(createHeapFn(pCreateHeapContext, &pageable),
+                               GetDevice(pageable.Get()));
 
         // Pageable-based type is required for residency-managed heaps.
         GPGMM_RETURN_IF_NULLPTR(pageable);
@@ -137,11 +140,14 @@ namespace gpgmm::d3d12 {
             // descriptor heap), they must be manually locked and unlocked to be inserted into the
             // residency cache.
             if (heap->mState != RESIDENCY_STATUS_UNKNOWN) {
-                GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()));
+                GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
+                                       GetDevice(pageable.Get()));
             } else {
                 if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
-                    GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()));
-                    GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()));
+                    GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
+                                           GetDevice(pageable.Get()));
+                    GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
+                                           GetDevice(pageable.Get()));
                     ASSERT(heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT);
                 }
             }
@@ -154,7 +160,7 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName));
+        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName), GetDevice(pageable.Get()));
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
 
         DebugLog(heap.get(), MessageId::kObjectCreated)
