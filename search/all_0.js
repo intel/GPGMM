@@ -36,5 +36,6 @@ var searchData=
   ['allocator_5fflag_5fdisable_5funified_5fmemory_33',['ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5fnever_5fleak_5fmemory_34',['ALLOCATOR_FLAG_NEVER_LEAK_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4',1,'gpgmm::d3d12']]],
   ['allocator_5fflag_5fnone_35',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]],
-  ['allocator_5fflags_36',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]]
+  ['allocator_5fflags_36',['ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8',1,'gpgmm::d3d12']]],
+  ['allocator_5fstats_37',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
 ];

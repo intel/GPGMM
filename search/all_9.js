@@ -9,7 +9,7 @@ var searchData=
   ['preadrange_6',['pReadRange',['../namespacegpgmm_1_1d3d12.html#a1e58a104b6eb456c7e81ee651304159f',1,'gpgmm::d3d12']]],
   ['preferreddevicememorysize_7',['preferredDeviceMemorySize',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#acc85c61dfa24987e871e692394a6455c',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['preferredresourceheapsize_8',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___d_e_s_c.html#a9ffd07b861a66980125321249fdf23c5',1,'gpgmm::d3d12::ALLOCATOR_DESC']]],
-  ['prefetchedheapmisses_9',['PrefetchedHeapMisses',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#afb76112277ebdfd626458ace3e3d687c',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
-  ['prefetchedheapmisseseliminated_10',['PrefetchedHeapMissesEliminated',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a502d763d214501ada839cad314c23626',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['prefetchedheapmisses_9',['PrefetchedHeapMisses',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ae683ef98f076c4d80cfa9b92342284bb',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
+  ['prefetchedheapmisseseliminated_10',['PrefetchedHeapMissesEliminated',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a6d947630bf00e22227ad6193c17086bb',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
   ['pvulkanfunctions_11',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a50d3442f6b682ddb33e70d71310fa001',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
 ];
