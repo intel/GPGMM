@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['allocation_5fflag_5fallow_5fsuballocate_5fwithin_5fresource_0',['ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fallow_5fsuballocate_5fwithin_0',['ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122adf7c4695ea835b76589054da16e135f4',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fattribute_5fheaps_1',['ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fcache_5fsize_2',['ALLOCATION_FLAG_ALWAYS_CACHE_SIZE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5falways_5fprefetch_5fmemory_3',['ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a127e1716e2a0c9ee9868f7be9f8cd150',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5falways_5fprefetch_3',['ALLOCATION_FLAG_ALWAYS_PREFETCH',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac8452aaa8b7b0d834c04c0e9f22e9389',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fwarn_5fon_5falignment_5fmismatch_4',['ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a56d66d479605475e9571f89d36dfccf5',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5fnever_5fallocate_5fmemory_5',['ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a19cd2f2e04d5cae53df0cc645652089e',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fnever_5fallocate_5',['ALLOCATION_FLAG_NEVER_ALLOCATE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a079489e9db863a7a39212df0a73c5e00',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnever_5ffallback_6',['ALLOCATION_FLAG_NEVER_FALLBACK',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnever_5fresident_7',['ALLOCATION_FLAG_NEVER_RESIDENT',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487',1,'gpgmm::d3d12']]],
-  ['allocation_5fflag_5fnever_5fsuballocate_5fmemory_8',['ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a3a76f8699ea453d95ed68dce9d5006de',1,'gpgmm::d3d12']]],
+  ['allocation_5fflag_5fnever_5fsuballocate_8',['ALLOCATION_FLAG_NEVER_SUBALLOCATE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a1d6b00ac94f6b012596af457a0a21a84',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnone_9',['ALLOCATION_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073',1,'gpgmm::d3d12']]],
   ['allocation_5fmethod_5fstandalone_10',['ALLOCATION_METHOD_STANDALONE',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22',1,'gpgmm::d3d12']]],
   ['allocation_5fmethod_5fsuballocated_11',['ALLOCATION_METHOD_SUBALLOCATED',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5',1,'gpgmm::d3d12']]],
@@ -21,12 +21,5 @@ var searchData=
   ['allocator_5falgorithm_5fsegmented_5fpool_18',['ALLOCATOR_ALGORITHM_SEGMENTED_POOL',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313',1,'gpgmm::d3d12']]],
   ['allocator_5falgorithm_5fslab_19',['ALLOCATOR_ALGORITHM_SLAB',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab',1,'gpgmm::d3d12']]],
   ['allocator_5ffeature_5fresource_5fallocation_5fsupport_20',['ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5falways_5fcommitted_21',['ALLOCATOR_FLAG_ALWAYS_COMMITTED',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a990a4f92da9987370b90bf24d8f1b897',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5falways_5fin_5fbudget_22',['ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a27a6e9749da00a54a89ff0ce9d485fba',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5falways_5fon_5fdemand_23',['ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aebd50c2c440d6cd9d6c1a4e98b8e8663',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5falways_5fresident_24',['ALLOCATOR_FLAG_ALWAYS_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a136d5d2c03f84883605eddd2653f6d3d',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fdisable_5fmemory_5fprefetch_25',['ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a2811cf52c008939fbca9bef7656d6d02',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fdisable_5funified_5fmemory_26',['ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a557e5b6012c93120cda53f813892ec32',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnever_5fleak_5fmemory_27',['ALLOCATOR_FLAG_NEVER_LEAK_MEMORY',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8aae58a0a16254e906125fd6c86d0b5bc4',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnone_28',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a41e5f9a1d561e4bc68c1e2965f8860b8a04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]]
+  ['allocator_5fflag_5fnone_21',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]]
 ];
