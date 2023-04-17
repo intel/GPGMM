@@ -25,7 +25,7 @@ First create an allocator then create allocations from it:
 ```cpp
 #include <gpgmm_d3d12.h>
 
-gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
+gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC allocatorDesc = {};
 
 ComPtr<gpgmm::d3d12::IResidencyManager> residency; // Optional
 ComPtr<gpgmm::d3d12::IResourceAllocator> allocator;
@@ -58,13 +58,13 @@ list->Reset();
 Residency also works for non-resources too:
 
 ```cpp
-gpgmm::d3d12::HEAP_DESC shaderVisibleHeap = {};
+gpgmm::d3d12::RESIDENCY_HEAP_DESC shaderVisibleHeap = {};
 shaderVisibleHeap.SizeInBytes = kHeapSize;
 shaderVisibleHeap.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
-ComPtr<gpgmm::d3d12::IHeap> descriptorHeap;
+ComPtr<gpgmm::d3d12::IResidencyHeap> descriptorHeap;
 CreateHeapContext createHeapContext(heapDesc);
-gpgmm::d3d12::CreateHeap(shaderVisibleHeap, residencyManager,
+gpgmm::d3d12::CreateResidencyHeap(shaderVisibleHeap, residencyManager,
       createHeapContext, &CreateHeapContext::CreateHeapCallbackWrapper,
       &descriptorHeap);
 

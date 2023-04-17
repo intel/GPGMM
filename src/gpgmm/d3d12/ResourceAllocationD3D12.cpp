@@ -19,9 +19,9 @@
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
@@ -45,7 +45,7 @@ namespace gpgmm::d3d12 {
     ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                                            ResidencyManager* residencyManager,
                                            MemoryAllocator* allocator,
-                                           Heap* resourceHeap,
+                                           ResidencyHeap* resourceHeap,
                                            MemoryBlock* block,
                                            ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator,
@@ -151,8 +151,8 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment(), static_cast<ALLOCATION_METHOD>(GetMethod())};
     }
 
-    IHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<Heap*>(MemoryAllocation::GetMemory());
+    IResidencyHeap* ResourceAllocation::GetMemory() const {
+        return static_cast<ResidencyHeap*>(MemoryAllocation::GetMemory());
     }
 
     void ResourceAllocation::SetDebugAllocator(MemoryAllocator* allocator) {

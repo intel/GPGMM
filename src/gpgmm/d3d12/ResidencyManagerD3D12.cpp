@@ -22,9 +22,9 @@
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Math.h"
@@ -161,7 +161,7 @@ namespace gpgmm::d3d12 {
         std::shared_ptr<Event> mEvent;
     };
 
-    HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+    HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                    ID3D12Device* pDevice,
                                    IDXGIAdapter3* pAdapter,
                                    IResidencyManager** ppResidencyManagerOut) {
@@ -170,7 +170,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                                      ID3D12Device* pDevice,
                                                      IDXGIAdapter3* pAdapter,
                                                      IResidencyManager** ppResidencyManagerOut) {
@@ -273,7 +273,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
+    ResidencyManager::ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                        ID3D12Device* pDevice,
                                        IDXGIAdapter3* pAdapter,
                                        std::unique_ptr<Caps> caps)
@@ -310,12 +310,12 @@ namespace gpgmm::d3d12 {
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
-    HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
+    HRESULT ResidencyManager::LockHeap(IResidencyHeap* pHeap) {
         GPGMM_RETURN_IF_NULLPTR(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        Heap* heap = static_cast<Heap*>(pHeap);
+        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         ASSERT(heap != nullptr);
 
         if (!heap->IsInList() && !heap->IsResidencyLocked()) {
@@ -324,7 +324,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(
                 MakeResident(heap->GetHeapSegment(), heap->GetSize(), 1, pageable.GetAddressOf()),
                 mDevice);
-            heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
@@ -338,7 +338,7 @@ namespace gpgmm::d3d12 {
 
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
-            if (heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT) {
+            if (heap->mState == RESIDENCY_HEAP_STATUS_CURRENT) {
                 mStats.CurrentHeapCount++;
                 mStats.CurrentHeapUsage += heap->GetSize();
             }
@@ -351,11 +351,11 @@ namespace gpgmm::d3d12 {
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    HRESULT ResidencyManager::UnlockHeap(IHeap* pHeap) {
+    HRESULT ResidencyManager::UnlockHeap(IResidencyHeap* pHeap) {
         GPGMM_RETURN_IF_NULLPTR(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);
-        Heap* heap = static_cast<Heap*>(pHeap);
+        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         ASSERT(heap != nullptr);
 
         // If the heap was never locked, nothing further should be done.
@@ -389,7 +389,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::InsertHeap(Heap* pHeap) {
+    HRESULT ResidencyManager::InsertHeap(ResidencyHeap* pHeap) {
         std::lock_guard<std::mutex> lock(mMutex);
         return InsertHeapInternal(pHeap);
     }
@@ -399,7 +399,7 @@ namespace gpgmm::d3d12 {
     // is implicitly made resident will cause the residency manager to view the allocation as
     // non-resident and call MakeResident - which will make D3D12's internal residency refcount on
     // the allocation out of sync with Dawn.
-    HRESULT ResidencyManager::InsertHeapInternal(Heap* heap) {
+    HRESULT ResidencyManager::InsertHeapInternal(ResidencyHeap* heap) {
         if (heap == nullptr) {
             return E_INVALIDARG;
         }
@@ -561,7 +561,8 @@ namespace gpgmm::d3d12 {
                         << "There is not enough memory to page-out to get below the budget. This "
                            "likely means there are more external than internal heaps that cannot "
                            "be "
-                           "evicted because they are unmanaged by GPGMM. Consider using CreateHeap "
+                           "evicted because they are unmanaged by GPGMM. Consider using "
+                           "CreateResidencyHeap "
                            "to import them: "
                         << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
                         << GPGMM_BYTES_TO_MB(mStats.CurrentHeapUsage) << " MBs.";
@@ -665,7 +666,7 @@ namespace gpgmm::d3d12 {
                 break;
             }
 
-            Heap* heap = cache->head()->value();
+            ResidencyHeap* heap = cache->head()->value();
             const uint64_t lastUsedFenceValue = heap->GetLastUsedFenceValue();
 
             // If the next candidate for eviction was inserted into the cache during the current
@@ -681,7 +682,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(mResidencyFence->WaitFor(lastUsedFenceValue), mDevice);
 
             heap->RemoveFromList();
-            heap->SetResidencyState(RESIDENCY_STATUS_PENDING_RESIDENCY);
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_PENDING);
 
             bytesEvicted += heap->GetSize();
 
@@ -746,8 +747,8 @@ namespace gpgmm::d3d12 {
         uint64_t localSizeToMakeResident = 0;
         uint64_t nonLocalSizeToMakeResident = 0;
 
-        std::vector<Heap*> heapsToMakeResident;
-        for (Heap* heap : *residencyList) {
+        std::vector<ResidencyHeap*> heapsToMakeResident;
+        for (ResidencyHeap* heap : *residencyList) {
             // Heaps that are locked resident are not tracked in the LRU cache.
             if (heap->IsResidencyLocked()) {
                 continue;
@@ -791,7 +792,7 @@ namespace gpgmm::d3d12 {
 
             // If the heap should be already resident, calling MakeResident again will be redundant.
             // Tell the developer the heap wasn't properly tracked by the residency manager.
-            if (heap->GetInfo().Status == RESIDENCY_STATUS_UNKNOWN) {
+            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_UNKNOWN) {
                 DebugLog(this, MessageId::kBadOperation)
                     << "Residency state could not be determined for the heap (Heap="
                     << ToHexStr(heap)
@@ -818,8 +819,8 @@ namespace gpgmm::d3d12 {
 
         // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
         // no way of knowing for certain.
-        for (Heap* heap : heapsToMakeResident) {
-            heap->SetResidencyState(RESIDENCY_STATUS_CURRENT_RESIDENT);
+        for (ResidencyHeap* heap : heapsToMakeResident) {
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
         }
 
         GPGMM_TRACE_EVENT_METRIC(
@@ -920,14 +921,14 @@ namespace gpgmm::d3d12 {
         RESIDENCY_MANAGER_STATS result = mStats;
 
         for (const auto& entry : mLocalVideoMemorySegment.cache) {
-            if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
+            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
             }
         }
 
         for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
-            if (entry.value()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT) {
+            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
             }
@@ -995,10 +996,11 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    HRESULT ResidencyManager::SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) {
+    HRESULT ResidencyManager::SetResidencyStatus(IResidencyHeap* pHeap,
+                                                 const RESIDENCY_HEAP_STATUS& state) {
         GPGMM_RETURN_IF_NULLPTR(pHeap);
 
-        Heap* heap = static_cast<Heap*>(pHeap);
+        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         if (heap->GetInfo().IsLocked) {
             ErrorLog(this, MessageId::kBadOperation)
                 << "Heap residency cannot be updated because it was locked. "
@@ -1006,8 +1008,8 @@ namespace gpgmm::d3d12 {
             return E_FAIL;
         }
 
-        const RESIDENCY_STATUS oldState = heap->GetInfo().Status;
-        if (state == RESIDENCY_STATUS_UNKNOWN && oldState != RESIDENCY_STATUS_UNKNOWN) {
+        const RESIDENCY_HEAP_STATUS oldState = heap->GetInfo().Status;
+        if (state == RESIDENCY_HEAP_STATUS_UNKNOWN && oldState != RESIDENCY_HEAP_STATUS_UNKNOWN) {
             ErrorLog(this, MessageId::kBadOperation)
                 << "Heap residency cannot be unknown when previously known by the "
                    "residency manager. "
@@ -1015,7 +1017,7 @@ namespace gpgmm::d3d12 {
             return E_FAIL;
         }
 
-        heap->SetResidencyState(state);
+        heap->SetResidencyStatus(state);
         return S_OK;
     }
 

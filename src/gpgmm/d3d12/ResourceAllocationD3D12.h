@@ -26,7 +26,7 @@ namespace gpgmm::d3d12 {
     class DebugResourceAllocator;
     class ResidencyManager;
     class ResourceAllocator;
-    class Heap;
+    class ResidencyHeap;
 
     struct RESOURCE_ALLOCATION_DESC {
         uint64_t SizeInBytes;
@@ -49,7 +49,7 @@ namespace gpgmm::d3d12 {
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const override;
         uint64_t GetOffsetFromResource() const override;
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
-        IHeap* GetMemory() const override;
+        IResidencyHeap* GetMemory() const override;
 
         DEFINE_UNKNOWN_OVERRIDES()
 
@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            ResidencyManager* residencyManager,
                            MemoryAllocator* allocator,
-                           Heap* resourceHeap,
+                           ResidencyHeap* resourceHeap,
                            MemoryBlock* block,
                            ComPtr<ID3D12Resource> resource);
 

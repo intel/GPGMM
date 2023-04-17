@@ -260,7 +260,7 @@ namespace gpgmm::vk {
         when the current allocation requested is completed. By default, GPGMM will automatically
         trigger prefetching based on heurstics. Prefetching enables more performance when
         allocating for large contiguous allocations. Should not be used with
-        ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+        GP_ALLOCATION_CREATE_NEVER_ALLOCATE_MEMORY.
         */
         GP_ALLOCATION_CREATE_ALWAYS_PREFETCH_MEMORY = 0x8,
     };

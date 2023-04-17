@@ -62,7 +62,7 @@ namespace gpgmm::d3d12 {
         virtual HRESULT SetDebugName(LPCWSTR Name) = 0;
     };
 
-    /** \enum RESIDENCY_STATUS
+    /** \enum RESIDENCY_HEAP_STATUS
 
        D3D12 allows heaps to be explicitly created resident or not. This means the expected
        residency status of the heap cannot be solely  determined by checking for the existence in a
@@ -75,27 +75,27 @@ namespace gpgmm::d3d12 {
        D3D12, it will immediately become currently resident. If the heap becomes locked, it will
        stay currently resident until it is evicted, then back to pending residency.
     */
-    enum RESIDENCY_STATUS {
+    enum RESIDENCY_HEAP_STATUS {
         /** \brief Heap residency status is not known and cannot be made resident.
          Heap must become locked to be managed for residency.
          */
-        RESIDENCY_STATUS_UNKNOWN = 0,
+        RESIDENCY_HEAP_STATUS_UNKNOWN = 0,
 
         /** \brief Heap is about to be made resident.
         Heap must be previously locked, evicted, or currently resident at creation.
         */
-        RESIDENCY_STATUS_PENDING_RESIDENCY = 1,
+        RESIDENCY_HEAP_STATUS_PENDING = 1,
 
         /** \brief Heap was made resident and can be evicted.
         Heaps that stay locked will always be currently resident.
         */
-        RESIDENCY_STATUS_CURRENT_RESIDENT = 2,
+        RESIDENCY_HEAP_STATUS_CURRENT = 2,
     };
 
-    /** \struct HEAP_INFO
+    /** \struct RESIDENCY_HEAP_INFO
     Additional information about the heap.
     */
-    struct HEAP_INFO {
+    struct RESIDENCY_HEAP_INFO {
         /** \brief Created size, in bytes, of the heap.
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
@@ -118,23 +118,23 @@ namespace gpgmm::d3d12 {
 
         /** \brief Check if the heap was made resident or not.
          */
-        RESIDENCY_STATUS Status;
+        RESIDENCY_HEAP_STATUS Status;
     };
 
-    /** \enum HEAP_FLAGS
+    /** \enum RESIDENCY_HEAP_FLAGS
     Specify creation options to configure the heap.
     */
-    enum HEAP_FLAGS {
+    enum RESIDENCY_HEAP_FLAGS {
 
         /** \brief Disables all option flags.
          */
-        HEAP_FLAG_NONE = 0x0,
+        RESIDENCY_HEAP_FLAG_NONE = 0x0,
 
         /** \brief Requires the heap to be created in budget.
 
         This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
         */
-        HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
+        RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
 
         /** \brief Requires the heap to be tracked for residency.
 
@@ -142,15 +142,15 @@ namespace gpgmm::d3d12 {
         creation. The flag only has effect when the heap's residency status
         cannot be determined.
         */
-        HEAP_FLAG_ALWAYS_IN_RESIDENCY = 0x2,
+        RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT = 0x2,
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(HEAP_FLAGS)
+    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_HEAP_FLAGS)
 
-    /** \struct HEAP_DESC
+    /** \struct RESIDENCY_HEAP_DESC
       Specifies creation options for a residency managed heap.
       */
-    struct HEAP_DESC {
+    struct RESIDENCY_HEAP_DESC {
         /** \brief Created size of the heap, in bytes.
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
@@ -171,9 +171,9 @@ namespace gpgmm::d3d12 {
 
         /** \brief Specifies heaps options.
 
-        Optional parameter. By default, no flags are specified or HEAP_FLAG_NONE.
+        Optional parameter. By default, no flags are specified or RESIDENCY_HEAP_FLAG_NONE.
         */
-        HEAP_FLAGS Flags;
+        RESIDENCY_HEAP_FLAGS Flags;
 
         /** \brief Debug name associated with the heap.
 
@@ -198,12 +198,12 @@ namespace gpgmm::d3d12 {
     node is removed from the cache when it is evicted from video memory due to budget constraints,
     or when the memory is released.
     */
-    GPGMM_INTERFACE IHeap : public IDebugObject {
+    GPGMM_INTERFACE IResidencyHeap : public IDebugObject {
         /** \brief Returns information about this heap.
 
-        \return A HEAP_INFO struct containing the information.
+        \return A RESIDENCY_HEAP_INFO struct containing the information.
         */
-        virtual HEAP_INFO GetInfo() const = 0;
+        virtual RESIDENCY_HEAP_INFO GetInfo() const = 0;
     };
 
     /** \brief  Create a heap managed by GPGMM.
@@ -212,19 +212,19 @@ namespace gpgmm::d3d12 {
     purposes. A heap managed by GPGMM represents either a 1) committed resource backed by
     implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
 
-    @param descriptor A reference to HEAP_DESC structure that describes the heap.
+    @param descriptor A reference to RESIDENCY_HEAP_DESC structure that describes the heap.
     @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
     @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
     @param pCreateHeapContext  A pointer to a class designed to implement the actual heap creation
     function and store any necessary variables.
-    @param[out] ppHeapOut Pointer to a memory block that receives a pointer to the
+    @param[out] ppResidencyHeapOut Pointer to a memory block that receives a pointer to the
     heap.
 
     Example call showing the usage of createHeapFn and pCreateHeapContext:
 
     \code
-    CreateHeap(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,
-    reinterpret_cast<void*>(callbackContext), ppHeapOut);
+    CreateResidencyHeap(descriptor, pResidencyManager, CallbackContext:CallbackWrapper,
+    reinterpret_cast<void*>(callbackContext), ppResidencyHeapOut);
     \endcode
 
     Example Callback Context Class:
@@ -233,7 +233,7 @@ namespace gpgmm::d3d12 {
     class CallbackContext {
         public:
             CallbackContext(<Pass variables needed for heap creation here>);
-            CreateHeap(void *context, ID3D12Pageable** ppPageableOut);
+            CreateResidencyHeap(void *context, ID3D12Pageable** ppPageableOut);
             static CallbackWrapper(ID3D12Pageable** ppPageableOut);
         private:
             (Declare variables needed for heap creation here)
@@ -245,15 +245,15 @@ namespace gpgmm::d3d12 {
     \code
     HRESULT CallbackContext:CallbackWrapper(void* context, ID3D12Pageable** ppPageableOut) {
         CallbackContext* callbackContext = reinterpret_cast<CallbackContext*>(context);
-        return callbackContext->CreateHeap(ppPageableOut);
+        return callbackContext->CreateResidencyHeap(ppPageableOut);
     }
     \endcode
     */
-    GPGMM_EXPORT HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                                    IResidencyManager* const pResidencyManager,
-                                    CreateHeapFn createHeapFn,
-                                    void* pCreateHeapContext,
-                                    IHeap** ppHeapOut);
+    GPGMM_EXPORT HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                             IResidencyManager* const pResidencyManager,
+                                             CreateHeapFn createHeapFn,
+                                             void* pCreateHeapContext,
+                                             IResidencyHeap** ppResidencyHeapOut);
 
     /** \brief Represents a list of heaps which will be "made resident" upon executing a
     command-list.
@@ -274,7 +274,7 @@ namespace gpgmm::d3d12 {
 
         \return Returns S_OK if successfull.
         */
-        virtual HRESULT Add(IHeap * pHeap) = 0;
+        virtual HRESULT Add(IResidencyHeap * pHeap) = 0;
 
         /** \brief Resets a residency list to its initial state as if a new residenct list was
         created.
@@ -375,10 +375,10 @@ namespace gpgmm::d3d12 {
      */
     GPGMM_EXPORT HRESULT CreateResidencyList(IResidencyList** ppResidencyListOut);
 
-    /** \enum RESIDENCY_FLAGS
+    /** \enum RESIDENCY_MANAGER_FLAGS
        Specify options to configure the residency manager.
        */
-    enum RESIDENCY_FLAGS {
+    enum RESIDENCY_MANAGER_FLAGS {
 
         /** \brief Disables all option flags.
          */
@@ -409,17 +409,17 @@ namespace gpgmm::d3d12 {
         RESIDENCY_FLAG_ALWAYS_IN_BUDGET = 0x4,
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_FLAGS)
+    DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_MANAGER_FLAGS)
 
-    /** \struct RESIDENCY_DESC
+    /** \struct RESIDENCY_MANAGER_DESC
      Specify parameters when creating a residency manager.
      */
-    struct RESIDENCY_DESC {
+    struct RESIDENCY_MANAGER_DESC {
         /** \brief Specifies residency options.
 
         Optional parameter. By default, no flags are specified or RESIDENCY_FLAG_NONE.
         */
-        RESIDENCY_FLAGS Flags;
+        RESIDENCY_MANAGER_FLAGS Flags;
 
         /** \brief Minimum severity level to record messages.
 
@@ -553,7 +553,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to the heap being locked.
         */
-        virtual HRESULT LockHeap(IHeap * pHeap) = 0;
+        virtual HRESULT LockHeap(IResidencyHeap * pHeap) = 0;
 
         /** \brief Unlocks the specified heap.
 
@@ -561,7 +561,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to the heap being unlocked.
         */
-        virtual HRESULT UnlockHeap(IHeap * pHeap) = 0;
+        virtual HRESULT UnlockHeap(IResidencyHeap * pHeap) = 0;
 
         /** \brief Execute command lists using residency managed heaps or E_OUTOFMEMORY.
 
@@ -613,9 +613,10 @@ namespace gpgmm::d3d12 {
         CURRENT_RESIDENT/PENDING, respectively.
 
         @param pHeap A pointer to the heap being updated.
-        @param state The RESIDENCY_STATUS enum of the new status.
+        @param state The RESIDENCY_HEAP_STATUS enum of the new status.
         */
-        virtual HRESULT SetResidencyState(IHeap * pHeap, const RESIDENCY_STATUS& state) = 0;
+        virtual HRESULT SetResidencyStatus(IResidencyHeap * pHeap,
+                                           const RESIDENCY_HEAP_STATUS& state) = 0;
 
         /** \brief Query the current residency usage.
 
@@ -630,7 +631,7 @@ namespace gpgmm::d3d12 {
 
     /** \brief  Create residency residency manager to manage video memory.
 
-    @param descriptor A reference to RESIDENCY_DESC structure that describes the residency
+    @param descriptor A reference to RESIDENCY_MANAGER_DESC structure that describes the residency
     manager.
     @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
     device.
@@ -641,7 +642,7 @@ namespace gpgmm::d3d12 {
     actually create the residency Manager. If NULL is passed and residency manager creating
     would succeed, S_FALSE is returned.
     */
-    GPGMM_EXPORT HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+    GPGMM_EXPORT HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                                 ID3D12Device* pDevice,
                                                 IDXGIAdapter3* pAdapter,
                                                 IResidencyManager** ppResidencyManagerOut);
@@ -737,13 +738,13 @@ namespace gpgmm::d3d12 {
 
         \return A pointer to the Heap used by this resource allocation.
         */
-        virtual IHeap* GetMemory() const = 0;
+        virtual IResidencyHeap* GetMemory() const = 0;
     };
 
-    /** \enum ALLOCATOR_FLAGS
+    /** \enum RESOURCE_ALLOCATOR_FLAGS
     Specify creation options for allocator.
     */
-    enum ALLOCATOR_FLAGS {
+    enum RESOURCE_ALLOCATOR_FLAGS {
 
         /** \brief Disables all option flags.
          */
@@ -755,19 +756,20 @@ namespace gpgmm::d3d12 {
         for large static resources. Otherwise, this is mostly used for debugging and testing
         purposes.
         */
-        ALLOCATOR_FLAG_ALWAYS_COMMITTED = 0x1,
+        RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED = 0x1,
 
         /** \brief Requires resource allocation to be created within budget.
 
-        Always use HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource allocator.
+        Always use RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource
+        allocator.
         */
-        ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
+        RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
         /** \brief Disables pre-fetching of GPU memory.
 
         Should be only used for debugging and testing purposes.
         */
-        ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH = 0x4,
+        RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH = 0x4,
 
         /** \brief Disables recycling of GPU memory.
 
@@ -778,7 +780,7 @@ namespace gpgmm::d3d12 {
         minimal possible GPU memory footprint, avoiding out-of-memory, or debugging possible
         corruption of heaps.
         */
-        ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
+        RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
 
         /** \brief Disables using D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA
         GPUs.
@@ -786,14 +788,14 @@ namespace gpgmm::d3d12 {
         Used to workaround issues when custom heaps are not being recongized as expected or driver
         bugs related to using a single memory pool.
         */
-        ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY = 0x10,
+        RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY = 0x10,
 
         /** \brief Report leaks of resource allocations.
 
         Used to track outstanding allocations made with this allocator. When the allocator is about
         to be released, it will report details on any leaked allocations as log messages.
         */
-        ALLOCATOR_FLAG_NEVER_LEAK_MEMORY = 0x20,
+        RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK = 0x20,
 
         /** \brief Requires resource allocation to be created resident.
 
@@ -802,10 +804,10 @@ namespace gpgmm::d3d12 {
         operations at resource creation, and instead, reverts back to the default behavior of D3D12
         of always making heaps implicitly resident on creation.
         */
-        ALLOCATOR_FLAG_ALWAYS_RESIDENT = 0x40,
+        RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT = 0x40,
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATOR_FLAGS)
+    DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATOR_FLAGS)
 
     /** \enum ALLOCATOR_ALGORITHM
     Specify the algorithms used for allocation.
@@ -857,7 +859,7 @@ namespace gpgmm::d3d12 {
 
         Fixed-size pool limits recycling to resource heaps equal to
         PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-        equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+        equivelent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
         ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
 
@@ -874,24 +876,24 @@ namespace gpgmm::d3d12 {
         A dedicated allocation allocates exactly what is needed for the resource and nothing more.
 
         Internally, dedicated allocations are "placed resources" which allows the heap to be
-        recycled by GPGMM. Otherwise, ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivelent to a "dedicated
-        allocation" but without heaps being recycled by GPGMM.
+        recycled by GPGMM. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivelent to a
+        "dedicated allocation" but without heaps being recycled by GPGMM.
 
         Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
         */
         ALLOCATOR_ALGORITHM_DEDICATED = 5,
     };
 
-    /** \struct ALLOCATOR_DESC
+    /** \struct RESOURCE_ALLOCATOR_DESC
     Specify parameters for creating allocators.
     */
-    struct ALLOCATOR_DESC {
+    struct RESOURCE_ALLOCATOR_DESC {
         /** \brief Specifies allocator options.
 
         For example, whether the allocator can reuse memory, or resources should be resident upon
         creation.
         */
-        ALLOCATOR_FLAGS Flags;
+        RESOURCE_ALLOCATOR_FLAGS Flags;
 
         /** \brief Minimum severity level to record messages.
 
@@ -1012,7 +1014,7 @@ namespace gpgmm::d3d12 {
         The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
         disables creating standalone allocations whose memory cannot be reused.
         */
-        ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY = 0x1,
+        ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP = 0x1,
 
         /** \brief Sub-allocate a resource allocation within the same resource.
 
@@ -1036,7 +1038,7 @@ namespace gpgmm::d3d12 {
         When this flag is used, the created resource will always be allocated with it's own resource
         heap.
         */
-        ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY = 0x4,
+        ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP = 0x4,
 
         /** \brief Prefetch memory for the next resource allocation.
 
@@ -1045,9 +1047,9 @@ namespace gpgmm::d3d12 {
         trigger prefetching based on heurstics. Prefetching enables more performance when
         allocating for contiguous allocations or many resources of the same size.
 
-        Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY.
+        Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
         */
-        ALLOCATION_FLAG_ALWAYS_PREFETCH_MEMORY = 0x8,
+        ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP = 0x8,
 
         /** \brief Cache the request size.
 
@@ -1064,7 +1066,7 @@ namespace gpgmm::d3d12 {
         as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
         properties are always write-combined.
 
-        If ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was specified, heap type was
+        If RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was specified, heap type was
         D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
         */
         ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
@@ -1125,7 +1127,7 @@ namespace gpgmm::d3d12 {
         /** \brief Additional heap flags that the resource requires.
 
         By default, GPGMM infers the required heap flags based on the required
-        fields in the D3D12_RESOURCE_DESC, ALLOCATOR_DESC and ALLOCATION_DESC.
+        fields in the D3D12_RESOURCE_DESC, RESOURCE_ALLOCATOR_DESC and ALLOCATION_DESC.
         But if additional heap flags are required, they can also be specified.
 
         It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all
@@ -1343,7 +1345,7 @@ namespace gpgmm::d3d12 {
 
     Residency requires at-least DXGI version 1.4.
 
-    @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
+    @param allocatorDescriptor A reference to RESOURCE_ALLOCATOR_DESC structure that describes the
     allocator.
     @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
     device.
@@ -1356,7 +1358,7 @@ namespace gpgmm::d3d12 {
     residency manager. If NULL is passed, the allocator will be created without using
     residency.
     */
-    GPGMM_EXPORT HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+    GPGMM_EXPORT HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                  ID3D12Device* pDevice,
                                                  IDXGIAdapter* pAdapter,
                                                  IResourceAllocator** ppResourceAllocatorOut,
@@ -1364,7 +1366,7 @@ namespace gpgmm::d3d12 {
 
     /** \brief Create a resource allocator using a specified residency manager.
 
-    @param allocatorDescriptor A reference to ALLOCATOR_DESC structure that describes the
+    @param allocatorDescriptor A reference to RESOURCE_ALLOCATOR_DESC structure that describes the
     allocator.
     @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
     device.
@@ -1376,7 +1378,7 @@ namespace gpgmm::d3d12 {
     resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
     create the allocator.
     */
-    GPGMM_EXPORT HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+    GPGMM_EXPORT HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                  ID3D12Device* pDevice,
                                                  IDXGIAdapter* pAdapter,
                                                  IResidencyManager* pResidencyManager,

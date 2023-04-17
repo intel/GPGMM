@@ -39,14 +39,14 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
     // Configures allocator for testing residency in a controlled and predictable
     // fashion.
-    ALLOCATOR_DESC CreateBasicAllocatorDesc() const {
-        ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
+    RESOURCE_ALLOCATOR_DESC CreateBasicAllocatorDesc() const {
+        RESOURCE_ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
 
         // Disable pre-fetching since it will could cause over-committment unpredictably.
-        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+        desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
 
         // Require MakeResident/Evict occur near CreateResource, for debugging purposes.
-        desc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
+        desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 
         // Disable memory growth so older heap being paged out are the same size as newer heaps
         // being paged-in, and the test expectation based on these sizes is easy to determine.
@@ -57,8 +57,8 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
     // Configures residency manager for testing residency in a controlled and predictable
     // fashion.
-    RESIDENCY_DESC CreateBasicResidencyDesc(uint64_t budget) const {
-        RESIDENCY_DESC residencyDesc = D3D12TestBase::CreateBasicResidencyDesc();
+    RESIDENCY_MANAGER_DESC CreateBasicResidencyDesc(uint64_t budget) const {
+        RESIDENCY_MANAGER_DESC residencyDesc = D3D12TestBase::CreateBasicResidencyDesc();
 
         // Disable automatic budget updates, since it occurs uncontrollably by the OS.
         residencyDesc.Flags |= RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD;
@@ -84,7 +84,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
     bool IsResident(IResourceAllocation* pAllocation) const {
         ASSERT(pAllocation != nullptr);
-        return pAllocation->GetMemory()->GetInfo().Status == RESIDENCY_STATUS_CURRENT_RESIDENT;
+        return pAllocation->GetMemory()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT;
     }
 
     class CreateDescHeapCallbackContext {
@@ -92,14 +92,14 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         CreateDescHeapCallbackContext(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc)
             : mDevice(device), mDescHeapDesc(descHeapDesc) {
         }
-        static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut) {
+        static HRESULT CreateResidencyHeap(void* pContext, ID3D12Pageable** ppPageableOut) {
             CreateDescHeapCallbackContext* createDescHeapCallbackContext =
                 static_cast<CreateDescHeapCallbackContext*>(pContext);
-            return createDescHeapCallbackContext->CreateHeap(ppPageableOut);
+            return createDescHeapCallbackContext->CreateResidencyHeap(ppPageableOut);
         }
 
       private:
-        HRESULT CreateHeap(ID3D12Pageable** ppPageableOut) {
+        HRESULT CreateResidencyHeap(ID3D12Pageable** ppPageableOut) {
             ComPtr<ID3D12DescriptorHeap> heap;
             if (FAILED(mDevice->CreateDescriptorHeap(&mDescHeapDesc, IID_PPV_ARGS(&heap)))) {
                 return E_FAIL;
@@ -141,10 +141,10 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     D3D12_HEAP_PROPERTIES heapProperties = {};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-    HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
+    RESIDENCY_HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
     resourceHeapAlwaysInBudgetDesc.SizeInBytes = kHeapSize;
     resourceHeapAlwaysInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-    resourceHeapAlwaysInBudgetDesc.Flags |= HEAP_FLAG_ALWAYS_IN_BUDGET;
+    resourceHeapAlwaysInBudgetDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET;
 
     D3D12_HEAP_DESC heapDesc = {};
     heapDesc.Properties = heapProperties;
@@ -154,9 +154,9 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
 
-    ASSERT_SUCCEEDED(CreateHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
-                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
-                                nullptr));
+    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, nullptr));
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
@@ -179,37 +179,37 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
     BadCreateHeapCallbackContext badCreateHeapCallbackContext;
 
-    HEAP_DESC resourceHeapDesc = {};
+    RESIDENCY_HEAP_DESC resourceHeapDesc = {};
     resourceHeapDesc.SizeInBytes = kHeapSize;
     resourceHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
-    ASSERT_FAILED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                             BadCreateHeapCallbackContext::CreateHeap,
-                             &badCreateHeapCallbackContext, nullptr));
+    ASSERT_FAILED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+                                      BadCreateHeapCallbackContext::CreateHeap,
+                                      &badCreateHeapCallbackContext, nullptr));
 
-    ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
-                                nullptr));
+    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, nullptr));
 
     // Create a resource heap without residency.
-    ComPtr<IHeap> resourceHeap;
-    ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, nullptr,
-                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
-                                &resourceHeap));
+    ComPtr<IResidencyHeap> resourceHeap;
+    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, nullptr,
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, &resourceHeap));
 
     // Ensure the unmanaged resource heap state is always unknown. Even though D3D12 implicitly
     // creates heaps as resident, untrack resource heaps would never transition out from
-    // RESIDENCY_STATUS_CURRENT_RESIDENT and must be left RESIDENCY_STATUS_UNKNOWN.
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_UNKNOWN);
+    // RESIDENCY_HEAP_STATUS_CURRENT and must be left RESIDENCY_HEAP_STATUS_UNKNOWN.
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_UNKNOWN);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Create a resource heap with residency.
-    ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager.Get(),
-                                CreateResourceHeapCallbackContext::CreateHeap, &createHeapContext,
-                                &resourceHeap));
+    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Residency status of resource heap types is always known.
@@ -222,7 +222,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
@@ -230,7 +230,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
@@ -250,19 +250,19 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     heapDesc.NumDescriptors = 1;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-    HEAP_DESC descriptorHeapDesc = {};
+    RESIDENCY_HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
     descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
-    ComPtr<IHeap> descriptorHeap;
-    ASSERT_SUCCEEDED(CreateHeap(descriptorHeapDesc, residencyManager.Get(),
-                                CreateDescHeapCallbackContext::CreateHeap,
-                                &createDescHeapCallbackContext, &descriptorHeap));
+    ComPtr<IResidencyHeap> descriptorHeap;
+    ASSERT_SUCCEEDED(CreateResidencyHeap(descriptorHeapDesc, residencyManager.Get(),
+                                         CreateDescHeapCallbackContext::CreateResidencyHeap,
+                                         &createDescHeapCallbackContext, &descriptorHeap));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_UNKNOWN);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_UNKNOWN);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 
     ComPtr<ID3D12DescriptorHeap> heap;
@@ -276,7 +276,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(descriptorHeap.Get()));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, true);
 
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
@@ -284,7 +284,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
@@ -304,20 +304,20 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     heapDesc.NumDescriptors = 1;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-    HEAP_DESC descriptorHeapDesc = {};
+    RESIDENCY_HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
     descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-    descriptorHeapDesc.Flags |= HEAP_FLAG_ALWAYS_IN_RESIDENCY;
+    descriptorHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
-    ComPtr<IHeap> descriptorHeap;
-    ASSERT_SUCCEEDED(CreateHeap(descriptorHeapDesc, residencyManager.Get(),
-                                CreateDescHeapCallbackContext::CreateHeap,
-                                &createDescHeapCallbackContext, &descriptorHeap));
+    ComPtr<IResidencyHeap> descriptorHeap;
+    ASSERT_SUCCEEDED(CreateResidencyHeap(descriptorHeapDesc, residencyManager.Get(),
+                                         CreateDescHeapCallbackContext::CreateResidencyHeap,
+                                         &createDescHeapCallbackContext, &descriptorHeap));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_STATUS_CURRENT_RESIDENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 }
 
@@ -338,7 +338,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     {
         ComPtr<IResidencyList> list;
         ASSERT_SUCCEEDED(CreateResidencyList(&list));
-        IHeap* invalid = nullptr;
+        IResidencyHeap* invalid = nullptr;
         ASSERT_FAILED(list->Add(invalid));
     }
 
@@ -398,7 +398,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
 
     // Create allocator with residency, seperately, but no adapter should fail.
     {
-        ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+        RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
         ComPtr<IResidencyManager> residencyManager;
         ComPtr<IResourceAllocator> resourceAllocator;
@@ -463,7 +463,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManagerNoLeak) {
 // Keeps allocating until it reaches the restricted budget then over-commits to ensure older heaps
 // will evicted.
 TEST_F(D3D12ResidencyManagerTests, OverBudget) {
-    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
@@ -528,7 +528,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 // Keeps allocating until it goes over the OS provided budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     constexpr uint64_t kBudgetIsDeterminedByOS = 0;
-    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kBudgetIsDeterminedByOS);
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kBudgetIsDeterminedByOS);
     residencyDesc.Flags ^= RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD;
 
     ComPtr<IResidencyManager> residencyManager;
@@ -572,13 +572,13 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
 // Keeps allocating until it reaches the restricted budget then over-commits to ensure new heaps
 // will not keep increasing in size.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
-    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
         CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
-    ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
     allocatorDesc.ResourceHeapGrowthFactor = 2;
 
     ComPtr<IResourceAllocator> resourceAllocator;
@@ -587,7 +587,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
                                              &resourceAllocator));
 
     std::vector<ComPtr<IResourceAllocation>> allocations = {};
-    std::vector<IHeap*> resourceHeaps = {};
+    std::vector<IResidencyHeap*> resourceHeaps = {};
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
@@ -619,7 +619,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
 // Keeps allocating until it reaches the restricted budget then over-commits to ensure locked heaps
 // will never be evicted.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
-    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
@@ -659,8 +659,8 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         return;
     }
 
-    // Since locked heaps are ineligable for eviction and HEAP_FLAG_ALWAYS_IN_BUDGET is true,
-    // CreateResource should always fail since there is not enough budget.
+    // Since locked heaps are ineligable for eviction and RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET is
+    // true, CreateResource should always fail since there is not enough budget.
     ASSERT_FAILED(resourceAllocator->CreateResource(bufferAllocationDesc, bufferDesc,
                                                     D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 
@@ -695,7 +695,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
         firstSetOfHeaps.push_back(std::move(allocation));
     }
 
@@ -705,7 +705,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
         secondSetOfHeaps.push_back(std::move(allocation));
     }
 
@@ -745,12 +745,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
 
     // Everything below the budget should now be resident.
     for (auto& allocation : firstSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
     }
 
     // Everything above the budget should now be evicted.
     for (auto& allocation : secondSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_PENDING_RESIDENCY);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_PENDING);
     }
 
     // Page-in the second set of heaps using ExecuteCommandLists (and page-out the first set).
@@ -770,17 +770,17 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
 
     // Everything below the budget should now be evicted.
     for (auto& allocation : firstSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_PENDING_RESIDENCY);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_PENDING);
     }
 
     // Everything above the budget should now be resident.
     for (auto& allocation : secondSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_STATUS_CURRENT_RESIDENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
     }
 }
 
 TEST_F(D3D12ResidencyManagerTests, OverBudgetImported) {
-    RESIDENCY_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(

@@ -71,48 +71,49 @@ namespace gpgmm::d3d12 {
     // Heap
 
     // static
-    HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
-                             IResidencyManager* const pResidencyManager,
-                             CreateHeapFn createHeapFn,
-                             void* context,
-                             IHeap** ppHeapOut) {
+    HRESULT ResidencyHeap::CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                               IResidencyManager* const pResidencyManager,
+                                               CreateHeapFn createHeapFn,
+                                               void* context,
+                                               IResidencyHeap** ppResidencyHeapOut) {
         Microsoft::WRL::ComPtr<ID3D12Pageable> pageable;
         GPGMM_RETURN_IF_FAILED(createHeapFn(context, &pageable));
 
-        if (ppHeapOut != nullptr) {
-            *ppHeapOut = new Heap(pageable, descriptor, (pResidencyManager == nullptr));
+        if (ppResidencyHeapOut != nullptr) {
+            *ppResidencyHeapOut =
+                new ResidencyHeap(pageable, descriptor, (pResidencyManager == nullptr));
         }
 
         return S_OK;
     }
 
-    Heap::Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
-               const HEAP_DESC& descriptor,
-               bool isResidencyDisabled)
+    ResidencyHeap::ResidencyHeap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
+                                 const RESIDENCY_HEAP_DESC& descriptor,
+                                 bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment), mPageable(std::move(pageable)) {
     }
 
-    HEAP_INFO Heap::GetInfo() const {
-        return {GetSize(), GetAlignment(), false, false, RESIDENCY_STATUS_UNKNOWN};
+    RESIDENCY_HEAP_INFO ResidencyHeap::GetInfo() const {
+        return {GetSize(), GetAlignment(), false, false, RESIDENCY_HEAP_STATUS_UNKNOWN};
     }
 
-    HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {
+    HRESULT STDMETHODCALLTYPE ResidencyHeap::QueryInterface(REFIID riid, void** ppvObject) {
         return mPageable->QueryInterface(riid, ppvObject);
     }
 
-    ULONG STDMETHODCALLTYPE Heap::AddRef() {
+    ULONG STDMETHODCALLTYPE ResidencyHeap::AddRef() {
         return Unknown::AddRef();
     }
 
-    ULONG STDMETHODCALLTYPE Heap::Release() {
+    ULONG STDMETHODCALLTYPE ResidencyHeap::Release() {
         return Unknown::Release();
     }
 
-    LPCWSTR Heap::GetDebugName() const {
+    LPCWSTR ResidencyHeap::GetDebugName() const {
         return nullptr;
     }
 
-    HRESULT Heap::SetDebugName(LPCWSTR Name) {
+    HRESULT ResidencyHeap::SetDebugName(LPCWSTR Name) {
         return E_NOTIMPL;
     }
 
@@ -127,7 +128,7 @@ namespace gpgmm::d3d12 {
 
     ResidencyList::ResidencyList() = default;
 
-    HRESULT ResidencyList::Add(IHeap* pHeap) {
+    HRESULT ResidencyList::Add(IResidencyHeap* pHeap) {
         return S_OK;
     }
 
@@ -149,7 +150,7 @@ namespace gpgmm::d3d12 {
 
     // ResidencyManager
 
-    HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+    HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                    ID3D12Device* pDevice,
                                    IDXGIAdapter3* pAdapter,
                                    IResidencyManager** ppResidencyManagerOut) {
@@ -158,7 +159,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+    HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                                      ID3D12Device* pDevice,
                                                      IDXGIAdapter3* pAdapter,
                                                      IResidencyManager** ppResidencyManagerOut) {
@@ -171,11 +172,11 @@ namespace gpgmm::d3d12 {
 
     ResidencyManager::~ResidencyManager() = default;
 
-    HRESULT ResidencyManager::LockHeap(IHeap* pHeap) {
+    HRESULT ResidencyManager::LockHeap(IResidencyHeap* pHeap) {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::UnlockHeap(IHeap* pHeap) {
+    HRESULT ResidencyManager::UnlockHeap(IResidencyHeap* pHeap) {
         return S_OK;
     }
 
@@ -200,7 +201,8 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) {
+    HRESULT ResidencyManager::SetResidencyStatus(IResidencyHeap* pHeap,
+                                                 const RESIDENCY_HEAP_STATUS& state) {
         return S_OK;
     }
 
@@ -208,7 +210,7 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
-    ResidencyManager::ResidencyManager(const RESIDENCY_DESC& descriptor,
+    ResidencyManager::ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                        ID3D12Device* pDevice,
                                        IDXGIAdapter3* pAdapter)
         : mDevice(pDevice), mAdapter(pAdapter) {
@@ -266,12 +268,12 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment()};
     }
 
-    IHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<Heap*>(MemoryAllocation::GetMemory());
+    IResidencyHeap* ResourceAllocation::GetMemory() const {
+        return static_cast<ResidencyHeap*>(MemoryAllocation::GetMemory());
     }
 
     ResourceAllocation::ResourceAllocation(MemoryAllocator* allocator,
-                                           Heap* resourceHeap,
+                                           ResidencyHeap* resourceHeap,
                                            Microsoft::WRL::ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator, resourceHeap), mResource(std::move(resource)) {
     }
@@ -298,7 +300,7 @@ namespace gpgmm::d3d12 {
 
     // ResourceAllocator
 
-    HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+    HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                     ID3D12Device* pDevice,
                                     IDXGIAdapter* pAdapter,
                                     IResourceAllocator** ppResourceAllocatorOut,
@@ -308,18 +310,19 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT ResourceAllocator::CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
-                                                       ID3D12Device* pDevice,
-                                                       IDXGIAdapter* pAdapter,
-                                                       IResourceAllocator** ppResourceAllocatorOut,
-                                                       IResidencyManager** ppResidencyManagerOut) {
+    HRESULT ResourceAllocator::CreateResourceAllocator(
+        const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
+        ID3D12Device* pDevice,
+        IDXGIAdapter* pAdapter,
+        IResourceAllocator** ppResourceAllocatorOut,
+        IResidencyManager** ppResidencyManagerOut) {
         if (pDevice == nullptr) {
             return E_INVALIDARG;
         }
 
         Microsoft::WRL::ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
-            RESIDENCY_DESC residencyDesc = {};
+            RESIDENCY_MANAGER_DESC residencyDesc = {};
 
             Microsoft::WRL::ComPtr<IDXGIAdapter3> adapter3;
             if (pAdapter != nullptr) {
@@ -347,7 +350,7 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT ResourceAllocator::CreateResourceAllocator(
-        const ALLOCATOR_DESC& allocatorDescriptor,
+        const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
         ID3D12Device* pDevice,
         IDXGIAdapter* pAdapter,
         IResidencyManager* pResidencyManager,
@@ -365,13 +368,13 @@ namespace gpgmm::d3d12 {
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* pClearValue,
                                               IResourceAllocation** ppResourceAllocationOut) {
-        IHeap* resourceHeap = nullptr;
+        IResidencyHeap* resourceHeap = nullptr;
         Microsoft::WRL::ComPtr<ID3D12Resource> committedResource;
 
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
 
-        HEAP_DESC resourceHeapDesc = {};
+        RESIDENCY_HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = resourceInfo.SizeInBytes;
         resourceHeapDesc.Alignment = resourceInfo.Alignment;
 
@@ -379,12 +382,13 @@ namespace gpgmm::d3d12 {
             mDevice.Get(), allocationDescriptor, committedResource, &resourceDescriptor,
             pClearValue, initialResourceState);
 
-        GPGMM_RETURN_IF_FAILED(Heap::CreateHeap(resourceHeapDesc, mResidencyManager.Get(),
-                                                CreateCommittedResourceCallbackContext::CreateHeap,
-                                                &callbackContext, &resourceHeap));
+        GPGMM_RETURN_IF_FAILED(ResidencyHeap::CreateResidencyHeap(
+            resourceHeapDesc, mResidencyManager.Get(),
+            CreateCommittedResourceCallbackContext::CreateResidencyHeap, &callbackContext,
+            &resourceHeap));
 
-        *ppResourceAllocationOut = new ResourceAllocation(this, static_cast<Heap*>(resourceHeap),
-                                                          std::move(committedResource));
+        *ppResourceAllocationOut = new ResourceAllocation(
+            this, static_cast<ResidencyHeap*>(resourceHeap), std::move(committedResource));
 
         return S_OK;
     }
@@ -409,7 +413,7 @@ namespace gpgmm::d3d12 {
         return E_INVALIDARG;  // Unsupported
     }
 
-    ResourceAllocator::ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+    ResourceAllocator::ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                                          ID3D12Device* pDevice,
                                          ResidencyManager* pResidencyManager)
         : mDevice(pDevice), mResidencyManager(pResidencyManager) {
@@ -468,8 +472,9 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(void* context,
-                                                               ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateResidencyHeap(
+        void* context,
+        ID3D12Pageable** ppPageableOut) {
         CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
             static_cast<CreateCommittedResourceCallbackContext*>(context);
 

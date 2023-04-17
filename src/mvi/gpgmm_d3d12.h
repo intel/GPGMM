@@ -62,16 +62,16 @@ namespace gpgmm::d3d12 {
         GPGMM_REFCOUNT_TYPE mRefCount;
     };
 
-    class Heap final : public MemoryBase, public Unknown, public IHeap {
+    class ResidencyHeap final : public MemoryBase, public Unknown, public IResidencyHeap {
       public:
-        static HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                                  IResidencyManager* const pResidencyManager,
-                                  CreateHeapFn createHeapFn,
-                                  void* context,
-                                  IHeap** ppHeapOut);
+        static HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                           IResidencyManager* const pResidencyManager,
+                                           CreateHeapFn createHeapFn,
+                                           void* context,
+                                           IResidencyHeap** ppResidencyHeapOut);
 
-        // IHeap interface
-        HEAP_INFO GetInfo() const override;
+        // IResidencyHeap interface
+        RESIDENCY_HEAP_INFO GetInfo() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -83,9 +83,9 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        Heap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
-             const HEAP_DESC& descriptor,
-             bool isResidencyDisabled);
+        ResidencyHeap(Microsoft::WRL::ComPtr<ID3D12Pageable> pageable,
+                      const RESIDENCY_HEAP_DESC& descriptor,
+                      bool isResidencyDisabled);
 
         Microsoft::WRL::ComPtr<ID3D12Pageable> mPageable;
     };
@@ -94,7 +94,7 @@ namespace gpgmm::d3d12 {
       public:
         ResidencyList();
 
-        HRESULT Add(IHeap* pHeap) override;
+        HRESULT Add(IResidencyHeap* pHeap) override;
         HRESULT Reset() override;
 
         // IUnknown interface
@@ -105,7 +105,7 @@ namespace gpgmm::d3d12 {
 
     class ResidencyManager final : public Unknown, public IResidencyManager {
       public:
-        static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+        static HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                               ID3D12Device* pDevice,
                                               IDXGIAdapter3* pAdapter,
                                               IResidencyManager** ppResidencyManagerOut);
@@ -113,8 +113,8 @@ namespace gpgmm::d3d12 {
         ~ResidencyManager() override;
 
         // IResidencyManager interface
-        HRESULT LockHeap(IHeap* pHeap) override;
-        HRESULT UnlockHeap(IHeap* pHeap) override;
+        HRESULT LockHeap(IResidencyHeap* pHeap) override;
+        HRESULT UnlockHeap(IResidencyHeap* pHeap) override;
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
                                     IResidencyList* const* ppResidencyLists,
@@ -124,7 +124,8 @@ namespace gpgmm::d3d12 {
                                           uint64_t* pCurrentReservationOut = nullptr) override;
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
-        HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
+        HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
+                                   const RESIDENCY_HEAP_STATUS& state) override;
         HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 
         // IUnknown interface
@@ -137,7 +138,7 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        ResidencyManager(const RESIDENCY_DESC& descriptor,
+        ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                          ID3D12Device* pDevice,
                          IDXGIAdapter3* pAdapter);
 
@@ -160,7 +161,7 @@ namespace gpgmm::d3d12 {
         D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const override;
         uint64_t GetOffsetFromResource() const override;
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
-        IHeap* GetMemory() const override;
+        IResidencyHeap* GetMemory() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -175,7 +176,7 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocator;
 
         ResourceAllocation(MemoryAllocator* allocator,
-                           Heap* resourceHeap,
+                           ResidencyHeap* resourceHeap,
                            Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 
         void DeleteThis() override;
@@ -191,7 +192,7 @@ namespace gpgmm::d3d12 {
                                                const D3D12_RESOURCE_DESC* resourceDescriptor,
                                                const D3D12_CLEAR_VALUE* clearValue,
                                                D3D12_RESOURCE_STATES initialResourceState);
-        static HRESULT CreateHeap(void* context, ID3D12Pageable** ppPageableOut);
+        static HRESULT CreateResidencyHeap(void* context, ID3D12Pageable** ppPageableOut);
 
       private:
         HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
@@ -208,13 +209,13 @@ namespace gpgmm::d3d12 {
                                     public Unknown,
                                     public IResourceAllocator {
       public:
-        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+        static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
                                                IDXGIAdapter* pAdapter,
                                                IResourceAllocator** ppResourceAllocatorOut,
                                                IResidencyManager** ppResidencyManagerOut);
 
-        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+        static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
                                                IDXGIAdapter* pAdapter,
                                                IResidencyManager* pResidencyManager,
@@ -245,7 +246,7 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+        ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                           ID3D12Device* pDevice,
                           ResidencyManager* pResidencyManager);
 

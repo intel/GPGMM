@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
@@ -47,29 +47,29 @@ namespace gpgmm::d3d12 {
         }
     }  // namespace
 
-    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget) {
+    RESIDENCY_HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget) {
         if (alwaysCreatedInBudget) {
-            return HEAP_FLAG_ALWAYS_IN_BUDGET | HEAP_FLAG_ALWAYS_IN_RESIDENCY;
+            return RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET | RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
         }
 
-        return HEAP_FLAG_ALWAYS_IN_RESIDENCY;
+        return RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
     }
 
-    HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                       IResidencyManager* const pResidencyManager,
-                       CreateHeapFn createHeapFn,
-                       void* pCreateHeapContext,
-                       IHeap** ppHeapOut) {
-        return Heap::CreateHeap(descriptor, pResidencyManager, createHeapFn, pCreateHeapContext,
-                                ppHeapOut);
+    HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                IResidencyManager* const pResidencyManager,
+                                CreateHeapFn createHeapFn,
+                                void* pCreateHeapContext,
+                                IResidencyHeap** ppResidencyHeapOut) {
+        return ResidencyHeap::CreateResidencyHeap(descriptor, pResidencyManager, createHeapFn,
+                                                  pCreateHeapContext, ppResidencyHeapOut);
     }
 
     // static
-    HRESULT Heap::CreateHeap(const HEAP_DESC& descriptor,
-                             IResidencyManager* const pResidencyManager,
-                             CreateHeapFn createHeapFn,
-                             void* pCreateHeapContext,
-                             IHeap** ppHeapOut) {
+    HRESULT ResidencyHeap::CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                               IResidencyManager* const pResidencyManager,
+                                               CreateHeapFn createHeapFn,
+                                               void* pCreateHeapContext,
+                                               IResidencyHeap** ppResidencyHeapOut) {
         GPGMM_RETURN_IF_NULLPTR(pCreateHeapContext);
 
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
         ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
-        if (!isResidencyDisabled && (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+        if (!isResidencyDisabled && (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
             uint64_t bytesEvicted = descriptor.SizeInBytes;
             GPGMM_RETURN_IF_FAILED(
                 residencyManager->EvictInternal(descriptor.SizeInBytes, descriptor.HeapSegment,
@@ -95,7 +95,7 @@ namespace gpgmm::d3d12 {
                                (currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
                                    ? currentVideoInfo.Budget - currentVideoInfo.CurrentUsage
                                    : 0)
-                        << " MBs) and HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
+                        << " MBs) and RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
                 }
                 return E_OUTOFMEMORY;
             }
@@ -108,10 +108,11 @@ namespace gpgmm::d3d12 {
         // Pageable-based type is required for residency-managed heaps.
         GPGMM_RETURN_IF_NULLPTR(pageable);
 
-        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateHeap",
+        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateResidencyHeap",
                                       (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
 
-        std::unique_ptr<Heap> heap(new Heap(pageable, descriptor, isResidencyDisabled));
+        std::unique_ptr<ResidencyHeap> heap(
+            new ResidencyHeap(pageable, descriptor, isResidencyDisabled));
 
         if (!isResidencyDisabled) {
             // Check if the underlying memory was implicitly made resident.
@@ -120,15 +121,15 @@ namespace gpgmm::d3d12 {
                 // Resource heaps created without the "create not resident" flag are always
                 // resident.
                 if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
-                    heap->mState = RESIDENCY_STATUS_CURRENT_RESIDENT;
+                    heap->mState = RESIDENCY_HEAP_STATUS_CURRENT;
                 } else {
-                    heap->mState = RESIDENCY_STATUS_PENDING_RESIDENCY;
+                    heap->mState = RESIDENCY_HEAP_STATUS_PENDING;
                 }
             }
 
             // Heap created not resident requires no budget to be created.
-            if (heap->mState == RESIDENCY_STATUS_PENDING_RESIDENCY &&
-                (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+            if (heap->mState == RESIDENCY_HEAP_STATUS_PENDING &&
+                (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
                 ErrorLog(heap.get(), MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
@@ -139,22 +140,23 @@ namespace gpgmm::d3d12 {
             // should be always inserted in the residency cache. For other heap types (eg.
             // descriptor heap), they must be manually locked and unlocked to be inserted into the
             // residency cache.
-            if (heap->mState != RESIDENCY_STATUS_UNKNOWN) {
+            if (heap->mState != RESIDENCY_HEAP_STATUS_UNKNOWN) {
                 GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
                                        GetDevice(pageable.Get()));
             } else {
-                if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
+                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
                     GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
                                            GetDevice(pageable.Get()));
                     GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
                                            GetDevice(pageable.Get()));
-                    ASSERT(heap->mState == RESIDENCY_STATUS_CURRENT_RESIDENT);
+                    ASSERT(heap->mState == RESIDENCY_HEAP_STATUS_CURRENT);
                 }
             }
         } else {
-            if (descriptor.Flags & HEAP_FLAG_ALWAYS_IN_RESIDENCY) {
+            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
                 WarnLog(heap.get(), MessageId::kInvalidArgument)
-                    << "HEAP_FLAG_ALWAYS_IN_RESIDENCY was specified but had no effect becauase "
+                    << "RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT was specified but had no effect "
+                       "becauase "
                        "residency management is "
                        "not being used.";
             }
@@ -167,29 +169,29 @@ namespace gpgmm::d3d12 {
             << "Created heap, Size=" << heap->GetInfo().SizeInBytes
             << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
 
-        if (ppHeapOut != nullptr) {
-            *ppHeapOut = heap.release();
+        if (ppResidencyHeapOut != nullptr) {
+            *ppResidencyHeapOut = heap.release();
         }
 
         return S_OK;
     }
 
-    Heap::Heap(ComPtr<ID3D12Pageable> pageable,
-               const HEAP_DESC& descriptor,
-               bool isResidencyDisabled)
+    ResidencyHeap::ResidencyHeap(ComPtr<ID3D12Pageable> pageable,
+                                 const RESIDENCY_HEAP_DESC& descriptor,
+                                 bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
           mPageable(std::move(pageable)),
           mHeapSegment(descriptor.HeapSegment),
           mResidencyLock(0),
           mIsResidencyDisabled(isResidencyDisabled),
-          mState(RESIDENCY_STATUS_UNKNOWN) {
+          mState(RESIDENCY_HEAP_STATUS_UNKNOWN) {
         ASSERT(mPageable != nullptr);
         if (!mIsResidencyDisabled) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);
         }
     }
 
-    Heap::~Heap() {
+    ResidencyHeap::~ResidencyHeap() {
         if (mIsResidencyDisabled) {
             return;
         }
@@ -204,59 +206,59 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    uint64_t Heap::GetLastUsedFenceValue() const {
+    uint64_t ResidencyHeap::GetLastUsedFenceValue() const {
         return mLastUsedFenceValue;
     }
 
-    void Heap::SetLastUsedFenceValue(uint64_t fenceValue) {
+    void ResidencyHeap::SetLastUsedFenceValue(uint64_t fenceValue) {
         mLastUsedFenceValue = fenceValue;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP Heap::GetHeapSegment() const {
+    DXGI_MEMORY_SEGMENT_GROUP ResidencyHeap::GetHeapSegment() const {
         return mHeapSegment;
     }
 
-    void Heap::AddResidencyLockRef() {
+    void ResidencyHeap::AddResidencyLockRef() {
         mResidencyLock.Ref();
     }
 
-    void Heap::ReleaseResidencyLock() {
+    void ResidencyHeap::ReleaseResidencyLock() {
         mResidencyLock.Unref();
     }
 
-    bool Heap::IsResidencyLocked() const {
+    bool ResidencyHeap::IsResidencyLocked() const {
         return mResidencyLock.GetRefCount() > 0;
     }
 
-    HEAP_INFO Heap::GetInfo() const {
+    RESIDENCY_HEAP_INFO ResidencyHeap::GetInfo() const {
         return {GetSize(), GetAlignment(), IsResidencyLocked(), IsInList(), mState};
     }
 
-    HRESULT Heap::SetDebugNameImpl(LPCWSTR name) {
+    HRESULT ResidencyHeap::SetDebugNameImpl(LPCWSTR name) {
         return SetDebugObjectName(mPageable.Get(), name);
     }
 
-    HRESULT STDMETHODCALLTYPE Heap::QueryInterface(REFIID riid, void** ppvObject) {
+    HRESULT STDMETHODCALLTYPE ResidencyHeap::QueryInterface(REFIID riid, void** ppvObject) {
         return mPageable->QueryInterface(riid, ppvObject);
     }
 
-    ULONG STDMETHODCALLTYPE Heap::AddRef() {
+    ULONG STDMETHODCALLTYPE ResidencyHeap::AddRef() {
         return Unknown::AddRef();
     }
 
-    ULONG STDMETHODCALLTYPE Heap::Release() {
+    ULONG STDMETHODCALLTYPE ResidencyHeap::Release() {
         return Unknown::Release();
     }
 
-    void Heap::SetResidencyState(RESIDENCY_STATUS newStatus) {
+    void ResidencyHeap::SetResidencyStatus(RESIDENCY_HEAP_STATUS newStatus) {
         mState = newStatus;
     }
 
-    LPCWSTR Heap::GetDebugName() const {
+    LPCWSTR ResidencyHeap::GetDebugName() const {
         return DebugObject::GetDebugName();
     }
 
-    HRESULT Heap::SetDebugName(LPCWSTR Name) {
+    HRESULT ResidencyHeap::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugName(Name);
     }
 

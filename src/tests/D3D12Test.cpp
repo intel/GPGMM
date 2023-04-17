@@ -126,8 +126,8 @@ namespace gpgmm::d3d12 {
         GPGMMTestBase::TearDown();
     }
 
-    ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
-        ALLOCATOR_DESC desc = {};
+    RESOURCE_ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
+        RESOURCE_ALLOCATOR_DESC desc = {};
         desc.ResourceHeapTier = mCaps->GetMaxResourceHeapTierSupported();
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
@@ -141,8 +141,8 @@ namespace gpgmm::d3d12 {
         return desc;
     }
 
-    RESIDENCY_DESC D3D12TestBase::CreateBasicResidencyDesc() const {
-        RESIDENCY_DESC desc = {};
+    RESIDENCY_MANAGER_DESC D3D12TestBase::CreateBasicResidencyDesc() const {
+        RESIDENCY_MANAGER_DESC desc = {};
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {

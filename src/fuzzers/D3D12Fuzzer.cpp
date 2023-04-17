@@ -20,10 +20,10 @@ uint64_t UInt8ToUInt64(const uint8_t* src) {
     return dst;
 }
 
-HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::ALLOCATOR_DESC* pAllocatorDesc,
+HRESULT CreateResourceAllocatorDesc(gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC* pAllocatorDesc,
                                     ID3D12Device** ppDeviceOut,
                                     IDXGIAdapter3** ppAdapterOut) {
-    gpgmm::d3d12::ALLOCATOR_DESC allocatorDescOut = {};
+    gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC allocatorDescOut = {};
 
     // Populate the device
     if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(ppDeviceOut)))) {

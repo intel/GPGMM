@@ -50,19 +50,19 @@ namespace {
 }  // namespace
 
 extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
-    gpgmm::d3d12::ALLOCATOR_DESC allocatorDesc = {};
+    gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC allocatorDesc = {};
     if (FAILED(CreateResourceAllocatorDesc(&allocatorDesc, &gDevice, &gAdapter))) {
         return 0;
     }
 
-    allocatorDesc.Flags |= gpgmm::d3d12::ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
+    allocatorDesc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;
 
     ComPtr<IDXGIAdapter3> adapter3;
     if (FAILED(gAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)))) {
         return 0;
     }
 
-    gpgmm::d3d12::RESIDENCY_DESC residencyDesc = {};
+    gpgmm::d3d12::RESIDENCY_MANAGER_DESC residencyDesc = {};
     residencyDesc.MinLogLevel = D3D12_MESSAGE_SEVERITY_MESSAGE;
 
     // Create ResidencyManager

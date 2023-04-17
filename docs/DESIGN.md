@@ -147,7 +147,7 @@ sequenceDiagram
     GPGMM->>GPGMM: Pool-allocate
     Note over GPGMM: No heaps in pool.
     activate D3D12
-    GPGMM->>D3D12: CreateHeap
+    GPGMM->>D3D12: CreateResidencyHeap
     D3D12-->>GPGMM: new Heap
     Note over GPGMM: Track Heap for residency.
     GPGMM->>D3D12: CreatePlacedResource

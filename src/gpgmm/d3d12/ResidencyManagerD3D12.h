@@ -36,13 +36,13 @@ namespace gpgmm::d3d12 {
     class BudgetUpdateEvent;
     class Caps;
     class Fence;
-    class Heap;
+    class ResidencyHeap;
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
     class ResidencyManager final : public DebugObject, public IResidencyManager, public ObjectBase {
       public:
-        static HRESULT CreateResidencyManager(const RESIDENCY_DESC& descriptor,
+        static HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                               ID3D12Device* pDevice,
                                               IDXGIAdapter3* pAdapter,
                                               IResidencyManager** ppResidencyManagerOut);
@@ -50,8 +50,8 @@ namespace gpgmm::d3d12 {
         ~ResidencyManager() override;
 
         // IResidencyManager interface
-        HRESULT LockHeap(IHeap* pHeap) override;
-        HRESULT UnlockHeap(IHeap* pHeap) override;
+        HRESULT LockHeap(IResidencyHeap* pHeap) override;
+        HRESULT UnlockHeap(IResidencyHeap* pHeap) override;
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
                                     IResidencyList* const* ppResidencyLists,
@@ -63,7 +63,8 @@ namespace gpgmm::d3d12 {
 
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
-        HRESULT SetResidencyState(IHeap* pHeap, const RESIDENCY_STATUS& state) override;
+        HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
+                                   const RESIDENCY_HEAP_STATUS& state) override;
 
         HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 
@@ -74,11 +75,11 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
       private:
-        friend Heap;
+        friend ResidencyHeap;
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
 
-        ResidencyManager(const RESIDENCY_DESC& descriptor,
+        ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                          ID3D12Device* pDevice,
                          IDXGIAdapter3* pAdapter,
                          std::unique_ptr<Caps> caps);
@@ -87,9 +88,9 @@ namespace gpgmm::d3d12 {
                               const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                               uint64_t* bytesEvictedOut = nullptr);
 
-        HRESULT InsertHeap(Heap* heap);
+        HRESULT InsertHeap(ResidencyHeap* heap);
 
-        HRESULT InsertHeapInternal(Heap* heap);
+        HRESULT InsertHeapInternal(ResidencyHeap* heap);
 
         HRESULT QueryStatsInternal(RESIDENCY_MANAGER_STATS* pResidencyManagerStats);
 
@@ -101,7 +102,7 @@ namespace gpgmm::d3d12 {
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IResidencyManager)
 
-        using LRUCache = LinkedList<Heap>;
+        using LRUCache = LinkedList<ResidencyHeap>;
 
         struct VideoMemorySegment {
             LRUCache cache = {};

@@ -17,7 +17,7 @@
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/utils/Math.h"
@@ -65,7 +65,7 @@ namespace gpgmm::d3d12 {
         resourceDescriptor.Flags = mResourceFlags;
 
         // Optimized clear is not supported for buffers.
-        ComPtr<Heap> resourceHeap;
+        ComPtr<ResidencyHeap> resourceHeap;
         HRESULT hr = mResourceAllocator->CreateCommittedResource(
             mHeapProperties, mHeapFlags, info, &resourceDescriptor,
             /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
