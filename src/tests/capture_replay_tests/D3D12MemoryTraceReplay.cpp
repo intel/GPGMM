@@ -86,10 +86,12 @@ namespace {
         return resourceDesc;
     }
 
-    ALLOCATOR_DESC ConvertAndApplyToAllocatorDesc(const Json::Value& allocatorDescJson,
-                                                  const ALLOCATOR_DESC& allocatorDesc) {
-        ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.Flags |= static_cast<ALLOCATOR_FLAGS>(allocatorDescJson["Flags"].asInt());
+    RESOURCE_ALLOCATOR_DESC ConvertAndApplyToAllocatorDesc(
+        const Json::Value& allocatorDescJson,
+        const RESOURCE_ALLOCATOR_DESC& allocatorDesc) {
+        RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
+        newAllocatorDesc.Flags |=
+            static_cast<RESOURCE_ALLOCATOR_FLAGS>(allocatorDescJson["Flags"].asInt());
         newAllocatorDesc.ResourceHeapTier =
             static_cast<D3D12_RESOURCE_HEAP_TIER>(allocatorDescJson["ResourceHeapTier"].asInt());
         newAllocatorDesc.SubAllocationAlgorithm =
@@ -106,10 +108,12 @@ namespace {
         return newAllocatorDesc;
     }
 
-    RESIDENCY_DESC ConvertAndApplyToResidencyDesc(const Json::Value& residencyDescJson,
-                                                  const RESIDENCY_DESC& residencyDesc) {
-        RESIDENCY_DESC newResidencyDesc = residencyDesc;
-        newResidencyDesc.Flags |= static_cast<RESIDENCY_FLAGS>(residencyDescJson["Flags"].asInt());
+    RESIDENCY_MANAGER_DESC ConvertAndApplyToResidencyDesc(
+        const Json::Value& residencyDescJson,
+        const RESIDENCY_MANAGER_DESC& residencyDesc) {
+        RESIDENCY_MANAGER_DESC newResidencyDesc = residencyDesc;
+        newResidencyDesc.Flags |=
+            static_cast<RESIDENCY_MANAGER_FLAGS>(residencyDescJson["Flags"].asInt());
         newResidencyDesc.MaxPctOfVideoMemoryToBudget =
             residencyDescJson["MaxPctOfVideoMemoryToBudget"].asFloat();
         newResidencyDesc.MinPctOfBudgetToReserve =
@@ -130,11 +134,12 @@ namespace {
         return heapProperties;
     }
 
-    HEAP_DESC ConvertAndApplyToHeapDesc(const Json::Value& heapJson, const HEAP_DESC& heapDesc) {
-        HEAP_DESC newHeapDesc = heapDesc;
+    RESIDENCY_HEAP_DESC ConvertAndApplyToHeapDesc(const Json::Value& heapJson,
+                                                  const RESIDENCY_HEAP_DESC& heapDesc) {
+        RESIDENCY_HEAP_DESC newHeapDesc = heapDesc;
         newHeapDesc.SizeInBytes = heapJson["SizeInBytes"].asUInt64();
         newHeapDesc.Alignment = heapJson["Alignment"].asUInt64();
-        newHeapDesc.Flags = static_cast<HEAP_FLAGS>(heapJson["Flags"].asInt());
+        newHeapDesc.Flags = static_cast<RESIDENCY_HEAP_FLAGS>(heapJson["Flags"].asInt());
         return newHeapDesc;
     }
 
@@ -158,12 +163,12 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
         using InstanceID = std::string;
 
         ComPtr<IResourceAllocation> CurrentAllocationWithoutID;
-        ComPtr<IHeap> CurrentHeapWithoutID;
+        ComPtr<IResidencyHeap> CurrentHeapWithoutID;
 
         std::unordered_map<InstanceID, ComPtr<IResourceAllocator>> CreatedAllocatorsToID;
         std::unordered_map<InstanceID, ComPtr<IResidencyManager>> CreatedResidencyManagersToID;
         std::unordered_map<InstanceID, ComPtr<IResourceAllocation>> CreatedAllocationsToID;
-        std::unordered_map<InstanceID, ComPtr<IHeap>> CreatedHeapsToID;
+        std::unordered_map<InstanceID, ComPtr<IResidencyHeap>> CreatedHeapsToID;
 
         InstanceID currentAllocatorID;
         InstanceID currentResidencyID;
@@ -185,7 +190,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
         const Json::Value& traceEvents = root["traceEvents"];
         ASSERT_TRUE(!traceEvents.empty());
 
-        ALLOCATOR_DESC baseAllocatorDesc = CreateBasicAllocatorDesc();
+        RESOURCE_ALLOCATOR_DESC baseAllocatorDesc = CreateBasicAllocatorDesc();
 
         // Captures never store recording options, they must be always specified.
         baseAllocatorDesc.RecordOptions.Flags |=
@@ -200,10 +205,10 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
         }
 
         if (!envParams.IsPrefetchAllowed) {
-            baseAllocatorDesc.Flags |= ALLOCATOR_FLAG_DISABLE_MEMORY_PREFETCH;
+            baseAllocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
         }
 
-        RESIDENCY_DESC baseResidencyDesc = CreateBasicResidencyDesc();
+        RESIDENCY_MANAGER_DESC baseResidencyDesc = CreateBasicResidencyDesc();
         baseResidencyDesc.RecordOptions = baseAllocatorDesc.RecordOptions;
 
         for (Json::Value::ArrayIndex eventIndex = 0; eventIndex < traceEvents.size();
@@ -309,11 +314,11 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                         ASSERT_NE(resourceAllocator, nullptr);
 
                         if (envParams.IsNeverAllocate) {
-                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_ALLOCATE_MEMORY;
+                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
                         }
 
                         if (envParams.IsSuballocationDisabled) {
-                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_MEMORY;
+                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
                         }
 
                         HRESULT hr = resourceAllocator->CreateResource(
@@ -394,7 +399,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
-                        RESIDENCY_DESC newResidencyDesc = baseResidencyDesc;
+                        RESIDENCY_MANAGER_DESC newResidencyDesc = baseResidencyDesc;
                         newResidencyDesc =
                             ConvertAndApplyToResidencyDesc(snapshot, newResidencyDesc);
 
@@ -456,7 +461,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
-                        ALLOCATOR_DESC allocatorDescOfProfile = baseAllocatorDesc;
+                        RESOURCE_ALLOCATOR_DESC allocatorDescOfProfile = baseAllocatorDesc;
                         // Apply profile (if specified).
                         if (envParams.AllocatorProfile ==
                             AllocatorProfile::ALLOCATOR_PROFILE_CAPTURED) {
@@ -468,7 +473,8 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             allocatorDescOfProfile.ResourceHeapFragmentationLimit = 1.0f;
                         } else if (envParams.AllocatorProfile ==
                                    AllocatorProfile::ALLOCATOR_PROFILE_LOW_MEMORY) {
-                            allocatorDescOfProfile.Flags |= ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
+                            allocatorDescOfProfile.Flags |=
+                                RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
                             allocatorDescOfProfile.ResourceHeapFragmentationLimit =
                                 0.125;  // 1/8th of 4MB
                         }
@@ -511,7 +517,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "Heap.CreateHeap") {
+            } else if (event["name"].asString() == "Heap.CreateResidencyHeap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_INSTANT: {
                         const Json::Value& args = event["args"];
@@ -529,7 +535,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                         const D3D12_HEAP_PROPERTIES heapProperties =
                             ConvertToD3D12HeapProperties(args["Heap"]["Properties"]);
 
-                        HEAP_DESC resourceHeapDesc = {};
+                        RESIDENCY_HEAP_DESC resourceHeapDesc = {};
                         resourceHeapDesc.HeapSegment = GetHeapSegment(
                             heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
                         resourceHeapDesc =
@@ -553,10 +559,11 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                         CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(),
                                                                             &heapDesc);
 
-                        ComPtr<IHeap> resourceHeap;
-                        ASSERT_SUCCEEDED(CreateHeap(resourceHeapDesc, residencyManager,
-                                                    CreateResourceHeapCallbackContext::CreateHeap,
-                                                    &createHeapContext, &resourceHeap));
+                        ComPtr<IResidencyHeap> resourceHeap;
+                        ASSERT_SUCCEEDED(
+                            CreateResidencyHeap(resourceHeapDesc, residencyManager,
+                                                CreateResourceHeapCallbackContext::CreateHeap,
+                                                &createHeapContext, &resourceHeap));
 
                         playbackContext.CurrentHeapWithoutID = std::move(resourceHeap);
 
@@ -569,7 +576,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                     default:
                         break;
                 }
-            } else if (event["name"].asString() == "IHeap") {
+            } else if (event["name"].asString() == "IResidencyHeap") {
                 switch (*event["ph"].asCString()) {
                     case TRACE_EVENT_PHASE_CREATE_OBJECT: {
                         if (playbackContext.CurrentHeapWithoutID == nullptr) {
@@ -592,7 +599,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             continue;
                         }
 
-                        IHeap* heap = it->second.Get();
+                        IResidencyHeap* heap = it->second.Get();
                         ASSERT_NE(heap, nullptr);
 
                         mCapturedMemoryStats.CurrentUsage -= heap->GetInfo().SizeInBytes;

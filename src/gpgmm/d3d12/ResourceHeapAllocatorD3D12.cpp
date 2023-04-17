@@ -19,7 +19,7 @@
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 #include "gpgmm/utils/Limits.h"
@@ -50,7 +50,7 @@ namespace gpgmm::d3d12 {
             return {};
         }
 
-        HEAP_DESC resourceHeapDesc = {};
+        RESIDENCY_HEAP_DESC resourceHeapDesc = {};
         // D3D12 requests (but not requires) the heap size be always a multiple of
         // alignment to avoid wasting bytes.
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
@@ -72,10 +72,10 @@ namespace gpgmm::d3d12 {
         heapDesc.Flags = mHeapFlags;
 
         CreateResourceHeapCallbackContext createResourceHeapCallbackContext(mDevice, &heapDesc);
-        ComPtr<IHeap> resourceHeap;
-        HRESULT hr = Heap::CreateHeap(resourceHeapDesc, mResidencyManager,
-                                      CreateResourceHeapCallbackContext::CreateHeap,
-                                      &createResourceHeapCallbackContext, &resourceHeap);
+        ComPtr<IResidencyHeap> resourceHeap;
+        HRESULT hr = ResidencyHeap::CreateResidencyHeap(
+            resourceHeapDesc, mResidencyManager, CreateResourceHeapCallbackContext::CreateHeap,
+            &createResourceHeapCallbackContext, &resourceHeap);
         if (FAILED(hr)) {
             return {static_cast<ErrorCodeType>(hr)};
         }
@@ -83,8 +83,8 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(this, static_cast<Heap*>(resourceHeap.Detach()),
-                                                  request.SizeInBytes);
+        return std::make_unique<MemoryAllocation>(
+            this, static_cast<ResidencyHeap*>(resourceHeap.Detach()), request.SizeInBytes);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {

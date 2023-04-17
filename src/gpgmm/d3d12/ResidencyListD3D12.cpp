@@ -15,7 +15,7 @@
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 
 #include "gpgmm/common/TraceEvent.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 
 namespace gpgmm::d3d12 {
 
@@ -34,13 +34,12 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
-    HRESULT ResidencyList::Add(IHeap* pHeap) {
+    HRESULT ResidencyList::Add(IResidencyHeap* pHeap) {
         if (pHeap == nullptr) {
             return E_INVALIDARG;
         }
 
-        Heap* heap = static_cast<Heap*>(pHeap);
-        mList.push_back(heap);
+        mList.push_back(static_cast<ResidencyHeap*>(pHeap));
         return S_OK;
     }
 

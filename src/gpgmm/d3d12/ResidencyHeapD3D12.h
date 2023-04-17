@@ -27,20 +27,23 @@ namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
-    HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget);
+    RESIDENCY_HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget);
 
-    class Heap final : public MemoryBase, public DebugObject, public LinkNode<Heap>, public IHeap {
+    class ResidencyHeap final : public MemoryBase,
+                                public DebugObject,
+                                public LinkNode<ResidencyHeap>,
+                                public IResidencyHeap {
       public:
-        static HRESULT CreateHeap(const HEAP_DESC& descriptor,
-                                  IResidencyManager* const pResidencyManager,
-                                  CreateHeapFn createHeapFn,
-                                  void* pCreateHeapContext,
-                                  IHeap** ppHeapOut);
+        static HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                           IResidencyManager* const pResidencyManager,
+                                           CreateHeapFn createHeapFn,
+                                           void* pCreateHeapContext,
+                                           IResidencyHeap** ppResidencyHeapOut);
 
-        ~Heap() override;
+        ~ResidencyHeap() override;
 
-        // IHeap interface
-        HEAP_INFO GetInfo() const override;
+        // IResidencyHeap interface
+        RESIDENCY_HEAP_INFO GetInfo() const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -54,9 +57,9 @@ namespace gpgmm::d3d12 {
       private:
         friend ResidencyManager;
 
-        Heap(ComPtr<ID3D12Pageable> pageable,
-             const HEAP_DESC& descriptor,
-             bool isResidencyDisabled);
+        ResidencyHeap(ComPtr<ID3D12Pageable> pageable,
+                      const RESIDENCY_HEAP_DESC& descriptor,
+                      bool isResidencyDisabled);
 
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IHeap)
@@ -70,7 +73,7 @@ namespace gpgmm::d3d12 {
         uint64_t GetLastUsedFenceValue() const;
         void SetLastUsedFenceValue(uint64_t fenceValue);
 
-        void SetResidencyState(RESIDENCY_STATUS newStatus);
+        void SetResidencyStatus(RESIDENCY_HEAP_STATUS newStatus);
 
         bool IsResidencyLocked() const;
 
@@ -86,7 +89,7 @@ namespace gpgmm::d3d12 {
         DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
         RefCounted mResidencyLock;
         bool mIsResidencyDisabled;
-        RESIDENCY_STATUS mState;
+        RESIDENCY_HEAP_STATUS mState;
     };
 }  // namespace gpgmm::d3d12
 

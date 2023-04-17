@@ -30,7 +30,7 @@ namespace gpgmm::d3d12 {
 
     class BufferAllocator;
     class Caps;
-    class Heap;
+    class ResidencyHeap;
     class DebugResourceAllocator;
     class ResidencyManager;
     class ResourceAllocation;
@@ -39,13 +39,13 @@ namespace gpgmm::d3d12 {
                                     public IResourceAllocator,
                                     public MemoryAllocator {
       public:
-        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+        static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
                                                IDXGIAdapter* pAdapter,
                                                IResourceAllocator** ppResourceAllocatorOut,
                                                IResidencyManager** ppResidencyManagerOut);
 
-        static HRESULT CreateResourceAllocator(const ALLOCATOR_DESC& allocatorDescriptor,
+        static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
                                                IDXGIAdapter* pAdapter,
                                                IResidencyManager* pResidencyManager,
@@ -87,19 +87,19 @@ namespace gpgmm::d3d12 {
                                        const D3D12_CLEAR_VALUE* clearValue,
                                        IResourceAllocation** ppResourceAllocationOut);
 
-        ResourceAllocator(const ALLOCATOR_DESC& descriptor,
+        ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                           ID3D12Device* pDevice,
                           ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 
         std::unique_ptr<MemoryAllocator> CreateResourceAllocator(
-            const ALLOCATOR_DESC& descriptor,
+            const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment);
 
         std::unique_ptr<MemoryAllocator> CreateSmallBufferAllocator(
-            const ALLOCATOR_DESC& descriptor,
+            const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment,
@@ -121,7 +121,7 @@ namespace gpgmm::d3d12 {
             bool isPrefetchAllowed,
             std::unique_ptr<MemoryAllocator> underlyingAllocator);
 
-        HRESULT CreatePlacedResource(Heap* const resourceHeap,
+        HRESULT CreatePlacedResource(ResidencyHeap* const resourceHeap,
                                      uint64_t resourceOffset,
                                      const D3D12_RESOURCE_DESC* resourceDescriptor,
                                      const D3D12_CLEAR_VALUE* clearValue,
@@ -135,7 +135,7 @@ namespace gpgmm::d3d12 {
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialResourceState,
                                         ID3D12Resource** commitedResourceOut,
-                                        Heap** resourceHeapOut);
+                                        ResidencyHeap** resourceHeapOut);
 
         HRESULT ReportLiveDeviceObjects() const;
 

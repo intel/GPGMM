@@ -15,7 +15,7 @@
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 
 #include "gpgmm/common/TraceEvent.h"
-#include "gpgmm/d3d12/HeapD3D12.h"
+#include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
@@ -31,7 +31,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const ALLOCATOR_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATOR_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
@@ -158,7 +158,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const HEAP_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESIDENCY_HEAP_DESC& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("Alignment", desc.Alignment);
@@ -171,7 +171,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const HEAP_INFO& info) {
+    JSONDict JSONSerializer::Serialize(const RESIDENCY_HEAP_INFO& info) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", info.SizeInBytes);
         dict.AddItem("Alignment", info.Alignment);
@@ -230,7 +230,7 @@ namespace gpgmm::d3d12 {
             JSONDict residencyListDict;
             JSONArray heapArray;
             ResidencyList* residencyList = static_cast<ResidencyList*>(desc.ResidencyLists[i]);
-            for (Heap* heap : *residencyList) {
+            for (ResidencyHeap* heap : *residencyList) {
                 heapArray.AddItem(gpgmm::JSONSerializer::Serialize(heap));
             }
             if (!heapArray.IsEmpty()) {
@@ -248,7 +248,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const RESIDENCY_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESIDENCY_MANAGER_DESC& desc) {
         JSONDict dict;
         dict.AddItem("MinLogLevel", desc.MinLogLevel);
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
