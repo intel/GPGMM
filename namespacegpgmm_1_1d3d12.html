@@ -179,11 +179,11 @@ Enumerations</h2></td></tr>
 <tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073">ALLOCATION_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a079489e9db863a7a39212df0a73c5e00">ALLOCATION_FLAG_NEVER_ALLOCATE</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122adf7c4695ea835b76589054da16e135f4">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a1d6b00ac94f6b012596af457a0a21a84">ALLOCATION_FLAG_NEVER_SUBALLOCATE</a> = 0x4
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2904eb820b689e47e79e18a3659777ab">ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515">ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5">ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122ac8452aaa8b7b0d834c04c0e9f22e9389">ALLOCATION_FLAG_ALWAYS_PREFETCH</a> = 0x8
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d">ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP</a> = 0x8
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f">ALLOCATION_FLAG_ALWAYS_CACHE_SIZE</a> = 0x10
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa">ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS</a> = 0x20
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a27522d3ccdef64c508026d66a07e98dc">ALLOCATION_FLAG_NEVER_FALLBACK</a> = 0x40
@@ -336,11 +336,11 @@ Variables</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073" name="aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073"></a>ALLOCATION_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all allocation flags. </p>
 <pre class="fragment">Enabled by default.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a079489e9db863a7a39212df0a73c5e00" name="aec66b5dc9f1b55002d33c5c75ac2f122a079489e9db863a7a39212df0a73c5e00"></a>ALLOCATION_FLAG_NEVER_ALLOCATE&#160;</td><td class="fielddoc"><p>Disallow creating a new resource heap when creating a resource. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a2904eb820b689e47e79e18a3659777ab" name="aec66b5dc9f1b55002d33c5c75ac2f122a2904eb820b689e47e79e18a3659777ab"></a>ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP&#160;</td><td class="fielddoc"><p>Disallow creating a new resource heap when creating a resource. </p>
 <pre class="fragment">The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
 disables creating standalone allocations whose memory cannot be reused.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122adf7c4695ea835b76589054da16e135f4" name="aec66b5dc9f1b55002d33c5c75ac2f122adf7c4695ea835b76589054da16e135f4"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN&#160;</td><td class="fielddoc"><p>Sub-allocate a resource allocation within the same resource. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515" name="aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515"></a>ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE&#160;</td><td class="fielddoc"><p>Sub-allocate a resource allocation within the same resource. </p>
 <pre class="fragment">The resource alignment is allowed to be byte-aligned instead of being resource-aligned,
 which significantly reduces app memory usage (1B vs 64KB per allocation). Since the resource
 can only be in one state at a time, this is mostly restricted to constant buffers (index and
@@ -353,16 +353,16 @@ beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a 
 command queue is used since not all devices guarentee command queue accesses are coherent
 between sub-allocations within the same resource.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a1d6b00ac94f6b012596af457a0a21a84" name="aec66b5dc9f1b55002d33c5c75ac2f122a1d6b00ac94f6b012596af457a0a21a84"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE&#160;</td><td class="fielddoc"><p>Disallow allowing the creation of multiple resources using the same resource heap. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5" name="aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP&#160;</td><td class="fielddoc"><p>Disallow allowing the creation of multiple resources using the same resource heap. </p>
 <p>When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122ac8452aaa8b7b0d834c04c0e9f22e9389" name="aec66b5dc9f1b55002d33c5c75ac2f122ac8452aaa8b7b0d834c04c0e9f22e9389"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH&#160;</td><td class="fielddoc"><p>Prefetch memory for the next resource allocation. </p>
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d" name="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP&#160;</td><td class="fielddoc"><p>Prefetch memory for the next resource allocation. </p>
 <pre class="fragment">The call to prefetch is deferred to a seperate background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
 trigger prefetching based on heurstics. Prefetching enables more performance when
 allocating for contiguous allocations or many resources of the same size.
 
-Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE.
+Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f" name="aec66b5dc9f1b55002d33c5c75ac2f122a9628f4a0c473f56e31a62b630fa7b67f"></a>ALLOCATION_FLAG_ALWAYS_CACHE_SIZE&#160;</td><td class="fielddoc"><p>Cache the request size. </p>
 <pre class="fragment">Allow internal data structures used for resource allocation to be cached in-memory.
