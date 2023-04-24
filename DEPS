@@ -65,7 +65,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang@2c8239e949058c9dd6e2ab3236f16ff8c4b4f8de',
+    'url': '{chromium_git}/chromium/src/tools/clang@55676aed71dd450595d83f107d24cb31c00160b3',
     'condition': 'gpgmm_standalone',
   },
  'third_party/ninja': {
