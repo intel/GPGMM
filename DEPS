@@ -57,7 +57,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@5f7e371b41f053a7fac6436bbc859a8312ce28c6',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@cfac7d9e3d497d2bdb5adad094923201c0d3db12',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/third_party/libc++abi/trunk': {
