@@ -22,7 +22,10 @@ namespace gpgmm {
 
     class MemoryPoolBase;
 
-    class MemoryBase : public ObjectBase {
+    // Backend-agnostic device-memory object that can be further sub-allocated.
+    // Lifetime is managed by incrementing or decrementing the reference count per allocate or
+    // deallocate of the sub-allocations within.
+    class MemoryBase : public ObjectBase, public RefCounted {
       public:
         explicit MemoryBase(uint64_t size, uint64_t alignment);
         virtual ~MemoryBase() override;
@@ -33,14 +36,9 @@ namespace gpgmm {
         MemoryPoolBase* GetPool() const;
         void SetPool(MemoryPoolBase* pool);
 
-        void AddSubAllocationRef();
-        bool RemoveSubAllocationRef();
-
       private:
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(MemoryBase)
-
-        RefCounted mSubAllocationRefs;
 
         const uint64_t mSize;
         const uint64_t mAlignment;

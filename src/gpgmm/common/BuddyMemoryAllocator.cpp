@@ -119,7 +119,7 @@ namespace gpgmm {
         MemoryBase* memory = memoryAllocation.GetMemory();
         ASSERT(memory != nullptr);
 
-        if (memory->RemoveSubAllocationRef()) {
+        if (memory->Unref()) {
             GetNextInChain()->DeallocateMemory(
                 std::make_unique<MemoryAllocation>(memoryAllocation));
         } else {
