@@ -430,7 +430,7 @@ namespace gpgmm {
         MemoryBase* slabMemory = subAllocation->GetMemory();
         ASSERT(slabMemory != nullptr);
 
-        slabMemory->RemoveSubAllocationRef();
+        slabMemory->Unref();
 
         if (pSlab->IsEmpty()) {
             mMemoryAllocator->DeallocateMemory(

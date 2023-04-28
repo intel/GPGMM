@@ -319,7 +319,7 @@ namespace gpgmm {
             MemoryBase* memory = result.AcquireResult();
             ASSERT(memory != nullptr);
 
-            memory->AddSubAllocationRef();
+            memory->Ref();
 
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the
