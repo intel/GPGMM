@@ -26,13 +26,13 @@
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
-#include "gpgmm/d3d12/DebugResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"
 #include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
+#include "gpgmm/d3d12/ResourceAllocationTrackingAllocatorD3D12.h"
 #include "gpgmm/d3d12/ResourceHeapAllocatorD3D12.h"
 #include "gpgmm/d3d12/ResourceSizeD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
@@ -600,7 +600,7 @@ namespace gpgmm::d3d12 {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
 
         if (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK) {
-            mDebugAllocator = std::make_unique<DebugResourceAllocator>();
+            mTrackingAllocator = std::make_unique<ResourceAllocationTrackingAllocator>();
         }
 
         const bool isUMA =
@@ -813,9 +813,9 @@ namespace gpgmm::d3d12 {
         // Give the debug allocator the first chance to report allocation leaks.
         // If allocation leak exists, report then release them immediately to prevent another leak
         // check from re-reporting the leaked allocation.
-        if (mDebugAllocator) {
-            mDebugAllocator->ReportLiveAllocations();
-            mDebugAllocator->ReleaseLiveAllocationsForTesting();
+        if (mTrackingAllocator) {
+            mTrackingAllocator->ReportLiveAllocations();
+            mTrackingAllocator->ReleaseLiveAllocationsForTesting();
         }
 
         // Destroy allocators in the reverse order they were created so we can record delete events
@@ -956,10 +956,10 @@ namespace gpgmm::d3d12 {
 
         ASSERT(allocation->GetResource() != nullptr);
 
-        if (GPGMM_UNLIKELY(mDebugAllocator)) {
+        if (GPGMM_UNLIKELY(mTrackingAllocator)) {
             GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
                                    mDevice);
-            mDebugAllocator->AddLiveAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
+            mTrackingAllocator->TrackAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
         }
 
         // Update the current usage counters.
