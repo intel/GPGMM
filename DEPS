@@ -31,7 +31,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools@d709f875a5039737024a88b0c049f0a6605e1ed1',
+    'url': '{chromium_git}/chromium/src/buildtools@fe77fde27f2c17b1d99b718403192346908c9e6c',
     'condition': 'gpgmm_standalone',
   },
   'buildtools/clang_format/script': {
