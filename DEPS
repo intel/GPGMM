@@ -94,7 +94,7 @@ deps = {
     'condition': 'gpgmm_standalone',
   },
   'third_party/jsoncpp/source': {
-    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@8190e061bc2d95da37479a638aa2c9e483e58ec6',
+    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@3d9bf8ee54855396e20b4e221ad28f71625bb76c',
     'condition': 'gpgmm_standalone',
   },
   # Fuzzing
