@@ -49,7 +49,7 @@ namespace gpgmm::d3d12 {
     /** \brief Debug object associates additional information for D3D objects using SetPrivateData.
 
     Since a single D3D object could be re-used by one or more GPGMM objects, debug information must
-    be stored and retrieved seperately.
+    be stored and retrieved separately.
     */
     GPGMM_INTERFACE IDebugObject : public IUnknown {
         /** \brief Get the debug name.
@@ -143,7 +143,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Requires the heap to be tracked for residency.
 
-        This flag is equivelent to calling LockHeap then UnlockHeap after
+        This flag is equivalent to calling LockHeap then UnlockHeap after
         creation. The flag only has effect when the heap's residency status
         cannot be determined.
         */
@@ -277,7 +277,7 @@ namespace gpgmm::d3d12 {
 
         @param pHeap A pointer to Heap about to be added.
 
-        \return Returns S_OK if successfull.
+        \return Returns S_OK if successful.
         */
         virtual HRESULT Add(IResidencyHeap * pHeap) = 0;
 
@@ -473,7 +473,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Maximum amount of budgeted memory, in bytes, that can be budgeted.
 
-        Allows a fixed budget to be artifically set for testing purposes.
+        Allows a fixed budget to be artificially set for testing purposes.
 
         Optional parameter. By default, the API will not further restrict the residency manager
         budget.
@@ -575,7 +575,7 @@ namespace gpgmm::d3d12 {
         exhausted.
 
         @param pQueue The command queue to submit to. May be nullptr. When nullptr, only residency
-        operations are peformed.
+        operations are performed.
         @param ppCommandLists The array of ID3D12CommandList command lists to be executed. May be
         nullptr. When nullptr, only residency operations are performed.
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
@@ -679,14 +679,14 @@ namespace gpgmm::d3d12 {
     in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a
     ID3D12Heap (called a committed resource).
 
-    It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for perfoming D3D12
+    It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for performing D3D12
     operations with it (eg. Map, Unmap, etc).
     */
     GPGMM_INTERFACE IResourceAllocation : public IDebugObject {
       public:
         /** \brief Maps the resource allocation.
 
-        Gets the CPU pointer to the specificed subresource of the resource allocation.
+        Gets the CPU pointer to the specified subresource of the resource allocation.
 
         If sub-allocated within the resource, the read or write range and
         pointer value will start from the allocation instead of the resource.
@@ -790,7 +790,7 @@ namespace gpgmm::d3d12 {
         /** \brief Disables using D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA
         GPUs.
 
-        Used to workaround issues when custom heaps are not being recongized as expected or driver
+        Used to workaround issues when custom heaps are not being recognized as expected or driver
         bugs related to using a single memory pool.
         */
         RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY = 0x10,
@@ -827,7 +827,7 @@ namespace gpgmm::d3d12 {
         2. The size the resource being created.
         3. The amount of available memory.
 
-        In general, the most-efficent resource allocator will be attempted first (efficent
+        In general, the most efficient resource allocator will be attempted first (efficient
         being defined as fastest service-time to allocate/deallocate with smallest memory
         footprint), subject to other constraints. However, since it's impossible to predict all
         future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
@@ -864,7 +864,7 @@ namespace gpgmm::d3d12 {
 
         Fixed-size pool limits recycling to resource heaps equal to
         PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-        equivelent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+        equivalent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
         ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
 
@@ -881,7 +881,7 @@ namespace gpgmm::d3d12 {
         A dedicated allocation allocates exactly what is needed for the resource and nothing more.
 
         Internally, dedicated allocations are "placed resources" which allows the heap to be
-        recycled by GPGMM. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivelent to a
+        recycled by GPGMM. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
         "dedicated allocation" but without heaps being recycled by GPGMM.
 
         Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
@@ -985,7 +985,7 @@ namespace gpgmm::d3d12 {
         */
         double ResourceHeapFragmentationLimit;
 
-        /** \brief Resource heap growth factor, expressed as a multipler of the resource heap size
+        /** \brief Resource heap growth factor, expressed as a multiple of the resource heap size
         that will monotonically increase.
 
         A factor value of 1.0 specifies no growth, where the resource heap size is always determined
@@ -1032,7 +1032,7 @@ namespace gpgmm::d3d12 {
 
         The app developer must either check if the allocator supports sub-allocation within resource
         beforehand (via ResourceAllocator::CheckFeatureSupport) OR simply ensure only a single
-        command queue is used since not all devices guarentee command queue accesses are coherent
+        command queue is used since not all devices guarantee command queue accesses are coherent
         between sub-allocations within the same resource.
         */
         ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
@@ -1047,7 +1047,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Prefetch memory for the next resource allocation.
 
-        The call to prefetch is deferred to a seperate background thread by GPGMM which runs
+        The call to prefetch is deferred to a separate background thread by GPGMM which runs
         when the current allocation requested is completed. By default, GPGMM will automatically
         trigger prefetching based on heurstics. Prefetching enables more performance when
         allocating for contiguous allocations or many resources of the same size.
@@ -1064,7 +1064,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Requires heaps to be always attributed by D3D12_HEAP_TYPE.
 
-        With cache-coherent UMA adapters, a single custom-equivelent heap will be used everywhere.
+        With cache-coherent UMA adapters, a single custom-equivalent heap will be used everywhere.
         This enables better resource optimization during allocation. However, certain heap flags or
         access-patterns may beneifit specifying D3D12_HEAP_TYPE. For example,
         D3D12_HEAP_FLAG_SHARED requires D3D12_HEAP_TYPE_READBACK or D3D12_HEAP_TYPE_UPLOAD,
@@ -1118,9 +1118,9 @@ namespace gpgmm::d3d12 {
 
         /** \brief Heap type that the resource to be allocated requires.
 
-        It is recommended to not specifiy the heap type or equivalently specify
+        It is recommended to not specify the heap type or equivalently specify
         D3D12_HEAP_TYPE_CUSTOM. This enables better resource optimization for UMA adapters by using
-        a custom-equivelent upload heap everywhere. However, since UMA adapters use write-combined
+        a custom-equivalent upload heap everywhere. However, since UMA adapters use write-combined
         memory for CPU writes, a heap type of D3D12_HEAP_TYPE_READBACK could have better
         performance.
 
@@ -1136,7 +1136,7 @@ namespace gpgmm::d3d12 {
         But if additional heap flags are required, they can also be specified.
 
         It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all
-        allocation methods are guarenteed to be supported.
+        allocation methods are guaranteed to be supported.
 
         Optional parameter.
         */
@@ -1144,11 +1144,11 @@ namespace gpgmm::d3d12 {
 
         /** \brief Require additional bytes to be appended to the resource allocation.
 
-        Resource heap size is guarenteed to increase by at-least this number of bytes.
+        Resource heap size is guaranteed to increase by at-least this number of bytes.
         Specifying a padding will disable committed resources and sub-allocated
         heaps.
 
-        Used to workaround driver bugs related to the heap size being insufficent for the resource.
+        Used to workaround driver bugs related to the heap size being insufficient for the resource.
 
         Optional parameter. No extra padding is applied by default.
         */
@@ -1171,7 +1171,7 @@ namespace gpgmm::d3d12 {
 
         For example, if two allocations belong to the same resource where each allocation is
         referenced with a different command-queue, will accessing one stomp over the other. D3D12
-        does not guarentee such behavior is safe but is it well-defined behavior based on the GPU
+        does not guarantee such behavior is safe but is it well-defined behavior based on the GPU
         vendor.
         */
         bool IsResourceAllocationWithinCoherent;
@@ -1254,7 +1254,7 @@ namespace gpgmm::d3d12 {
 
         Returns a ResourceAllocation which represents a resource allocated at a specific
         location in memory. The resource could be allocated within a resource heap, within the
-        resource itself, or seperately using it's own memory (resource heap).
+        resource itself, or separately using it's own memory (resource heap).
 
         Unlike a D3D12 resource, a resource allocation can made resident. It is recommended but not
         strictly required to use the D3D12 resource equivalent methods (ex. Map, Unmap) through the
@@ -1303,7 +1303,7 @@ namespace gpgmm::d3d12 {
 
         @param bytesToRelease Amount of memory to release, in bytes. A value of UINT64_MAX
         releases ALL memory held by the allocator.
-        @param pBytesReleased Optional pointer to integer which recieves the amount of memory
+        @param pBytesReleased Optional pointer to integer which receives the amount of memory
         released, in bytes.
 
         \return Returns S_OK if successfully released equal to or greater than the memory amount

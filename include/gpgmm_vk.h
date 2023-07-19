@@ -122,7 +122,7 @@ namespace gpgmm::vk {
 
         Fixed-size pool limits recycling to device memorys equal to
         preferredDeviceMemorySize. A preferredDeviceMemorySize of zero is effectively
-        equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+        equivalent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
         GP_ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
 
