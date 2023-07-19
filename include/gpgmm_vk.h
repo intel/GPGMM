@@ -18,7 +18,12 @@
 // gpgmm_vk.h is the GMM interface implemented by GPGMM for Vulkan.
 // This file should not be modified by downstream GMM clients or forks of GPGMM.
 // Please consider submitting a pull-request to https://github.com/intel/gpgmm.
-#include "gpgmm_export.h"
+
+#ifdef GPGMM_SHARED_LIBRARY
+#    include "gpgmm_export.h"
+#else // defined(GPGMM_SHARED_LIBRARY)
+#    define GPGMM_EXPORT
+#endif // defined(GPGMM_SHARED_LIBRARY)
 
 #ifndef GPGMM_VK_HEADERS_ALREADY_INCLUDED
 #    include <vulkan/vulkan.h>
