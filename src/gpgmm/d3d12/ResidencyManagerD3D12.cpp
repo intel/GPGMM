@@ -17,8 +17,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/SizeClass.h"
-#include "gpgmm/common/ThreadPool.h"
-#include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/d3d12/BudgetUpdateD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
@@ -38,128 +37,6 @@ namespace gpgmm::d3d12 {
     static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
     static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
     static constexpr float kMinCurrentUsageOfBudgetReportingThreshold = 0.90f;
-
-    // Creates a long-lived task to recieve and process OS budget change events.
-    class BudgetUpdateTask : public VoidCallback {
-      public:
-        BudgetUpdateTask(ResidencyManager* const residencyManager, IDXGIAdapter3* adapter)
-            : mResidencyManager(residencyManager),
-              mAdapter(std::move(adapter)),
-              mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
-              mUnregisterAndExitEvent(CreateEventW(NULL, FALSE, FALSE, NULL)) {
-            ASSERT(mResidencyManager != nullptr);
-            ASSERT(mAdapter != nullptr);
-            mLastError = mAdapter->RegisterVideoMemoryBudgetChangeNotificationEvent(
-                mBudgetNotificationUpdateEvent, &mCookie);
-        }
-
-        ~BudgetUpdateTask() override {
-            CloseHandle(mUnregisterAndExitEvent);
-            CloseHandle(mBudgetNotificationUpdateEvent);
-        }
-
-        void operator()() override {
-            HRESULT hr = GetLastError();
-            bool isExiting = false;
-            while (!isExiting && SUCCEEDED(hr)) {
-                // Wait on two events: one to unblock for OS budget changes, and another to unblock
-                // for shutdown.
-                HANDLE hWaitEvents[2] = {mBudgetNotificationUpdateEvent, mUnregisterAndExitEvent};
-                const DWORD waitedEvent =
-                    WaitForMultipleObjects(2, hWaitEvents, /*bWaitAll*/ false, INFINITE);
-                switch (waitedEvent) {
-                    // mBudgetNotificationUpdateEvent
-                    case (WAIT_OBJECT_0 + 0): {
-                        hr = mResidencyManager->UpdateMemorySegments();
-                        if (FAILED(hr)) {
-                            break;
-                        }
-
-                        DebugLog(mResidencyManager, MessageId::kBudgetUpdated)
-                            << "Updated budget from OS notification.";
-                        break;
-                    }
-                    // mUnregisterAndExitEvent
-                    case (WAIT_OBJECT_0 + 1): {
-                        isExiting = true;
-                        break;
-                    }
-                    default: {
-                        UNREACHABLE();
-                        break;
-                    }
-                }
-            }
-
-            if (FAILED(hr)) {
-                ErrorLog(mResidencyManager, MessageId::kBudgetInvalid)
-                    << "Unable to update budget: " +
-                           GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
-            }
-
-            SetLastError(hr);
-        }
-
-        HRESULT GetLastError() const {
-            std::lock_guard<std::mutex> lock(mMutex);
-            return mLastError;
-        }
-
-        // Shutdown the event loop.
-        bool UnregisterAndExit() {
-            mAdapter->UnregisterVideoMemoryBudgetChangeNotification(mCookie);
-            return SetEvent(mUnregisterAndExitEvent);
-        }
-
-      private:
-        void SetLastError(HRESULT hr) {
-            std::lock_guard<std::mutex> lock(mMutex);
-            mLastError = hr;
-        }
-
-        ResidencyManager* const mResidencyManager;
-        IDXGIAdapter3* mAdapter = nullptr;
-
-        HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;
-        HANDLE mUnregisterAndExitEvent = INVALID_HANDLE_VALUE;
-
-        DWORD mCookie = 0;  // Used to unregister from notifications.
-
-        mutable std::mutex mMutex;  // Protect access between threads for members below.
-        HRESULT mLastError = S_OK;
-    };
-
-    class BudgetUpdateEvent final : public Event {
-      public:
-        BudgetUpdateEvent(std::shared_ptr<Event> event, std::shared_ptr<BudgetUpdateTask> task)
-            : mTask(task), mEvent(event) {
-        }
-
-        // Event overrides
-        void Wait() override {
-            mEvent->Wait();
-        }
-
-        bool IsSignaled() override {
-            return mEvent->IsSignaled();
-        }
-
-        void Signal() override {
-            return mEvent->Signal();
-        }
-
-        bool UnregisterAndExit() {
-            return mTask->UnregisterAndExit();
-        }
-
-        bool GetLastError() const {
-            return mTask->GetLastError();
-        }
-
-      private:
-        std::shared_ptr<BudgetUpdateTask> mTask;
-        std::shared_ptr<Event> mEvent;
-    };
 
     HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                    ID3D12Device* pDevice,
