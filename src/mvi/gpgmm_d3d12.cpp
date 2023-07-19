@@ -94,7 +94,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_HEAP_INFO ResidencyHeap::GetInfo() const {
-        return {GetSize(), GetAlignment(), false, false, RESIDENCY_HEAP_STATUS_UNKNOWN};
+        return {GetSize(), GetAlignment(), false, RESIDENCY_HEAP_STATUS_UNKNOWN};
     }
 
     HRESULT STDMETHODCALLTYPE ResidencyHeap::QueryInterface(REFIID riid, void** ppvObject) {

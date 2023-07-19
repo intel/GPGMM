@@ -231,7 +231,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_HEAP_INFO ResidencyHeap::GetInfo() const {
-        return {GetSize(), GetAlignment(), IsResidencyLocked(), IsInList(), mState};
+        return {GetSize(), GetAlignment(), IsResidencyLocked(), mState};
     }
 
     HRESULT ResidencyHeap::SetDebugNameImpl(LPCWSTR name) {

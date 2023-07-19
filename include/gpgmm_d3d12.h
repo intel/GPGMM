@@ -113,13 +113,12 @@ namespace gpgmm::d3d12 {
         */
         uint64_t Alignment;
 
-        /** \brief Check if the heap currently locked for residency.
+        /** \brief Check if the heap is currently locked for residency.
+
+        A locked heap means the heap is not eligable for eviction.
+
          */
         bool IsLocked;
-
-        /** \brief Check if the heap is in a residency cache.
-         */
-        bool IsCachedForResidency;
 
         /** \brief Check if the heap was made resident or not.
          */
