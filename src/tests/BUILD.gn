@@ -23,7 +23,7 @@ group("gpgmm_tests") {
   deps = [
     ":gpgmm_capture_replay_tests",
     ":gpgmm_end2end_tests",
-    ":gpgmm_perftests",
+    ":gpgmm_perf_tests",
     ":gpgmm_unittests",
   ]
 }
@@ -124,13 +124,7 @@ test("gpgmm_unittests") {
     "unittests/UtilsTest.cpp",
   ]
 
-  # When building inside Chromium, use their gtest main function because it is
-  # needed to run in swarming correctly.
-  if (build_with_chromium) {
-    deps += [ ":gpgmm_unittests_main" ]
-  } else {
-    sources += [ "UnittestsMain.cpp" ]
-  }
+  sources += [ "UnittestsMain.cpp" ]
 }
 
 ###############################################################################
@@ -191,13 +185,7 @@ test("gpgmm_end2end_tests") {
 
   libs = []
 
-  # When building inside Chromium, use their gtest main function because it is
-  # needed to run in swarming correctly.
-  if (build_with_chromium) {
-    deps += [ ":gpgmm_end2end_tests_main" ]
-  } else {
-    sources += [ "End2EndTestsMain.cpp" ]
-  }
+  sources += [ "End2EndTestsMain.cpp" ]
 
   if (is_chromeos) {
     libs += [ "gbm" ]
@@ -287,13 +275,7 @@ test("gpgmm_capture_replay_tests") {
 
   libs = []
 
-  # When building inside Chromium, use their gtest main function because it is
-  # needed to run in swarming correctly.
-  if (build_with_chromium) {
-    deps += [ ":gpgmm_capture_replay_tests_main" ]
-  } else {
-    sources += [ "CaptureReplayTestsMain.cpp" ]
-  }
+  sources += [ "CaptureReplayTestsMain.cpp" ]
 
   if (is_chromeos) {
     libs += [ "gbm" ]
@@ -304,7 +286,7 @@ test("gpgmm_capture_replay_tests") {
 # Performance tests
 ###############################################################################
 
-test("gpgmm_perftests") {
+test("gpgmm_perf_tests") {
   configs += [ "${gpgmm_root_dir}/src/gpgmm/common:gpgmm_common_config" ]
 
   deps = [
