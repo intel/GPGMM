@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['alignment_0',['Alignment',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#ad6ffe93568141c21f3cfbd7670a57c57',1,'gpgmm::d3d12::RESIDENCY_HEAP_INFO::Alignment()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___d_e_s_c.html#a993116cfce54728bc62be5678b08a66c',1,'gpgmm::d3d12::RESIDENCY_HEAP_DESC::Alignment()'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a87d1ca40bafa2a2cd92363d0f2db7b8b',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::Alignment()']]],
+  ['alignment_0',['Alignment',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#ad6ffe93568141c21f3cfbd7670a57c57',1,'gpgmm::d3d12::RESIDENCY_HEAP_INFO::Alignment'],['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___d_e_s_c.html#a993116cfce54728bc62be5678b08a66c',1,'gpgmm::d3d12::RESIDENCY_HEAP_DESC::Alignment'],['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html#a87d1ca40bafa2a2cd92363d0f2db7b8b',1,'gpgmm::d3d12::RESOURCE_ALLOCATION_INFO::Alignment']]],
   ['allocation_5fdesc_1',['ALLOCATION_DESC',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fallow_5fsuballocate_5fwithin_5fresource_2',['ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a86f519390cacac8f532bae523f3c0515',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5falways_5fattribute_5fheaps_3',['ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2af1fb3d730846828f60fb4a7b0767aa',1,'gpgmm::d3d12']]],
@@ -12,7 +12,7 @@ var searchData=
   ['allocation_5fflag_5fnever_5fresident_9',['ALLOCATION_FLAG_NEVER_RESIDENT',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a8e55a7791685f0adf8083d2015a7f487',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnever_5fsuballocate_5fheap_10',['ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5',1,'gpgmm::d3d12']]],
   ['allocation_5fflag_5fnone_11',['ALLOCATION_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073',1,'gpgmm::d3d12']]],
-  ['allocation_5fflags_12',['ALLOCATION_FLAGS',['../struct_a_l_l_o_c_a_t_i_o_n___f_l_a_g_s.html',1,'ALLOCATION_FLAGS'],['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122',1,'gpgmm::d3d12::ALLOCATION_FLAGS()']]],
+  ['allocation_5fflags_12',['ALLOCATION_FLAGS',['../struct_a_l_l_o_c_a_t_i_o_n___f_l_a_g_s.html',1,'ALLOCATION_FLAGS'],['../namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122',1,'gpgmm::d3d12::ALLOCATION_FLAGS']]],
   ['allocation_5fmethod_13',['ALLOCATION_METHOD',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96',1,'gpgmm::d3d12']]],
   ['allocation_5fmethod_5fstandalone_14',['ALLOCATION_METHOD_STANDALONE',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22',1,'gpgmm::d3d12']]],
   ['allocation_5fmethod_5fsuballocated_15',['ALLOCATION_METHOD_SUBALLOCATED',['../namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5',1,'gpgmm::d3d12']]],
