@@ -12,18 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_UnknownD3D12_H_
-#define GPGMM_D3D12_UnknownD3D12_H_
+#ifndef GPGMM_D3D12_UNKNOWND3D12_H_
+#define GPGMM_D3D12_UNKNOWND3D12_H_
 
 #include "gpgmm/d3d12/D3D12Platform.h"
 #include "gpgmm/utils/NonCopyable.h"
-
-#ifndef GPGMM_REFCOUNT_TYPE
-#    include "gpgmm/utils/RefCount.h"
-/** \brief Defines the atomic-type to use for ref-counting the COM object.
- */
-#    define GPGMM_REFCOUNT_TYPE RefCounted
-#endif
+#include "gpgmm/utils/RefCount.h"
 
 namespace gpgmm::d3d12 {
 
@@ -46,7 +40,7 @@ namespace gpgmm::d3d12 {
         virtual void DeleteThis();
 
       private:
-        GPGMM_REFCOUNT_TYPE mRefCount;  // Maintains the COM ref-count of this object.
+        RefCounted mRefCount;  // Maintains the COM ref-count of this object.
     };
 
 // Helper to provide IUnknown-based object types the required overrides to use Unknown.
@@ -63,4 +57,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_UnknownD3D12_H_
+#endif  // GPGMM_D3D12_UNKNOWND3D12_H_
