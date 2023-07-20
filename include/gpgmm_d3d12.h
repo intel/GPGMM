@@ -388,13 +388,13 @@ namespace gpgmm::d3d12 {
          */
         RESIDENCY_FLAG_NONE = 0x0,
 
-        /** \brief Disables automatic background memory budget updates by OS notifications.
+        /** \brief Disables background memory budget updates from OS notifications.
 
         By default, memory budget updates will be pushed by the OS using a background thread. If
         the OS does not support push notifications or budget updates are not frequent enough, this
         mechanism can be disabled where a pull-based method is used instead.
         */
-        RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD = 0x1,
+        RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES = 0x1,
 
         /** \brief Specifies if unified memory architecture (UMA) is always disabled.
 
@@ -1046,7 +1046,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Prefetch memory for the next resource allocation.
 
-        The call to prefetch is deferred to a separate background thread by GPGMM which runs
+        The call to prefetch is deferred to a background thread by GPGMM which runs
         when the current allocation requested is completed. By default, GPGMM will automatically
         trigger prefetching based on heurstics. Prefetching enables more performance when
         allocating for contiguous allocations or many resources of the same size.
