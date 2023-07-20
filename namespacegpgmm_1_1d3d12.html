@@ -142,7 +142,7 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="separator:a9ec7ea284284659e18d7cf925436960b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcdbaecdcd1fa9578f444da18babcc27"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27">RESIDENCY_MANAGER_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a1639083caa3293e398a7375a55bb904e">RESIDENCY_FLAG_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27abe5d5da8a102c57d10b4b985716439f2">RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a53ea5c1a16faf8a99edd98f761bf5d5b">RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES</a> = 0x1
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27af2c600fc2565eb4af7a626efb44c60bc">RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY</a> = 0x2
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a2ee02832ba8b10ec421c65658ac92b93">RESIDENCY_FLAG_ALWAYS_IN_BUDGET</a> = 0x4
  }</td></tr>
@@ -357,7 +357,7 @@ between sub-allocations within the same resource.
 <p>When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d" name="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP&#160;</td><td class="fielddoc"><p>Prefetch memory for the next resource allocation. </p>
-<pre class="fragment">The call to prefetch is deferred to a separate background thread by GPGMM which runs
+<pre class="fragment">The call to prefetch is deferred to a background thread by GPGMM which runs
 when the current allocation requested is completed. By default, GPGMM will automatically
 trigger prefetching based on heurstics. Prefetching enables more performance when
 allocating for contiguous allocations or many resources of the same size.
@@ -637,7 +637,7 @@ cannot be determined.
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27a1639083caa3293e398a7375a55bb904e" name="adcdbaecdcd1fa9578f444da18babcc27a1639083caa3293e398a7375a55bb904e"></a>RESIDENCY_FLAG_NONE&#160;</td><td class="fielddoc"><p>Disables all option flags. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27abe5d5da8a102c57d10b4b985716439f2" name="adcdbaecdcd1fa9578f444da18babcc27abe5d5da8a102c57d10b4b985716439f2"></a>RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD&#160;</td><td class="fielddoc"><p>Disables automatic background memory budget updates by OS notifications. </p>
+<tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27a53ea5c1a16faf8a99edd98f761bf5d5b" name="adcdbaecdcd1fa9578f444da18babcc27a53ea5c1a16faf8a99edd98f761bf5d5b"></a>RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES&#160;</td><td class="fielddoc"><p>Disables background memory budget updates from OS notifications. </p>
 <pre class="fragment">By default, memory budget updates will be pushed by the OS using a background thread. If
 the OS does not support push notifications or budget updates are not frequent enough, this
 mechanism can be disabled where a pull-based method is used instead.

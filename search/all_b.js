@@ -18,7 +18,7 @@ var searchData=
   ['requireresourceheappadding_15',['RequireResourceHeapPadding',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#aed41cef6134f5552d5581f75d526683c',1,'gpgmm::d3d12::ALLOCATION_DESC']]],
   ['reset_16',['Reset',['../namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5falways_5fin_5fbudget_17',['RESIDENCY_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a2ee02832ba8b10ec421c65658ac92b93',1,'gpgmm::d3d12']]],
-  ['residency_5fflag_5fdisable_5fbudget_5fupdates_5fon_5fworker_5fthread_18',['RESIDENCY_FLAG_DISABLE_BUDGET_UPDATES_ON_WORKER_THREAD',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27abe5d5da8a102c57d10b4b985716439f2',1,'gpgmm::d3d12']]],
+  ['residency_5fflag_5fdisable_5fbackground_5fbudget_5fupdates_18',['RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a53ea5c1a16faf8a99edd98f761bf5d5b',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fdisable_5funified_5fmemory_19',['RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27af2c600fc2565eb4af7a626efb44c60bc',1,'gpgmm::d3d12']]],
   ['residency_5fflag_5fnone_20',['RESIDENCY_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a1639083caa3293e398a7375a55bb904e',1,'gpgmm::d3d12']]],
   ['residency_5fheap_5fdesc_21',['RESIDENCY_HEAP_DESC',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___d_e_s_c.html',1,'gpgmm::d3d12']]],
