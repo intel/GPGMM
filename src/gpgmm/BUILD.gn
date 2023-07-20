@@ -113,6 +113,8 @@ source_set("gpgmm_sources") {
     libs += [ "dxguid.lib" ]
 
     sources += [
+      "d3d12/BudgetUpdateD3D12.cpp",
+      "d3d12/BudgetUpdateD3D12.h",
       "d3d12/BufferAllocatorD3D12.cpp",
       "d3d12/BufferAllocatorD3D12.h",
       "d3d12/CapsD3D12.cpp",
