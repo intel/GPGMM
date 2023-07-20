@@ -133,7 +133,7 @@ Public Attributes</h2></td></tr>
 
 <p>Additional heap flags that the resource requires. </p>
 <p>By default, GPGMM infers the required heap flags based on the required fields in the D3D12_RESOURCE_DESC, <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> and <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a>. But if additional heap flags are required, they can also be specified.</p>
-<p>It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all allocation methods are guarenteed to be supported.</p>
+<p>It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all allocation methods are guaranteed to be supported.</p>
 <p>Optional parameter. </p>
 
 </div>
@@ -168,7 +168,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Heap type that the resource to be allocated requires. </p>
-<p>It is recommended to not specifiy the heap type or equivalently specify D3D12_HEAP_TYPE_CUSTOM. This enables better resource optimization for UMA adapters by using a custom-equivelent upload heap everywhere. However, since UMA adapters use write-combined memory for CPU writes, a heap type of D3D12_HEAP_TYPE_READBACK could have better performance.</p>
+<p>It is recommended to not specify the heap type or equivalently specify D3D12_HEAP_TYPE_CUSTOM. This enables better resource optimization for UMA adapters by using a custom-equivalent upload heap everywhere. However, since UMA adapters use write-combined memory for CPU writes, a heap type of D3D12_HEAP_TYPE_READBACK could have better performance.</p>
 <p>Optional parameter. If the heap type is not provided or D3D12_HEAP_TYPE_CUSTOM, the heap type will be inferred by using adapter properties and the initial resource state. </p>
 
 </div>
@@ -186,8 +186,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Require additional bytes to be appended to the resource allocation. </p>
-<p>Resource heap size is guarenteed to increase by at-least this number of bytes. Specifying a padding will disable committed resources and sub-allocated heaps.</p>
-<p>Used to workaround driver bugs related to the heap size being insufficent for the resource.</p>
+<p>Resource heap size is guaranteed to increase by at-least this number of bytes. Specifying a padding will disable committed resources and sub-allocated heaps.</p>
+<p>Used to workaround driver bugs related to the heap size being insufficient for the resource.</p>
 <p>Optional parameter. No extra padding is applied by default. </p>
 
 </div>

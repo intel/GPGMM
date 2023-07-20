@@ -187,7 +187,7 @@ creating the larger device memory becomes a bigger bottleneck.
 
 Fixed-size pool limits recycling to device memorys equal to
 preferredDeviceMemorySize. A preferredDeviceMemorySize of zero is effectively
-equivelent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+equivalent to ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a59e276245b71c30952b1e8b14c65787ea9869547137c9b4bae14485fec1b4243d" name="a59e276245b71c30952b1e8b14c65787ea9869547137c9b4bae14485fec1b4243d"></a>GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p>Recycles device memory of any size using multiple pools. </p>
 <pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.

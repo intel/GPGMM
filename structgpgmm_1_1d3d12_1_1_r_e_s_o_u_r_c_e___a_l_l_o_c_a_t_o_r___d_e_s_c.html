@@ -116,7 +116,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a9be07aa4311dfce57a4798f84f5951fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap fragmentation limit, expressed as a percentage of the resource heap size, that is acceptable to be wasted due to fragmentation.  <br /></td></tr>
 <tr class="separator:a9be07aa4311dfce57a4798f84f5951fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5721230140ce95b8bb984f34b4854e83"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a5721230140ce95b8bb984f34b4854e83">ResourceHeapGrowthFactor</a></td></tr>
-<tr class="memdesc:a5721230140ce95b8bb984f34b4854e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap growth factor, expressed as a multipler of the resource heap size that will monotonically increase.  <br /></td></tr>
+<tr class="memdesc:a5721230140ce95b8bb984f34b4854e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap growth factor, expressed as a multiple of the resource heap size that will monotonically increase.  <br /></td></tr>
 <tr class="separator:a5721230140ce95b8bb984f34b4854e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -276,7 +276,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Resource heap growth factor, expressed as a multipler of the resource heap size that will monotonically increase. </p>
+<p>Resource heap growth factor, expressed as a multiple of the resource heap size that will monotonically increase. </p>
 <p>A factor value of 1.0 specifies no growth, where the resource heap size is always determined by other limits or constraints. If no factor gets specified (or a value less than 1 is specified), GPGMM will allocate a resource heap size with enough space to fit exactly one resource.</p>
 <p>Memory growth avoids the need to specify |PreferredResourceHeapSize|, which especially helps in situations where the resource size cannot be predicated (eg. user-defined), by allowing the resource heap size to gradually increase in size per demand to achieve a balance of memory usage and performance.</p>
 <p>Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth). </p>
