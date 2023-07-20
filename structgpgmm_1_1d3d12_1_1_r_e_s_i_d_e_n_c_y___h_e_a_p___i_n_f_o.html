@@ -92,8 +92,11 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:ad6ffe93568141c21f3cfbd7670a57c57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created alignment, in bytes, of the heap.  <br /></td></tr>
 <tr class="separator:ad6ffe93568141c21f3cfbd7670a57c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c4aa414151e67c436afd8d620e3359"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#ac5c4aa414151e67c436afd8d620e3359">IsLocked</a></td></tr>
-<tr class="memdesc:ac5c4aa414151e67c436afd8d620e3359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap is currently locked for residency.  <br /></td></tr>
+<tr class="memdesc:ac5c4aa414151e67c436afd8d620e3359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap currently locked for residency.  <br /></td></tr>
 <tr class="separator:ac5c4aa414151e67c436afd8d620e3359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28a9314fce5b6e9143add011f7961436"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#a28a9314fce5b6e9143add011f7961436">IsCachedForResidency</a></td></tr>
+<tr class="memdesc:a28a9314fce5b6e9143add011f7961436"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap is in a residency cache.  <br /></td></tr>
+<tr class="separator:a28a9314fce5b6e9143add011f7961436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44047f55797497c84896e1394ff83ca5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717">RESIDENCY_HEAP_STATUS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#a44047f55797497c84896e1394ff83ca5">Status</a></td></tr>
 <tr class="memdesc:a44047f55797497c84896e1394ff83ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap was made resident or not.  <br /></td></tr>
 <tr class="separator:a44047f55797497c84896e1394ff83ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +121,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a28a9314fce5b6e9143add011f7961436" name="a28a9314fce5b6e9143add011f7961436"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28a9314fce5b6e9143add011f7961436">&#9670;&#160;</a></span>IsCachedForResidency</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gpgmm::d3d12::RESIDENCY_HEAP_INFO::IsCachedForResidency</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if the heap is in a residency cache. </p>
+
+</div>
+</div>
 <a id="ac5c4aa414151e67c436afd8d620e3359" name="ac5c4aa414151e67c436afd8d620e3359"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5c4aa414151e67c436afd8d620e3359">&#9670;&#160;</a></span>IsLocked</h2>
 
@@ -130,8 +149,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Check if the heap is currently locked for residency. </p>
-<p>A locked heap means the heap is not eligable for eviction. </p>
+<p>Check if the heap currently locked for residency. </p>
 
 </div>
 </div>
