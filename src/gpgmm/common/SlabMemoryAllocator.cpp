@@ -82,9 +82,9 @@ namespace gpgmm {
                                              uint64_t maxSlabSize,
                                              uint64_t minSlabSize,
                                              uint64_t slabAlignment,
-                                             double slabFragmentationLimit,
+                                             float slabFragmentationLimit,
                                              bool allowSlabPrefetch,
-                                             double slabGrowthFactor,
+                                             float slabGrowthFactor,
                                              MemoryAllocator* memoryAllocator)
         : mLastUsedSlabSize(0),
           mBlockSize(blockSize),
@@ -97,7 +97,7 @@ namespace gpgmm {
           mMemoryAllocator(memoryAllocator) {
         ASSERT(IsPowerOfTwo(mSlabAlignment));
         ASSERT(mMemoryAllocator != nullptr);
-        ASSERT(mSlabGrowthFactor >= 1);
+        ASSERT(mSlabGrowthFactor >= 1.0f);
         ASSERT(IsAligned(mMaxSlabSize, mSlabAlignment));
         ASSERT(IsAligned(mMinSlabSize, mSlabAlignment));
         ASSERT(blockSize <= mMaxSlabSize);
@@ -488,9 +488,9 @@ namespace gpgmm {
     SlabCacheAllocator::SlabCacheAllocator(uint64_t maxSlabSize,
                                            uint64_t minSlabSize,
                                            uint64_t slabAlignment,
-                                           double slabFragmentationLimit,
+                                           float slabFragmentationLimit,
                                            bool allowPrefetchSlab,
-                                           double slabGrowthFactor,
+                                           float slabGrowthFactor,
                                            std::unique_ptr<MemoryAllocator> memoryAllocator)
         : MemoryAllocator(std::move(memoryAllocator)),
           mMaxSlabSize(maxSlabSize),

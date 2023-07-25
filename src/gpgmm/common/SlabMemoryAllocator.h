@@ -48,9 +48,9 @@ namespace gpgmm {
                             uint64_t maxSlabSize,
                             uint64_t minSlabSize,
                             uint64_t slabAlignment,
-                            double slabFragmentationLimit,
+                            float slabFragmentationLimit,
                             bool allowSlabPrefetch,
-                            double slabGrowthFactor,
+                            float slabGrowthFactor,
                             MemoryAllocator* memoryAllocator);
         ~SlabMemoryAllocator() override;
 
@@ -99,9 +99,9 @@ namespace gpgmm {
         const uint64_t mMaxSlabSize;
         const uint64_t mMinSlabSize;  // Optional size when non-zero.
 
-        const double mSlabFragmentationLimit;
+        const float mSlabFragmentationLimit;
         const bool mAllowSlabPrefetch;
-        const double mSlabGrowthFactor;
+        const float mSlabGrowthFactor;
 
         MemoryAllocator* mMemoryAllocator = nullptr;
         std::shared_ptr<MemoryAllocationEvent> mNextSlabAllocationEvent;
@@ -114,9 +114,9 @@ namespace gpgmm {
         SlabCacheAllocator(uint64_t maxSlabSize,
                            uint64_t minSlabSize,
                            uint64_t slabAlignment,
-                           double slabFragmentationLimit,
+                           float slabFragmentationLimit,
                            bool allowSlabPrefetch,
-                           double slabGrowthFactor,
+                           float slabGrowthFactor,
                            std::unique_ptr<MemoryAllocator> memoryAllocator);
 
         ~SlabCacheAllocator() override;
@@ -153,9 +153,9 @@ namespace gpgmm {
         const uint64_t mMinSlabSize;
         const uint64_t mSlabAlignment;
 
-        const double mSlabFragmentationLimit;
+        const float mSlabFragmentationLimit;
         const bool mAllowSlabPrefetch;
-        const double mSlabGrowthFactor;
+        const float mSlabGrowthFactor;
 
         MemoryCache<SlabAllocatorCacheEntry> mSizeCache;
     };

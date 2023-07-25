@@ -50,7 +50,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
         // Disable memory growth so older heap being paged out are the same size as newer heaps
         // being paged-in, and the test expectation based on these sizes is easy to determine.
-        desc.ResourceHeapGrowthFactor = 1.0;
+        desc.ResourceHeapGrowthFactor = 1.0f;
 
         return desc;
     }
@@ -579,7 +579,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
         CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
 
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.ResourceHeapGrowthFactor = 2;
+    allocatorDesc.ResourceHeapGrowthFactor = 2.0f;
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),

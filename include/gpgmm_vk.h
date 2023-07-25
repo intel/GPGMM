@@ -214,7 +214,7 @@ namespace gpgmm::vk {
         Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
         device memory size.
         */
-        double memoryFragmentationLimit;
+        float memoryFragmentationLimit;
 
         /** \brief Memory growth factor, expressed as a multipler of the device memory size
         that will monotonically increase.
@@ -231,7 +231,7 @@ namespace gpgmm::vk {
 
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
-        double memoryGrowthFactor;
+        float memoryGrowthFactor;
     };
 
     /** \enum GpResourceAllocationCreateFlags

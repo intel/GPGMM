@@ -102,9 +102,9 @@ namespace {
             allocatorDescJson["PreferredResourceHeapSize"].asUInt64();
         newAllocatorDesc.MaxResourceHeapSize = allocatorDescJson["MaxResourceHeapSize"].asUInt64();
         newAllocatorDesc.ResourceHeapFragmentationLimit =
-            allocatorDescJson["ResourceHeapFragmentationLimit"].asDouble();
+            allocatorDescJson["ResourceHeapFragmentationLimit"].asFloat();
         newAllocatorDesc.ResourceHeapGrowthFactor =
-            allocatorDescJson["ResourceHeapGrowthFactor"].asDouble();
+            allocatorDescJson["ResourceHeapGrowthFactor"].asFloat();
         return newAllocatorDesc;
     }
 
@@ -476,7 +476,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             allocatorDescOfProfile.Flags |=
                                 RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
                             allocatorDescOfProfile.ResourceHeapFragmentationLimit =
-                                0.125;  // 1/8th of 4MB
+                                0.125f;  // 1/8th of 4MB
                         }
 
                         ComPtr<IResidencyManager> residencyManager;

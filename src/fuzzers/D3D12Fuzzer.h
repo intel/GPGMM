@@ -18,6 +18,7 @@
 #include <gpgmm_d3d12.h>
 
 #include <wrl.h>
+#include <cstdint>
 
 using Microsoft::WRL::ComPtr;
 

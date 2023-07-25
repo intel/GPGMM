@@ -116,8 +116,8 @@ namespace gpgmm::d3d12 {
             ALLOCATOR_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
-            double memoryFragmentationLimit,
-            double memoryGrowthFactor,
+            float memoryFragmentationLimit,
+            float memoryGrowthFactor,
             bool isPrefetchAllowed,
             std::unique_ptr<MemoryAllocator> underlyingAllocator);
 
