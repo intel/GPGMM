@@ -19,19 +19,19 @@
 // This file should not be modified by downstream GMM clients or forks of GPGMM.
 // Please consider submitting a pull-request to https://github.com/intel/gpgmm.
 
-#ifdef GPGMM_SHARED_LIBRARY
-#    include "gpgmm_export.h"
-#else // defined(GPGMM_SHARED_LIBRARY)
-#    define GPGMM_EXPORT
-#endif // defined(GPGMM_SHARED_LIBRARY)
-
-#include <cstdint>
-
 // User should decide to define the following macros:
+// - GPGMM_SHARED_LIBRARY: the implementation using this header wishes to be built as a shared
+// library.
 // - GPGMM_D3D12_HEADERS_ALREADY_INCLUDED: D3D12 platform headers will be already included before
 // this header and does not need to be re-included.
 // - GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED: Windows.h will be already included before this header
 // and does not need to be re-included.
+
+#ifdef GPGMM_SHARED_LIBRARY
+#    include "gpgmm_export.h"
+#else  // defined(GPGMM_SHARED_LIBRARY)
+#    define GPGMM_EXPORT
+#endif  // defined(GPGMM_SHARED_LIBRARY)
 
 #ifndef GPGMM_D3D12_HEADERS_ALREADY_INCLUDED
 #    include <d3d12.h>
@@ -70,7 +70,7 @@ namespace gpgmm::d3d12 {
     /** \enum RESIDENCY_HEAP_STATUS
 
        D3D12 allows heaps to be explicitly created resident or not. This means the expected
-       residency status of the heap cannot be solely  determined by checking for the existence in a
+       residency status of the heap cannot be solely determined by checking for the existence in a
        residency cache.
 
        Heaps are in one of three exclusive states: never made resident or unknown, about to become
@@ -105,19 +105,18 @@ namespace gpgmm::d3d12 {
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
-        uint64_t SizeInBytes;
+        UINT64 SizeInBytes;
 
         /** \brief Created alignment, in bytes, of the heap.
 
         Must be non-zero.
         */
-        uint64_t Alignment;
+        UINT64 Alignment;
 
         /** \brief Check if the heap is currently locked for residency.
 
-        A locked heap means the heap is not eligable for eviction.
-
-         */
+        A locked heap means the heap is not eligible for eviction.
+        */
         bool IsLocked;
 
         /** \brief Check if the heap was made resident or not.
@@ -159,13 +158,13 @@ namespace gpgmm::d3d12 {
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
-        uint64_t SizeInBytes;
+        UINT64 SizeInBytes;
 
         /** \brief Created alignment of the heap, in bytes.
 
         Must be non-zero.
         */
-        uint64_t Alignment;
+        UINT64 Alignment;
 
         /** \brief Specifies the memory segment the heap will reside in.
 
@@ -457,7 +456,7 @@ namespace gpgmm::d3d12 {
         Optional parameter. By default, the API will automatically set the budget to 95% of video
         memory, leaving 5% for the OS and other applications.
         */
-        float MaxPctOfVideoMemoryToBudget;
+        FLOAT MaxPctOfVideoMemoryToBudget;
 
         /** \brief Lowest amount of budgeted memory, expressed as a percentage, that can be
         reserved.
@@ -468,7 +467,7 @@ namespace gpgmm::d3d12 {
         Optional parameter. By default, the API restricts the residency manager reservation to never
         go below 50% of the budget.
         */
-        float MinPctOfBudgetToReserve;
+        FLOAT MinPctOfBudgetToReserve;
 
         /** \brief Maximum amount of budgeted memory, in bytes, that can be budgeted.
 
@@ -477,14 +476,14 @@ namespace gpgmm::d3d12 {
         Optional parameter. By default, the API will not further restrict the residency manager
         budget.
         */
-        uint64_t MaxBudgetInBytes;
+        UINT64 MaxBudgetInBytes;
 
         /** \brief Size of memory, in bytes, to evict from residency at once,
         should there not be enough budget left.
 
         Optional parameter. When 0 is specified, the API will use a evict size of 50MB.
         */
-        uint64_t EvictSizeInBytes;
+        UINT64 EvictSizeInBytes;
 
         /** \brief Initial fence value to use when managing heaps for residency.
 
@@ -494,7 +493,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. Zero by default.
         */
-        uint64_t InitialFenceValue;
+        UINT64 InitialFenceValue;
     };
 
     /** \struct RESIDENCY_MANAGER_STATS
@@ -503,11 +502,11 @@ namespace gpgmm::d3d12 {
     struct RESIDENCY_MANAGER_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
          */
-        uint64_t CurrentHeapUsage;
+        UINT64 CurrentHeapUsage;
 
         /** \brief Number of heaps, currently resident.
          */
-        uint64_t CurrentHeapCount;
+        UINT64 CurrentHeapCount;
     };
 
     /** \enum ALLOCATION_METHOD
@@ -582,7 +581,7 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT ExecuteCommandLists(
             ID3D12CommandQueue* const pQueue, ID3D12CommandList* const* ppCommandLists,
-            IResidencyList* const* ppResidencyLists, uint32_t count) = 0;
+            IResidencyList* const* ppResidencyLists, UINT count) = 0;
 
         /** \brief Sets video memory reservation.
 
@@ -596,8 +595,8 @@ namespace gpgmm::d3d12 {
         return the current reservation.
         */
         virtual HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
-                                                  uint64_t availableForReservation,
-                                                  uint64_t* pCurrentReservationOut = nullptr) = 0;
+                                                  UINT64 availableForReservation,
+                                                  UINT64* pCurrentReservationOut = nullptr) = 0;
 
         /** \brief Get the current budget and memory usage.
 
@@ -659,13 +658,13 @@ namespace gpgmm::d3d12 {
 
         Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
-        uint64_t SizeInBytes;
+        UINT64 SizeInBytes;
 
         /** \brief Created alignment, in bytes, of the resource allocation.
 
         Must be non-zero.
         */
-        uint64_t Alignment;
+        UINT64 Alignment;
 
         /** \brief Method used to allocate memory for the resource.
          */
@@ -696,8 +695,7 @@ namespace gpgmm::d3d12 {
         @param[out] ppDataOut A pointer to a memory block that receives a pointer to the resource
         data.
         */
-        virtual HRESULT Map(uint32_t subresource, const D3D12_RANGE* pReadRange,
-                            void** ppDataOut) = 0;
+        virtual HRESULT Map(UINT subresource, const D3D12_RANGE* pReadRange, void** ppDataOut) = 0;
 
         /** \brief Unmaps the resource allocation.
 
@@ -707,7 +705,7 @@ namespace gpgmm::d3d12 {
         @param pWrittenRange A pointer to a D3D12_RANGE structure that describes the range of memory
         to unmap.
         */
-        virtual void Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) = 0;
+        virtual void Unmap(UINT subresource, const D3D12_RANGE* pWrittenRange) = 0;
 
         /** \brief Returns the resource owned by this allocation.
 
@@ -730,7 +728,7 @@ namespace gpgmm::d3d12 {
 
         \return A offset, in bytes, of the start of this allocation in the resource.
         */
-        virtual uint64_t GetOffsetFromResource() const = 0;
+        virtual UINT64 GetOffsetFromResource() const = 0;
 
         /** \brief Returns information about this resource allocation.
 
@@ -954,7 +952,7 @@ namespace gpgmm::d3d12 {
         Optional parameter. When 0 is specified, the API will automatically set the preferred
         resource heap size to be a multiple of minimum resource heap size allowed by D3D12.
         */
-        uint64_t PreferredResourceHeapSize;
+        UINT64 PreferredResourceHeapSize;
 
         /** \brief Maximum size of the resource heap allowed.
 
@@ -965,7 +963,7 @@ namespace gpgmm::d3d12 {
         heap size based on the adapter's GPU virtual address range. If the max resource size
         exceeds the adapter's GPU virtual address range, it will default to the smaller range.
         */
-        uint64_t MaxResourceHeapSize;
+        UINT64 MaxResourceHeapSize;
 
         /** \brief Resource heap fragmentation limit, expressed as a percentage of the resource heap
         size, that is acceptable to be wasted due to fragmentation.
@@ -982,7 +980,7 @@ namespace gpgmm::d3d12 {
         Optional parameter. When 0 is specified, the default fragmentation limit is 1/8th the
         resource heap size.
         */
-        double ResourceHeapFragmentationLimit;
+        FLOAT ResourceHeapFragmentationLimit;
 
         /** \brief Resource heap growth factor, expressed as a multiple of the resource heap size
         that will monotonically increase.
@@ -999,7 +997,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
-        double ResourceHeapGrowthFactor;
+        FLOAT ResourceHeapGrowthFactor;
     };
 
     /** \enum ALLOCATION_FLAGS
@@ -1151,7 +1149,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. No extra padding is applied by default.
         */
-        uint64_t RequireResourceHeapPadding;
+        UINT64 RequireResourceHeapPadding;
 
         /** \brief Associates a name with the given allocation.
 
@@ -1195,39 +1193,39 @@ namespace gpgmm::d3d12 {
     struct ALLOCATOR_STATS {
         /** \brief Number of used sub-allocated blocks within the same memory.
          */
-        uint32_t UsedBlockCount;
+        UINT UsedBlockCount;
 
         /** \brief Total size, in bytes, of used sub-allocated blocks.
          */
-        uint64_t UsedBlockUsage;
+        UINT64 UsedBlockUsage;
 
         /** \brief Number of used memory allocations.
          */
-        uint32_t UsedHeapCount;
+        UINT UsedHeapCount;
 
         /** \brief Total size, in bytes, of used memory.
          */
-        uint64_t UsedHeapUsage;
+        UINT64 UsedHeapUsage;
 
         /** \brief Total size, in bytes, of free memory.
          */
-        uint64_t FreeHeapUsage;
+        UINT64 FreeHeapUsage;
 
         /** \brief Cache misses not eliminated by prefetching.
          */
-        uint64_t PrefetchedHeapMisses;
+        UINT64 PrefetchedHeapMisses;
 
         /** \brief Cache misses eliminated because of prefetching.
          */
-        uint64_t PrefetchedHeapMissesEliminated;
+        UINT64 PrefetchedHeapMissesEliminated;
 
         /** \brief Requested size was NOT cached.
          */
-        uint64_t SizeCacheMisses;
+        UINT64 SizeCacheMisses;
 
         /** \brief Requested size was cached.
          */
-        uint64_t SizeCacheHits;
+        UINT64 SizeCacheHits;
     };
 
     /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
@@ -1309,8 +1307,7 @@ namespace gpgmm::d3d12 {
         specified. Or S_FALSE if the released size was smaller, there was not enough memory or
         larger if releasable memory doesn't exactly total up to the amount.
         */
-        virtual HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease,
-                                             uint64_t * pBytesReleased) = 0;
+        virtual HRESULT ReleaseResourceHeaps(UINT64 bytesToRelease, UINT64 * pBytesReleased) = 0;
 
         /** \brief  Query the current allocator usage.
 
@@ -1342,7 +1339,7 @@ namespace gpgmm::d3d12 {
         parameter.
         */
         virtual HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature, void* pFeatureSupportData,
-                                            uint32_t featureSupportDataSize) const = 0;
+                                            UINT featureSupportDataSize) const = 0;
     };
 
     /** \brief Create a resource allocator with residency.

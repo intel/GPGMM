@@ -229,7 +229,7 @@ namespace gpgmm::vk {
 
         newInfo.memoryFragmentationLimit = (newInfo.memoryFragmentationLimit > 0)
                                                ? newInfo.memoryFragmentationLimit
-                                               : kDefaultFragmentationLimit;
+                                               : kDefaultMemoryFragmentationLimit;
 
         // By default, slab-allocate from a sorted segmented list.
         if (newInfo.poolAlgorithm == GP_ALLOCATOR_ALGORITHM_DEFAULT) {

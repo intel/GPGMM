@@ -478,7 +478,7 @@ namespace gpgmm::d3d12 {
 
         RESOURCE_ALLOCATOR_DESC newDescriptor = allocatorDescriptor;
         newDescriptor.ResourceHeapGrowthFactor =
-            (allocatorDescriptor.ResourceHeapGrowthFactor >= 1.0)
+            (allocatorDescriptor.ResourceHeapGrowthFactor >= 1.0f)
                 ? allocatorDescriptor.ResourceHeapGrowthFactor
                 : kDefaultMemoryGrowthFactor;
 
@@ -528,7 +528,7 @@ namespace gpgmm::d3d12 {
         newDescriptor.ResourceHeapFragmentationLimit =
             (allocatorDescriptor.ResourceHeapFragmentationLimit > 0)
                 ? allocatorDescriptor.ResourceHeapFragmentationLimit
-                : kDefaultFragmentationLimit;
+                : kDefaultMemoryFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
             ErrorLog(MessageId::kInvalidArgument, true)
@@ -719,8 +719,8 @@ namespace gpgmm::d3d12 {
         ALLOCATOR_ALGORITHM algorithm,
         uint64_t memorySize,
         uint64_t memoryAlignment,
-        double memoryFragmentationLimit,
-        double memoryGrowthFactor,
+        float memoryFragmentationLimit,
+        float memoryGrowthFactor,
         bool isPrefetchAllowed,
         std::unique_ptr<MemoryAllocator> underlyingAllocator) {
         switch (algorithm) {
@@ -803,7 +803,7 @@ namespace gpgmm::d3d12 {
         // be smaller then the resource heap alignment.
         return CreateSubAllocator(
             descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
-            /*memoryFragmentationLimit*/ 1, descriptor.ResourceHeapGrowthFactor,
+            /*memoryFragmentationLimit*/ 1.0f, descriptor.ResourceHeapGrowthFactor,
             /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
     }
 
