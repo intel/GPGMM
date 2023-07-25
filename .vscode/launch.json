@@ -59,36 +59,5 @@
       "environment": [],
       "console": "integratedTerminal"
     },
-    {
-      "name": "Debug WebNN end2end tests",
-      "type": "cppvsdbg",
-      "request": "launch",
-      "program": "webnn_end2end_tests",
-      "args": [
-        "-d gpu",
-        "--gtest_catch_exceptions=0",
-        "--gtest_filter=*"
-      ],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/out/Debug",
-      "environment": [],
-      "console": "integratedTerminal"
-    },
-    {
-      "name": "Debug Dawn end2end tests",
-      "type": "cppvsdbg",
-      "request": "launch",
-      "program": "dawn_end2end_tests",
-      "args": [
-        "--gtest_catch_exceptions=0",
-        "--backend=d3d12",
-        "--enable-backend-validation",
-        "--gtest_filter=*"
-      ],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/out/Debug",
-      "environment": [],
-      "console": "integratedTerminal"
-    },
   ]
 }
