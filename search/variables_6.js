@@ -1,7 +1,7 @@
 var searchData=
 [
   ['idebugobject_0',['IDebugObject',['../namespacegpgmm_1_1d3d12.html#af4959aceb2454a577bd5b37a60926a28',1,'gpgmm::d3d12']]],
-  ['initialfencevalue_1',['InitialFenceValue',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___d_e_s_c.html#a16941c906a07c560158ac3f37cfd092c',1,'gpgmm::d3d12::RESIDENCY_MANAGER_DESC']]],
+  ['initialfencevalue_1',['InitialFenceValue',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___d_e_s_c.html#abb2ee4a417631df7b7b9a3aee6724d55',1,'gpgmm::d3d12::RESIDENCY_MANAGER_DESC']]],
   ['initialresourcestate_2',['initialResourceState',['../namespacegpgmm_1_1d3d12.html#a6ef07ca5665f843a9433a5c16598513b',1,'gpgmm::d3d12']]],
   ['instance_3',['instance',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a5d40707ce6865b7b4f8498b46a3fe7f3',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['iresidencyheap_4',['IResidencyHeap',['../namespacegpgmm_1_1d3d12.html#a0af206595eb7d5798cccd49cbc9b3acf',1,'gpgmm::d3d12']]],

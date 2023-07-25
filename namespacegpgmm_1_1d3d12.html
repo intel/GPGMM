@@ -214,12 +214,12 @@ Functions</h2></td></tr>
 <tr class="memitem:aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aefca0a22a15bdc66cebf9eecc5aa4c43">UnlockHeap</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a0af206595eb7d5798cccd49cbc9b3acf">IResidencyHeap</a> *pHeap)=0</td></tr>
 <tr class="memdesc:aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <br /></td></tr>
 <tr class="separator:aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0cccf47f2fa1cced8b6e3f88a85a13ca">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *ppResidencyLists, uint32_t count)=0</td></tr>
-<tr class="memdesc:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps or E_OUTOFMEMORY.  <br /></td></tr>
-<tr class="separator:a0cccf47f2fa1cced8b6e3f88a85a13ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a837c0dacd846fb62153e3ed4e343365f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a837c0dacd846fb62153e3ed4e343365f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, uint64_t availableForReservation, uint64_t *pCurrentReservationOut=nullptr)=0</td></tr>
-<tr class="memdesc:a837c0dacd846fb62153e3ed4e343365f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
-<tr class="separator:a837c0dacd846fb62153e3ed4e343365f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac911ca7f1a4e44c02d008e136766f104"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac911ca7f1a4e44c02d008e136766f104">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *ppResidencyLists, UINT count)=0</td></tr>
+<tr class="memdesc:ac911ca7f1a4e44c02d008e136766f104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps or E_OUTOFMEMORY.  <br /></td></tr>
+<tr class="separator:ac911ca7f1a4e44c02d008e136766f104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c4619565912aa33382be743b7116f9f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a4c4619565912aa33382be743b7116f9f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, UINT64 availableForReservation, UINT64 *pCurrentReservationOut=nullptr)=0</td></tr>
+<tr class="memdesc:a4c4619565912aa33382be743b7116f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
+<tr class="separator:a4c4619565912aa33382be743b7116f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a347909514fa574f72b2f299cf1f54f7a"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a347909514fa574f72b2f299cf1f54f7a">QueryVideoMemoryInfo</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, DXGI_QUERY_VIDEO_MEMORY_INFO *pVideoMemoryInfoOut)=0</td></tr>
 <tr class="memdesc:a347909514fa574f72b2f299cf1f54f7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current budget and memory usage.  <br /></td></tr>
 <tr class="separator:a347909514fa574f72b2f299cf1f54f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,18 +232,18 @@ Functions</h2></td></tr>
 <tr class="memitem:adda8e5c707e8be72160858d53e4e8ff9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adda8e5c707e8be72160858d53e4e8ff9">CreateResidencyManager</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___d_e_s_c.html">RESIDENCY_MANAGER_DESC</a> &amp;descriptor, ID3D12Device *pDevice, IDXGIAdapter3 *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:adda8e5c707e8be72160858d53e4e8ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create residency residency manager to manage video memory.  <br /></td></tr>
 <tr class="separator:adda8e5c707e8be72160858d53e4e8ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3cf28c7ae524e3045d4ef069a4d2c148">Unmap</a> (uint32_t subresource, const D3D12_RANGE *pWrittenRange)=0</td></tr>
-<tr class="memdesc:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <br /></td></tr>
-<tr class="separator:a3cf28c7ae524e3045d4ef069a4d2c148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe4dab35a8585dbce60718ae543f37e5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abe4dab35a8585dbce60718ae543f37e5">Unmap</a> (UINT subresource, const D3D12_RANGE *pWrittenRange)=0</td></tr>
+<tr class="memdesc:abe4dab35a8585dbce60718ae543f37e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmaps the resource allocation.  <br /></td></tr>
+<tr class="separator:abe4dab35a8585dbce60718ae543f37e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memItemLeft" align="right" valign="top">virtual ID3D12Resource *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2">GetResource</a> () const =0</td></tr>
 <tr class="memdesc:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource owned by this allocation.  <br /></td></tr>
 <tr class="separator:afa6f63f90f81e777ddb781a3dc01c0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a904c1177cec90316677f032d530cb146"><td class="memItemLeft" align="right" valign="top">virtual D3D12_GPU_VIRTUAL_ADDRESS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a904c1177cec90316677f032d530cb146">GetGPUVirtualAddress</a> () const =0</td></tr>
 <tr class="memdesc:a904c1177cec90316677f032d530cb146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the GPU virtual address of the resource allocation.  <br /></td></tr>
 <tr class="separator:a904c1177cec90316677f032d530cb146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0a002f6eee82988c57957bd9c8d2b4a6">GetOffsetFromResource</a> () const =0</td></tr>
-<tr class="memdesc:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start of the allocation in the resource.  <br /></td></tr>
-<tr class="separator:a0a002f6eee82988c57957bd9c8d2b4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef42cfb572e20b44f1fc86aca14d497"><td class="memItemLeft" align="right" valign="top">virtual UINT64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#abef42cfb572e20b44f1fc86aca14d497">GetOffsetFromResource</a> () const =0</td></tr>
+<tr class="memdesc:abef42cfb572e20b44f1fc86aca14d497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start of the allocation in the resource.  <br /></td></tr>
+<tr class="separator:abef42cfb572e20b44f1fc86aca14d497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a260a6f663ef8bb86a09441fb159abe1e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___i_n_f_o.html">RESOURCE_ALLOCATION_INFO</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a260a6f663ef8bb86a09441fb159abe1e">GetInfo</a> () const =0</td></tr>
 <tr class="memdesc:a260a6f663ef8bb86a09441fb159abe1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns information about this resource allocation.  <br /></td></tr>
 <tr class="separator:a260a6f663ef8bb86a09441fb159abe1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,15 +253,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a1c46f070043b15d73f162e85ad07cf60"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1c46f070043b15d73f162e85ad07cf60">CreateResource</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">ALLOCATION_DESC</a> &amp;allocationDescriptor, ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#a7ae6e7dbbfc15afd46d2e3b562b36f49">ppResourceAllocationOut</a>)=0</td></tr>
 <tr class="memdesc:a1c46f070043b15d73f162e85ad07cf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use existing D3D12 resource as a resource allocation.  <br /></td></tr>
 <tr class="separator:a1c46f070043b15d73f162e85ad07cf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06cd29b01b8c7a94760d503ca7282022"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022">ReleaseResourceHeaps</a> (uint64_t bytesToRelease, uint64_t *pBytesReleased)=0</td></tr>
-<tr class="memdesc:a06cd29b01b8c7a94760d503ca7282022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
-<tr class="separator:a06cd29b01b8c7a94760d503ca7282022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33e1823d01d51f58a1ae135a2971941d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a33e1823d01d51f58a1ae135a2971941d">ReleaseResourceHeaps</a> (UINT64 bytesToRelease, UINT64 *pBytesReleased)=0</td></tr>
+<tr class="memdesc:a33e1823d01d51f58a1ae135a2971941d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
+<tr class="separator:a33e1823d01d51f58a1ae135a2971941d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a893abe2943b14c899b78980d5048f05f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a893abe2943b14c899b78980d5048f05f">QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
 <tr class="memdesc:a893abe2943b14c899b78980d5048f05f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
 <tr class="separator:a893abe2943b14c899b78980d5048f05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6ffa8695a413186d32f9931dd8d3f6da">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, uint32_t featureSupportDataSize) const =0</td></tr>
-<tr class="memdesc:a6ffa8695a413186d32f9931dd8d3f6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
-<tr class="separator:a6ffa8695a413186d32f9931dd8d3f6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ef632845f002294d62b21ef6c36d42"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a07ef632845f002294d62b21ef6c36d42">CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, UINT featureSupportDataSize) const =0</td></tr>
+<tr class="memdesc:a07ef632845f002294d62b21ef6c36d42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
+<tr class="separator:a07ef632845f002294d62b21ef6c36d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8142df67f3fd5f78dfac64a3cff7a7b1">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> &amp;allocatorDescriptor, ID3D12Device *pDevice, IDXGIAdapter *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <br /></td></tr>
 <tr class="separator:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -709,8 +709,8 @@ of always making heaps implicitly resident on creation.
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a6ffa8695a413186d32f9931dd8d3f6da" name="a6ffa8695a413186d32f9931dd8d3f6da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ffa8695a413186d32f9931dd8d3f6da">&#9670;&#160;</a></span>CheckFeatureSupport()</h2>
+<a id="a07ef632845f002294d62b21ef6c36d42" name="a07ef632845f002294d62b21ef6c36d42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07ef632845f002294d62b21ef6c36d42">&#9670;&#160;</a></span>CheckFeatureSupport()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -733,7 +733,7 @@ of always making heaps implicitly resident on creation.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">UINT&#160;</td>
           <td class="paramname"><em>featureSupportDataSize</em>&#160;</td>
         </tr>
         <tr>
@@ -1087,8 +1087,8 @@ of always making heaps implicitly resident on creation.
 
 </div>
 </div>
-<a id="a0cccf47f2fa1cced8b6e3f88a85a13ca" name="a0cccf47f2fa1cced8b6e3f88a85a13ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cccf47f2fa1cced8b6e3f88a85a13ca">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
+<a id="ac911ca7f1a4e44c02d008e136766f104" name="ac911ca7f1a4e44c02d008e136766f104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac911ca7f1a4e44c02d008e136766f104">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1117,7 +1117,7 @@ of always making heaps implicitly resident on creation.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">UINT&#160;</td>
           <td class="paramname"><em>count</em>&#160;</td>
         </tr>
         <tr>
@@ -1232,8 +1232,8 @@ of always making heaps implicitly resident on creation.
 
 </div>
 </div>
-<a id="a0a002f6eee82988c57957bd9c8d2b4a6" name="a0a002f6eee82988c57957bd9c8d2b4a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a002f6eee82988c57957bd9c8d2b4a6">&#9670;&#160;</a></span>GetOffsetFromResource()</h2>
+<a id="abef42cfb572e20b44f1fc86aca14d497" name="abef42cfb572e20b44f1fc86aca14d497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef42cfb572e20b44f1fc86aca14d497">&#9670;&#160;</a></span>GetOffsetFromResource()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1242,7 +1242,7 @@ of always making heaps implicitly resident on creation.
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual uint64_t gpgmm::d3d12::GetOffsetFromResource </td>
+          <td class="memname">virtual UINT64 gpgmm::d3d12::GetOffsetFromResource </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1405,8 +1405,8 @@ of always making heaps implicitly resident on creation.
 
 </div>
 </div>
-<a id="a06cd29b01b8c7a94760d503ca7282022" name="a06cd29b01b8c7a94760d503ca7282022"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06cd29b01b8c7a94760d503ca7282022">&#9670;&#160;</a></span>ReleaseResourceHeaps()</h2>
+<a id="a33e1823d01d51f58a1ae135a2971941d" name="a33e1823d01d51f58a1ae135a2971941d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33e1823d01d51f58a1ae135a2971941d">&#9670;&#160;</a></span>ReleaseResourceHeaps()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1417,13 +1417,13 @@ of always making heaps implicitly resident on creation.
         <tr>
           <td class="memname">virtual HRESULT gpgmm::d3d12::ReleaseResourceHeaps </td>
           <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramtype">UINT64&#160;</td>
           <td class="paramname"><em>bytesToRelease</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramtype">UINT64 *&#160;</td>
           <td class="paramname"><em>pBytesReleased</em>&#160;</td>
         </tr>
         <tr>
@@ -1440,7 +1440,7 @@ of always making heaps implicitly resident on creation.
 </div><div class="memdoc">
 
 <p>Return free memory back to the OS. </p>
-<p>When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="namespacegpgmm_1_1d3d12.html#a06cd29b01b8c7a94760d503ca7282022" title="Return free memory back to the OS.">ReleaseResourceHeaps()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
+<p>When pooling is enabled, the allocator will retain resource heaps in order to speed-up subsequent resource allocation requests. These resource allocations count against the app's memory usage and in general, will lead to increased memory usage by the overall system. Apps should call <a class="el" href="namespacegpgmm_1_1d3d12.html#a33e1823d01d51f58a1ae135a2971941d" title="Return free memory back to the OS.">ReleaseResourceHeaps()</a> when going idle for a period of time since there is a brief performance hit when the internal resource heaps get reallocated by the OS.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bytesToRelease</td><td>Amount of memory to release, in bytes. A value of UINT64_MAX releases ALL memory held by the allocator. </td></tr>
@@ -1560,8 +1560,8 @@ of always making heaps implicitly resident on creation.
 
 </div>
 </div>
-<a id="a837c0dacd846fb62153e3ed4e343365f" name="a837c0dacd846fb62153e3ed4e343365f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a837c0dacd846fb62153e3ed4e343365f">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
+<a id="a4c4619565912aa33382be743b7116f9f" name="a4c4619565912aa33382be743b7116f9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c4619565912aa33382be743b7116f9f">&#9670;&#160;</a></span>SetVideoMemoryReservation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1578,13 +1578,13 @@ of always making heaps implicitly resident on creation.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramtype">UINT64&#160;</td>
           <td class="paramname"><em>availableForReservation</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramtype">UINT64 *&#160;</td>
           <td class="paramname"><em>pCurrentReservationOut</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
@@ -1648,8 +1648,8 @@ of always making heaps implicitly resident on creation.
 
 </div>
 </div>
-<a id="a3cf28c7ae524e3045d4ef069a4d2c148" name="a3cf28c7ae524e3045d4ef069a4d2c148"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cf28c7ae524e3045d4ef069a4d2c148">&#9670;&#160;</a></span>Unmap()</h2>
+<a id="abe4dab35a8585dbce60718ae543f37e5" name="abe4dab35a8585dbce60718ae543f37e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe4dab35a8585dbce60718ae543f37e5">&#9670;&#160;</a></span>Unmap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1660,7 +1660,7 @@ of always making heaps implicitly resident on creation.
         <tr>
           <td class="memname">virtual void gpgmm::d3d12::Unmap </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">UINT&#160;</td>
           <td class="paramname"><em>subresource</em>, </td>
         </tr>
         <tr>
