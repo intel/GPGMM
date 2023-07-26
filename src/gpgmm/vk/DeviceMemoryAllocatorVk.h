@@ -24,9 +24,9 @@ namespace gpgmm::vk {
         ~DeviceMemoryAllocator() override = default;
 
         // MemoryAllocatorBase interface
-        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
       private:
         GpResourceAllocator mResourceAllocator;

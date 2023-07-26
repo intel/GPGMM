@@ -39,7 +39,7 @@ namespace gpgmm::d3d12 {
           mIsAlwaysCreatedInBudget(alwaysCreatedInBudget) {
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> ResourceHeapAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> ResourceHeapAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResourceHeapAllocator.TryAllocateMemory");
@@ -83,11 +83,11 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(
+        return std::make_unique<MemoryAllocationBase>(
             this, static_cast<ResidencyHeap*>(resourceHeap.Detach()), request.SizeInBytes);
     }
 
-    void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,

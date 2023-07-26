@@ -148,7 +148,7 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocator;
 
-    class ResourceAllocation final : public MemoryAllocation,
+    class ResourceAllocation final : public MemoryAllocationBase,
                                      public Unknown,
                                      public IResourceAllocation {
       public:
@@ -250,7 +250,7 @@ namespace gpgmm::d3d12 {
                           ID3D12Device* pDevice,
                           ResidencyManager* pResidencyManager);
 
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
         Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
         Microsoft::WRL::ComPtr<ResidencyManager> mResidencyManager;

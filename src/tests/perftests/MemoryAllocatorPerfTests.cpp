@@ -48,7 +48,7 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
     void SingleStep(benchmark::State& state,
                     MemoryAllocatorBase* allocator,
                     const MemoryAllocationRequest& request) const {
-        std::vector<std::unique_ptr<MemoryAllocation>> allocations;
+        std::vector<std::unique_ptr<MemoryAllocationBase>> allocations;
         for (int i = 0; i < state.range(3); i++) {
             auto allocation = allocator->TryAllocateMemoryForTesting(request);
             if (allocation == nullptr) {

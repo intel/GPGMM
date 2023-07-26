@@ -28,8 +28,8 @@ namespace gpgmm {
           mConditionalSize(conditionalSize) {
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> ConditionalMemoryAllocator::TryAllocateMemory(
-        const MemoryAllocationRequest& request) {
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>>
+    ConditionalMemoryAllocator::TryAllocateMemory(const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ConditionalMemoryAllocator.TryAllocateMemory");
         if (request.SizeInBytes <= mConditionalSize) {
@@ -40,7 +40,7 @@ namespace gpgmm {
     }
 
     void ConditionalMemoryAllocator::DeallocateMemory(
-        std::unique_ptr<MemoryAllocation> allocation) {
+        std::unique_ptr<MemoryAllocationBase> allocation) {
         // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
         allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
     }

@@ -37,7 +37,7 @@ namespace gpgmm::d3d12 {
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(DebugResourceAllocator)
 
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
         class ResourceAllocationEntry {
           public:

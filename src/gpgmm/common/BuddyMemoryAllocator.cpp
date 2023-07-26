@@ -41,7 +41,7 @@ namespace gpgmm {
         return static_cast<uint64_t>(SafeDivide(offset, mMemorySize));
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> BuddyMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> BuddyMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "BuddyMemoryAllocator.TryAllocateMemory");
@@ -57,13 +57,13 @@ namespace gpgmm {
         GPGMM_RETURN_INVALID_IF(allocationSize > mMemorySize);
 
         // Attempt to sub-allocate a block of the requested size.
-        std::unique_ptr<MemoryAllocation> subAllocation;
+        std::unique_ptr<MemoryAllocationBase> subAllocation;
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &mBuddyBlockAllocator, allocationSize, request.Alignment, request.NeverAllocate,
                 [&](const auto& block) -> ResultOrError<MemoryBase*> {
                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                    MemoryAllocation memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
+                    MemoryAllocationBase memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
 
                     // No existing, allocate new memory for the block.
                     if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
@@ -71,8 +71,9 @@ namespace gpgmm {
                         newRequest.SizeInBytes = mMemorySize;
                         newRequest.Alignment = mMemoryAlignment;
 
-                        ResultOrError<std::unique_ptr<MemoryAllocation>> memoryAllocationResult =
-                            GetNextInChain()->TryAllocateMemory(newRequest);
+                        ResultOrError<std::unique_ptr<MemoryAllocationBase>>
+                            memoryAllocationResult =
+                                GetNextInChain()->TryAllocateMemory(newRequest);
                         if (!memoryAllocationResult.IsSuccess()) {
                             return memoryAllocationResult.GetErrorCode();
                         }
@@ -94,12 +95,13 @@ namespace gpgmm {
         // Memory allocation offset is always memory-relative.
         const uint64_t memoryOffset = block->Offset % mMemorySize;
 
-        return std::make_unique<MemoryAllocation>(/*allocator*/ this, subAllocation->GetMemory(),
-                                                  memoryOffset, AllocationMethod::kSubAllocated,
-                                                  block, request.SizeInBytes);
+        return std::make_unique<MemoryAllocationBase>(
+            /*allocator*/ this, subAllocation->GetMemory(), memoryOffset,
+            AllocationMethod::kSubAllocated, block, request.SizeInBytes);
     }
 
-    void BuddyMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
+    void BuddyMemoryAllocator::DeallocateMemory(
+        std::unique_ptr<MemoryAllocationBase> subAllocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
@@ -114,14 +116,14 @@ namespace gpgmm {
 
         mBuddyBlockAllocator.DeallocateBlock(subAllocation->GetBlock());
 
-        MemoryAllocation memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
+        MemoryAllocationBase memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
 
         MemoryBase* memory = memoryAllocation.GetMemory();
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
             GetNextInChain()->DeallocateMemory(
-                std::make_unique<MemoryAllocation>(memoryAllocation));
+                std::make_unique<MemoryAllocationBase>(memoryAllocation));
         } else {
             mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
         }

@@ -35,25 +35,25 @@ namespace gpgmm {
         return 0;
     }
 
-    // MemoryAllocation
+    // MemoryAllocationBase
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory)
+    MemoryAllocationBase::MemoryAllocationBase(MemoryAllocatorBase* allocator, MemoryBase* memory)
         : mAllocator(allocator), mMemory(memory) {
     }
 
-    MemoryBase* MemoryAllocation::GetMemory() const {
+    MemoryBase* MemoryAllocationBase::GetMemory() const {
         return mMemory;
     }
 
-    MemoryAllocatorBase* MemoryAllocation::GetAllocator() const {
+    MemoryAllocatorBase* MemoryAllocationBase::GetAllocator() const {
         return mAllocator;
     }
 
-    uint64_t MemoryAllocation::GetSize() const {
+    uint64_t MemoryAllocationBase::GetSize() const {
         return mMemory->GetSize();
     }
 
-    uint64_t MemoryAllocation::GetAlignment() const {
+    uint64_t MemoryAllocationBase::GetAlignment() const {
         return mMemory->GetAlignment();
     }
 

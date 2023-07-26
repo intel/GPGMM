@@ -119,8 +119,8 @@ namespace gpgmm {
         return newFreeSegment;
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> SegmentedMemoryAllocator::TryAllocateMemory(
-        const MemoryAllocationRequest& request) {
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>>
+    SegmentedMemoryAllocator::TryAllocateMemory(const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SegmentedMemoryAllocator.TryAllocateMemory");
 
@@ -132,13 +132,13 @@ namespace gpgmm {
         MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
         ASSERT(segment != nullptr);
 
-        MemoryAllocation allocation = segment->AcquireFromPool();
+        MemoryAllocationBase allocation = segment->AcquireFromPool();
         if (allocation == GPGMM_INVALID_ALLOCATION) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
             memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
-            std::unique_ptr<MemoryAllocation> allocationPtr;
+            std::unique_ptr<MemoryAllocationBase> allocationPtr;
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
             allocation = *allocationPtr;
         } else {
@@ -152,10 +152,11 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
         memory->SetPool(segment);
 
-        return std::make_unique<MemoryAllocation>(this, memory, request.SizeInBytes);
+        return std::make_unique<MemoryAllocationBase>(this, memory, request.SizeInBytes);
     }
 
-    void SegmentedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void SegmentedMemoryAllocator::DeallocateMemory(
+        std::unique_ptr<MemoryAllocationBase> allocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SegmentedMemoryAllocator.DeallocateMemory");
 
@@ -175,7 +176,7 @@ namespace gpgmm {
         ASSERT(pool != nullptr);
 
         static_cast<MemorySegment*>(pool)->ReturnToPool(
-            MemoryAllocation(GetNextInChain(), memory, allocation->GetRequestSize()));
+            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()));
     }
 
     uint64_t SegmentedMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

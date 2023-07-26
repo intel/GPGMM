@@ -268,7 +268,7 @@ namespace gpgmm::d3d12 {
         HRESULT TryAllocateResource(MemoryAllocatorBase* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
-            ResultOrError<std::unique_ptr<MemoryAllocation>> result =
+            ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
                 allocator->TryAllocateMemory(request);
             if (FAILED(result.GetErrorCode())) {
                 // NeverAllocate always fails, so suppress it.
@@ -280,7 +280,7 @@ namespace gpgmm::d3d12 {
                 return static_cast<HRESULT>(result.GetErrorCode());
             }
 
-            std::unique_ptr<MemoryAllocation> allocation = result.AcquireResult();
+            std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
             ASSERT(allocation != nullptr);
 
             HRESULT hr = createResourceFn(*allocation);
@@ -1647,7 +1647,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResourceAllocator.DeallocateMemory");
 

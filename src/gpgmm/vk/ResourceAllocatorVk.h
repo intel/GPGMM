@@ -24,8 +24,8 @@
 
 namespace gpgmm::vk {
 
-    struct GpResourceAllocation_T final : public MemoryAllocation {
-        GpResourceAllocation_T(const MemoryAllocation& allocation);
+    struct GpResourceAllocation_T final : public MemoryAllocationBase {
+        GpResourceAllocation_T(const MemoryAllocationBase& allocation);
     };
 
     class Caps;

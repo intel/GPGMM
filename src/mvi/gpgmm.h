@@ -32,20 +32,20 @@ namespace gpgmm {
         const uint64_t mAlignment;
     };
 
-    class MemoryAllocation;
+    class MemoryAllocationBase;
 
     class MemoryAllocatorBase {
       public:
-        virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
+        virtual void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) = 0;
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease);
     };
 
-    // MemoryAllocation represents a range of memory. A MemoryAllocation object will be held alive
-    // until MemoryAllocatorBase::DeallocateMemory is called on the MemoryAllocatorBase object from
-    // which it was originally created.
-    class MemoryAllocation {
+    // MemoryAllocationBase represents a range of memory. A MemoryAllocationBase object will be held
+    // alive until MemoryAllocatorBase::DeallocateMemory is called on the MemoryAllocatorBase object
+    // from which it was originally created.
+    class MemoryAllocationBase {
       public:
-        MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory);
+        MemoryAllocationBase(MemoryAllocatorBase* allocator, MemoryBase* memory);
 
         MemoryAllocatorBase* GetAllocator() const;
         uint64_t GetSize() const;

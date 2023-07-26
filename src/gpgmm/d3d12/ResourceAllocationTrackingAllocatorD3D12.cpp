@@ -61,7 +61,7 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
         for (auto allocationEntry : mLiveAllocations) {
             allocationEntry->GetValue().GetAllocator()->DeallocateMemory(
-                std::unique_ptr<MemoryAllocation>(allocationEntry->GetValue().GetAllocation()));
+                std::unique_ptr<MemoryAllocationBase>(allocationEntry->GetValue().GetAllocation()));
         }
 
         mLiveAllocations.clear();
@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocationTrackingAllocator::DeallocateMemory(
-        std::unique_ptr<MemoryAllocation> allocation) {
+        std::unique_ptr<MemoryAllocationBase> allocation) {
         std::lock_guard<std::mutex> lock(mMutex);
 
         // KeepAlive must be false so |mLiveAllocations| cache will shrink by 1 entry once |entry|

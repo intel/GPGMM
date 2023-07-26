@@ -26,8 +26,8 @@ namespace gpgmm {
         : MemoryAllocatorBase(std::move(memoryAllocator)), mMemoryAlignment(memoryAlignment) {
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> DedicatedMemoryAllocator::TryAllocateMemory(
-        const MemoryAllocationRequest& request) {
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>>
+    DedicatedMemoryAllocator::TryAllocateMemory(const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "DedicatedMemoryAllocator.TryAllocateMemory");
 
@@ -39,7 +39,7 @@ namespace gpgmm {
         memoryRequest.Alignment = mMemoryAlignment;
         memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
-        std::unique_ptr<MemoryAllocation> allocation;
+        std::unique_ptr<MemoryAllocationBase> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
 
         if (memoryRequest.SizeInBytes > request.SizeInBytes) {
@@ -51,12 +51,13 @@ namespace gpgmm {
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
 
-        return std::make_unique<MemoryAllocation>(
+        return std::make_unique<MemoryAllocationBase>(
             this, allocation->GetMemory(), /*offset*/ 0, allocation->GetMethod(),
             new MemoryBlock{0, allocation->GetSize()}, request.SizeInBytes);
     }
 
-    void DedicatedMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void DedicatedMemoryAllocator::DeallocateMemory(
+        std::unique_ptr<MemoryAllocationBase> allocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "DedicatedMemoryAllocator.DeallocateMemory");
 

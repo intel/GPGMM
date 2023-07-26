@@ -31,7 +31,7 @@ namespace gpgmm {
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
         }
 
-        ResultOrError<std::unique_ptr<MemoryAllocation>> AcquireAllocation() {
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireAllocation() {
             std::lock_guard<std::mutex> lock(mAllocationMutex);
             return std::move(mAllocation);
         }
@@ -41,7 +41,7 @@ namespace gpgmm {
         const MemoryAllocationRequest mRequest;
 
         std::mutex mAllocationMutex;
-        ResultOrError<std::unique_ptr<MemoryAllocation>> mAllocation;
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> mAllocation;
     };
 
     // MemoryAllocatorStats
@@ -81,7 +81,7 @@ namespace gpgmm {
         return mEvent->Signal();
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocationEvent::AcquireAllocation()
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> MemoryAllocationEvent::AcquireAllocation()
         const {
         return mTask->AcquireAllocation();
     }
@@ -116,13 +116,13 @@ namespace gpgmm {
         }
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocatorBase::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> MemoryAllocatorBase::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         ASSERT(false);
         return {};
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocatorBase::TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocationBase> MemoryAllocatorBase::TryAllocateMemoryForTesting(
         const MemoryAllocationRequest& request) {
         return TryAllocateMemory(request).AcquireResult();
     }
@@ -205,7 +205,7 @@ namespace gpgmm {
     }
 
     void MemoryAllocatorBase::CheckAndReportAllocationMisalignment(
-        const MemoryAllocation& allocation) {
+        const MemoryAllocationBase& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
             WarnLog(MessageId::kAlignmentMismatch)
                 << "Allocation is larger then the requested size (" +

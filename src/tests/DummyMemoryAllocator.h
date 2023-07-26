@@ -35,7 +35,7 @@ namespace gpgmm {
             : MemoryAllocatorBase(std::move(next)) {
         }
 
-        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override {
             GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                        "DummyMemoryAllocator.TryAllocateMemory");
@@ -49,11 +49,11 @@ namespace gpgmm {
             mStats.UsedMemoryCount++;
             mStats.UsedMemoryUsage += request.SizeInBytes;
 
-            return std::make_unique<MemoryAllocation>(
+            return std::make_unique<MemoryAllocationBase>(
                 this, new DummyMemory(request.SizeInBytes, request.Alignment), request.SizeInBytes);
         }
 
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override {
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override {
             GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                        "DummyMemoryAllocator.DeallocateMemory");
 
