@@ -284,7 +284,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:a09e5c02e9225b2fbfcbb11c26356024a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <br /></td></tr>
 <tr class="separator:a09e5c02e9225b2fbfcbb11c26356024a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a199143fd12adc1d2a067b51257c228f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a></td></tr>
-<tr class="memdesc:a199143fd12adc1d2a067b51257c228f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.  <br /></td></tr>
+<tr class="memdesc:a199143fd12adc1d2a067b51257c228f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocation is an allocation that contains a ID3D12Resource.  <br /></td></tr>
 <tr class="separator:a199143fd12adc1d2a067b51257c228f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e58a104b6eb456c7e81ee651304159f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1e58a104b6eb456c7e81ee651304159f">pReadRange</a></td></tr>
 <tr class="separator:a1e58a104b6eb456c7e81ee651304159f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1792,7 +1792,7 @@ of always making heaps implicitly resident on creation.
       </table>
 </div><div class="memdoc">
 
-<p>ResourceAllocation is MemoryAllocation that contains a ID3D12Resource. </p>
+<p>ResourceAllocation is an allocation that contains a ID3D12Resource. </p>
 <p>It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed" in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a ID3D12Heap (called a committed resource).</p>
 <p>It is recommend to use ResourceAllocation instead of ID3D12Resource (1:1) for performing D3D12 operations with it (eg. Map, Unmap, etc). </p>
 
