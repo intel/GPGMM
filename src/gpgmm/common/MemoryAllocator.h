@@ -119,31 +119,32 @@ namespace gpgmm {
 
     class BlockAllocator;
 
-    // MemoryAllocator services a fixed or variable sized MemoryAllocationRequest.
+    // MemoryAllocatorBase services a fixed or variable sized MemoryAllocationRequest.
     //
-    // Internally, MemoryAllocator sub-allocates existing memory objects into smaller chucks
+    // Internally, MemoryAllocatorBase sub-allocates existing memory objects into smaller chucks
     // (called memory blocks) or allocates whole memory objects then decides which memory blocks
     // or objects to cache. Since cached memory objects count against the application's memory
     // usage, freeing this cache periodically by calling ReleaseMemory() is highly recommended.
 
-    // MemoryAllocator can also be created with another MemoryAllocator. MemoryAllocator represents
-    // a chain where allocations made between the first-order MemoryAllocator (or parent)
-    // and the next MemoryAllocator (or child) form a one-way edge. This allows the first-order
-    // MemoryAllocator to sub-allocate from larger blocks provided by the second-order
-    // MemoryAllocator and so on.
-    class MemoryAllocator : public ObjectBase, public LinkNode<MemoryAllocator> {
+    // MemoryAllocatorBase can also be created with another MemoryAllocatorBase. MemoryAllocatorBase
+    // represents a chain where allocations made between the first-order MemoryAllocatorBase (or
+    // parent) and the next MemoryAllocatorBase (or child) form a one-way edge. This allows the
+    // first-order MemoryAllocatorBase to sub-allocate from larger blocks provided by the
+    // second-order MemoryAllocatorBase and so on.
+    class MemoryAllocatorBase : public ObjectBase, public LinkNode<MemoryAllocatorBase> {
       public:
-        // Constructs a standalone MemoryAllocator.
-        MemoryAllocator();
+        // Constructs a standalone MemoryAllocatorBase.
+        MemoryAllocatorBase();
 
-        // Constructs a MemoryAllocator that also owns a (child) allocator.
-        explicit MemoryAllocator(std::unique_ptr<MemoryAllocator> next);
+        // Constructs a MemoryAllocatorBase that also owns a (child) allocator.
+        explicit MemoryAllocatorBase(std::unique_ptr<MemoryAllocatorBase> next);
 
-        virtual ~MemoryAllocator() override;
+        virtual ~MemoryAllocatorBase() override;
 
         // Attempts creation of a memory allocation.
         //
-        // The returned MemoryAllocation is only valid for the lifetime of |this| MemoryAllocator.
+        // The returned MemoryAllocation is only valid for the lifetime of |this|
+        // MemoryAllocatorBase.
         virtual ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request);
 
@@ -171,14 +172,14 @@ namespace gpgmm {
         // allocator.
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease);
 
-        // Get the fixed-memory sized of the MemoryAllocator.
+        // Get the fixed-memory sized of the MemoryAllocatorBase.
         //
         // If this allocator only allocates memory blocks using the same size, this value
         // is guarenteed to valid. Otherwise, kInvalidSize is returned to denote any memory size
         // could be created by |this| allocator.
         virtual uint64_t GetMemorySize() const;
 
-        // Get the fixed-memory alignment of the MemoryAllocator.
+        // Get the fixed-memory alignment of the MemoryAllocatorBase.
         // If this allocator only allocates memory using the same alignment, this value
         // is guarenteed to valid. Otherwise, kInvalidOffset is returned to denote any alignment is
         // allowed.
@@ -193,13 +194,13 @@ namespace gpgmm {
         // Checks if the request is valid.
         bool ValidateRequest(const MemoryAllocationRequest& request) const;
 
-        // Return the next MemoryAllocator.
-        MemoryAllocator* GetNextInChain() const;
+        // Return the next MemoryAllocatorBase.
+        MemoryAllocatorBase* GetNextInChain() const;
 
-        // Return the previous MemoryAllocator.
-        MemoryAllocator* GetParent() const;
+        // Return the previous MemoryAllocatorBase.
+        MemoryAllocatorBase* GetParent() const;
 
-        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocator)
+        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocatorBase)
 
       protected:
         // Combine TryAllocateBlock and TryAllocateMemory into a single call so a partial
@@ -243,7 +244,7 @@ namespace gpgmm {
                 nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
         }
 
-        void InsertIntoChain(std::unique_ptr<MemoryAllocator> next);
+        void InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next);
 
         void CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation);
 
@@ -252,8 +253,8 @@ namespace gpgmm {
         mutable std::mutex mMutex;
 
       private:
-        MemoryAllocator* mNext = nullptr;
-        MemoryAllocator* mParent = nullptr;
+        MemoryAllocatorBase* mNext = nullptr;
+        MemoryAllocatorBase* mParent = nullptr;
     };
 
 }  // namespace gpgmm

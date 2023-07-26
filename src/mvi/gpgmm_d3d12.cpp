@@ -272,7 +272,7 @@ namespace gpgmm::d3d12 {
         return static_cast<ResidencyHeap*>(MemoryAllocation::GetMemory());
     }
 
-    ResourceAllocation::ResourceAllocation(MemoryAllocator* allocator,
+    ResourceAllocation::ResourceAllocation(MemoryAllocatorBase* allocator,
                                            ResidencyHeap* resourceHeap,
                                            Microsoft::WRL::ComPtr<ID3D12Resource> resource)
         : MemoryAllocation(allocator, resourceHeap), mResource(std::move(resource)) {

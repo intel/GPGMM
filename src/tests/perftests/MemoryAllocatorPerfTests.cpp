@@ -46,7 +46,7 @@ class MemoryAllocatorPerfTests : public benchmark::Fixture {
 class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
   public:
     void SingleStep(benchmark::State& state,
-                    MemoryAllocator* allocator,
+                    MemoryAllocatorBase* allocator,
                     const MemoryAllocationRequest& request) const {
         std::vector<std::unique_ptr<MemoryAllocation>> allocations;
         for (int i = 0; i < state.range(3); i++) {

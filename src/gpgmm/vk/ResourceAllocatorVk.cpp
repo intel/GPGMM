@@ -340,7 +340,7 @@ namespace gpgmm::vk {
         request.AvailableForAllocation = kInvalidSize;
 
         // Attempt to allocate using the most effective allocator.
-        MemoryAllocator* allocator = nullptr;
+        MemoryAllocatorBase* allocator = nullptr;
 
         ResultOrError<std::unique_ptr<MemoryAllocation>> result;
         if (!neverSubAllocate) {
@@ -383,11 +383,11 @@ namespace gpgmm::vk {
         return mCaps.get();
     }
 
-    std::unique_ptr<MemoryAllocator> GpResourceAllocator_T::CreateDeviceMemoryAllocator(
+    std::unique_ptr<MemoryAllocatorBase> GpResourceAllocator_T::CreateDeviceMemoryAllocator(
         const GpAllocatorCreateInfo& info,
         uint64_t memoryTypeIndex,
         uint64_t memoryAlignment) {
-        std::unique_ptr<MemoryAllocator> deviceMemoryAllocator =
+        std::unique_ptr<MemoryAllocatorBase> deviceMemoryAllocator =
             std::make_unique<DeviceMemoryAllocator>(this, memoryTypeIndex);
 
         if (!(info.flags & GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND)) {
@@ -411,11 +411,11 @@ namespace gpgmm::vk {
         return deviceMemoryAllocator;
     }
 
-    std::unique_ptr<MemoryAllocator> GpResourceAllocator_T::CreateResourceSubAllocator(
+    std::unique_ptr<MemoryAllocatorBase> GpResourceAllocator_T::CreateResourceSubAllocator(
         const GpAllocatorCreateInfo& info,
         uint64_t memoryTypeIndex,
         uint64_t memoryAlignment) {
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
+        std::unique_ptr<MemoryAllocatorBase> pooledOrNonPooledAllocator =
             CreateDeviceMemoryAllocator(info, memoryTypeIndex, memoryAlignment);
 
         // TODO: Figure out how to specify this using Vulkan API.

@@ -43,7 +43,7 @@ namespace gpgmm {
 
     class MemoryBase;
     struct MemoryBlock;
-    class MemoryAllocator;
+    class MemoryAllocatorBase;
 
     // Represents a location and range in memory.
     class MemoryAllocation : public ObjectBase {
@@ -52,7 +52,7 @@ namespace gpgmm {
         MemoryAllocation();
 
         // Constructs a "sub-allocated" memory allocation.
-        MemoryAllocation(MemoryAllocator* allocator,
+        MemoryAllocation(MemoryAllocatorBase* allocator,
                          MemoryBase* memory,
                          uint64_t offset,
                          AllocationMethod method,
@@ -60,7 +60,7 @@ namespace gpgmm {
                          uint64_t requestSize);
 
         // Constructs a "standalone" memory allocation.
-        MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory, uint64_t requestSize);
+        MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory, uint64_t requestSize);
 
         virtual ~MemoryAllocation() override = default;
 
@@ -70,7 +70,7 @@ namespace gpgmm {
         bool operator!=(const MemoryAllocation& other) const;
 
         MemoryBase* GetMemory() const;
-        MemoryAllocator* GetAllocator() const;
+        MemoryAllocatorBase* GetAllocator() const;
         uint64_t GetSize() const;
         uint64_t GetRequestSize() const;
         uint64_t GetAlignment() const;
@@ -79,9 +79,9 @@ namespace gpgmm {
         MemoryBlock* GetBlock() const;
 
       protected:
-        friend class MemoryAllocator;
+        friend class MemoryAllocatorBase;
 
-        MemoryAllocator* mAllocator;
+        MemoryAllocatorBase* mAllocator;
 
       private:
         // ObjectBase interface

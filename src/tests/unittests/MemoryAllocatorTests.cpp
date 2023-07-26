@@ -30,7 +30,7 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
   public:
     TestMemoryAllocator() = default;
 
-    explicit TestMemoryAllocator(std::unique_ptr<MemoryAllocator> next)
+    explicit TestMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> next)
         : DummyMemoryAllocator(std::move(next)) {
     }
 
@@ -40,7 +40,7 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
 
     uint64_t ReleaseMemory(uint64_t bytesToRelease) override {
         ReleaseMemoryCount++;
-        return MemoryAllocator::ReleaseMemory(bytesToRelease);
+        return MemoryAllocatorBase::ReleaseMemory(bytesToRelease);
     }
 };
 

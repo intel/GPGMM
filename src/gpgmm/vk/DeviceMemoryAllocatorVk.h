@@ -18,12 +18,12 @@
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
 namespace gpgmm::vk {
-    class DeviceMemoryAllocator final : public MemoryAllocator {
+    class DeviceMemoryAllocator final : public MemoryAllocatorBase {
       public:
         DeviceMemoryAllocator(GpResourceAllocator resourceAllocator, uint32_t memoryTypeIndex);
         ~DeviceMemoryAllocator() override = default;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

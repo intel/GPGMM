@@ -34,26 +34,26 @@ namespace gpgmm {
 
     class MemoryAllocation;
 
-    class MemoryAllocator {
+    class MemoryAllocatorBase {
       public:
         virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
         virtual uint64_t ReleaseMemory(uint64_t bytesToRelease);
     };
 
     // MemoryAllocation represents a range of memory. A MemoryAllocation object will be held alive
-    // until MemoryAllocator::DeallocateMemory is called on the MemoryAllocator object from which it
-    // was originally created.
+    // until MemoryAllocatorBase::DeallocateMemory is called on the MemoryAllocatorBase object from
+    // which it was originally created.
     class MemoryAllocation {
       public:
-        MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory);
+        MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory);
 
-        MemoryAllocator* GetAllocator() const;
+        MemoryAllocatorBase* GetAllocator() const;
         uint64_t GetSize() const;
         uint64_t GetAlignment() const;
         MemoryBase* GetMemory() const;
 
       protected:
-        MemoryAllocator* mAllocator;
+        MemoryAllocatorBase* mAllocator;
 
       private:
         MemoryBase* mMemory;

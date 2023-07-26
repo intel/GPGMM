@@ -175,7 +175,7 @@ namespace gpgmm::d3d12 {
       private:
         friend ResourceAllocator;
 
-        ResourceAllocation(MemoryAllocator* allocator,
+        ResourceAllocation(MemoryAllocatorBase* allocator,
                            ResidencyHeap* resourceHeap,
                            Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 
@@ -205,7 +205,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC* mResourceDescriptor;
     };
 
-    class ResourceAllocator final : public MemoryAllocator,
+    class ResourceAllocator final : public MemoryAllocatorBase,
                                     public Unknown,
                                     public IResourceAllocator {
       public:

@@ -1228,14 +1228,14 @@ namespace gpgmm::d3d12 {
         UINT64 SizeCacheHits;
     };
 
-    /** \brief ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a
+    /** \brief ResourceAllocator is an allocator that creates ID3D12Resources in a
     ResourceAllocation.
 
     Internally, ResourceAllocator creates a request, by determining the
-    resource allocation requirements, then finds a MemoryAllocator able to service the request.
+    resource allocation requirements, then finds an allocator able to service the request.
 
-    If the first MemoryAllocator attempt fails, it will try a second MemoryAllocator, and so on.
-    MemoryAllocator attempts are greedy: re-use of resources > re-use of heaps >
+    If the first ResourceAllocator attempt fails, it will try a second allocator, and so on.
+    ResourceAllocator attempts are greedy: re-use of resources > re-use of heaps >
     re-use by pools > no re-use, in order of maximizing performance while minimizing memory
     footprint.
 

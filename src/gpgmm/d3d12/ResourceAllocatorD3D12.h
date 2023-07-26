@@ -37,7 +37,7 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocator final : public DebugObject,
                                     public IResourceAllocator,
-                                    public MemoryAllocator {
+                                    public MemoryAllocatorBase {
       public:
         static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
@@ -92,34 +92,34 @@ namespace gpgmm::d3d12 {
                           ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 
-        std::unique_ptr<MemoryAllocator> CreateResourceAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment);
 
-        std::unique_ptr<MemoryAllocator> CreateSmallBufferAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreateSmallBufferAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment,
             D3D12_RESOURCE_STATES initialResourceState);
 
-        std::unique_ptr<MemoryAllocator> CreatePoolAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreatePoolAllocator(
             ALLOCATOR_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             bool isAlwaysOnDemand,
-            std::unique_ptr<MemoryAllocator> underlyingAllocator);
+            std::unique_ptr<MemoryAllocatorBase> underlyingAllocator);
 
-        std::unique_ptr<MemoryAllocator> CreateSubAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreateSubAllocator(
             ALLOCATOR_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             float memoryFragmentationLimit,
             float memoryGrowthFactor,
             bool isPrefetchAllowed,
-            std::unique_ptr<MemoryAllocator> underlyingAllocator);
+            std::unique_ptr<MemoryAllocatorBase> underlyingAllocator);
 
         HRESULT CreatePlacedResource(ResidencyHeap* const resourceHeap,
                                      uint64_t resourceOffset,
@@ -145,7 +145,7 @@ namespace gpgmm::d3d12 {
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
             D3D12_RESOURCE_DESC& resourceDescriptor) const;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         HRESULT QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats);
@@ -166,17 +166,17 @@ namespace gpgmm::d3d12 {
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mDedicatedResourceAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mResourceAllocatorOfType;
 
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mMSAADedicatedResourceAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mMSAAResourceAllocatorOfType;
 
-        std::array<std::unique_ptr<MemoryAllocator>, kNumOfResourceHeapTypes>
+        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mSmallBufferAllocatorOfType;
 
         std::unique_ptr<ResourceAllocationTrackingAllocator> mTrackingAllocator;
