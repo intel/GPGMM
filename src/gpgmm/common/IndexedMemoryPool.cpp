@@ -22,16 +22,16 @@ namespace gpgmm {
     IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
-    MemoryAllocation IndexedMemoryPool::AcquireFromPool(uint64_t indexInPool) {
+    MemoryAllocationBase IndexedMemoryPool::AcquireFromPool(uint64_t indexInPool) {
         if (indexInPool >= mPool.size()) {
             mPool.resize(indexInPool + 1);
         }
-        MemoryAllocation tmp = mPool[indexInPool];
+        MemoryAllocationBase tmp = mPool[indexInPool];
         mPool[indexInPool] = {};  // invalidate it
         return tmp;
     }
 
-    void IndexedMemoryPool::ReturnToPool(MemoryAllocation allocation, uint64_t indexInPool) {
+    void IndexedMemoryPool::ReturnToPool(MemoryAllocationBase allocation, uint64_t indexInPool) {
         ASSERT(indexInPool < mPool.size());
         ASSERT(allocation.GetSize() == GetMemorySize());
         mPool[indexInPool] = std::move(allocation);

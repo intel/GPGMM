@@ -36,7 +36,7 @@ namespace gpgmm::d3d12 {
           mInitialResourceState(initialResourceState) {
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> BufferAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> BufferAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "BufferAllocator.TryAllocateMemory");
@@ -84,10 +84,11 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryUsage += resourceHeap->GetSize();
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocation>(this, resourceHeap.Detach(), request.SizeInBytes);
+        return std::make_unique<MemoryAllocationBase>(this, resourceHeap.Detach(),
+                                                      request.SizeInBytes);
     }
 
-    void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void BufferAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "BufferAllocator.DeallocateMemory");
         std::lock_guard<std::mutex> lock(mMutex);

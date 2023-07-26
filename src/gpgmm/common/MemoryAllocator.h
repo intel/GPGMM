@@ -42,7 +42,7 @@ namespace gpgmm {
         // Event overrides
         void Wait() override;
 
-        ResultOrError<std::unique_ptr<MemoryAllocation>> AcquireAllocation() const;
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireAllocation() const;
 
       private:
         void Signal() override;
@@ -143,14 +143,14 @@ namespace gpgmm {
 
         // Attempts creation of a memory allocation.
         //
-        // The returned MemoryAllocation is only valid for the lifetime of |this|
+        // The returned MemoryAllocationBase is only valid for the lifetime of |this|
         // MemoryAllocatorBase.
-        virtual ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
+        virtual ResultOrError<std::unique_ptr<MemoryAllocationBase>> TryAllocateMemory(
             const MemoryAllocationRequest& request);
 
         // Same as TryAllocateMemory above but leaves the result unwrapped for testing the result
         // directly.
-        std::unique_ptr<MemoryAllocation> TryAllocateMemoryForTesting(
+        std::unique_ptr<MemoryAllocationBase> TryAllocateMemoryForTesting(
             const MemoryAllocationRequest& request);
 
         // Non-blocking version of TryAllocateMemory.
@@ -161,8 +161,8 @@ namespace gpgmm {
 
         // Free a memory allocation.
         //
-        // After DeallocateMemory is called, the MemoryAllocation is longer valid.
-        virtual void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) = 0;
+        // After DeallocateMemory is called, the MemoryAllocationBase is longer valid.
+        virtual void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) = 0;
 
         // Return free memory back to the OS.
         //
@@ -207,7 +207,7 @@ namespace gpgmm {
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
-        static ResultOrError<std::unique_ptr<MemoryAllocation>> TrySubAllocateMemory(
+        static ResultOrError<std::unique_ptr<MemoryAllocationBase>> TrySubAllocateMemory(
             BlockAllocator* allocator,
             uint64_t requestSize,
             uint64_t alignment,
@@ -240,13 +240,13 @@ namespace gpgmm {
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the
             // final sub-allocated block to created memory.
-            return std::make_unique<MemoryAllocation>(
+            return std::make_unique<MemoryAllocationBase>(
                 nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
         }
 
         void InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next);
 
-        void CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation);
+        void CheckAndReportAllocationMisalignment(const MemoryAllocationBase& allocation);
 
         MemoryAllocatorStats mStats = {};
 

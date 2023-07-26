@@ -71,7 +71,7 @@ namespace gpgmm {
 
         SlabBlockAllocator Allocator;
         uint64_t UsedBlocksPerSlab = 0;
-        MemoryAllocation Allocation;
+        MemoryAllocationBase Allocation;
         uint64_t IndexInList = kInvalidIndex;
         uint64_t IndexInCache = kInvalidIndex;
     };
@@ -106,7 +106,7 @@ namespace gpgmm {
     SlabMemoryAllocator::~SlabMemoryAllocator() {
         if (mNextSlabAllocationEvent != nullptr) {
             mNextSlabAllocationEvent->Wait();
-            ResultOrError<std::unique_ptr<MemoryAllocation>> result =
+            ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
                 mNextSlabAllocationEvent->AcquireAllocation();
             if (result.IsSuccess()) {
                 mMemoryAllocator->DeallocateMemory(result.AcquireResult());
@@ -195,7 +195,7 @@ namespace gpgmm {
         return cache;
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> SlabMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> SlabMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SlabMemoryAllocator.TryAllocateMemory");
@@ -262,7 +262,7 @@ namespace gpgmm {
         ASSERT(pFreeSlab != nullptr);
         ASSERT(!pFreeSlab->IsFull());
 
-        std::unique_ptr<MemoryAllocation> subAllocation;
+        std::unique_ptr<MemoryAllocationBase> subAllocation;
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
@@ -277,13 +277,13 @@ namespace gpgmm {
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
-                        ResultOrError<std::unique_ptr<MemoryAllocation>> memoryAllocationResult =
-                            mNextSlabAllocationEvent->AcquireAllocation();
+                        ResultOrError<std::unique_ptr<MemoryAllocationBase>>
+                            memoryAllocationResult = mNextSlabAllocationEvent->AcquireAllocation();
                         if (!memoryAllocationResult.IsSuccess()) {
                             return memoryAllocationResult.GetErrorCode();
                         }
 
-                        std::unique_ptr<MemoryAllocation> prefetchedSlabAllocation =
+                        std::unique_ptr<MemoryAllocationBase> prefetchedSlabAllocation =
                             memoryAllocationResult.AcquireResult();
                         mNextSlabAllocationEvent.reset();
 
@@ -313,7 +313,7 @@ namespace gpgmm {
                     newSlabRequest.SizeInBytes = slabSize;
                     newSlabRequest.Alignment = mSlabAlignment;
 
-                    ResultOrError<std::unique_ptr<MemoryAllocation>> slabAllocationResult =
+                    ResultOrError<std::unique_ptr<MemoryAllocationBase>> slabAllocationResult =
                         mMemoryAllocator->TryAllocateMemory(newSlabRequest);
                     if (!slabAllocationResult.IsSuccess()) {
                         return slabAllocationResult.GetErrorCode();
@@ -395,12 +395,13 @@ namespace gpgmm {
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += blockInSlab->Size;
 
-        return std::make_unique<MemoryAllocation>(this, subAllocation->GetMemory(),
-                                                  offsetFromMemory, AllocationMethod::kSubAllocated,
-                                                  blockInSlab, request.SizeInBytes);
+        return std::make_unique<MemoryAllocationBase>(
+            this, subAllocation->GetMemory(), offsetFromMemory, AllocationMethod::kSubAllocated,
+            blockInSlab, request.SizeInBytes);
     }
 
-    void SlabMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
+    void SlabMemoryAllocator::DeallocateMemory(
+        std::unique_ptr<MemoryAllocationBase> subAllocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SlabMemoryAllocator.DeallocateMemory");
 
@@ -434,7 +435,7 @@ namespace gpgmm {
 
         if (pSlab->IsEmpty()) {
             mMemoryAllocator->DeallocateMemory(
-                std::make_unique<MemoryAllocation>(pSlab->Allocation));
+                std::make_unique<MemoryAllocationBase>(pSlab->Allocation));
             pSlab->Allocation = {};  // Invalidate it
         }
     }
@@ -507,7 +508,7 @@ namespace gpgmm {
         mSizeCache.clear();
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> SlabCacheAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> SlabCacheAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SlabCacheAllocator.TryAllocateMemory");
@@ -532,18 +533,18 @@ namespace gpgmm {
 
         ASSERT(slabAllocator != nullptr);
 
-        std::unique_ptr<MemoryAllocation> subAllocation;
+        std::unique_ptr<MemoryAllocationBase> subAllocation;
         GPGMM_TRY_ASSIGN(slabAllocator->TryAllocateMemory(request), subAllocation);
 
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();
 
-        return std::make_unique<MemoryAllocation>(
+        return std::make_unique<MemoryAllocationBase>(
             this, subAllocation->GetMemory(), subAllocation->GetOffset(),
             subAllocation->GetMethod(), subAllocation->GetBlock(), request.SizeInBytes);
     }
 
-    void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) {
+    void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> subAllocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "SlabCacheAllocator.DeallocateMemory");
 

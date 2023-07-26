@@ -35,7 +35,7 @@ namespace gpgmm {
         mPool->ReleasePool(kInvalidSize);
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> PooledMemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> PooledMemoryAllocator::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "PooledMemoryAllocator.TryAllocateMemory");
@@ -44,13 +44,13 @@ namespace gpgmm {
 
         GPGMM_RETURN_INVALID_IF(!ValidateRequest(request));
 
-        MemoryAllocation allocation = mPool->AcquireFromPool();
+        MemoryAllocationBase allocation = mPool->AcquireFromPool();
         if (allocation == GPGMM_INVALID_ALLOCATION) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
             memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
-            std::unique_ptr<MemoryAllocation> allocationPtr;
+            std::unique_ptr<MemoryAllocationBase> allocationPtr;
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
             allocation = *allocationPtr;
         } else {
@@ -63,10 +63,10 @@ namespace gpgmm {
         MemoryBase* memory = allocation.GetMemory();
         ASSERT(memory != nullptr);
 
-        return std::make_unique<MemoryAllocation>(this, memory, allocation.GetRequestSize());
+        return std::make_unique<MemoryAllocationBase>(this, memory, allocation.GetRequestSize());
     }
 
-    void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "PooledMemoryAllocator.DeallocateMemory");
 
@@ -81,7 +81,7 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         mPool->ReturnToPool(
-            MemoryAllocation(GetNextInChain(), memory, allocation->GetRequestSize()));
+            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()));
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

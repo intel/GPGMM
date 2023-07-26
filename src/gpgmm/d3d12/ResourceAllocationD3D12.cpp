@@ -48,12 +48,12 @@ namespace gpgmm::d3d12 {
                                            ResidencyHeap* resourceHeap,
                                            MemoryBlock* block,
                                            ComPtr<ID3D12Resource> resource)
-        : MemoryAllocation(allocator,
-                           resourceHeap,
-                           desc.HeapOffset,
-                           static_cast<AllocationMethod>(desc.Method),
-                           block,
-                           desc.SizeInBytes),
+        : MemoryAllocationBase(allocator,
+                               resourceHeap,
+                               desc.HeapOffset,
+                               static_cast<AllocationMethod>(desc.Method),
+                               block,
+                               desc.SizeInBytes),
           mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
@@ -66,7 +66,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResourceAllocation::DeleteThis() {
-        GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocation>(this));
+        GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocationBase>(this));
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {
@@ -152,7 +152,7 @@ namespace gpgmm::d3d12 {
     }
 
     IResidencyHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<ResidencyHeap*>(MemoryAllocation::GetMemory());
+        return static_cast<ResidencyHeap*>(MemoryAllocationBase::GetMemory());
     }
 
     void ResourceAllocation::SetDebugAllocator(MemoryAllocatorBase* allocator) {

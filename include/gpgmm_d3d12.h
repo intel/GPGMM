@@ -671,7 +671,7 @@ namespace gpgmm::d3d12 {
         ALLOCATION_METHOD Method;
     };
 
-    /** \brief ResourceAllocation is MemoryAllocation that contains a ID3D12Resource.
+    /** \brief ResourceAllocation is an allocation that contains a ID3D12Resource.
 
     It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed"
     in a ID3D12Heap, 2) a ID3D12Resource at a specific offset, or 3) a ID3D12Resource without a

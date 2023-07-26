@@ -20,7 +20,7 @@
 #include "gpgmm/utils/Limits.h"
 
 #define GPGMM_INVALID_ALLOCATION \
-    MemoryAllocation {           \
+    MemoryAllocationBase {       \
     }
 
 namespace gpgmm {
@@ -46,28 +46,30 @@ namespace gpgmm {
     class MemoryAllocatorBase;
 
     // Represents a location and range in memory.
-    class MemoryAllocation : public ObjectBase {
+    class MemoryAllocationBase : public ObjectBase {
       public:
         // Contructs an invalid memory allocation.
-        MemoryAllocation();
+        MemoryAllocationBase();
 
         // Constructs a "sub-allocated" memory allocation.
-        MemoryAllocation(MemoryAllocatorBase* allocator,
-                         MemoryBase* memory,
-                         uint64_t offset,
-                         AllocationMethod method,
-                         MemoryBlock* block,
-                         uint64_t requestSize);
+        MemoryAllocationBase(MemoryAllocatorBase* allocator,
+                             MemoryBase* memory,
+                             uint64_t offset,
+                             AllocationMethod method,
+                             MemoryBlock* block,
+                             uint64_t requestSize);
 
         // Constructs a "standalone" memory allocation.
-        MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory, uint64_t requestSize);
+        MemoryAllocationBase(MemoryAllocatorBase* allocator,
+                             MemoryBase* memory,
+                             uint64_t requestSize);
 
-        virtual ~MemoryAllocation() override = default;
+        virtual ~MemoryAllocationBase() override = default;
 
-        MemoryAllocation(const MemoryAllocation&) = default;
-        MemoryAllocation& operator=(const MemoryAllocation&) = default;
-        bool operator==(const MemoryAllocation&) const;
-        bool operator!=(const MemoryAllocation& other) const;
+        MemoryAllocationBase(const MemoryAllocationBase&) = default;
+        MemoryAllocationBase& operator=(const MemoryAllocationBase&) = default;
+        bool operator==(const MemoryAllocationBase&) const;
+        bool operator!=(const MemoryAllocationBase& other) const;
 
         MemoryBase* GetMemory() const;
         MemoryAllocatorBase* GetAllocator() const;
@@ -85,7 +87,7 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocation)
+        DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocationBase)
 
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.

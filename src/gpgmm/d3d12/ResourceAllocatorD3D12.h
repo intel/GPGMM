@@ -146,7 +146,7 @@ namespace gpgmm::d3d12 {
             D3D12_RESOURCE_DESC& resourceDescriptor) const;
 
         // MemoryAllocatorBase interface
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
         HRESULT QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats);
 

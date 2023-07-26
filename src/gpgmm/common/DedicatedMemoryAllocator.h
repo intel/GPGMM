@@ -29,9 +29,9 @@ namespace gpgmm {
                                  uint64_t memoryAlignment);
 
         // MemoryAllocatorBase interface
-        ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
-        void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;
+        void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> subAllocation) override;
         uint64_t GetMemoryAlignment() const override;
 
         MemoryAllocatorStats GetStats() const override;

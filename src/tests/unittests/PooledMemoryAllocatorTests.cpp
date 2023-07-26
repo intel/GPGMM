@@ -42,7 +42,7 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
                                     std::make_unique<DummyMemoryAllocator>());
 
-    std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
     ASSERT_NE(allocation, nullptr);
     EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
@@ -60,12 +60,12 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
                                     std::make_unique<DummyMemoryAllocator>());
 
-    std::unique_ptr<MemoryAllocation> firstAllocation = allocator.TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocationBase> firstAllocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
     ASSERT_NE(firstAllocation, nullptr);
     EXPECT_EQ(firstAllocation->GetSize(), kDefaultMemorySize);
 
-    std::unique_ptr<MemoryAllocation> secondAllocation = allocator.TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocationBase> secondAllocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
     ASSERT_NE(secondAllocation, nullptr);
     EXPECT_EQ(secondAllocation->GetSize(), kDefaultMemorySize);
@@ -87,7 +87,7 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
                                     std::make_unique<DummyMemoryAllocator>());
     {
-        std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemoryForTesting(
+        std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
             CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
@@ -98,7 +98,7 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
     EXPECT_EQ(allocator.GetStats().FreeMemoryUsage, kDefaultMemorySize);
 
     {
-        std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemoryForTesting(
+        std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
             CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
         ASSERT_NE(allocation, nullptr);
         EXPECT_EQ(allocation->GetSize(), kDefaultMemorySize);
@@ -113,7 +113,7 @@ TEST_F(PooledMemoryAllocatorTests, GetInfo) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
                                     std::make_unique<DummyMemoryAllocator>());
 
-    std::unique_ptr<MemoryAllocation> allocation = allocator.TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
     EXPECT_NE(allocation, nullptr);
 

@@ -21,7 +21,7 @@
 
 namespace gpgmm {
 
-    MemoryAllocation::MemoryAllocation()
+    MemoryAllocationBase::MemoryAllocationBase()
         : mAllocator(nullptr),
           mMemory(nullptr),
           mOffset(kInvalidOffset),
@@ -32,12 +32,12 @@ namespace gpgmm {
           mBlock(nullptr) {
     }
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator,
-                                       MemoryBase* memory,
-                                       uint64_t offset,
-                                       AllocationMethod method,
-                                       MemoryBlock* block,
-                                       uint64_t requestSize)
+    MemoryAllocationBase::MemoryAllocationBase(MemoryAllocatorBase* allocator,
+                                               MemoryBase* memory,
+                                               uint64_t offset,
+                                               AllocationMethod method,
+                                               MemoryBlock* block,
+                                               uint64_t requestSize)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(offset),
@@ -48,9 +48,9 @@ namespace gpgmm {
           mBlock(block) {
     }
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator,
-                                       MemoryBase* memory,
-                                       uint64_t requestSize)
+    MemoryAllocationBase::MemoryAllocationBase(MemoryAllocatorBase* allocator,
+                                               MemoryBase* memory,
+                                               uint64_t requestSize)
         : mAllocator(allocator),
           mMemory(memory),
           mOffset(0),
@@ -61,24 +61,24 @@ namespace gpgmm {
           mBlock(nullptr) {
     }
 
-    bool MemoryAllocation::operator==(const MemoryAllocation& other) const {
+    bool MemoryAllocationBase::operator==(const MemoryAllocationBase& other) const {
         return (other.mAllocator == mAllocator && other.mMemory == mMemory &&
                 other.mOffset == mOffset && other.mMethod == mMethod && other.mBlock == mBlock);
     }
 
-    bool MemoryAllocation::operator!=(const MemoryAllocation& other) const {
+    bool MemoryAllocationBase::operator!=(const MemoryAllocationBase& other) const {
         return !operator==(other);
     }
 
-    MemoryBase* MemoryAllocation::GetMemory() const {
+    MemoryBase* MemoryAllocationBase::GetMemory() const {
         return mMemory;
     }
 
-    MemoryAllocatorBase* MemoryAllocation::GetAllocator() const {
+    MemoryAllocatorBase* MemoryAllocationBase::GetAllocator() const {
         return mAllocator;
     }
 
-    uint64_t MemoryAllocation::GetSize() const {
+    uint64_t MemoryAllocationBase::GetSize() const {
         switch (mMethod) {
             case gpgmm::AllocationMethod::kStandalone:
                 ASSERT(mMemory != nullptr);
@@ -95,7 +95,7 @@ namespace gpgmm {
         }
     }
 
-    uint64_t MemoryAllocation::GetRequestSize() const {
+    uint64_t MemoryAllocationBase::GetRequestSize() const {
 #ifdef GPGMM_ENABLE_MEMORY_ALIGN_CHECKS
         return mRequestSize;
 #else
@@ -103,7 +103,7 @@ namespace gpgmm {
 #endif
     }
 
-    uint64_t MemoryAllocation::GetAlignment() const {
+    uint64_t MemoryAllocationBase::GetAlignment() const {
         switch (mMethod) {
             case gpgmm::AllocationMethod::kStandalone:
                 ASSERT(mMemory != nullptr);
@@ -122,15 +122,15 @@ namespace gpgmm {
         }
     }
 
-    uint64_t MemoryAllocation::GetOffset() const {
+    uint64_t MemoryAllocationBase::GetOffset() const {
         return mOffset;
     }
 
-    AllocationMethod MemoryAllocation::GetMethod() const {
+    AllocationMethod MemoryAllocationBase::GetMethod() const {
         return mMethod;
     }
 
-    MemoryBlock* MemoryAllocation::GetBlock() const {
+    MemoryBlock* MemoryAllocationBase::GetBlock() const {
         return mBlock;
     }
 

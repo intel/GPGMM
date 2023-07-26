@@ -182,8 +182,8 @@ namespace gpgmm::vk {
 
     // GpResourceAllocation_T
 
-    GpResourceAllocation_T::GpResourceAllocation_T(const MemoryAllocation& allocation)
-        : MemoryAllocation(allocation) {
+    GpResourceAllocation_T::GpResourceAllocation_T(const MemoryAllocationBase& allocation)
+        : MemoryAllocationBase(allocation) {
     }
 
     // GpResourceAllocator_T
@@ -342,7 +342,7 @@ namespace gpgmm::vk {
         // Attempt to allocate using the most effective allocator.
         MemoryAllocatorBase* allocator = nullptr;
 
-        ResultOrError<std::unique_ptr<MemoryAllocation>> result;
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> result;
         if (!neverSubAllocate) {
             allocator = mResourceAllocatorsPerType[memoryTypeIndex].get();
             result = allocator->TryAllocateMemory(request);
@@ -368,7 +368,8 @@ namespace gpgmm::vk {
         if (allocation == VK_NULL_HANDLE) {
             return;
         }
-        allocation->GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocation>(allocation));
+        allocation->GetAllocator()->DeallocateMemory(
+            std::unique_ptr<MemoryAllocationBase>(allocation));
     }
 
     VkDevice GpResourceAllocator_T::GetDevice() const {

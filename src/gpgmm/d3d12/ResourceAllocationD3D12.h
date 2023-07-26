@@ -36,7 +36,7 @@ namespace gpgmm::d3d12 {
         LPCWSTR DebugName;
     };
 
-    class ResourceAllocation final : public MemoryAllocation,
+    class ResourceAllocation final : public MemoryAllocationBase,
                                      public DebugObject,
                                      public IResourceAllocation {
       public:

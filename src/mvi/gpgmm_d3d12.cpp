@@ -269,13 +269,13 @@ namespace gpgmm::d3d12 {
     }
 
     IResidencyHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<ResidencyHeap*>(MemoryAllocation::GetMemory());
+        return static_cast<ResidencyHeap*>(MemoryAllocationBase::GetMemory());
     }
 
     ResourceAllocation::ResourceAllocation(MemoryAllocatorBase* allocator,
                                            ResidencyHeap* resourceHeap,
                                            Microsoft::WRL::ComPtr<ID3D12Resource> resource)
-        : MemoryAllocation(allocator, resourceHeap), mResource(std::move(resource)) {
+        : MemoryAllocationBase(allocator, resourceHeap), mResource(std::move(resource)) {
     }
 
     HRESULT STDMETHODCALLTYPE ResourceAllocation::QueryInterface(REFIID riid, void** ppvObject) {
@@ -419,7 +419,7 @@ namespace gpgmm::d3d12 {
         : mDevice(pDevice), mResidencyManager(pResidencyManager) {
     }
 
-    void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) {
+    void ResourceAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
         delete allocation->GetMemory();
     }
 
