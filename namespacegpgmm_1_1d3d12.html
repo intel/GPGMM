@@ -291,7 +291,7 @@ Variables</h2></td></tr>
 <tr class="memitem:a924abb72b724f675a0d311bf225a9fda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a924abb72b724f675a0d311bf225a9fda">ppDataOut</a> = 0</td></tr>
 <tr class="separator:a924abb72b724f675a0d311bf225a9fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a></td></tr>
-<tr class="memdesc:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation.  <br /></td></tr>
+<tr class="memdesc:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is an allocator that creates ID3D12Resources in a ResourceAllocation.  <br /></td></tr>
 <tr class="separator:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52f35a32b6cdbfb0a4055692343dece0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RESOURCE_DESC &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a52f35a32b6cdbfb0a4055692343dece0">resourceDescriptor</a></td></tr>
 <tr class="separator:a52f35a32b6cdbfb0a4055692343dece0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1810,9 +1810,9 @@ of always making heaps implicitly resident on creation.
       </table>
 </div><div class="memdoc">
 
-<p>ResourceAllocator is a MemoryAllocator that creates ID3D12Resources in a ResourceAllocation. </p>
-<p>Internally, ResourceAllocator creates a request, by determining the resource allocation requirements, then finds a MemoryAllocator able to service the request.</p>
-<p>If the first MemoryAllocator attempt fails, it will try a second MemoryAllocator, and so on. MemoryAllocator attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
+<p>ResourceAllocator is an allocator that creates ID3D12Resources in a ResourceAllocation. </p>
+<p>Internally, ResourceAllocator creates a request, by determining the resource allocation requirements, then finds an allocator able to service the request.</p>
+<p>If the first ResourceAllocator attempt fails, it will try a second allocator, and so on. ResourceAllocator attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
 <p>ResourceAllocator also uses ResidencyManager to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger Heap could be ideal for allocation but only if there is budget. And similarly, a smaller Heap allows for finer grained residency but could increase overall memory usage for allocation. </p>
 
 </div>
