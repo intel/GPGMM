@@ -57,12 +57,12 @@ namespace gpgmm::vk {
                                      const GpResourceAllocationCreateInfo& allocationInfo,
                                      uint32_t* memoryTypeIndexOut);
 
-        std::unique_ptr<MemoryAllocator> CreateDeviceMemoryAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreateDeviceMemoryAllocator(
             const GpAllocatorCreateInfo& info,
             uint64_t memoryTypeIndex,
             uint64_t memoryAlignment);
 
-        std::unique_ptr<MemoryAllocator> CreateResourceSubAllocator(
+        std::unique_ptr<MemoryAllocatorBase> CreateResourceSubAllocator(
             const GpAllocatorCreateInfo& info,
             uint64_t memoryTypeIndex,
             uint64_t memoryAlignment);
@@ -71,8 +71,8 @@ namespace gpgmm::vk {
         VulkanFunctions mVulkanFunctions;
         std::unique_ptr<Caps> mCaps;
 
-        std::vector<std::unique_ptr<MemoryAllocator>> mResourceAllocatorsPerType;
-        std::vector<std::unique_ptr<MemoryAllocator>> mDeviceAllocatorsPerType;
+        std::vector<std::unique_ptr<MemoryAllocatorBase>> mResourceAllocatorsPerType;
+        std::vector<std::unique_ptr<MemoryAllocatorBase>> mDeviceAllocatorsPerType;
         std::vector<VkMemoryType> mMemoryTypes;
     };
 

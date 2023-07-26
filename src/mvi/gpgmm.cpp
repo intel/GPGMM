@@ -29,15 +29,15 @@ namespace gpgmm {
         return mAlignment;
     }
 
-    // MemoryAllocator
+    // MemoryAllocatorBase
 
-    uint64_t MemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
+    uint64_t MemoryAllocatorBase::ReleaseMemory(uint64_t bytesToRelease) {
         return 0;
     }
 
     // MemoryAllocation
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator, MemoryBase* memory)
+    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator, MemoryBase* memory)
         : mAllocator(allocator), mMemory(memory) {
     }
 
@@ -45,7 +45,7 @@ namespace gpgmm {
         return mMemory;
     }
 
-    MemoryAllocator* MemoryAllocation::GetAllocator() const {
+    MemoryAllocatorBase* MemoryAllocation::GetAllocator() const {
         return mAllocator;
     }
 

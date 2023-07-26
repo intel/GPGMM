@@ -24,8 +24,8 @@ namespace gpgmm {
     BuddyMemoryAllocator::BuddyMemoryAllocator(uint64_t systemSize,
                                                uint64_t memorySize,
                                                uint64_t memoryAlignment,
-                                               std::unique_ptr<MemoryAllocator> memoryAllocator)
-        : MemoryAllocator(std::move(memoryAllocator)),
+                                               std::unique_ptr<MemoryAllocatorBase> memoryAllocator)
+        : MemoryAllocatorBase(std::move(memoryAllocator)),
           mMemorySize(memorySize),
           mMemoryAlignment(memoryAlignment),
           mBuddyBlockAllocator(systemSize),

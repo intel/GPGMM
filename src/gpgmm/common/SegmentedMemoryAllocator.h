@@ -32,13 +32,13 @@ namespace gpgmm {
 
     // SegmentedMemoryAllocator maintains a sorted segmented list of memory pools to allocate
     // variable-size memory blocks.
-    class SegmentedMemoryAllocator : public MemoryAllocator {
+    class SegmentedMemoryAllocator : public MemoryAllocatorBase {
       public:
-        SegmentedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
+        SegmentedMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
                                  uint64_t memoryAlignment);
         ~SegmentedMemoryAllocator() override;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

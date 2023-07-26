@@ -22,29 +22,29 @@ namespace gpgmm {
     // Conditionally allocates depending on the size.
     // If the allocation size is less then or equal to the |conditionalSize|, the |firstAllocator|
     // will be used, else |secondAllocator|.
-    class ConditionalMemoryAllocator final : public MemoryAllocator {
+    class ConditionalMemoryAllocator final : public MemoryAllocatorBase {
       public:
-        ConditionalMemoryAllocator(std::unique_ptr<MemoryAllocator> firstAllocator,
-                                   std::unique_ptr<MemoryAllocator> secondAllocator,
+        ConditionalMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> firstAllocator,
+                                   std::unique_ptr<MemoryAllocatorBase> secondAllocator,
                                    uint64_t conditionalSize);
         ~ConditionalMemoryAllocator() override = default;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
 
         MemoryAllocatorStats GetStats() const override;
 
-        MemoryAllocator* GetFirstAllocatorForTesting() const;
-        MemoryAllocator* GetSecondAllocatorForTesting() const;
+        MemoryAllocatorBase* GetFirstAllocatorForTesting() const;
+        MemoryAllocatorBase* GetSecondAllocatorForTesting() const;
 
       private:
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(ConditionalMemoryAllocator)
 
-        std::unique_ptr<MemoryAllocator> mFirstAllocator;
-        std::unique_ptr<MemoryAllocator> mSecondAllocator;
+        std::unique_ptr<MemoryAllocatorBase> mFirstAllocator;
+        std::unique_ptr<MemoryAllocatorBase> mSecondAllocator;
 
         uint64_t mConditionalSize;
     };

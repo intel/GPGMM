@@ -42,7 +42,7 @@ namespace gpgmm {
     // Slab allocator implementation is closely based on Jeff Bonwick's paper "The Slab Allocator".
     // https://people.eecs.berkeley.edu/~kubitron/courses/cs194-24-S13/hand-outs/bonwick_slab.pdf
     //
-    class SlabMemoryAllocator final : public MemoryAllocator {
+    class SlabMemoryAllocator final : public MemoryAllocatorBase {
       public:
         SlabMemoryAllocator(uint64_t blockSize,
                             uint64_t maxSlabSize,
@@ -51,10 +51,10 @@ namespace gpgmm {
                             float slabFragmentationLimit,
                             bool allowSlabPrefetch,
                             float slabGrowthFactor,
-                            MemoryAllocator* memoryAllocator);
+                            MemoryAllocatorBase* memoryAllocator);
         ~SlabMemoryAllocator() override;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
@@ -103,13 +103,13 @@ namespace gpgmm {
         const bool mAllowSlabPrefetch;
         const float mSlabGrowthFactor;
 
-        MemoryAllocator* mMemoryAllocator = nullptr;
+        MemoryAllocatorBase* mMemoryAllocator = nullptr;
         std::shared_ptr<MemoryAllocationEvent> mNextSlabAllocationEvent;
     };
 
     // SlabCacheAllocator slab-allocates |minBlockSize|-size aligned allocations from
     // fixed-sized slabs.
-    class SlabCacheAllocator : public MemoryAllocator {
+    class SlabCacheAllocator : public MemoryAllocatorBase {
       public:
         SlabCacheAllocator(uint64_t maxSlabSize,
                            uint64_t minSlabSize,
@@ -117,11 +117,11 @@ namespace gpgmm {
                            float slabFragmentationLimit,
                            bool allowSlabPrefetch,
                            float slabGrowthFactor,
-                           std::unique_ptr<MemoryAllocator> memoryAllocator);
+                           std::unique_ptr<MemoryAllocatorBase> memoryAllocator);
 
         ~SlabCacheAllocator() override;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

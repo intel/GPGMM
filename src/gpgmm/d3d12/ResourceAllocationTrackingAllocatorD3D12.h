@@ -25,7 +25,7 @@ namespace gpgmm::d3d12 {
     // ResourceAllocationTrackingAllocator tracks "live" allocations so they can be reported if
     // leaked. A "live" allocation means the allocation was created (allocated) but not released
     // (de-allocated).
-    class ResourceAllocationTrackingAllocator final : public MemoryAllocator {
+    class ResourceAllocationTrackingAllocator final : public MemoryAllocatorBase {
       public:
         ResourceAllocationTrackingAllocator() = default;
 
@@ -42,15 +42,15 @@ namespace gpgmm::d3d12 {
         class ResourceAllocationEntry {
           public:
             explicit ResourceAllocationEntry(ResourceAllocation* allocation);  // For lookup
-            ResourceAllocationEntry(ResourceAllocation* allocation, MemoryAllocator* allocator);
+            ResourceAllocationEntry(ResourceAllocation* allocation, MemoryAllocatorBase* allocator);
 
-            MemoryAllocator* GetAllocator() const;
+            MemoryAllocatorBase* GetAllocator() const;
             ResourceAllocation* GetAllocation() const;
             size_t GetKey() const;
 
           private:
             ResourceAllocation* mAllocation = nullptr;
-            MemoryAllocator* mAllocator = nullptr;
+            MemoryAllocatorBase* mAllocator = nullptr;
         };
 
         MemoryCache<ResourceAllocationEntry> mLiveAllocations = {};

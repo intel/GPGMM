@@ -62,14 +62,14 @@ namespace gpgmm::d3d12 {
 
         ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
                            ResidencyManager* residencyManager,
-                           MemoryAllocator* allocator,
+                           MemoryAllocatorBase* allocator,
                            ResidencyHeap* resourceHeap,
                            MemoryBlock* block,
                            ComPtr<ID3D12Resource> resource);
 
         // Only ResourceAllocationTrackingAllocator may inject itself to ensure |this| cannot leak.
         friend ResourceAllocationTrackingAllocator;
-        void SetDebugAllocator(MemoryAllocator* allocator);
+        void SetDebugAllocator(MemoryAllocatorBase* allocator);
 
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
 

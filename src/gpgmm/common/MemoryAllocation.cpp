@@ -32,7 +32,7 @@ namespace gpgmm {
           mBlock(nullptr) {
     }
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
+    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator,
                                        MemoryBase* memory,
                                        uint64_t offset,
                                        AllocationMethod method,
@@ -48,7 +48,7 @@ namespace gpgmm {
           mBlock(block) {
     }
 
-    MemoryAllocation::MemoryAllocation(MemoryAllocator* allocator,
+    MemoryAllocation::MemoryAllocation(MemoryAllocatorBase* allocator,
                                        MemoryBase* memory,
                                        uint64_t requestSize)
         : mAllocator(allocator),
@@ -74,7 +74,7 @@ namespace gpgmm {
         return mMemory;
     }
 
-    MemoryAllocator* MemoryAllocation::GetAllocator() const {
+    MemoryAllocatorBase* MemoryAllocation::GetAllocator() const {
         return mAllocator;
     }
 

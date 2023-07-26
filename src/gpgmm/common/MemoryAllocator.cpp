@@ -22,7 +22,7 @@ namespace gpgmm {
 
     class AllocateMemoryTask : public VoidCallback {
       public:
-        AllocateMemoryTask(MemoryAllocator* allocator, const MemoryAllocationRequest& request)
+        AllocateMemoryTask(MemoryAllocatorBase* allocator, const MemoryAllocationRequest& request)
             : mAllocator(allocator), mRequest(request) {
         }
 
@@ -37,7 +37,7 @@ namespace gpgmm {
         }
 
       private:
-        MemoryAllocator* const mAllocator;
+        MemoryAllocatorBase* const mAllocator;
         const MemoryAllocationRequest mRequest;
 
         std::mutex mAllocationMutex;
@@ -86,16 +86,16 @@ namespace gpgmm {
         return mTask->AcquireAllocation();
     }
 
-    // MemoryAllocator
+    // MemoryAllocatorBase
 
-    MemoryAllocator::MemoryAllocator() {
+    MemoryAllocatorBase::MemoryAllocatorBase() {
     }
 
-    MemoryAllocator::MemoryAllocator(std::unique_ptr<MemoryAllocator> next) {
+    MemoryAllocatorBase::MemoryAllocatorBase(std::unique_ptr<MemoryAllocatorBase> next) {
         InsertIntoChain(std::move(next));
     }
 
-    MemoryAllocator::~MemoryAllocator() {
+    MemoryAllocatorBase::~MemoryAllocatorBase() {
 #if defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS)
         // If memory cannot be reused by a (parent) allocator, ensure no used memory leaked.
         if (GetParent() == nullptr) {
@@ -116,18 +116,18 @@ namespace gpgmm {
         }
     }
 
-    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocator::TryAllocateMemory(
+    ResultOrError<std::unique_ptr<MemoryAllocation>> MemoryAllocatorBase::TryAllocateMemory(
         const MemoryAllocationRequest& request) {
         ASSERT(false);
         return {};
     }
 
-    std::unique_ptr<MemoryAllocation> MemoryAllocator::TryAllocateMemoryForTesting(
+    std::unique_ptr<MemoryAllocation> MemoryAllocatorBase::TryAllocateMemoryForTesting(
         const MemoryAllocationRequest& request) {
         return TryAllocateMemory(request).AcquireResult();
     }
 
-    std::shared_ptr<MemoryAllocationEvent> MemoryAllocator::TryAllocateMemoryAsync(
+    std::shared_ptr<MemoryAllocationEvent> MemoryAllocatorBase::TryAllocateMemoryAsync(
         const MemoryAllocationRequest& request) {
         std::shared_ptr<AllocateMemoryTask> task =
             std::make_shared<AllocateMemoryTask>(this, request);
@@ -135,7 +135,7 @@ namespace gpgmm {
             TaskScheduler::GetOrCreateInstance()->PostTask(task), task);
     }
 
-    uint64_t MemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
+    uint64_t MemoryAllocatorBase::ReleaseMemory(uint64_t bytesToRelease) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (GetNextInChain() != nullptr) {
             return GetNextInChain()->ReleaseMemory(bytesToRelease);
@@ -143,20 +143,20 @@ namespace gpgmm {
         return 0;
     }
 
-    uint64_t MemoryAllocator::GetMemorySize() const {
+    uint64_t MemoryAllocatorBase::GetMemorySize() const {
         return kInvalidSize;
     }
 
-    uint64_t MemoryAllocator::GetMemoryAlignment() const {
+    uint64_t MemoryAllocatorBase::GetMemoryAlignment() const {
         return kNoRequiredAlignment;
     }
 
-    MemoryAllocatorStats MemoryAllocator::GetStats() const {
+    MemoryAllocatorStats MemoryAllocatorBase::GetStats() const {
         std::lock_guard<std::mutex> lock(mMutex);
         return mStats;
     }
 
-    bool MemoryAllocator::ValidateRequest(const MemoryAllocationRequest& request) const {
+    bool MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
         ASSERT(request.SizeInBytes > 0 && request.Alignment > 0);
 
         // Check request size cannot overflow.
@@ -190,21 +190,22 @@ namespace gpgmm {
         return true;
     }
 
-    MemoryAllocator* MemoryAllocator::GetNextInChain() const {
-        return static_cast<MemoryAllocator*>(mNext);
+    MemoryAllocatorBase* MemoryAllocatorBase::GetNextInChain() const {
+        return static_cast<MemoryAllocatorBase*>(mNext);
     }
 
-    MemoryAllocator* MemoryAllocator::GetParent() const {
+    MemoryAllocatorBase* MemoryAllocatorBase::GetParent() const {
         return mParent;
     }
 
-    void MemoryAllocator::InsertIntoChain(std::unique_ptr<MemoryAllocator> next) {
+    void MemoryAllocatorBase::InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next) {
         ASSERT(next != nullptr);
         next->mParent = this->value();
         mNext = next.release();
     }
 
-    void MemoryAllocator::CheckAndReportAllocationMisalignment(const MemoryAllocation& allocation) {
+    void MemoryAllocatorBase::CheckAndReportAllocationMisalignment(
+        const MemoryAllocation& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
             WarnLog(MessageId::kAlignmentMismatch)
                 << "Allocation is larger then the requested size (" +

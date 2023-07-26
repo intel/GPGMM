@@ -36,7 +36,7 @@ namespace gpgmm::d3d12 {
     };
 
     // Wrapper to allocate a D3D12 heap for resources of any type.
-    class ResourceHeapAllocator final : public MemoryAllocator {
+    class ResourceHeapAllocator final : public MemoryAllocatorBase {
       public:
         ResourceHeapAllocator(ResidencyManager* residencyManager,
                               ID3D12Device* device,
@@ -45,7 +45,7 @@ namespace gpgmm::d3d12 {
                               bool alwaysCreatedInBudget);
         ~ResourceHeapAllocator() override = default;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;

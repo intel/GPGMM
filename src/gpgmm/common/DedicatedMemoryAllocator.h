@@ -23,12 +23,12 @@ namespace gpgmm {
     // DedicatedMemoryAllocator is useful in situations where whole memory objects could be reused
     // without the need for sub-allocation. DedicatedMemoryAllocator also allows
     // memory to be tracked.
-    class DedicatedMemoryAllocator final : public MemoryAllocator {
+    class DedicatedMemoryAllocator final : public MemoryAllocatorBase {
       public:
-        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocator> memoryAllocator,
+        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
                                  uint64_t memoryAlignment);
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;

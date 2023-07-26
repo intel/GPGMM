@@ -30,12 +30,12 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocationTrackingAllocator::ResourceAllocationEntry::ResourceAllocationEntry(
         ResourceAllocation* allocation,
-        MemoryAllocator* allocator)
+        MemoryAllocatorBase* allocator)
         : mAllocation(allocation), mAllocator(allocator) {
     }
 
-    MemoryAllocator* ResourceAllocationTrackingAllocator::ResourceAllocationEntry::GetAllocator()
-        const {
+    MemoryAllocatorBase*
+    ResourceAllocationTrackingAllocator::ResourceAllocationEntry::GetAllocator() const {
         return mAllocator;
     }
 

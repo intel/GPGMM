@@ -265,7 +265,7 @@ namespace gpgmm::d3d12 {
         // If the memory allocation was successful, the resource will be created using it.
         // Else, if the resource creation fails, the memory allocation will be cleaned up.
         template <typename CreateResourceFn>
-        HRESULT TryAllocateResource(MemoryAllocator* allocator,
+        HRESULT TryAllocateResource(MemoryAllocatorBase* allocator,
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn) {
             ResultOrError<std::unique_ptr<MemoryAllocation>> result =
@@ -665,7 +665,7 @@ namespace gpgmm::d3d12 {
                     cacheRequest.SizeInBytes = sizeInfo.SizeInBytes;
                     cacheRequest.Alignment = sizeInfo.Alignment;
 
-                    MemoryAllocator* allocator =
+                    MemoryAllocatorBase* allocator =
                         mSmallBufferAllocatorOfType[resourceHeapTypeIndex].get();
                     if (cacheRequest.SizeInBytes <= allocator->GetMemorySize() &&
                         sizeInfo.Alignment == D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT) {
@@ -689,12 +689,12 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreatePoolAllocator(
+    std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreatePoolAllocator(
         ALLOCATOR_ALGORITHM algorithm,
         uint64_t memorySize,
         uint64_t memoryAlignment,
         bool isAlwaysOnDemand,
-        std::unique_ptr<MemoryAllocator> underlyingAllocator) {
+        std::unique_ptr<MemoryAllocatorBase> underlyingAllocator) {
         if (isAlwaysOnDemand) {
             return underlyingAllocator;
         }
@@ -715,14 +715,14 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSubAllocator(
+    std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreateSubAllocator(
         ALLOCATOR_ALGORITHM algorithm,
         uint64_t memorySize,
         uint64_t memoryAlignment,
         float memoryFragmentationLimit,
         float memoryGrowthFactor,
         bool isPrefetchAllowed,
-        std::unique_ptr<MemoryAllocator> underlyingAllocator) {
+        std::unique_ptr<MemoryAllocatorBase> underlyingAllocator) {
         switch (algorithm) {
             case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
                 // System and memory size must be aligned at creation-time.
@@ -755,12 +755,12 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateResourceAllocator(
+    std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreateResourceAllocator(
         const RESOURCE_ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment) {
-        std::unique_ptr<MemoryAllocator> resourceHeapAllocator =
+        std::unique_ptr<MemoryAllocatorBase> resourceHeapAllocator =
             std::make_unique<ResourceHeapAllocator>(mResidencyManager.Get(), mDevice,
                                                     heapProperties, heapFlags,
                                                     mIsAlwaysCreatedInBudget);
@@ -768,7 +768,7 @@ namespace gpgmm::d3d12 {
         const uint64_t heapSize =
             std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
 
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
+        std::unique_ptr<MemoryAllocatorBase> pooledOrNonPooledAllocator =
             CreatePoolAllocator(descriptor.PoolAlgorithm, heapSize, heapAlignment,
                                 (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
                                 std::move(resourceHeapAllocator));
@@ -781,17 +781,17 @@ namespace gpgmm::d3d12 {
                                   std::move(pooledOrNonPooledAllocator));
     }
 
-    std::unique_ptr<MemoryAllocator> ResourceAllocator::CreateSmallBufferAllocator(
+    std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreateSmallBufferAllocator(
         const RESOURCE_ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_HEAP_PROPERTIES& heapProperties,
         uint64_t heapAlignment,
         D3D12_RESOURCE_STATES initialResourceState) {
-        std::unique_ptr<MemoryAllocator> smallBufferOnlyAllocator =
+        std::unique_ptr<MemoryAllocatorBase> smallBufferOnlyAllocator =
             std::make_unique<BufferAllocator>(this, heapProperties, heapFlags,
                                               D3D12_RESOURCE_FLAG_NONE, initialResourceState);
 
-        std::unique_ptr<MemoryAllocator> pooledOrNonPooledAllocator =
+        std::unique_ptr<MemoryAllocatorBase> pooledOrNonPooledAllocator =
             CreatePoolAllocator(descriptor.PoolAlgorithm, heapAlignment, heapAlignment,
                                 (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
                                 std::move(smallBufferOnlyAllocator));
@@ -1070,7 +1070,7 @@ namespace gpgmm::d3d12 {
         const bool requiresPadding = allocationDescriptor.RequireResourceHeapPadding > 0;
 
         // Attempt to allocate using the most effective allocator.;
-        MemoryAllocator* allocator = nullptr;
+        MemoryAllocatorBase* allocator = nullptr;
 
         // The requested size should always be the non-allocated size when possible. The
         // sub-allocator uses the unaligned size to determine the size of the heap required to stay

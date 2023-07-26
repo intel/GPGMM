@@ -25,7 +25,7 @@
 namespace gpgmm {
 
     // BuddyMemoryAllocator uses the buddy allocator to sub-allocate blocks of device
-    // memory created by MemoryAllocator clients. It creates a very large buddy system
+    // memory created by MemoryAllocatorBase clients. It creates a very large buddy system
     // where backing device memory blocks equal a specified level in the system.
     //
     // Upon sub-allocating, the offset gets mapped to device memory by computing the corresponding
@@ -33,16 +33,16 @@ namespace gpgmm {
     // same memory index, the memory refcount is incremented to ensure de-allocating one doesn't
     // release the other prematurely.
     //
-    // The MemoryAllocator should return ResourceHeaps that are all compatible with each other.
+    // The MemoryAllocatorBase should return ResourceHeaps that are all compatible with each other.
     // It should also outlive all the resources that are in the buddy allocator.
-    class BuddyMemoryAllocator final : public MemoryAllocator {
+    class BuddyMemoryAllocator final : public MemoryAllocatorBase {
       public:
         BuddyMemoryAllocator(uint64_t systemSize,
                              uint64_t memorySize,
                              uint64_t memoryAlignment,
-                             std::unique_ptr<MemoryAllocator> memoryAllocator);
+                             std::unique_ptr<MemoryAllocatorBase> memoryAllocator);
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> subAllocation) override;

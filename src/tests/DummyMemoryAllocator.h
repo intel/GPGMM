@@ -27,12 +27,12 @@ namespace gpgmm {
         }
     };
 
-    class DummyMemoryAllocator : public MemoryAllocator {
+    class DummyMemoryAllocator : public MemoryAllocatorBase {
       public:
         DummyMemoryAllocator() = default;
 
-        explicit DummyMemoryAllocator(std::unique_ptr<MemoryAllocator> next)
-            : MemoryAllocator(std::move(next)) {
+        explicit DummyMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> next)
+            : MemoryAllocatorBase(std::move(next)) {
         }
 
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(

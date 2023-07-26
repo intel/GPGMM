@@ -23,7 +23,7 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocator;
 
-    class BufferAllocator : public MemoryAllocator {
+    class BufferAllocator : public MemoryAllocatorBase {
       public:
         BufferAllocator(ResourceAllocator* resourceAllocator,
                         D3D12_HEAP_PROPERTIES heapProperties,
@@ -32,7 +32,7 @@ namespace gpgmm::d3d12 {
                         D3D12_RESOURCE_STATES initialResourceState);
         ~BufferAllocator() override = default;
 
-        // MemoryAllocator interface
+        // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocation>> TryAllocateMemory(
             const MemoryAllocationRequest& request) override;
         void DeallocateMemory(std::unique_ptr<MemoryAllocation> allocation) override;
