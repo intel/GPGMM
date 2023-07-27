@@ -36,11 +36,11 @@
 #ifndef GPGMM_D3D12_HEADERS_ALREADY_INCLUDED
 #    include <d3d12.h>
 #    include <dxgi1_4.h>
-#endif
+#endif  // defined(GPGMM_D3D12_HEADERS_ALREADY_INCLUDED)
 
 #ifndef GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED
 #    include <windows.h>  // for DEFINE_ENUM_FLAG_OPERATORS
-#endif
+#endif                    // defined(GPGMM_WINDOWS_HEADERS_ALREADY_INCLUDED)
 
 #define GPGMM_INTERFACE struct
 

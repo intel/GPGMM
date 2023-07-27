@@ -19,6 +19,12 @@
 // This file should not be modified by downstream GMM clients or forks of GPGMM.
 // Please consider submitting a pull-request to https://github.com/intel/gpgmm.
 
+// User should decide to define the following macros:
+// - GPGMM_SHARED_LIBRARY: the implementation using this header wishes to be built as a shared
+// library.
+// - GPGMM_VK_HEADERS_ALREADY_INCLUDED: Vulkan platform headers will be already included before
+// this header and does not need to be re-included.
+
 #ifdef GPGMM_SHARED_LIBRARY
 #    include "gpgmm_export.h"
 #else // defined(GPGMM_SHARED_LIBRARY)
@@ -27,7 +33,9 @@
 
 #ifndef GPGMM_VK_HEADERS_ALREADY_INCLUDED
 #    include <vulkan/vulkan.h>
-#endif
+#endif  // defined(GPGMM_VK_HEADERS_ALREADY_INCLUDED)
+
+#include <cstdint>
 
 namespace gpgmm::vk {
 
