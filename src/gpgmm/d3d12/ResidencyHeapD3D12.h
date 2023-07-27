@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_HEAPD3D12_H_
-#define GPGMM_D3D12_HEAPD3D12_H_
+#ifndef SRC_GPGMM_D3D12_RESIDENCYHEAPD3D12_H_
+#define SRC_GPGMM_D3D12_RESIDENCYHEAPD3D12_H_
 
 #include "gpgmm/common/Memory.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
@@ -93,4 +93,4 @@ namespace gpgmm::d3d12 {
     };
 }  // namespace gpgmm::d3d12
 
-#endif
+#endif  // SRC_GPGMM_D3D12_RESIDENCYHEAPD3D12_H_

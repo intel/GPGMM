@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_BACKEND3D12_H_
-#define GPGMM_D3D12_BACKEND3D12_H_
+#ifndef SRC_GPGMM_D3D12_BACKEND3D12_H_
+#define SRC_GPGMM_D3D12_BACKEND3D12_H_
 
 #include "gpgmm/common/Backend.h"
 

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_UTILS_WINDOWSUTILS_H
-#define GPGMM_UTILS_WINDOWSUTILS_H
+#ifndef SRC_GPGMM_UTILS_WINDOWSUTILS_H
+#define SRC_GPGMM_UTILS_WINDOWSUTILS_H
 
 #include <string>
 namespace gpgmm {
@@ -25,4 +25,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_UTILS_WINDOWSUTILS_H
+#endif  // SRC_GPGMM_UTILS_WINDOWSUTILS_H

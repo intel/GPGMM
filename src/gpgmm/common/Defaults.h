@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_DEFAULTS_H_
-#define GPGMM_COMMON_DEFAULTS_H_
+#ifndef SRC_GPGMM_COMMON_DEFAULTS_H_
+#define SRC_GPGMM_COMMON_DEFAULTS_H_
 
 #include <cstdint>
 
@@ -23,4 +23,4 @@ namespace gpgmm {
     static constexpr float kDefaultMemoryGrowthFactor = 1.25f;         // 25% growth
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_DEFAULTS_H_
+#endif  // SRC_GPGMM_COMMON_DEFAULTS_H_

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_
-#define GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_
+#ifndef SRC_GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_
+#define SRC_GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
 
@@ -51,4 +51,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_
+#endif  // SRC_GPGMM_COMMON_CONDITIONALMEMORYALLOCATOR_H_

@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef GPGMM_D3D12_UTILSD3D12_H_
-#define GPGMM_D3D12_UTILSD3D12_H_
+#ifndef SRC_GPGMM_D3D12_UTILSD3D12_H_
+#define SRC_GPGMM_D3D12_UTILSD3D12_H_
 
 #include "gpgmm/d3d12/D3D12Platform.h"
 
@@ -33,4 +33,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_UTILSD3D12_H_
+#endif  // SRC_GPGMM_D3D12_UTILSD3D12_H_

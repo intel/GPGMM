@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_UTILS_LOG_H_
-#define GPGMM_UTILS_LOG_H_
+#ifndef SRC_GPGMM_UTILS_LOG_H_
+#define SRC_GPGMM_UTILS_LOG_H_
 
 // Targets shouldn't use iostream or printf directly for several reasons:
 //  - iostream adds static initializers which we want to avoid.
@@ -133,4 +133,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_UTILS_LOG_H_
+#endif  // SRC_GPGMM_UTILS_LOG_H_

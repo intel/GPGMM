@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_TRACEEVENT_H_
-#define GPGMM_COMMON_TRACEEVENT_H_
+#ifndef SRC_GPGMM_COMMON_TRACEEVENT_H_
+#define SRC_GPGMM_COMMON_TRACEEVENT_H_
 
 #include "gpgmm/common/JSONSerializer.h"
 #include "gpgmm/common/TraceEventPhase.h"
@@ -254,4 +254,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_TRACEEVENT_H_
+#endif  // SRC_GPGMM_COMMON_TRACEEVENT_H_

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
-#define GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
+#ifndef SRC_GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
+#define SRC_GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
 
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/d3d12/DebugObjectD3D12.h"
@@ -86,4 +86,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_
+#endif  // SRC_GPGMM_D3D12_RESOURCEALLOCATIOND3D12_H_

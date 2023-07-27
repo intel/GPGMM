@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_D3D12PLATFORM_H_
-#define GPGMM_D3D12_D3D12PLATFORM_H_
+#ifndef SRC_GPGMM_D3D12_D3D12PLATFORM_H_
+#define SRC_GPGMM_D3D12_D3D12PLATFORM_H_
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -28,4 +28,4 @@
 
 using Microsoft::WRL::ComPtr;
 
-#endif  // GPGMM_D3D12_D3D12PLATFORM_H_
+#endif  // SRC_GPGMM_D3D12_D3D12PLATFORM_H_

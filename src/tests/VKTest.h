@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TESTS_VKTEST_H_
-#define TESTS_VKTEST_H_
+#ifndef SRC_TESTS_VKTEST_H_
+#define SRC_TESTS_VKTEST_H_
 
 #include "tests/GPGMMTest.h"
 
@@ -44,4 +44,4 @@ namespace gpgmm::vk {
 
 }  // namespace gpgmm::vk
 
-#endif  // TESTS_VKTEST_H_
+#endif  // SRC_TESTS_VKTEST_H_

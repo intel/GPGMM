@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TESTS_D3D12TEST_H_
-#define TESTS_D3D12TEST_H_
+#ifndef SRC_TESTS_D3D12TEST_H_
+#define SRC_TESTS_D3D12TEST_H_
 
 #include "tests/GPGMMTest.h"
 
@@ -74,4 +74,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // TESTS_D3D12TEST_H_
+#endif  // SRC_TESTS_D3D12TEST_H_

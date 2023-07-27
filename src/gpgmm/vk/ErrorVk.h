@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef GPGMM_VK_ERRORVK_H_
-#define GPGMM_VK_ERRORVK_H_
+#ifndef SRC_GPGMM_VK_ERRORVK_H_
+#define SRC_GPGMM_VK_ERRORVK_H_
 
 #include "gpgmm/common/Error.h"
 #include "gpgmm/vk/VKPlatform.h"
@@ -54,4 +54,4 @@ namespace gpgmm::vk {
 
 }  // namespace gpgmm::vk
 
-#endif  // GPGMM_VK_ERRORVK_H_
+#endif  // SRC_GPGMM_VK_ERRORVK_H_
