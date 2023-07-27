@@ -18,12 +18,12 @@
 namespace gpgmm {
 
     enum class GPUVendor {
-        kAMD_VkVendor = 4098,
-        kARM_VkVendor = 5045,
-        kImagination_VkVendor = 4112,
-        kIntel_VkVendor = 32902,
-        kNvidia_VkVendor = 4318,
-        kQualcomm_VkVendor = 20803,
+        kAMD_Vendor = 4098,
+        kARM_Vendor = 5045,
+        kImagination_Vendor = 4112,
+        kIntel_Vendor = 32902,
+        kNvidia_Vendor = 4318,
+        kQualcomm_Vendor = 20803,
     };
 
 }  // namespace gpgmm

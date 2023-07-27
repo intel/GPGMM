@@ -110,7 +110,7 @@ namespace gpgmm::d3d12 {
             caps->mDedicatedSegmentSize = adapterDesc.DedicatedVideoMemory;
 
             // D3D12 has no feature to detect support and must be set manually.
-            if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_VkVendor)) {
+            if (adapterDesc.VendorId == static_cast<uint32_t>(GPUVendor::kIntel_Vendor)) {
                 caps->mIsResourceAllocationWithinCoherent = true;
             }
         } else {
