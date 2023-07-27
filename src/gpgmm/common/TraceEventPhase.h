@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_TRACEEVENTPHASE_H_
+#ifndef SRC_GPGMM_COMMON_TRACEEVENTPHASE_H_
+#define SRC_GPGMM_COMMON_TRACEEVENTPHASE_H_
 
 // Phase indicates the nature of an event entry. E.g. part of a begin/end pair.
 #    define TRACE_EVENT_PHASE_BEGIN ('B')
@@ -24,4 +25,4 @@
 #    define TRACE_EVENT_PHASE_METADATA ('M')
 #    define TRACE_EVENT_PHASE_COUNTER ('C')
 
-#endif  // GPGMM_COMMON_TRACEEVENTPHASE_H_
+#endif  // SRC_GPGMM_COMMON_TRACEEVENTPHASE_H_

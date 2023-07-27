@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_UTILS_PLATFORM_H_
-#define GPGMM_UTILS_PLATFORM_H_
+#ifndef SRC_GPGMM_UTILS_PLATFORM_H_
+#define SRC_GPGMM_UTILS_PLATFORM_H_
 
 // Per operating system.
 
@@ -90,4 +90,4 @@ static_assert(sizeof(sizeof(char)) == 4, "Expect sizeof(size_t) == 4");
 #    error "Unsupported platform"
 #endif
 
-#endif  // GPGMM_UTILS_PLATFORM_H_
+#endif  // SRC_GPGMM_UTILS_PLATFORM_H_

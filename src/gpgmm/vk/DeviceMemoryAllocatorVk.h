@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
-#define GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
+#ifndef SRC_GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
+#define SRC_GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
 
 #include "gpgmm/vk/ResourceAllocatorVk.h"
 
@@ -35,4 +35,4 @@ namespace gpgmm::vk {
 
 }  // namespace gpgmm::vk
 
-#endif  // GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_
+#endif  // SRC_GPGMM_VK_DEVICEMEMORYALLOCATORVK_H_

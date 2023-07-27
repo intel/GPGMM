@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_D3D12_LOGD3D12_H_
-#define GPGMM_D3D12_LOGD3D12_H_
+#ifndef SRC_GPGMM_D3D12_LOGD3D12_H_
+#define SRC_GPGMM_D3D12_LOGD3D12_H_
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/utils/WindowsUtils.h"
@@ -66,4 +66,4 @@ namespace gpgmm::d3d12 {
 
 }  // namespace gpgmm::d3d12
 
-#endif  // GPGMM_D3D12_LOGD3D12_H_
+#endif  // SRC_GPGMM_D3D12_LOGD3D12_H_

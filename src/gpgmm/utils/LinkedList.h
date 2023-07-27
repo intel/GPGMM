@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_UTILS_LINKED_LIST_H
-#define GPGMM_UTILS_LINKED_LIST_H
+#ifndef SRC_GPGMM_UTILS_LINKED_LIST_H
+#define SRC_GPGMM_UTILS_LINKED_LIST_H
 
 #include "Assert.h"
 #include "Utils.h"
@@ -316,4 +316,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_UTILS_LINKED_LIST_H
+#endif  // SRC_GPGMM_UTILS_LINKED_LIST_H

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GPGMM_COMMON_EVENT_MESSAGE_H_
-#define GPGMM_COMMON_EVENT_MESSAGE_H_
+#ifndef SRC_GPGMM_COMMON_EVENTMESSAGE_H_
+#define SRC_GPGMM_COMMON_EVENTMESSAGE_H_
 
 #include "gpgmm/common/Message.h"
 #include "gpgmm/common/Object.h"
@@ -78,4 +78,4 @@ namespace gpgmm {
 
 }  // namespace gpgmm
 
-#endif  // GPGMM_COMMON_EVENT_MESSAGE_H_
+#endif  // SRC_GPGMM_COMMON_EVENTMESSAGE_H_
