@@ -74,6 +74,19 @@ namespace gpgmm::d3d12 {
 
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
+        // Validate residency resource heap flags must also have a residency manager.
+        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET) {
+            ErrorLog(MessageId::kInvalidArgument, true)
+                << "Creating a heap always in budget requires a residency manager to exist.";
+            return E_INVALIDARG;
+        }
+
+        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+            ErrorLog(MessageId::kInvalidArgument, true)
+                << "Creating a heap always residency requires a residency manager to exist.";
+            return E_INVALIDARG;
+        }
+
         ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.

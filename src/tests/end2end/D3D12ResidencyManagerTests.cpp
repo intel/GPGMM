@@ -197,6 +197,24 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, &resourceHeap));
 
+    {
+        RESIDENCY_HEAP_DESC invalidResourceHeapDesc = resourceHeapDesc;
+        invalidResourceHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
+
+        ASSERT_FAILED(CreateResidencyHeap(invalidResourceHeapDesc, nullptr,
+                                          CreateResourceHeapCallbackContext::CreateHeap,
+                                          &createHeapContext, nullptr));
+    }
+
+    {
+        RESIDENCY_HEAP_DESC invalidResourceHeapDesc = resourceHeapDesc;
+        invalidResourceHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET;
+
+        ASSERT_FAILED(CreateResidencyHeap(invalidResourceHeapDesc, nullptr,
+                                          CreateResourceHeapCallbackContext::CreateHeap,
+                                          &createHeapContext, nullptr));
+    }
+
     // Ensure the unmanaged resource heap state is always unknown. Even though D3D12 implicitly
     // creates heaps as resident, untrack resource heaps would never transition out from
     // RESIDENCY_HEAP_STATUS_CURRENT and must be left RESIDENCY_HEAP_STATUS_UNKNOWN.
