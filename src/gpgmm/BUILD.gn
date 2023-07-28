@@ -124,6 +124,7 @@ source_set("gpgmm_sources") {
       "d3d12/DebugObjectD3D12.h",
       "d3d12/ErrorD3D12.cpp",
       "d3d12/ErrorD3D12.h",
+      "d3d12/EventMessageD3D12.h",
       "d3d12/FenceD3D12.cpp",
       "d3d12/FenceD3D12.h",
       "d3d12/JSONSerializerD3D12.cpp",

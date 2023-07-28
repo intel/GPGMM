@@ -67,6 +67,7 @@ if (GPGMM_ENABLE_D3D12)
         "d3d12/CapsD3D12.h"
         "d3d12/ErrorD3D12.cpp"
         "d3d12/ErrorD3D12.h"
+        "d3d12/EventMessageD3D12.h"
         "d3d12/FenceD3D12.cpp"
         "d3d12/FenceD3D12.h"
         "d3d12/ResidencyHeapD3D12.cpp"
