@@ -27,6 +27,7 @@
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/d3d12/EventMessageD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"
 #include "gpgmm/d3d12/ResidencyHeapD3D12.h"

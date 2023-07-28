@@ -20,6 +20,7 @@
 #include "gpgmm/d3d12/BudgetUpdateD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
+#include "gpgmm/d3d12/EventMessageD3D12.h"
 #include "gpgmm/d3d12/FenceD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"

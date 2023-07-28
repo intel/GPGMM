@@ -15,7 +15,7 @@
 #ifndef SRC_GPGMM_D3D12_LOGD3D12_H_
 #define SRC_GPGMM_D3D12_LOGD3D12_H_
 
-#include "gpgmm/common/EventMessage.h"
+#include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm::d3d12 {
@@ -38,30 +38,6 @@ namespace gpgmm::d3d12 {
     template <typename BackendT>
     LogMessage ErrorLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
         return gpgmm::ErrorLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
-    }
-
-    template <typename BackendT>
-    EventMessage DebugEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::DebugEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
-                                 object);
-    }
-
-    template <typename BackendT>
-    EventMessage InfoEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::InfoEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
-                                object);
-    }
-
-    template <typename BackendT>
-    EventMessage WarnEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::WarnEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
-                                object);
-    }
-
-    template <typename BackendT>
-    EventMessage ErrorEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::ErrorEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
-                                 object);
     }
 
 }  // namespace gpgmm::d3d12
