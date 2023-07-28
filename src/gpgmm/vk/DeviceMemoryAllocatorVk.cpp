@@ -47,7 +47,7 @@ namespace gpgmm::vk {
             return {};
         }
 
-        GPGMM_RETURN_INVALID_IF(!ValidateRequest(request));
+        GPGMM_RETURN_ERROR_IF(!ValidateRequest(request));
 
         VkMemoryAllocateInfo allocateInfo = {};
         allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;

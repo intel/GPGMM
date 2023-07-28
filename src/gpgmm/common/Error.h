@@ -30,11 +30,11 @@
     for (;;)                                       \
     break
 
-#define GPGMM_RETURN_INVALID_IF(expr) \
-    if (GPGMM_UNLIKELY(expr)) {       \
-        return {};                    \
-    }                                 \
-    for (;;)                          \
+#define GPGMM_RETURN_ERROR_IF(expr) \
+    if (GPGMM_UNLIKELY(expr)) {     \
+        return {};                  \
+    }                               \
+    for (;;)                        \
     break
 
 namespace gpgmm {
