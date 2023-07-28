@@ -904,10 +904,7 @@ namespace gpgmm::d3d12 {
         // Must be non-depth or without render-target to use small resource alignment.
         // This also applies to MSAA textures (4MB => 64KB).
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
-        if ((resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
-             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
-             resourceDescriptor.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) &&
-            IsAllowedToUseSmallAlignment(resourceDescriptor) &&
+        if (IsTexture(resourceDescriptor) && IsAllowedToUseSmallAlignment(resourceDescriptor) &&
             (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
                                          D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
             resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)

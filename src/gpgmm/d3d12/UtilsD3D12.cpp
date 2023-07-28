@@ -475,4 +475,15 @@ namespace gpgmm::d3d12 {
         return pDevice;
     }
 
+    bool IsTexture(const D3D12_RESOURCE_DESC& resourceDescriptor) {
+        switch (resourceDescriptor.Dimension) {
+            case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
+            case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
+            case D3D12_RESOURCE_DIMENSION_TEXTURE3D:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }  // namespace gpgmm::d3d12
