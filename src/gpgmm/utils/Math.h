@@ -29,10 +29,10 @@ namespace gpgmm {
     uint32_t ScanForward(uint32_t bits);
     uint32_t Log2(uint32_t number);
     uint32_t Log2(uint64_t number);
-    uint64_t PrevPowerOfTwo(uint64_t number);
+    uint64_t LowerPowerOfTwo(uint64_t number);
 
     bool IsPowerOfTwo(uint64_t number);
-    uint64_t NextPowerOfTwo(uint64_t number);
+    uint64_t UpperPowerOfTwo(uint64_t number);
     bool IsAligned(uint64_t number, size_t multiple);
 
     // Aligns number to the nearest power-of-two multiple.

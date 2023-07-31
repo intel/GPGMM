@@ -141,7 +141,7 @@ namespace gpgmm {
             slabSize *= 2;
         }
 
-        slabSize = NextPowerOfTwo(slabSize);
+        slabSize = UpperPowerOfTwo(slabSize);
 
         // If the larger slab excceeds available memory, re-use a slab instead.
         // Otherwise, creating a larger slab will page-out smaller slabs.

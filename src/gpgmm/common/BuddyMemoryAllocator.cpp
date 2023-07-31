@@ -51,7 +51,7 @@ namespace gpgmm {
         GPGMM_RETURN_ERROR_IF(!ValidateRequest(request));
 
         // Round allocation size to nearest power-of-two.
-        const uint64_t allocationSize = NextPowerOfTwo(request.SizeInBytes);
+        const uint64_t allocationSize = UpperPowerOfTwo(request.SizeInBytes);
 
         // Request cannot exceed memory size.
         GPGMM_RETURN_ERROR_IF(allocationSize > mMemorySize);
