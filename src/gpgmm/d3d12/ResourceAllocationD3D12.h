@@ -32,7 +32,7 @@ namespace gpgmm::d3d12 {
         uint64_t SizeInBytes;
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
-        ALLOCATION_METHOD Method;
+        ALLOCATION_TYPE Type;
         LPCWSTR DebugName;
     };
 
