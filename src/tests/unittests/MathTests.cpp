@@ -36,17 +36,17 @@ TEST(MathTests, IsPowerOfTwo) {
     EXPECT_FALSE(IsPowerOfTwo(3u));
 }
 
-TEST(MathTests, PrevPowerOfTwo) {
+TEST(MathTests, LowerPowerOfTwo) {
     // Check number from POT.
-    EXPECT_EQ(PrevPowerOfTwo(1u), 1u);
-    EXPECT_EQ(PrevPowerOfTwo(2u), 2u);
+    EXPECT_EQ(LowerPowerOfTwo(1u), 1u);
+    EXPECT_EQ(LowerPowerOfTwo(2u), 2u);
 
     // Check number from NPOT.
-    EXPECT_EQ(PrevPowerOfTwo(3u), 2u);
-    EXPECT_EQ(PrevPowerOfTwo(9u), 8u);
-    EXPECT_EQ(PrevPowerOfTwo(15u), 8u);
+    EXPECT_EQ(LowerPowerOfTwo(3u), 2u);
+    EXPECT_EQ(LowerPowerOfTwo(9u), 8u);
+    EXPECT_EQ(LowerPowerOfTwo(15u), 8u);
 
-    EXPECT_EQ(PrevPowerOfTwo((2ull << 31) + 1), 2ull << 31);
+    EXPECT_EQ(LowerPowerOfTwo((2ull << 31) + 1), 2ull << 31);
 }
 
 TEST(MathTests, IsAligned) {

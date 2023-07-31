@@ -74,7 +74,7 @@ namespace gpgmm {
 #endif      // defined(GPGMM_COMPILER_MSVC)
     }
 
-    uint64_t NextPowerOfTwo(uint64_t number) {
+    uint64_t UpperPowerOfTwo(uint64_t number) {
         if (number <= 1) {
             return 1;
         }
@@ -82,7 +82,7 @@ namespace gpgmm {
         return 1ull << (Log2(number - 1) + 1);
     }
 
-    uint64_t PrevPowerOfTwo(uint64_t number) {
+    uint64_t LowerPowerOfTwo(uint64_t number) {
         ASSERT(number != 0);
         return 1ull << Log2(number);
     }
