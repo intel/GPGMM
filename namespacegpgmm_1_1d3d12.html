@@ -147,12 +147,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a2ee02832ba8b10ec421c65658ac92b93">RESIDENCY_FLAG_ALWAYS_IN_BUDGET</a> = 0x4
  }</td></tr>
 <tr class="separator:adcdbaecdcd1fa9578f444da18babcc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a647374552c2db5cfd4583865f2ad9e96"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96">ALLOCATION_METHOD</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116">ALLOCATION_METHOD_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22">ALLOCATION_METHOD_STANDALONE</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5">ALLOCATION_METHOD_SUBALLOCATED</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d">ALLOCATION_METHOD_SUBALLOCATED_WITHIN</a> = 3
+<tr class="memitem:a615dbaeb4ce00f65ebb0339e48ff4643"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643">ALLOCATION_TYPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb">ALLOCATION_TYPE_UNKNOWN</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692">ALLOCATION_TYPE_STANDALONE</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41">ALLOCATION_TYPE_SUBALLOCATED</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424">ALLOCATION_TYPE_SUBALLOCATED_WITHIN</a> = 3
  }</td></tr>
-<tr class="separator:a647374552c2db5cfd4583865f2ad9e96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a615dbaeb4ce00f65ebb0339e48ff4643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33ac7fa401378e4e3361fbae516c5c9a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9a">RESOURCE_ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaeace11da07c766529cf73156f9890e22">RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
@@ -400,29 +400,29 @@ is normally not tracked.
 
 </div>
 </div>
-<a id="a647374552c2db5cfd4583865f2ad9e96" name="a647374552c2db5cfd4583865f2ad9e96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a647374552c2db5cfd4583865f2ad9e96">&#9670;&#160;</a></span>ALLOCATION_METHOD</h2>
+<a id="a615dbaeb4ce00f65ebb0339e48ff4643" name="a615dbaeb4ce00f65ebb0339e48ff4643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a615dbaeb4ce00f65ebb0339e48ff4643">&#9670;&#160;</a></span>ALLOCATION_TYPE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a647374552c2db5cfd4583865f2ad9e96">gpgmm::d3d12::ALLOCATION_METHOD</a></td>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643">gpgmm::d3d12::ALLOCATION_TYPE</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Represents how memory was allocated. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116" name="a647374552c2db5cfd4583865f2ad9e96a0cc6ed8715a2f3a8a48e9dfa11b8c116"></a>ALLOCATION_METHOD_UNKNOWN&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb" name="a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb"></a>ALLOCATION_TYPE_UNKNOWN&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
 <pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22" name="a647374552c2db5cfd4583865f2ad9e96ac7de718e04c106bd2d75e9f9b5ba4b22"></a>ALLOCATION_METHOD_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692" name="a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692"></a>ALLOCATION_TYPE_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
 <pre class="fragment">One and only one allocation exists for the memory.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5" name="a647374552c2db5cfd4583865f2ad9e96acd291fd76178c54439d03e05eb6b35e5"></a>ALLOCATION_METHOD_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41" name="a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41"></a>ALLOCATION_TYPE_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
 <pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d" name="a647374552c2db5cfd4583865f2ad9e96a633bb097455847cfef7c5e2c24e2d12d"></a>ALLOCATION_METHOD_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424" name="a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424"></a>ALLOCATION_TYPE_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
 <pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
 </pre> </td></tr>
 </table>
