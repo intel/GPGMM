@@ -21,6 +21,7 @@
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
+#include "gpgmm/common/SentinelMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
@@ -71,6 +72,19 @@ namespace gpgmm::d3d12 {
 
             RESOURCE_HEAP_TYPE_INVALID,
         };
+
+        bool IsTexturesAllowed(D3D12_HEAP_FLAGS heapFlags, bool isMSAA) {
+            switch (heapFlags) {
+                case D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES:
+                case D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES:
+                case D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES:
+                    return true;
+                case D3D12_HEAP_FLAG_ALLOW_DISPLAY:
+                    return !isMSAA;
+                default:
+                    return false;
+            }
+        }
 
         D3D12_HEAP_TYPE GetHeapType(RESOURCE_HEAP_TYPE resourceHeapType) {
             switch (resourceHeapType) {
@@ -629,8 +643,13 @@ namespace gpgmm::d3d12 {
             mResourceAllocatorOfType[resourceHeapTypeIndex] =
                 CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
 
-            mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceAllocator(descriptor, heapFlags, heapProperties, msaaHeapAlignment);
+            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true)) {
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
+                    descriptor, heapFlags, heapProperties, msaaHeapAlignment);
+            } else {
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
+                    std::make_unique<SentinelMemoryAllocator>();
+            }
 
             // Dedicated allocators are used when sub-allocation cannot but heaps could still be
             // recycled.
@@ -640,8 +659,14 @@ namespace gpgmm::d3d12 {
             mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
                 dedicatedDescriptor, heapFlags, heapProperties, heapAlignment);
 
-            mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
-                dedicatedDescriptor, heapFlags, heapProperties, msaaHeapAlignment);
+            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true)) {
+                mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
+                    CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties,
+                                            msaaHeapAlignment);
+            } else {
+                mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
+                    std::make_unique<SentinelMemoryAllocator>();
+            }
 
             // Resource specific allocators.
             mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
