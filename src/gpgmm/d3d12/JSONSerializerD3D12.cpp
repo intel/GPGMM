@@ -186,7 +186,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("HeapOffset", desc.HeapOffset);
         dict.AddItem("OffsetFromResource", desc.OffsetFromResource);
-        dict.AddItem("Method", static_cast<uint32_t>(desc.Method));
+        dict.AddItem("Method", static_cast<uint32_t>(desc.Type));
         if (desc.DebugName != nullptr) {
             dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
         }
