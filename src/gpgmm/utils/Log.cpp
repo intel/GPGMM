@@ -116,7 +116,7 @@ namespace gpgmm {
         }
 
         // Ignore internal objects being logged unless the build is enabled for it.
-#if !defined(GPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS)
+#if !defined(GPGMM_ENABLE_LOGGING_INTERNAL)
         if (!mIsExternal) {
             return;
         }

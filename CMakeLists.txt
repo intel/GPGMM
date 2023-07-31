@@ -109,7 +109,7 @@ option_if_not_defined(GPGMM_ENABLE_ALLOCATOR_LEAK_CHECKS "Enables checking of al
 option_if_not_defined(GPGMM_ENABLE_ASSERT_ON_WARNING "Enables ASSERT on severity functionality" OFF)
 option_if_not_defined(GPGMM_DISABLE_SIZE_CACHE "Enables warming of caches with common resource sizes" OFF)
 option_if_not_defined(GPGMM_ENABLE_MEMORY_ALIGN_CHECKS "Enables checking of resource alignment." OFF)
-option_if_not_defined(GPGMM_ENABLE_LOGGING_INTERNAL_OBJECTS "Enables log messages for internal objects." OFF)
+option_if_not_defined(GPGMM_ENABLE_LOGGING_INTERNAL "Enables log messages for internal objects." OFF)
 
 if(GPGMM_ENABLE_TESTS)
   # Vulkan tests require static linking.
