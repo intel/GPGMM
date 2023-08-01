@@ -276,37 +276,6 @@ namespace gpgmm::d3d12 {
             ResidencyHeap* const mHeap;
         };
 
-        // Combines AllocatorMemory and Create*Resource into a single call.
-        // If the memory allocation was successful, the resource will be created using it.
-        // Else, if the resource creation fails, the memory allocation will be cleaned up.
-        template <typename CreateResourceFn>
-        HRESULT TryAllocateResource(MemoryAllocatorBase* allocator,
-                                    const MemoryAllocationRequest& request,
-                                    CreateResourceFn&& createResourceFn) {
-            ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
-                allocator->TryAllocateMemory(request);
-            if (FAILED(result.GetErrorCode())) {
-                // NeverAllocate always fails, so suppress it.
-                if (!request.NeverAllocate) {
-                    DebugEvent(MessageId::kAllocatorFailed, false, allocator->GetTypename(),
-                               allocator)
-                        << "Unable to allocate memory for request.";
-                }
-                return static_cast<HRESULT>(result.GetErrorCode());
-            }
-
-            std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
-            ASSERT(allocation != nullptr);
-
-            HRESULT hr = createResourceFn(*allocation);
-            if (FAILED(hr)) {
-                InfoEvent(MessageId::kAllocatorFailed, true, allocator->GetTypename(), allocator)
-                    << "Failed to create resource using allocation.";
-                allocator->DeallocateMemory(std::move(allocation));
-            }
-            return hr;
-        }
-
         D3D12_HEAP_PROPERTIES GetHeapProperties(ID3D12Device* device,
                                                 D3D12_HEAP_TYPE heapType,
                                                 bool isCustomHeapDisabled) {
@@ -1000,6 +969,36 @@ namespace gpgmm::d3d12 {
         }
 
         return S_OK;
+    }
+
+    // Combines AllocatorMemory and Create*Resource into a single call.
+    // If the memory allocation was successful, the resource will be created using it.
+    // Else, if the resource creation fails, the memory allocation will be cleaned up.
+    template <typename D3D12CreateResourceFn>
+    HRESULT ResourceAllocator::TryAllocateResource(MemoryAllocatorBase* allocator,
+                                                   const MemoryAllocationRequest& request,
+                                                   D3D12CreateResourceFn&& createResourceFn) {
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
+            allocator->TryAllocateMemory(request);
+        if (FAILED(result.GetErrorCode())) {
+            // NeverAllocate always fails, so suppress it.
+            if (!request.NeverAllocate) {
+                DebugEvent(this, MessageId::kAllocatorFailed)
+                    << "Unable to allocate memory for request.";
+            }
+            return static_cast<HRESULT>(result.GetErrorCode());
+        }
+
+        std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
+        ASSERT(allocation != nullptr);
+
+        HRESULT hr = createResourceFn(*allocation);
+        if (FAILED(hr)) {
+            InfoEvent(this, MessageId::kAllocatorFailed)
+                << "Failed to create resource using allocation.";
+            allocator->DeallocateMemory(std::move(allocation));
+        }
+        return hr;
     }
 
     HRESULT ResourceAllocator::CreateResourceInternal(

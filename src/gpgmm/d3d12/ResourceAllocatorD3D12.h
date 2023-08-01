@@ -78,19 +78,21 @@ namespace gpgmm::d3d12 {
         friend BufferAllocator;
         friend ResourceAllocation;
 
-        // ObjectBase interface
-        DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
+        ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
+                          ID3D12Device* pDevice,
+                          ResidencyManager* pResidencyManager,
+                          std::unique_ptr<Caps> caps);
+
+        template <typename CreateResourceFn>
+        HRESULT TryAllocateResource(MemoryAllocatorBase* allocator,
+                                    const MemoryAllocationRequest& request,
+                                    CreateResourceFn&& createResourceFn);
 
         HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
                                        D3D12_RESOURCE_STATES initialResourceState,
                                        const D3D12_CLEAR_VALUE* clearValue,
                                        IResourceAllocation** ppResourceAllocationOut);
-
-        ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
-                          ID3D12Device* pDevice,
-                          ResidencyManager* pResidencyManager,
-                          std::unique_ptr<Caps> caps);
 
         std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
@@ -149,6 +151,9 @@ namespace gpgmm::d3d12 {
         void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
         HRESULT QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats);
+
+        // ObjectBase interface
+        DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
 
         ID3D12Device* mDevice = nullptr;
         ComPtr<ResidencyManager> mResidencyManager;
