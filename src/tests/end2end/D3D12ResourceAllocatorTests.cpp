@@ -687,10 +687,12 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         ASSERT_NE(allocation, nullptr);
     }
     {
+        D3D12_RESOURCE_DESC uavBufferDesc = CreateBasicBufferDesc(kBufferOf4MBAllocationSize);
+        uavBufferDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+
         ComPtr<IResourceAllocation> allocation;
-        ASSERT_FAILED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
-            D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, &allocation));
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            {}, uavBufferDesc, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, &allocation));
     }
 
     // Create a buffer that exceeds the max size should always fail.
