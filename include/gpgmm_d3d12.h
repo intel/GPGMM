@@ -258,6 +258,22 @@ namespace gpgmm::d3d12 {
                                              void* pCreateHeapContext,
                                              IResidencyHeap** ppResidencyHeapOut);
 
+    /** \brief  Create a heap managed by GPGMM.
+
+    This version of CreateResidencyHeap is a simpler way to create residency heaps by disallowing
+    use of RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET by specifying the pageable instead.
+
+    @param descriptor A reference to RESIDENCY_HEAP_DESC structure that describes the heap.
+    @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
+    @param pPageable  A pointer to the pageable object that represents the heap.
+    @param[out] ppResidencyHeapOut Pointer to a memory block that receives a pointer to the
+    heap.
+    */
+    GPGMM_EXPORT HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                             IResidencyManager* const pResidencyManager,
+                                             ID3D12Pageable* pPageable,
+                                             IResidencyHeap** ppResidencyHeapOut);
+
     /** \brief Represents a list of heaps which will be "made resident" upon executing a
     command-list.
 
