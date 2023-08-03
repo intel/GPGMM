@@ -40,6 +40,11 @@ namespace gpgmm::d3d12 {
                                            void* pCreateHeapContext,
                                            IResidencyHeap** ppResidencyHeapOut);
 
+        static HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                           IResidencyManager* const pResidencyManager,
+                                           ID3D12Pageable* pPageable,
+                                           IResidencyHeap** ppResidencyHeapOut);
+
         ~ResidencyHeap() override;
 
         // IResidencyHeap interface

@@ -64,6 +64,90 @@ namespace gpgmm::d3d12 {
                                                   pCreateHeapContext, ppResidencyHeapOut);
     }
 
+    HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                IResidencyManager* const pResidencyManager,
+                                ID3D12Pageable* pPageable,
+                                IResidencyHeap** ppResidencyHeapOut) {
+        return ResidencyHeap::CreateResidencyHeap(descriptor, pResidencyManager, pPageable,
+                                                  ppResidencyHeapOut);
+    }
+
+    // static
+    HRESULT ResidencyHeap::CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
+                                               IResidencyManager* const pResidencyManager,
+                                               ID3D12Pageable* pPageable,
+                                               IResidencyHeap** ppResidencyHeapOut) {
+        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateResidencyHeap",
+                                      (CREATE_HEAP_DESC{descriptor, pPageable}));
+
+        GPGMM_RETURN_IF_NULLPTR(pPageable);
+
+        ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
+        const bool isResidencyDisabled = (pResidencyManager == nullptr);
+
+        std::unique_ptr<ResidencyHeap> heap(
+            new ResidencyHeap(pPageable, descriptor, isResidencyDisabled));
+
+        if (!isResidencyDisabled) {
+            // Check if the underlying memory was implicitly made resident.
+            D3D12_HEAP_FLAGS resourceHeapFlags = D3D12_HEAP_FLAG_NONE;
+            if (SUCCEEDED(GetResourceHeapFlags(pPageable, &resourceHeapFlags))) {
+                // Resource heaps created without the "create not resident" flag are always
+                // resident.
+                if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
+                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
+                } else {
+                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_PENDING);
+                }
+            }
+
+            // Heap created not resident requires no budget to be created.
+            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_PENDING &&
+                (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+                ErrorLog(heap.get(), MessageId::kInvalidArgument)
+                    << "Creating a heap always in budget cannot be used with "
+                       "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
+                return E_INVALIDARG;
+            }
+
+            // Only heap types that are known to be created resident are eligable for evicition and
+            // should be always inserted in the residency cache. For other heap types (eg.
+            // descriptor heap), they must be manually locked and unlocked to be inserted into the
+            // residency cache.
+            if (heap->GetInfo().Status != RESIDENCY_HEAP_STATUS_UNKNOWN) {
+                GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
+                                       GetDevice(pPageable));
+            } else {
+                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+                    GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
+                                           GetDevice(pPageable));
+                    GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
+                                           GetDevice(pPageable));
+                    ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT);
+                }
+            }
+        } else {
+            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+                WarnLog(heap.get(), MessageId::kInvalidArgument)
+                    << "RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT was specified but had no effect "
+                       "becauase residency management is not being used.";
+            }
+        }
+
+        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName), GetDevice(pPageable));
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
+
+        DebugLog(heap.get(), MessageId::kObjectCreated)
+            << "Created heap, Size=" << heap->GetInfo().SizeInBytes
+            << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
+
+        if (ppResidencyHeapOut != nullptr) {
+            *ppResidencyHeapOut = heap.release();
+        }
+
+        return S_OK;
+    }
+
     // static
     HRESULT ResidencyHeap::CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
                                                IResidencyManager* const pResidencyManager,
@@ -118,73 +202,8 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(createHeapFn(pCreateHeapContext, &pageable),
                                GetDevice(pageable.Get()));
 
-        // Pageable-based type is required for residency-managed heaps.
-        GPGMM_RETURN_IF_NULLPTR(pageable);
-
-        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateResidencyHeap",
-                                      (CREATE_HEAP_DESC{descriptor, pageable.Get()}));
-
-        std::unique_ptr<ResidencyHeap> heap(
-            new ResidencyHeap(pageable, descriptor, isResidencyDisabled));
-
-        if (!isResidencyDisabled) {
-            // Check if the underlying memory was implicitly made resident.
-            D3D12_HEAP_FLAGS resourceHeapFlags = D3D12_HEAP_FLAG_NONE;
-            if (SUCCEEDED(GetResourceHeapFlags(pageable, &resourceHeapFlags))) {
-                // Resource heaps created without the "create not resident" flag are always
-                // resident.
-                if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
-                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
-                } else {
-                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_PENDING);
-                }
-            }
-
-            // Heap created not resident requires no budget to be created.
-            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_PENDING &&
-                (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
-                ErrorLog(heap.get(), MessageId::kInvalidArgument)
-                    << "Creating a heap always in budget cannot be used with "
-                       "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
-                return E_INVALIDARG;
-            }
-
-            // Only heap types that are known to be created resident are eligable for evicition and
-            // should be always inserted in the residency cache. For other heap types (eg.
-            // descriptor heap), they must be manually locked and unlocked to be inserted into the
-            // residency cache.
-            if (heap->GetInfo().Status != RESIDENCY_HEAP_STATUS_UNKNOWN) {
-                GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
-                                       GetDevice(pageable.Get()));
-            } else {
-                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
-                    GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
-                                           GetDevice(pageable.Get()));
-                    GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
-                                           GetDevice(pageable.Get()));
-                    ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT);
-                }
-            }
-        } else {
-            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
-                WarnLog(heap.get(), MessageId::kInvalidArgument)
-                    << "RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT was specified but had no effect "
-                       "becauase residency management is not being used.";
-            }
-        }
-
-        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName), GetDevice(pageable.Get()));
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
-
-        DebugLog(heap.get(), MessageId::kObjectCreated)
-            << "Created heap, Size=" << heap->GetInfo().SizeInBytes
-            << ", ID3D12Pageable=" << ToHexStr(heap->mPageable.Get());
-
-        if (ppResidencyHeapOut != nullptr) {
-            *ppResidencyHeapOut = heap.release();
-        }
-
-        return S_OK;
+        return CreateResidencyHeap(descriptor, pResidencyManager, pageable.Get(),
+                                   ppResidencyHeapOut);
     }
 
     ResidencyHeap::ResidencyHeap(ComPtr<ID3D12Pageable> pageable,

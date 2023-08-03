@@ -191,6 +191,13 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, nullptr));
 
+    // Create a resource heap by importing the heap.
+    {
+        ComPtr<ID3D12Pageable> pageable;
+        CreateResourceHeapCallbackContext::CreateHeap(&createHeapContext, &pageable);
+        ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, nullptr, pageable.Get(), nullptr));
+    }
+
     // Create a resource heap without residency.
     ComPtr<IResidencyHeap> resourceHeap;
     ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, nullptr,
