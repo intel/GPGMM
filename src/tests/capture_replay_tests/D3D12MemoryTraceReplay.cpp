@@ -204,8 +204,8 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
             baseAllocatorDesc.RecordOptions.EventScope = RECORD_SCOPE_PER_INSTANCE;
         }
 
-        if (!envParams.IsPrefetchAllowed) {
-            baseAllocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
+        if (envParams.IsPrefetchAllowed) {
+            baseAllocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH;
         }
 
         RESIDENCY_MANAGER_DESC baseResidencyDesc = CreateBasicResidencyDesc();

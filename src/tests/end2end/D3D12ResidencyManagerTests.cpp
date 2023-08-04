@@ -42,8 +42,6 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     RESOURCE_ALLOCATOR_DESC CreateBasicAllocatorDesc() const {
         RESOURCE_ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
 
-        // Disable pre-fetching since it will could cause over-committment unpredictably.
-        desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
 
         // Require MakeResident/Evict occur near CreateResource, for debugging purposes.
         desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET;

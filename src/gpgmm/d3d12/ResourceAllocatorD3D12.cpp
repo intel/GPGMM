@@ -772,7 +772,7 @@ namespace gpgmm::d3d12 {
                                   descriptor.ResourceHeapFragmentationLimit,
                                   descriptor.ResourceHeapGrowthFactor,
                                   /*allowSlabPrefetch*/
-                                  !(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH),
+                                  (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
                                   std::move(pooledOrNonPooledAllocator));
     }
 
