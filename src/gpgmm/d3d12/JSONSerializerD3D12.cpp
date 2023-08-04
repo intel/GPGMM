@@ -63,7 +63,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("HeapType", desc.HeapType);
         dict.AddItem("ExtraRequiredHeapFlags", desc.ExtraRequiredHeapFlags);
-        dict.AddItem("RequireResourceHeapPadding", desc.RequireResourceHeapPadding);
+        dict.AddItem("ExtraRequiredResourcePadding", desc.ExtraRequiredResourcePadding);
         if (desc.DebugName != nullptr) {
             dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
         }

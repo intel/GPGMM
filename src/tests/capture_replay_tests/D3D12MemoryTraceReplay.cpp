@@ -43,8 +43,8 @@ namespace {
             static_cast<D3D12_HEAP_TYPE>(allocationDescJson["HeapType"].asInt());
         allocationDesc.ExtraRequiredHeapFlags =
             static_cast<D3D12_HEAP_FLAGS>(allocationDescJson["ExtraRequiredHeapFlags"].asInt());
-        allocationDesc.RequireResourceHeapPadding =
-            allocationDescJson["RequireResourceHeapPadding"].asUInt64();
+        allocationDesc.ExtraRequiredResourcePadding =
+            allocationDescJson["ExtraRequiredResourcePadding"].asUInt64();
         return allocationDesc;
     }
 
