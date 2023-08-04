@@ -238,14 +238,12 @@ namespace gpgmm::d3d12 {
         }
 
         HRESULT GetHeapType(D3D12_RESOURCE_STATES initialResourceState, D3D12_HEAP_TYPE* heapType) {
-            if (HasAllFlags(GetInitialResourceState(D3D12_HEAP_TYPE_UPLOAD),
-                            initialResourceState)) {
+            if (GetInitialResourceState(D3D12_HEAP_TYPE_UPLOAD) == initialResourceState) {
                 *heapType = D3D12_HEAP_TYPE_UPLOAD;
                 return S_OK;
             }
 
-            if (HasAllFlags(GetInitialResourceState(D3D12_HEAP_TYPE_READBACK),
-                            initialResourceState)) {
+            if (GetInitialResourceState(D3D12_HEAP_TYPE_READBACK) == initialResourceState) {
                 *heapType = D3D12_HEAP_TYPE_READBACK;
                 return S_OK;
             }
@@ -278,12 +276,12 @@ namespace gpgmm::d3d12 {
 
         D3D12_HEAP_PROPERTIES GetHeapProperties(ID3D12Device* device,
                                                 D3D12_HEAP_TYPE heapType,
-                                                bool isCustomHeapDisabled) {
+                                                bool isCustomHeapsEnabled) {
             ASSERT(heapType != D3D12_HEAP_TYPE_CUSTOM);
 
             // Produces the corresponding properties from the corresponding heap type per this table
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-getcustomheapproperties
-            if (!isCustomHeapDisabled) {
+            if (isCustomHeapsEnabled) {
                 return device->GetCustomHeapProperties(0, heapType);
             }
 
@@ -477,12 +475,12 @@ namespace gpgmm::d3d12 {
 
         // By default, UMA is allowed to use a single heap type. Unless it is explicitly disabled or
         // unsupported by the device.
-        if (!(allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY) &&
+        if ((allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY) &&
             !caps->IsAdapterCacheCoherentUMA()) {
-            DebugLog(MessageId::kInvalidArgument, true)
-                << "RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was not requested but enabled "
-                   "anyway because the device did not support cache-coherent UMA.";
-            newDescriptor.Flags |= RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
+            WarnLog(MessageId::kPerformanceWarning, true)
+                << "RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY requested but disallowed "
+                   "because the device did not support cache-coherent UMA.";
+            newDescriptor.Flags ^= RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY;
         }
 
         if (!(allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT) &&
@@ -576,7 +574,7 @@ namespace gpgmm::d3d12 {
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
-          mIsCustomHeapsDisabled(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY),
+          mIsCustomHeapsEnabled(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY),
           mIsAlwaysCreateResident(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         ASSERT(mDevice != nullptr);
@@ -603,7 +601,7 @@ namespace gpgmm::d3d12 {
             const uint64_t heapAlignment = GetHeapAlignment(heapFlags, false);
 
             D3D12_HEAP_PROPERTIES heapProperties =
-                GetHeapProperties(mDevice, heapType, mIsCustomHeapsDisabled);
+                GetHeapProperties(mDevice, heapType, mIsCustomHeapsEnabled);
             heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
             // General-purpose allocators.
@@ -1043,7 +1041,7 @@ namespace gpgmm::d3d12 {
         // read-back would be inefficent since upload heaps on UMA adapters are usually
         // write-combined (vs write-back) so leave read back heaps alone.
         if (!(allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS) &&
-            !mIsCustomHeapsDisabled) {
+            mIsCustomHeapsEnabled) {
             if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
                 heapType = D3D12_HEAP_TYPE_UPLOAD;
             } else {
@@ -1123,7 +1121,7 @@ namespace gpgmm::d3d12 {
         }
 
         D3D12_HEAP_PROPERTIES heapProperties =
-            GetHeapProperties(mDevice, heapType, mIsCustomHeapsDisabled);
+            GetHeapProperties(mDevice, heapType, mIsCustomHeapsEnabled);
 
         const bool isUMA =
             (IsResidencyEnabled()) ? mResidencyManager->IsUMA() : mCaps->IsAdapterUMA();

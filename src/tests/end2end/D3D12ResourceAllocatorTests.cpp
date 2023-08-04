@@ -188,7 +188,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNoLeak) {
     GPGMM_TEST_MEMORY_LEAK_END();
 }
 
-// Exceeding the max resource heap size should always fail.
+// Checks if a texture and buffer resource can re-use the same heap.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSameHeap) {
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
@@ -217,13 +217,13 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSameHeap) {
         ComPtr<IResourceAllocation> textureAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &textureAllocation));
+            D3D12_RESOURCE_STATE_COMMON, nullptr, &textureAllocation));
     }
 
     EXPECT_EQ(GetStats(resourceAllocator).FreeHeapUsage, kBufferOf4MBAllocationSize);
 }
 
-// Exceeding the max resource heap size should always fail.
+// Checks if a texture and buffer resource CANNOT re-use the same heap.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
     allocatorDesc.ResourceHeapTier = D3D12_RESOURCE_HEAP_TIER_1;
@@ -239,8 +239,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
     {
         ComPtr<IResourceAllocation> bufferAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON,
-            nullptr, &bufferAllocation));
+            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &bufferAllocation));
 
         EXPECT_EQ(bufferAllocation->GetMemory()->GetInfo().SizeInBytes,
                   allocatorDesc.PreferredResourceHeapSize);
@@ -253,7 +253,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSeperateHeap) {
         ComPtr<IResourceAllocation> textureAllocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &textureAllocation));
+            D3D12_RESOURCE_STATE_COMMON, nullptr, &textureAllocation));
 
         EXPECT_EQ(textureAllocation->GetMemory()->GetInfo().SizeInBytes,
                   allocatorDesc.PreferredResourceHeapSize);
@@ -628,9 +628,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
         allocationDesc.ExtraRequiredHeapFlags = D3D12_HEAP_FLAG_SHARED;
 
-        // D3D12_HEAP_FLAG_SHARED is incompatible CPU accessible heaps.
-        allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
-
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
@@ -726,11 +723,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
 
 // Verifies there are no attribution of heaps when UMA + no read-back.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
-    GPGMM_SKIP_TEST_IF(!mCaps->IsAdapterUMA());
+    GPGMM_SKIP_TEST_IF(!mCaps->IsAdapterCacheCoherentUMA());
+
+    RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
+    allocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY;
 
     ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
-                                             mAdapter.Get(), &resourceAllocator, nullptr));
+    ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),
+                                             &resourceAllocator, nullptr));
     ASSERT_NE(resourceAllocator, nullptr);
 
     ASSERT_SUCCEEDED(
@@ -757,55 +757,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
         D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
 
     EXPECT_EQ(GetStats(resourceAllocator).FreeHeapUsage, kBufferOf4MBAllocationSize * 2);
-}
-
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferDisableUMA) {
-    RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY;
-
-    ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),
-                                             &resourceAllocator, nullptr));
-
-    {
-        ComPtr<IResourceAllocation> allocation;
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COPY_DEST,
-            nullptr, &allocation));
-
-        D3D12_HEAP_PROPERTIES heapProperties = {};
-        ASSERT_SUCCEEDED(allocation->GetResource()->GetHeapProperties(&heapProperties, nullptr));
-        EXPECT_NE(heapProperties.Type, D3D12_HEAP_TYPE_CUSTOM);
-    }
-    {
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;
-
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
-    }
-
-    // Abandonment of heap type attribution is disallowed when custom heaps are disabled.
-    ASSERT_SUCCEEDED(resourceAllocator->ReleaseResourceHeaps(kReleaseAllMemory, nullptr));
-    {
-        ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS;
-
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, nullptr));
-
-        allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-
-        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
-            allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
-
-        EXPECT_EQ(GetStats(resourceAllocator).FreeHeapUsage, kBufferOf4MBAllocationSize * 2);
-    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {

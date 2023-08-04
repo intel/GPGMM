@@ -165,7 +165,7 @@ namespace gpgmm::d3d12 {
         const bool mIsAlwaysCreatedInBudget;
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
-        const bool mIsCustomHeapsDisabled;
+        const bool mIsCustomHeapsEnabled;
         const bool mIsAlwaysCreateResident;
         const uint64_t mMaxResourceHeapSize;
 
