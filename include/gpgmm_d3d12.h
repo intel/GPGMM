@@ -782,11 +782,12 @@ namespace gpgmm::d3d12 {
         */
         RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
 
-        /** \brief Disables pre-fetching of GPU memory.
+        /** \brief Allow pre-fetching of resource heaps on background thread.
 
-        Should be only used for debugging and testing purposes.
+        Allows GPGMM to trigger prefetching based on heurstics. Prefetching enables more
+        performance when allocating for contiguous allocations or many resources of the same size.
         */
-        RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH = 0x4,
+        RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH = 0x4,
 
         /** \brief Disables recycling of GPU memory.
 
@@ -1056,12 +1057,9 @@ namespace gpgmm::d3d12 {
         */
         ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP = 0x4,
 
-        /** \brief Prefetch memory for the next resource allocation.
+        /** \brief Force pre-fetch for the next resource allocation.
 
-        The call to prefetch is deferred to a background thread by GPGMM which runs
-        when the current allocation requested is completed. By default, GPGMM will automatically
-        trigger prefetching based on heurstics. Prefetching enables more performance when
-        allocating for contiguous allocations or many resources of the same size.
+        This flag has no effect if RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH was not specified.
 
         Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
         */

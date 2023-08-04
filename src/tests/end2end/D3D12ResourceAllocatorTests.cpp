@@ -65,10 +65,6 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
     RESOURCE_ALLOCATOR_DESC CreateBasicAllocatorDesc() const {
         RESOURCE_ALLOCATOR_DESC desc = D3D12TestBase::CreateBasicAllocatorDesc();
 
-        // Pre-fetching is enabled by default. However for testing purposes, pre-fetching changes
-        // expectations that check GPU memory usage and needs to be tested in isolation.
-        desc.Flags |= RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
-
         // Make sure leak detection is always enabled.
         desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK;
 
@@ -1692,10 +1688,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     GPGMM_SKIP_TEST_IF(true);
 #endif
 
-    // Prefetching is explicitly disabled but otherwise allowed, re-enable it by clearing the
-    // disable flag.
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
-    allocatorDesc.Flags ^= RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH;
+    allocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH;
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),
