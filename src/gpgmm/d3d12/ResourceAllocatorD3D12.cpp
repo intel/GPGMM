@@ -386,7 +386,7 @@ namespace gpgmm::d3d12 {
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
 
             if (allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET) {
-                residencyDesc.Flags |= RESIDENCY_FLAG_ALWAYS_IN_BUDGET;
+                residencyDesc.Flags |= RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET;
             }
 
             GPGMM_RETURN_IF_FAILED(ResidencyManager::CreateResidencyManager(

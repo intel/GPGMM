@@ -401,14 +401,14 @@ namespace gpgmm::d3d12 {
 
         /** \brief Disables all option flags.
          */
-        RESIDENCY_FLAG_NONE = 0x0,
+        RESIDENCY_MANAGER_FLAG_NONE = 0x0,
 
         /** \brief Allow background budget updates from OS notifications.
 
         By default, budget updates will be queried by the residency manager
         instead of pushed by OS notifications using a background thread.
         */
-        RESIDENCY_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES = 0x1,
+        RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES = 0x1,
 
         /** \brief Specifies if unified memory architecture (UMA) is always disabled.
 
@@ -417,14 +417,14 @@ namespace gpgmm::d3d12 {
         Otherwise, the residency manager will have two budgets for local and non-local
         memory segments, respectively.
         */
-        RESIDENCY_FLAG_DISABLE_UNIFIED_MEMORY = 0x2,
+        RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY = 0x2,
 
         /** \brief Requires heaps to be in budget or E_OUTOFMEMORY.
 
         With this flag, heaps created for this residency manager will effectively never
-        specify D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET.
+        specify D3D12_RESIDENCY_MANAGER_FLAG_DENY_OVERBUDGET.
         */
-        RESIDENCY_FLAG_ALWAYS_IN_BUDGET = 0x4,
+        RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET = 0x4,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_MANAGER_FLAGS)
@@ -435,7 +435,7 @@ namespace gpgmm::d3d12 {
     struct RESIDENCY_MANAGER_DESC {
         /** \brief Specifies residency options.
 
-        Optional parameter. By default, no flags are specified or RESIDENCY_FLAG_NONE.
+        Optional parameter. By default, no flags are specified or RESIDENCY_MANAGER_FLAG_NONE.
         */
         RESIDENCY_MANAGER_FLAGS Flags;
 
@@ -765,7 +765,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Disables all option flags.
          */
-        ALLOCATOR_FLAG_NONE = 0x0,
+        RESOURCE_ALLOCATOR_FLAG_NONE = 0x0,
 
         /** \brief Disable re-use of resource heap.
 
