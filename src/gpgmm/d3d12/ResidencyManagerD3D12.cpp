@@ -87,11 +87,13 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, pDevice, pAdapter, std::move(caps)));
 
-        // Require automatic video memory budget updates.
-        if (!(descriptor.Flags & RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES)) {
-            GPGMM_RETURN_IF_FAILED(residencyManager->StartBudgetNotificationUpdates(), pDevice);
-            DebugLog(residencyManager.get(), MessageId::kBudgetUpdated)
-                << "OS based memory budget updates were successfully enabled.";
+        // Enable automatic video memory budget updates.
+        if (descriptor.Flags & RESIDENCY_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES) {
+            if (FAILED(residencyManager->StartBudgetNotificationUpdates())) {
+                WarnLog(residencyManager.get(), MessageId::kBudgetUpdated)
+                    << "RESIDENCY_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES was requested but failed to "
+                       "start.";
+            }
         }
 
         // Set the initial video memory limits.
