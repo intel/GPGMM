@@ -800,13 +800,12 @@ namespace gpgmm::d3d12 {
         */
         RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND = 0x8,
 
-        /** \brief Disables using D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA
-        GPUs.
+        /** \brief Uses D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA.
 
-        Used to workaround issues when custom heaps are not being recognized as expected or driver
-        bugs related to using a single memory pool.
+        Allocates resources with a D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap type from
+        a single memory pool.
         */
-        RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY = 0x10,
+        RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY = 0x10,
 
         /** \brief Report leaks of resource allocations.
 
@@ -1084,7 +1083,7 @@ namespace gpgmm::d3d12 {
         as well as frequent CPU reads would beneifit from D3D12_HEAP_TYPE_READBACK since the CPU
         properties are always write-combined.
 
-        If RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY was specified, heap type was
+        If RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY was not specified, heap type was
         D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
         */
         ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
