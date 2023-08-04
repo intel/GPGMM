@@ -1578,6 +1578,39 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
     }
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateTexture) {
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), &resourceAllocator, nullptr));
+
+    // Check that inferring to a incompatible heap type will fail.
+    {
+        // Texture resources cannot be created on D3D12_HEAP_TYPE_UPLOAD or D3D12_HEAP_TYPE_READBACK
+        // heap.
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            {}, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+    }
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_CUSTOM;  // Not supported
+
+        ASSERT_FAILED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+    }
+
+    // Unless the heap type was explicitly specified to be a compatible heap type.
+    {
+        ALLOCATION_DESC allocationDesc = {};
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+            allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+    }
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
     ComPtr<IResourceAllocator> poolAllocator;
     {
