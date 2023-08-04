@@ -403,13 +403,12 @@ namespace gpgmm::d3d12 {
          */
         RESIDENCY_FLAG_NONE = 0x0,
 
-        /** \brief Disables background memory budget updates from OS notifications.
+        /** \brief Allow background budget updates from OS notifications.
 
-        By default, memory budget updates will be pushed by the OS using a background thread. If
-        the OS does not support push notifications or budget updates are not frequent enough, this
-        mechanism can be disabled where a pull-based method is used instead.
+        By default, budget updates will be queried by the residency manager
+        instead of pushed by OS notifications using a background thread.
         */
-        RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES = 0x1,
+        RESIDENCY_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES = 0x1,
 
         /** \brief Specifies if unified memory architecture (UMA) is always disabled.
 

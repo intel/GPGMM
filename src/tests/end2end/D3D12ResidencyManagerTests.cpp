@@ -60,9 +60,6 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     RESIDENCY_MANAGER_DESC CreateBasicResidencyDesc(uint64_t budget) const {
         RESIDENCY_MANAGER_DESC residencyDesc = D3D12TestBase::CreateBasicResidencyDesc();
 
-        // Disable automatic budget updates, since it occurs uncontrollably by the OS.
-        residencyDesc.Flags |= RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES;
-
         // Specify a restricted budget, the OS budget fluctuates unpredicatbly.
         residencyDesc.MaxBudgetInBytes = budget;
 
@@ -554,7 +551,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     constexpr uint64_t kBudgetIsDeterminedByOS = 0;
     RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kBudgetIsDeterminedByOS);
-    residencyDesc.Flags ^= RESIDENCY_FLAG_DISABLE_BACKGROUND_BUDGET_UPDATES;
+    residencyDesc.Flags |= RESIDENCY_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES;
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(
