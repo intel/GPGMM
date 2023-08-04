@@ -1087,7 +1087,7 @@ namespace gpgmm::d3d12 {
 
         const bool isMSAA = resourceDescriptor.SampleDesc.Count > 1;
 
-        const bool requiresPadding = allocationDescriptor.RequireResourceHeapPadding > 0;
+        const bool requiresPadding = allocationDescriptor.ExtraRequiredResourcePadding > 0;
 
         // Attempt to allocate using the most effective allocator.;
         MemoryAllocatorBase* allocator = nullptr;
@@ -1111,11 +1111,11 @@ namespace gpgmm::d3d12 {
         // Apply extra padding to the resource heap size, if specified.
         // Padding can only be applied to standalone non-committed resources.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            request.SizeInBytes += allocationDescriptor.RequireResourceHeapPadding;
+            request.SizeInBytes += allocationDescriptor.ExtraRequiredResourcePadding;
             if (!neverSubAllocate) {
                 WarnLog(this, MessageId::kInvalidArgument)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
-                    << allocationDescriptor.RequireResourceHeapPadding << " bytes.";
+                    << allocationDescriptor.ExtraRequiredResourcePadding << " bytes.";
                 neverSubAllocate = true;
             }
         }
@@ -1414,7 +1414,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (allocationDescriptor.RequireResourceHeapPadding > 0) {
+        if (allocationDescriptor.ExtraRequiredResourcePadding > 0) {
             ErrorLog(MessageId::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;

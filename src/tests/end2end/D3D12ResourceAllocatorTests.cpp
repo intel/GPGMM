@@ -1928,7 +1928,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPadding) {
         allocationDesc, CreateBasicBufferDesc(kBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr, &allocationWithoutPadding));
 
-    allocationDesc.RequireResourceHeapPadding = 63;
+    allocationDesc.ExtraRequiredResourcePadding = 63;
     ComPtr<IResourceAllocation> allocationWithPadding;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -1936,7 +1936,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPadding) {
 
     EXPECT_GE(allocationWithPadding->GetInfo().SizeInBytes -
                   allocationWithoutPadding->GetInfo().SizeInBytes,
-              allocationDesc.RequireResourceHeapPadding);
+              allocationDesc.ExtraRequiredResourcePadding);
 
     // Padded resources are only supported for standalone allocations.
     EXPECT_EQ(allocationWithPadding->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
@@ -1957,7 +1957,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
         allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocationWithoutPadding));
 
-    allocationDesc.RequireResourceHeapPadding = 63;
+    allocationDesc.ExtraRequiredResourcePadding = 63;
     ComPtr<IResourceAllocation> allocationWithPadding;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
@@ -1965,7 +1965,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
 
     EXPECT_GE(allocationWithPadding->GetInfo().SizeInBytes -
                   allocationWithoutPadding->GetInfo().SizeInBytes,
-              allocationDesc.RequireResourceHeapPadding);
+              allocationDesc.ExtraRequiredResourcePadding);
 
     // Padded resources are only supported for standalone allocations.
     EXPECT_EQ(allocationWithPadding->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);

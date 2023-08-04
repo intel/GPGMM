@@ -1161,7 +1161,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. No extra padding is applied by default.
         */
-        UINT64 RequireResourceHeapPadding;
+        UINT64 ExtraRequiredResourcePadding;
 
         /** \brief Associates a name with the given allocation.
 
