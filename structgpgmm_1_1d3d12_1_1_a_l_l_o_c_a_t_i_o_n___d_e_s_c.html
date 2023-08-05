@@ -94,9 +94,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memItemLeft" align="right" valign="top">D3D12_HEAP_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a08cf139c6ad730e0dae3df0526ce36bd">ExtraRequiredHeapFlags</a></td></tr>
 <tr class="memdesc:a08cf139c6ad730e0dae3df0526ce36bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional heap flags that the resource requires.  <br /></td></tr>
 <tr class="separator:a08cf139c6ad730e0dae3df0526ce36bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a711acf6e29c81886e877fde06a2f3da8"><td class="memItemLeft" align="right" valign="top">UINT64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a711acf6e29c81886e877fde06a2f3da8">RequireResourceHeapPadding</a></td></tr>
-<tr class="memdesc:a711acf6e29c81886e877fde06a2f3da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Require additional bytes to be appended to the resource allocation.  <br /></td></tr>
-<tr class="separator:a711acf6e29c81886e877fde06a2f3da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad125c94c6d8940bb91138434fceecf3f"><td class="memItemLeft" align="right" valign="top">UINT64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#ad125c94c6d8940bb91138434fceecf3f">ExtraRequiredResourcePadding</a></td></tr>
+<tr class="memdesc:ad125c94c6d8940bb91138434fceecf3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Require additional bytes to be appended to the resource allocation.  <br /></td></tr>
+<tr class="separator:ad125c94c6d8940bb91138434fceecf3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bf383e2f509558fd16cbf1c3aba0bd3"><td class="memItemLeft" align="right" valign="top">LPCWSTR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_i_o_n___d_e_s_c.html#a1bf383e2f509558fd16cbf1c3aba0bd3">DebugName</a></td></tr>
 <tr class="memdesc:a1bf383e2f509558fd16cbf1c3aba0bd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associates a name with the given allocation.  <br /></td></tr>
 <tr class="separator:a1bf383e2f509558fd16cbf1c3aba0bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +138,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad125c94c6d8940bb91138434fceecf3f" name="ad125c94c6d8940bb91138434fceecf3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad125c94c6d8940bb91138434fceecf3f">&#9670;&#160;</a></span>ExtraRequiredResourcePadding</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT64 gpgmm::d3d12::ALLOCATION_DESC::ExtraRequiredResourcePadding</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Require additional bytes to be appended to the resource allocation. </p>
+<p>Resource heap size is guaranteed to increase by at-least this number of bytes. Specifying a padding will disable committed resources and sub-allocated heaps.</p>
+<p>Used to workaround driver bugs related to the heap size being insufficient for the resource.</p>
+<p>Optional parameter. No extra padding is applied by default. </p>
+
+</div>
+</div>
 <a id="a6ebb920a3ca6d2fea75792ca986af9ef" name="a6ebb920a3ca6d2fea75792ca986af9ef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6ebb920a3ca6d2fea75792ca986af9ef">&#9670;&#160;</a></span>Flags</h2>
 
@@ -170,25 +189,6 @@ Public Attributes</h2></td></tr>
 <p>Heap type that the resource to be allocated requires. </p>
 <p>It is recommended to not specify the heap type or equivalently specify D3D12_HEAP_TYPE_CUSTOM. This enables better resource optimization for UMA adapters by using a custom-equivalent upload heap everywhere. However, since UMA adapters use write-combined memory for CPU writes, a heap type of D3D12_HEAP_TYPE_READBACK could have better performance.</p>
 <p>Optional parameter. If the heap type is not provided or D3D12_HEAP_TYPE_CUSTOM, the heap type will be inferred by using adapter properties and the initial resource state. </p>
-
-</div>
-</div>
-<a id="a711acf6e29c81886e877fde06a2f3da8" name="a711acf6e29c81886e877fde06a2f3da8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a711acf6e29c81886e877fde06a2f3da8">&#9670;&#160;</a></span>RequireResourceHeapPadding</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">UINT64 gpgmm::d3d12::ALLOCATION_DESC::RequireResourceHeapPadding</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Require additional bytes to be appended to the resource allocation. </p>
-<p>Resource heap size is guaranteed to increase by at-least this number of bytes. Specifying a padding will disable committed resources and sub-allocated heaps.</p>
-<p>Used to workaround driver bugs related to the heap size being insufficient for the resource.</p>
-<p>Optional parameter. No extra padding is applied by default. </p>
 
 </div>
 </div>
