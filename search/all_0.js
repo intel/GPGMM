@@ -27,6 +27,5 @@ var searchData=
   ['allocator_5falgorithm_5fslab_24',['ALLOCATOR_ALGORITHM_SLAB',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab',1,'gpgmm::d3d12']]],
   ['allocator_5ffeature_25',['ALLOCATOR_FEATURE',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a',1,'gpgmm::d3d12']]],
   ['allocator_5ffeature_5fresource_5fallocation_5fsupport_26',['ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b',1,'gpgmm::d3d12']]],
-  ['allocator_5fflag_5fnone_27',['ALLOCATOR_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa04e95541f688312b7e2df2b7023872ba',1,'gpgmm::d3d12']]],
-  ['allocator_5fstats_28',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
+  ['allocator_5fstats_27',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
 ];
