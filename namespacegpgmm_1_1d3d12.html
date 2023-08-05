@@ -157,7 +157,7 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa04e95541f688312b7e2df2b7023872ba">ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaeace11da07c766529cf73156f9890e22">RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa9c9522596de0fc060cd4b6e5ce405e23">RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa4b3a1c4f45b7657423ce44eeb4fe716e">RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH</a> = 0x4
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa0c482143e97fadc559b248ccef9f73b8">RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH</a> = 0x4
 , <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6">RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND</a> = 0x8
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaae859133263db0e2fbc47b26ae9e0cad">RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY</a> = 0x10
@@ -359,11 +359,8 @@ between sub-allocations within the same resource.
 <tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5" name="aec66b5dc9f1b55002d33c5c75ac2f122a91092b25d618e767cdfe94b5e65833f5"></a>ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP&#160;</td><td class="fielddoc"><p>Disallow allowing the creation of multiple resources using the same resource heap. </p>
 <p>When this flag is used, the created resource will always be allocated with it's own resource heap. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d" name="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP&#160;</td><td class="fielddoc"><p>Prefetch memory for the next resource allocation. </p>
-<pre class="fragment">The call to prefetch is deferred to a background thread by GPGMM which runs
-when the current allocation requested is completed. By default, GPGMM will automatically
-trigger prefetching based on heurstics. Prefetching enables more performance when
-allocating for contiguous allocations or many resources of the same size.
+<tr><td class="fieldname"><a id="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d" name="aec66b5dc9f1b55002d33c5c75ac2f122adec1e5213f227fe9a24ca8bb3892aa7d"></a>ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP&#160;</td><td class="fielddoc"><p>Force pre-fetch for the next resource allocation. </p>
+<pre class="fragment">This flag has no effect if RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH was not specified.
 
 Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
 </pre> </td></tr>
@@ -682,8 +679,9 @@ purposes.
 <pre class="fragment">Always use RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource
 allocator.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aa4b3a1c4f45b7657423ce44eeb4fe716e" name="a33ac7fa401378e4e3361fbae516c5c9aa4b3a1c4f45b7657423ce44eeb4fe716e"></a>RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH&#160;</td><td class="fielddoc"><p>Disables pre-fetching of GPU memory. </p>
-<pre class="fragment">Should be only used for debugging and testing purposes.
+<tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aa0c482143e97fadc559b248ccef9f73b8" name="a33ac7fa401378e4e3361fbae516c5c9aa0c482143e97fadc559b248ccef9f73b8"></a>RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH&#160;</td><td class="fielddoc"><p>Allow pre-fetching of resource heaps on background thread. </p>
+<pre class="fragment">Allows GPGMM to trigger prefetching based on heurstics. Prefetching enables more
+performance when allocating for contiguous allocations or many resources of the same size.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6" name="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6"></a>RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p>Disables recycling of GPU memory. </p>
 <pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
