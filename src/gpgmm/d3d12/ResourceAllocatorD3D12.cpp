@@ -330,7 +330,7 @@ namespace gpgmm::d3d12 {
                                                    const D3D12_CLEAR_VALUE* clearValue,
                                                    D3D12_RESOURCE_STATES initialResourceState);
 
-            static HRESULT CreateResidencyHeap(void* pContext, ID3D12Pageable** ppPageableOut);
+            static HRESULT CreateHeap(void* pContext, ID3D12Pageable** ppPageableOut);
 
           private:
             HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
@@ -1503,7 +1503,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
-        ID3D12Resource** commitedResourceOut,
+        ID3D12Resource** committedResourceOut,
         ResidencyHeap** resourceHeapOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResourceAllocator.CreateCommittedResource");
@@ -1525,17 +1525,17 @@ namespace gpgmm::d3d12 {
                                                                resourceDescriptor, clearValue,
                                                                initialResourceState);
 
-        GPGMM_RETURN_IF_FAILED(ResidencyHeap::CreateResidencyHeap(
-                                   resourceHeapDesc, mResidencyManager.Get(),
-                                   CreateCommittedResourceCallbackContext::CreateResidencyHeap,
-                                   &callbackContext, &resourceHeap),
-                               mDevice);
+        GPGMM_RETURN_IF_FAILED(
+            ResidencyHeap::CreateResidencyHeap(resourceHeapDesc, mResidencyManager.Get(),
+                                               CreateCommittedResourceCallbackContext::CreateHeap,
+                                               &callbackContext, &resourceHeap),
+            mDevice);
 
-        if (commitedResourceOut != nullptr) {
+        if (committedResourceOut != nullptr) {
             ComPtr<ID3D12Resource> committedResource;
             GPGMM_RETURN_IF_FAILED(resourceHeap.As(&committedResource), mDevice);
 
-            *commitedResourceOut = committedResource.Detach();
+            *committedResourceOut = committedResource.Detach();
         }
 
         if (resourceHeapOut != nullptr) {
@@ -1752,9 +1752,8 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    HRESULT CreateCommittedResourceCallbackContext::CreateResidencyHeap(
-        void* pContext,
-        ID3D12Pageable** ppPageableOut) {
+    HRESULT CreateCommittedResourceCallbackContext::CreateHeap(void* pContext,
+                                                               ID3D12Pageable** ppPageableOut) {
         CreateCommittedResourceCallbackContext* createCommittedResourceCallbackContext =
             static_cast<CreateCommittedResourceCallbackContext*>(pContext);
 
