@@ -814,14 +814,13 @@ namespace gpgmm::d3d12 {
         */
         RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK = 0x20,
 
-        /** \brief Requires resource allocation to be created resident.
+        /** \brief Create resource allocation to be NOT created resident.
 
-        With this flag, resource heaps created by this resource allocator will never specify
+        With this flag, resource heaps created by this resource allocator will specify
         D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT, when supported, to avoid unnecessary GPU paging
-        operations at resource creation, and instead, reverts back to the default behavior of D3D12
-        of always making heaps implicitly resident on creation.
+        operations at resource creation.
         */
-        RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT = 0x40,
+        RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT = 0x40,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATOR_FLAGS)
