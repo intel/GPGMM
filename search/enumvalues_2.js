@@ -19,11 +19,11 @@ var searchData=
   ['residency_5fheap_5fstatus_5fcurrent_16',['RESIDENCY_HEAP_STATUS_CURRENT',['../namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717a3ecc5e83ae8e6528b866a26e5884666d',1,'gpgmm::d3d12']]],
   ['residency_5fheap_5fstatus_5fpending_17',['RESIDENCY_HEAP_STATUS_PENDING',['../namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717a7fbbfa3727d056b3772c5a9804ba763a',1,'gpgmm::d3d12']]],
   ['residency_5fheap_5fstatus_5funknown_18',['RESIDENCY_HEAP_STATUS_UNKNOWN',['../namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717a73db0a3f65a7943a5ae3ee00beeaeff3',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5falways_5fcommitted_19',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaeace11da07c766529cf73156f9890e22',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5falways_5fin_5fbudget_20',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa9c9522596de0fc060cd4b6e5ce405e23',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5falways_5fon_5fdemand_21',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5falways_5fresident_22',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa0c8b204990a2c1c28d23357cd5aa5402',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5fdisable_5fprefetch_23',['RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa4b3a1c4f45b7657423ce44eeb4fe716e',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflag_5fdisable_5funified_5fmemory_24',['RESOURCE_ALLOCATOR_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaf856ff9db62bf902a3b908c3a6aff715',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5fallow_5funified_5fmemory_19',['RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaae859133263db0e2fbc47b26ae9e0cad',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5falways_5fcommitted_20',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaeace11da07c766529cf73156f9890e22',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5falways_5fin_5fbudget_21',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa9c9522596de0fc060cd4b6e5ce405e23',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5falways_5fon_5fdemand_22',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5falways_5fresident_23',['RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa0c8b204990a2c1c28d23357cd5aa5402',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflag_5fdisable_5fprefetch_24',['RESOURCE_ALLOCATOR_FLAG_DISABLE_PREFETCH',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aa4b3a1c4f45b7657423ce44eeb4fe716e',1,'gpgmm::d3d12']]],
   ['resource_5fallocator_5fflag_5fnever_5fleak_25',['RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaee629d9cfdc3939a461fea970a41ebd8',1,'gpgmm::d3d12']]]
 ];
