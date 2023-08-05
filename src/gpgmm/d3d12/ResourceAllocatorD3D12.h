@@ -141,7 +141,7 @@ namespace gpgmm::d3d12 {
 
         HRESULT ReportLiveDeviceObjects() const;
 
-        bool IsCreateHeapNotResident() const;
+        bool IsCreateHeapNotResidentEnabled() const;
         bool IsResidencyEnabled() const;
 
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
@@ -166,7 +166,7 @@ namespace gpgmm::d3d12 {
         const bool mFlushEventBuffersOnDestruct;
         const bool mUseDetailedTimingEvents;
         const bool mIsCustomHeapsEnabled;
-        const bool mIsAlwaysCreateResident;
+        const bool mIsCreateNotResidentEnabled;
         const uint64_t mMaxResourceHeapSize;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;

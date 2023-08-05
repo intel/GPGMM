@@ -483,12 +483,12 @@ namespace gpgmm::d3d12 {
             newDescriptor.Flags ^= RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY;
         }
 
-        if (!(allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT) &&
+        if ((allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT) &&
             !caps->IsCreateHeapNotResidentSupported()) {
             DebugLog(MessageId::kInvalidArgument, true)
-                << "RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT was not requested but enabled "
-                   "anyway because the device did not support creation of non-resident heaps.";
-            newDescriptor.Flags |= RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT;
+                << "RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT was requested but disallowed "
+                   "because the device did not support creation of non-resident heaps.";
+            newDescriptor.Flags ^= RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT;
         }
 
         // Resource heap tier is required but user didn't specify one.
@@ -575,7 +575,8 @@ namespace gpgmm::d3d12 {
                                        RECORD_SCOPE_PER_INSTANCE),
           mUseDetailedTimingEvents(descriptor.RecordOptions.UseDetailedTimingEvents),
           mIsCustomHeapsEnabled(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY),
-          mIsAlwaysCreateResident(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_RESIDENT),
+          mIsCreateNotResidentEnabled(descriptor.Flags &
+                                      RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT),
           mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
         ASSERT(mDevice != nullptr);
 
@@ -594,7 +595,7 @@ namespace gpgmm::d3d12 {
                 static_cast<RESOURCE_HEAP_TYPE>(resourceHeapTypeIndex);
 
             const D3D12_HEAP_FLAGS& heapFlags =
-                GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
+                GetHeapFlags(resourceHeapType, IsCreateHeapNotResidentEnabled());
             const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
             const uint64_t msaaHeapAlignment = GetHeapAlignment(heapFlags, true);
@@ -1067,7 +1068,8 @@ namespace gpgmm::d3d12 {
         bool isAlwaysCommitted = mIsAlwaysCommitted;
 
         // Check memory requirements.
-        D3D12_HEAP_FLAGS heapFlags = GetHeapFlags(resourceHeapType, IsCreateHeapNotResident());
+        D3D12_HEAP_FLAGS heapFlags =
+            GetHeapFlags(resourceHeapType, IsCreateHeapNotResidentEnabled());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
             WarnLog(this, MessageId::kPerformanceWarning)
                 << "RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED was not requested but enabled anyway "
@@ -1148,7 +1150,7 @@ namespace gpgmm::d3d12 {
         // to prevent OOM to free memory only or to the amount of budget left. The allocator
         // checks this amount to determine if its appropriate to pre-allocate more memory or
         // not.
-        if (IsResidencyEnabled() && !IsCreateHeapNotResident()) {
+        if (IsResidencyEnabled() && !IsCreateHeapNotResidentEnabled()) {
             DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(heapSegment);
 
@@ -1680,8 +1682,8 @@ namespace gpgmm::d3d12 {
         SafeRelease(allocation);
     }
 
-    bool ResourceAllocator::IsCreateHeapNotResident() const {
-        return IsResidencyEnabled() && !mIsAlwaysCreateResident;
+    bool ResourceAllocator::IsCreateHeapNotResidentEnabled() const {
+        return IsResidencyEnabled() && mIsCreateNotResidentEnabled;
     }
 
     bool ResourceAllocator::IsResidencyEnabled() const {
