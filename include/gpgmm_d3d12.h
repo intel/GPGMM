@@ -137,15 +137,15 @@ namespace gpgmm::d3d12 {
 
         This flags ensures there is enough budget to exist for the heap or E_OUTOFMEMORY.
         */
-        RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET = 0x1,
+        RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET = 0x1,
 
-        /** \brief Requires the heap to be tracked for residency.
+        /** \brief Requires the heap to be managed for residency.
 
         This flag is equivalent to calling LockHeap then UnlockHeap after
         creation. The flag only has effect when the heap's residency status
         cannot be determined.
         */
-        RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT = 0x2,
+        RESIDENCY_HEAP_FLAG_CREATE_RESIDENT = 0x2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_HEAP_FLAGS)
@@ -209,9 +209,9 @@ namespace gpgmm::d3d12 {
         virtual RESIDENCY_HEAP_INFO GetInfo() const = 0;
     };
 
-    /** \brief  Create a heap managed by GPGMM.
+    /** \brief  Create a residency managed heap.
 
-    Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be tracked for residency
+    Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be managed for residency
     purposes. A heap managed by GPGMM represents either a 1) committed resource backed by
     implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
 
@@ -258,10 +258,10 @@ namespace gpgmm::d3d12 {
                                              void* pCreateHeapContext,
                                              IResidencyHeap** ppResidencyHeapOut);
 
-    /** \brief  Create a heap managed by GPGMM.
+    /** \brief  Create a residency managed heap.
 
     This version of CreateResidencyHeap is a simpler way to create residency heaps by disallowing
-    use of RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET by specifying the pageable instead.
+    use of RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET by specifying the pageable instead.
 
     @param descriptor A reference to RESIDENCY_HEAP_DESC structure that describes the heap.
     @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
@@ -777,7 +777,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Requires resource allocation to be created within budget.
 
-        Always use RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET to resource heaps created by this resource
+        Always use RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET to resource heaps created by this resource
         allocator.
         */
         RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET = 0x2,
