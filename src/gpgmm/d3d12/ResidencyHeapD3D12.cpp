@@ -95,14 +95,14 @@ namespace gpgmm::d3d12 {
                 // Resource heaps created without the "create not resident" flag are always
                 // resident.
                 if (!(resourceHeapFlags & D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT)) {
-                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
+                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_RESIDENT);
                 } else {
-                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_PENDING);
+                    heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_EVICTED);
                 }
             }
 
             // Heap created not resident requires no budget to be created.
-            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_PENDING &&
+            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_EVICTED &&
                 (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
                 ErrorLog(heap.get(), MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
@@ -123,7 +123,7 @@ namespace gpgmm::d3d12 {
                                            GetDevice(pPageable));
                     GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
                                            GetDevice(pPageable));
-                    ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT);
+                    ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT);
                 }
             }
         } else {

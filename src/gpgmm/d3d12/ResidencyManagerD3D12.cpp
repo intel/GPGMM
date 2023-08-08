@@ -206,7 +206,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(
                 MakeResident(heap->GetHeapSegment(), heap->GetSize(), 1, pageable.GetAddressOf()),
                 mDevice);
-            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
             // usage because they are not in the residency cache.
@@ -220,7 +220,7 @@ namespace gpgmm::d3d12 {
 
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
-            if (heap->mState == RESIDENCY_HEAP_STATUS_CURRENT) {
+            if (heap->mState == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 mStats.CurrentHeapCount++;
                 mStats.CurrentHeapUsage += heap->GetSize();
             }
@@ -564,7 +564,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(mResidencyFence->WaitFor(lastUsedFenceValue), mDevice);
 
             heap->RemoveFromList();
-            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_PENDING);
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_EVICTED);
 
             bytesEvicted += heap->GetSize();
 
@@ -702,7 +702,7 @@ namespace gpgmm::d3d12 {
         // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
         // no way of knowing for certain.
         for (ResidencyHeap* heap : heapsToMakeResident) {
-            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_CURRENT);
+            heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_RESIDENT);
         }
 
         GPGMM_TRACE_EVENT_METRIC(
@@ -803,14 +803,14 @@ namespace gpgmm::d3d12 {
         RESIDENCY_MANAGER_STATS result = mStats;
 
         for (const auto& entry : mLocalVideoMemorySegment.cache) {
-            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT) {
+            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
             }
         }
 
         for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
-            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT) {
+            if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
             }
