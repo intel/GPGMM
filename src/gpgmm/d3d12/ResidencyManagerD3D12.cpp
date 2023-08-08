@@ -62,10 +62,10 @@ namespace gpgmm::d3d12 {
             caps.reset(ptr);
         }
 
-        if ((descriptor.Flags & RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY) &&
+        if ((descriptor.Flags & RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY) &&
             caps->IsAdapterUMA()) {
             WarnLog(MessageId::kInvalidArgument, true)
-                << "RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY flag was specified but "
+                << "RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY flag was specified but "
                    "did not match the architecture of the adapter.";
         }
 
@@ -171,7 +171,7 @@ namespace gpgmm::d3d12 {
           mEvictSizeInBytes(descriptor.EvictSizeInBytes == 0 ? kDefaultEvictSizeInBytes
                                                              : descriptor.EvictSizeInBytes),
           mIsUMA(caps->IsAdapterUMA() &&
-                 !(descriptor.Flags & RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY)),
+                 !(descriptor.Flags & RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY)),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
                                        RECORD_SCOPE_PER_INSTANCE),
           mInitialFenceValue(descriptor.InitialFenceValue),
