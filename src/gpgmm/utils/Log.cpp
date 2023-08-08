@@ -215,6 +215,26 @@ namespace gpgmm {
         return message;
     }
 
+    LogMessage DebugLog(MessageId messageId, const ObjectBase* object) {
+        return DebugLog(messageId, /*isExternal*/ false,
+                        (object != nullptr) ? object->GetTypename() : "", object);
+    }
+
+    LogMessage InfoLog(MessageId messageId, const ObjectBase* object) {
+        return InfoLog(messageId, /*isExternal*/ false,
+                       (object != nullptr) ? object->GetTypename() : "", object);
+    }
+
+    LogMessage WarnLog(MessageId messageId, const ObjectBase* object) {
+        return WarnLog(messageId, /*isExternal*/ false,
+                       (object != nullptr) ? object->GetTypename() : "", object);
+    }
+
+    LogMessage ErrorLog(MessageId messageId, const ObjectBase* object) {
+        return ErrorLog(messageId, /*isExternal*/ false,
+                        (object != nullptr) ? object->GetTypename() : "", object);
+    }
+
     LogMessage Log(MessageSeverity severity,
                    MessageId messageId,
                    bool isExternal,

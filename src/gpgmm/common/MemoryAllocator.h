@@ -207,7 +207,7 @@ namespace gpgmm {
         // or uninitalized memory allocation cannot be created. If memory cannot be allocated for
         // the block, the block will be deallocated instead of allowing it to leak.
         template <typename GetOrCreateMemoryFn>
-        static ResultOrError<std::unique_ptr<MemoryAllocationBase>> TrySubAllocateMemory(
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> TrySubAllocateMemory(
             BlockAllocator* allocator,
             uint64_t requestSize,
             uint64_t alignment,
@@ -222,8 +222,7 @@ namespace gpgmm {
             if (!result.IsSuccess()) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {
-                    DebugLog(MessageId::kAllocatorFailed, false, allocator->GetTypename(),
-                             allocator)
+                    DebugLog(MessageId::kAllocatorFailed, this)
                         << "Failed to sub-allocate memory range = ["
                         << std::to_string(block->Offset) << ", "
                         << std::to_string(block->Offset + block->Size) << ").";
