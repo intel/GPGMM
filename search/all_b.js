@@ -29,7 +29,7 @@ var searchData=
   ['residency_5fmanager_5fdesc_26',['RESIDENCY_MANAGER_DESC',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___d_e_s_c.html',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fflag_5fallow_5fbackground_5fbudget_5fupdates_27',['RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a310fce5e58f340dcb53161337c345680',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fflag_5falways_5fin_5fbudget_28',['RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a',1,'gpgmm::d3d12']]],
-  ['residency_5fmanager_5fflag_5fdisable_5funified_5fmemory_29',['RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27aa71815defad24b2dcc9c053136c2cc4b',1,'gpgmm::d3d12']]],
+  ['residency_5fmanager_5fflag_5fnever_5fuse_5funified_5fmemory_29',['RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27ab4580062135a0f4c55e51bd75fdf43fd',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fflag_5fnone_30',['RESIDENCY_MANAGER_FLAG_NONE',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a0fb17566b8bba518202e7d7c537b0dc4',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fflags_31',['RESIDENCY_MANAGER_FLAGS',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fstats_32',['RESIDENCY_MANAGER_STATS',['../structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___m_a_n_a_g_e_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]],
