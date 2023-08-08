@@ -49,10 +49,10 @@ namespace gpgmm::d3d12 {
 
     RESIDENCY_HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget) {
         if (alwaysCreatedInBudget) {
-            return RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET | RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
+            return RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET | RESIDENCY_HEAP_FLAG_CREATE_RESIDENT;
         }
 
-        return RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
+        return RESIDENCY_HEAP_FLAG_CREATE_RESIDENT;
     }
 
     HRESULT CreateResidencyHeap(const RESIDENCY_HEAP_DESC& descriptor,
@@ -103,7 +103,7 @@ namespace gpgmm::d3d12 {
 
             // Heap created not resident requires no budget to be created.
             if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_PENDING &&
-                (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+                (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
                 ErrorLog(heap.get(), MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
@@ -118,7 +118,7 @@ namespace gpgmm::d3d12 {
                 GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
                                        GetDevice(pPageable));
             } else {
-                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
                     GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
                                            GetDevice(pPageable));
                     GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
@@ -127,9 +127,9 @@ namespace gpgmm::d3d12 {
                 }
             }
         } else {
-            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
                 WarnLog(heap.get(), MessageId::kInvalidArgument)
-                    << "RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT was specified but had no effect "
+                    << "RESIDENCY_HEAP_FLAG_CREATE_RESIDENT was specified but had no effect "
                        "becauase residency management is not being used.";
             }
         }
@@ -159,13 +159,13 @@ namespace gpgmm::d3d12 {
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
         // Validate residency resource heap flags must also have a residency manager.
-        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET) {
+        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET) {
             ErrorLog(MessageId::kInvalidArgument, true)
                 << "Creating a heap always in budget requires a residency manager to exist.";
             return E_INVALIDARG;
         }
 
-        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT) {
+        if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
             ErrorLog(MessageId::kInvalidArgument, true)
                 << "Creating a heap always residency requires a residency manager to exist.";
             return E_INVALIDARG;
@@ -174,7 +174,7 @@ namespace gpgmm::d3d12 {
         ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
 
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
-        if (!isResidencyDisabled && (descriptor.Flags & RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET)) {
+        if (!isResidencyDisabled && (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
             uint64_t bytesEvicted = descriptor.SizeInBytes;
             GPGMM_RETURN_IF_FAILED(
                 residencyManager->EvictInternal(descriptor.SizeInBytes, descriptor.HeapSegment,
@@ -192,7 +192,7 @@ namespace gpgmm::d3d12 {
                                (currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
                                    ? currentVideoInfo.Budget - currentVideoInfo.CurrentUsage
                                    : 0)
-                        << " MBs) and RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET was specified.";
+                        << " MBs) and RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET was specified.";
                 }
                 return E_OUTOFMEMORY;
             }

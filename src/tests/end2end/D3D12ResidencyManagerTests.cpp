@@ -136,10 +136,10 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     D3D12_HEAP_PROPERTIES heapProperties = {};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-    RESIDENCY_HEAP_DESC resourceHeapAlwaysInBudgetDesc = {};
-    resourceHeapAlwaysInBudgetDesc.SizeInBytes = kHeapSize;
-    resourceHeapAlwaysInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-    resourceHeapAlwaysInBudgetDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET;
+    RESIDENCY_HEAP_DESC resourceHeapInBudgetDesc = {};
+    resourceHeapInBudgetDesc.SizeInBytes = kHeapSize;
+    resourceHeapInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapInBudgetDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET;
 
     D3D12_HEAP_DESC heapDesc = {};
     heapDesc.Properties = heapProperties;
@@ -149,7 +149,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
 
-    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapAlwaysInBudgetDesc, residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapInBudgetDesc, residencyManager.Get(),
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, nullptr));
 }
@@ -174,15 +174,15 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
     BadCreateHeapCallbackContext badCreateHeapCallbackContext;
 
-    RESIDENCY_HEAP_DESC resourceHeapDesc = {};
-    resourceHeapDesc.SizeInBytes = kHeapSize;
-    resourceHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    RESIDENCY_HEAP_DESC residencyHeapDesc = {};
+    residencyHeapDesc.SizeInBytes = kHeapSize;
+    residencyHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
-    ASSERT_FAILED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+    ASSERT_FAILED(CreateResidencyHeap(residencyHeapDesc, residencyManager.Get(),
                                       BadCreateHeapCallbackContext::CreateHeap,
                                       &badCreateHeapCallbackContext, nullptr));
 
-    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResidencyHeap(residencyHeapDesc, residencyManager.Get(),
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, nullptr));
 
@@ -190,29 +190,29 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     {
         ComPtr<ID3D12Pageable> pageable;
         CreateResourceHeapCallbackContext::CreateHeap(&createHeapContext, &pageable);
-        ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, nullptr, pageable.Get(), nullptr));
+        ASSERT_SUCCEEDED(CreateResidencyHeap(residencyHeapDesc, nullptr, pageable.Get(), nullptr));
     }
 
     // Create a resource heap without residency.
     ComPtr<IResidencyHeap> resourceHeap;
-    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, nullptr,
+    ASSERT_SUCCEEDED(CreateResidencyHeap(residencyHeapDesc, nullptr,
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, &resourceHeap));
 
     {
-        RESIDENCY_HEAP_DESC invalidResourceHeapDesc = resourceHeapDesc;
-        invalidResourceHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
+        RESIDENCY_HEAP_DESC invalidResidencyHeapDesc = residencyHeapDesc;
+        invalidResidencyHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_RESIDENT;
 
-        ASSERT_FAILED(CreateResidencyHeap(invalidResourceHeapDesc, nullptr,
+        ASSERT_FAILED(CreateResidencyHeap(invalidResidencyHeapDesc, nullptr,
                                           CreateResourceHeapCallbackContext::CreateHeap,
                                           &createHeapContext, nullptr));
     }
 
     {
-        RESIDENCY_HEAP_DESC invalidResourceHeapDesc = resourceHeapDesc;
-        invalidResourceHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET;
+        RESIDENCY_HEAP_DESC invalidResidencyHeapDesc = residencyHeapDesc;
+        invalidResidencyHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET;
 
-        ASSERT_FAILED(CreateResidencyHeap(invalidResourceHeapDesc, nullptr,
+        ASSERT_FAILED(CreateResidencyHeap(invalidResidencyHeapDesc, nullptr,
                                           CreateResourceHeapCallbackContext::CreateHeap,
                                           &createHeapContext, nullptr));
     }
@@ -224,7 +224,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Create a resource heap with residency.
-    ASSERT_SUCCEEDED(CreateResidencyHeap(resourceHeapDesc, residencyManager.Get(),
+    ASSERT_SUCCEEDED(CreateResidencyHeap(residencyHeapDesc, residencyManager.Get(),
                                          CreateResourceHeapCallbackContext::CreateHeap,
                                          &createHeapContext, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
@@ -233,7 +233,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Residency status of resource heap types is always known.
-    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, residencyHeapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ComPtr<ID3D12Heap> heap;
@@ -245,7 +245,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
-    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, residencyHeapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
@@ -254,7 +254,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
-    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, resourceHeapDesc.SizeInBytes);
+    EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, residencyHeapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
@@ -314,7 +314,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 }
 
-TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
+TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapResident) {
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
                                             mAdapter.Get(), &residencyManager));
@@ -328,7 +328,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapAlwaysResident) {
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
     descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
-    descriptorHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_ALWAYS_RESIDENT;
+    descriptorHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_RESIDENT;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
@@ -679,7 +679,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         return;
     }
 
-    // Since locked heaps are ineligable for eviction and RESIDENCY_HEAP_FLAG_ALWAYS_IN_BUDGET is
+    // Since locked heaps are ineligable for eviction and RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET is
     // true, CreateResource should always fail since there is not enough budget.
     ASSERT_FAILED(resourceAllocator->CreateResource(bufferAllocationDesc, bufferDesc,
                                                     D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
