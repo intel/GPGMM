@@ -410,14 +410,15 @@ namespace gpgmm::d3d12 {
         */
         RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES = 0x1,
 
-        /** \brief Specifies if unified memory architecture (UMA) is always disabled.
+        /** \brief Specifies if unified memory architecture (UMA) is always disabled, even
+        if the adapter supports UMA.
 
         By default, UMA is enabled when the adapter supports the architecture.
         UMA allows the residency manager to budget using a single memory segment.
         Otherwise, the residency manager will have two budgets for local and non-local
         memory segments, respectively.
         */
-        RESIDENCY_MANAGER_FLAG_DISABLE_UNIFIED_MEMORY = 0x2,
+        RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY = 0x2,
 
         /** \brief Requires heaps to be in budget or E_OUTOFMEMORY.
 
