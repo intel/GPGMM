@@ -25,6 +25,10 @@
 
 namespace gpgmm::d3d12 {
 
+    // D3D12 doesn't provide a allocation info definition for non-resource heap types (eg.
+    // descriptor heaps) but the info is the otherwise the same as resource heaps.
+    using HEAP_ALLOCATION_INFO = D3D12_RESOURCE_ALLOCATION_INFO;
+
     namespace {
 
         // Returns the resource heap flags or E_INVALIDARG, when the memory type doesn't allow
@@ -45,6 +49,53 @@ namespace gpgmm::d3d12 {
 
             return E_INVALIDARG;
         }
+
+        HEAP_ALLOCATION_INFO GetResourceHeapAllocationInfo(ComPtr<ID3D12Pageable> pageable) {
+            ComPtr<ID3D12Heap> heap;
+            if (SUCCEEDED(pageable.As(&heap))) {
+                const D3D12_HEAP_DESC desc = heap->GetDesc();
+                return {desc.SizeInBytes, desc.Alignment};
+            }
+
+            ComPtr<ID3D12Resource> committedResource;
+            if (SUCCEEDED(pageable.As(&committedResource))) {
+                const D3D12_RESOURCE_DESC desc = committedResource->GetDesc();
+                const D3D12_RESOURCE_ALLOCATION_INFO info =
+                    GetDevice(committedResource.Get())->GetResourceAllocationInfo(0, 1, &desc);
+                return info;
+            }
+
+            return {kInvalidSize, kInvalidSize};
+        }
+
+        HEAP_ALLOCATION_INFO GetDescriptorHeapAllocationInfo(ComPtr<ID3D12Pageable> pageable) {
+            ComPtr<ID3D12DescriptorHeap> heap;
+            if (SUCCEEDED(pageable.As(&heap))) {
+                const D3D12_DESCRIPTOR_HEAP_DESC desc = heap->GetDesc();
+                const uint64_t sizePerDescriptor =
+                    GetDevice(heap.Get())->GetDescriptorHandleIncrementSize(desc.Type);
+                return {desc.NumDescriptors * sizePerDescriptor, sizePerDescriptor};
+            }
+
+            return {kInvalidSize, kInvalidSize};
+        }
+
+        HEAP_ALLOCATION_INFO GetHeapAllocationInfo(ComPtr<ID3D12Pageable> pageable) {
+            const D3D12_RESOURCE_ALLOCATION_INFO resourceHeapInfo =
+                GetResourceHeapAllocationInfo(pageable);
+            if (resourceHeapInfo.SizeInBytes != kInvalidSize) {
+                return resourceHeapInfo;
+            }
+
+            const HEAP_ALLOCATION_INFO descriptorHeapInfo =
+                GetDescriptorHeapAllocationInfo(pageable);
+            if (descriptorHeapInfo.SizeInBytes != kInvalidSize) {
+                return descriptorHeapInfo;
+            }
+
+            return {kInvalidSize, kInvalidSize};
+        }
+
     }  // namespace
 
     RESIDENCY_HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget) {
@@ -85,8 +136,29 @@ namespace gpgmm::d3d12 {
         ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
         const bool isResidencyDisabled = (pResidencyManager == nullptr);
 
+        RESIDENCY_HEAP_DESC newDescriptor = descriptor;
+        const HEAP_ALLOCATION_INFO heapInfo = GetHeapAllocationInfo(pPageable);
+        if (descriptor.SizeInBytes == 0) {
+            newDescriptor.SizeInBytes = heapInfo.SizeInBytes;
+        }
+
+        if (newDescriptor.SizeInBytes == kInvalidSize) {
+            ErrorLog(MessageId::kInvalidArgument, true) << "Heap size for residency was invalid";
+            return E_INVALIDARG;
+        }
+
+        if (descriptor.Alignment == 0) {
+            newDescriptor.Alignment = heapInfo.Alignment;
+        }
+
+        if (newDescriptor.Alignment == kInvalidSize) {
+            ErrorLog(MessageId::kInvalidArgument, true)
+                << "Heap alignment for residency was invalid.";
+            return E_INVALIDARG;
+        }
+
         std::unique_ptr<ResidencyHeap> heap(
-            new ResidencyHeap(pPageable, descriptor, isResidencyDisabled));
+            new ResidencyHeap(pPageable, newDescriptor, isResidencyDisabled));
 
         if (!isResidencyDisabled) {
             // Check if the underlying memory was implicitly made resident.
@@ -103,7 +175,7 @@ namespace gpgmm::d3d12 {
 
             // Heap created not resident requires no budget to be created.
             if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_EVICTED &&
-                (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
+                (newDescriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
                 ErrorLog(heap.get(), MessageId::kInvalidArgument)
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
@@ -118,7 +190,7 @@ namespace gpgmm::d3d12 {
                 GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
                                        GetDevice(pPageable));
             } else {
-                if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
+                if (newDescriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
                     GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
                                            GetDevice(pPageable));
                     GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
@@ -127,15 +199,15 @@ namespace gpgmm::d3d12 {
                 }
             }
         } else {
-            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
+            if (newDescriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
                 WarnLog(heap.get(), MessageId::kInvalidArgument)
                     << "RESIDENCY_HEAP_FLAG_CREATE_RESIDENT was specified but had no effect "
                        "becauase residency management is not being used.";
             }
         }
 
-        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(descriptor.DebugName), GetDevice(pPageable));
-        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), descriptor);
+        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(newDescriptor.DebugName), GetDevice(pPageable));
+        GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), newDescriptor);
 
         DebugLog(heap.get(), MessageId::kObjectCreated)
             << "Created heap, Size=" << heap->GetInfo().SizeInBytes

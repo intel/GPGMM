@@ -99,21 +99,15 @@ namespace gpgmm::d3d12 {
     */
     struct RESIDENCY_HEAP_INFO {
         /** \brief Created size, in bytes, of the heap.
-
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
         */
         UINT64 SizeInBytes;
 
         /** \brief Created alignment, in bytes, of the heap.
-
-        Must be non-zero.
         */
         UINT64 Alignment;
 
-        /** \brief Check if the heap is currently locked for residency.
-
-        A locked heap means the heap is not eligible for eviction.
-        */
+        /** \brief Determine if the heap is currently locked for residency.
+         */
         bool IsLocked;
 
         /** \brief Determine if the heap is resident or not.
@@ -151,23 +145,25 @@ namespace gpgmm::d3d12 {
       Specifies creation options for a residency managed heap.
       */
     struct RESIDENCY_HEAP_DESC {
+        /** \brief Specifies the memory segment the heap will reside in.
+
+        Required parameter. Must be local or non-local segment.
+        */
+        DXGI_MEMORY_SEGMENT_GROUP HeapSegment;
+
         /** \brief Created size of the heap, in bytes.
 
-        Must be non-zero. SizeInBytes is always a multiple of the alignment.
+        SizeInBytes is always a multiple of the alignment.
+
+        Optional parameter. By default, the size is inferred by type of the created heap.
         */
         UINT64 SizeInBytes;
 
         /** \brief Created alignment of the heap, in bytes.
 
-        Must be non-zero.
+        Optional parameter. By default, the alignment is inferred by type of the created heap.
         */
         UINT64 Alignment;
-
-        /** \brief Specifies the memory segment the heap will reside in.
-
-        Required parameter.
-        */
-        DXGI_MEMORY_SEGMENT_GROUP HeapSegment;
 
         /** \brief Specifies heaps options.
 
