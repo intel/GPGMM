@@ -156,7 +156,7 @@ namespace gpgmm {
         return mStats;
     }
 
-    bool MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
+    MaybeError MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
         ASSERT(request.SizeInBytes > 0 && request.Alignment > 0);
 
         // Check request size cannot overflow.
@@ -164,7 +164,7 @@ namespace gpgmm {
             DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
                 << "Requested size rejected due to overflow: " + std::to_string(request.SizeInBytes)
                 << " bytes.";
-            return false;
+            return std::move(ErrorCodeType(kInternalFailureResult));
         }
 
         // Check request size cannot overflow |this| memory allocator.
@@ -173,7 +173,7 @@ namespace gpgmm {
             DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
                 << "Requested size exceeds memory size (" + std::to_string(alignedSize) + " vs " +
                        std::to_string(GetMemorySize()) + " bytes).";
-            return false;
+            return std::move(ErrorCodeType(kInternalFailureResult));
         }
 
         // Check request size has compatible alignment with |this| memory allocator.
@@ -184,10 +184,10 @@ namespace gpgmm {
                 << "Requested alignment exceeds memory alignment (" +
                        std::to_string(request.Alignment) + " vs " +
                        std::to_string(GetMemoryAlignment()) + " bytes).";
-            return false;
+            return std::move(ErrorCodeType(kInternalFailureResult));
         }
 
-        return true;
+        return {};
     }
 
     MemoryAllocatorBase* MemoryAllocatorBase::GetNextInChain() const {

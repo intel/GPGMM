@@ -192,7 +192,7 @@ namespace gpgmm {
         virtual MemoryAllocatorStats GetStats() const;
 
         // Checks if the request is valid.
-        bool ValidateRequest(const MemoryAllocationRequest& request) const;
+        MaybeError ValidateRequest(const MemoryAllocationRequest& request) const;
 
         // Return the next MemoryAllocatorBase.
         MemoryAllocatorBase* GetNextInChain() const;

@@ -30,11 +30,21 @@
     for (;;)                                       \
     break
 
-#define GPGMM_RETURN_ERROR_IF(expr) \
-    if (GPGMM_UNLIKELY(expr)) {     \
-        return {};                  \
-    }                               \
-    for (;;)                        \
+#define GPGMM_RETURN_IF_ERROR(expr)                \
+    {                                              \
+        auto result = expr;                        \
+        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
+            return {};                             \
+        }                                          \
+    }                                              \
+    for (;;)                                       \
+    break
+
+#define GPGMM_INVALID_IF(expr)  \
+    if (GPGMM_UNLIKELY(expr)) { \
+        return {};              \
+    }                           \
+    for (;;)                    \
     break
 
 namespace gpgmm {
@@ -95,6 +105,36 @@ namespace gpgmm {
         ErrorT mErrorCode;
         ResultT mResult;
     };
+
+    // Specialization of Result<ErrorT, ResultT> where the ResultT is void.
+    // Used when a void function must return a Result with only error code.
+    template <typename ErrorT>
+    class Result<ErrorT, void> {
+      public:
+        Result() : mErrorCode(kInternalSuccessResult) {
+        }
+
+        Result(ErrorT&& error) : mErrorCode(std::move(error)) {
+        }
+
+        Result(Result<ErrorT, void>&& other) : mErrorCode(std::move(other.mErrorCode)) {
+        }
+
+        Result<ErrorT, void>& operator=(Result<ErrorT, void>&& other) {
+            mErrorCode = std::move(other.mErrorCode);
+            return *this;
+        }
+
+        bool IsSuccess() const {
+            return mErrorCode == kInternalSuccessResult;
+        }
+
+      private:
+        ErrorT mErrorCode;
+    };
+
+    // Result with only an error code.
+    using MaybeError = Result<ErrorCodeType, void>;
 
     // Alias of Result + error code to avoid having to always specify error type.
     template <typename ResultT>
