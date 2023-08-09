@@ -79,7 +79,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
     bool IsResident(IResourceAllocation* pAllocation) const {
         ASSERT(pAllocation != nullptr);
-        return pAllocation->GetMemory()->GetInfo().Status == RESIDENCY_HEAP_STATUS_CURRENT;
+        return pAllocation->GetMemory()->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT;
     }
 
     class CreateDescHeapCallbackContext {
@@ -219,7 +219,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     // Ensure the unmanaged resource heap state is always unknown. Even though D3D12 implicitly
     // creates heaps as resident, untrack resource heaps would never transition out from
-    // RESIDENCY_HEAP_STATUS_CURRENT and must be left RESIDENCY_HEAP_STATUS_UNKNOWN.
+    // RESIDENCY_HEAP_STATUS_RESIDENT and must be left RESIDENCY_HEAP_STATUS_UNKNOWN.
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_UNKNOWN);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
@@ -229,7 +229,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
                                          &createHeapContext, &resourceHeap));
     ASSERT_NE(resourceHeap, nullptr);
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Residency status of resource heap types is always known.
@@ -242,7 +242,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
 
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, residencyHeapDesc.SizeInBytes);
@@ -250,7 +250,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
 
-    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
@@ -296,7 +296,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->LockHeap(descriptorHeap.Get()));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, true);
 
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
@@ -304,7 +304,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
 
     ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 
     // Unlocking a heap does not evict it, the memory usage should not change.
@@ -337,7 +337,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapResident) {
                                          CreateDescHeapCallbackContext::CreateResidencyHeap,
                                          &createDescHeapCallbackContext, &descriptorHeap));
 
-    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_CURRENT);
+    EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
 }
 
@@ -715,7 +715,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_RESIDENT);
         firstSetOfHeaps.push_back(std::move(allocation));
     }
 
@@ -725,7 +725,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             {}, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_RESIDENT);
         secondSetOfHeaps.push_back(std::move(allocation));
     }
 
@@ -765,12 +765,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
 
     // Everything below the budget should now be resident.
     for (auto& allocation : firstSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_RESIDENT);
     }
 
     // Everything above the budget should now be evicted.
     for (auto& allocation : secondSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_PENDING);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_EVICTED);
     }
 
     // Page-in the second set of heaps using ExecuteCommandLists (and page-out the first set).
@@ -790,12 +790,12 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
 
     // Everything below the budget should now be evicted.
     for (auto& allocation : firstSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_PENDING);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_EVICTED);
     }
 
     // Everything above the budget should now be resident.
     for (auto& allocation : secondSetOfHeaps) {
-        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_CURRENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_RESIDENT);
     }
 }
 
