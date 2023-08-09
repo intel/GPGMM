@@ -879,27 +879,26 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyManager::SetResidencyStatus(IResidencyHeap* pHeap,
-                                                 const RESIDENCY_HEAP_STATUS& state) {
+                                                 const RESIDENCY_HEAP_STATUS& newStatus) {
         GPGMM_RETURN_IF_NULLPTR(pHeap);
 
         ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         if (heap->GetInfo().IsLocked) {
             ErrorLog(this, MessageId::kBadOperation)
                 << "Heap residency cannot be updated because it was locked. "
-                   "Please unlock the heap before updating the state.";
+                   "Please unlock the heap before updating.";
             return E_FAIL;
         }
 
-        const RESIDENCY_HEAP_STATUS oldState = heap->GetInfo().Status;
-        if (state == RESIDENCY_HEAP_STATUS_UNKNOWN && oldState != RESIDENCY_HEAP_STATUS_UNKNOWN) {
+        if (newStatus == RESIDENCY_HEAP_STATUS_UNKNOWN &&
+            heap->GetInfo().Status != RESIDENCY_HEAP_STATUS_UNKNOWN) {
             ErrorLog(this, MessageId::kBadOperation)
                 << "Heap residency cannot be unknown when previously known by the "
-                   "residency manager. "
-                   "Check the status before updating the state.";
+                   "residency manager. Please check the status before updating.";
             return E_FAIL;
         }
 
-        heap->SetResidencyStatus(state);
+        heap->SetResidencyStatus(newStatus);
         return S_OK;
     }
 
