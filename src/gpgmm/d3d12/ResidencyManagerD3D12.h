@@ -64,7 +64,7 @@ namespace gpgmm::d3d12 {
         HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
-                                   const RESIDENCY_HEAP_STATUS& state) override;
+                                   const RESIDENCY_HEAP_STATUS& newStatus) override;
 
         HRESULT QueryStats(RESIDENCY_MANAGER_STATS* pResidencyManagerStats) override;
 

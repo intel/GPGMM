@@ -625,14 +625,13 @@ namespace gpgmm::d3d12 {
         Allows the application to explicitly MakeResident/Evict without using a residency manager
         operation. This is useful should the application already perform some residency management
         but also want to use a residency manager. It is the application developers responsibility to
-        ensure MakeResident/Evict will be called before updating the residency status to
-        CURRENT_RESIDENT/PENDING, respectively.
+        ensure MakeResident/Evict will be called before updating the residency status.
 
         @param pHeap A pointer to the heap being updated.
-        @param state The RESIDENCY_HEAP_STATUS enum of the new status.
+        @param newStatus The RESIDENCY_HEAP_STATUS enum of the new status.
         */
         virtual HRESULT SetResidencyStatus(IResidencyHeap * pHeap,
-                                           const RESIDENCY_HEAP_STATUS& state) = 0;
+                                           const RESIDENCY_HEAP_STATUS& newStatus) = 0;
 
         /** \brief Query the current residency usage.
 
