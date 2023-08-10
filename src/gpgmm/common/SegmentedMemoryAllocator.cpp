@@ -126,7 +126,7 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_RETURN_ERROR_IF(!ValidateRequest(request));
+        GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
 
         const uint64_t memorySize = AlignTo(request.SizeInBytes, mMemoryAlignment);
         MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
