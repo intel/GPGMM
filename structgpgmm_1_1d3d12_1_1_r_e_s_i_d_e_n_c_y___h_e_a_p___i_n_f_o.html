@@ -92,7 +92,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:aeb6588f0633da0977adbce2b5313657c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Created alignment, in bytes, of the heap.  <br /></td></tr>
 <tr class="separator:aeb6588f0633da0977adbce2b5313657c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c4aa414151e67c436afd8d620e3359"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#ac5c4aa414151e67c436afd8d620e3359">IsLocked</a></td></tr>
-<tr class="memdesc:ac5c4aa414151e67c436afd8d620e3359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the heap is currently locked for residency.  <br /></td></tr>
+<tr class="memdesc:ac5c4aa414151e67c436afd8d620e3359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the heap is currently locked for residency.  <br /></td></tr>
 <tr class="separator:ac5c4aa414151e67c436afd8d620e3359"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44047f55797497c84896e1394ff83ca5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717">RESIDENCY_HEAP_STATUS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___i_n_f_o.html#a44047f55797497c84896e1394ff83ca5">Status</a></td></tr>
 <tr class="memdesc:a44047f55797497c84896e1394ff83ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the heap is resident or not.  <br /></td></tr>
@@ -114,6 +114,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Created alignment, in bytes, of the heap. </p>
+<p>Must be non-zero. </p>
 
 </div>
 </div>
@@ -129,7 +130,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determine if the heap is currently locked for residency. </p>
+<p>Check if the heap is currently locked for residency. </p>
+<p>A locked heap means the heap is not eligible for eviction. </p>
 
 </div>
 </div>
@@ -146,6 +148,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Created size, in bytes, of the heap. </p>
+<p>Must be non-zero. SizeInBytes is always a multiple of the alignment. </p>
 
 </div>
 </div>
