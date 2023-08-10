@@ -21,23 +21,35 @@
 namespace gpgmm::d3d12 {
 
     template <typename BackendT>
-    LogMessage DebugLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::DebugLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
+    LogMessage DebugLog(MessageId messageId = MessageId::kUnknown,
+                        const BackendT* object = nullptr) {
+        return gpgmm::DebugLog(
+            messageId, true, (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
+            object);
     }
 
     template <typename BackendT>
-    LogMessage InfoLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::InfoLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
+    LogMessage InfoLog(MessageId messageId = MessageId::kUnknown,
+                       const BackendT* object = nullptr) {
+        return gpgmm::InfoLog(messageId, true,
+                              (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
+                              object);
     }
 
     template <typename BackendT>
-    LogMessage WarnLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::WarnLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
+    LogMessage WarnLog(MessageId messageId = MessageId::kUnknown,
+                       const BackendT* object = nullptr) {
+        return gpgmm::WarnLog(messageId, true,
+                              (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
+                              object);
     }
 
     template <typename BackendT>
-    LogMessage ErrorLog(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
-        return gpgmm::ErrorLog(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()), object);
+    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
+                        const BackendT* object = nullptr) {
+        return gpgmm::ErrorLog(
+            messageId, true, (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
+            object);
     }
 
 }  // namespace gpgmm::d3d12

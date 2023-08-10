@@ -161,7 +161,7 @@ namespace gpgmm {
 
         // Check request size cannot overflow.
         if (request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1)) {
-            DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
+            DebugLog(MessageId::kSizeExceeded, this)
                 << "Requested size rejected due to overflow: " + std::to_string(request.SizeInBytes)
                 << " bytes.";
             return std::move(ErrorCodeType(kInternalFailureResult));
@@ -170,7 +170,7 @@ namespace gpgmm {
         // Check request size cannot overflow |this| memory allocator.
         const uint64_t alignedSize = AlignTo(request.SizeInBytes, request.Alignment);
         if (GetMemorySize() != kInvalidSize && alignedSize > GetMemorySize()) {
-            DebugLog(MessageId::kSizeExceeded, false, GetTypename(), this)
+            DebugLog(MessageId::kSizeExceeded, this)
                 << "Requested size exceeds memory size (" + std::to_string(alignedSize) + " vs " +
                        std::to_string(GetMemorySize()) + " bytes).";
             return std::move(ErrorCodeType(kInternalFailureResult));
@@ -180,7 +180,7 @@ namespace gpgmm {
         // Alignment value of 1 means no alignment required.
         if (GetMemoryAlignment() == 0 ||
             (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment))) {
-            DebugLog(MessageId::kAlignmentMismatch, false, GetTypename(), this)
+            DebugLog(MessageId::kAlignmentMismatch, this)
                 << "Requested alignment exceeds memory alignment (" +
                        std::to_string(request.Alignment) + " vs " +
                        std::to_string(GetMemoryAlignment()) + " bytes).";
@@ -207,7 +207,7 @@ namespace gpgmm {
     void MemoryAllocatorBase::CheckAndReportAllocationMisalignment(
         const MemoryAllocationBase& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
-            WarnLog(MessageId::kAlignmentMismatch)
+            WarnLog(MessageId::kAlignmentMismatch, this)
                 << "Allocation is larger then the requested size (" +
                        std::to_string(allocation.GetSize()) + " vs " +
                        std::to_string(allocation.GetRequestSize()) + " bytes).";

@@ -58,7 +58,7 @@ namespace gpgmm::d3d12 {
                         break;
                     }
 
-                    DebugLog(mResidencyManager, MessageId::kBudgetUpdated)
+                    DebugLog(MessageId::kBudgetUpdated, mResidencyManager)
                         << "Updated budget from OS notification.";
                     break;
                 }
@@ -75,7 +75,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (FAILED(hr)) {
-            ErrorLog(mResidencyManager, MessageId::kBudgetInvalid)
+            ErrorLog(MessageId::kBudgetInvalid, mResidencyManager)
                 << "Unable to update budget: " +
                        GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
         }
