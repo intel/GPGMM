@@ -17,7 +17,6 @@
 
 #include "gpgmm/common/BuddyMemoryAllocator.h"
 #include "gpgmm/common/DedicatedMemoryAllocator.h"
-#include "gpgmm/common/Defaults.h"
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"

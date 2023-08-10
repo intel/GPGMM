@@ -14,7 +14,6 @@
 
 #include "gpgmm/common/EventTraceWriter.h"
 
-#include "gpgmm/common/Defaults.h"
 #include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/PlatformTime.h"
@@ -27,6 +26,8 @@
 #include <thread>
 
 namespace gpgmm {
+
+    static constexpr const char* kDefaultTraceFile = "gpgmm_event_trace.json";
 
     // Trace buffer that flushes and unlinks itself from the cache once destroyed.
     class ScopedTraceBufferInTLS {
