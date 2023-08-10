@@ -53,6 +53,8 @@ target_sources(gpgmm_common PRIVATE
     "SegmentedMemoryAllocator.h"
     "SentinelMemoryAllocator.cpp"
     "SentinelMemoryAllocator.h"
+    "SizeClass.cpp"
+    "SizeClass.h"
     "SlabBlockAllocator.cpp"
     "SlabBlockAllocator.h"
     "SlabMemoryAllocator.cpp"

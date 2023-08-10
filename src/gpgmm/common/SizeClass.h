@@ -16,6 +16,7 @@
 #define SRC_GPGMM_COMMON_SIZECLASS_H_
 
 #include <array>
+#include <string>
 
 // Convert sizes, in bytes, to/from SI prefix.
 #define GPGMM_KB_TO_BYTES(bytes) ((bytes)*1024ull)
@@ -32,6 +33,10 @@ namespace gpgmm {
         uint64_t SizeInBytes;
         uint64_t Alignment;
     };
+
+    // Returns the printable string of |bytes| in storage units (eg. 2*1024 =>
+    // 2 MB).
+    std::string GetBytesToSizeInUnits(uint64_t bytes);
 
     // Generates array containing values in range [2^N1...2^N2], where N2 > N1.
     template <size_t N1, size_t N2>

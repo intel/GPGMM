@@ -214,6 +214,8 @@ source_set("gpgmm_common_sources") {
     "SegmentedMemoryAllocator.h",
     "SentinelMemoryAllocator.cpp",
     "SentinelMemoryAllocator.h",
+    "SizeClass.cpp",
+    "SizeClass.h",
     "SlabBlockAllocator.cpp",
     "SlabBlockAllocator.h",
     "SlabMemoryAllocator.cpp",
