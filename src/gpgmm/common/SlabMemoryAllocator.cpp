@@ -202,7 +202,8 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_INVALID_IF(request.SizeInBytes > mBlockSize);
+        GPGMM_RETURN_ERROR_IF(request.SizeInBytes > mBlockSize,
+                              "Allocation size exceeded block size.");
 
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize),
@@ -229,7 +230,8 @@ namespace gpgmm {
                 uint64_t newSlabSize = ComputeSlabSize(
                     request.SizeInBytes, static_cast<uint64_t>(slabSize * mSlabGrowthFactor),
                     request.AvailableForAllocation);
-                GPGMM_INVALID_IF(newSlabSize == kInvalidSize);
+
+                GPGMM_RETURN_ERROR_IF(newSlabSize == kInvalidSize, "Slab size was invalid.");
 
                 // If the new slab size exceeds the limit, then re-use the previous, smaller size.
                 if (newSlabSize > mMaxSlabSize) {
@@ -518,7 +520,8 @@ namespace gpgmm {
         GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
-        GPGMM_INVALID_IF(blockSize > mMaxSlabSize);
+
+        GPGMM_RETURN_ERROR_IF(blockSize > mMaxSlabSize, "Block size exceeded max slab size.");
 
         // Create a slab allocator for the new entry.
         auto entry =

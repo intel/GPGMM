@@ -34,17 +34,18 @@
     {                                              \
         auto result = expr;                        \
         if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
-            return {};                             \
+            return result.AcquireError();          \
         }                                          \
     }                                              \
     for (;;)                                       \
     break
 
-#define GPGMM_INVALID_IF(expr)  \
-    if (GPGMM_UNLIKELY(expr)) { \
-        return {};              \
-    }                           \
-    for (;;)                    \
+#define GPGMM_RETURN_ERROR_IF(expr, msg)                                  \
+    if (GPGMM_UNLIKELY(expr)) {                                           \
+        gpgmm::DebugLog() << msg;                                         \
+        return std::move(::gpgmm::ErrorCodeType(kInternalFailureResult)); \
+    }                                                                     \
+    for (;;)                                                              \
     break
 
 namespace gpgmm {
@@ -97,6 +98,10 @@ namespace gpgmm {
             return std::move(mResult);
         }
 
+        ErrorT&& AcquireError() {
+            return std::move(mErrorCode);
+        }
+
         bool IsSuccess() const {
             return mErrorCode == kInternalSuccessResult;
         }
@@ -127,6 +132,10 @@ namespace gpgmm {
 
         bool IsSuccess() const {
             return mErrorCode == kInternalSuccessResult;
+        }
+
+        ErrorT&& AcquireError() {
+            return std::move(mErrorCode);
         }
 
       private:
