@@ -1,7 +1,7 @@
 var searchData=
 [
   ['setdebugname_0',['SetDebugName',['../namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451',1,'gpgmm::d3d12']]],
-  ['setresidencystatus_1',['SetResidencyStatus',['../namespacegpgmm_1_1d3d12.html#ad019a265c7070bb41a325ff879ba97c0',1,'gpgmm::d3d12']]],
+  ['setresidencystatus_1',['SetResidencyStatus',['../namespacegpgmm_1_1d3d12.html#a3071c293284b2fc05524a8e51e894271',1,'gpgmm::d3d12']]],
   ['setvideomemoryreservation_2',['SetVideoMemoryReservation',['../namespacegpgmm_1_1d3d12.html#a4c4619565912aa33382be743b7116f9f',1,'gpgmm::d3d12']]],
   ['sizecachehits_3',['SizeCacheHits',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a5faee1b58b06fe5d1b718d152ef7822a',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
   ['sizecachemisses_4',['SizeCacheMisses',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a9f3e86f256c62ace35126f03025984ff',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
