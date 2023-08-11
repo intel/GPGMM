@@ -117,6 +117,15 @@ namespace gpgmm {
         MemoryAllocatorStats& operator+=(const MemoryAllocatorStats& rhs);
     };
 
+    // Amount of memory, expressed as a percentage of memory, that is acceptable to waste
+    // to fragmentation. For example, a 6 byte request may require 8 bytes (eg. power-of-two) or 25%
+    // fragmentation.
+    static constexpr float kDefaultMemoryFragmentationLimit = 0.125f;  // 1/8th or 12.5%
+
+    // Amount of memory, expressed as a perecentage memory size, that can
+    // increased per allocation. For example, a 2.0 factor means the memory size can double.
+    static constexpr float kDefaultMemoryGrowthFactor = 1.25f;  // 25% growth
+
     class BlockAllocator;
 
     // MemoryAllocatorBase services a fixed or variable sized MemoryAllocationRequest.

@@ -23,7 +23,6 @@ target_sources(gpgmm_common PRIVATE
     "ConditionalMemoryAllocator.h"
     "DedicatedMemoryAllocator.cpp"
     "DedicatedMemoryAllocator.h"
-    "Defaults.h"
     "Error.h"
     "EventTraceWriter.cpp"
     "EventTraceWriter.h"
