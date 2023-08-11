@@ -15,6 +15,7 @@
 #include "gpgmm/common/DedicatedMemoryAllocator.h"
 
 #include "gpgmm/common/MemoryBlock.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/utils/Math.h"
 
@@ -44,8 +45,9 @@ namespace gpgmm {
 
         if (memoryRequest.SizeInBytes > request.SizeInBytes) {
             DebugLog(MessageId::kAlignmentMismatch, this)
-                << "Memory allocation was larger then the requested size: "
-                << memoryRequest.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
+                << "Memory allocation was larger then the requested: "
+                << GetBytesToSizeInUnits(memoryRequest.SizeInBytes) << " vs "
+                << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
         }
 
         mStats.UsedBlockCount++;

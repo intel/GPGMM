@@ -16,6 +16,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/JSONSerializer.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/utils/Math.h"
 
 namespace gpgmm {
@@ -164,24 +165,24 @@ namespace gpgmm {
         // Check request size cannot overflow.
         GPGMM_RETURN_ERROR_IF(
             request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1),
-            "Requested size invalid due to overflow: " + std::to_string(request.SizeInBytes) +
-                " bytes.");
+            "Requested size invalid due to overflow: " +
+                GetBytesToSizeInUnits(request.SizeInBytes) + ".");
 
         // Check request size cannot overflow |this| memory allocator.
         const uint64_t requestedAlignedSize = AlignTo(request.SizeInBytes, request.Alignment);
         GPGMM_RETURN_ERROR_IF(
             GetMemorySize() != kInvalidSize && requestedAlignedSize > GetMemorySize(),
-            "Requested size, after alignment, exceeds memory size (" +
-                std::to_string(requestedAlignedSize) + " vs " + std::to_string(GetMemorySize()) +
-                " bytes).");
+            "Requested size, after alignment, exceeds memory size: " +
+                GetBytesToSizeInUnits(requestedAlignedSize) + " vs " +
+                GetBytesToSizeInUnits(GetMemorySize()) + ".");
 
         // Check request size has compatible alignment with |this| memory allocator.
         // Alignment value of 1 means no alignment required.
         GPGMM_RETURN_ERROR_IF(
             GetMemoryAlignment() == 0 ||
                 (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment)),
-            "Requested alignment exceeds memory alignment (" + std::to_string(request.Alignment) +
-                " vs " + std::to_string(GetMemoryAlignment()) + " bytes).");
+            "Requested alignment exceeds memory alignment: " + std::to_string(request.Alignment) +
+                " vs " + std::to_string(GetMemoryAlignment()) + ".");
 
         return {};
     }
@@ -204,9 +205,9 @@ namespace gpgmm {
         const MemoryAllocationBase& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
             WarnLog(MessageId::kAlignmentMismatch, this)
-                << "Allocation is larger then the requested size (" +
-                       std::to_string(allocation.GetSize()) + " vs " +
-                       std::to_string(allocation.GetRequestSize()) + " bytes).";
+                << "Memory allocation was larger then requested: " +
+                       GetBytesToSizeInUnits(allocation.GetSize()) + " vs " +
+                       GetBytesToSizeInUnits(allocation.GetRequestSize()) + ".";
         }
     }
 

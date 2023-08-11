@@ -15,6 +15,7 @@
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
 
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ResidencyHeapD3D12.h"
@@ -77,8 +78,9 @@ namespace gpgmm::d3d12 {
 
         if (info.SizeInBytes > request.SizeInBytes) {
             DebugLog(MessageId::kAlignmentMismatch, false, GetTypename(), this)
-                << "Memory allocation size was larger then the requested size: " << info.SizeInBytes
-                << " vs " << request.SizeInBytes << " bytes.";
+                << "Memory allocation was larger then the requested: "
+                << GetBytesToSizeInUnits(info.SizeInBytes) << " vs "
+                << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
         }
 
         mStats.UsedMemoryUsage += resourceHeap->GetSize();

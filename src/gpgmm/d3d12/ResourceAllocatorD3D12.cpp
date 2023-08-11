@@ -1116,7 +1116,8 @@ namespace gpgmm::d3d12 {
             if (!neverSubAllocate) {
                 WarnLog(MessageId::kInvalidArgument, this)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
-                    << allocationDescriptor.ExtraRequiredResourcePadding << " bytes.";
+                    << GetBytesToSizeInUnits(allocationDescriptor.ExtraRequiredResourcePadding)
+                    << ".";
                 neverSubAllocate = true;
             }
         }
@@ -1350,8 +1351,9 @@ namespace gpgmm::d3d12 {
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             DebugLog(MessageId::kAlignmentMismatch, this)
-                << "Resource heap size is larger then the requested size: "
-                << resourceInfo.SizeInBytes << " vs " << request.SizeInBytes << " bytes.";
+                << "Resource heap is larger then the requested: "
+                << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
+                << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
         }
 
         // Using committed resources will create a tightly allocated resource allocations.
