@@ -582,7 +582,7 @@ namespace gpgmm::d3d12 {
 
             DebugEvent(this, MessageId::kBudgetExceeded)
                 << "GPU page-out. Number of allocations: " << objectsToEvict.size() << " ("
-                << bytesEvicted << " bytes).";
+                << GetBytesToSizeInUnits(bytesEvicted) << ").";
         }
 
         if (bytesEvictedOut != nullptr) {
@@ -746,7 +746,7 @@ namespace gpgmm::d3d12 {
 
         DebugEvent(this, MessageId::kBudgetExceeded)
             << "GPU page-in. Number of allocations: " << numberOfObjectsToMakeResident << " ("
-            << sizeToMakeResident << " bytes).";
+            << GetBytesToSizeInUnits(sizeToMakeResident) << ").";
 
         // Decrease the overhead from using MakeResident, a synchronous call, by calling the
         // asynchronous MakeResident, called EnqueueMakeResident, instead first. Should
@@ -869,13 +869,13 @@ namespace gpgmm::d3d12 {
         DebugLog(MessageId::kBudgetUpdated, this)
             << GetMemorySegmentName(segmentGroup, IsUMA()) << " GPU memory segment:";
         DebugLog(MessageId::kBudgetUpdated, this)
-            << "\tBudget: " << GPGMM_BYTES_TO_MB(info->Budget) << " MBs ("
-            << GPGMM_BYTES_TO_MB(info->CurrentUsage) << " used).";
+            << "\tBudget: " << GetBytesToSizeInUnits(info->Budget) << " ("
+            << GetBytesToSizeInUnits(info->CurrentUsage) << " used).";
 
         if (info->CurrentReservation == 0) {
             DebugLog(MessageId::kBudgetUpdated, this)
-                << "\tReserved: " << GPGMM_BYTES_TO_MB(info->CurrentReservation) << " MBs ("
-                << GPGMM_BYTES_TO_MB(info->AvailableForReservation) << " available).";
+                << "\tReserved: " << GetBytesToSizeInUnits(info->CurrentReservation) << " ("
+                << GetBytesToSizeInUnits(info->AvailableForReservation) << " available).";
         }
     }
 

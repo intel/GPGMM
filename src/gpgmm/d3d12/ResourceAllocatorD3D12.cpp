@@ -1017,8 +1017,8 @@ namespace gpgmm::d3d12 {
             ErrorLog(MessageId::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the device: "
-                << GPGMM_BYTES_TO_GB(resourceInfo.SizeInBytes) << " vs "
-                << GPGMM_BYTES_TO_GB(mMaxResourceHeapSize) << " GBs.";
+                << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
+                << GetBytesToSizeInUnits(mMaxResourceHeapSize);
             return E_OUTOFMEMORY;
         }
 
@@ -1140,8 +1140,8 @@ namespace gpgmm::d3d12 {
             ErrorLog(MessageId::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the adapter: "
-                << GPGMM_BYTES_TO_GB(request.SizeInBytes) << " vs "
-                << GPGMM_BYTES_TO_GB(maxSegmentSize) << " GBs.";
+                << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
+                << GetBytesToSizeInUnits(maxSegmentSize);
             return E_OUTOFMEMORY;
         }
 
@@ -1163,9 +1163,9 @@ namespace gpgmm::d3d12 {
 
                 DebugLog(MessageId::kBudgetExceeded, this)
                     << "Current usage exceeded budget: "
-                    << GPGMM_BYTES_TO_MB(currentVideoInfo->CurrentUsage) << " vs "
-                    << GPGMM_BYTES_TO_MB(currentVideoInfo->Budget) << " MBs ("
-                    << GPGMM_BYTES_TO_MB(request.AvailableForAllocation) << " MBs free).";
+                    << GetBytesToSizeInUnits(currentVideoInfo->CurrentUsage) << " vs "
+                    << GetBytesToSizeInUnits(currentVideoInfo->Budget) << " ("
+                    << GetBytesToSizeInUnits(request.AvailableForAllocation) << " free).";
 
             } else {
                 // Otherwise, only memory in budget is considered available.
