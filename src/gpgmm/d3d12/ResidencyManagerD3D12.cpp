@@ -382,16 +382,16 @@ namespace gpgmm::d3d12 {
             GPGMM_BYTES_TO_MB(previousUsage - pVideoMemoryInfo->CurrentUsage) > 0) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went down by "
-                << GPGMM_BYTES_TO_MB(previousUsage - pVideoMemoryInfo->CurrentUsage) << " MBs.";
+                << GetBytesToSizeInUnits(previousUsage - pVideoMemoryInfo->CurrentUsage) << ".";
         } else if (previousUsage < pVideoMemoryInfo->CurrentUsage &&
                    GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - previousUsage) > 0) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went up by "
-                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - previousUsage) << " MBs.";
+                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage - previousUsage) << ".";
         } else if (previousUsage < pVideoMemoryInfo->CurrentUsage) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went up by "
-                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " MBs.";
+                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << ".";
         }
 
         // If we're restricting the budget, leave the budget as is.
@@ -406,12 +406,12 @@ namespace gpgmm::d3d12 {
                 DebugLog(MessageId::kMemoryUsageUpdated, this)
                     << GetMemorySegmentName(heapSegment, mIsUMA)
                     << " GPU memory budget went down by "
-                    << GPGMM_BYTES_TO_MB(previousBudget - pVideoMemoryInfo->Budget) << " MBs.";
+                    << GetBytesToSizeInUnits(previousBudget - pVideoMemoryInfo->Budget) << ".";
             } else if (previousBudget < pVideoMemoryInfo->Budget &&
                        GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - previousBudget) > 0) {
                 DebugLog(MessageId::kMemoryUsageUpdated, this)
                     << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory budget went up by "
-                    << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - previousBudget) << " MBs.";
+                    << GetBytesToSizeInUnits(pVideoMemoryInfo->Budget - previousBudget) << ".";
             }
         }
 
@@ -420,8 +420,8 @@ namespace gpgmm::d3d12 {
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
             WarnEvent(this, MessageId::kBudgetExceeded)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage exceeds budget: "
-                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
-                << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget) << " MBs.";
+                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << " vs "
+                << GetBytesToSizeInUnits(pVideoMemoryInfo->Budget) << ".";
         } else {
             const float currentUsageOfBudget =
                 SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget);
@@ -445,8 +445,8 @@ namespace gpgmm::d3d12 {
                            "evicted because they are unmanaged by GPGMM. Consider using "
                            "CreateResidencyHeap "
                            "to import them: "
-                        << GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage) << " vs "
-                        << GPGMM_BYTES_TO_MB(mStats.CurrentHeapUsage) << " MBs.";
+                        << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << " vs "
+                        << GetBytesToSizeInUnits(mStats.CurrentHeapUsage) << ".";
                 }
             }
         }

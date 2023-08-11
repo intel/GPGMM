@@ -258,12 +258,12 @@ namespace gpgmm::d3d12 {
                                                                      &currentVideoInfo))) {
                     ErrorLog(MessageId::kBudgetExceeded)
                         << "Unable to create heap because not enough budget exists ("
-                        << GPGMM_BYTES_TO_MB(descriptor.SizeInBytes) << " vs "
-                        << GPGMM_BYTES_TO_MB(
+                        << GetBytesToSizeInUnits(descriptor.SizeInBytes) << " vs "
+                        << GetBytesToSizeInUnits(
                                (currentVideoInfo.Budget > currentVideoInfo.CurrentUsage)
                                    ? currentVideoInfo.Budget - currentVideoInfo.CurrentUsage
                                    : 0)
-                        << " MBs) and RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET was specified.";
+                        << ") and RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET was specified.";
                 }
                 return E_OUTOFMEMORY;
             }

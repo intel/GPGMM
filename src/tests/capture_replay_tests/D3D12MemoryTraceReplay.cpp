@@ -616,8 +616,9 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
 
         if (mReplayedMemoryStats.PeakUsage > 0 && mCapturedMemoryStats.PeakUsage > 0) {
             gpgmm::InfoLog() << "GPU memory peak usage (captured vs replayed): "
-                             << GPGMM_BYTES_TO_MB(mCapturedMemoryStats.PeakUsage) << " vs "
-                             << GPGMM_BYTES_TO_MB(mReplayedMemoryStats.PeakUsage) << " MB";
+                             << gpgmm::GetBytesToSizeInUnits(mCapturedMemoryStats.PeakUsage)
+                             << " vs "
+                             << gpgmm::GetBytesToSizeInUnits(mReplayedMemoryStats.PeakUsage) << ".";
         }
     }
 
