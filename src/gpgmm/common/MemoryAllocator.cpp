@@ -204,7 +204,7 @@ namespace gpgmm {
     void MemoryAllocatorBase::CheckAndReportAllocationMisalignment(
         const MemoryAllocationBase& allocation) {
         if (allocation.GetSize() > allocation.GetRequestSize()) {
-            WarnLog(MessageId::kAlignmentMismatch, this)
+            WarnLog(MessageId::kPerformanceWarning, this)
                 << "Memory allocation was larger then requested: " +
                        GetBytesToSizeInUnits(allocation.GetSize()) + " vs " +
                        GetBytesToSizeInUnits(allocation.GetRequestSize()) + ".";

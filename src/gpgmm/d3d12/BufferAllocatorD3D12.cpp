@@ -73,11 +73,11 @@ namespace gpgmm::d3d12 {
             &resourceHeap);
 
         if (FAILED(hr)) {
-            return {static_cast<ErrorCodeType>(hr)};
+            return {static_cast<ErrorCode>(hr)};
         }
 
         if (info.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kAlignmentMismatch, false, GetTypename(), this)
+            DebugLog(MessageId::kPerformanceWarning, this)
                 << "Memory allocation was larger then the requested: "
                 << GetBytesToSizeInUnits(info.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";

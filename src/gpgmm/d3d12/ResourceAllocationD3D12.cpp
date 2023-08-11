@@ -79,7 +79,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Type == ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
-            ErrorLog(MessageId::kBadOperation, this)
+            ErrorLog(ErrorCode::kBadOperation, this)
                 << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return E_INVALIDARG;
@@ -116,7 +116,7 @@ namespace gpgmm::d3d12 {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Type == ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
-            ErrorLog(MessageId::kBadOperation, this)
+            ErrorLog(ErrorCode::kBadOperation, this)
                 << "Unmapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
             return;

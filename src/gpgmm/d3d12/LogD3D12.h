@@ -15,6 +15,7 @@
 #ifndef SRC_GPGMM_D3D12_LOGD3D12_H_
 #define SRC_GPGMM_D3D12_LOGD3D12_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/utils/Log.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
@@ -45,10 +46,10 @@ namespace gpgmm::d3d12 {
     }
 
     template <typename BackendT>
-    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
+    LogMessage ErrorLog(ErrorCode errorCode = ErrorCode::kUnknown,
                         const BackendT* object = nullptr) {
         return gpgmm::ErrorLog(
-            messageId, true, (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
+            errorCode, true, (object != nullptr) ? gpgmm::WCharToUTF8(object->GetDebugName()) : "",
             object);
     }
 

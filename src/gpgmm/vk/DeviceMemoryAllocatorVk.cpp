@@ -40,7 +40,7 @@ namespace gpgmm::vk {
         const uint64_t maxDeviceMemoryAllocationCount =
             mResourceAllocator->GetCaps()->GetMaxDeviceAllocationCount();
         if (mStats.UsedMemoryCount + 1 >= maxDeviceMemoryAllocationCount) {
-            DebugEvent(MessageId::kAllocatorFailed, true)
+            ErrorLog(ErrorCode::kAllocatorFailed, this)
                 << "Device exceeded max number of device memory allocations (" +
                        std::to_string(mStats.UsedMemoryCount) + " vs " +
                        std::to_string(maxDeviceMemoryAllocationCount) + ").";

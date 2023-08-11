@@ -143,7 +143,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (newDescriptor.SizeInBytes == kInvalidSize) {
-            ErrorLog(MessageId::kInvalidArgument) << "Heap size for residency was invalid";
+            ErrorLog(ErrorCode::kInvalidArgument) << "Heap size for residency was invalid";
             return E_INVALIDARG;
         }
 
@@ -152,7 +152,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (newDescriptor.Alignment == kInvalidSize) {
-            ErrorLog(MessageId::kInvalidArgument) << "Heap alignment for residency was invalid.";
+            ErrorLog(ErrorCode::kInvalidArgument) << "Heap alignment for residency was invalid.";
             return E_INVALIDARG;
         }
 
@@ -175,7 +175,7 @@ namespace gpgmm::d3d12 {
             // Heap created not resident requires no budget to be created.
             if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_EVICTED &&
                 (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET)) {
-                ErrorLog(MessageId::kInvalidArgument, heap.get())
+                ErrorLog(ErrorCode::kInvalidArgument, heap.get())
                     << "Creating a heap always in budget cannot be used with "
                        "D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.";
                 return E_INVALIDARG;
@@ -199,7 +199,7 @@ namespace gpgmm::d3d12 {
             }
         } else {
             if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
-                WarnLog(MessageId::kInvalidArgument, heap.get())
+                WarnLog(MessageId::kPerformanceWarning, heap.get())
                     << "RESIDENCY_HEAP_FLAG_CREATE_RESIDENT was specified but had no effect "
                        "becauase residency management is not being used.";
             }
@@ -231,13 +231,13 @@ namespace gpgmm::d3d12 {
 
         // Validate residency resource heap flags must also have a residency manager.
         if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Creating a heap always in budget requires a residency manager to exist.";
             return E_INVALIDARG;
         }
 
         if (isResidencyDisabled && descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Creating a heap always residency requires a residency manager to exist.";
             return E_INVALIDARG;
         }
@@ -256,7 +256,7 @@ namespace gpgmm::d3d12 {
                 DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
                 if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
                                                                      &currentVideoInfo))) {
-                    ErrorLog(MessageId::kBudgetExceeded)
+                    ErrorLog(ErrorCode::kSizeExceeded)
                         << "Unable to create heap because not enough budget exists ("
                         << GetBytesToSizeInUnits(descriptor.SizeInBytes) << " vs "
                         << GetBytesToSizeInUnits(

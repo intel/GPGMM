@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
             resourceHeapDesc, mResidencyManager, CreateResourceHeapCallbackContext::CreateHeap,
             &createResourceHeapCallbackContext, &resourceHeap);
         if (FAILED(hr)) {
-            return {static_cast<ErrorCodeType>(hr)};
+            return {static_cast<ErrorCode>(hr)};
         }
 
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;

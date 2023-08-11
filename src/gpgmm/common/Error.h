@@ -40,20 +40,32 @@
     for (;;)                                       \
     break
 
-#define GPGMM_RETURN_ERROR_IF(expr, msg)                                  \
-    if (GPGMM_UNLIKELY(expr)) {                                           \
-        gpgmm::DebugLog() << msg;                                         \
-        return std::move(::gpgmm::ErrorCodeType(kInternalFailureResult)); \
-    }                                                                     \
-    for (;;)                                                              \
+#define GPGMM_RETURN_ERROR_IF(expr, msg)                              \
+    if (GPGMM_UNLIKELY(expr)) {                                       \
+        gpgmm::DebugLog() << msg;                                     \
+        return std::move(::gpgmm::ErrorCode(kInternalFailureResult)); \
+    }                                                                 \
+    for (;;)                                                          \
     break
 
 namespace gpgmm {
 
-    enum class ErrorCodeType : uint32_t;
+    enum class ErrorCode : uint32_t {
+        kNone,
+        kUnknown,
+        kSizeExceeded,
+        kAlignmentMismatch,
+        kAllocatorFailed,
+        kPrefetchFailed,
+        kBudgetInvalid,
+        kInvalidArgument,
+        kBadOperation,
+    };
 
-    constexpr ErrorCodeType kInternalFailureResult = static_cast<ErrorCodeType>(-1);
-    constexpr ErrorCodeType kInternalSuccessResult = static_cast<ErrorCodeType>(0u);
+    const char* GetErrorFromID(ErrorCode errorCode);
+
+    constexpr ErrorCode kInternalFailureResult = static_cast<ErrorCode>(-1);
+    constexpr ErrorCode kInternalSuccessResult = static_cast<ErrorCode>(0u);
 
     // Wraps a backend error code with a result object.
     // Use Result::IsSuccess then Result::AcquireResult to use or else, use Result::GetErrorCode to
@@ -90,7 +102,7 @@ namespace gpgmm {
             return *this;
         }
 
-        ErrorCodeType GetErrorCode() const {
+        ErrorCode GetErrorCode() const {
             return mErrorCode;
         }
 
@@ -143,11 +155,11 @@ namespace gpgmm {
     };
 
     // Result with only an error code.
-    using MaybeError = Result<ErrorCodeType, void>;
+    using MaybeError = Result<ErrorCode, void>;
 
     // Alias of Result + error code to avoid having to always specify error type.
     template <typename ResultT>
-    using ResultOrError = Result<ErrorCodeType, ResultT>;
+    using ResultOrError = Result<ErrorCode, ResultT>;
 
 }  // namespace gpgmm
 

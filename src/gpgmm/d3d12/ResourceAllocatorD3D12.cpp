@@ -431,7 +431,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocatorDescriptor.ResourceHeapTier > caps->GetMaxResourceHeapTierSupported()) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Resource heap tier exceeds the capabilities of the device "
                    "(ResourceHeapTier:"
                 << allocatorDescriptor.ResourceHeapTier << " vs "
@@ -442,7 +442,7 @@ namespace gpgmm::d3d12 {
 
         if (allocatorDescriptor.ResourceHeapTier != 0 &&
             allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
-            DebugLog(MessageId::kInvalidArgument)
+            DebugLog(MessageId::kPerformanceWarning)
                 << "Resource heap tier requested was lower than what the device "
                    "supports. This is allowed but not recommended because it prevents "
                    "resources of different categories from sharing the same heap.";
@@ -450,7 +450,7 @@ namespace gpgmm::d3d12 {
 
         if (allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET &&
             !pResidencyManager) {
-            WarnLog(MessageId::kInvalidArgument)
+            WarnLog(MessageId::kPerformanceWarning)
                 << "RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET has no effect when residency "
                    "management does not exist. This is probably not what the "
                    "developer intended to do. Please consider creating a residency "
@@ -484,7 +484,7 @@ namespace gpgmm::d3d12 {
 
         if ((allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT) &&
             !caps->IsCreateHeapNotResidentSupported()) {
-            DebugLog(MessageId::kInvalidArgument)
+            DebugLog(MessageId::kPerformanceWarning)
                 << "RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT was requested but disallowed "
                    "because the device did not support creation of non-resident heaps.";
             newDescriptor.Flags ^= RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT;
@@ -512,7 +512,7 @@ namespace gpgmm::d3d12 {
                 : kDefaultMemoryFragmentationLimit;
 
         if (newDescriptor.PreferredResourceHeapSize > newDescriptor.MaxResourceHeapSize) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Requested preferred resource heap size exceeded the capabilities "
                    "of the device. This is probably not what the developer intended "
                    "to do. Please consider using a smaller resource heap size.";
@@ -981,7 +981,7 @@ namespace gpgmm::d3d12 {
         if (FAILED(result.GetErrorCode())) {
             // NeverAllocate always fails, so suppress it.
             if (!request.NeverAllocate) {
-                DebugEvent(this, MessageId::kAllocatorFailed)
+                DebugEvent(MessageId::kPerformanceWarning, this)
                     << "Unable to allocate memory for request.";
             }
             return static_cast<HRESULT>(result.GetErrorCode());
@@ -992,7 +992,7 @@ namespace gpgmm::d3d12 {
 
         HRESULT hr = createResourceFn(*allocation);
         if (FAILED(hr)) {
-            InfoEvent(this, MessageId::kAllocatorFailed)
+            ErrorLog(ErrorCode::kAllocatorFailed, this)
                 << "Failed to create resource using allocation.";
             allocator->DeallocateMemory(std::move(allocation));
         }
@@ -1014,7 +1014,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             GetResourceAllocationInfo(newResourceDesc);
         if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
-            ErrorLog(MessageId::kSizeExceeded, this)
+            ErrorLog(ErrorCode::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the device: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
@@ -1056,7 +1056,7 @@ namespace gpgmm::d3d12 {
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
             newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
         if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
-            ErrorLog(MessageId::kInvalidArgument, this)
+            ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
             return E_INVALIDARG;
@@ -1114,7 +1114,7 @@ namespace gpgmm::d3d12 {
         if (GPGMM_UNLIKELY(requiresPadding)) {
             request.SizeInBytes += allocationDescriptor.ExtraRequiredResourcePadding;
             if (!neverSubAllocate) {
-                WarnLog(MessageId::kInvalidArgument, this)
+                WarnLog(MessageId::kPerformanceWarning, this)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
                     << GetBytesToSizeInUnits(allocationDescriptor.ExtraRequiredResourcePadding)
                     << ".";
@@ -1138,7 +1138,7 @@ namespace gpgmm::d3d12 {
 
         const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);
         if (request.SizeInBytes > maxSegmentSize) {
-            ErrorLog(MessageId::kSizeExceeded, this)
+            ErrorLog(ErrorCode::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
                    "the capabilities of the adapter: "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
@@ -1318,7 +1318,7 @@ namespace gpgmm::d3d12 {
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
-            ErrorLog(MessageId::kAllocatorFailed, this)
+            ErrorLog(ErrorCode::kAllocatorFailed, this)
                 << "Unable to allocate memory for resource because no memory was allowed to "
                    "be created.";
             return E_OUTOFMEMORY;
@@ -1326,7 +1326,7 @@ namespace gpgmm::d3d12 {
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            ErrorLog(MessageId::kAllocatorFailed, this)
+            ErrorLog(ErrorCode::kAllocatorFailed, this)
                 << "Unable to allocate memory for resource because a padding was specified "
                    "but no resource allocator could be used.";
             return E_INVALIDARG;
@@ -1334,7 +1334,7 @@ namespace gpgmm::d3d12 {
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
-                ErrorLog(MessageId::kAllocatorFailed, this)
+                ErrorLog(ErrorCode::kAllocatorFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and fall-back was disabled.";
                 return E_OUTOFMEMORY;
@@ -1350,7 +1350,7 @@ namespace gpgmm::d3d12 {
             mDevice);
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kAlignmentMismatch, this)
+            DebugLog(MessageId::kPerformanceWarning, this)
                 << "Resource heap is larger then the requested: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
@@ -1398,7 +1398,7 @@ namespace gpgmm::d3d12 {
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
             heapProperties.Type != allocationDescriptor.HeapType) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource using a heap type that differs from the "
                    "heap type used at creation. For important resources, it is recommended "
                    "to not specify a heap type.";
@@ -1406,7 +1406,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource using heap flags that differs from the "
                    "heap flags used at creation. For important resources, it is recommended "
                    "to not specify heap flags.";
@@ -1414,7 +1414,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (allocationDescriptor.ExtraRequiredResourcePadding > 0) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
@@ -1423,7 +1423,7 @@ namespace gpgmm::d3d12 {
             (ALLOCATION_FLAG_NEVER_RESIDENT & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
              ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
         if (allocationDescriptor.Flags & ~allowMask) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
             return E_INVALIDARG;
         }
@@ -1570,7 +1570,7 @@ namespace gpgmm::d3d12 {
         // sub-allocation is used.
         const uint64_t blocksPerHeap = SafeDivide(result.UsedBlockCount, result.UsedMemoryCount);
         if (blocksPerHeap > 1 && blocksPerHeap < kMinBlockToMemoryCountReportingThreshold) {
-            WarnEvent(this, MessageId::kPerformanceWarning)
+            WarnEvent(MessageId::kPerformanceWarning, this)
                 << "Average number of resource allocations per heap is below threshold: "
                 << blocksPerHeap << " blocks per heap (vs "
                 << kMinBlockToMemoryCountReportingThreshold
@@ -1584,7 +1584,7 @@ namespace gpgmm::d3d12 {
             100;
         if (allocationUsagePct > 0 &&
             allocationUsagePct < kMinAllocationUsageReportingThreshold * 100) {
-            WarnEvent(this, MessageId::kPerformanceWarning)
+            WarnEvent(MessageId::kPerformanceWarning, this)
                 << "Average resource allocation usage is below threshold: " << allocationUsagePct
                 << "% vs " << uint64_t(kMinAllocationUsageReportingThreshold * 100)
                 << "%. This either means memory has become fragmented or the working set has "
@@ -1704,7 +1704,7 @@ namespace gpgmm::d3d12 {
                 return S_OK;
             }
             default: {
-                WarnLog(MessageId::kBadOperation, this)
+                ErrorLog(ErrorCode::kBadOperation, this)
                     << "CheckFeatureSupport does not support feature (" + std::to_string(feature) +
                            ").";
                 return E_INVALIDARG;
