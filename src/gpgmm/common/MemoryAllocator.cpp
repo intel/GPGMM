@@ -157,35 +157,31 @@ namespace gpgmm {
     }
 
     MaybeError MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
-        ASSERT(request.SizeInBytes > 0 && request.Alignment > 0);
+        // Check for non-zero size and alignment.
+        GPGMM_RETURN_ERROR_IF(request.SizeInBytes == 0, "Request cannot have zero size.");
+        GPGMM_RETURN_ERROR_IF(request.Alignment == 0, "Request cannot have zero alignment.");
 
         // Check request size cannot overflow.
-        if (request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1)) {
-            DebugLog(MessageId::kSizeExceeded, this)
-                << "Requested size rejected due to overflow: " + std::to_string(request.SizeInBytes)
-                << " bytes.";
-            return std::move(ErrorCodeType(kInternalFailureResult));
-        }
+        GPGMM_RETURN_ERROR_IF(
+            request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1),
+            "Requested size invalid due to overflow: " + std::to_string(request.SizeInBytes) +
+                " bytes.");
 
         // Check request size cannot overflow |this| memory allocator.
-        const uint64_t alignedSize = AlignTo(request.SizeInBytes, request.Alignment);
-        if (GetMemorySize() != kInvalidSize && alignedSize > GetMemorySize()) {
-            DebugLog(MessageId::kSizeExceeded, this)
-                << "Requested size exceeds memory size (" + std::to_string(alignedSize) + " vs " +
-                       std::to_string(GetMemorySize()) + " bytes).";
-            return std::move(ErrorCodeType(kInternalFailureResult));
-        }
+        const uint64_t requestedAlignedSize = AlignTo(request.SizeInBytes, request.Alignment);
+        GPGMM_RETURN_ERROR_IF(
+            GetMemorySize() != kInvalidSize && requestedAlignedSize > GetMemorySize(),
+            "Requested size, after alignment, exceeds memory size (" +
+                std::to_string(requestedAlignedSize) + " vs " + std::to_string(GetMemorySize()) +
+                " bytes).");
 
         // Check request size has compatible alignment with |this| memory allocator.
         // Alignment value of 1 means no alignment required.
-        if (GetMemoryAlignment() == 0 ||
-            (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment))) {
-            DebugLog(MessageId::kAlignmentMismatch, this)
-                << "Requested alignment exceeds memory alignment (" +
-                       std::to_string(request.Alignment) + " vs " +
-                       std::to_string(GetMemoryAlignment()) + " bytes).";
-            return std::move(ErrorCodeType(kInternalFailureResult));
-        }
+        GPGMM_RETURN_ERROR_IF(
+            GetMemoryAlignment() == 0 ||
+                (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment)),
+            "Requested alignment exceeds memory alignment (" + std::to_string(request.Alignment) +
+                " vs " + std::to_string(GetMemoryAlignment()) + " bytes).");
 
         return {};
     }

@@ -54,7 +54,7 @@ namespace gpgmm {
         const uint64_t allocationSize = UpperPowerOfTwo(request.SizeInBytes);
 
         // Request cannot exceed memory size.
-        GPGMM_INVALID_IF(allocationSize > mMemorySize);
+        GPGMM_RETURN_ERROR_IF(allocationSize > mMemorySize, "Allocation size exceeds memory size");
 
         // Attempt to sub-allocate a block of the requested size.
         std::unique_ptr<MemoryAllocationBase> subAllocation;
