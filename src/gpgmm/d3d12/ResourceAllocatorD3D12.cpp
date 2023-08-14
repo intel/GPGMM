@@ -464,12 +464,12 @@ namespace gpgmm::d3d12 {
                 : kDefaultMemoryGrowthFactor;
 
         // By default, slab-allocate from a sorted segmented list.
-        if (newDescriptor.PoolAlgorithm == ALLOCATOR_ALGORITHM_DEFAULT) {
-            newDescriptor.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        if (newDescriptor.PoolAlgorithm == RESOURCE_ALLOCATION_ALGORITHM_DEFAULT) {
+            newDescriptor.PoolAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL;
         }
 
-        if (newDescriptor.SubAllocationAlgorithm == ALLOCATOR_ALGORITHM_DEFAULT) {
-            newDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        if (newDescriptor.SubAllocationAlgorithm == RESOURCE_ALLOCATION_ALGORITHM_DEFAULT) {
+            newDescriptor.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
         }
 
         // By default, UMA is allowed to use a single heap type. Unless it is explicitly disabled or
@@ -621,7 +621,7 @@ namespace gpgmm::d3d12 {
             // Dedicated allocators are used when sub-allocation cannot but heaps could still be
             // recycled.
             RESOURCE_ALLOCATOR_DESC dedicatedDescriptor = descriptor;
-            dedicatedDescriptor.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+            dedicatedDescriptor.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
 
             mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
                 dedicatedDescriptor, heapFlags, heapProperties, heapAlignment);
@@ -683,7 +683,7 @@ namespace gpgmm::d3d12 {
     }
 
     std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreatePoolAllocator(
-        ALLOCATOR_ALGORITHM algorithm,
+        RESOURCE_ALLOCATION_ALGORITHM algorithm,
         uint64_t memorySize,
         uint64_t memoryAlignment,
         bool isAlwaysOnDemand,
@@ -693,11 +693,11 @@ namespace gpgmm::d3d12 {
         }
 
         switch (algorithm) {
-            case ALLOCATOR_ALGORITHM_FIXED_POOL: {
+            case RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL: {
                 return std::make_unique<PooledMemoryAllocator>(memorySize, memoryAlignment,
                                                                std::move(underlyingAllocator));
             }
-            case ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
+            case RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL: {
                 return std::make_unique<SegmentedMemoryAllocator>(std::move(underlyingAllocator),
                                                                   memoryAlignment);
             }
@@ -709,7 +709,7 @@ namespace gpgmm::d3d12 {
     }
 
     std::unique_ptr<MemoryAllocatorBase> ResourceAllocator::CreateSubAllocator(
-        ALLOCATOR_ALGORITHM algorithm,
+        RESOURCE_ALLOCATION_ALGORITHM algorithm,
         uint64_t memorySize,
         uint64_t memoryAlignment,
         float memoryFragmentationLimit,
@@ -717,7 +717,7 @@ namespace gpgmm::d3d12 {
         bool isPrefetchAllowed,
         std::unique_ptr<MemoryAllocatorBase> underlyingAllocator) {
         switch (algorithm) {
-            case ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
+            case RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM: {
                 // System and memory size must be aligned at creation-time.
                 return std::make_unique<BuddyMemoryAllocator>(
                     /*systemSize*/ LowerPowerOfTwo(mMaxResourceHeapSize),
@@ -725,7 +725,7 @@ namespace gpgmm::d3d12 {
                     /*memoryAlignment*/ memoryAlignment,
                     /*memoryAllocator*/ std::move(underlyingAllocator));
             }
-            case ALLOCATOR_ALGORITHM_SLAB: {
+            case RESOURCE_ALLOCATION_ALGORITHM_SLAB: {
                 // Min slab size is always equal to the memory size because the
                 // slab allocator aligns the slab size at allocate-time.
                 return std::make_unique<SlabCacheAllocator>(
@@ -737,7 +737,7 @@ namespace gpgmm::d3d12 {
                     /*slabGrowthFactor*/ memoryGrowthFactor,
                     /*memoryAllocator*/ std::move(underlyingAllocator));
             }
-            case ALLOCATOR_ALGORITHM_DEDICATED: {
+            case RESOURCE_ALLOCATION_ALGORITHM_DEDICATED: {
                 return std::make_unique<DedicatedMemoryAllocator>(
                     /*memoryAllocator*/ std::move(underlyingAllocator), memoryAlignment);
             }

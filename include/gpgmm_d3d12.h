@@ -818,11 +818,11 @@ namespace gpgmm::d3d12 {
 
     DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATOR_FLAGS)
 
-    /** \enum ALLOCATOR_ALGORITHM
-    Specify the algorithms used for allocation.
+    /** \enum RESOURCE_ALLOCATION_ALGORITHM
+    Describes the algorithm used for allocation of resources.
     */
-    enum ALLOCATOR_ALGORITHM {
-        /** \brief Use default allocation mechanism.
+    enum RESOURCE_ALLOCATION_ALGORITHM {
+        /** \brief Default allocation mechanism.
 
         Relies on internal heuristics to automatically determine the best allocation mechanism. The
         selection of algorithm depends on:
@@ -837,18 +837,18 @@ namespace gpgmm::d3d12 {
         future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
         prove to be faster as expected. Further experimentation is recommended.
         */
-        ALLOCATOR_ALGORITHM_DEFAULT = 0,
+        RESOURCE_ALLOCATION_ALGORITHM_DEFAULT = 0,
 
-        /** \brief Use the slab allocation mechanism.
+        /** \brief Slab allocation mechanism.
 
         Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 
         Slab allocation does not suffer from internal fragmentation but could externally fragment
         when many unique request sizes are used.
         */
-        ALLOCATOR_ALGORITHM_SLAB = 1,
+        RESOURCE_ALLOCATION_ALGORITHM_SLAB = 1,
 
-        /** \brief Use the buddy system mechanism.
+        /** \brief Buddy system mechanism.
 
         Buddy system allocate/deallocates in O(Log2) time using O(1) space.
 
@@ -860,9 +860,9 @@ namespace gpgmm::d3d12 {
         requests can fit within the specified PreferredResourceHeapSize but not too large where
         creating the larger resource heap becomes a bigger bottleneck.
         */
-        ALLOCATOR_ALGORITHM_BUDDY_SYSTEM = 2,
+        RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM = 2,
 
-        /** \brief Recycles resource heaps of a size being specified.
+        /** \brief Recycles resource heaps using a single pool.
 
         Fixed pools allocate/deallocate in O(1) time using O(N) space.
 
@@ -870,27 +870,26 @@ namespace gpgmm::d3d12 {
         PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
         equivalent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
         */
-        ALLOCATOR_ALGORITHM_FIXED_POOL = 3,
+        RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL = 3,
 
-        /** \brief Recycles resource heaps of any size using multiple pools.
+        /** \brief Recycles resource heaps of any size using one or more pools.
 
         Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
         */
-        ALLOCATOR_ALGORITHM_SEGMENTED_POOL = 4,
+        RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL = 4,
 
-        /** \brief Use the dedicated allocation mechanism.
+        /** \brief Dedicate allocation resource heaps.
 
-        Allows resources to be created as a dedicated allocation, rather than sub-allocated.
-
+        Creates resources with their own resource heap, never sub-allocated.
         A dedicated allocation allocates exactly what is needed for the resource and nothing more.
 
         Internally, dedicated allocations are "placed resources" which allows the heap to be
-        recycled by GPGMM. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
-        "dedicated allocation" but without heaps being recycled by GPGMM.
+        recycled. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
+        "dedicated allocation" but without recycling heaps.
 
         Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
         */
-        ALLOCATOR_ALGORITHM_DEDICATED = 5,
+        RESOURCE_ALLOCATION_ALGORITHM_DEDICATED = 5,
     };
 
     /** \struct RESOURCE_ALLOCATOR_DESC
@@ -940,7 +939,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        ALLOCATOR_ALGORITHM SubAllocationAlgorithm;
+        RESOURCE_ALLOCATION_ALGORITHM SubAllocationAlgorithm;
 
         /** \brief Specifies the algorithm to use for resource heap pooling.
 
@@ -949,7 +948,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, the slab allocator is used.
         */
-        ALLOCATOR_ALGORITHM PoolAlgorithm;
+        RESOURCE_ALLOCATION_ALGORITHM PoolAlgorithm;
 
         /** \brief Specifies the preferred size of the resource heap.
 

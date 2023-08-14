@@ -108,14 +108,14 @@ namespace gpgmm::d3d12 {
             D3D12_RESOURCE_STATES initialResourceState);
 
         std::unique_ptr<MemoryAllocatorBase> CreatePoolAllocator(
-            ALLOCATOR_ALGORITHM algorithm,
+            RESOURCE_ALLOCATION_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             bool isAlwaysOnDemand,
             std::unique_ptr<MemoryAllocatorBase> underlyingAllocator);
 
         std::unique_ptr<MemoryAllocatorBase> CreateSubAllocator(
-            ALLOCATOR_ALGORITHM algorithm,
+            RESOURCE_ALLOCATION_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             float memoryFragmentationLimit,
