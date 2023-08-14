@@ -24,19 +24,19 @@ namespace gpgmm::d3d12 {
 
     struct RESOURCE_ALLOCATION_DESC;
 
-    struct CREATE_RESOURCE_DESC {
+    struct RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS {
         const ALLOCATION_DESC& allocationDescriptor;
         const D3D12_RESOURCE_DESC& resourceDescriptor;
         D3D12_RESOURCE_STATES initialResourceState;
         const D3D12_CLEAR_VALUE* clearValue;
     };
 
-    struct CREATE_HEAP_DESC {
+    struct RESIDENCY_HEAP_CREATE_RESIDENCY_HEAP_PARAMS {
         const RESIDENCY_HEAP_DESC& HeapDescriptor;
         ID3D12Pageable* Pageable;
     };
 
-    struct EXECUTE_COMMAND_LISTS_DESC {
+    struct RESIDENCY_MANAGER_EXECUTE_COMMAND_LISTS_PARAMS {
         IResidencyList* const* ResidencyLists;
         uint32_t Count;
     };
@@ -45,19 +45,19 @@ namespace gpgmm::d3d12 {
       public:
         static JSONDict Serialize();
         static JSONDict Serialize(const RESOURCE_ALLOCATOR_DESC& desc);
-        static JSONDict Serialize(const CREATE_RESOURCE_DESC& desc);
+        static JSONDict Serialize(const RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS& params);
         static JSONDict Serialize(const ALLOCATION_DESC& desc);
-        static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
-        static JSONDict Serialize(const CREATE_HEAP_DESC& desc);
+        static JSONDict Serialize(const RESIDENCY_HEAP_CREATE_RESIDENCY_HEAP_PARAMS& params);
         static JSONDict Serialize(const RESIDENCY_HEAP_DESC& desc);
         static JSONDict Serialize(const RESIDENCY_HEAP_INFO& info);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_DESC& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& info);
-        static JSONDict Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc);
+        static JSONDict Serialize(const RESIDENCY_MANAGER_EXECUTE_COMMAND_LISTS_PARAMS& params);
         static JSONDict Serialize(const RESIDENCY_MANAGER_DESC& desc);
         static JSONDict Serialize(const RECORD_OPTIONS& desc);
 
       private:
+        static JSONDict Serialize(const D3D12_RESOURCE_DESC& desc);
         static JSONDict Serialize(const D3D12_DEPTH_STENCIL_VALUE& depthStencilValue);
         static JSONDict Serialize(const FLOAT rgba[4]);
         static JSONDict Serialize(const D3D12_CLEAR_VALUE* clearValue);

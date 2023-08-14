@@ -128,8 +128,9 @@ namespace gpgmm::d3d12 {
                                                IResidencyManager* const pResidencyManager,
                                                ID3D12Pageable* pPageable,
                                                IResidencyHeap** ppResidencyHeapOut) {
-        GPGMM_TRACE_EVENT_OBJECT_CALL("Heap.CreateResidencyHeap",
-                                      (CREATE_HEAP_DESC{descriptor, pPageable}));
+        GPGMM_TRACE_EVENT_OBJECT_CALL(
+            "Heap.CreateResidencyHeap",
+            (RESIDENCY_HEAP_CREATE_RESIDENCY_HEAP_PARAMS{descriptor, pPageable}));
 
         GPGMM_RETURN_IF_NULLPTR(pPageable);
 

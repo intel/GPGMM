@@ -48,12 +48,12 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const CREATE_RESOURCE_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS& params) {
         JSONDict dict;
-        dict.AddItem("allocationDescriptor", Serialize(desc.allocationDescriptor));
-        dict.AddItem("resourceDescriptor", Serialize(desc.resourceDescriptor));
-        dict.AddItem("initialResourceState", desc.initialResourceState);
-        dict.AddItem("clearValue", Serialize(desc.clearValue));
+        dict.AddItem("allocationDescriptor", Serialize(params.allocationDescriptor));
+        dict.AddItem("resourceDescriptor", Serialize(params.resourceDescriptor));
+        dict.AddItem("initialResourceState", params.initialResourceState);
+        dict.AddItem("clearValue", Serialize(params.clearValue));
         return dict;
     }
 
@@ -131,25 +131,25 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const CREATE_HEAP_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESIDENCY_HEAP_CREATE_RESIDENCY_HEAP_PARAMS& params) {
         JSONDict dict;
 
         ComPtr<ID3D12Heap> heap;
-        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
+        if (SUCCEEDED(params.Pageable->QueryInterface(IID_PPV_ARGS(&heap)))) {
             dict.AddItem("Heap", Serialize(heap->GetDesc()));
             return dict;
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        if (SUCCEEDED(desc.Pageable->QueryInterface(IID_PPV_ARGS(&committedResource)))) {
+        if (SUCCEEDED(params.Pageable->QueryInterface(IID_PPV_ARGS(&committedResource)))) {
             JSONDict heapDict;
             D3D12_HEAP_PROPERTIES heapProperties = {};
             D3D12_HEAP_FLAGS heapFlags = {};
             if (SUCCEEDED(committedResource->GetHeapProperties(&heapProperties, &heapFlags))) {
                 heapDict.AddItem("Properties", Serialize(heapProperties));
                 heapDict.AddItem("Flags", heapFlags);
-                heapDict.AddItem("SizeInBytes", desc.HeapDescriptor.SizeInBytes);
-                heapDict.AddItem("Alignment", desc.HeapDescriptor.Alignment);
+                heapDict.AddItem("SizeInBytes", params.HeapDescriptor.SizeInBytes);
+                heapDict.AddItem("Alignment", params.HeapDescriptor.Alignment);
                 dict.AddItem("Heap", heapDict);
             }
         }
@@ -223,13 +223,14 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const EXECUTE_COMMAND_LISTS_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(
+        const RESIDENCY_MANAGER_EXECUTE_COMMAND_LISTS_PARAMS& params) {
         JSONDict dict;
         JSONArray residencyLists;
-        for (uint64_t i = 0; i < desc.Count; i++) {
+        for (uint64_t i = 0; i < params.Count; i++) {
             JSONDict residencyListDict;
             JSONArray heapArray;
-            ResidencyList* residencyList = static_cast<ResidencyList*>(desc.ResidencyLists[i]);
+            ResidencyList* residencyList = static_cast<ResidencyList*>(params.ResidencyLists[i]);
             for (ResidencyHeap* heap : *residencyList) {
                 heapArray.AddItem(gpgmm::JSONSerializer::Serialize(heap));
             }

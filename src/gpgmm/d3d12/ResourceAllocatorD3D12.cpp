@@ -934,8 +934,8 @@ namespace gpgmm::d3d12 {
                                               IResourceAllocation** ppResourceAllocationOut) {
         GPGMM_TRACE_EVENT_OBJECT_CALL(
             "ResourceAllocator.CreateResource",
-            (CREATE_RESOURCE_DESC{allocationDescriptor, resourceDescriptor, initialResourceState,
-                                  pClearValue}));
+            (RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS{allocationDescriptor, resourceDescriptor,
+                                                       initialResourceState, pClearValue}));
 
         std::lock_guard<std::mutex> lock(mMutex);
         ComPtr<IResourceAllocation> allocation;

@@ -730,8 +730,9 @@ namespace gpgmm::d3d12 {
                                    mDevice);
         }
 
-        GPGMM_TRACE_EVENT_OBJECT_CALL("ResidencyManager.ExecuteCommandLists",
-                                      (EXECUTE_COMMAND_LISTS_DESC{ppResidencyLists, count}));
+        GPGMM_TRACE_EVENT_OBJECT_CALL(
+            "ResidencyManager.ExecuteCommandLists",
+            (RESIDENCY_MANAGER_EXECUTE_COMMAND_LISTS_PARAMS{ppResidencyLists, count}));
 
         return S_OK;
     }
