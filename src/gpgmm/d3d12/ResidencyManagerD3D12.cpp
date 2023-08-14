@@ -64,13 +64,13 @@ namespace gpgmm::d3d12 {
 
         if ((descriptor.Flags & RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY) &&
             caps->IsAdapterUMA()) {
-            WarnLog(MessageId::kInvalidArgument)
+            WarnLog(MessageId::kUnknown)
                 << "RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY flag was specified but "
                    "did not match the architecture of the adapter.";
         }
 
         if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
-            ErrorLog(MessageId::kInvalidArgument)
+            ErrorLog(ErrorCode::kInvalidArgument)
                 << "Both the OS based memory budget and restricted budget were "
                    "specified but cannot be used at the same time.";
             return E_UNEXPECTED;
@@ -121,13 +121,13 @@ namespace gpgmm::d3d12 {
         // Emit a warning if the budget was initialized to zero.
         // This means nothing will be ever evicted, which will lead to device lost.
         if (localVideoMemorySegmentInfo->Budget == 0) {
-            WarnLog(MessageId::kBudgetInvalid, residencyManager.get())
+            WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, residencyManager->mIsUMA)
                 << ") did not initialize a budget. This means either a restricted budget was not "
                    "used or the first OS budget update hasn't occured.";
             if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
-                WarnLog(MessageId::kBudgetInvalid, residencyManager.get())
+                WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                     << "GPU memory segment ("
                     << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
                                             residencyManager->mIsUMA)
@@ -245,7 +245,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (heap->IsInList()) {
-            ErrorLog(MessageId::kBadOperation, this)
+            ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap was never being tracked for residency. This usually occurs when a "
                    "non-resource heap was created by the developer and never made resident at "
                    "creation or failure to call LockHeap beforehand.";
@@ -418,7 +418,7 @@ namespace gpgmm::d3d12 {
         // Ignore when no budget was specified.
         if (pVideoMemoryInfo->Budget > 0 &&
             pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
-            WarnEvent(this, MessageId::kBudgetExceeded)
+            WarnEvent(MessageId::kBudgetExceeded, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage exceeds budget: "
                 << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << " vs "
                 << GetBytesToSizeInUnits(pVideoMemoryInfo->Budget) << ".";
@@ -427,7 +427,7 @@ namespace gpgmm::d3d12 {
                 SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget);
             if (pVideoMemoryInfo->Budget > 0 &&
                 currentUsageOfBudget > kMinCurrentUsageOfBudgetReportingThreshold) {
-                EventMessage message = WarnEvent(this, MessageId::kBudgetExceeded);
+                EventMessage message = WarnEvent(MessageId::kBudgetExceeded, this);
                 message << GetMemorySegmentName(heapSegment, mIsUMA)
                         << " GPU memory usage is above budget threshold: "
                         << uint64_t(currentUsageOfBudget * 100) << "% vs "
@@ -506,7 +506,7 @@ namespace gpgmm::d3d12 {
         // If a budget wasn't provided, it not possible to evict. This is because either the budget
         // update event has not happened yet or was invalid.
         if (pVideoMemoryInfo->Budget == 0) {
-            WarnEvent(this, MessageId::kBudgetInvalid)
+            WarnEvent(MessageId::kBudgetExceeded, this)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, IsUMA())
                 << ") was unable to evict memory because a budget was not specified.";
@@ -580,7 +580,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(mDevice->Evict(objectEvictCount, objectsToEvict.data()),
                                    mDevice);
 
-            DebugEvent(this, MessageId::kBudgetExceeded)
+            DebugEvent(MessageId::kBudgetExceeded, this)
                 << "GPU page-out. Number of allocations: " << objectsToEvict.size() << " ("
                 << GetBytesToSizeInUnits(bytesEvicted) << ").";
         }
@@ -605,7 +605,7 @@ namespace gpgmm::d3d12 {
         std::lock_guard<std::mutex> lock(mMutex);
 
         if (count == 0) {
-            ErrorLog(MessageId::kInvalidArgument, this)
+            ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "ExecuteCommandLists is required to have at-least one residency "
                    "list to be called.";
             return E_INVALIDARG;
@@ -613,7 +613,7 @@ namespace gpgmm::d3d12 {
 
         // TODO: support multiple command lists.
         if (count > 1) {
-            ErrorLog(MessageId::kInvalidArgument, this)
+            ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "ExecuteCommandLists does not support multiple residency lists at this time. "
                    "Please call ExecuteCommandLists per residency list as a workaround, if needed.";
             return E_NOTIMPL;
@@ -674,7 +674,7 @@ namespace gpgmm::d3d12 {
             // If the heap should be already resident, calling MakeResident again will be redundant.
             // Tell the developer the heap wasn't properly tracked by the residency manager.
             if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_UNKNOWN) {
-                DebugLog(MessageId::kBadOperation, this)
+                DebugLog(MessageId::kPerformanceWarning, this)
                     << "Residency state could not be determined for the heap (Heap="
                     << ToHexStr(heap)
                     << "). This likely means the developer was attempting to make a "
@@ -744,7 +744,7 @@ namespace gpgmm::d3d12 {
 
         GPGMM_RETURN_IF_FAILED(EvictInternal(sizeToMakeResident, heapSegment, nullptr), mDevice);
 
-        DebugEvent(this, MessageId::kBudgetExceeded)
+        DebugEvent(MessageId::kBudgetExceeded, this)
             << "GPU page-in. Number of allocations: " << numberOfObjectsToMakeResident << " ("
             << GetBytesToSizeInUnits(sizeToMakeResident) << ").";
 
@@ -773,7 +773,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(
                 EvictInternal(mEvictSizeInBytes, heapSegment, &evictedSizeInBytes), mDevice);
             if (evictedSizeInBytes == 0) {
-                ErrorLog(MessageId::kBudgetInvalid, this)
+                ErrorLog(ErrorCode::kBudgetInvalid, this)
                     << "Unable to evict enough heaps to stay within budget. This "
                        "usually occurs when there is not enough available memory. "
                        "Please reduce consumption by checking allocation sizes and "
@@ -885,7 +885,7 @@ namespace gpgmm::d3d12 {
 
         ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         if (heap->GetInfo().IsLocked) {
-            ErrorLog(MessageId::kBadOperation, this)
+            ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap residency cannot be updated because it was locked. "
                    "Please unlock the heap before updating.";
             return E_FAIL;
@@ -893,7 +893,7 @@ namespace gpgmm::d3d12 {
 
         if (newStatus == RESIDENCY_HEAP_STATUS_UNKNOWN &&
             heap->GetInfo().Status != RESIDENCY_HEAP_STATUS_UNKNOWN) {
-            ErrorLog(MessageId::kBadOperation, this)
+            ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap residency cannot be unknown when previously known by the "
                    "residency manager. Check the status before updating the state.";
             return E_FAIL;

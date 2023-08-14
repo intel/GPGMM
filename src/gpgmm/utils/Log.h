@@ -44,6 +44,7 @@
 //   // Get more information
 //   GPGMM_DEBUG() << texture.GetFormat();
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/common/Message.h"
 #include "gpgmm/common/Object.h"
 
@@ -60,6 +61,7 @@ namespace gpgmm {
       public:
         LogMessage(MessageSeverity severity,
                    MessageId messageId,
+                   ErrorCode errorCode,
                    bool isExternal,
                    const std::string& name,
                    const ObjectBase* object) noexcept;
@@ -84,6 +86,7 @@ namespace gpgmm {
         std::string mName;
         const ObjectBase* mObject = nullptr;
         std::ostringstream mStream;
+        ErrorCode mErrorCode = ErrorCode::kNone;
     };
 
     LogMessage DebugLog(MessageId messageId,
@@ -98,7 +101,7 @@ namespace gpgmm {
                        bool isExternal,
                        const std::string& name,
                        const ObjectBase* object);
-    LogMessage ErrorLog(MessageId messageId,
+    LogMessage ErrorLog(ErrorCode errorCode,
                         bool isExternal,
                         const std::string& name,
                         const ObjectBase* object);
@@ -110,12 +113,13 @@ namespace gpgmm {
                        const ObjectBase* object = nullptr);
     LogMessage WarnLog(MessageId messageId = MessageId::kUnknown,
                        const ObjectBase* object = nullptr);
-    LogMessage ErrorLog(MessageId messageId = MessageId::kUnknown,
+    LogMessage ErrorLog(ErrorCode errorCode = ErrorCode::kUnknown,
                         const ObjectBase* object = nullptr);
 
     // Create a LogMessage based on severity.
     LogMessage Log(MessageSeverity severity,
                    MessageId messageId = MessageId::kUnknown,
+                   ErrorCode errorCode = ErrorCode::kNone,
                    bool isExternal = false,
                    const std::string& name = "",
                    const ObjectBase* object = nullptr);

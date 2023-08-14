@@ -19,18 +19,11 @@ namespace gpgmm {
 
     enum class MessageId {
         kUnknown,
-        kSizeExceeded,
-        kAlignmentMismatch,
-        kAllocatorFailed,
-        kPrefetchFailed,
-        kBudgetExceeded,
         kBudgetUpdated,
-        kBudgetInvalid,
-        kInvalidArgument,
-        kBadOperation,
         kPerformanceWarning,
         kMemoryUsageUpdated,
         kObjectCreated,
+        kBudgetExceeded,
     };
 
     enum class MessageSeverity {

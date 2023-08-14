@@ -16,30 +16,35 @@
 #define SRC_GPGMM_D3D12_EVENTMESSAGED3D12_H_
 
 #include "gpgmm/common/EventMessage.h"
+#include "gpgmm/utils/Assert.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
 namespace gpgmm::d3d12 {
 
     template <typename BackendT>
-    EventMessage DebugEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
+    EventMessage DebugEvent(MessageId messageId, const BackendT* object) {
+        ASSERT(object != nullptr);
         return gpgmm::DebugEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
                                  object);
     }
 
     template <typename BackendT>
-    EventMessage InfoEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
+    EventMessage InfoEvent(MessageId messageId, const BackendT* object) {
+        ASSERT(object != nullptr);
         return gpgmm::InfoEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
                                 object);
     }
 
     template <typename BackendT>
-    EventMessage WarnEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
+    EventMessage WarnEvent(MessageId messageId, const BackendT* object) {
+        ASSERT(object != nullptr);
         return gpgmm::WarnEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
                                 object);
     }
 
     template <typename BackendT>
-    EventMessage ErrorEvent(const BackendT* object, MessageId messageId = MessageId::kUnknown) {
+    EventMessage ErrorEvent(MessageId messageId, const BackendT* object) {
+        ASSERT(object != nullptr);
         return gpgmm::ErrorEvent(messageId, true, gpgmm::WCharToUTF8(object->GetDebugName()),
                                  object);
     }

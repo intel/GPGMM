@@ -15,6 +15,7 @@
 #ifndef SRC_GPGMM_COMMON_EVENTMESSAGE_H_
 #define SRC_GPGMM_COMMON_EVENTMESSAGE_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/common/Message.h"
 #include "gpgmm/common/Object.h"
 #include "gpgmm/common/TraceEvent.h"
@@ -29,6 +30,7 @@ namespace gpgmm {
       public:
         EventMessage(const MessageSeverity& severity,
                      MessageId messageId,
+                     ErrorCode errorCode,
                      bool isExternal,
                      const std::string& name,
                      const ObjectBase* object);
@@ -50,6 +52,7 @@ namespace gpgmm {
         std::string mName;
         const ObjectBase* mObject = nullptr;
         std::ostringstream mStream;
+        ErrorCode mErrorCode = ErrorCode::kNone;
     };
 
     // Short-hands to create a EventMessage with the respective severity.
@@ -68,7 +71,7 @@ namespace gpgmm {
                            const std::string& name = "",
                            const ObjectBase* mObject = nullptr);
 
-    EventMessage ErrorEvent(MessageId messageId = MessageId::kUnknown,
+    EventMessage ErrorEvent(ErrorCode errorCode = ErrorCode::kUnknown,
                             bool isExternal = false,
                             const std::string& name = "",
                             const ObjectBase* mObject = nullptr);

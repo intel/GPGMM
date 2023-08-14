@@ -183,6 +183,7 @@ source_set("gpgmm_common_sources") {
     "ConditionalMemoryAllocator.h",
     "DedicatedMemoryAllocator.cpp",
     "DedicatedMemoryAllocator.h",
+    "Error.cpp",
     "Error.h",
     "EventMessage.cpp",
     "EventMessage.h",

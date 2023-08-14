@@ -22,30 +22,16 @@ namespace gpgmm {
         switch (messageId) {
             case MessageId::kUnknown:
                 return "UNKNOWN";
-            case MessageId::kSizeExceeded:
-                return "SIZE_EXCEEDED";
-            case MessageId::kAlignmentMismatch:
-                return "ALIGNMENT_MISMATCH";
-            case MessageId::kAllocatorFailed:
-                return "ALLOCATOR_FAILED";
-            case MessageId::kPrefetchFailed:
-                return "PREFETCH_FAILED";
-            case MessageId::kBudgetExceeded:
-                return "BUDGET_EXCEEDED";
             case MessageId::kBudgetUpdated:
                 return "BUDGET_UPDATED";
-            case MessageId::kBudgetInvalid:
-                return "BUDGET_INVALID";
-            case MessageId::kInvalidArgument:
-                return "INVALID_ARGUMENT";
-            case MessageId::kBadOperation:
-                return "BAD_OPERATION";
             case MessageId::kPerformanceWarning:
                 return "PERFORMANCE_WARNING";
             case MessageId::kMemoryUsageUpdated:
                 return "MEMORY_USAGE_UPDATED";
             case MessageId::kObjectCreated:
                 return "OBJECT_CREATED";
+            case MessageId::kBudgetExceeded:
+                return "BUDGET_EXCEEDED";
             default:
                 UNREACHABLE();
                 return "";

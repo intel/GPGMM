@@ -30,7 +30,7 @@ namespace gpgmm::vk {
 
     class Caps;
 
-    struct GpResourceAllocator_T {
+    struct GpResourceAllocator_T final : public ObjectBase {
       public:
         static VkResult CreateResourceAllocator(const GpAllocatorCreateInfo& info,
                                                 GpResourceAllocator* allocatorOut);
@@ -66,6 +66,9 @@ namespace gpgmm::vk {
             const GpAllocatorCreateInfo& info,
             uint64_t memoryTypeIndex,
             uint64_t memoryAlignment);
+
+        // ObjectBase interface
+        DEFINE_OBJECT_BASE_OVERRIDES(GpResourceAllocator_T)
 
         VkDevice mDevice;
         VulkanFunctions mVulkanFunctions;
