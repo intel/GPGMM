@@ -286,10 +286,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.Flags = ALLOCATION_FLAG_NEVER_FALLBACK;
 
-    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
+    // RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -305,11 +305,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM + ALLOCATOR_ALGORITHM_FIXED_POOL
+    // RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM + RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
-        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_FIXED_POOL;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.PoolAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -325,11 +325,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM + ALLOCATOR_ALGORITHM_SEGMENTED_POOL
+    // RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM + RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
-        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.PoolAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -345,10 +345,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_SLAB
+    // RESOURCE_ALLOCATION_ALGORITHM_SLAB
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -364,11 +364,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_SLAB + ALLOCATOR_ALGORITHM_FIXED_POOL
+    // RESOURCE_ALLOCATION_ALGORITHM_SLAB + RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
-        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_FIXED_POOL;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
+        newAllocatorDesc.PoolAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -384,11 +384,11 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_SLAB + ALLOCATOR_ALGORITHM_SEGMENTED_POOL
+    // RESOURCE_ALLOCATION_ALGORITHM_SLAB + RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
-        newAllocatorDesc.PoolAlgorithm = ALLOCATOR_ALGORITHM_SEGMENTED_POOL;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
+        newAllocatorDesc.PoolAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -423,10 +423,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
         }
     }
 
-    // ALLOCATOR_ALGORITHM_DEDICATED
+    // RESOURCE_ALLOCATION_ALGORITHM_DEDICATED
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(newAllocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -446,10 +446,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
 
-    // ALLOCATOR_ALGORITHM_SLAB
+    // RESOURCE_ALLOCATION_ALGORITHM_SLAB
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_SLAB;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
         newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
 
         ComPtr<IResourceAllocator> resourceAllocator;
@@ -466,10 +466,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
         EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, GPGMM_MB_TO_BYTES(16));
     }
 
-    // ALLOCATOR_ALGORITHM_BUDDY_SYSTEM
+    // RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_BUDDY_SYSTEM;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
         newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
 
         ComPtr<IResourceAllocator> resourceAllocator;
@@ -486,10 +486,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPreferredHeapSize) {
         EXPECT_EQ(allocation->GetMemory()->GetInfo().SizeInBytes, GPGMM_MB_TO_BYTES(16));
     }
 
-    // ALLOCATOR_ALGORITHM_DEDICATED
+    // RESOURCE_ALLOCATION_ALGORITHM_DEDICATED
     {
         RESOURCE_ALLOCATOR_DESC newAllocatorDesc = allocatorDesc;
-        newAllocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+        newAllocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
         newAllocatorDesc.PreferredResourceHeapSize = GPGMM_MB_TO_BYTES(12);
 
         ComPtr<IResourceAllocator> resourceAllocator;
@@ -779,7 +779,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateSmallTexture) {
     {
         RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
         allocatorDesc.Flags = RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND;
-        allocatorDesc.SubAllocationAlgorithm = ALLOCATOR_ALGORITHM_DEDICATED;
+        allocatorDesc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
 
         ComPtr<IResourceAllocator> resourceAllocator;
         ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),

@@ -94,10 +94,10 @@ namespace {
             static_cast<RESOURCE_ALLOCATOR_FLAGS>(allocatorDescJson["Flags"].asInt());
         newAllocatorDesc.ResourceHeapTier =
             static_cast<D3D12_RESOURCE_HEAP_TIER>(allocatorDescJson["ResourceHeapTier"].asInt());
-        newAllocatorDesc.SubAllocationAlgorithm =
-            static_cast<ALLOCATOR_ALGORITHM>(allocatorDescJson["SubAllocationAlgorithm"].asInt());
+        newAllocatorDesc.SubAllocationAlgorithm = static_cast<RESOURCE_ALLOCATION_ALGORITHM>(
+            allocatorDescJson["SubAllocationAlgorithm"].asInt());
         newAllocatorDesc.PoolAlgorithm =
-            static_cast<ALLOCATOR_ALGORITHM>(allocatorDescJson["PoolAlgorithm"].asInt());
+            static_cast<RESOURCE_ALLOCATION_ALGORITHM>(allocatorDescJson["PoolAlgorithm"].asInt());
         newAllocatorDesc.PreferredResourceHeapSize =
             allocatorDescJson["PreferredResourceHeapSize"].asUInt64();
         newAllocatorDesc.MaxResourceHeapSize = allocatorDescJson["MaxResourceHeapSize"].asUInt64();
