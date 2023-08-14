@@ -18,6 +18,7 @@
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocationD3D12.h"
 #include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
@@ -73,7 +74,7 @@ namespace gpgmm::d3d12 {
             &resourceHeap);
 
         if (FAILED(hr)) {
-            return {static_cast<ErrorCode>(hr)};
+            return GetErrorCode(hr);
         }
 
         if (info.SizeInBytes > request.SizeInBytes) {

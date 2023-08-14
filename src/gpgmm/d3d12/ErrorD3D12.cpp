@@ -23,6 +23,38 @@
 
 namespace gpgmm::d3d12 {
 
+    ErrorCode GetErrorCode(HRESULT error) {
+        switch (error) {
+            case E_INVALIDARG:
+            case E_POINTER:
+                return ErrorCode::kInvalidArgument;
+            case E_UNEXPECTED:
+                return ErrorCode::kBadOperation;
+            default:
+                return ErrorCode::kUnknown;
+        }
+    }
+
+    HRESULT GetErrorResult(ErrorCode error) {
+        switch (error) {
+            case ErrorCode::kInvalidArgument:
+                return E_INVALIDARG;
+            case ErrorCode::kBadOperation:
+                return E_UNEXPECTED;
+            default:
+                return E_FAIL;
+        }
+    }
+
+    bool IsErrorResultFatal(HRESULT error) {
+        switch (error) {
+            case E_UNEXPECTED:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     std::string GetErrorMessage(HRESULT error) noexcept {
         std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
         std::stringstream ss;

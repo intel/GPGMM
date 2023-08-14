@@ -976,15 +976,17 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::TryAllocateResource(MemoryAllocatorBase* allocator,
                                                    const MemoryAllocationRequest& request,
                                                    D3D12CreateResourceFn&& createResourceFn) {
+        ASSERT(allocator != nullptr);
+
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
             allocator->TryAllocateMemory(request);
-        if (FAILED(result.GetErrorCode())) {
+        if (!result.IsSuccess()) {
             // NeverAllocate always fails, so suppress it.
             if (!request.NeverAllocate) {
                 DebugEvent(MessageId::kPerformanceWarning, this)
                     << "Unable to allocate memory for request.";
             }
-            return static_cast<HRESULT>(result.GetErrorCode());
+            return GetErrorResult(result.GetErrorCode());
         }
 
         std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
