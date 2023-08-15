@@ -15,6 +15,7 @@
 #ifndef SRC_GPGMM_COMMON_THREADPOOL_H_
 #define SRC_GPGMM_COMMON_THREADPOOL_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/utils/NonCopyable.h"
 
 #include <memory>
@@ -26,7 +27,7 @@ namespace gpgmm {
         virtual ~VoidCallback() = default;
 
         // Define operator () that accepts no parameters ().
-        virtual void operator()() = 0;
+        virtual MaybeError operator()() = 0;
     };
 
     class ThreadPool;
