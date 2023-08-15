@@ -19,25 +19,30 @@
 
 #include <utility>
 
-#define GPGMM_TRY_ASSIGN(expr, value)              \
-    {                                              \
-        auto result = expr;                        \
-        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
-            return result;                         \
-        }                                          \
-        value = result.AcquireResult();            \
-    }                                              \
-    for (;;)                                       \
+// Generates a unique variable name to avoid variable shadowing with result variables.
+#define GPGMM_CONCAT1(x, y) x##y
+#define GPGMM_CONCAT2(x, y) GPGMM_CONCAT1(x, y)
+#define GPGMM_LOCAL_VAR(name) GPGMM_CONCAT2(GPGMM_CONCAT2(_localVar, __LINE__), name)
+
+#define GPGMM_TRY_ASSIGN(expr, value)                               \
+    {                                                               \
+        auto GPGMM_LOCAL_VAR(Result) = expr;                        \
+        if (GPGMM_UNLIKELY(!GPGMM_LOCAL_VAR(Result).IsSuccess())) { \
+            return GPGMM_LOCAL_VAR(Result);                         \
+        }                                                           \
+        value = GPGMM_LOCAL_VAR(Result).AcquireResult();            \
+    }                                                               \
+    for (;;)                                                        \
     break
 
-#define GPGMM_RETURN_IF_ERROR(expr)                \
-    {                                              \
-        auto result = expr;                        \
-        if (GPGMM_UNLIKELY(!result.IsSuccess())) { \
-            return result.AcquireError();          \
-        }                                          \
-    }                                              \
-    for (;;)                                       \
+#define GPGMM_RETURN_IF_ERROR(expr)                                 \
+    {                                                               \
+        auto GPGMM_LOCAL_VAR(Result) = expr;                        \
+        if (GPGMM_UNLIKELY(!GPGMM_LOCAL_VAR(Result).IsSuccess())) { \
+            return GPGMM_LOCAL_VAR(Result).AcquireError();          \
+        }                                                           \
+    }                                                               \
+    for (;;)                                                        \
     break
 
 #define GPGMM_RETURN_ERROR_IF(obj, expr, msg, error) \
