@@ -25,8 +25,9 @@ using namespace gpgmm;
 
 class Task : public VoidCallback {
   public:
-    void operator()() {
+    MaybeError operator()() {
         ASSERT(true);
+        return {};
     }
 };
 

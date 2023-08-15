@@ -41,7 +41,7 @@ namespace gpgmm::d3d12 {
         CloseHandle(mBudgetNotificationUpdateEvent);
     }
 
-    void BudgetUpdateTask::operator()() {
+    MaybeError BudgetUpdateTask::operator()() {
         HRESULT hr = GetLastError();
         bool isExiting = false;
         while (!isExiting && SUCCEEDED(hr)) {
@@ -81,6 +81,7 @@ namespace gpgmm::d3d12 {
         }
 
         SetLastError(hr);
+        return GetErrorCode(hr);
     }
 
     HRESULT BudgetUpdateTask::GetLastError() const {

@@ -27,9 +27,10 @@ namespace gpgmm {
             : mAllocator(allocator), mRequest(request) {
         }
 
-        void operator()() override {
+        MaybeError operator()() override {
             std::lock_guard<std::mutex> lock(mAllocationMutex);
             mAllocation = mAllocator->TryAllocateMemory(mRequest);
+            return mAllocation.GetErrorCode();
         }
 
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireAllocation() {

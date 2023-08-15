@@ -31,7 +31,7 @@ namespace gpgmm::d3d12 {
         BudgetUpdateTask(ResidencyManager* const residencyManager, IDXGIAdapter3* adapter);
         ~BudgetUpdateTask() override;
 
-        void operator()() override;
+        MaybeError operator()() override;
 
         HRESULT GetLastError() const;
 
