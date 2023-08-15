@@ -937,29 +937,35 @@ namespace gpgmm::d3d12 {
             (RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS{allocationDescriptor, resourceDescriptor,
                                                        initialResourceState, pClearValue}));
 
-        std::lock_guard<std::mutex> lock(mMutex);
         ComPtr<IResourceAllocation> allocation;
-        GPGMM_RETURN_IF_FAILED(
-            CreateResourceInternal(allocationDescriptor, resourceDescriptor, initialResourceState,
-                                   pClearValue, &allocation),
-            mDevice);
+        {
+            // Mutex must be destroyed before the allocation gets released. This occurs
+            // when the allocation never calls Detach() below and calls release which
+            // re-enters |this| upon DeallocateMemory().
+            std::lock_guard<std::mutex> lock(mMutex);
+            GPGMM_RETURN_IF_FAILED(
+                CreateResourceInternal(allocationDescriptor, resourceDescriptor,
+                                       initialResourceState, pClearValue, &allocation),
+                mDevice);
 
-        ASSERT(allocation->GetResource() != nullptr);
+            ASSERT(allocation->GetResource() != nullptr);
 
-        if (GPGMM_UNLIKELY(mTrackingAllocator)) {
-            GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
-                                   mDevice);
-            mTrackingAllocator->TrackAllocation(static_cast<ResourceAllocation*>(allocation.Get()));
-        }
+            if (GPGMM_UNLIKELY(mTrackingAllocator)) {
+                GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
+                                       mDevice);
+                mTrackingAllocator->TrackAllocation(
+                    static_cast<ResourceAllocation*>(allocation.Get()));
+            }
 
-        // Update the current usage counters.
-        if (mUseDetailedTimingEvents) {
-            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
-        }
+            // Update the current usage counters.
+            if (mUseDetailedTimingEvents) {
+                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
+            }
 
-        if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
-            CheckAndReportAllocationMisalignment(
-                *static_cast<ResourceAllocation*>(allocation.Get()));
+            if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
+                CheckAndReportAllocationMisalignment(
+                    *static_cast<ResourceAllocation*>(allocation.Get()));
+            }
         }
 
         if (ppResourceAllocationOut != nullptr) {
