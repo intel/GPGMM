@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
         if (FAILED(hr)) {
             ErrorLog(ErrorCode::kBudgetInvalid, mResidencyManager)
                 << "Unable to update budget: " +
-                       GetDeviceErrorMessage(mResidencyManager->mDevice, hr);
+                       GetDeviceErrorMessage(hr, mResidencyManager->mDevice);
         }
 
         SetLastError(hr);
