@@ -22,10 +22,10 @@
 
 namespace gpgmm::d3d12 {
 
-    struct RESOURCE_ALLOCATION_DESC;
+    struct RESOURCE_RESOURCE_ALLOCATION_DESC;
 
     struct RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS {
-        const ALLOCATION_DESC& allocationDescriptor;
+        const RESOURCE_ALLOCATION_DESC& allocationDescriptor;
         const D3D12_RESOURCE_DESC& resourceDescriptor;
         D3D12_RESOURCE_STATES initialResourceState;
         const D3D12_CLEAR_VALUE* clearValue;
@@ -46,11 +46,11 @@ namespace gpgmm::d3d12 {
         static JSONDict Serialize();
         static JSONDict Serialize(const RESOURCE_ALLOCATOR_DESC& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS& params);
-        static JSONDict Serialize(const ALLOCATION_DESC& desc);
+        static JSONDict Serialize(const RESOURCE_ALLOCATION_DESC& desc);
         static JSONDict Serialize(const RESIDENCY_HEAP_CREATE_RESIDENCY_HEAP_PARAMS& params);
         static JSONDict Serialize(const RESIDENCY_HEAP_DESC& desc);
         static JSONDict Serialize(const RESIDENCY_HEAP_INFO& info);
-        static JSONDict Serialize(const RESOURCE_ALLOCATION_DESC& desc);
+        static JSONDict Serialize(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc);
         static JSONDict Serialize(const RESOURCE_ALLOCATION_INFO& info);
         static JSONDict Serialize(const RESIDENCY_MANAGER_EXECUTE_COMMAND_LISTS_PARAMS& params);
         static JSONDict Serialize(const RESIDENCY_MANAGER_DESC& desc);

@@ -356,7 +356,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyList) {
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
                                              mAdapter.Get(), &resourceAllocator, nullptr));
 
-    ALLOCATION_DESC allocationDesc = {};
+    RESOURCE_ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     ComPtr<IResourceAllocation> allocation;
@@ -507,7 +507,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
 
-    ALLOCATION_DESC bufferAllocationDesc = {};
+    RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     // Keep allocating until we reach the budget.
@@ -573,7 +573,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
 
-    ALLOCATION_DESC bufferAllocationDesc = {};
+    RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
@@ -622,7 +622,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetDisablesGrowth) {
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
 
-    ALLOCATION_DESC bufferAllocationDesc = {};
+    RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     while (GetStats(resourceAllocator).UsedHeapUsage + kBufferMemorySize <= kDefaultBudget) {
@@ -663,7 +663,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
 
-    ALLOCATION_DESC bufferAllocationDesc = {};
+    RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     // Keep allocating until we reach the budget.

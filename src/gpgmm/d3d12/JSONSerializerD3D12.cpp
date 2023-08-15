@@ -58,7 +58,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const ALLOCATION_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_DESC& desc) {
         JSONDict dict;
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("HeapType", desc.HeapType);
@@ -181,7 +181,7 @@ namespace gpgmm::d3d12 {
     }
 
     // static
-    JSONDict JSONSerializer::Serialize(const RESOURCE_ALLOCATION_DESC& desc) {
+    JSONDict JSONSerializer::Serialize(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc) {
         JSONDict dict;
         dict.AddItem("SizeInBytes", desc.SizeInBytes);
         dict.AddItem("HeapOffset", desc.HeapOffset);

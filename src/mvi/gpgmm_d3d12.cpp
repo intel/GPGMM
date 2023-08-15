@@ -363,7 +363,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+    HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* pClearValue,
@@ -393,7 +393,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+    HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                               ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
         return E_NOTIMPL;
@@ -445,7 +445,7 @@ namespace gpgmm::d3d12 {
 
     CreateCommittedResourceCallbackContext::CreateCommittedResourceCallbackContext(
         ID3D12Device* device,
-        ALLOCATION_DESC allocationDescriptor,
+        RESOURCE_ALLOCATION_DESC allocationDescriptor,
         Microsoft::WRL::ComPtr<ID3D12Resource> resource,
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
