@@ -518,33 +518,33 @@ namespace gpgmm::d3d12 {
         UINT64 CurrentHeapCount;
     };
 
-    /** \enum ALLOCATION_TYPE
+    /** \enum RESOURCE_ALLOCATION_TYPE
     Represents how memory was allocated.
     */
-    enum ALLOCATION_TYPE {
+    enum RESOURCE_ALLOCATION_TYPE {
         /** \brief Not yet allocated or invalid.
 
         This is an invalid state that assigned temporary before the actual method is known.
         */
-        ALLOCATION_TYPE_UNKNOWN = 0,
+        RESOURCE_ALLOCATION_TYPE_UNKNOWN = 0,
 
         /** \brief Not sub-divided.
 
         One and only one allocation exists for the memory.
         */
-        ALLOCATION_TYPE_STANDALONE = 1,
+        RESOURCE_ALLOCATION_TYPE_STANDALONE = 1,
 
         /** \brief Sub-divided using one or more allocations.
 
         Underlying memory will be broken up into one or more memory allocations.
         */
-        ALLOCATION_TYPE_SUBALLOCATED = 2,
+        RESOURCE_ALLOCATION_TYPE_SUBALLOCATED = 2,
 
         /** \brief Sub-divided within a single memory allocation.
 
         A single memory allocation will be broken into one or more sub-allocations.
         */
-        ALLOCATION_TYPE_SUBALLOCATED_WITHIN = 3,
+        RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN = 3,
     };
 
     /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
@@ -676,7 +676,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Describes the method used to allocate memory for the resource.
          */
-        ALLOCATION_TYPE Type;
+        RESOURCE_ALLOCATION_TYPE Type;
     };
 
     /** \brief ResourceAllocation is an allocation that contains a ID3D12Resource.
