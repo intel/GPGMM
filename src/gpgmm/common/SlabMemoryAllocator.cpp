@@ -202,22 +202,19 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        GPGMM_RETURN_ERROR_IF(request.SizeInBytes > mBlockSize,
-                              "Allocation size exceeded block size.");
+        GPGMM_RETURN_ERROR_IF(this, request.SizeInBytes > mBlockSize,
+                              "Allocation size exceeded block size.", ErrorCode::kSizeExceeded);
 
         uint64_t slabSize =
             ComputeSlabSize(request.SizeInBytes, std::max(mMinSlabSize, mLastUsedSlabSize),
                             request.AvailableForAllocation);
 
         // Slab cannot exceed memory size.
-        if (slabSize > mMaxSlabSize) {
-            DebugLog(MessageId::kPerformanceWarning, this)
-                << "Slab allocation was disabled because the slab size exceeded the max slab size "
-                   "allowed: "
-                << GPGMM_BYTES_TO_MB(slabSize) << " vs " << GPGMM_BYTES_TO_MB(mMaxSlabSize)
-                << " MBs.";
-            return {};
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this, slabSize > mMaxSlabSize,
+            "Slab allocation was disabled because the slab exceeded the max size: " +
+                GetBytesToSizeInUnits(slabSize) + " vs " + GetBytesToSizeInUnits(mMaxSlabSize),
+            ErrorCode::kSizeExceeded);
 
         // Get or create the cache containing slabs of the slab size.
         SlabCache* pCache = GetOrCreateCache(slabSize);
@@ -231,7 +228,8 @@ namespace gpgmm {
                     request.SizeInBytes, static_cast<uint64_t>(slabSize * mSlabGrowthFactor),
                     request.AvailableForAllocation);
 
-                GPGMM_RETURN_ERROR_IF(newSlabSize == kInvalidSize, "Slab size was invalid.");
+                GPGMM_RETURN_ERROR_IF(this, newSlabSize == kInvalidSize, "Slab size was invalid.",
+                                      ErrorCode::kSizeExceeded);
 
                 // If the new slab size exceeds the limit, then re-use the previous, smaller size.
                 if (newSlabSize > mMaxSlabSize) {
@@ -521,7 +519,8 @@ namespace gpgmm {
 
         const uint64_t blockSize = AlignTo(request.SizeInBytes, request.Alignment);
 
-        GPGMM_RETURN_ERROR_IF(blockSize > mMaxSlabSize, "Block size exceeded max slab size.");
+        GPGMM_RETURN_ERROR_IF(this, blockSize > mMaxSlabSize, "Block size exceeded max slab size.",
+                              ErrorCode::kSizeExceeded);
 
         // Create a slab allocator for the new entry.
         auto entry =

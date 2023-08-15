@@ -18,7 +18,7 @@
 
 namespace gpgmm {
 
-    const char* GetErrorFromID(ErrorCode errorCode) {
+    const char* GetErrorCodeToChar(ErrorCode errorCode) {
         switch (errorCode) {
             case ErrorCode::kNone:
                 return "";
@@ -26,8 +26,6 @@ namespace gpgmm {
                 return "UNKNOWN";
             case ErrorCode::kSizeExceeded:
                 return "SIZE_EXCEEDED";
-            case ErrorCode::kAlignmentMismatch:
-                return "ALIGNMENT_MISMATCH";
             case ErrorCode::kAllocatorFailed:
                 return "ALLOCATOR_FAILED";
             case ErrorCode::kPrefetchFailed:
