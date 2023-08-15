@@ -159,30 +159,37 @@ namespace gpgmm {
 
     MaybeError MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
         // Check for non-zero size and alignment.
-        GPGMM_RETURN_ERROR_IF(request.SizeInBytes == 0, "Request cannot have zero size.");
-        GPGMM_RETURN_ERROR_IF(request.Alignment == 0, "Request cannot have zero alignment.");
+        GPGMM_RETURN_ERROR_IF(this, request.SizeInBytes == 0, "Request cannot have zero size.",
+                              ErrorCode::kValidationError);
+        GPGMM_RETURN_ERROR_IF(this, request.Alignment == 0, "Request cannot have zero alignment.",
+                              ErrorCode::kValidationError);
 
         // Check request size cannot overflow.
         GPGMM_RETURN_ERROR_IF(
+            this,
             request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1),
             "Requested size invalid due to overflow: " +
-                GetBytesToSizeInUnits(request.SizeInBytes) + ".");
+                GetBytesToSizeInUnits(request.SizeInBytes) + ".",
+            ErrorCode::kValidationError);
 
         // Check request size cannot overflow |this| memory allocator.
         const uint64_t requestedAlignedSize = AlignTo(request.SizeInBytes, request.Alignment);
         GPGMM_RETURN_ERROR_IF(
-            GetMemorySize() != kInvalidSize && requestedAlignedSize > GetMemorySize(),
+            this, GetMemorySize() != kInvalidSize && requestedAlignedSize > GetMemorySize(),
             "Requested size, after alignment, exceeds memory size: " +
                 GetBytesToSizeInUnits(requestedAlignedSize) + " vs " +
-                GetBytesToSizeInUnits(GetMemorySize()) + ".");
+                GetBytesToSizeInUnits(GetMemorySize()) + ".",
+            ErrorCode::kValidationError);
 
         // Check request size has compatible alignment with |this| memory allocator.
         // Alignment value of 1 means no alignment required.
         GPGMM_RETURN_ERROR_IF(
+            this,
             GetMemoryAlignment() == 0 ||
                 (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment)),
             "Requested alignment exceeds memory alignment: " + std::to_string(request.Alignment) +
-                " vs " + std::to_string(GetMemoryAlignment()) + ".");
+                " vs " + std::to_string(GetMemoryAlignment()) + ".",
+            ErrorCode::kValidationError);
 
         return {};
     }

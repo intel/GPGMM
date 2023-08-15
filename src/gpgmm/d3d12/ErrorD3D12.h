@@ -25,16 +25,16 @@
 #define GPGMM_RETURN_IF_NULLPTR(ptr) \
     GPGMM_RETURN_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
 
-#define GPGMM_RETURN_IF_FAILED(expr, device)                           \
-    {                                                                  \
-        HRESULT hr = expr;                                             \
-        if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
-            gpgmm::ErrorLog(GetErrorCode(hr))                          \
-                << #expr << ": " << GetDeviceErrorMessage(hr, device); \
-            return hr;                                                 \
-        }                                                              \
-    }                                                                  \
-    for (;;)                                                           \
+#define GPGMM_RETURN_IF_FAILED(expr, device)                                     \
+    {                                                                            \
+        HRESULT hr = expr;                                                       \
+        if (GPGMM_UNLIKELY(FAILED(hr))) {                                        \
+            gpgmm::ErrorLog(GetErrorCode(hr))                                    \
+                << #expr << ": " << GetErrorResultWithRemovalReason(hr, device); \
+            return hr;                                                           \
+        }                                                                        \
+    }                                                                            \
+    for (;;)                                                                     \
     break
 
 #define GPGMM_RETURN_IF_SUCCEEDED(expr)    \
@@ -59,8 +59,8 @@
     for (;;)                                                                         \
     break
 
-#define GPGMM_ASSERT_IF_FAILED(expr) ASSERT(SUCCEEDED(expr));
-#define GPGMM_ASSERT_IF_SUCCEEDED(expr) ASSERT(FAILED(expr));
+#define GPGMM_ASSERT_FAILED(hr) ASSERT(SUCCEEDED(hr));
+#define GPGMM_ASSERT_SUCCEEDED(hr) ASSERT(FAILED(hr));
 
 namespace gpgmm::d3d12 {
 
@@ -70,7 +70,8 @@ namespace gpgmm::d3d12 {
 
     // Returns HRESULT error as a printable message.
     // If the device is also specified and removed, a detailed message is supplied.
-    std::string GetDeviceErrorMessage(HRESULT error, ID3D12Device* device);
+    std::string GetErrorResultWithRemovalReason(HRESULT error, ID3D12Device* device);
+    std::string GetErrorResultToString(HRESULT error) noexcept;
 
 }  // namespace gpgmm::d3d12
 

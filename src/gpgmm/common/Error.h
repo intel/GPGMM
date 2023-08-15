@@ -40,12 +40,12 @@
     for (;;)                                       \
     break
 
-#define GPGMM_RETURN_ERROR_IF(expr, msg)                              \
-    if (GPGMM_UNLIKELY(expr)) {                                       \
-        gpgmm::DebugLog() << msg;                                     \
-        return std::move(::gpgmm::ErrorCode(kInternalFailureResult)); \
-    }                                                                 \
-    for (;;)                                                          \
+#define GPGMM_RETURN_ERROR_IF(obj, expr, msg, error) \
+    if (GPGMM_UNLIKELY(expr)) {                      \
+        gpgmm::ErrorLog(error, obj) << msg;          \
+        return std::move(error);                     \
+    }                                                \
+    for (;;)                                         \
     break
 
 namespace gpgmm {
@@ -54,18 +54,15 @@ namespace gpgmm {
         kNone,
         kUnknown,
         kSizeExceeded,
-        kAlignmentMismatch,
         kAllocatorFailed,
         kPrefetchFailed,
         kBudgetInvalid,
         kInvalidArgument,
         kBadOperation,
+        kValidationError,
     };
 
-    const char* GetErrorFromID(ErrorCode errorCode);
-
-    constexpr ErrorCode kInternalFailureResult = static_cast<ErrorCode>(-1);
-    constexpr ErrorCode kInternalSuccessResult = static_cast<ErrorCode>(0u);
+    const char* GetErrorCodeToChar(ErrorCode errorCode);
 
     // Wraps a backend error code with a result object.
     // Use Result::IsSuccess then Result::AcquireResult to use or else, use Result::GetErrorCode to
@@ -73,8 +70,8 @@ namespace gpgmm {
     template <typename ErrorT, typename ResultT>
     class Result {
       public:
-        // Empty result
-        Result() : mErrorCode(kInternalFailureResult) {
+        // Empty result with error.
+        Result() : mErrorCode(ErrorCode::kUnknown) {
             mResult = {};
         }
 
@@ -84,7 +81,7 @@ namespace gpgmm {
         }
 
         // Result but with no error
-        Result(ResultT&& result) : mErrorCode(kInternalSuccessResult), mResult(std::move(result)) {
+        Result(ResultT&& result) : mErrorCode(ErrorCode::kNone), mResult(std::move(result)) {
         }
 
         // Result with error.
@@ -115,7 +112,7 @@ namespace gpgmm {
         }
 
         bool IsSuccess() const {
-            return mErrorCode == kInternalSuccessResult;
+            return mErrorCode == ErrorCode::kNone;
         }
 
       private:
@@ -128,9 +125,11 @@ namespace gpgmm {
     template <typename ErrorT>
     class Result<ErrorT, void> {
       public:
-        Result() : mErrorCode(kInternalSuccessResult) {
+        // Result with no error.
+        Result() : mErrorCode(ErrorCode::kNone) {
         }
 
+        // Result with error.
         Result(ErrorT&& error) : mErrorCode(std::move(error)) {
         }
 
@@ -143,7 +142,7 @@ namespace gpgmm {
         }
 
         bool IsSuccess() const {
-            return mErrorCode == kInternalSuccessResult;
+            return mErrorCode == ErrorCode::kNone;
         }
 
         ErrorT&& AcquireError() {

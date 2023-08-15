@@ -138,7 +138,7 @@ namespace gpgmm {
         if (IsDebuggerPresent()) {
             std::string outputString;
             const std::string errorString =
-                (mSeverity == MessageSeverity::kError) ? GetErrorFromID(mErrorCode) : "";
+                (mSeverity == MessageSeverity::kError) ? GetErrorCodeToChar(mErrorCode) : "";
             if (mMessageId != MessageId::kUnknown) {
                 outputString =
                     std::string(kLogTag) + " " + std::string(severityName) +

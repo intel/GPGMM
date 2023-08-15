@@ -55,7 +55,7 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    std::string GetErrorMessage(HRESULT error) noexcept {
+    std::string GetErrorResultToString(HRESULT error) noexcept {
         std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
         std::stringstream ss;
         ss << WCharToUTF8(wstring.c_str()) << " (0x" << std::hex << std::uppercase
@@ -63,16 +63,15 @@ namespace gpgmm::d3d12 {
         return ss.str();
     }
 
-    std::string GetDeviceErrorMessage(HRESULT error, ID3D12Device* device) {
+    std::string GetErrorResultWithRemovalReason(HRESULT error, ID3D12Device* device) {
         if (error == DXGI_ERROR_DEVICE_REMOVED) {
             if (device == nullptr) {
-                return "Device was not found but removed " + GetErrorMessage(error);
+                return "Device was not found but removed " + GetErrorResultToString(error);
             }
-            return GetErrorMessage(error) +
-                   " with reason: " + GetErrorMessage(device->GetDeviceRemovedReason());
+            return GetErrorResultToString(error) +
+                   " with reason: " + GetErrorResultToString(device->GetDeviceRemovedReason());
         }
-
-        return GetErrorMessage(error);
+        return GetErrorResultToString(error);
     }
 
 }  // namespace gpgmm::d3d12
