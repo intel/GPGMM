@@ -1092,7 +1092,7 @@ namespace gpgmm::d3d12 {
 
         const bool requiresPadding = allocationDescriptor.ExtraRequiredResourcePadding > 0;
 
-        // Attempt to allocate using the most effective allocator.;
+        // Attempt to allocate using the most effective allocator.
         MemoryAllocatorBase* allocator = nullptr;
 
         // The requested size should always be the non-allocated size when possible. The
@@ -1192,22 +1192,24 @@ namespace gpgmm::d3d12 {
 
             // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the
             // alignment was unspecified, assign the smallest alignment possible.
+            MemoryAllocationRequest subAllocWithinRequest = request;
             if (resourceDescriptor.Alignment == 0) {
                 // Only constant buffers must be 256B aligned.
-                request.Alignment = (initialResourceState == D3D12_RESOURCE_STATE_GENERIC_READ)
-                                        ? D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT
-                                        : UpperPowerOfTwo(newResourceDesc.Width);
+                subAllocWithinRequest.Alignment =
+                    (initialResourceState == D3D12_RESOURCE_STATE_GENERIC_READ)
+                        ? D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT
+                        : UpperPowerOfTwo(newResourceDesc.Width);
             } else {
-                request.Alignment = resourceDescriptor.Alignment;
+                subAllocWithinRequest.Alignment = resourceDescriptor.Alignment;
             }
 
             // Pre-fetching is not supported for resources since the pre-fetch thread must allocate
             // through |this| via CreateCommittedResource which is already locked by
             // CreateResource().
-            request.AlwaysPrefetch = false;
+            subAllocWithinRequest.AlwaysPrefetch = false;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
-                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+                allocator, subAllocWithinRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
@@ -1242,10 +1244,11 @@ namespace gpgmm::d3d12 {
                 allocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            request.Alignment = resourceInfo.Alignment;
+            MemoryAllocationRequest subAllocRequest = request;
+            subAllocRequest.Alignment = resourceInfo.Alignment;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
-                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+                allocator, subAllocRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -1259,7 +1262,7 @@ namespace gpgmm::d3d12 {
                         mDevice);
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.SizeInBytes = request.SizeInBytes;
+                    allocationDesc.SizeInBytes = subAllocRequest.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
                     allocationDesc.Type = static_cast<ALLOCATION_TYPE>(subAllocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
@@ -1288,10 +1291,11 @@ namespace gpgmm::d3d12 {
                     mDedicatedResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            request.Alignment = allocator->GetMemoryAlignment();
+            MemoryAllocationRequest dedicatedRequest = request;
+            dedicatedRequest.Alignment = allocator->GetMemoryAlignment();
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(
-                TryAllocateResource(allocator, request, [&](const auto& allocation) -> HRESULT {
+            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+                allocator, dedicatedRequest, [&](const auto& allocation) -> HRESULT {
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
@@ -1301,7 +1305,7 @@ namespace gpgmm::d3d12 {
                         mDevice);
 
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.SizeInBytes = request.SizeInBytes;
+                    allocationDesc.SizeInBytes = dedicatedRequest.SizeInBytes;
                     allocationDesc.HeapOffset = allocation.GetOffset();
                     allocationDesc.Type = static_cast<ALLOCATION_TYPE>(allocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
