@@ -63,44 +63,13 @@ namespace gpgmm::d3d12 {
         return ss.str();
     }
 
-    std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error) {
+    std::string GetDeviceErrorMessage(HRESULT error, ID3D12Device* device) {
         if (error == DXGI_ERROR_DEVICE_REMOVED) {
             if (device == nullptr) {
                 return "Device was not found but removed " + GetErrorMessage(error);
             }
-
-            const HRESULT removedReason = device->GetDeviceRemovedReason();
-            std::string removedReasonStr = "Unknown.";
-            switch (removedReason) {
-                case DXGI_ERROR_DEVICE_HUNG: {
-                    removedReasonStr = "HUNG";
-                    break;
-                }
-                case DXGI_ERROR_DEVICE_REMOVED: {
-                    removedReasonStr = "REMOVED";
-                    break;
-                }
-                case DXGI_ERROR_DEVICE_RESET: {
-                    removedReasonStr = "RESET";
-                    break;
-                }
-                case DXGI_ERROR_DRIVER_INTERNAL_ERROR: {
-                    removedReasonStr = "INTERNAL_ERROR";
-                    break;
-                }
-                case DXGI_ERROR_INVALID_CALL: {
-                    removedReasonStr = "INVALID_CALL";
-                    break;
-                }
-                case S_OK: {
-                    removedReasonStr = "S_OK";
-                    break;
-                }
-                default:
-                    break;
-            }
-
-            return "Device reason: " + removedReasonStr + " " + GetErrorMessage(removedReason);
+            return GetErrorMessage(error) +
+                   " with reason: " + GetErrorMessage(device->GetDeviceRemovedReason());
         }
 
         return GetErrorMessage(error);

@@ -22,23 +22,15 @@
 
 #include <string>
 
-#define GPGMM_RETURN_IF_NULLPTR(expr)                                                  \
-    {                                                                                  \
-        HRESULT hr = E_POINTER;                                                        \
-        if (GPGMM_UNLIKELY(expr == nullptr)) {                                         \
-            gpgmm::ErrorLog(GetErrorCode(hr)) << #expr << ": " << GetErrorMessage(hr); \
-            return hr;                                                                 \
-        }                                                                              \
-    }                                                                                  \
-    for (;;)                                                                           \
-    break
+#define GPGMM_RETURN_IF_NULLPTR(ptr) \
+    GPGMM_RETURN_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
 
 #define GPGMM_RETURN_IF_FAILED(expr, device)                           \
     {                                                                  \
         HRESULT hr = expr;                                             \
         if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
             gpgmm::ErrorLog(GetErrorCode(hr))                          \
-                << #expr << ": " << GetDeviceErrorMessage(device, hr); \
+                << #expr << ": " << GetDeviceErrorMessage(hr, device); \
             return hr;                                                 \
         }                                                              \
     }                                                                  \
@@ -75,8 +67,10 @@ namespace gpgmm::d3d12 {
     HRESULT GetErrorResult(ErrorCode error);
     ErrorCode GetErrorCode(HRESULT error);
     bool IsErrorResultFatal(HRESULT error);
-    std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
-    std::string GetErrorMessage(HRESULT error) noexcept;
+
+    // Returns HRESULT error as a printable message.
+    // If the device is also specified and removed, a detailed message is supplied.
+    std::string GetDeviceErrorMessage(HRESULT error, ID3D12Device* device);
 
 }  // namespace gpgmm::d3d12
 
