@@ -22,25 +22,27 @@
 
 #include <string>
 
-#define GPGMM_RETURN_IF_NULLPTR(expr)                                         \
-    {                                                                         \
-        if (GPGMM_UNLIKELY(expr == nullptr)) {                                \
-            gpgmm::ErrorLog() << #expr << ": " << GetErrorMessage(E_POINTER); \
-            return E_POINTER;                                                 \
-        }                                                                     \
-    }                                                                         \
-    for (;;)                                                                  \
+#define GPGMM_RETURN_IF_NULLPTR(expr)                                                  \
+    {                                                                                  \
+        HRESULT hr = E_POINTER;                                                        \
+        if (GPGMM_UNLIKELY(expr == nullptr)) {                                         \
+            gpgmm::ErrorLog(GetErrorCode(hr)) << #expr << ": " << GetErrorMessage(hr); \
+            return hr;                                                                 \
+        }                                                                              \
+    }                                                                                  \
+    for (;;)                                                                           \
     break
 
-#define GPGMM_RETURN_IF_FAILED(expr, device)                                         \
-    {                                                                                \
-        HRESULT hr = expr;                                                           \
-        if (GPGMM_UNLIKELY(FAILED(hr))) {                                            \
-            gpgmm::ErrorLog() << #expr << ": " << GetDeviceErrorMessage(device, hr); \
-            return hr;                                                               \
-        }                                                                            \
-    }                                                                                \
-    for (;;)                                                                         \
+#define GPGMM_RETURN_IF_FAILED(expr, device)                           \
+    {                                                                  \
+        HRESULT hr = expr;                                             \
+        if (GPGMM_UNLIKELY(FAILED(hr))) {                              \
+            gpgmm::ErrorLog(GetErrorCode(hr))                          \
+                << #expr << ": " << GetDeviceErrorMessage(device, hr); \
+            return hr;                                                 \
+        }                                                              \
+    }                                                                  \
+    for (;;)                                                           \
     break
 
 #define GPGMM_RETURN_IF_SUCCEEDED(expr)    \
@@ -55,15 +57,14 @@
 
 // Same as GPGMM_RETURN_IF_SUCCEEDED but also returns if error is lethal.
 // Non-internal errors are always fatal and should not run re-attempt logic.
-#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                                  \
-    {                                                                             \
-        HRESULT hr = expr;                                                        \
-        if (GPGMM_LIKELY(SUCCEEDED(hr)) ||                                        \
-            GPGMM_UNLIKELY(hr != static_cast<HRESULT>(kInternalFailureResult))) { \
-            return hr;                                                            \
-        }                                                                         \
-    }                                                                             \
-    for (;;)                                                                      \
+#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                                     \
+    {                                                                                \
+        HRESULT hr = expr;                                                           \
+        if (GPGMM_LIKELY(SUCCEEDED(hr)) || GPGMM_UNLIKELY(IsErrorResultFatal(hr))) { \
+            return hr;                                                               \
+        }                                                                            \
+    }                                                                                \
+    for (;;)                                                                         \
     break
 
 #define GPGMM_ASSERT_IF_FAILED(expr) ASSERT(SUCCEEDED(expr));
@@ -71,6 +72,9 @@
 
 namespace gpgmm::d3d12 {
 
+    HRESULT GetErrorResult(ErrorCode error);
+    ErrorCode GetErrorCode(HRESULT error);
+    bool IsErrorResultFatal(HRESULT error);
     std::string GetDeviceErrorMessage(ID3D12Device* device, HRESULT error);
     std::string GetErrorMessage(HRESULT error) noexcept;
 
