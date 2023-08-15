@@ -18,14 +18,7 @@ var searchData=
   ['allocation_5ftype_5fsuballocated_15',['ALLOCATION_TYPE_SUBALLOCATED',['../namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41',1,'gpgmm::d3d12']]],
   ['allocation_5ftype_5fsuballocated_5fwithin_16',['ALLOCATION_TYPE_SUBALLOCATED_WITHIN',['../namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424',1,'gpgmm::d3d12']]],
   ['allocation_5ftype_5funknown_17',['ALLOCATION_TYPE_UNKNOWN',['../namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_18',['ALLOCATOR_ALGORITHM',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5fbuddy_5fsystem_19',['ALLOCATOR_ALGORITHM_BUDDY_SYSTEM',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5fdedicated_20',['ALLOCATOR_ALGORITHM_DEDICATED',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5fdefault_21',['ALLOCATOR_ALGORITHM_DEFAULT',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5ffixed_5fpool_22',['ALLOCATOR_ALGORITHM_FIXED_POOL',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5fsegmented_5fpool_23',['ALLOCATOR_ALGORITHM_SEGMENTED_POOL',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313',1,'gpgmm::d3d12']]],
-  ['allocator_5falgorithm_5fslab_24',['ALLOCATOR_ALGORITHM_SLAB',['../namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab',1,'gpgmm::d3d12']]],
-  ['allocator_5ffeature_25',['ALLOCATOR_FEATURE',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a',1,'gpgmm::d3d12']]],
-  ['allocator_5ffeature_5fresource_5fallocation_5fsupport_26',['ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b',1,'gpgmm::d3d12']]],
-  ['allocator_5fstats_27',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
+  ['allocator_5ffeature_18',['ALLOCATOR_FEATURE',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a',1,'gpgmm::d3d12']]],
+  ['allocator_5ffeature_5fresource_5fallocation_5fsupport_19',['ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT',['../namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b',1,'gpgmm::d3d12']]],
+  ['allocator_5fstats_20',['ALLOCATOR_STATS',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html',1,'gpgmm::d3d12']]]
 ];

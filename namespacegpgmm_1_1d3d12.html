@@ -166,17 +166,17 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a33ac7fa401378e4e3361fbae516c5c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3946897dfb4221430841cc3d229a8c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">ALLOCATOR_ALGORITHM</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7">ALLOCATOR_ALGORITHM_DEFAULT</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab">ALLOCATOR_ALGORITHM_SLAB</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59">ALLOCATOR_ALGORITHM_BUDDY_SYSTEM</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681">ALLOCATOR_ALGORITHM_FIXED_POOL</a> = 3
+<tr class="memitem:a8b9ccc2dab1eb8a41786bcaec3df0c73"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73">RESOURCE_ALLOCATION_ALGORITHM</a> { <br />
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73ac1aeab95204ded0b01369751fc107b77">RESOURCE_ALLOCATION_ALGORITHM_DEFAULT</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73a1005446b2bb6dc3853cbb01d4fd670d2">RESOURCE_ALLOCATION_ALGORITHM_SLAB</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73a5ca58d69d0f446b1fed186229697df6c">RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73ac7639d6189e35b342acfa73fd8d90359">RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL</a> = 3
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313">ALLOCATOR_ALGORITHM_SEGMENTED_POOL</a> = 4
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099">ALLOCATOR_ALGORITHM_DEDICATED</a> = 5
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73a3fbb462302c4587de9830b01a21ba460">RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL</a> = 4
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73add4301f72ef2dee3d41bca4494a977bb">RESOURCE_ALLOCATION_ALGORITHM_DEDICATED</a> = 5
 <br />
  }</td></tr>
-<tr class="separator:ad3946897dfb4221430841cc3d229a8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a8b9ccc2dab1eb8a41786bcaec3df0c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec66b5dc9f1b55002d33c5c75ac2f122"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122">ALLOCATION_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a94853c29e79662c916a6c1b2a0ead073">ALLOCATION_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#aec66b5dc9f1b55002d33c5c75ac2f122a2904eb820b689e47e79e18a3659777ab">ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP</a> = 0x1
@@ -429,75 +429,6 @@ is normally not tracked.
 
 </div>
 </div>
-<a id="ad3946897dfb4221430841cc3d229a8c0" name="ad3946897dfb4221430841cc3d229a8c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3946897dfb4221430841cc3d229a8c0">&#9670;&#160;</a></span>ALLOCATOR_ALGORITHM</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#ad3946897dfb4221430841cc3d229a8c0">gpgmm::d3d12::ALLOCATOR_ALGORITHM</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Specify the algorithms used for allocation. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7" name="ad3946897dfb4221430841cc3d229a8c0a524cd7d92d2428f88cd9a5d71f8328b7"></a>ALLOCATOR_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p>Use default allocation mechanism. </p>
-<pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
-selection of algorithm depends on:
-
-1. The heap properties or flags specified by the user.
-2. The size the resource being created.
-3. The amount of available memory.
-
-In general, the most efficient resource allocator will be attempted first (efficient
-being defined as fastest service-time to allocate/deallocate with smallest memory
-footprint), subject to other constraints. However, since it's impossible to predict all
-future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
-prove to be faster as expected. Further experimentation is recommended.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab" name="ad3946897dfb4221430841cc3d229a8c0a03ef0749a4926d3b245392f17e5a4aab"></a>ALLOCATOR_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p>Use the slab allocation mechanism. </p>
-<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-
-Slab allocation does not suffer from internal fragmentation but could externally fragment
-when many unique request sizes are used.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59" name="ad3946897dfb4221430841cc3d229a8c0a5595cc7698cb9d19a692a1d667b8ea59"></a>ALLOCATOR_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p>Use the buddy system mechanism. </p>
-<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
-
-Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
-does not suffer from external fragmentation as much since the resource heap size does not
-change.
-
-It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
-requests can fit within the specified PreferredResourceHeapSize but not too large where
-creating the larger resource heap becomes a bigger bottleneck.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681" name="ad3946897dfb4221430841cc3d229a8c0a0435146441261f6d76e99931ae5bd681"></a>ALLOCATOR_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p>Recycles resource heaps of a size being specified. </p>
-<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
-
-Fixed-size pool limits recycling to resource heaps equal to
-PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
-equivalent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313" name="ad3946897dfb4221430841cc3d229a8c0adeae6abe916395cf3e39140f07c48313"></a>ALLOCATOR_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p>Recycles resource heaps of any size using multiple pools. </p>
-<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099" name="ad3946897dfb4221430841cc3d229a8c0a8032a49123e5fb089d6f7413cbb23099"></a>ALLOCATOR_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p>Use the dedicated allocation mechanism. </p>
-<pre class="fragment">Allows resources to be created as a dedicated allocation, rather than sub-allocated.
-
-A dedicated allocation allocates exactly what is needed for the resource and nothing more.
-
-Internally, dedicated allocations are "placed resources" which allows the heap to be
-recycled by GPGMM. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
-"dedicated allocation" but without heaps being recycled by GPGMM.
-
-Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
 <a id="a24c166248417fa823597d7219566304a" name="a24c166248417fa823597d7219566304a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24c166248417fa823597d7219566304a">&#9670;&#160;</a></span>ALLOCATOR_FEATURE</h2>
 
@@ -648,6 +579,74 @@ instead of pushed by OS notifications using a background thread.
 <tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a" name="adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a"></a>RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires heaps to be in budget or E_OUTOFMEMORY. </p>
 <pre class="fragment">With this flag, heaps created for this residency manager will effectively never
 specify D3D12_RESIDENCY_MANAGER_FLAG_DENY_OVERBUDGET.
+</pre> </td></tr>
+</table>
+
+</div>
+</div>
+<a id="a8b9ccc2dab1eb8a41786bcaec3df0c73" name="a8b9ccc2dab1eb8a41786bcaec3df0c73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b9ccc2dab1eb8a41786bcaec3df0c73">&#9670;&#160;</a></span>RESOURCE_ALLOCATION_ALGORITHM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73">gpgmm::d3d12::RESOURCE_ALLOCATION_ALGORITHM</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Describes the algorithm used for allocation of resources. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73ac1aeab95204ded0b01369751fc107b77" name="a8b9ccc2dab1eb8a41786bcaec3df0c73ac1aeab95204ded0b01369751fc107b77"></a>RESOURCE_ALLOCATION_ALGORITHM_DEFAULT&#160;</td><td class="fielddoc"><p>Default allocation mechanism. </p>
+<pre class="fragment">Relies on internal heuristics to automatically determine the best allocation mechanism. The
+selection of algorithm depends on:
+
+1. The heap properties or flags specified by the user.
+2. The size the resource being created.
+3. The amount of available memory.
+
+In general, the most efficient resource allocator will be attempted first (efficient
+being defined as fastest service-time to allocate/deallocate with smallest memory
+footprint), subject to other constraints. However, since it's impossible to predict all
+future memory accesses, allocation techniques that rely on amortization of GPU heaps may not
+prove to be faster as expected. Further experimentation is recommended.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73a1005446b2bb6dc3853cbb01d4fd670d2" name="a8b9ccc2dab1eb8a41786bcaec3df0c73a1005446b2bb6dc3853cbb01d4fd670d2"></a>RESOURCE_ALLOCATION_ALGORITHM_SLAB&#160;</td><td class="fielddoc"><p>Slab allocation mechanism. </p>
+<pre class="fragment">Slab allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
+
+Slab allocation does not suffer from internal fragmentation but could externally fragment
+when many unique request sizes are used.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73a5ca58d69d0f446b1fed186229697df6c" name="a8b9ccc2dab1eb8a41786bcaec3df0c73a5ca58d69d0f446b1fed186229697df6c"></a>RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM&#160;</td><td class="fielddoc"><p>Buddy system mechanism. </p>
+<pre class="fragment">Buddy system allocate/deallocates in O(Log2) time using O(1) space.
+
+Buddy system suffers from internal fragmentation (ie. resources are not a power-of-two) but
+does not suffer from external fragmentation as much since the resource heap size does not
+change.
+
+It is recommend to specify a PreferredResourceHeapSize large enough such that multiple
+requests can fit within the specified PreferredResourceHeapSize but not too large where
+creating the larger resource heap becomes a bigger bottleneck.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73ac7639d6189e35b342acfa73fd8d90359" name="a8b9ccc2dab1eb8a41786bcaec3df0c73ac7639d6189e35b342acfa73fd8d90359"></a>RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL&#160;</td><td class="fielddoc"><p>Recycles resource heaps using a single pool. </p>
+<pre class="fragment">Fixed pools allocate/deallocate in O(1) time using O(N) space.
+
+Fixed-size pool limits recycling to resource heaps equal to
+PreferredResourceHeapSize. A PreferredResourceHeapSize of zero is effectively
+equivalent to RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73a3fbb462302c4587de9830b01a21ba460" name="a8b9ccc2dab1eb8a41786bcaec3df0c73a3fbb462302c4587de9830b01a21ba460"></a>RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL&#160;</td><td class="fielddoc"><p>Recycles resource heaps of any size using one or more pools. </p>
+<pre class="fragment">Segmented pool allocate/deallocates in O(Log2) time using O(N * K) space.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a8b9ccc2dab1eb8a41786bcaec3df0c73add4301f72ef2dee3d41bca4494a977bb" name="a8b9ccc2dab1eb8a41786bcaec3df0c73add4301f72ef2dee3d41bca4494a977bb"></a>RESOURCE_ALLOCATION_ALGORITHM_DEDICATED&#160;</td><td class="fielddoc"><p>Dedicate allocation resource heaps. </p>
+<pre class="fragment">Creates resources with their own resource heap, never sub-allocated.
+A dedicated allocation allocates exactly what is needed for the resource and nothing more.
+
+Internally, dedicated allocations are "placed resources" which allows the heap to be
+recycled. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
+"dedicated allocation" but without recycling heaps.
+
+Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
 </pre> </td></tr>
 </table>
 
