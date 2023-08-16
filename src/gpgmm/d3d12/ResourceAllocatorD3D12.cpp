@@ -72,17 +72,51 @@ namespace gpgmm::d3d12 {
             RESOURCE_HEAP_TYPE_INVALID,
         };
 
-        bool IsTexturesAllowed(D3D12_HEAP_FLAGS heapFlags, bool isMSAA) {
-            switch (heapFlags) {
-                case D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES:
-                case D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES:
-                case D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES:
-                    return true;
-                case D3D12_HEAP_FLAG_ALLOW_DISPLAY:
-                    return !isMSAA;
-                default:
-                    return false;
+        // Checks what D3D12_HEAP_FLAGS allow texture resource types (eg. 1D, 2D, 3D).
+        // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+        bool IsTexturesAllowed(D3D12_HEAP_FLAGS heapFlags,
+                               bool isMSAA,
+                               D3D12_RESOURCE_HEAP_TIER resourceHeapTier) {
+            // Mixed heaps require D3D12_RESOURCE_HEAP_TIER_2.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES) &&
+                resourceHeapTier >= D3D12_RESOURCE_HEAP_TIER_2) {
+                return true;
             }
+
+            // Non-RT and non-DS textures.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES)) {
+                return true;
+            }
+
+            // RT or DS only textures.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES)) {
+                return true;
+            }
+
+            // MSAA textures cannot be used with display heaps.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_DISPLAY)) {
+                return !isMSAA;
+            }
+
+            return false;
+        }
+
+        // Checks what D3D12_HEAP_FLAGS allow buffer resource types.
+        // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
+        bool IsBuffersAllowed(D3D12_HEAP_FLAGS heapFlags,
+                              D3D12_RESOURCE_HEAP_TIER resourceHeapTier) {
+            // Mixed heaps require D3D12_RESOURCE_HEAP_TIER_2.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES) &&
+                resourceHeapTier >= D3D12_RESOURCE_HEAP_TIER_2) {
+                return true;
+            }
+
+            // Buffers only.
+            if (HasAllFlags(heapFlags, D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS)) {
+                return true;
+            }
+
+            return false;
         }
 
         D3D12_HEAP_TYPE GetHeapType(RESOURCE_HEAP_TYPE resourceHeapType) {
@@ -610,7 +644,7 @@ namespace gpgmm::d3d12 {
             mResourceAllocatorOfType[resourceHeapTypeIndex] =
                 CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
 
-            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true)) {
+            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
                 mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
                     descriptor, heapFlags, heapProperties, msaaHeapAlignment);
             } else {
@@ -626,7 +660,7 @@ namespace gpgmm::d3d12 {
             mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
                 dedicatedDescriptor, heapFlags, heapProperties, heapAlignment);
 
-            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true)) {
+            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
                     CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties,
                                             msaaHeapAlignment);
@@ -635,10 +669,14 @@ namespace gpgmm::d3d12 {
                     std::make_unique<SentinelMemoryAllocator>();
             }
 
-            // Resource specific allocators.
-            mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
-                CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapAlignment,
-                                           GetInitialResourceState(heapType));
+            if (IsBuffersAllowed(heapFlags, mResourceHeapTier)) {
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
+                    CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapAlignment,
+                                               GetInitialResourceState(heapType));
+            } else {
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
+                    std::make_unique<SentinelMemoryAllocator>();
+            }
 
             // Cache resource sizes commonly requested.
             // Allows the next memory block to be made available upon request without
