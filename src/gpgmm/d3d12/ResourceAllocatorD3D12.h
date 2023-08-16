@@ -63,8 +63,8 @@ namespace gpgmm::d3d12 {
                                ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) override;
-        HRESULT QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) override;
-        HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature,
+        HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) override;
+        HRESULT CheckFeatureSupport(RESOURCE_ALLOCATOR_FEATURE feature,
                                     void* pFeatureSupportData,
                                     uint32_t featureSupportDataSize) const override;
 
@@ -150,7 +150,7 @@ namespace gpgmm::d3d12 {
         // MemoryAllocatorBase interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
-        HRESULT QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats);
+        HRESULT QueryStatsInternal(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats);
 
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
