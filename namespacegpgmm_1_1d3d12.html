@@ -147,12 +147,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a">RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET</a> = 0x4
  }</td></tr>
 <tr class="separator:adcdbaecdcd1fa9578f444da18babcc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26eab6e69ba858e7b6e367ea935324c4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4">RESOURCE_ALLOCATION_TYPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4a374dc9f8fd3288665dceb2e17cf7a478">RESOURCE_ALLOCATION_TYPE_UNKNOWN</a> = 0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4ad373311e851b518457648f7a4dda4c0a">RESOURCE_ALLOCATION_TYPE_STANDALONE</a> = 1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4af4cd3000177c7334c7dbf49e5212835e">RESOURCE_ALLOCATION_TYPE_SUBALLOCATED</a> = 2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4aa9ce6aa06422c86a462bcd93bc38c1d9">RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN</a> = 3
+<tr class="memitem:a615dbaeb4ce00f65ebb0339e48ff4643"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643">ALLOCATION_TYPE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb">ALLOCATION_TYPE_UNKNOWN</a> = 0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692">ALLOCATION_TYPE_STANDALONE</a> = 1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41">ALLOCATION_TYPE_SUBALLOCATED</a> = 2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424">ALLOCATION_TYPE_SUBALLOCATED_WITHIN</a> = 3
  }</td></tr>
-<tr class="separator:a26eab6e69ba858e7b6e367ea935324c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a615dbaeb4ce00f65ebb0339e48ff4643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33ac7fa401378e4e3361fbae516c5c9a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9a">RESOURCE_ALLOCATOR_FLAGS</a> { <br />
 &#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aafb7b2ee41647752e26ed4f4d806643e6">RESOURCE_ALLOCATOR_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9aaeace11da07c766529cf73156f9890e22">RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED</a> = 0x1
@@ -400,6 +400,35 @@ is normally not tracked.
 
 </div>
 </div>
+<a id="a615dbaeb4ce00f65ebb0339e48ff4643" name="a615dbaeb4ce00f65ebb0339e48ff4643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a615dbaeb4ce00f65ebb0339e48ff4643">&#9670;&#160;</a></span>ALLOCATION_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a615dbaeb4ce00f65ebb0339e48ff4643">gpgmm::d3d12::ALLOCATION_TYPE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Represents how memory was allocated. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb" name="a615dbaeb4ce00f65ebb0339e48ff4643ada7e1adf5efc01e8f17e23b8ee88defb"></a>ALLOCATION_TYPE_UNKNOWN&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
+<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692" name="a615dbaeb4ce00f65ebb0339e48ff4643a6bd74370eaf9acef7de02b8974d4e692"></a>ALLOCATION_TYPE_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
+<pre class="fragment">One and only one allocation exists for the memory.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41" name="a615dbaeb4ce00f65ebb0339e48ff4643a07f8302922c585412449ae0528b10c41"></a>ALLOCATION_TYPE_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
+<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
+</pre> </td></tr>
+<tr><td class="fieldname"><a id="a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424" name="a615dbaeb4ce00f65ebb0339e48ff4643a8e89dd60f649b5516bf269afc42bc424"></a>ALLOCATION_TYPE_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
+<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
+</pre> </td></tr>
+</table>
+
+</div>
+</div>
 <a id="a24c166248417fa823597d7219566304a" name="a24c166248417fa823597d7219566304a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24c166248417fa823597d7219566304a">&#9670;&#160;</a></span>ALLOCATOR_FEATURE</h2>
 
@@ -618,35 +647,6 @@ recycled. Otherwise, RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED is equivalent to a
 "dedicated allocation" but without recycling heaps.
 
 Dedicated allocation allocates/deallocates in O(1) time using O(N * pageSize) space.
-</pre> </td></tr>
-</table>
-
-</div>
-</div>
-<a id="a26eab6e69ba858e7b6e367ea935324c4" name="a26eab6e69ba858e7b6e367ea935324c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26eab6e69ba858e7b6e367ea935324c4">&#9670;&#160;</a></span>RESOURCE_ALLOCATION_TYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4">gpgmm::d3d12::RESOURCE_ALLOCATION_TYPE</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Represents how memory was allocated. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4a374dc9f8fd3288665dceb2e17cf7a478" name="a26eab6e69ba858e7b6e367ea935324c4a374dc9f8fd3288665dceb2e17cf7a478"></a>RESOURCE_ALLOCATION_TYPE_UNKNOWN&#160;</td><td class="fielddoc"><p>Not yet allocated or invalid. </p>
-<pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4ad373311e851b518457648f7a4dda4c0a" name="a26eab6e69ba858e7b6e367ea935324c4ad373311e851b518457648f7a4dda4c0a"></a>RESOURCE_ALLOCATION_TYPE_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
-<pre class="fragment">One and only one allocation exists for the memory.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4af4cd3000177c7334c7dbf49e5212835e" name="a26eab6e69ba858e7b6e367ea935324c4af4cd3000177c7334c7dbf49e5212835e"></a>RESOURCE_ALLOCATION_TYPE_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
-<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
-</pre> </td></tr>
-<tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4aa9ce6aa06422c86a462bcd93bc38c1d9" name="a26eab6e69ba858e7b6e367ea935324c4aa9ce6aa06422c86a462bcd93bc38c1d9"></a>RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
-<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
 </pre> </td></tr>
 </table>
 
