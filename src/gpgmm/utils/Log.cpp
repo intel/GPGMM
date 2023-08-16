@@ -151,8 +151,7 @@ namespace gpgmm {
                     std::string(kLogTag) + " " + std::string(severityName) +
                     "(tid: " + ToString(std::this_thread::get_id()) + "): " +
                     ((mObject != nullptr) ? ((mName + ": Addr=") + ToString(mObject) + ", ") : "") +
-                    fullMessage + ((errorString.empty()) ? "" : (" [ " + errorString + " ]")) +
-                    "\n";
+                    fullMessage + ((errorString.empty()) ? "" : (" [" + errorString + "]")) + "\n";
             }
 
             OutputDebugStringA(outputString.c_str());

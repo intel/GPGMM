@@ -476,7 +476,7 @@ namespace gpgmm::d3d12 {
 
         if (allocatorDescriptor.ResourceHeapTier != 0 &&
             allocatorDescriptor.ResourceHeapTier < caps->GetMaxResourceHeapTierSupported()) {
-            DebugLog(MessageId::kPerformanceWarning)
+            WarnLog(MessageId::kPerformanceWarning)
                 << "Resource heap tier requested was lower than what the device "
                    "supports. This is allowed but not recommended because it prevents "
                    "resources of different categories from sharing the same heap.";
@@ -518,7 +518,7 @@ namespace gpgmm::d3d12 {
 
         if ((allocatorDescriptor.Flags & RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT) &&
             !caps->IsCreateHeapNotResidentSupported()) {
-            DebugLog(MessageId::kPerformanceWarning)
+            WarnLog(MessageId::kPerformanceWarning)
                 << "RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT was requested but disallowed "
                    "because the device did not support creation of non-resident heaps.";
             newDescriptor.Flags ^= RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT;
@@ -1028,7 +1028,7 @@ namespace gpgmm::d3d12 {
         if (!result.IsSuccess()) {
             // NeverAllocate always fails, so suppress it.
             if (!request.NeverAllocate) {
-                DebugEvent(MessageId::kPerformanceWarning, this)
+                WarnEvent(MessageId::kPerformanceWarning, this)
                     << "Unable to allocate memory for request.";
             }
             return GetErrorResult(result.GetErrorCode());
@@ -1039,7 +1039,7 @@ namespace gpgmm::d3d12 {
 
         HRESULT hr = createResourceFn(*allocation);
         if (FAILED(hr)) {
-            ErrorLog(ErrorCode::kAllocatorFailed, this)
+            ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Failed to create resource using allocation.";
             allocator->DeallocateMemory(std::move(allocation));
         }
@@ -1094,7 +1094,7 @@ namespace gpgmm::d3d12 {
             if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
                 heapType = D3D12_HEAP_TYPE_UPLOAD;
             } else {
-                DebugLog(MessageId::kPerformanceWarning, this)
+                WarnLog(MessageId::kPerformanceWarning, this)
                     << "Unable to optimize resource allocation for supported UMA adapter "
                        "due to D3D12_HEAP_TYPE_READBACK being specified. Please consider "
                        "using an unspecified heap type if CPU read-back efficency is "
@@ -1377,7 +1377,7 @@ namespace gpgmm::d3d12 {
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
-            ErrorLog(ErrorCode::kAllocatorFailed, this)
+            ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was allowed to "
                    "be created.";
             return E_OUTOFMEMORY;
@@ -1385,7 +1385,7 @@ namespace gpgmm::d3d12 {
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
-            ErrorLog(ErrorCode::kAllocatorFailed, this)
+            ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because a padding was specified "
                    "but no resource allocator could be used.";
             return E_INVALIDARG;
@@ -1393,7 +1393,7 @@ namespace gpgmm::d3d12 {
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK) {
-                ErrorLog(ErrorCode::kAllocatorFailed, this)
+                ErrorLog(ErrorCode::kAllocationFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and fall-back was disabled.";
                 return E_OUTOFMEMORY;
@@ -1409,7 +1409,7 @@ namespace gpgmm::d3d12 {
             mDevice);
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kPerformanceWarning, this)
+            WarnLog(MessageId::kPerformanceWarning, this)
                 << "Resource heap is larger then the requested: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";

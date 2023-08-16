@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (info.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kPerformanceWarning, this)
+            WarnLog(MessageId::kPerformanceWarning, this)
                 << "Memory allocation was larger then the requested: "
                 << GetBytesToSizeInUnits(info.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";

@@ -59,12 +59,11 @@ namespace gpgmm {
         kNone,
         kUnknown,
         kSizeExceeded,
-        kAllocatorFailed,
+        kAllocationFailed,
         kPrefetchFailed,
         kBudgetInvalid,
         kInvalidArgument,
         kBadOperation,
-        kValidationError,
     };
 
     const char* GetErrorCodeToChar(ErrorCode errorCode);
