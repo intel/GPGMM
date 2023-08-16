@@ -64,6 +64,7 @@ namespace gpgmm {
         kBudgetInvalid,
         kInvalidArgument,
         kBadOperation,
+        kUnsupported,
     };
 
     const char* GetErrorCodeToChar(ErrorCode errorCode);
