@@ -31,6 +31,7 @@ namespace gpgmm::d3d12 {
     const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP heapSegment, bool isUMA);
     ID3D12Device* GetDevice(ID3D12DeviceChild* pDeviceChild);
     bool IsTexture(const D3D12_RESOURCE_DESC& resourceDescriptor);
+    bool IsBuffer(const D3D12_RESOURCE_DESC& resourceDescriptor);
 
 }  // namespace gpgmm::d3d12
 
