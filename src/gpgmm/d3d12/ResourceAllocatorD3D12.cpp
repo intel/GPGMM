@@ -927,7 +927,7 @@ namespace gpgmm::d3d12 {
         return resourceInfo;
     }
 
-    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+    HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                               const D3D12_RESOURCE_DESC& resourceDescriptor,
                                               D3D12_RESOURCE_STATES initialResourceState,
                                               const D3D12_CLEAR_VALUE* pClearValue,
@@ -1008,7 +1008,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocator::CreateResourceInternal(
-        const ALLOCATION_DESC& allocationDescriptor,
+        const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
@@ -1224,7 +1224,7 @@ namespace gpgmm::d3d12 {
                     GPGMM_RETURN_IF_FAILED(
                         resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)), mDevice);
 
-                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = resourceDescriptor.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
                     allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
@@ -1267,7 +1267,7 @@ namespace gpgmm::d3d12 {
                                              &placedResource),
                         mDevice);
 
-                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = subAllocRequest.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
                     allocationDesc.Type =
@@ -1311,7 +1311,7 @@ namespace gpgmm::d3d12 {
                                              clearValue, initialResourceState, &placedResource),
                         mDevice);
 
-                    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+                    RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = dedicatedRequest.SizeInBytes;
                     allocationDesc.HeapOffset = allocation.GetOffset();
                     allocationDesc.Type =
@@ -1377,7 +1377,7 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryCount++;
         mStats.UsedBlockUsage += allocationSize;
 
-        RESOURCE_ALLOCATION_DESC allocationDesc = {};
+        RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
         allocationDesc.SizeInBytes = request.SizeInBytes;
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
@@ -1394,7 +1394,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+    HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                               ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
         GPGMM_RETURN_IF_NULLPTR(pCommittedResource);
@@ -1468,7 +1468,7 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryCount++;
         mStats.UsedBlockUsage += allocationSize;
 
-        RESOURCE_ALLOCATION_DESC allocationDesc = {};
+        RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;

@@ -46,7 +46,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
         return 0;
     }
 
-    gpgmm::d3d12::ALLOCATION_DESC allocationDesc = {};
+    gpgmm::d3d12::RESOURCE_ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     ComPtr<gpgmm::d3d12::IResourceAllocation> allocation;

@@ -28,7 +28,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResidencyHeap;
 
-    struct RESOURCE_ALLOCATION_DESC {
+    struct RESOURCE_RESOURCE_ALLOCATION_DESC {
         uint64_t SizeInBytes;
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
@@ -60,7 +60,7 @@ namespace gpgmm::d3d12 {
       private:
         friend ResourceAllocator;
 
-        ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
+        ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
                            ResidencyManager* residencyManager,
                            MemoryAllocatorBase* allocator,
                            ResidencyHeap* resourceHeap,

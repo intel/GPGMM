@@ -36,8 +36,8 @@ using namespace gpgmm::d3d12;
 
 namespace {
 
-    ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescJson) {
-        ALLOCATION_DESC allocationDesc = {};
+    RESOURCE_ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescJson) {
+        RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.Flags = static_cast<ALLOCATION_FLAGS>(allocationDescJson["Flags"].asInt());
         allocationDesc.HeapType =
             static_cast<D3D12_HEAP_TYPE>(allocationDescJson["HeapType"].asInt());
@@ -285,7 +285,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             continue;
                         }
 
-                        ALLOCATION_DESC allocationDescriptor =
+                        RESOURCE_ALLOCATION_DESC allocationDescriptor =
                             ConvertToAllocationDesc(args["allocationDescriptor"]);
 
                         const D3D12_RESOURCE_STATES initialResourceState =

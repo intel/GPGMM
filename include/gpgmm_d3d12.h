@@ -1109,7 +1109,7 @@ namespace gpgmm::d3d12 {
     /** \struct ALLOCATION_FLAGS
     Specifies how allocations should be created.
     */
-    struct ALLOCATION_DESC {
+    struct RESOURCE_ALLOCATION_DESC {
         /** \brief Flags used to control how the resource will be allocated.
 
         Optional parameter. By default, GPGMM will decide automatically.
@@ -1132,7 +1132,7 @@ namespace gpgmm::d3d12 {
         /** \brief Additional heap flags that the resource requires.
 
         By default, GPGMM infers the required heap flags based on the required
-        fields in the D3D12_RESOURCE_DESC, RESOURCE_ALLOCATOR_DESC and ALLOCATION_DESC.
+        fields in the D3D12_RESOURCE_DESC, RESOURCE_ALLOCATOR_DESC and RESOURCE_ALLOCATION_DESC.
         But if additional heap flags are required, they can also be specified.
 
         It is recommended to only specify D3D12_HEAP_FLAG_NONE since not all
@@ -1260,7 +1260,7 @@ namespace gpgmm::d3d12 {
         strictly required to use the D3D12 resource equivalent methods (ex. Map, Unmap) through the
         returned ResourceAllocation.
 
-        @param allocationDescriptor A reference to ALLOCATION_DESC structure that provides
+        @param allocationDescriptor A reference to RESOURCE_ALLOCATION_DESC structure that provides
         properties for the resource allocation.
         @param resourceDescriptor A reference to the D3D12_RESOURCE_DESC structure that describes
         the resource.
@@ -1271,7 +1271,7 @@ namespace gpgmm::d3d12 {
         @param[out] ppResourceAllocationOut An optional pointer to a memory block that receives the
         required interface pointer to the created resource allocation object.
         */
-        virtual HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        virtual HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
                                        D3D12_RESOURCE_STATES initialResourceState,
                                        const D3D12_CLEAR_VALUE* pClearValue,
@@ -1281,7 +1281,7 @@ namespace gpgmm::d3d12 {
 
         Returns a ResourceAllocation which represents an existing resource with a resource heap.
 
-        @param allocationDescriptor A reference to ALLOCATION_DESC structure that provides.
+        @param allocationDescriptor A reference to RESOURCE_ALLOCATION_DESC structure that provides.
         properties for the resource allocation.
         @param pCommittedResource A pointer to a committed ID3D12Resource.
         @param[out] ppResourceAllocationOut Pointer to a memory block that receives a pointer to the
@@ -1289,7 +1289,7 @@ namespace gpgmm::d3d12 {
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
         */
-        virtual HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        virtual HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                        ID3D12Resource* pCommittedResource,
                                        IResourceAllocation** ppResourceAllocationOut) = 0;
 

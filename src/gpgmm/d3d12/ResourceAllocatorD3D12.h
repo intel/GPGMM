@@ -54,12 +54,12 @@ namespace gpgmm::d3d12 {
         ~ResourceAllocator() override;
 
         // IResourceAllocator interface
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialResourceState,
                                const D3D12_CLEAR_VALUE* pClearValue,
                                IResourceAllocation** ppResourceAllocationOut) override;
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) override;
@@ -88,7 +88,7 @@ namespace gpgmm::d3d12 {
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn);
 
-        HRESULT CreateResourceInternal(const ALLOCATION_DESC& allocationDescriptor,
+        HRESULT CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
                                        D3D12_RESOURCE_STATES initialResourceState,
                                        const D3D12_CLEAR_VALUE* clearValue,

@@ -42,7 +42,7 @@ namespace gpgmm::d3d12 {
 
     }  // namespace
 
-    ResourceAllocation::ResourceAllocation(const RESOURCE_ALLOCATION_DESC& desc,
+    ResourceAllocation::ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
                                            ResidencyManager* residencyManager,
                                            MemoryAllocatorBase* allocator,
                                            ResidencyHeap* resourceHeap,

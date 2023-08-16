@@ -187,7 +187,7 @@ namespace gpgmm::d3d12 {
     class CreateCommittedResourceCallbackContext {
       public:
         CreateCommittedResourceCallbackContext(ID3D12Device* device,
-                                               ALLOCATION_DESC allocationDescriptor,
+                                               RESOURCE_ALLOCATION_DESC allocationDescriptor,
                                                Microsoft::WRL::ComPtr<ID3D12Resource> resource,
                                                const D3D12_RESOURCE_DESC* resourceDescriptor,
                                                const D3D12_CLEAR_VALUE* clearValue,
@@ -198,7 +198,7 @@ namespace gpgmm::d3d12 {
         HRESULT CreateCommittedResource(ID3D12Pageable** ppPageableOut);
 
         ID3D12Device* mDevice;
-        ALLOCATION_DESC mAllocationDescriptor;
+        RESOURCE_ALLOCATION_DESC mAllocationDescriptor;
         const D3D12_CLEAR_VALUE* mClearValue;
         D3D12_RESOURCE_STATES mInitialResourceState;
         Microsoft::WRL::ComPtr<ID3D12Resource> mResource;
@@ -222,12 +222,12 @@ namespace gpgmm::d3d12 {
                                                IResourceAllocator** ppResourceAllocatorOut);
 
         // IResourceAllocator interface
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                const D3D12_RESOURCE_DESC& resourceDescriptor,
                                D3D12_RESOURCE_STATES initialResourceState,
                                const D3D12_CLEAR_VALUE* pClearValue,
                                IResourceAllocation** ppResourceAllocationOut) override;
-        HRESULT CreateResource(const ALLOCATION_DESC& allocationDescriptor,
+        HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                ID3D12Resource* pCommittedResource,
                                IResourceAllocation** ppResourceAllocationOut) override;
         HRESULT ReleaseResourceHeaps(uint64_t bytesToRelease, uint64_t* pBytesReleased) override;
