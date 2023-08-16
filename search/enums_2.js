@@ -6,7 +6,6 @@ var searchData=
   ['residency_5fheap_5fstatus_3',['RESIDENCY_HEAP_STATUS',['../namespacegpgmm_1_1d3d12.html#a1a4f1102db3d15f073722b2da3aad717',1,'gpgmm::d3d12']]],
   ['residency_5fmanager_5fflags_4',['RESIDENCY_MANAGER_FLAGS',['../namespacegpgmm_1_1d3d12.html#adcdbaecdcd1fa9578f444da18babcc27',1,'gpgmm::d3d12']]],
   ['resource_5fallocation_5falgorithm_5',['RESOURCE_ALLOCATION_ALGORITHM',['../namespacegpgmm_1_1d3d12.html#a8b9ccc2dab1eb8a41786bcaec3df0c73',1,'gpgmm::d3d12']]],
-  ['resource_5fallocation_5fflags_6',['RESOURCE_ALLOCATION_FLAGS',['../namespacegpgmm_1_1d3d12.html#a367e28e89ec909c7d04045c72c3f1756',1,'gpgmm::d3d12']]],
-  ['resource_5fallocation_5ftype_7',['RESOURCE_ALLOCATION_TYPE',['../namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4',1,'gpgmm::d3d12']]],
-  ['resource_5fallocator_5fflags_8',['RESOURCE_ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9a',1,'gpgmm::d3d12']]]
+  ['resource_5fallocation_5ftype_6',['RESOURCE_ALLOCATION_TYPE',['../namespacegpgmm_1_1d3d12.html#a26eab6e69ba858e7b6e367ea935324c4',1,'gpgmm::d3d12']]],
+  ['resource_5fallocator_5fflags_7',['RESOURCE_ALLOCATOR_FLAGS',['../namespacegpgmm_1_1d3d12.html#a33ac7fa401378e4e3361fbae516c5c9a',1,'gpgmm::d3d12']]]
 ];
