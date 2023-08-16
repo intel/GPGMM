@@ -898,6 +898,10 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAlwaysCommitted) {
     ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+        D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+
     ComPtr<IResourceAllocation> allocation;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
