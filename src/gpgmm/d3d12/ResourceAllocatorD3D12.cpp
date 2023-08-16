@@ -961,7 +961,8 @@ namespace gpgmm::d3d12 {
                 GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
             }
 
-            if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
+            if (allocationDescriptor.Flags &
+                RESOURCE_ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
                 CheckAndReportAllocationMisalignment(
                     *static_cast<ResourceAllocation*>(allocation.Get()));
             }
@@ -1047,7 +1048,7 @@ namespace gpgmm::d3d12 {
         // allowing the same resource allocator to be used, improving heap reuse. However, CPU
         // read-back would be inefficent since upload heaps on UMA adapters are usually
         // write-combined (vs write-back) so leave read back heaps alone.
-        if (!(allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS) &&
+        if (!(allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS) &&
             mIsCustomHeapsEnabled) {
             if (allocationDescriptor.HeapType != D3D12_HEAP_TYPE_READBACK) {
                 heapType = D3D12_HEAP_TYPE_UPLOAD;
@@ -1091,7 +1092,8 @@ namespace gpgmm::d3d12 {
             isAlwaysCommitted = true;
         }
 
-        bool neverSubAllocate = allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+        bool neverSubAllocate =
+            allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
 
         const bool isMSAA = resourceDescriptor.SampleDesc.Count > 1;
 
@@ -1110,10 +1112,12 @@ namespace gpgmm::d3d12 {
         request.SizeInBytes = (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
                                   ? newResourceDesc.Width
                                   : resourceInfo.SizeInBytes;
-        request.NeverAllocate = (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
+        request.NeverAllocate =
+            (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
         request.AlwaysPrefetch =
-            (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP);
-        request.AlwaysCacheSize = (allocationDescriptor.Flags & ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
+            (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP);
+        request.AlwaysCacheSize =
+            (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_ALWAYS_CACHE_SIZE);
         request.AvailableForAllocation = mMaxResourceHeapSize;
 
         // Apply extra padding to the resource heap size, if specified.
@@ -1188,7 +1192,8 @@ namespace gpgmm::d3d12 {
         // strategy only works in a few cases (ex. small constant buffers uploads) so it should be
         // tried before sub-allocating resource heaps.
         // The time and space complexity of is defined by the sub-allocation algorithm used.
-        if (allocationDescriptor.Flags & ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
+        if (allocationDescriptor.Flags &
+                RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             newResourceDesc.Flags == D3D12_RESOURCE_FLAG_NONE && isCreatedResourceStateRequired &&
@@ -1346,7 +1351,7 @@ namespace gpgmm::d3d12 {
         }
 
         if (!isAlwaysCommitted) {
-            if (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_FALLBACK) {
+            if (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK) {
                 ErrorLog(ErrorCode::kAllocatorFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and fall-back was disabled.";
@@ -1432,9 +1437,10 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        const ALLOCATION_FLAGS allowMask =
-            (ALLOCATION_FLAG_NEVER_RESIDENT & ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
-             ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
+        const RESOURCE_ALLOCATION_FLAGS allowMask =
+            (RESOURCE_ALLOCATION_FLAG_NEVER_RESIDENT &
+             RESOURCE_ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS &
+             RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
         if (allocationDescriptor.Flags & ~allowMask) {
             ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
@@ -1453,14 +1459,15 @@ namespace gpgmm::d3d12 {
         ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
         ComPtr<IResidencyHeap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED(ResidencyHeap::CreateResidencyHeap(
-                                   resourceHeapDesc,
-                                   (allocationDescriptor.Flags & ALLOCATION_FLAG_NEVER_RESIDENT)
-                                       ? nullptr
-                                       : mResidencyManager.Get(),
-                                   ImportResourceCallbackContext::GetHeap,
-                                   &importResourceCallbackContext, &resourceHeap),
-                               mDevice);
+        GPGMM_RETURN_IF_FAILED(
+            ResidencyHeap::CreateResidencyHeap(
+                resourceHeapDesc,
+                (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_RESIDENT)
+                    ? nullptr
+                    : mResidencyManager.Get(),
+                ImportResourceCallbackContext::GetHeap, &importResourceCallbackContext,
+                &resourceHeap),
+            mDevice);
 
         const uint64_t& allocationSize = resourceInfo.SizeInBytes;
         mStats.UsedMemoryUsage += allocationSize;
