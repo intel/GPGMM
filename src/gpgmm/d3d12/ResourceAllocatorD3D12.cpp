@@ -1384,25 +1384,25 @@ namespace gpgmm::d3d12 {
         // The time and space complexity of committed resource is driver-defined.
         if (request.NeverAllocate) {
             ErrorLog(ErrorCode::kAllocationFailed, this)
-                << "Unable to allocate memory for resource because no memory was allowed to "
-                   "be created.";
-            return E_OUTOFMEMORY;
+                << "Unable to allocate memory for resource because no memory was could "
+                   "be created and RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP was specified.";
+            return GetErrorResult(ErrorCode::kAllocationFailed);
         }
 
         // Committed resources cannot specify resource heap size.
         if (GPGMM_UNLIKELY(requiresPadding)) {
             ErrorLog(ErrorCode::kAllocationFailed, this)
-                << "Unable to allocate memory for resource because a padding was specified "
-                   "but no resource allocator could be used.";
-            return E_INVALIDARG;
+                << "Unable to allocate memory for resource because no memory was could "
+                   "be created and ExtraRequiredResourcePadding was specified.";
+            return GetErrorResult(ErrorCode::kAllocationFailed);
         }
 
         if (!isAlwaysCommitted) {
             if (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK) {
                 ErrorLog(ErrorCode::kAllocationFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
-                       "be created and fall-back was disabled.";
-                return E_OUTOFMEMORY;
+                       "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.";
+                return GetErrorResult(ErrorCode::kAllocationFailed);
             }
         }
 
