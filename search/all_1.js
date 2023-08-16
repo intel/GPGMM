@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['checkfeaturesupport_0',['CheckFeatureSupport',['../namespacegpgmm_1_1d3d12.html#a07ef632845f002294d62b21ef6c36d42',1,'gpgmm::d3d12']]],
+  ['checkfeaturesupport_0',['CheckFeatureSupport',['../namespacegpgmm_1_1d3d12.html#a915511d4342c8da750841d88c321708e',1,'gpgmm::d3d12']]],
   ['createheapfn_1',['CreateHeapFn',['../namespacegpgmm_1_1d3d12.html#a3e40b4972a3aab0c61cc965fc1023f9d',1,'gpgmm::d3d12']]],
   ['createresidencyheap_2',['CreateResidencyHeap',['../namespacegpgmm_1_1d3d12.html#aeb4ab4be463f147277b1970dcb64e1f9',1,'gpgmm::d3d12::CreateResidencyHeap(const RESIDENCY_HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, CreateHeapFn createHeapFn, void *pCreateHeapContext, IResidencyHeap **ppResidencyHeapOut)'],['../namespacegpgmm_1_1d3d12.html#a7539ec907ea3866d2a3d0150fd696cf2',1,'gpgmm::d3d12::CreateResidencyHeap(const RESIDENCY_HEAP_DESC &amp;descriptor, IResidencyManager *const pResidencyManager, ID3D12Pageable *pPageable, IResidencyHeap **ppResidencyHeapOut)']]],
   ['createresidencylist_3',['CreateResidencyList',['../namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee',1,'gpgmm::d3d12']]],
