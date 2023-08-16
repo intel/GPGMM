@@ -25,38 +25,40 @@
 #define GPGMM_RETURN_IF_NULLPTR(ptr) \
     GPGMM_RETURN_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
 
-#define GPGMM_RETURN_IF_FAILED(expr, device)                                     \
-    {                                                                            \
-        HRESULT hr = expr;                                                       \
-        if (GPGMM_UNLIKELY(FAILED(hr))) {                                        \
-            gpgmm::ErrorLog(GetErrorCode(hr))                                    \
-                << #expr << ": " << GetErrorResultWithRemovalReason(hr, device); \
-            return hr;                                                           \
-        }                                                                        \
-    }                                                                            \
-    for (;;)                                                                     \
+#define GPGMM_RETURN_IF_FAILED(expr, device)                                          \
+    {                                                                                 \
+        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                                         \
+        if (GPGMM_UNLIKELY(FAILED(GPGMM_LOCAL_VAR(HRESULT)))) {                       \
+            gpgmm::ErrorLog(GetErrorCode(GPGMM_LOCAL_VAR(HRESULT)))                   \
+                << #expr << ": "                                                      \
+                << GetErrorResultWithRemovalReason(GPGMM_LOCAL_VAR(HRESULT), device); \
+            return GPGMM_LOCAL_VAR(HRESULT);                                          \
+        }                                                                             \
+    }                                                                                 \
+    for (;;)                                                                          \
     break
 
-#define GPGMM_RETURN_IF_SUCCEEDED(expr)    \
-    {                                      \
-        HRESULT hr = expr;                 \
-        if (GPGMM_LIKELY(SUCCEEDED(hr))) { \
-            return hr;                     \
-        }                                  \
-    }                                      \
-    for (;;)                               \
+#define GPGMM_RETURN_IF_SUCCEEDED(expr)                          \
+    {                                                            \
+        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                    \
+        if (GPGMM_LIKELY(SUCCEEDED(GPGMM_LOCAL_VAR(HRESULT)))) { \
+            return GPGMM_LOCAL_VAR(HRESULT);                     \
+        }                                                        \
+    }                                                            \
+    for (;;)                                                     \
     break
 
 // Same as GPGMM_RETURN_IF_SUCCEEDED but also returns if error is lethal.
 // Non-internal errors are always fatal and should not run re-attempt logic.
-#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                                     \
-    {                                                                                \
-        HRESULT hr = expr;                                                           \
-        if (GPGMM_LIKELY(SUCCEEDED(hr)) || GPGMM_UNLIKELY(IsErrorResultFatal(hr))) { \
-            return hr;                                                               \
-        }                                                                            \
-    }                                                                                \
-    for (;;)                                                                         \
+#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                            \
+    {                                                                       \
+        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                               \
+        if (GPGMM_LIKELY(SUCCEEDED(GPGMM_LOCAL_VAR(HRESULT))) ||            \
+            GPGMM_UNLIKELY(IsErrorResultFatal(GPGMM_LOCAL_VAR(HRESULT)))) { \
+            return GPGMM_LOCAL_VAR(HRESULT);                                \
+        }                                                                   \
+    }                                                                       \
+    for (;;)                                                                \
     break
 
 #define GPGMM_ASSERT_FAILED(hr) ASSERT(SUCCEEDED(hr));
