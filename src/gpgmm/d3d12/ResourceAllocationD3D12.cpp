@@ -82,7 +82,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kBadOperation);
         }
 
         if (mResidencyManager != nullptr) {

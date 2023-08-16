@@ -30,6 +30,8 @@ namespace gpgmm::d3d12 {
                 return ErrorCode::kInvalidArgument;
             case E_UNEXPECTED:
                 return ErrorCode::kBadOperation;
+            case E_NOTIMPL:
+                return ErrorCode::kUnsupported;
             case E_FAIL:
             default:
                 return ErrorCode::kUnknown;
@@ -42,6 +44,8 @@ namespace gpgmm::d3d12 {
                 return E_INVALIDARG;
             case ErrorCode::kBadOperation:
                 return E_UNEXPECTED;
+            case ErrorCode::kUnsupported:
+                return E_NOTIMPL;
             case ErrorCode::kUnknown:
             case ErrorCode::kAllocationFailed:
             default:

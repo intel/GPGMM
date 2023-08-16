@@ -471,7 +471,7 @@ namespace gpgmm::d3d12 {
                 << allocatorDescriptor.ResourceHeapTier << " vs "
                 << caps->GetMaxResourceHeapTierSupported()
                 << "). Please consider using a lower resource heap tier.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         if (allocatorDescriptor.ResourceHeapTier != 0 &&
@@ -550,7 +550,7 @@ namespace gpgmm::d3d12 {
                 << "Requested preferred resource heap size exceeded the capabilities "
                    "of the device. This is probably not what the developer intended "
                    "to do. Please consider using a smaller resource heap size.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         if (pResidencyManager == nullptr && newDescriptor.RecordOptions.Flags != RECORD_FLAG_NONE) {
@@ -1071,7 +1071,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the device: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(mMaxResourceHeapSize);
-            return E_OUTOFMEMORY;
+            return GetErrorResult(ErrorCode::kSizeExceeded);
         }
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -1114,7 +1114,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         // Resource is always committed when heaps flags are incompatible with the resource heap
@@ -1201,7 +1201,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the adapter: "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(maxSegmentSize);
-            return E_OUTOFMEMORY;
+            return GetErrorResult(ErrorCode::kSizeExceeded);
         }
 
         // If the allocation must be created within the budget, restrict the amount of memory
@@ -1467,7 +1467,7 @@ namespace gpgmm::d3d12 {
                 << "Unable to import a resource using a heap type that differs from the "
                    "heap type used at creation. For important resources, it is recommended "
                    "to not specify a heap type.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
@@ -1475,13 +1475,13 @@ namespace gpgmm::d3d12 {
                 << "Unable to import a resource using heap flags that differs from the "
                    "heap flags used at creation. For important resources, it is recommended "
                    "to not specify heap flags.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         if (allocationDescriptor.ExtraRequiredResourcePadding > 0) {
             ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         const RESOURCE_ALLOCATION_FLAGS allowMask =
@@ -1491,7 +1491,7 @@ namespace gpgmm::d3d12 {
         if (allocationDescriptor.Flags & ~allowMask) {
             ErrorLog(ErrorCode::kInvalidArgument)
                 << "Unable to import a resource when using allocation flags which modify memory.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         // If no resource allocation is to be created then only validate by returning early.
@@ -1772,10 +1772,10 @@ namespace gpgmm::d3d12 {
                 return S_OK;
             }
             default: {
-                ErrorLog(ErrorCode::kBadOperation, this)
+                ErrorLog(ErrorCode::kInvalidArgument, this)
                     << "CheckFeatureSupport does not support feature (" + std::to_string(feature) +
                            ").";
-                return E_INVALIDARG;
+                return GetErrorResult(ErrorCode::kInvalidArgument);
             }
         }
 

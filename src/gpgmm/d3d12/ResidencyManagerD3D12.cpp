@@ -73,7 +73,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kInvalidArgument)
                 << "Both the OS based memory budget and restricted budget were "
                    "specified but cannot be used at the same time.";
-            return E_UNEXPECTED;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         if (descriptor.RecordOptions.Flags != RECORD_FLAG_NONE) {
@@ -249,7 +249,7 @@ namespace gpgmm::d3d12 {
                 << "Heap was never being tracked for residency. This usually occurs when a "
                    "non-resource heap was created by the developer and never made resident at "
                    "creation or failure to call LockHeap beforehand.";
-            return E_FAIL;
+            return GetErrorResult(ErrorCode::kBadOperation);
         }
 
         heap->ReleaseResidencyLock();
@@ -608,15 +608,15 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "ExecuteCommandLists is required to have at-least one residency "
                    "list to be called.";
-            return E_INVALIDARG;
+            return GetErrorResult(ErrorCode::kInvalidArgument);
         }
 
         // TODO: support multiple command lists.
         if (count > 1) {
-            ErrorLog(ErrorCode::kInvalidArgument, this)
+            ErrorLog(ErrorCode::kUnsupported, this)
                 << "ExecuteCommandLists does not support multiple residency lists at this time. "
                    "Please call ExecuteCommandLists per residency list as a workaround, if needed.";
-            return E_NOTIMPL;
+            return GetErrorResult(ErrorCode::kUnsupported);
         }
 
         GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists(), mDevice);
@@ -889,7 +889,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap residency cannot be updated because it was locked. "
                    "Please unlock the heap before updating.";
-            return E_FAIL;
+            return GetErrorResult(ErrorCode::kBadOperation);
         }
 
         if (newStatus == RESIDENCY_HEAP_STATUS_UNKNOWN &&
@@ -897,7 +897,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap residency cannot be unknown when previously known by the "
                    "residency manager. Check the status before updating the state.";
-            return E_FAIL;
+            return GetErrorResult(ErrorCode::kBadOperation);
         }
 
         heap->SetResidencyStatus(newStatus);
