@@ -9,7 +9,7 @@ var searchData=
   ['preadrange_6',['pReadRange',['../namespacegpgmm_1_1d3d12.html#a1e58a104b6eb456c7e81ee651304159f',1,'gpgmm::d3d12']]],
   ['preferreddevicememorysize_7',['preferredDeviceMemorySize',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#acc85c61dfa24987e871e692394a6455c',1,'gpgmm::vk::GpAllocatorCreateInfo']]],
   ['preferredresourceheapsize_8',['PreferredResourceHeapSize',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a0608426854245f8c9b09e374c384fd15',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC']]],
-  ['prefetchedheapmisses_9',['PrefetchedHeapMisses',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#ac76e4533904e4d9dd1567b639af76044',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
-  ['prefetchedheapmisseseliminated_10',['PrefetchedHeapMissesEliminated',['../structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a06fbfdc2ef48330e9ca28ebba61d7511',1,'gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS']]],
+  ['prefetchedheapmisses_9',['PrefetchedHeapMisses',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a703de285c2879ba2fb496aa788de4bd3',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
+  ['prefetchedheapmisseseliminated_10',['PrefetchedHeapMissesEliminated',['../structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html#a29cf10d18abef835b4ee0a38effc3f4b',1,'gpgmm::d3d12::ALLOCATOR_STATS']]],
   ['pvulkanfunctions_11',['pVulkanFunctions',['../structgpgmm_1_1vk_1_1_gp_allocator_create_info.html#a50d3442f6b682ddb33e70d71310fa001',1,'gpgmm::vk::GpAllocatorCreateInfo']]]
 ];

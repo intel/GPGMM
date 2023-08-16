@@ -109,7 +109,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_f_e_a_t_u_r_e___d_a_t_a___r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___s_u_p_p_o_r_t.html">gpgmm::d3d12::FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">gpgmm::d3d12::ALLOCATOR_STATS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -212,9 +212,9 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a367e28e89ec909c7d04045c72c3f1756"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a446f9d08c070e68903dfac31618f4b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0a446f9d08c070e68903dfac31618f4b">gpgmm::d3d12::RESOURCE_ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a0a446f9d08c070e68903dfac31618f4babbe69c04e55ad53af203af2927450dcd">gpgmm::d3d12::RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
+<tr class="memitem:a24c166248417fa823597d7219566304a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">gpgmm::d3d12::ALLOCATOR_FEATURE</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304aa44295c51b1df094f2bec764d5459c62b">gpgmm::d3d12::ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT</a>
  }</td></tr>
-<tr class="separator:a0a446f9d08c070e68903dfac31618f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a24c166248417fa823597d7219566304a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -278,12 +278,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a33e1823d01d51f58a1ae135a2971941d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a33e1823d01d51f58a1ae135a2971941d">gpgmm::d3d12::ReleaseResourceHeaps</a> (UINT64 bytesToRelease, UINT64 *pBytesReleased)=0</td></tr>
 <tr class="memdesc:a33e1823d01d51f58a1ae135a2971941d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
 <tr class="separator:a33e1823d01d51f58a1ae135a2971941d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c629ea6a1ef674642afb0519170c5dd"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8c629ea6a1ef674642afb0519170c5dd">gpgmm::d3d12::QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">RESOURCE_ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
-<tr class="memdesc:a8c629ea6a1ef674642afb0519170c5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
-<tr class="separator:a8c629ea6a1ef674642afb0519170c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a915511d4342c8da750841d88c321708e"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a915511d4342c8da750841d88c321708e">gpgmm::d3d12::CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a0a446f9d08c070e68903dfac31618f4b">RESOURCE_ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, UINT featureSupportDataSize) const =0</td></tr>
-<tr class="memdesc:a915511d4342c8da750841d88c321708e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
-<tr class="separator:a915511d4342c8da750841d88c321708e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a893abe2943b14c899b78980d5048f05f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a893abe2943b14c899b78980d5048f05f">gpgmm::d3d12::QueryStats</a> (<a class="el" href="structgpgmm_1_1d3d12_1_1_a_l_l_o_c_a_t_o_r___s_t_a_t_s.html">ALLOCATOR_STATS</a> *pResourceAllocatorStats)=0</td></tr>
+<tr class="memdesc:a893abe2943b14c899b78980d5048f05f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the current allocator usage.  <br /></td></tr>
+<tr class="separator:a893abe2943b14c899b78980d5048f05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ef632845f002294d62b21ef6c36d42"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a07ef632845f002294d62b21ef6c36d42">gpgmm::d3d12::CheckFeatureSupport</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a24c166248417fa823597d7219566304a">ALLOCATOR_FEATURE</a> feature, void *pFeatureSupportData, UINT featureSupportDataSize) const =0</td></tr>
+<tr class="memdesc:a07ef632845f002294d62b21ef6c36d42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets information about the features that are supported by the resource allocator.  <br /></td></tr>
+<tr class="separator:a07ef632845f002294d62b21ef6c36d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a8142df67f3fd5f78dfac64a3cff7a7b1">gpgmm::d3d12::CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> &amp;allocatorDescriptor, ID3D12Device *pDevice, IDXGIAdapter *pAdapter, <a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut, <a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut)</td></tr>
 <tr class="memdesc:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator with residency.  <br /></td></tr>
 <tr class="separator:a8142df67f3fd5f78dfac64a3cff7a7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
