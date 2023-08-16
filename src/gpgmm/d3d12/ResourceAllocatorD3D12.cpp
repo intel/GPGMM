@@ -519,8 +519,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        if (pResidencyManager == nullptr &&
-            newDescriptor.RecordOptions.Flags != RECORD_FLAGS_NONE) {
+        if (pResidencyManager == nullptr && newDescriptor.RecordOptions.Flags != RECORD_FLAG_NONE) {
             StartupEventTrace(allocatorDescriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~newDescriptor.RecordOptions.Flags));
 

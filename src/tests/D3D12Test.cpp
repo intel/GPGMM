@@ -132,7 +132,7 @@ namespace gpgmm::d3d12 {
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {
-            desc.RecordOptions.Flags |= RECORD_FLAGS_ALL;
+            desc.RecordOptions.Flags |= RECORD_FLAG_ALL;
             desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
             desc.RecordOptions.TraceFile = mTraceFile.c_str();
@@ -146,7 +146,7 @@ namespace gpgmm::d3d12 {
         desc.MinLogLevel = GetMessageSeverity(GetLogLevel());
 
         if (IsDumpEventsEnabled()) {
-            desc.RecordOptions.Flags |= RECORD_FLAGS_ALL;
+            desc.RecordOptions.Flags |= RECORD_FLAG_ALL;
             desc.MinRecordLevel = desc.MinLogLevel;
             desc.RecordOptions.UseDetailedTimingEvents = true;
         }

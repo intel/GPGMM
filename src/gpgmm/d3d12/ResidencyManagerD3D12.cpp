@@ -76,7 +76,7 @@ namespace gpgmm::d3d12 {
             return E_UNEXPECTED;
         }
 
-        if (descriptor.RecordOptions.Flags != RECORD_FLAGS_NONE) {
+        if (descriptor.RecordOptions.Flags != RECORD_FLAG_NONE) {
             StartupEventTrace(descriptor.RecordOptions.TraceFile,
                               static_cast<TraceEventPhase>(~descriptor.RecordOptions.Flags));
 
