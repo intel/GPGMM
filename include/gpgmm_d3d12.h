@@ -1006,23 +1006,23 @@ namespace gpgmm::d3d12 {
         FLOAT ResourceHeapGrowthFactor;
     };
 
-    /** \enum ALLOCATION_FLAGS
+    /** \enum RESOURCE_ALLOCATION_FLAGS
     Additional controls that modify allocations.
     */
-    enum ALLOCATION_FLAGS {
+    enum RESOURCE_ALLOCATION_FLAGS {
 
         /** \brief Disables all allocation flags.
 
         Enabled by default.
         */
-        ALLOCATION_FLAG_NONE = 0x0,
+        RESOURCE_ALLOCATION_FLAG_NONE = 0x0,
 
         /** \brief Disallow creating a new resource heap when creating a resource.
 
         The created resource must use an existing resource heap or E_OUTOFMEMORY. Effectively
         disables creating standalone allocations whose memory cannot be reused.
         */
-        ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP = 0x1,
+        RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP = 0x1,
 
         /** \brief Sub-allocate a resource allocation within the same resource.
 
@@ -1038,7 +1038,7 @@ namespace gpgmm::d3d12 {
         command queue is used since not all devices guarantee command queue accesses are coherent
         between sub-allocations within the same resource.
         */
-        ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
+        RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE = 0x2,
 
         /** \brief Disallow allowing the creation of multiple resources using the same resource
         heap.
@@ -1046,21 +1046,21 @@ namespace gpgmm::d3d12 {
         When this flag is used, the created resource will always be allocated with it's own resource
         heap.
         */
-        ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP = 0x4,
+        RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP = 0x4,
 
         /** \brief Force pre-fetch for the next resource allocation.
 
         This flag has no effect if RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH was not specified.
 
-        Should not be used with ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
+        Should not be used with RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP.
         */
-        ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP = 0x8,
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP = 0x8,
 
         /** \brief Cache the request size.
 
         Allow internal data structures used for resource allocation to be cached in-memory.
         */
-        ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x10,
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_CACHE_SIZE = 0x10,
 
         /** \brief Requires heaps to be always attributed by D3D12_HEAP_TYPE.
 
@@ -1074,7 +1074,7 @@ namespace gpgmm::d3d12 {
         If RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY was not specified, heap type was
         D3D12_HEAP_TYPE_READBACK, or the adapter is not cache-coherent UMA, this flag has no effect.
         */
-        ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_ATTRIBUTE_HEAPS = 0x20,
 
         /** \brief Forces use of the resource allocator or E_FAIL.
 
@@ -1083,7 +1083,7 @@ namespace gpgmm::d3d12 {
 
         Mostly used for debug and testing when certain allocation methods unexpectedly fail.
         */
-        ALLOCATION_FLAG_NEVER_FALLBACK = 0x40,
+        RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK = 0x40,
 
         /** \brief Disable residency management for the resource allocation.
 
@@ -1091,7 +1091,7 @@ namespace gpgmm::d3d12 {
 
         Mostly used when external resources are residency managed elsewhere.
         */
-        ALLOCATION_FLAG_NEVER_RESIDENT = 0x80,
+        RESOURCE_ALLOCATION_FLAG_NEVER_RESIDENT = 0x80,
 
         /** \brief Report alignment mismatches upon successful resource creation.
 
@@ -1101,12 +1101,12 @@ namespace gpgmm::d3d12 {
         Must compile with GPGMM_ENABLE_MEMORY_ALIGN_CHECKS to use as the request size
         is normally not tracked.
         */
-        ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH = 0x100,
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH = 0x100,
     };
 
-    DEFINE_ENUM_FLAG_OPERATORS(ALLOCATION_FLAGS)
+    DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATION_FLAGS)
 
-    /** \struct ALLOCATION_FLAGS
+    /** \struct RESOURCE_ALLOCATION_FLAGS
     Specifies how allocations should be created.
     */
     struct RESOURCE_ALLOCATION_DESC {
@@ -1114,7 +1114,7 @@ namespace gpgmm::d3d12 {
 
         Optional parameter. By default, GPGMM will decide automatically.
         */
-        ALLOCATION_FLAGS Flags;
+        RESOURCE_ALLOCATION_FLAGS Flags;
 
         /** \brief Heap type that the resource to be allocated requires.
 

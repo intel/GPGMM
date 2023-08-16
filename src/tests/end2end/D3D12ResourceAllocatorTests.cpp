@@ -284,7 +284,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {
 
     // Ensure the allocation will never fall-back to use any method other than the one being tested.
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_FALLBACK;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK;
 
     // RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM
     {
@@ -939,7 +939,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
 
     // Check we can't reuse memory if CreateResource was never called previously.
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     ComPtr<IResourceAllocation> allocation;
@@ -950,7 +950,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
 
     constexpr uint64_t bufferSize = kBufferOf4MBAllocationSize / 8;
 
-    allocationDesc.Flags = ALLOCATION_FLAG_NONE;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NONE;
     ComPtr<IResourceAllocation> allocationA;
     ASSERT_SUCCEEDED(
         resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
@@ -961,7 +961,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverAllocate) {
     allocationA.Reset();
 
     // Re-check that the same resource heap is used once CreateResource gets called.
-    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
     ComPtr<IResourceAllocation> allocationB;
     ASSERT_SUCCEEDED(
         resourceAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(bufferSize),
@@ -976,7 +976,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
     ASSERT_NE(resourceAllocator, nullptr);
 
     RESOURCE_ALLOCATION_DESC baseAllocationDesc = {};
-    baseAllocationDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+    baseAllocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
 
     {
         RESOURCE_ALLOCATION_DESC smallBufferDesc = baseAllocationDesc;
@@ -1134,7 +1134,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     ASSERT_NE(resourceAllocator, nullptr);
 
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-    allocationDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
     allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
     const D3D12_RESOURCE_DESC& smallBufferDesc = CreateBasicBufferDesc(4u, 1);
@@ -1255,7 +1255,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
 
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-    allocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
 
     ComPtr<IResourceAllocation> subAllocation;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
@@ -1293,7 +1293,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
     // Check the first buffer of size A cannot be from recycled memory.
     {
         RESOURCE_ALLOCATION_DESC allocationDesc = baseAllocationDesc;
-        allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+        allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
 
         ComPtr<IResourceAllocation> allocation;
         ASSERT_FAILED(resourceAllocator->CreateResource(
@@ -1314,7 +1314,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
     // Check the second buffer of size B cannot be from recycled memory.
     {
         RESOURCE_ALLOCATION_DESC allocationDesc = baseAllocationDesc;
-        allocationDesc.Flags = ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+        allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
 
         ComPtr<IResourceAllocation> allocation;
         ASSERT_FAILED(resourceAllocator->CreateResource(
@@ -1335,7 +1335,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
 
     // Only standalone allocations can be pool-allocated.
     RESOURCE_ALLOCATION_DESC standaloneAllocationDesc = {};
-    standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+    standaloneAllocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
     standaloneAllocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
     // Create buffer of size A with it's own resource heap that will be returned to the pool.
@@ -1364,7 +1364,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     {
         RESOURCE_ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
         reusePoolOnlyDesc.Flags =
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+            standaloneAllocationDesc.Flags | RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize),
@@ -1378,7 +1378,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     {
         RESOURCE_ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
         reusePoolOnlyDesc.Flags =
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+            standaloneAllocationDesc.Flags | RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize / 2),
@@ -1401,7 +1401,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     {
         RESOURCE_ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
         reusePoolOnlyDesc.Flags =
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+            standaloneAllocationDesc.Flags | RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
         ComPtr<IResourceAllocation> allocation;
         ASSERT_FAILED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize),
@@ -1412,7 +1412,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
     {
         RESOURCE_ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
         reusePoolOnlyDesc.Flags =
-            standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+            standaloneAllocationDesc.Flags | RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
         ComPtr<IResourceAllocation> allocation;
         ASSERT_FAILED(
             poolAllocator->CreateResource(reusePoolOnlyDesc, CreateBasicBufferDesc(bufferSize / 2),
@@ -1448,7 +1448,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(resourceAllocator, nullptr);
 
         RESOURCE_ALLOCATION_DESC standaloneAllocationDesc = {};
-        standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+        standaloneAllocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
         standaloneAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
         ComPtr<IResourceAllocation> firstAllocation;
@@ -1473,7 +1473,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(resourceAllocator, nullptr);
 
         RESOURCE_ALLOCATION_DESC standaloneAllocationDesc = {};
-        standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+        standaloneAllocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
         standaloneAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
         ComPtr<IResourceAllocation> firstAllocation;
@@ -1550,7 +1550,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(resourceAllocator, nullptr);
 
         RESOURCE_ALLOCATION_DESC allocationWithinDesc = {};
-        allocationWithinDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+        allocationWithinDesc.Flags = RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
         allocationWithinDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
         constexpr uint32_t kBufferSize = 4u;  // Must less than 64KB
@@ -1627,7 +1627,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
 
     // Only standalone allocations can be pool-allocated.
     RESOURCE_ALLOCATION_DESC standaloneAllocationDesc = {};
-    standaloneAllocationDesc.Flags = ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+    standaloneAllocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
     standaloneAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
     // Create a small texture of size A with it's own resource heap that will be returned to the
@@ -1642,7 +1642,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
     }
 
     RESOURCE_ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
-    reusePoolOnlyDesc.Flags = standaloneAllocationDesc.Flags | ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+    reusePoolOnlyDesc.Flags =
+        standaloneAllocationDesc.Flags | RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
 
     // Check the first small texture of size A was pool-allocated by creating it again.
     {
@@ -1691,7 +1692,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
         ASSERT_NE(resourceAllocator, nullptr);
 
         RESOURCE_ALLOCATION_DESC standaloneAllocationDesc = baseAllocationDesc;
-        standaloneAllocationDesc.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+        standaloneAllocationDesc.Flags |= RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
 
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(
@@ -1738,7 +1739,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
 
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
     allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-    allocationDesc.Flags = ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_ALWAYS_PREFETCH_HEAP;
 
     constexpr uint32_t kMinBufferSize = GPGMM_KB_TO_BYTES(64);
 
@@ -1792,7 +1793,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
     ASSERT_NE(resourceAllocator, nullptr);
 
     RESOURCE_ALLOCATION_DESC allocationDesc = {};
-    allocationDesc.Flags = ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
     allocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 
     constexpr uint32_t kSmallBufferSize = 256u;
@@ -1830,14 +1831,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
     // First request is always a cache miss.
     RESOURCE_ALLOCATION_DESC baseAllocationDesc = {};
     baseAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-    baseAllocationDesc.Flags |= ALLOCATION_FLAG_ALWAYS_CACHE_SIZE;
+    baseAllocationDesc.Flags |= RESOURCE_ALLOCATION_FLAG_ALWAYS_CACHE_SIZE;
 
     {
         ComPtr<IResourceAllocation> allocation;
 
         RESOURCE_ALLOCATION_DESC smallResourceAllocDesc = baseAllocationDesc;
         smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-        smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+        smallResourceAllocDesc.Flags |= RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
 
         EXPECT_SIZE_CACHE_MISS(resourceAllocator,
                                resourceAllocator->CreateResource(
@@ -1880,7 +1881,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
 
         RESOURCE_ALLOCATION_DESC smallResourceAllocDesc = baseAllocationDesc;
         smallResourceAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-        smallResourceAllocDesc.Flags |= ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+        smallResourceAllocDesc.Flags |= RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
 
         EXPECT_SIZE_CACHE_HIT(resourceAllocator,
                               resourceAllocator->CreateResource(

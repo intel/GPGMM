@@ -38,7 +38,8 @@ namespace {
 
     RESOURCE_ALLOCATION_DESC ConvertToAllocationDesc(const Json::Value& allocationDescJson) {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
-        allocationDesc.Flags = static_cast<ALLOCATION_FLAGS>(allocationDescJson["Flags"].asInt());
+        allocationDesc.Flags =
+            static_cast<RESOURCE_ALLOCATION_FLAGS>(allocationDescJson["Flags"].asInt());
         allocationDesc.HeapType =
             static_cast<D3D12_HEAP_TYPE>(allocationDescJson["HeapType"].asInt());
         allocationDesc.ExtraRequiredHeapFlags =
@@ -314,11 +315,13 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                         ASSERT_NE(resourceAllocator, nullptr);
 
                         if (envParams.IsNeverAllocate) {
-                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
+                            allocationDescriptor.Flags |=
+                                RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP;
                         }
 
                         if (envParams.IsSuballocationDisabled) {
-                            allocationDescriptor.Flags |= ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+                            allocationDescriptor.Flags |=
+                                RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
                         }
 
                         HRESULT hr = resourceAllocator->CreateResource(
