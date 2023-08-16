@@ -1227,7 +1227,7 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = resourceDescriptor.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
-                    allocationDesc.Type = ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
+                    allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1270,7 +1270,8 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = subAllocRequest.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
-                    allocationDesc.Type = static_cast<ALLOCATION_TYPE>(subAllocation.GetMethod());
+                    allocationDesc.Type =
+                        static_cast<RESOURCE_ALLOCATION_TYPE>(subAllocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1313,7 +1314,8 @@ namespace gpgmm::d3d12 {
                     RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = dedicatedRequest.SizeInBytes;
                     allocationDesc.HeapOffset = allocation.GetOffset();
-                    allocationDesc.Type = static_cast<ALLOCATION_TYPE>(allocation.GetMethod());
+                    allocationDesc.Type =
+                        static_cast<RESOURCE_ALLOCATION_TYPE>(allocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
@@ -1378,7 +1380,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidOffset;
         allocationDesc.SizeInBytes = request.SizeInBytes;
-        allocationDesc.Type = ALLOCATION_TYPE_STANDALONE;
+        allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
 
         if (ppResourceAllocationOut != nullptr) {
@@ -1469,7 +1471,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapOffset = kInvalidSize;
         allocationDesc.SizeInBytes = allocationSize;
-        allocationDesc.Type = ALLOCATION_TYPE_STANDALONE;
+        allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
 
         *ppResourceAllocationOut = new ResourceAllocation(
             allocationDesc, nullptr, this, static_cast<ResidencyHeap*>(resourceHeap.Detach()),

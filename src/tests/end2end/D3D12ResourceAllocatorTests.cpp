@@ -987,7 +987,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
             smallBufferDesc, CreateBasicBufferDesc(4u, 1), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
 
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         EXPECT_EQ(smallBuffer->GetInfo().SizeInBytes, 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetInfo().Alignment, 4u);  // Must re-align.
@@ -1005,7 +1005,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
             smallBufferWithinDesc, CreateBasicBufferDesc(4u, 16), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
 
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         EXPECT_EQ(smallBuffer->GetInfo().SizeInBytes, 16u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetInfo().Alignment, 16u);
@@ -1023,7 +1023,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
             smallBufferWithinDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr, &smallBuffer));
 
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         EXPECT_EQ(smallBuffer->GetInfo().SizeInBytes, 256u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetInfo().Alignment, 256u);  // Re-align
@@ -1041,7 +1041,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
             smallBufferWithinDesc, CreateBasicBufferDesc(4u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
 
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         EXPECT_EQ(smallBuffer->GetInfo().SizeInBytes, 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetInfo().Alignment, 4u);
@@ -1055,7 +1055,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
             smallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
 
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         EXPECT_EQ(smallBuffer->GetInfo().SizeInBytes, 4u);
         EXPECT_EQ(smallBuffer->GetOffsetFromResource(), 0u);
         EXPECT_EQ(smallBuffer->GetInfo().Alignment, 4u);  // Re-align
@@ -1070,7 +1070,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             invalidSmallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
-        EXPECT_NE(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_NE(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
 
     // Non-compatible heap type is not allowed reguardless of resource state specified.
@@ -1082,7 +1082,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             invalidSmallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COMMON,
             nullptr, &smallBuffer));
-        EXPECT_NE(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_NE(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
 
     // Custom heaps should use a heap type inferred by the resource state required.
@@ -1094,7 +1094,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             smallBufferWithinDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, &smallBuffer));
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
 
     // Unspecified heap type should use the heap type inferred by the resource state
@@ -1104,14 +1104,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             baseAllocationDesc, CreateBasicBufferDesc(3u), D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
             &smallBuffer));
-        EXPECT_EQ(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
     {
         ComPtr<IResourceAllocation> smallBuffer;
         ASSERT_SUCCEEDED(
             resourceAllocator->CreateResource(baseAllocationDesc, CreateBasicBufferDesc(3u),
                                               D3D12_RESOURCE_STATE_COMMON, nullptr, &smallBuffer));
-        EXPECT_NE(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_NE(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
 
     // Resource flags are not allowed.
@@ -1123,7 +1123,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithin) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             baseAllocationDesc, resourceDescWithFlags, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
             &smallBuffer));
-        EXPECT_NE(smallBuffer->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_NE(smallBuffer->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     }
 }
 
@@ -1147,7 +1147,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferA));
     ASSERT_NE(smallBufferA, nullptr);
-    EXPECT_EQ(smallBufferA->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+    EXPECT_EQ(smallBufferA->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     EXPECT_EQ(smallBufferA->GetInfo().SizeInBytes, smallBufferDesc.Width);
 
     ComPtr<IResourceAllocation> smallBufferB;
@@ -1157,7 +1157,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferB));
     ASSERT_NE(smallBufferB, nullptr);
-    EXPECT_EQ(smallBufferB->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+    EXPECT_EQ(smallBufferB->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     EXPECT_EQ(smallBufferB->GetInfo().SizeInBytes, smallBufferDesc.Width);
 
     ComPtr<IResourceAllocation> smallBufferC;
@@ -1167,7 +1167,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferC));
     ASSERT_NE(smallBufferC, nullptr);
-    EXPECT_EQ(smallBufferC->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+    EXPECT_EQ(smallBufferC->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
     EXPECT_EQ(smallBufferC->GetInfo().SizeInBytes, smallBufferDesc.Width);
 
     EXPECT_EQ(GetStats(resourceAllocator).UsedBlockCount, 3u);
@@ -1263,7 +1263,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
         nullptr, &subAllocation));
     ASSERT_NE(subAllocation, nullptr);
     EXPECT_NE(subAllocation->GetResource(), nullptr);
-    EXPECT_NE(subAllocation->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED);
+    EXPECT_NE(subAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverPooled) {
@@ -1346,7 +1346,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     // Create buffer of size B with it's own resource heap that will be returned to the pool.
@@ -1357,7 +1357,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     // Create buffer of size A again with it's own resource heap from the pool.
@@ -1371,7 +1371,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     // Create buffer of size B again with it's own resource heap from the pool.
@@ -1385,7 +1385,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
                                           D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
         EXPECT_NE(allocation->GetResource(), nullptr);
-        EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     EXPECT_EQ(GetStats(poolAllocator).FreeHeapUsage, bufferSize + bufferSize / 2);
@@ -1433,7 +1433,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferPooled) {
             standaloneAllocationDesc, CreateBasicBufferDesc(1024),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
-        EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     EXPECT_EQ(GetStats(poolAllocator).FreeHeapUsage, 0u);
@@ -1456,7 +1456,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             standaloneAllocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
-        EXPECT_EQ(firstAllocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 
         ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1481,7 +1481,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             standaloneAllocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
-        EXPECT_EQ(firstAllocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 
         ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1492,7 +1492,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             standaloneAllocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
-        EXPECT_EQ(secondAllocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(secondAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 
         stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 2u);
@@ -1519,7 +1519,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         // Depending on the device, sub-allocation could fail. Since this test relies on a
         // sub-allocator's info counts, it must be skipped.
         // TODO: Consider testing counts by allocator type.
-        GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Type != ALLOCATION_TYPE_SUBALLOCATED);
+        GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Type !=
+                           RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
 
         ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1532,7 +1533,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             subAllocationDesc, CreateBasicBufferDesc(kBufferSize),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
-        EXPECT_EQ(secondAllocation->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED);
+        EXPECT_EQ(secondAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
 
         stats = GetStats(resourceAllocator);
         EXPECT_GE(stats.UsedHeapCount, 1u);
@@ -1559,7 +1560,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             allocationWithinDesc, CreateBasicBufferDesc(kBufferSize, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
-        EXPECT_EQ(firstAllocation->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
 
         ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1572,7 +1573,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
             allocationWithinDesc, CreateBasicBufferDesc(kBufferSize, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
-        EXPECT_EQ(secondAllocation->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+        EXPECT_EQ(secondAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
 
         stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1637,7 +1638,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             standaloneAllocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &firstAllocation));
         ASSERT_NE(firstAllocation, nullptr);
-        EXPECT_EQ(firstAllocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 
     ALLOCATION_DESC reusePoolOnlyDesc = standaloneAllocationDesc;
@@ -1650,7 +1651,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTexturePooled) {
             reusePoolOnlyDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &secondAllocation));
         ASSERT_NE(secondAllocation, nullptr);
-        EXPECT_EQ(secondAllocation->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+        EXPECT_EQ(secondAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
     }
 }
 
@@ -1805,7 +1806,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
                 allocationDesc, CreateBasicBufferDesc(kSmallBufferSize),
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocation));
             ASSERT_NE(allocation, nullptr);
-            EXPECT_EQ(allocation->GetInfo().Type, ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+            EXPECT_EQ(allocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
         });
     }
 
@@ -1943,7 +1944,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPadding) {
               allocationDesc.ExtraRequiredResourcePadding);
 
     // Padded resources are only supported for standalone allocations.
-    EXPECT_EQ(allocationWithPadding->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+    EXPECT_EQ(allocationWithPadding->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 }
 
 // Verify two textures, with and without padding, allocate the correct size.
@@ -1972,7 +1973,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
               allocationDesc.ExtraRequiredResourcePadding);
 
     // Padded resources are only supported for standalone allocations.
-    EXPECT_EQ(allocationWithPadding->GetInfo().Type, ALLOCATION_TYPE_STANDALONE);
+    EXPECT_EQ(allocationWithPadding->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 }
 
 TEST_F(D3D12ResourceAllocatorTests, AllocatorFeatures) {

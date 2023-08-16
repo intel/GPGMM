@@ -78,7 +78,7 @@ namespace gpgmm::d3d12 {
                                     void** ppDataOut) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        if (subresource > 0 && GetInfo().Type == ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
+        if (subresource > 0 && GetInfo().Type == RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Mapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
@@ -115,7 +115,7 @@ namespace gpgmm::d3d12 {
     void ResourceAllocation::Unmap(uint32_t subresource, const D3D12_RANGE* pWrittenRange) {
         // Allocation coordinates relative to the resource cannot be used when specifying
         // subresource-relative coordinates.
-        if (subresource > 0 && GetInfo().Type == ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
+        if (subresource > 0 && GetInfo().Type == RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Unmapping a sub-allocation within a resource cannot use "
                    "non-zero subresource-relative coordinates.";
@@ -148,7 +148,7 @@ namespace gpgmm::d3d12 {
     }
 
     RESOURCE_ALLOCATION_INFO ResourceAllocation::GetInfo() const {
-        return {GetSize(), GetAlignment(), static_cast<ALLOCATION_TYPE>(GetMethod())};
+        return {GetSize(), GetAlignment(), static_cast<RESOURCE_ALLOCATION_TYPE>(GetMethod())};
     }
 
     IResidencyHeap* ResourceAllocation::GetMemory() const {
@@ -161,7 +161,8 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocation::SetDebugNameImpl(LPCWSTR name) {
         // D3D name is set per resource.
-        if (GetDebugName() != nullptr && GetInfo().Type == ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
+        if (GetDebugName() != nullptr &&
+            GetInfo().Type == RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
             return S_FALSE;
         }
 
