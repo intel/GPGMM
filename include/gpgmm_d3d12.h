@@ -297,40 +297,40 @@ namespace gpgmm::d3d12 {
     };
 
     /** \enum RECORD_FLAGS
-      Represents different event categories to record.
-      */
+    Represents different event categories to record.
+    */
     enum RECORD_FLAGS {
 
         /** \brief Record nothing.
          */
-        RECORD_FLAGS_NONE = 0x0,
+        RECORD_FLAG_NONE = 0x0,
 
         /** \brief Record lifetimes of API objects created by GPGMM.
          */
-        RECORD_FLAGS_API_OBJECTS = 0x1,
+        RECORD_FLAG_API_OBJECTS = 0x1,
 
         /** \brief Record API calls made to GPGMM.
          */
-        RECORD_FLAGS_API_CALLS = 0x2,
+        RECORD_FLAG_API_CALLS = 0x2,
 
         /** \brief Record duration of GPGMM API calls.
          */
-        RECORD_FLAGS_API_TIMINGS = 0x4,
+        RECORD_FLAG_API_TIMINGS = 0x4,
 
         /** \brief Record metrics made to GPGMM API calls.
          */
-        RECORD_FLAGS_COUNTERS = 0x8,
+        RECORD_FLAG_COUNTERS = 0x8,
 
         /** \brief Record events required for playback.
 
          Bitwise OR'd combination of kApiObjects and
          kApiCalls.
          */
-        RECORD_FLAGS_CAPTURE = 0x3,
+        RECORD_FLAG_CAPTURE = 0x3,
 
         /** \brief Record everything.
          */
-        RECORD_FLAGS_ALL = 0xFF,
+        RECORD_FLAG_ALL = 0xFF,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RECORD_FLAGS)
