@@ -126,14 +126,14 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="separator:ab374b96904e24df12ee8ba8b248652fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf361481164c757b56fb2f17cd3952c6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6">RECORD_FLAGS</a> { <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6ac210cdfd015ed87b6f74a8f1da7f9d6a">RECORD_FLAGS_NONE</a> = 0x0
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6aeebf491831135e3952d2a9f01ecc32af">RECORD_FLAGS_API_OBJECTS</a> = 0x1
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6aa136c28f544eb70dcae599f29fcd2b16">RECORD_FLAGS_API_CALLS</a> = 0x2
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6afbca1f07401fdf596e74ec9559c3db41">RECORD_FLAGS_API_TIMINGS</a> = 0x4
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a8fceb80fa6b9472766db268c771efa17">RECORD_FLAG_NONE</a> = 0x0
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6add63c186578e08660ad8038712ed1018">RECORD_FLAG_API_OBJECTS</a> = 0x1
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a683d1e3a3a83f94be524e52f947b7493">RECORD_FLAG_API_CALLS</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a450a8760b1755d9a9b2e5a367d446ebd">RECORD_FLAG_API_TIMINGS</a> = 0x4
 , <br />
-&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a91d4c966d1031cadfb205aae9477d1eb">RECORD_FLAGS_COUNTERS</a> = 0x8
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a4b01f0ae89f4b170dfc6b01488f95742">RECORD_FLAGS_CAPTURE</a> = 0x3
-, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6af33fd7dd95924d7aa2bedbd64fb2f23d">RECORD_FLAGS_ALL</a> = 0xFF
+&#160;&#160;<a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a456638b1705d52126d2700ea194f41ec">RECORD_FLAG_COUNTERS</a> = 0x8
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6ae65741b1bf29a184c51a7325a821a2c0">RECORD_FLAG_CAPTURE</a> = 0x3
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6a4b5fde9a47e50eb9bdbf88b5726d74f6">RECORD_FLAG_ALL</a> = 0xFF
 <br />
  }</td></tr>
 <tr class="separator:adf361481164c757b56fb2f17cd3952c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -432,21 +432,21 @@ is normally not tracked.
 </div><div class="memdoc">
 <p>Represents different event categories to record. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6ac210cdfd015ed87b6f74a8f1da7f9d6a" name="adf361481164c757b56fb2f17cd3952c6ac210cdfd015ed87b6f74a8f1da7f9d6a"></a>RECORD_FLAGS_NONE&#160;</td><td class="fielddoc"><p>Record nothing. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a8fceb80fa6b9472766db268c771efa17" name="adf361481164c757b56fb2f17cd3952c6a8fceb80fa6b9472766db268c771efa17"></a>RECORD_FLAG_NONE&#160;</td><td class="fielddoc"><p>Record nothing. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6aeebf491831135e3952d2a9f01ecc32af" name="adf361481164c757b56fb2f17cd3952c6aeebf491831135e3952d2a9f01ecc32af"></a>RECORD_FLAGS_API_OBJECTS&#160;</td><td class="fielddoc"><p>Record lifetimes of API objects created by GPGMM. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6add63c186578e08660ad8038712ed1018" name="adf361481164c757b56fb2f17cd3952c6add63c186578e08660ad8038712ed1018"></a>RECORD_FLAG_API_OBJECTS&#160;</td><td class="fielddoc"><p>Record lifetimes of API objects created by GPGMM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6aa136c28f544eb70dcae599f29fcd2b16" name="adf361481164c757b56fb2f17cd3952c6aa136c28f544eb70dcae599f29fcd2b16"></a>RECORD_FLAGS_API_CALLS&#160;</td><td class="fielddoc"><p>Record API calls made to GPGMM. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a683d1e3a3a83f94be524e52f947b7493" name="adf361481164c757b56fb2f17cd3952c6a683d1e3a3a83f94be524e52f947b7493"></a>RECORD_FLAG_API_CALLS&#160;</td><td class="fielddoc"><p>Record API calls made to GPGMM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6afbca1f07401fdf596e74ec9559c3db41" name="adf361481164c757b56fb2f17cd3952c6afbca1f07401fdf596e74ec9559c3db41"></a>RECORD_FLAGS_API_TIMINGS&#160;</td><td class="fielddoc"><p>Record duration of GPGMM API calls. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a450a8760b1755d9a9b2e5a367d446ebd" name="adf361481164c757b56fb2f17cd3952c6a450a8760b1755d9a9b2e5a367d446ebd"></a>RECORD_FLAG_API_TIMINGS&#160;</td><td class="fielddoc"><p>Record duration of GPGMM API calls. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a91d4c966d1031cadfb205aae9477d1eb" name="adf361481164c757b56fb2f17cd3952c6a91d4c966d1031cadfb205aae9477d1eb"></a>RECORD_FLAGS_COUNTERS&#160;</td><td class="fielddoc"><p>Record metrics made to GPGMM API calls. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a456638b1705d52126d2700ea194f41ec" name="adf361481164c757b56fb2f17cd3952c6a456638b1705d52126d2700ea194f41ec"></a>RECORD_FLAG_COUNTERS&#160;</td><td class="fielddoc"><p>Record metrics made to GPGMM API calls. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a4b01f0ae89f4b170dfc6b01488f95742" name="adf361481164c757b56fb2f17cd3952c6a4b01f0ae89f4b170dfc6b01488f95742"></a>RECORD_FLAGS_CAPTURE&#160;</td><td class="fielddoc"><p>Record events required for playback. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6ae65741b1bf29a184c51a7325a821a2c0" name="adf361481164c757b56fb2f17cd3952c6ae65741b1bf29a184c51a7325a821a2c0"></a>RECORD_FLAG_CAPTURE&#160;</td><td class="fielddoc"><p>Record events required for playback. </p>
 <pre class="fragment"> Bitwise OR'd combination of kApiObjects and
  kApiCalls.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6af33fd7dd95924d7aa2bedbd64fb2f23d" name="adf361481164c757b56fb2f17cd3952c6af33fd7dd95924d7aa2bedbd64fb2f23d"></a>RECORD_FLAGS_ALL&#160;</td><td class="fielddoc"><p>Record everything. </p>
+<tr><td class="fieldname"><a id="adf361481164c757b56fb2f17cd3952c6a4b5fde9a47e50eb9bdbf88b5726d74f6" name="adf361481164c757b56fb2f17cd3952c6a4b5fde9a47e50eb9bdbf88b5726d74f6"></a>RECORD_FLAG_ALL&#160;</td><td class="fielddoc"><p>Record everything. </p>
 </td></tr>
 </table>
 
