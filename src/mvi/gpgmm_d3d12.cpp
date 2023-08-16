@@ -403,11 +403,11 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
-    HRESULT ResourceAllocator::QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         return E_NOTIMPL;
     }
 
-    HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
+    HRESULT ResourceAllocator::CheckFeatureSupport(RESOURCE_ALLOCATOR_FEATURE feature,
                                                    void* pFeatureSupportData,
                                                    uint32_t featureSupportDataSize) const {
         return E_INVALIDARG;  // Unsupported

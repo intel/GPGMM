@@ -1177,24 +1177,24 @@ namespace gpgmm::d3d12 {
         bool IsResourceAllocationWithinCoherent;
     };
 
-    /** \enum ALLOCATOR_FEATURE
+    /** \enum RESOURCE_ALLOCATOR_FEATURE
 
     Defines constants that specify a resource allocator feature to query about. When you
     want to query for the level to which an allocator supports a feature, pass one of these values
     to ResourceAllocator::CheckFeatureSupport.
     */
-    enum ALLOCATOR_FEATURE {
+    enum RESOURCE_ALLOCATOR_FEATURE {
         /** \brief Indicates a query for the level of support for allocated resources. The
         corresponding data structure for this value is FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT
         */
-        ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
+        RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT,
     };
 
-    /** \struct ALLOCATOR_STATS
-    Additional information about allocator usage.
+    /** \struct RESOURCE_ALLOCATOR_STATS
+    Additional information about resource allocator usage.
     */
-    struct ALLOCATOR_STATS {
-        /** \brief Number of used sub-allocated blocks within the same memory.
+    struct RESOURCE_ALLOCATOR_STATS {
+        /** \brief Number of used sub-allocated blocks within the same heap.
          */
         UINT UsedBlockCount;
 
@@ -1206,11 +1206,11 @@ namespace gpgmm::d3d12 {
          */
         UINT UsedHeapCount;
 
-        /** \brief Total size, in bytes, of used memory.
+        /** \brief Total size, in bytes, of used heaps.
          */
         UINT64 UsedHeapUsage;
 
-        /** \brief Total size, in bytes, of free memory.
+        /** \brief Total size, in bytes, of free heaps.
          */
         UINT64 FreeHeapUsage;
 
@@ -1319,18 +1319,18 @@ namespace gpgmm::d3d12 {
         UsedMemoryUsage. Or the percent of recycled memory is equal to FreeMemoryUsage /
         (UsedMemoryUsage + FreeMemoryUsage) * 100%.
 
-        @param pResourceAllocatorStats A pointer to a ALLOCATOR_STATS structure or NULL if
+        @param pResourceAllocatorStats A pointer to a RESOURCE_ALLOCATOR_STATS structure or NULL if
         statistics information should only be gathered for recording.
 
         \return Returns S_OK if successful. Returns S_FALSE if statistics information was only
         gathered for recording.
         */
-        virtual HRESULT QueryStats(ALLOCATOR_STATS * pResourceAllocatorStats) = 0;
+        virtual HRESULT QueryStats(RESOURCE_ALLOCATOR_STATS * pResourceAllocatorStats) = 0;
 
         /** \brief Gets information about the features that are supported by the resource allocator.
 
-        @param feature A constant from the ALLOCATOR_FEATURE enumeration describing the feature(s)
-        that you want to query for support.
+        @param feature A constant from the RESOURCE_ALLOCATOR_FEATURE enumeration describing the
+        feature(s) that you want to query for support.
         @param pFeatureSupportData A pointer to the data structure that corresponds to the value of
         the feature parameter. To determine the corresponding data structure for each constant, see
         FEATURE.
@@ -1341,8 +1341,9 @@ namespace gpgmm::d3d12 {
         to pFeatureSupportData or if a size mismatch is detected for the featureSupportDataSize
         parameter.
         */
-        virtual HRESULT CheckFeatureSupport(ALLOCATOR_FEATURE feature, void* pFeatureSupportData,
-                                            UINT featureSupportDataSize) const = 0;
+        virtual HRESULT CheckFeatureSupport(RESOURCE_ALLOCATOR_FEATURE feature,
+                                            void* pFeatureSupportData, UINT featureSupportDataSize)
+            const = 0;
     };
 
     /** \brief Create a resource allocator with residency.

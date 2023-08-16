@@ -1458,7 +1458,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 
-        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, kBufferOf4MBAllocationSize);
     }
@@ -1483,7 +1483,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
 
-        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, kBufferOf4MBAllocationSize);
 
@@ -1522,7 +1522,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Type !=
                            RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
 
-        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_GE(stats.UsedHeapUsage, stats.UsedBlockUsage);
         EXPECT_EQ(stats.UsedBlockCount, 1u);
@@ -1562,7 +1562,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         ASSERT_NE(firstAllocation, nullptr);
         EXPECT_EQ(firstAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
 
-        ALLOCATOR_STATS stats = GetStats(resourceAllocator);
+        RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
         EXPECT_EQ(stats.UsedHeapUsage, 64u * 1024u);
         EXPECT_EQ(stats.UsedBlockCount, 1u);
@@ -1990,19 +1990,19 @@ TEST_F(D3D12ResourceAllocatorTests, AllocatorFeatures) {
         } WrongData = {};
 
         ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
-            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &WrongData, sizeof(WrongData)));
+            RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &WrongData, sizeof(WrongData)));
     }
 
     // Request information with no data.
     {
         ASSERT_FAILED(resourceAllocator->CheckFeatureSupport(
-            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, nullptr, 0));
+            RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, nullptr, 0));
     }
 
     // Request information with valid data size.
     {
         FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT data = {};
         ASSERT_SUCCEEDED(resourceAllocator->CheckFeatureSupport(
-            ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &data, sizeof(data)));
+            RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &data, sizeof(data)));
     }
 }

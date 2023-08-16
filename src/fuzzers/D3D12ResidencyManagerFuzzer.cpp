@@ -40,9 +40,9 @@ namespace {
                                                        : 0;
     }
 
-    gpgmm::d3d12::ALLOCATOR_STATS GetStats(
+    gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS GetStats(
         ComPtr<gpgmm::d3d12::IResourceAllocator> resourceAllocator) {
-        gpgmm::d3d12::ALLOCATOR_STATS stats = {};
+        gpgmm::d3d12::RESOURCE_ALLOCATOR_STATS stats = {};
         resourceAllocator->QueryStats(&stats);
         return stats;
     }

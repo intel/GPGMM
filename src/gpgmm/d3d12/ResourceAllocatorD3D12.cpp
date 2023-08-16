@@ -1206,7 +1206,7 @@ namespace gpgmm::d3d12 {
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
-                ALLOCATOR_STATS allocationStats = {};
+                RESOURCE_ALLOCATOR_STATS allocationStats = {};
                 GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats), mDevice);
 
                 request.AvailableForAllocation = allocationStats.FreeHeapUsage;
@@ -1602,12 +1602,13 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResourceAllocator::QueryStats(ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         std::lock_guard<std::mutex> lock(mMutex);
         return QueryStatsInternal(pResourceAllocatorStats);
     }
 
-    HRESULT ResourceAllocator::QueryStatsInternal(ALLOCATOR_STATS* pResourceAllocatorStats) {
+    HRESULT ResourceAllocator::QueryStatsInternal(
+        RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
@@ -1745,11 +1746,11 @@ namespace gpgmm::d3d12 {
         return mResidencyManager != nullptr;
     }
 
-    HRESULT ResourceAllocator::CheckFeatureSupport(ALLOCATOR_FEATURE feature,
+    HRESULT ResourceAllocator::CheckFeatureSupport(RESOURCE_ALLOCATOR_FEATURE feature,
                                                    void* pFeatureSupportData,
                                                    uint32_t featureSupportDataSize) const {
         switch (feature) {
-            case ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT: {
+            case RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT: {
                 FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT data = {};
                 if (featureSupportDataSize != sizeof(data)) {
                     return E_INVALIDARG;
