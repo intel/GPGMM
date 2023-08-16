@@ -928,33 +928,34 @@ namespace gpgmm::d3d12 {
     }
 
     D3D12_RESOURCE_ALLOCATION_INFO ResourceAllocator::GetResourceAllocationInfo(
-        D3D12_RESOURCE_DESC& resourceDescriptor) const {
+        const D3D12_RESOURCE_DESC& resourceDescriptor) const {
         // Small textures can take advantage of smaller alignments. For example,
         // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
         // Must be non-depth or without render-target to use small resource alignment.
         // This also applies to MSAA textures (4MB => 64KB).
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc
+        D3D12_RESOURCE_DESC newResourceDescriptor = resourceDescriptor;
         if (IsTexture(resourceDescriptor) && IsAllowedToUseSmallAlignment(resourceDescriptor) &&
             (resourceDescriptor.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |
                                          D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) == 0) {
-            resourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
-                                               ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
-                                               : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+            newResourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
+                                                  ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
+                                                  : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
         }
 
         D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+            mDevice->GetResourceAllocationInfo(0, 1, &newResourceDescriptor);
 
         // If the requested resource alignment was rejected, let D3D tell us what the
         // required alignment is for this resource.
-        if (resourceDescriptor.Alignment != 0 &&
-            resourceDescriptor.Alignment != resourceInfo.Alignment) {
+        if (newResourceDescriptor.Alignment != 0 &&
+            newResourceDescriptor.Alignment != resourceInfo.Alignment) {
             DebugLog(MessageId::kPerformanceWarning, this)
                 << "Re-aligned: " << resourceDescriptor.Alignment << " vs "
                 << resourceInfo.Alignment << " bytes.";
 
-            resourceDescriptor.Alignment = 0;
-            resourceInfo = mDevice->GetResourceAllocationInfo(0, 1, &resourceDescriptor);
+            newResourceDescriptor.Alignment = 0;
+            resourceInfo = mDevice->GetResourceAllocationInfo(0, 1, &newResourceDescriptor);
         }
 
         if (resourceInfo.SizeInBytes == 0) {
@@ -1056,9 +1057,8 @@ namespace gpgmm::d3d12 {
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
-        D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(newResourceDesc);
+            GetResourceAllocationInfo(resourceDescriptor);
         if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             ErrorLog(ErrorCode::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
@@ -1067,6 +1067,9 @@ namespace gpgmm::d3d12 {
                 << GetBytesToSizeInUnits(mMaxResourceHeapSize);
             return E_OUTOFMEMORY;
         }
+
+        D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
+        newResourceDesc.Alignment = resourceInfo.Alignment;
 
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;

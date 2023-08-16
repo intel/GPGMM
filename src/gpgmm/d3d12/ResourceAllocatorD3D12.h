@@ -145,7 +145,7 @@ namespace gpgmm::d3d12 {
         bool IsResidencyEnabled() const;
 
         D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo(
-            D3D12_RESOURCE_DESC& resourceDescriptor) const;
+            const D3D12_RESOURCE_DESC& resourceDescriptor) const;
 
         // MemoryAllocatorBase interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
