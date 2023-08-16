@@ -674,7 +674,7 @@ namespace gpgmm::d3d12 {
             // If the heap should be already resident, calling MakeResident again will be redundant.
             // Tell the developer the heap wasn't properly tracked by the residency manager.
             if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_UNKNOWN) {
-                DebugLog(MessageId::kPerformanceWarning, this)
+                WarnLog(MessageId::kPerformanceWarning, this)
                     << "Residency state could not be determined for the heap (Heap="
                     << ToHexStr(heap)
                     << "). This likely means the developer was attempting to make a "

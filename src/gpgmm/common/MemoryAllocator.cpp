@@ -161,9 +161,9 @@ namespace gpgmm {
     MaybeError MemoryAllocatorBase::ValidateRequest(const MemoryAllocationRequest& request) const {
         // Check for non-zero size and alignment.
         GPGMM_RETURN_ERROR_IF(this, request.SizeInBytes == 0, "Request cannot have zero size.",
-                              ErrorCode::kValidationError);
+                              ErrorCode::kInvalidArgument);
         GPGMM_RETURN_ERROR_IF(this, request.Alignment == 0, "Request cannot have zero alignment.",
-                              ErrorCode::kValidationError);
+                              ErrorCode::kInvalidArgument);
 
         // Check request size cannot overflow.
         GPGMM_RETURN_ERROR_IF(
@@ -171,7 +171,7 @@ namespace gpgmm {
             request.SizeInBytes > std::numeric_limits<uint64_t>::max() - (request.Alignment - 1),
             "Requested size invalid due to overflow: " +
                 GetBytesToSizeInUnits(request.SizeInBytes) + ".",
-            ErrorCode::kValidationError);
+            ErrorCode::kSizeExceeded);
 
         // Check request size cannot overflow |this| memory allocator.
         const uint64_t requestedAlignedSize = AlignTo(request.SizeInBytes, request.Alignment);
@@ -180,7 +180,7 @@ namespace gpgmm {
             "Requested size, after alignment, exceeds memory size: " +
                 GetBytesToSizeInUnits(requestedAlignedSize) + " vs " +
                 GetBytesToSizeInUnits(GetMemorySize()) + ".",
-            ErrorCode::kValidationError);
+            ErrorCode::kSizeExceeded);
 
         // Check request size has compatible alignment with |this| memory allocator.
         // Alignment value of 1 means no alignment required.
@@ -190,7 +190,7 @@ namespace gpgmm {
                 (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment)),
             "Requested alignment exceeds memory alignment: " + std::to_string(request.Alignment) +
                 " vs " + std::to_string(GetMemoryAlignment()) + ".",
-            ErrorCode::kValidationError);
+            ErrorCode::kSizeExceeded);
 
         return {};
     }

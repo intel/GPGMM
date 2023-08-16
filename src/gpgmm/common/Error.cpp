@@ -26,8 +26,8 @@ namespace gpgmm {
                 return "UNKNOWN";
             case ErrorCode::kSizeExceeded:
                 return "SIZE_EXCEEDED";
-            case ErrorCode::kAllocatorFailed:
-                return "ALLOCATOR_FAILED";
+            case ErrorCode::kAllocationFailed:
+                return "ALLOCATION_FAILED";
             case ErrorCode::kPrefetchFailed:
                 return "PREFETCH_FAILED";
             case ErrorCode::kBudgetInvalid:

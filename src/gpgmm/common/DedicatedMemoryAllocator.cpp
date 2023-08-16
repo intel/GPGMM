@@ -44,7 +44,7 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
 
         if (memoryRequest.SizeInBytes > request.SizeInBytes) {
-            DebugLog(MessageId::kPerformanceWarning, this)
+            WarnLog(MessageId::kPerformanceWarning, this)
                 << "Memory allocation was larger then the requested: "
                 << GetBytesToSizeInUnits(memoryRequest.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
