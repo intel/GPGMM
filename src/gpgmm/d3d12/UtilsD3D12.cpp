@@ -486,4 +486,13 @@ namespace gpgmm::d3d12 {
         }
     }
 
+    bool IsBuffer(const D3D12_RESOURCE_DESC& resourceDescriptor) {
+        switch (resourceDescriptor.Dimension) {
+            case D3D12_RESOURCE_DIMENSION_BUFFER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }  // namespace gpgmm::d3d12

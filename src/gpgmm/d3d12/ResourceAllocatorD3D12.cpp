@@ -943,6 +943,12 @@ namespace gpgmm::d3d12 {
                                                   : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
         }
 
+        // Buffers are effectively always 64KB. Specify this now to suppress D3D12 error
+        // upon calling GetResourceAllocationInfo().
+        if (IsBuffer(resourceDescriptor)) {
+            newResourceDescriptor.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+        }
+
         D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
             mDevice->GetResourceAllocationInfo(0, 1, &newResourceDescriptor);
 
@@ -1136,7 +1142,7 @@ namespace gpgmm::d3d12 {
         bool neverSubAllocate =
             allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
 
-        const bool isMSAA = resourceDescriptor.SampleDesc.Count > 1;
+        const bool isMSAA = newResourceDesc.SampleDesc.Count > 1;
 
         const bool requiresPadding = allocationDescriptor.ExtraRequiredResourcePadding > 0;
 
@@ -1270,7 +1276,7 @@ namespace gpgmm::d3d12 {
                         resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)), mDevice);
 
                     RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.SizeInBytes = resourceDescriptor.Width;
+                    allocationDesc.SizeInBytes = newResourceDesc.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
                     allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
