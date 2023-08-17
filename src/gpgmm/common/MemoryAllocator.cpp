@@ -209,14 +209,4 @@ namespace gpgmm {
         mNext = next.release();
     }
 
-    void MemoryAllocatorBase::CheckAndReportAllocationMisalignment(
-        const MemoryAllocationBase& allocation) {
-        if (allocation.GetSize() > allocation.GetRequestSize()) {
-            WarnLog(MessageId::kPerformanceWarning, this)
-                << "Memory allocation was larger then requested: " +
-                       GetBytesToSizeInUnits(allocation.GetSize()) + " vs " +
-                       GetBytesToSizeInUnits(allocation.GetRequestSize()) + ".";
-        }
-    }
-
 }  // namespace gpgmm
