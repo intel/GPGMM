@@ -1076,7 +1076,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the device: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(mMaxResourceHeapSize);
-            return ErrorCode::kSizeExceeded;
+            return ErrorCode::kOutOfMemory;
         }
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -1206,7 +1206,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the adapter: "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(maxSegmentSize);
-            return ErrorCode::kSizeExceeded;
+            return ErrorCode::kOutOfMemory;
         }
 
         // If the allocation must be created within the budget, restrict the amount of memory

@@ -266,14 +266,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferOversized) {
     ASSERT_NE(resourceAllocator, nullptr);
 
     // Exceeds adapter limit
-    EXPECT_FAILED(resourceAllocator->CreateResource({},
-                                                    CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(32)),
-                                                    D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+    EXPECT_EQ(E_OUTOFMEMORY,
+              resourceAllocator->CreateResource({}, CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(32)),
+                                                D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 
     // Exceeds device limit
-    EXPECT_FAILED(
-        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(1024 * 1024)),
-                                          D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
+    EXPECT_EQ(E_OUTOFMEMORY, resourceAllocator->CreateResource(
+                                 {}, CreateBasicBufferDesc(GPGMM_GB_TO_BYTES(1024 * 1024)),
+                                 D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 }
 
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferSubAllocated) {

@@ -76,6 +76,7 @@ namespace gpgmm {
         kInvalidArgument,
         kBadOperation,
         kUnsupported,
+        kOutOfMemory,
     };
 
     const char* GetErrorCodeToChar(ErrorCode errorCode);
