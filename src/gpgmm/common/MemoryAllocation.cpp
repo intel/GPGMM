@@ -134,4 +134,8 @@ namespace gpgmm {
         return mBlock;
     }
 
+    bool MemoryAllocationBase::IsRequestedSizeMisaligned() const {
+        return GetRequestSize() != kInvalidSize && GetSize() > GetRequestSize();
+    }
+
 }  // namespace gpgmm

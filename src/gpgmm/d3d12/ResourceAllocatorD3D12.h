@@ -92,7 +92,7 @@ namespace gpgmm::d3d12 {
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
                                        D3D12_RESOURCE_STATES initialResourceState,
                                        const D3D12_CLEAR_VALUE* clearValue,
-                                       IResourceAllocation** ppResourceAllocationOut);
+                                       ResourceAllocation** ppResourceAllocationOut);
 
         std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,

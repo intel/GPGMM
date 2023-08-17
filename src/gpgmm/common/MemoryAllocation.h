@@ -79,6 +79,7 @@ namespace gpgmm {
         uint64_t GetOffset() const;
         AllocationMethod GetMethod() const;
         MemoryBlock* GetBlock() const;
+        bool IsRequestedSizeMisaligned() const;
 
       protected:
         friend class MemoryAllocatorBase;

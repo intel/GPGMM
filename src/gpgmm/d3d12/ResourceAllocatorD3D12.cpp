@@ -981,7 +981,7 @@ namespace gpgmm::d3d12 {
             (RESOURCE_ALLOCATOR_CREATE_RESOURCE_PARAMS{allocationDescriptor, resourceDescriptor,
                                                        initialResourceState, pClearValue}));
 
-        ComPtr<IResourceAllocation> allocation;
+        ComPtr<ResourceAllocation> allocation;
         {
             // Mutex must be destroyed before the allocation gets released. This occurs
             // when the allocation never calls Detach() below and calls release which
@@ -997,8 +997,7 @@ namespace gpgmm::d3d12 {
             if (GPGMM_UNLIKELY(mTrackingAllocator)) {
                 GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
                                        mDevice);
-                mTrackingAllocator->TrackAllocation(
-                    static_cast<ResourceAllocation*>(allocation.Get()));
+                mTrackingAllocator->TrackAllocation(allocation.Get());
             }
 
             // Update the current usage counters.
@@ -1007,9 +1006,12 @@ namespace gpgmm::d3d12 {
             }
 
             if (allocationDescriptor.Flags &
-                RESOURCE_ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH) {
-                CheckAndReportAllocationMisalignment(
-                    *static_cast<ResourceAllocation*>(allocation.Get()));
+                    RESOURCE_ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH &&
+                allocation->IsRequestedSizeMisaligned()) {
+                WarnLog(MessageId::kPerformanceWarning, this)
+                    << "Resource allocation was larger then requested: " +
+                           GetBytesToSizeInUnits(allocation->GetSize()) + " vs " +
+                           GetBytesToSizeInUnits(allocation->GetRequestSize()) + ".";
             }
         }
 
@@ -1057,7 +1059,7 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
-        IResourceAllocation** ppResourceAllocationOut) {
+        ResourceAllocation** ppResourceAllocationOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResourceAllocator.CreateResource");
 
