@@ -118,9 +118,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a17328b069c180066b9821d2efc327479"><td class="memItemLeft" align="right" valign="top">FLOAT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a17328b069c180066b9821d2efc327479">ResourceHeapGrowthFactor</a></td></tr>
 <tr class="memdesc:a17328b069c180066b9821d2efc327479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resource heap growth factor, expressed as a multiple of the resource heap size that will monotonically increase.  <br /></td></tr>
 <tr class="separator:a17328b069c180066b9821d2efc327479"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="memItemLeft" align="right" valign="top">UINT64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a76b721fed3b2ce5aa24093cee1ed7c3e">ReleaseSizeInBytes</a></td></tr>
-<tr class="memdesc:a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of memory, in bytes, to release from the resource allocator at once, should there not be enough memory left.  <br /></td></tr>
-<tr class="separator:a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Specify parameters for creating allocators. </p>
@@ -245,24 +242,6 @@ Public Attributes</h2></td></tr>
 
 <p>Specifies recording options. </p>
 <p>For example, what events to record, and where to record them. </p>
-
-</div>
-</div>
-<a id="a76b721fed3b2ce5aa24093cee1ed7c3e" name="a76b721fed3b2ce5aa24093cee1ed7c3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76b721fed3b2ce5aa24093cee1ed7c3e">&#9670;&#160;</a></span>ReleaseSizeInBytes</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">UINT64 gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC::ReleaseSizeInBytes</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Size of memory, in bytes, to release from the resource allocator at once, should there not be enough memory left. </p>
-<p>A release size of UINT64_MAX releases ALL free memory held by the resource allocator.</p>
-<p>Optional parameter. When 0 is specified, the API will use the size of the current allocation. </p>
 
 </div>
 </div>
