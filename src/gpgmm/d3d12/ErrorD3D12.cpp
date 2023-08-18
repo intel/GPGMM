@@ -61,15 +61,6 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    bool IsErrorResultFatal(HRESULT error) {
-        switch (error) {
-            case E_UNEXPECTED:
-                return true;
-            default:
-                return false;
-        }
-    }
-
     std::string GetErrorResultToString(HRESULT error) noexcept {
         std::wstring wstring = TCharToWString(_com_error(error).ErrorMessage());
         std::stringstream ss;

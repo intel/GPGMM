@@ -55,7 +55,6 @@ namespace gpgmm::d3d12 {
 
     HRESULT GetErrorResult(ErrorCode error);
     ErrorCode GetErrorCode(HRESULT error);
-    bool IsErrorResultFatal(HRESULT error);
 
     // Returns HRESULT error as a printable message.
     // If the device is also specified and removed, a detailed message is supplied.
