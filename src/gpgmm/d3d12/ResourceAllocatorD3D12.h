@@ -84,15 +84,15 @@ namespace gpgmm::d3d12 {
                           std::unique_ptr<Caps> caps);
 
         template <typename CreateResourceFn>
-        HRESULT TryAllocateResource(MemoryAllocatorBase* allocator,
-                                    const MemoryAllocationRequest& request,
-                                    CreateResourceFn&& createResourceFn);
+        MaybeError TryAllocateResource(MemoryAllocatorBase* allocator,
+                                       const MemoryAllocationRequest& request,
+                                       CreateResourceFn&& createResourceFn);
 
-        HRESULT CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
-                                       const D3D12_RESOURCE_DESC& resourceDescriptor,
-                                       D3D12_RESOURCE_STATES initialResourceState,
-                                       const D3D12_CLEAR_VALUE* clearValue,
-                                       ResourceAllocation** ppResourceAllocationOut);
+        MaybeError CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
+                                          const D3D12_RESOURCE_DESC& resourceDescriptor,
+                                          D3D12_RESOURCE_STATES initialResourceState,
+                                          const D3D12_CLEAR_VALUE* clearValue,
+                                          ResourceAllocation** ppResourceAllocationOut);
 
         std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
@@ -150,7 +150,7 @@ namespace gpgmm::d3d12 {
         // MemoryAllocatorBase interface
         void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
-        HRESULT QueryStatsInternal(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats);
+        MemoryAllocatorStats GetStats() const override;
 
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)

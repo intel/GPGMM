@@ -42,4 +42,13 @@ namespace gpgmm {
         }
     }
 
+    bool IsErrorCodeFatal(ErrorCode errorCode) {
+        switch (errorCode) {
+            case ErrorCode::kBadOperation:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }  // namespace gpgmm
