@@ -23,7 +23,7 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT Fence::CreateFence(ID3D12Device* device, uint64_t initialValue, Fence** fenceOut) {
         ComPtr<ID3D12Fence> fence;
-        GPGMM_RETURN_IF_FAILED(
+        GPGMM_RETURN_RESULT_IF_FAILED(
             device->CreateFence(initialValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)), device);
         *fenceOut = new Fence(fence, initialValue);
         return S_OK;
@@ -53,8 +53,9 @@ namespace gpgmm::d3d12 {
 
     HRESULT Fence::WaitFor(uint64_t fenceValue) {
         if (!IsCompleted(fenceValue)) {
-            GPGMM_RETURN_IF_FAILED(mFence->SetEventOnCompletion(fenceValue, mCompletionEvent),
-                                   GetDevice(mFence.Get()));
+            GPGMM_RETURN_RESULT_IF_FAILED(
+                mFence->SetEventOnCompletion(fenceValue, mCompletionEvent),
+                GetDevice(mFence.Get()));
 
             // Wait for the event to complete (it will automatically reset).
             const uint32_t result = WaitForSingleObject(mCompletionEvent, INFINITE);
@@ -82,8 +83,8 @@ namespace gpgmm::d3d12 {
 
     HRESULT Fence::Signal(ID3D12CommandQueue* pCommandQueue) {
         ASSERT(mLastSignaledFence != mCurrentFence);
-        GPGMM_RETURN_IF_FAILED(pCommandQueue->Signal(mFence.Get(), mCurrentFence),
-                               GetDevice(pCommandQueue));
+        GPGMM_RETURN_RESULT_IF_FAILED(pCommandQueue->Signal(mFence.Get(), mCurrentFence),
+                                      GetDevice(pCommandQueue));
         mLastSignaledFence = mCurrentFence;
         mCurrentFence++;
         return S_OK;
