@@ -36,6 +36,9 @@ namespace gpgmm {
                 return "INVALID_ARGUMENT";
             case ErrorCode::kBadOperation:
                 return "BAD_OPERATION";
+            case ErrorCode::kOutOfMemory:
+            case ErrorCode::kOutOfMemoryAndFatal:
+                return "OUT_OF_MEMORY";
             default:
                 UNREACHABLE();
                 return "";
@@ -45,9 +48,37 @@ namespace gpgmm {
     bool IsErrorCodeFatal(ErrorCode errorCode) {
         switch (errorCode) {
             case ErrorCode::kBadOperation:
+            case ErrorCode::kOutOfMemoryAndFatal:
                 return true;
             default:
                 return false;
+        }
+    }
+
+    std::string GetErrorCodeToString(ErrorCode errorCode) noexcept {
+        switch (errorCode) {
+            case ErrorCode::kNone:
+                return "";
+            case ErrorCode::kUnknown:
+                return "Error could not be determined";
+            case ErrorCode::kSizeExceeded:
+                return "Size was invalid";
+            case ErrorCode::kAllocationFailed:
+                return "Failed to allocate memory";
+            case ErrorCode::kPrefetchFailed:
+                return "Failed to pre-fetch memory";
+            case ErrorCode::kBudgetInvalid:
+                return "Budget was invalid";
+            case ErrorCode::kInvalidArgument:
+                return "Argument was invalid";
+            case ErrorCode::kBadOperation:
+                return "Operation was illegal";
+            case ErrorCode::kOutOfMemory:
+            case ErrorCode::kOutOfMemoryAndFatal:
+                return "Not enough memory to complete operation";
+            default:
+                UNREACHABLE();
+                return "";
         }
     }
 

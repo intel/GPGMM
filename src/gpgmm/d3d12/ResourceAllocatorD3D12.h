@@ -89,6 +89,7 @@ namespace gpgmm::d3d12 {
                                        CreateResourceFn&& createResourceFn);
 
         MaybeError CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
+                                          const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
                                           const D3D12_RESOURCE_DESC& resourceDescriptor,
                                           D3D12_RESOURCE_STATES initialResourceState,
                                           const D3D12_CLEAR_VALUE* clearValue,
@@ -139,6 +140,8 @@ namespace gpgmm::d3d12 {
                                         ID3D12Resource** committedResourceOut,
                                         ResidencyHeap** resourceHeapOut);
 
+        HRESULT ReleaseResourceHeapsInternal(uint64_t bytesToRelease, uint64_t* pBytesReleased);
+
         HRESULT ReportLiveDeviceObjects() const;
 
         bool IsCreateHeapNotResidentEnabled() const;
@@ -168,6 +171,8 @@ namespace gpgmm::d3d12 {
         const bool mIsCustomHeapsEnabled;
         const bool mIsCreateNotResidentEnabled;
         const uint64_t mMaxResourceHeapSize;
+        const bool mIsNeverOverAllocateEnabled = false;
+        const uint64_t mReleaseSizeInBytes;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 

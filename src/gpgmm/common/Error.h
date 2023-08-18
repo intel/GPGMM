@@ -17,6 +17,7 @@
 
 #include "gpgmm/utils/Assert.h"
 
+#include <string>
 #include <utility>
 
 // Generates a unique variable name to avoid variable shadowing with result variables.
@@ -76,12 +77,15 @@ namespace gpgmm {
         kInvalidArgument,
         kBadOperation,
         kUnsupported,
-        kOutOfMemory,
+        kOutOfMemoryAndFatal,
+        kOutOfMemory
     };
 
     const char* GetErrorCodeToChar(ErrorCode errorCode);
 
     bool IsErrorCodeFatal(ErrorCode errorCode);
+
+    std::string GetErrorCodeToString(ErrorCode error) noexcept;
 
     // Wraps a backend error code with a result object.
     // Use Result::IsSuccess then Result::AcquireResult to use or else, use Result::GetErrorCode to

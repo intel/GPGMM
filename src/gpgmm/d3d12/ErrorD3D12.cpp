@@ -53,6 +53,7 @@ namespace gpgmm::d3d12 {
             case ErrorCode::kUnsupported:
                 return E_NOTIMPL;
             case ErrorCode::kOutOfMemory:
+            case ErrorCode::kOutOfMemoryAndFatal:
                 return E_OUTOFMEMORY;
             case ErrorCode::kUnknown:
             case ErrorCode::kAllocationFailed:

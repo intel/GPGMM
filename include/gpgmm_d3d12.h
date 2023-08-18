@@ -814,6 +814,18 @@ namespace gpgmm::d3d12 {
         operations at resource creation.
         */
         RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT = 0x40,
+
+        /** \brief Never allow creation of resources when out of memory.
+
+        By default, unused heaps will be freed if there is not enough available memory for
+        allocation. This prevents allocation from failing should the application forgo calling
+        ReleaseResourceHeaps(). It is recommended for application developers to periodically call
+        ReleaseResourceHeaps() when pooling is enabled or when the working set size changes
+        significantly.
+
+        With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY.
+        */
+        RESOURCE_ALLOCATOR_FLAG_NEVER_OVER_ALLOCATE = 0x80,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATOR_FLAGS)
@@ -1004,6 +1016,16 @@ namespace gpgmm::d3d12 {
         Optional parameter. When 0 is specified, the default of 1.25 is used (or 25% growth).
         */
         FLOAT ResourceHeapGrowthFactor;
+
+        /** \brief Size of memory, in bytes, to release from the resource allocator at once,
+        should there not be enough memory left.
+
+        A release size of UINT64_MAX releases ALL free memory held by the resource allocator.
+
+        Optional parameter. When 0 is specified, the API will use the size of the current
+        allocation.
+        */
+        UINT64 ReleaseSizeInBytes;
     };
 
     /** \enum RESOURCE_ALLOCATION_FLAGS

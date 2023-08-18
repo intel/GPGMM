@@ -68,6 +68,9 @@ class D3D12ResourceAllocatorTests : public D3D12TestBase, public ::testing::Test
         // Make sure leak detection is always enabled.
         desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK;
 
+        // Make sure E_OUTOFMEMORY is always possible at first chance.
+        desc.Flags |= gpgmm::d3d12::RESOURCE_ALLOCATOR_FLAG_NEVER_OVER_ALLOCATE;
+
         return desc;
     }
 };
