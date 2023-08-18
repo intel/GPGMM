@@ -27,7 +27,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT SetMaxResourceSize(ID3D12Device* device, uint64_t* sizeOut) {
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
-        GPGMM_RETURN_RESULT_IF_FAILED(
+        GPGMM_RETURN_IF_FAILED(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
             device);
@@ -43,7 +43,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT SetMaxResourceHeapSize(ID3D12Device* device, uint64_t* sizeOut) {
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
-        GPGMM_RETURN_RESULT_IF_FAILED(
+        GPGMM_RETURN_IF_FAILED(
             device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
             device);
@@ -76,7 +76,7 @@ namespace gpgmm::d3d12 {
     HRESULT SetMaxResourceHeapTierSupported(ID3D12Device* device,
                                             D3D12_RESOURCE_HEAP_TIER* maxResourceHeapTierOut) {
         D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
-        GPGMM_RETURN_RESULT_IF_FAILED(
+        GPGMM_RETURN_IF_FAILED(
             device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)),
             device);
         *maxResourceHeapTierOut = options.ResourceHeapTier;
@@ -85,27 +85,26 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
-        GPGMM_RETURN_RESULT_IF_NULLPTR(device);
+        GPGMM_RETURN_IF_NULLPTR(device);
 
         std::unique_ptr<Caps> caps(new Caps());
-        GPGMM_RETURN_RESULT_IF_FAILED(SetMaxResourceSize(device, &caps->mMaxResourceSize), device);
-        GPGMM_RETURN_RESULT_IF_FAILED(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize),
-                                      device);
-        GPGMM_RETURN_RESULT_IF_FAILED(
-            SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier), device);
-        GPGMM_RETURN_RESULT_IF_FAILED(
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceSize(device, &caps->mMaxResourceSize), device);
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize), device);
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier),
+                               device);
+        GPGMM_RETURN_IF_FAILED(
             SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported),
             device);
 
         D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
-        GPGMM_RETURN_RESULT_IF_FAILED(
+        GPGMM_RETURN_IF_FAILED(
             device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)), device);
         caps->mIsAdapterUMA = arch.UMA;
         caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 
         if (adapter != nullptr) {
             DXGI_ADAPTER_DESC adapterDesc;
-            GPGMM_RETURN_RESULT_IF_FAILED(adapter->GetDesc(&adapterDesc), device);
+            GPGMM_RETURN_IF_FAILED(adapter->GetDesc(&adapterDesc), device);
 
             caps->mSharedSegmentSize = adapterDesc.SharedSystemMemory;
             caps->mDedicatedSegmentSize = adapterDesc.DedicatedVideoMemory;

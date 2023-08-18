@@ -118,7 +118,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Heap> heap;
-        GPGMM_RETURN_RESULT_IF_FAILED(mDevice->CreateHeap(mHeapDesc, IID_PPV_ARGS(&heap)), mDevice);
+        GPGMM_RETURN_IF_FAILED(mDevice->CreateHeap(mHeapDesc, IID_PPV_ARGS(&heap)), mDevice);
 
         *ppPageableOut = heap.Detach();
 

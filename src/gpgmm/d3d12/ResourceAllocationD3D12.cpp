@@ -86,8 +86,8 @@ namespace gpgmm::d3d12 {
         }
 
         if (mResidencyManager != nullptr) {
-            GPGMM_RETURN_RESULT_IF_FAILED(mResidencyManager->LockHeap(GetMemory()),
-                                          GetDevice(mResource.Get()));
+            GPGMM_RETURN_IF_FAILED(mResidencyManager->LockHeap(GetMemory()),
+                                   GetDevice(mResource.Get()));
         }
 
         // Range coordinates are always subresource-relative so the range should only be
@@ -102,8 +102,8 @@ namespace gpgmm::d3d12 {
         }
 
         void* mappedData = nullptr;
-        GPGMM_RETURN_RESULT_IF_FAILED(mResource->Map(subresource, newReadRangePtr, &mappedData),
-                                      GetDevice(mResource.Get()));
+        GPGMM_RETURN_IF_FAILED(mResource->Map(subresource, newReadRangePtr, &mappedData),
+                               GetDevice(mResource.Get()));
 
         if (ppDataOut != nullptr) {
             *ppDataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;

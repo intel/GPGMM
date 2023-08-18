@@ -22,10 +22,10 @@
 
 #include <string>
 
-#define GPGMM_RETURN_RESULT_IF_NULLPTR(ptr) \
-    GPGMM_RETURN_RESULT_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
+#define GPGMM_RETURN_IF_NULLPTR(ptr) \
+    GPGMM_RETURN_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
 
-#define GPGMM_RETURN_RESULT_IF_FAILED(expr, device)                                   \
+#define GPGMM_RETURN_IF_FAILED(expr, device)                                          \
     {                                                                                 \
         auto GPGMM_LOCAL_VAR(HRESULT) = expr;                                         \
         if (GPGMM_UNLIKELY(FAILED(GPGMM_LOCAL_VAR(HRESULT)))) {                       \
@@ -38,31 +38,7 @@
     for (;;)                                                                          \
     break
 
-#define GPGMM_RETURN_ERROR_IF_FAILED(expr, device)                                    \
-    {                                                                                 \
-        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                                         \
-        if (GPGMM_UNLIKELY(FAILED(GPGMM_LOCAL_VAR(HRESULT)))) {                       \
-            gpgmm::ErrorLog(GetErrorCode(GPGMM_LOCAL_VAR(HRESULT)))                   \
-                << #expr << ": "                                                      \
-                << GetErrorResultWithRemovalReason(GPGMM_LOCAL_VAR(HRESULT), device); \
-            return GetErrorCode(GPGMM_LOCAL_VAR(HRESULT));                            \
-        }                                                                             \
-    }                                                                                 \
-    for (;;)                                                                          \
-    break
-
-#define GPGMM_RETURN_RESULT_IF_ERROR(expr)                                    \
-    {                                                                         \
-        auto GPGMM_LOCAL_VAR(Result) = expr;                                  \
-        if (GPGMM_UNLIKELY(!GPGMM_LOCAL_VAR(Result).IsSuccess())) {           \
-            gpgmm::ErrorLog(GPGMM_LOCAL_VAR(Result).GetErrorCode()) << #expr; \
-            return GetErrorResult(GPGMM_LOCAL_VAR(Result).AcquireError());    \
-        }                                                                     \
-    }                                                                         \
-    for (;;)                                                                  \
-    break
-
-#define GPGMM_RETURN_RESULT_IF_SUCCEEDED(expr)                   \
+#define GPGMM_RETURN_IF_SUCCEEDED(expr)                          \
     {                                                            \
         auto GPGMM_LOCAL_VAR(HRESULT) = expr;                    \
         if (GPGMM_LIKELY(SUCCEEDED(GPGMM_LOCAL_VAR(HRESULT)))) { \
@@ -72,14 +48,14 @@
     for (;;)                                                     \
     break
 
-// Same as GPGMM_RETURN_RESULT_IF_SUCCEEDED but also returns if error is lethal.
+// Same as GPGMM_RETURN_IF_SUCCEEDED but also returns if error is lethal.
 // Non-internal errors are always fatal and should not run re-attempt logic.
-#define GPGMM_RETURN_ERROR_IF_SUCCEEDED_OR_FATAL(expr)                      \
+#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                            \
     {                                                                       \
         auto GPGMM_LOCAL_VAR(HRESULT) = expr;                               \
         if (GPGMM_LIKELY(SUCCEEDED(GPGMM_LOCAL_VAR(HRESULT))) ||            \
             GPGMM_UNLIKELY(IsErrorResultFatal(GPGMM_LOCAL_VAR(HRESULT)))) { \
-            return GetErrorCode(GPGMM_LOCAL_VAR(HRESULT));                  \
+            return GPGMM_LOCAL_VAR(HRESULT);                                \
         }                                                                   \
     }                                                                       \
     for (;;)                                                                \
