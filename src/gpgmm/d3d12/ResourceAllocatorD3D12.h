@@ -88,11 +88,11 @@ namespace gpgmm::d3d12 {
                                     const MemoryAllocationRequest& request,
                                     CreateResourceFn&& createResourceFn);
 
-        HRESULT CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
-                                       const D3D12_RESOURCE_DESC& resourceDescriptor,
-                                       D3D12_RESOURCE_STATES initialResourceState,
-                                       const D3D12_CLEAR_VALUE* clearValue,
-                                       ResourceAllocation** ppResourceAllocationOut);
+        MaybeError CreateResourceInternal(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
+                                          const D3D12_RESOURCE_DESC& resourceDescriptor,
+                                          D3D12_RESOURCE_STATES initialResourceState,
+                                          const D3D12_CLEAR_VALUE* clearValue,
+                                          ResourceAllocation** ppResourceAllocationOut);
 
         std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,

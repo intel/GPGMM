@@ -403,13 +403,14 @@ namespace gpgmm::d3d12 {
         IDXGIAdapter* pAdapter,
         IResourceAllocator** ppResourceAllocatorOut,
         IResidencyManager** ppResidencyManagerOut) {
-        GPGMM_RETURN_IF_NULLPTR(pDevice);
+        GPGMM_RETURN_RESULT_IF_NULLPTR(pDevice);
 
         ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
             ComPtr<IDXGIAdapter3> adapter3;
             if (pAdapter != nullptr) {
-                GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)), pDevice);
+                GPGMM_RETURN_RESULT_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)),
+                                              pDevice);
             }
 
             RESIDENCY_MANAGER_DESC residencyDesc = {};
@@ -420,15 +421,17 @@ namespace gpgmm::d3d12 {
                 residencyDesc.Flags |= RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET;
             }
 
-            GPGMM_RETURN_IF_FAILED(ResidencyManager::CreateResidencyManager(
-                                       residencyDesc, pDevice, adapter3.Get(), &residencyManager),
-                                   pDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(
+                ResidencyManager::CreateResidencyManager(residencyDesc, pDevice, adapter3.Get(),
+                                                         &residencyManager),
+                pDevice);
         }
 
         ComPtr<IResourceAllocator> resourceAllocator;
-        GPGMM_RETURN_IF_FAILED(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
-                                                       residencyManager.Get(), &resourceAllocator),
-                               pDevice);
+        GPGMM_RETURN_RESULT_IF_FAILED(
+            CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter, residencyManager.Get(),
+                                    &resourceAllocator),
+            pDevice);
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -448,12 +451,12 @@ namespace gpgmm::d3d12 {
         IDXGIAdapter* pAdapter,
         IResidencyManager* pResidencyManager,
         IResourceAllocator** ppResourceAllocatorOut) {
-        GPGMM_RETURN_IF_NULLPTR(pDevice);
+        GPGMM_RETURN_RESULT_IF_NULLPTR(pDevice);
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            GPGMM_RETURN_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr), pDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr), pDevice);
             caps.reset(ptr);
         }
 
@@ -567,7 +570,8 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
         if (SUCCEEDED(newDescriptor.Device.As(&leakMessageQueue))) {
             D3D12_INFO_QUEUE_FILTER emptyFilter{};
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->PushRetrievalFilter(&emptyFilter), mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(leakMessageQueue->PushRetrievalFilter(&emptyFilter),
+                                          mDevice);
         } else {
             WarnLog(MessageId::kInvalidArgument)
                 << "GPGMM_ENABLE_DEVICE_LEAK_CHECKS has no effect because the D3D12 debug "
@@ -913,7 +917,7 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
         }
 
         if (pBytesReleased != nullptr) {
@@ -987,22 +991,21 @@ namespace gpgmm::d3d12 {
             // when the allocation never calls Detach() below and calls release which
             // re-enters |this| upon DeallocateMemory().
             std::lock_guard<std::mutex> lock(mMutex);
-            GPGMM_RETURN_IF_FAILED(
+            GPGMM_RETURN_RESULT_IF_ERROR(
                 CreateResourceInternal(allocationDescriptor, resourceDescriptor,
-                                       initialResourceState, pClearValue, &allocation),
-                mDevice);
+                                       initialResourceState, pClearValue, &allocation));
 
             ASSERT(allocation->GetResource() != nullptr);
 
             if (GPGMM_UNLIKELY(mTrackingAllocator)) {
-                GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
-                                       mDevice);
+                GPGMM_RETURN_RESULT_IF_FAILED(
+                    allocation->SetDebugName(allocationDescriptor.DebugName), mDevice);
                 mTrackingAllocator->TrackAllocation(allocation.Get());
             }
 
             // Update the current usage counters.
             if (mUseDetailedTimingEvents) {
-                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
+                GPGMM_RETURN_RESULT_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
             }
 
             if (allocationDescriptor.Flags &
@@ -1017,6 +1020,8 @@ namespace gpgmm::d3d12 {
 
         if (ppResourceAllocationOut != nullptr) {
             *ppResourceAllocationOut = allocation.Detach();
+        } else {
+            return S_FALSE;
         }
 
         return S_OK;
@@ -1054,7 +1059,7 @@ namespace gpgmm::d3d12 {
         return hr;
     }
 
-    HRESULT ResourceAllocator::CreateResourceInternal(
+    MaybeError ResourceAllocator::CreateResourceInternal(
         const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
@@ -1073,7 +1078,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the device: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(mMaxResourceHeapSize);
-            return GetErrorResult(ErrorCode::kSizeExceeded);
+            return ErrorCode::kSizeExceeded;
         }
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -1082,7 +1087,7 @@ namespace gpgmm::d3d12 {
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
         if (heapType == 0 || heapType == D3D12_HEAP_TYPE_CUSTOM) {
-            GPGMM_RETURN_IF_FAILED(GetHeapType(initialResourceState, &heapType), mDevice);
+            GPGMM_RETURN_ERROR_IF_FAILED(GetHeapType(initialResourceState, &heapType), mDevice);
         }
 
         // Attribution of heaps may be abandoned but the original heap type is needed to
@@ -1116,7 +1121,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
-            return GetErrorResult(ErrorCode::kInvalidArgument);
+            return ErrorCode::kInvalidArgument;
         }
 
         // Resource is always committed when heaps flags are incompatible with the resource heap
@@ -1203,7 +1208,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the adapter: "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(maxSegmentSize);
-            return GetErrorResult(ErrorCode::kSizeExceeded);
+            return ErrorCode::kSizeExceeded;
         }
 
         // If the allocation must be created within the budget, restrict the amount of memory
@@ -1218,7 +1223,7 @@ namespace gpgmm::d3d12 {
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
                 RESOURCE_ALLOCATOR_STATS allocationStats = {};
-                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats), mDevice);
+                GPGMM_RETURN_ERROR_IF_FAILED(QueryStatsInternal(&allocationStats), mDevice);
 
                 request.AvailableForAllocation = allocationStats.FreeHeapUsage;
 
@@ -1267,14 +1272,14 @@ namespace gpgmm::d3d12 {
             // CreateResource().
             subAllocWithinRequest.AlwaysPrefetch = false;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_ERROR_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
                 allocator, subAllocWithinRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
                     ComPtr<ID3D12Resource> committedResource;
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(subAllocation.GetMemory());
-                    GPGMM_RETURN_IF_FAILED(
+                    GPGMM_RETURN_RESULT_IF_FAILED(
                         resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)), mDevice);
 
                     RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
@@ -1306,7 +1311,7 @@ namespace gpgmm::d3d12 {
             MemoryAllocationRequest subAllocRequest = request;
             subAllocRequest.Alignment = resourceInfo.Alignment;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_ERROR_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
                 allocator, subAllocRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
@@ -1314,7 +1319,7 @@ namespace gpgmm::d3d12 {
                     ComPtr<ID3D12Resource> placedResource;
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(subAllocation.GetMemory());
-                    GPGMM_RETURN_IF_FAILED(
+                    GPGMM_RETURN_RESULT_IF_FAILED(
                         CreatePlacedResource(resourceHeap, subAllocation.GetOffset(),
                                              &newResourceDesc, clearValue, initialResourceState,
                                              &placedResource),
@@ -1354,12 +1359,12 @@ namespace gpgmm::d3d12 {
             MemoryAllocationRequest dedicatedRequest = request;
             dedicatedRequest.Alignment = allocator->GetMemoryAlignment();
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_ERROR_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
                 allocator, dedicatedRequest, [&](const auto& allocation) -> HRESULT {
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
-                    GPGMM_RETURN_IF_FAILED(
+                    GPGMM_RETURN_RESULT_IF_FAILED(
                         CreatePlacedResource(resourceHeap, allocation.GetOffset(), &newResourceDesc,
                                              clearValue, initialResourceState, &placedResource),
                         mDevice);
@@ -1388,7 +1393,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was could "
                    "be created and RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP was specified.";
-            return GetErrorResult(ErrorCode::kAllocationFailed);
+            return ErrorCode::kAllocationFailed;
         }
 
         // Committed resources cannot specify resource heap size.
@@ -1396,7 +1401,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was could "
                    "be created and ExtraRequiredResourcePadding was specified.";
-            return GetErrorResult(ErrorCode::kAllocationFailed);
+            return ErrorCode::kAllocationFailed;
         }
 
         if (!isAlwaysCommitted) {
@@ -1404,13 +1409,13 @@ namespace gpgmm::d3d12 {
                 ErrorLog(ErrorCode::kAllocationFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.";
-                return GetErrorResult(ErrorCode::kAllocationFailed);
+                return ErrorCode::kAllocationFailed;
             }
         }
 
         ComPtr<ID3D12Resource> committedResource;
         ComPtr<ResidencyHeap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED(
+        GPGMM_RETURN_ERROR_IF_FAILED(
             CreateCommittedResource(heapProperties, heapFlags, resourceInfo, &newResourceDesc,
                                     clearValue, initialResourceState, &committedResource,
                                     &resourceHeap),
@@ -1440,17 +1445,15 @@ namespace gpgmm::d3d12 {
             *ppResourceAllocationOut = new ResourceAllocation(
                 allocationDesc, mResidencyManager.Get(), this, resourceHeap.Detach(), nullptr,
                 std::move(committedResource));
-        } else {
-            return S_FALSE;
         }
 
-        return S_OK;
+        return ErrorCode::kNone;
     }
 
     HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                               ID3D12Resource* pCommittedResource,
                                               IResourceAllocation** ppResourceAllocationOut) {
-        GPGMM_RETURN_IF_NULLPTR(pCommittedResource);
+        GPGMM_RETURN_RESULT_IF_NULLPTR(pCommittedResource);
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -1459,8 +1462,8 @@ namespace gpgmm::d3d12 {
 
         D3D12_HEAP_PROPERTIES heapProperties;
         D3D12_HEAP_FLAGS heapFlags;
-        GPGMM_RETURN_IF_FAILED(pCommittedResource->GetHeapProperties(&heapProperties, &heapFlags),
-                               mDevice);
+        GPGMM_RETURN_RESULT_IF_FAILED(
+            pCommittedResource->GetHeapProperties(&heapProperties, &heapFlags), mDevice);
 
         // TODO: enable validation conditionally?
         if (allocationDescriptor.HeapType != 0 &&
@@ -1508,7 +1511,7 @@ namespace gpgmm::d3d12 {
         ImportResourceCallbackContext importResourceCallbackContext(pCommittedResource);
 
         ComPtr<IResidencyHeap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED(
+        GPGMM_RETURN_RESULT_IF_FAILED(
             ResidencyHeap::CreateResidencyHeap(
                 resourceHeapDesc,
                 (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_RESIDENT)
@@ -1549,10 +1552,11 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12Resource> placedResource;
         {
             ComPtr<ID3D12Heap> heap;
-            GPGMM_RETURN_IF_FAILED(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)), mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(resourceHeap->QueryInterface(IID_PPV_ARGS(&heap)),
+                                          mDevice);
 
             ScopedResidencyLock residencyLock(mResidencyManager.Get(), resourceHeap);
-            GPGMM_RETURN_IF_FAILED(
+            GPGMM_RETURN_RESULT_IF_FAILED(
                 mDevice->CreatePlacedResource(heap.Get(), resourceOffset, resourceDescriptor,
                                               initialResourceState, clearValue,
                                               IID_PPV_ARGS(&placedResource)),
@@ -1593,7 +1597,7 @@ namespace gpgmm::d3d12 {
                                                                resourceDescriptor, clearValue,
                                                                initialResourceState);
 
-        GPGMM_RETURN_IF_FAILED(
+        GPGMM_RETURN_RESULT_IF_FAILED(
             ResidencyHeap::CreateResidencyHeap(resourceHeapDesc, mResidencyManager.Get(),
                                                CreateCommittedResourceCallbackContext::CreateHeap,
                                                &callbackContext, &resourceHeap),
@@ -1601,7 +1605,7 @@ namespace gpgmm::d3d12 {
 
         if (committedResourceOut != nullptr) {
             ComPtr<ID3D12Resource> committedResource;
-            GPGMM_RETURN_IF_FAILED(resourceHeap.As(&committedResource), mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(resourceHeap.As(&committedResource), mDevice);
 
             *committedResourceOut = committedResource.Detach();
         }
@@ -1702,23 +1706,24 @@ namespace gpgmm::d3d12 {
         }
 
         const D3D12_RLDO_FLAGS rldoFlags = D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL;
-        GPGMM_RETURN_IF_FAILED(debugDevice->ReportLiveDeviceObjects(rldoFlags), mDevice);
+        GPGMM_RETURN_RESULT_IF_FAILED(debugDevice->ReportLiveDeviceObjects(rldoFlags), mDevice);
 
         ComPtr<ID3D12InfoQueue> leakMessageQueue;
-        GPGMM_RETURN_IF_FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&leakMessageQueue)), mDevice);
+        GPGMM_RETURN_RESULT_IF_FAILED(mDevice->QueryInterface(IID_PPV_ARGS(&leakMessageQueue)),
+                                      mDevice);
 
         // Report live device objects that could be created by GPGMM by checking the global filter.
         // This is because the allowList filter cannot easily be made exclusive to these IDs.
         for (uint64_t i = 0; i < leakMessageQueue->GetNumStoredMessagesAllowedByRetrievalFilter();
              ++i) {
             SIZE_T messageLength = 0;
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, nullptr, &messageLength),
-                                   mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(leakMessageQueue->GetMessage(i, nullptr, &messageLength),
+                                          mDevice);
 
             std::unique_ptr<uint8_t[]> messageData(new uint8_t[messageLength]);
             D3D12_MESSAGE* message = reinterpret_cast<D3D12_MESSAGE*>(messageData.get());
-            GPGMM_RETURN_IF_FAILED(leakMessageQueue->GetMessage(i, message, &messageLength),
-                                   mDevice);
+            GPGMM_RETURN_RESULT_IF_FAILED(leakMessageQueue->GetMessage(i, message, &messageLength),
+                                          mDevice);
 
             switch (message->ID) {
                 case D3D12_MESSAGE_ID_LIVE_HEAP:
@@ -1842,7 +1847,7 @@ namespace gpgmm::d3d12 {
         }
 
         ComPtr<ID3D12Resource> committedResource;
-        GPGMM_RETURN_IF_FAILED(
+        GPGMM_RETURN_RESULT_IF_FAILED(
             mDevice->CreateCommittedResource(mHeapProperties, mHeapFlags, mResourceDescriptor,
                                              mInitialResourceState, mClearValue,
                                              IID_PPV_ARGS(&committedResource)),

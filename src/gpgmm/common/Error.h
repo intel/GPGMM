@@ -146,6 +146,10 @@ namespace gpgmm {
             return *this;
         }
 
+        ErrorCode GetErrorCode() const {
+            return mErrorCode;
+        }
+
         bool IsSuccess() const {
             return mErrorCode == ErrorCode::kNone;
         }

@@ -25,6 +25,8 @@ namespace gpgmm::d3d12 {
 
     ErrorCode GetErrorCode(HRESULT error) {
         switch (error) {
+            case S_OK:
+                return ErrorCode::kNone;
             case E_INVALIDARG:
             case E_POINTER:
                 return ErrorCode::kInvalidArgument;
@@ -40,6 +42,8 @@ namespace gpgmm::d3d12 {
 
     HRESULT GetErrorResult(ErrorCode error) {
         switch (error) {
+            case ErrorCode::kNone:
+                return S_OK;
             case ErrorCode::kInvalidArgument:
                 return E_INVALIDARG;
             case ErrorCode::kBadOperation:
