@@ -53,6 +53,17 @@
     for (;;)                                         \
     break
 
+#define GPGMM_RETURN_IF_NOT_FATAL(expr)                                                 \
+    {                                                                                   \
+        auto GPGMM_LOCAL_VAR(Result) = expr;                                            \
+        if (GPGMM_LIKELY(GPGMM_LOCAL_VAR(Result).IsSuccess()) ||                        \
+            GPGMM_UNLIKELY(IsErrorCodeFatal(GPGMM_LOCAL_VAR(Result).GetErrorCode()))) { \
+            return GPGMM_LOCAL_VAR(Result).AcquireError();                              \
+        }                                                                               \
+    }                                                                                   \
+    for (;;)                                                                            \
+    break
+
 namespace gpgmm {
 
     enum class ErrorCode : uint32_t {
@@ -68,6 +79,8 @@ namespace gpgmm {
     };
 
     const char* GetErrorCodeToChar(ErrorCode errorCode);
+
+    bool IsErrorCodeFatal(ErrorCode errorCode);
 
     // Wraps a backend error code with a result object.
     // Use Result::IsSuccess then Result::AcquireResult to use or else, use Result::GetErrorCode to
@@ -144,6 +157,10 @@ namespace gpgmm {
         Result<ErrorT, void>& operator=(Result<ErrorT, void>&& other) {
             mErrorCode = std::move(other.mErrorCode);
             return *this;
+        }
+
+        ErrorCode GetErrorCode() const {
+            return mErrorCode;
         }
 
         bool IsSuccess() const {

@@ -270,19 +270,16 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        HRESULT GetHeapType(D3D12_RESOURCE_STATES initialResourceState, D3D12_HEAP_TYPE* heapType) {
+        D3D12_HEAP_TYPE GetHeapType(D3D12_RESOURCE_STATES initialResourceState) {
             if (GetInitialResourceState(D3D12_HEAP_TYPE_UPLOAD) == initialResourceState) {
-                *heapType = D3D12_HEAP_TYPE_UPLOAD;
-                return S_OK;
+                return D3D12_HEAP_TYPE_UPLOAD;
             }
 
             if (GetInitialResourceState(D3D12_HEAP_TYPE_READBACK) == initialResourceState) {
-                *heapType = D3D12_HEAP_TYPE_READBACK;
-                return S_OK;
+                return D3D12_HEAP_TYPE_READBACK;
             }
 
-            *heapType = D3D12_HEAP_TYPE_DEFAULT;
-            return S_OK;
+            return D3D12_HEAP_TYPE_DEFAULT;
         }
 
         // RAII wrapper to lock/unlock heap from the residency cache.
@@ -913,7 +910,7 @@ namespace gpgmm::d3d12 {
 
         // Update allocation metrics.
         if (bytesReleased > 0) {
-            GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
+            GetStats();
         }
 
         if (pBytesReleased != nullptr) {
@@ -987,10 +984,14 @@ namespace gpgmm::d3d12 {
             // when the allocation never calls Detach() below and calls release which
             // re-enters |this| upon DeallocateMemory().
             std::lock_guard<std::mutex> lock(mMutex);
-            GPGMM_RETURN_IF_FAILED(
+            const MaybeError result =
                 CreateResourceInternal(allocationDescriptor, resourceDescriptor,
-                                       initialResourceState, pClearValue, &allocation),
-                mDevice);
+                                       initialResourceState, pClearValue, &allocation);
+            if (!result.IsSuccess()) {
+                ErrorLog(result.GetErrorCode(), this)
+                    << "Failed to create resource for allocation.";
+                return GetErrorResult(result.GetErrorCode());
+            }
 
             ASSERT(allocation->GetResource() != nullptr);
 
@@ -1002,7 +1003,7 @@ namespace gpgmm::d3d12 {
 
             // Update the current usage counters.
             if (mUseDetailedTimingEvents) {
-                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(nullptr), mDevice);
+                GPGMM_UNUSED(GetStats());
             }
 
             if (allocationDescriptor.Flags &
@@ -1017,6 +1018,8 @@ namespace gpgmm::d3d12 {
 
         if (ppResourceAllocationOut != nullptr) {
             *ppResourceAllocationOut = allocation.Detach();
+        } else {
+            return S_FALSE;
         }
 
         return S_OK;
@@ -1026,9 +1029,9 @@ namespace gpgmm::d3d12 {
     // If the memory allocation was successful, the resource will be created using it.
     // Else, if the resource creation fails, the memory allocation will be cleaned up.
     template <typename D3D12CreateResourceFn>
-    HRESULT ResourceAllocator::TryAllocateResource(MemoryAllocatorBase* allocator,
-                                                   const MemoryAllocationRequest& request,
-                                                   D3D12CreateResourceFn&& createResourceFn) {
+    MaybeError ResourceAllocator::TryAllocateResource(MemoryAllocatorBase* allocator,
+                                                      const MemoryAllocationRequest& request,
+                                                      D3D12CreateResourceFn&& createResourceFn) {
         ASSERT(allocator != nullptr);
 
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> result =
@@ -1039,7 +1042,7 @@ namespace gpgmm::d3d12 {
                 WarnEvent(MessageId::kPerformanceWarning, this)
                     << "Unable to allocate memory for request.";
             }
-            return GetErrorResult(result.GetErrorCode());
+            return result.AcquireError();
         }
 
         std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
@@ -1051,10 +1054,10 @@ namespace gpgmm::d3d12 {
                 << "Failed to create resource using allocation.";
             allocator->DeallocateMemory(std::move(allocation));
         }
-        return hr;
+        return GetErrorCode(hr);
     }
 
-    HRESULT ResourceAllocator::CreateResourceInternal(
+    MaybeError ResourceAllocator::CreateResourceInternal(
         const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
@@ -1073,7 +1076,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the device: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(mMaxResourceHeapSize);
-            return GetErrorResult(ErrorCode::kSizeExceeded);
+            return ErrorCode::kSizeExceeded;
         }
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
@@ -1082,7 +1085,7 @@ namespace gpgmm::d3d12 {
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
         if (heapType == 0 || heapType == D3D12_HEAP_TYPE_CUSTOM) {
-            GPGMM_RETURN_IF_FAILED(GetHeapType(initialResourceState, &heapType), mDevice);
+            heapType = GetHeapType(initialResourceState);
         }
 
         // Attribution of heaps may be abandoned but the original heap type is needed to
@@ -1116,7 +1119,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kInvalidArgument, this)
                 << "Unable to create resource allocation because the resource type was invalid due "
                    "to the combination of resource flags, descriptor, and resource heap tier.";
-            return GetErrorResult(ErrorCode::kInvalidArgument);
+            return ErrorCode::kInvalidArgument;
         }
 
         // Resource is always committed when heaps flags are incompatible with the resource heap
@@ -1203,7 +1206,7 @@ namespace gpgmm::d3d12 {
                    "the capabilities of the adapter: "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(maxSegmentSize);
-            return GetErrorResult(ErrorCode::kSizeExceeded);
+            return ErrorCode::kSizeExceeded;
         }
 
         // If the allocation must be created within the budget, restrict the amount of memory
@@ -1217,10 +1220,9 @@ namespace gpgmm::d3d12 {
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetStatsInternal().
             if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
-                RESOURCE_ALLOCATOR_STATS allocationStats = {};
-                GPGMM_RETURN_IF_FAILED(QueryStatsInternal(&allocationStats), mDevice);
+                const MemoryAllocatorStats allocationStats = GetStats();
 
-                request.AvailableForAllocation = allocationStats.FreeHeapUsage;
+                request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
                 DebugLog(MessageId::kBudgetExceeded, this)
                     << "Current usage exceeded budget: "
@@ -1267,7 +1269,7 @@ namespace gpgmm::d3d12 {
             // CreateResource().
             subAllocWithinRequest.AlwaysPrefetch = false;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
                 allocator, subAllocWithinRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Committed resource implicitly creates a resource heap which can be
                     // used for sub-allocation.
@@ -1306,7 +1308,7 @@ namespace gpgmm::d3d12 {
             MemoryAllocationRequest subAllocRequest = request;
             subAllocRequest.Alignment = resourceInfo.Alignment;
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
                 allocator, subAllocRequest, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
@@ -1354,7 +1356,7 @@ namespace gpgmm::d3d12 {
             MemoryAllocationRequest dedicatedRequest = request;
             dedicatedRequest.Alignment = allocator->GetMemoryAlignment();
 
-            GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(TryAllocateResource(
+            GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
                 allocator, dedicatedRequest, [&](const auto& allocation) -> HRESULT {
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(allocation.GetMemory());
@@ -1388,7 +1390,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was could "
                    "be created and RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP was specified.";
-            return GetErrorResult(ErrorCode::kAllocationFailed);
+            return ErrorCode::kAllocationFailed;
         }
 
         // Committed resources cannot specify resource heap size.
@@ -1396,7 +1398,7 @@ namespace gpgmm::d3d12 {
             ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was could "
                    "be created and ExtraRequiredResourcePadding was specified.";
-            return GetErrorResult(ErrorCode::kAllocationFailed);
+            return ErrorCode::kAllocationFailed;
         }
 
         if (!isAlwaysCommitted) {
@@ -1404,17 +1406,17 @@ namespace gpgmm::d3d12 {
                 ErrorLog(ErrorCode::kAllocationFailed, this)
                     << "Unable to allocate memory for resource because no memory was could "
                        "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.";
-                return GetErrorResult(ErrorCode::kAllocationFailed);
+                return ErrorCode::kAllocationFailed;
             }
         }
 
         ComPtr<ID3D12Resource> committedResource;
         ComPtr<ResidencyHeap> resourceHeap;
-        GPGMM_RETURN_IF_FAILED(
-            CreateCommittedResource(heapProperties, heapFlags, resourceInfo, &newResourceDesc,
-                                    clearValue, initialResourceState, &committedResource,
-                                    &resourceHeap),
-            mDevice);
+        if (FAILED(CreateCommittedResource(heapProperties, heapFlags, resourceInfo,
+                                           &newResourceDesc, clearValue, initialResourceState,
+                                           &committedResource, &resourceHeap))) {
+            return ErrorCode::kAllocationFailed;
+        }
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             WarnLog(MessageId::kPerformanceWarning, this)
@@ -1440,11 +1442,9 @@ namespace gpgmm::d3d12 {
             *ppResourceAllocationOut = new ResourceAllocation(
                 allocationDesc, mResidencyManager.Get(), this, resourceHeap.Detach(), nullptr,
                 std::move(committedResource));
-        } else {
-            return S_FALSE;
         }
 
-        return S_OK;
+        return ErrorCode::kNone;
     }
 
     HRESULT ResourceAllocator::CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
@@ -1615,11 +1615,25 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocator::QueryStats(RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
         std::lock_guard<std::mutex> lock(mMutex);
-        return QueryStatsInternal(pResourceAllocatorStats);
+        const MemoryAllocatorStats result = GetStats();
+        if (pResourceAllocatorStats != nullptr) {
+            pResourceAllocatorStats->UsedBlockCount = result.UsedBlockCount;
+            pResourceAllocatorStats->UsedBlockUsage = result.UsedBlockUsage;
+            pResourceAllocatorStats->UsedHeapCount = result.UsedMemoryCount;
+            pResourceAllocatorStats->UsedHeapUsage = result.UsedMemoryUsage;
+            pResourceAllocatorStats->FreeHeapUsage = result.FreeMemoryUsage;
+            pResourceAllocatorStats->PrefetchedHeapMisses = result.PrefetchedMemoryMisses;
+            pResourceAllocatorStats->PrefetchedHeapMissesEliminated =
+                result.PrefetchedMemoryMissesEliminated;
+            pResourceAllocatorStats->SizeCacheMisses = result.SizeCacheMisses;
+            pResourceAllocatorStats->SizeCacheHits = result.SizeCacheHits;
+        } else {
+            return S_FALSE;
+        }
+        return S_OK;
     }
 
-    HRESULT ResourceAllocator::QueryStatsInternal(
-        RESOURCE_ALLOCATOR_STATS* pResourceAllocatorStats) {
+    MemoryAllocatorStats ResourceAllocator::GetStats() const {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResourceAllocator.QueryStats");
 
         // ResourceAllocator itself could call CreateCommittedResource directly.
@@ -1676,22 +1690,7 @@ namespace gpgmm::d3d12 {
             "GPU allocation cache-hits (%)",
             SafeDivide(result.SizeCacheHits, result.SizeCacheMisses + result.SizeCacheHits) * 100);
 
-        if (pResourceAllocatorStats != nullptr) {
-            pResourceAllocatorStats->UsedBlockCount = result.UsedBlockCount;
-            pResourceAllocatorStats->UsedBlockUsage = result.UsedBlockUsage;
-            pResourceAllocatorStats->UsedHeapCount = result.UsedMemoryCount;
-            pResourceAllocatorStats->UsedHeapUsage = result.UsedMemoryUsage;
-            pResourceAllocatorStats->FreeHeapUsage = result.FreeMemoryUsage;
-            pResourceAllocatorStats->PrefetchedHeapMisses = result.PrefetchedMemoryMisses;
-            pResourceAllocatorStats->PrefetchedHeapMissesEliminated =
-                result.PrefetchedMemoryMissesEliminated;
-            pResourceAllocatorStats->SizeCacheMisses = result.SizeCacheMisses;
-            pResourceAllocatorStats->SizeCacheHits = result.SizeCacheHits;
-        } else {
-            return S_FALSE;
-        }
-
-        return S_OK;
+        return result;
     }
 
     HRESULT ResourceAllocator::ReportLiveDeviceObjects() const {

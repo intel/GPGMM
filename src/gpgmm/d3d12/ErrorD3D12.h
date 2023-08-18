@@ -48,19 +48,6 @@
     for (;;)                                                     \
     break
 
-// Same as GPGMM_RETURN_IF_SUCCEEDED but also returns if error is lethal.
-// Non-internal errors are always fatal and should not run re-attempt logic.
-#define GPGMM_RETURN_IF_SUCCEEDED_OR_FATAL(expr)                            \
-    {                                                                       \
-        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                               \
-        if (GPGMM_LIKELY(SUCCEEDED(GPGMM_LOCAL_VAR(HRESULT))) ||            \
-            GPGMM_UNLIKELY(IsErrorResultFatal(GPGMM_LOCAL_VAR(HRESULT)))) { \
-            return GPGMM_LOCAL_VAR(HRESULT);                                \
-        }                                                                   \
-    }                                                                       \
-    for (;;)                                                                \
-    break
-
 #define GPGMM_ASSERT_FAILED(hr) ASSERT(SUCCEEDED(hr));
 #define GPGMM_ASSERT_SUCCEEDED(hr) ASSERT(FAILED(hr));
 
