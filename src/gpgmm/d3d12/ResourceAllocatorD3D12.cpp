@@ -606,7 +606,10 @@ namespace gpgmm::d3d12 {
           mIsCustomHeapsEnabled(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY),
           mIsCreateNotResidentEnabled(descriptor.Flags &
                                       RESOURCE_ALLOCATOR_FLAG_CREATE_NOT_RESIDENT),
-          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize) {
+          mMaxResourceHeapSize(descriptor.MaxResourceHeapSize),
+          mIsNeverOverAllocateEnabled(descriptor.Flags &
+                                      RESOURCE_ALLOCATOR_FLAG_NEVER_OVER_ALLOCATE),
+          mReleaseSizeInBytes(descriptor.ReleaseSizeInBytes) {
         ASSERT(mDevice != nullptr);
 
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
@@ -868,6 +871,11 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::ReleaseResourceHeaps(uint64_t bytesToRelease,
                                                     uint64_t* pBytesReleased) {
         std::lock_guard<std::mutex> lock(mMutex);
+        return ReleaseResourceHeapsInternal(bytesToRelease, pBytesReleased);
+    }
+
+    HRESULT ResourceAllocator::ReleaseResourceHeapsInternal(uint64_t bytesToRelease,
+                                                            uint64_t* pBytesReleased) {
         uint64_t bytesReleased = 0;
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
@@ -911,6 +919,8 @@ namespace gpgmm::d3d12 {
         // Update allocation metrics.
         if (bytesReleased > 0) {
             GetStats();
+            DebugLog(MessageId::kMemoryUsageUpdated, this)
+                << "Number of bytes freed: " << GetBytesToSizeInUnits(bytesReleased) << ".";
         }
 
         if (pBytesReleased != nullptr) {
@@ -984,13 +994,57 @@ namespace gpgmm::d3d12 {
             // when the allocation never calls Detach() below and calls release which
             // re-enters |this| upon DeallocateMemory().
             std::lock_guard<std::mutex> lock(mMutex);
-            const MaybeError result =
-                CreateResourceInternal(allocationDescriptor, resourceDescriptor,
+
+            const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
+                GetResourceAllocationInfo(resourceDescriptor);
+
+            MaybeError result =
+                CreateResourceInternal(allocationDescriptor, resourceInfo, resourceDescriptor,
                                        initialResourceState, pClearValue, &allocation);
+
+            // CreateResource() may fail if there is not enough available memory. This could occur
+            // if the working set size changes significantly or if the resource allocation sizes
+            // change. We may be able to continue creation by releasing some unused memory and
+            // calling CreateResource() again.
+            uint64_t freedSizeInBytes = 0;
+            while (result.GetErrorCode() == ErrorCode::kOutOfMemory &&
+                   !mIsNeverOverAllocateEnabled) {
+                const uint64_t bytesToRelease =
+                    std::max(mReleaseSizeInBytes, resourceInfo.SizeInBytes);
+                GPGMM_RETURN_IF_FAILED(
+                    ReleaseResourceHeapsInternal(bytesToRelease, &freedSizeInBytes), mDevice);
+                // If not enough memory can be freed after ReleaseResourceHeaps(), we cannot
+                // continue creation and must return E_OUTOFMEMORY for real.
+                if (freedSizeInBytes < resourceInfo.SizeInBytes) {
+                    MemoryAllocatorStats stats = GetStats();
+                    ErrorLog(result.GetErrorCode(), this)
+                        << GetBytesToSizeInUnits(freedSizeInBytes + stats.FreeMemoryUsage) +
+                               " free vs " + GetBytesToSizeInUnits(resourceInfo.SizeInBytes) +
+                               " required.";
+                    return E_OUTOFMEMORY;
+                }
+
+                result =
+                    CreateResourceInternal(allocationDescriptor, resourceInfo, resourceDescriptor,
+                                           initialResourceState, pClearValue, &allocation);
+
+                // Do not repeatedly attempt re-creation since there is no guarantee creation
+                // can be successful after E_OUTOFMEMORY.
+                // TODO: consider retries or backoff strategy if one-time trimming was insufficent.
+                break;
+            }
+
             if (!result.IsSuccess()) {
                 ErrorLog(result.GetErrorCode(), this)
-                    << "Failed to create resource for allocation.";
+                    << "Failed to create resource for allocation: " +
+                           GetErrorCodeToString(result.GetErrorCode());
                 return GetErrorResult(result.GetErrorCode());
+            }
+
+            if (freedSizeInBytes > 0) {
+                WarnLog(MessageId::kPerformanceWarning, this)
+                    << "Resource could not be created without freeing " +
+                           GetBytesToSizeInUnits(freedSizeInBytes) + " of unused heaps.";
             }
 
             ASSERT(allocation->GetResource() != nullptr);
@@ -1059,6 +1113,7 @@ namespace gpgmm::d3d12 {
 
     MaybeError ResourceAllocator::CreateResourceInternal(
         const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
+        const D3D12_RESOURCE_ALLOCATION_INFO& resourceInfo,
         const D3D12_RESOURCE_DESC& resourceDescriptor,
         D3D12_RESOURCE_STATES initialResourceState,
         const D3D12_CLEAR_VALUE* clearValue,
@@ -1068,8 +1123,6 @@ namespace gpgmm::d3d12 {
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
-        const D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
-            GetResourceAllocationInfo(resourceDescriptor);
         if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
             ErrorLog(ErrorCode::kSizeExceeded, this)
                 << "Unable to create resource allocation because the resource size exceeded "
