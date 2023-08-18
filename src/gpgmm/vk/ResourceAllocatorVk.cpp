@@ -328,7 +328,8 @@ namespace gpgmm::vk {
         GPGMM_RETURN_IF_FAILED(
             FindMemoryTypeIndex(requirements.memoryTypeBits, info, &memoryTypeIndex));
 
-        const bool neverSubAllocate = info.flags & GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY;
+        const bool isSubAllocationDisabled =
+            info.flags & GP_ALLOCATION_CREATE_NEVER_SUBALLOCATE_MEMORY;
 
         MemoryAllocationRequest request = {};
         request.SizeInBytes = requirements.size;
@@ -342,7 +343,7 @@ namespace gpgmm::vk {
         MemoryAllocatorBase* allocator = nullptr;
 
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> result;
-        if (!neverSubAllocate) {
+        if (!isSubAllocationDisabled) {
             allocator = mResourceAllocatorsPerType[memoryTypeIndex].get();
             result = allocator->TryAllocateMemory(request);
         }

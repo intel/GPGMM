@@ -1245,7 +1245,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(GetStats(resourceAllocator).UsedHeapCount, 0u);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferNeverSubAllocated) {
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferisSubAllocationDisabledd) {
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
                                              mAdapter.Get(), &resourceAllocator, nullptr));

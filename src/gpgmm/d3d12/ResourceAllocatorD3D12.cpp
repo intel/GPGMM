@@ -1144,12 +1144,12 @@ namespace gpgmm::d3d12 {
             isAlwaysCommitted = true;
         }
 
-        bool neverSubAllocate =
+        bool isSubAllocationDisabled =
             allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
 
         const bool isMSAA = newResourceDesc.SampleDesc.Count > 1;
 
-        const bool requiresPadding = allocationDescriptor.ExtraRequiredResourcePadding > 0;
+        const bool isPaddingRequired = allocationDescriptor.ExtraRequiredResourcePadding > 0;
 
         // Attempt to allocate using the most effective allocator.
         MemoryAllocatorBase* allocator = nullptr;
@@ -1174,14 +1174,14 @@ namespace gpgmm::d3d12 {
 
         // Apply extra padding to the resource heap size, if specified.
         // Padding can only be applied to standalone non-committed resources.
-        if (GPGMM_UNLIKELY(requiresPadding)) {
+        if (GPGMM_UNLIKELY(isPaddingRequired)) {
             request.SizeInBytes += allocationDescriptor.ExtraRequiredResourcePadding;
-            if (!neverSubAllocate) {
+            if (!isSubAllocationDisabled) {
                 WarnLog(MessageId::kPerformanceWarning, this)
                     << "Sub-allocation was enabled but has no effect when padding is requested: "
                     << GetBytesToSizeInUnits(allocationDescriptor.ExtraRequiredResourcePadding)
                     << ".";
-                neverSubAllocate = true;
+                isSubAllocationDisabled = true;
             }
         }
 
@@ -1248,7 +1248,7 @@ namespace gpgmm::d3d12 {
             resourceInfo.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             newResourceDesc.Flags == D3D12_RESOURCE_FLAG_NONE && isCreatedResourceStateRequired &&
-            !neverSubAllocate) {
+            !isSubAllocationDisabled) {
             allocator = mSmallBufferAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
 
             // GetResourceAllocationInfo() always rejects alignments smaller than 64KB. So if the
@@ -1297,7 +1297,7 @@ namespace gpgmm::d3d12 {
         // Attempt to create a resource allocation by placing a resource in a sub-allocated
         // resource heap.
         // The time and space complexity of is determined by the sub-allocation algorithm used.
-        if (!isAlwaysCommitted && !neverSubAllocate) {
+        if (!isAlwaysCommitted && !isSubAllocationDisabled) {
             if (isMSAA) {
                 allocator =
                     mMSAAResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
@@ -1394,7 +1394,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Committed resources cannot specify resource heap size.
-        if (GPGMM_UNLIKELY(requiresPadding)) {
+        if (GPGMM_UNLIKELY(isPaddingRequired)) {
             ErrorLog(ErrorCode::kAllocationFailed, this)
                 << "Unable to allocate memory for resource because no memory was could "
                    "be created and ExtraRequiredResourcePadding was specified.";
