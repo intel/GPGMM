@@ -936,6 +936,19 @@ namespace gpgmm::d3d12 {
 
     D3D12_RESOURCE_ALLOCATION_INFO ResourceAllocator::GetResourceAllocationInfo(
         const D3D12_RESOURCE_DESC& resourceDescriptor) const {
+        // Buffers are effectively always aligned to 64KB.
+        if (IsBuffer(resourceDescriptor)) {
+            const uint64_t kBufferAlignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+
+            // Check if AlignTo would overflow.
+            if (resourceDescriptor.Width >
+                std::numeric_limits<uint64_t>::max() - (kBufferAlignment - 1)) {
+                return {kInvalidSize, kBufferAlignment};
+            }
+
+            return {AlignTo(resourceDescriptor.Width, kBufferAlignment), kBufferAlignment};
+        }
+
         // Small textures can take advantage of smaller alignments. For example,
         // if the most detailed mip can fit under 64KB, 4KB alignments can be used.
         // Must be non-depth or without render-target to use small resource alignment.
@@ -948,12 +961,6 @@ namespace gpgmm::d3d12 {
             newResourceDescriptor.Alignment = (resourceDescriptor.SampleDesc.Count > 1)
                                                   ? D3D12_SMALL_MSAA_RESOURCE_PLACEMENT_ALIGNMENT
                                                   : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-        }
-
-        // Buffers are effectively always 64KB. Specify this now to suppress D3D12 error
-        // upon calling GetResourceAllocationInfo().
-        if (IsBuffer(resourceDescriptor)) {
-            newResourceDescriptor.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
         }
 
         D3D12_RESOURCE_ALLOCATION_INFO resourceInfo =
