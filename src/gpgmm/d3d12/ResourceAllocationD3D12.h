@@ -82,6 +82,9 @@ namespace gpgmm::d3d12 {
         ComPtr<ID3D12Resource> mResource;
 
         const uint64_t mOffsetFromResource;
+
+        // Keeps track of the number of outstanding calls to Map to avoid paging-out those heaps.
+        RefCounted mMappedCount = RefCounted{0u};
     };
 
 }  // namespace gpgmm::d3d12

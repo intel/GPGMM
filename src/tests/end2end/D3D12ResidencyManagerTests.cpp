@@ -703,6 +703,68 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, nullptr));
 }
 
+// Keeps creating mapped resources until it reaches the restricted budget then over-commits to
+// ensure mapped resources cannot be evicted.
+TEST_F(D3D12ResidencyManagerTests, OverBudgetWithMappedResources) {
+    RESIDENCY_MANAGER_DESC residencyDesc = CreateBasicResidencyDesc(kDefaultBudget);
+
+    ComPtr<IResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(
+        CreateResidencyManager(residencyDesc, mDevice.Get(), mAdapter.Get(), &residencyManager));
+
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), residencyManager.Get(),
+                                             &resourceAllocator));
+
+    constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
+    const D3D12_RESOURCE_DESC bufferDesc = CreateBasicBufferDesc(kBufferMemorySize);
+
+    RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
+    bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
+
+    // Keep allocating until we reach the budget.
+    std::vector<ComPtr<IResourceAllocation>> mappedAllocationsBelowBudget = {};
+    while (GetStats(resourceAllocator).UsedHeapUsage + kBufferMemorySize <= kDefaultBudget) {
+        ComPtr<IResourceAllocation> allocation;
+        ASSERT_SUCCEEDED(resourceAllocator->CreateResource(bufferAllocationDesc, bufferDesc,
+                                                           D3D12_RESOURCE_STATE_GENERIC_READ,
+                                                           nullptr, &allocation));
+
+        ASSERT_SUCCEEDED(allocation->Map(0, nullptr, nullptr));
+        mappedAllocationsBelowBudget.push_back(std::move(allocation));
+    }
+
+    // Mapped allocations should stay locked.
+    for (auto& allocation : mappedAllocationsBelowBudget) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().Status, RESIDENCY_HEAP_STATUS_RESIDENT);
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().IsLocked, true);
+    }
+
+    // Budget updates are not occuring frequently enough to detect going over budget will evict the
+    // same amount.
+    if (GetBudgetLeft(residencyManager.Get(), GetHeapSegment(bufferAllocationDesc.HeapType)) > 0) {
+        return;
+    }
+
+    // Since mapped resources are ineligable for eviction and RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET
+    // is true, CreateResource should always fail since there is not enough budget.
+    ASSERT_FAILED(resourceAllocator->CreateResource(
+        bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+
+    // Unmapped allocations should be always eligable for eviction.
+    for (auto& allocation : mappedAllocationsBelowBudget) {
+        allocation->Unmap(0, nullptr);
+    }
+
+    for (auto& allocation : mappedAllocationsBelowBudget) {
+        EXPECT_EQ(allocation->GetMemory()->GetInfo().IsLocked, false);
+    }
+
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, nullptr));
+}
+
 // Creates two sets of heaps, first set is below the budget, second set is above the budget, then
 // swaps the residency status using ExecuteCommandList: first set gets paged-in again, second set
 // gets paged-out.

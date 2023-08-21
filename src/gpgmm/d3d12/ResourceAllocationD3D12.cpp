@@ -63,6 +63,12 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocation::~ResourceAllocation() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+        if (mMappedCount.GetRefCount() > 0) {
+            WarnLog(MessageId::kPerformanceWarning, this)
+                << "Destroying a mapped resource allocation is allowed but discouraged. Please "
+                   "call Unmap the same number of times as Map before releasing the resource "
+                   "allocation.";
+        }
     }
 
     void ResourceAllocation::DeleteThis() {
@@ -105,6 +111,8 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(mResource->Map(subresource, newReadRangePtr, &mappedData),
                                GetDevice(mResource.Get()));
 
+        mMappedCount.Ref();
+
         if (ppDataOut != nullptr) {
             *ppDataOut = static_cast<uint8_t*>(mappedData) + mOffsetFromResource;
         }
@@ -122,7 +130,8 @@ namespace gpgmm::d3d12 {
             return;
         }
 
-        if (mResidencyManager != nullptr) {
+        // Underlying heap cannot be evicted until the last Unmap.
+        if (mResidencyManager != nullptr && mMappedCount.Unref()) {
             mResidencyManager->UnlockHeap(GetMemory());
         }
 
