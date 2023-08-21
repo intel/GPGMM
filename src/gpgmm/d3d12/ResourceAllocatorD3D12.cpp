@@ -1117,14 +1117,13 @@ namespace gpgmm::d3d12 {
 
         // If d3d tells us the resource size is invalid, treat the error as OOM.
         // Otherwise, creating a very large resource could overflow the allocator.
-        if (resourceInfo.SizeInBytes > mMaxResourceHeapSize) {
-            ErrorLog(ErrorCode::kSizeExceeded, this)
-                << "Unable to create resource allocation because the resource size exceeded "
-                   "the capabilities of the device: "
-                << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
-                << GetBytesToSizeInUnits(mMaxResourceHeapSize);
-            return ErrorCode::kOutOfMemory;
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this, resourceInfo.SizeInBytes > mMaxResourceHeapSize,
+            "Unable to create resource allocation because the resource size exceeded "
+            "the capabilities of the device: " +
+                GetBytesToSizeInUnits(resourceInfo.SizeInBytes) + " vs " +
+                GetBytesToSizeInUnits(mMaxResourceHeapSize),
+            ErrorCode::kOutOfMemory);
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         newResourceDesc.Alignment = resourceInfo.Alignment;
@@ -1162,12 +1161,11 @@ namespace gpgmm::d3d12 {
 
         const RESOURCE_HEAP_TYPE resourceHeapType = GetResourceHeapType(
             newResourceDesc.Dimension, heapType, newResourceDesc.Flags, mResourceHeapTier);
-        if (resourceHeapType == RESOURCE_HEAP_TYPE_INVALID) {
-            ErrorLog(ErrorCode::kInvalidArgument, this)
-                << "Unable to create resource allocation because the resource type was invalid due "
-                   "to the combination of resource flags, descriptor, and resource heap tier.";
-            return ErrorCode::kInvalidArgument;
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this, resourceHeapType == RESOURCE_HEAP_TYPE_INVALID,
+            "Unable to create resource allocation because the resource type was invalid due "
+            "to the combination of resource flags, descriptor, and resource heap tier.",
+            ErrorCode::kInvalidArgument);
 
         // Resource is always committed when heaps flags are incompatible with the resource heap
         // type or if specified by the flag.
@@ -1248,14 +1246,13 @@ namespace gpgmm::d3d12 {
             GetHeapSegment(heapProperties.MemoryPoolPreference, isUMA);
 
         const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);
-        if (request.SizeInBytes > maxSegmentSize) {
-            ErrorLog(ErrorCode::kSizeExceeded, this)
-                << "Unable to create resource allocation because the resource size exceeded "
-                   "the capabilities of the adapter: "
-                << GetBytesToSizeInUnits(request.SizeInBytes) << " vs "
-                << GetBytesToSizeInUnits(maxSegmentSize);
-            return ErrorCode::kOutOfMemory;
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this, request.SizeInBytes > maxSegmentSize,
+            "Unable to create resource allocation because the resource size exceeded "
+            "the capabilities of the adapter: " +
+                    GetBytesToSizeInUnits(request.SizeInBytes)
+                << " vs " + GetBytesToSizeInUnits(maxSegmentSize),
+            ErrorCode::kOutOfMemory);
 
         // If the allocation must be created within the budget, restrict the amount of memory
         // to prevent OOM to free memory only or to the amount of budget left. The allocator
