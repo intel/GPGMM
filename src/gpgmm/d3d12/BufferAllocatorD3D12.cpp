@@ -79,7 +79,7 @@ namespace gpgmm::d3d12 {
 
         if (info.SizeInBytes > request.SizeInBytes) {
             WarnLog(MessageId::kPerformanceWarning, this)
-                << "Memory allocation was larger then the requested: "
+                << "Resource heap was larger then the requested: "
                 << GetBytesToSizeInUnits(info.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
         }

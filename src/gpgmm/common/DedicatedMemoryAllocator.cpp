@@ -43,13 +43,6 @@ namespace gpgmm {
         std::unique_ptr<MemoryAllocationBase> allocation;
         GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
 
-        if (memoryRequest.SizeInBytes > request.SizeInBytes) {
-            WarnLog(MessageId::kPerformanceWarning, this)
-                << "Memory allocation was larger then the requested: "
-                << GetBytesToSizeInUnits(memoryRequest.SizeInBytes) << " vs "
-                << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
-        }
-
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
 

@@ -1435,29 +1435,25 @@ namespace gpgmm::d3d12 {
         // the most expensive so it's used as a last resort or if the developer needs larger
         // allocations where sub-allocation or pooling is otherwise ineffective.
         // The time and space complexity of committed resource is driver-defined.
-        if (request.NeverAllocate) {
-            ErrorLog(ErrorCode::kAllocationFailed, this)
-                << "Unable to allocate memory for resource because no memory was could "
-                   "be created and RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP was specified.";
-            return ErrorCode::kAllocationFailed;
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this, request.NeverAllocate,
+            "Unable to allocate memory for resource because no memory was could "
+            "be created and RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP was specified.",
+            ErrorCode::kAllocationFailed);
 
         // Committed resources cannot specify resource heap size.
-        if (GPGMM_UNLIKELY(isPaddingRequired)) {
-            ErrorLog(ErrorCode::kAllocationFailed, this)
-                << "Unable to allocate memory for resource because no memory was could "
-                   "be created and ExtraRequiredResourcePadding was specified.";
-            return ErrorCode::kAllocationFailed;
-        }
+        GPGMM_RETURN_ERROR_IF(this, isPaddingRequired,
+                              "Unable to allocate memory for resource because no memory was could "
+                              "be created and ExtraRequiredResourcePadding was specified.",
+                              ErrorCode::kAllocationFailed);
 
-        if (!isAlwaysCommitted) {
-            if (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK) {
-                ErrorLog(ErrorCode::kAllocationFailed, this)
-                    << "Unable to allocate memory for resource because no memory was could "
-                       "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.";
-                return ErrorCode::kAllocationFailed;
-            }
-        }
+        GPGMM_RETURN_ERROR_IF(
+            this,
+            (!isAlwaysCommitted &&
+             allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK),
+            "Unable to allocate memory for resource because no memory was could "
+            "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.",
+            ErrorCode::kAllocationFailed);
 
         ComPtr<ID3D12Resource> committedResource;
         ComPtr<ResidencyHeap> resourceHeap;
@@ -1469,7 +1465,7 @@ namespace gpgmm::d3d12 {
 
         if (resourceInfo.SizeInBytes > request.SizeInBytes) {
             WarnLog(MessageId::kPerformanceWarning, this)
-                << "Resource heap is larger then the requested: "
+                << "Resource heap was larger then the requested: "
                 << GetBytesToSizeInUnits(resourceInfo.SizeInBytes) << " vs "
                 << GetBytesToSizeInUnits(request.SizeInBytes) << ".";
         }
