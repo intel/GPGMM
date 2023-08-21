@@ -173,7 +173,7 @@ namespace gpgmm {
                 GetBytesToSizeInUnits(request.SizeInBytes) + ".",
             ErrorCode::kSizeExceeded);
 
-        // Check request size cannot overflow |this| memory allocator.
+        // Check request size cannot exceed the memory size of |this| memory allocator.
         const uint64_t requestedAlignedSize = AlignTo(request.SizeInBytes, request.Alignment);
         GPGMM_RETURN_ERROR_IF(
             this, GetMemorySize() != kInvalidSize && requestedAlignedSize > GetMemorySize(),
@@ -183,11 +183,10 @@ namespace gpgmm {
             ErrorCode::kSizeExceeded);
 
         // Check request size has compatible alignment with |this| memory allocator.
-        // Alignment value of 1 means no alignment required.
         GPGMM_RETURN_ERROR_IF(
             this,
-            GetMemoryAlignment() == 0 ||
-                (GetMemoryAlignment() > 1 && !IsAligned(GetMemoryAlignment(), request.Alignment)),
+            GetMemoryAlignment() != kNoRequiredAlignment &&
+                !IsAligned(GetMemoryAlignment(), request.Alignment),
             "Requested alignment exceeds memory alignment: " + std::to_string(request.Alignment) +
                 " vs " + std::to_string(GetMemoryAlignment()) + ".",
             ErrorCode::kSizeExceeded);
