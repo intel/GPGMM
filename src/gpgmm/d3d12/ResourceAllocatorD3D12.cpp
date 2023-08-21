@@ -1211,6 +1211,7 @@ namespace gpgmm::d3d12 {
         request.SizeInBytes = (newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
                                   ? newResourceDesc.Width
                                   : resourceInfo.SizeInBytes;
+        request.Alignment = resourceInfo.Alignment;
         request.NeverAllocate =
             (allocationDescriptor.Flags & RESOURCE_ALLOCATION_FLAG_NEVER_ALLOCATE_HEAP);
         request.AlwaysPrefetch =
@@ -1284,6 +1285,10 @@ namespace gpgmm::d3d12 {
             }
         }
 
+        // Check the request is well-formed before attemping resource creation and possibly failing
+        // in one or more allocators for the same reason.
+        GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
+
         // Attempt to create a resource allocation within the same resource.
         // This has the same performace as sub-allocating resource heaps without the
         // drawback of requiring resource heaps to be 64KB size-aligned. However, this
@@ -1292,7 +1297,7 @@ namespace gpgmm::d3d12 {
         // The time and space complexity of is defined by the sub-allocation algorithm used.
         if (allocationDescriptor.Flags &
                 RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE &&
-            resourceInfo.Alignment > newResourceDesc.Width &&
+            request.Alignment > newResourceDesc.Width &&
             newResourceDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
             newResourceDesc.Flags == D3D12_RESOURCE_FLAG_NONE && isCreatedResourceStateRequired &&
             !isSubAllocationDisabled) {
@@ -1352,11 +1357,8 @@ namespace gpgmm::d3d12 {
                 allocator = mResourceAllocatorOfType[static_cast<size_t>(resourceHeapType)].get();
             }
 
-            MemoryAllocationRequest subAllocRequest = request;
-            subAllocRequest.Alignment = resourceInfo.Alignment;
-
-            GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
-                allocator, subAllocRequest, [&](const auto& subAllocation) -> HRESULT {
+            GPGMM_RETURN_IF_NOT_FATAL(
+                TryAllocateResource(allocator, request, [&](const auto& subAllocation) -> HRESULT {
                     // Resource is placed at an offset corresponding to the allocation offset.
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
@@ -1370,7 +1372,7 @@ namespace gpgmm::d3d12 {
                         mDevice);
 
                     RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
-                    allocationDesc.SizeInBytes = subAllocRequest.SizeInBytes;
+                    allocationDesc.SizeInBytes = request.SizeInBytes;
                     allocationDesc.HeapOffset = subAllocation.GetOffset();
                     allocationDesc.Type =
                         static_cast<RESOURCE_ALLOCATION_TYPE>(subAllocation.GetMethod());

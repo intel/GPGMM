@@ -196,7 +196,7 @@ namespace gpgmm {
     }
 
     MemoryAllocatorBase* MemoryAllocatorBase::GetNextInChain() const {
-        return static_cast<MemoryAllocatorBase*>(mNext);
+        return mNext;
     }
 
     MemoryAllocatorBase* MemoryAllocatorBase::GetParent() const {
