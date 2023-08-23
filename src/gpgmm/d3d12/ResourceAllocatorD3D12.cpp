@@ -1196,6 +1196,12 @@ namespace gpgmm::d3d12 {
 
         const bool isPaddingRequired = allocationDescriptor.ExtraRequiredResourcePadding > 0;
 
+        // Padding can only be applied to standalone non-committed resources.
+        GPGMM_RETURN_ERROR_IF(this, isPaddingRequired && !isSubAllocationDisabled,
+                              "RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP must be specified "
+                              "when ExtraRequiredResourcePadding is specified.",
+                              ErrorCode::kInvalidArgument);
+
         // Attempt to allocate using the most effective allocator.
         MemoryAllocatorBase* allocator = nullptr;
 
@@ -1219,17 +1225,7 @@ namespace gpgmm::d3d12 {
         request.AvailableForAllocation = mMaxResourceHeapSize;
 
         // Apply extra padding to the resource heap size, if specified.
-        // Padding can only be applied to standalone non-committed resources.
-        if (GPGMM_UNLIKELY(isPaddingRequired)) {
-            request.SizeInBytes += allocationDescriptor.ExtraRequiredResourcePadding;
-            if (!isSubAllocationDisabled) {
-                WarnLog(MessageId::kPerformanceWarning, this)
-                    << "Sub-allocation was enabled but has no effect when padding is requested: "
-                    << GetBytesToSizeInUnits(allocationDescriptor.ExtraRequiredResourcePadding)
-                    << ".";
-                isSubAllocationDisabled = true;
-            }
-        }
+        request.SizeInBytes += allocationDescriptor.ExtraRequiredResourcePadding;
 
         D3D12_HEAP_PROPERTIES heapProperties =
             GetHeapProperties(mDevice, heapType, mIsCustomHeapsEnabled);

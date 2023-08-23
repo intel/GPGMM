@@ -1938,6 +1938,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithPadding) {
         nullptr, &allocationWithoutPadding));
 
     allocationDesc.ExtraRequiredResourcePadding = 63;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+
     ComPtr<IResourceAllocation> allocationWithPadding;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicBufferDesc(kBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -1967,6 +1969,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateTextureWithPadding) {
         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, &allocationWithoutPadding));
 
     allocationDesc.ExtraRequiredResourcePadding = 63;
+    allocationDesc.Flags = RESOURCE_ALLOCATION_FLAG_NEVER_SUBALLOCATE_HEAP;
+
     ComPtr<IResourceAllocation> allocationWithPadding;
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
         allocationDesc, CreateBasicTextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1),
