@@ -25,28 +25,24 @@
 namespace gpgmm::d3d12 {
 
     class ResidencyHeap;
-    class JSONSerializer;
-    class ResidencyManager;
 
     class ResidencyList final : public IResidencyList, public Unknown {
+        using UnderlyingType = std::vector<ResidencyHeap*>;
+
       public:
         ResidencyList();
         ~ResidencyList() override;
 
+        // IResidencyList interface
         HRESULT Add(IResidencyHeap* pHeap) override;
         HRESULT Reset() override;
 
         DEFINE_UNKNOWN_OVERRIDES()
 
-      private:
-        friend JSONSerializer;
-        friend ResidencyManager;
-
-        using UnderlyingType = std::vector<ResidencyHeap*>;
-
         UnderlyingType::const_iterator begin() const;
         UnderlyingType::const_iterator end() const;
 
+      private:
         const char* GetTypename() const;
 
         UnderlyingType mList;
