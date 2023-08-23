@@ -44,7 +44,7 @@ namespace gpgmm {
 
         GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
 
-        MemoryAllocationBase allocation = mPool->AcquireFromPool();
+        MemoryAllocationBase allocation = mPool->AcquireFromPool(kInvalidIndex);
         if (allocation == GPGMM_INVALID_ALLOCATION) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
@@ -81,7 +81,8 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
 
         mPool->ReturnToPool(
-            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()));
+            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()),
+            kInvalidIndex);
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

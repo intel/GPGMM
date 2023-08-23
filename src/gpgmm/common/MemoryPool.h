@@ -23,21 +23,22 @@
 namespace gpgmm {
 
     // Stores a collection of memory allocations.
-    class MemoryPoolBase {
+    class MemoryPoolBase : public ObjectBase {
       public:
         // Constructs a pool for memory of the specified size.
         explicit MemoryPoolBase(uint64_t memorySize);
-        virtual ~MemoryPoolBase();
+        virtual ~MemoryPoolBase() override;
 
         // Retrieves a memory allocation from the pool using an optional index.
-        virtual MemoryAllocationBase AcquireFromPool(uint64_t indexInPool = kInvalidIndex) = 0;
+        // Use kInvalidIndex to specify |this| pool is not indexed.
+        virtual MemoryAllocationBase AcquireFromPool(uint64_t indexInPool) = 0;
 
         // Returns a memory allocation back to the pool using an optional index.
-        virtual void ReturnToPool(MemoryAllocationBase allocation,
-                                  uint64_t indexInPool = kInvalidIndex) = 0;
+        // Use kInvalidIndex to specify |this| pool is not indexed.
+        virtual void ReturnToPool(MemoryAllocationBase allocation, uint64_t indexInPool) = 0;
 
         // Deallocate or shrink the pool.
-        virtual uint64_t ReleasePool(uint64_t bytesToRelease = kInvalidSize) = 0;
+        virtual uint64_t ReleasePool(uint64_t bytesToRelease) = 0;
 
         // Get the size of the pool.
         virtual uint64_t GetPoolSize() const = 0;
@@ -70,10 +71,10 @@ namespace gpgmm {
         }
 
       private:
-        // Returns the class name of this allocation.
-        const char* GetTypename() const;
+        // ObjectBase interface
+        DEFINE_OBJECT_BASE_OVERRIDES(MemoryPoolBase)
 
-        uint64_t mMemorySize;
+        const uint64_t mMemorySize;
     };
 
 }  // namespace gpgmm
