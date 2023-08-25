@@ -123,6 +123,7 @@ Enumerations</h2></td></tr>
 <tr class="memitem:ab374b96904e24df12ee8ba8b248652fe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ab374b96904e24df12ee8ba8b248652fe">RESIDENCY_HEAP_FLAGS</a> { <a class="el" href="namespacegpgmm_1_1d3d12.html#ab374b96904e24df12ee8ba8b248652feabcc2ca7382275f30734ac4f1e06b6154">RESIDENCY_HEAP_FLAG_NONE</a> = 0x0
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#ab374b96904e24df12ee8ba8b248652feaa2fc2ddad75b9629588bf6a154340cd4">RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET</a> = 0x1
 , <a class="el" href="namespacegpgmm_1_1d3d12.html#ab374b96904e24df12ee8ba8b248652fea1fdcb3674e92df186b27d4d3853a88f4">RESIDENCY_HEAP_FLAG_CREATE_RESIDENT</a> = 0x2
+, <a class="el" href="namespacegpgmm_1_1d3d12.html#ab374b96904e24df12ee8ba8b248652feae3b37abc509c5b972e76142d8dc05ebb">RESIDENCY_HEAP_FLAG_CREATE_LOCKED</a> = 0x4
  }</td></tr>
 <tr class="separator:ab374b96904e24df12ee8ba8b248652fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf361481164c757b56fb2f17cd3952c6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adf361481164c757b56fb2f17cd3952c6">RECORD_FLAGS</a> { <br />
@@ -211,7 +212,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a7539ec907ea3866d2a3d0150fd696cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency managed heap.  <br /></td></tr>
 <tr class="separator:a7539ec907ea3866d2a3d0150fd696cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d077755fd1c26ad6399d41479d911bb"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6d077755fd1c26ad6399d41479d911bb">Reset</a> ()=0</td></tr>
-<tr class="memdesc:a6d077755fd1c26ad6399d41479d911bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets a residency list to its initial state as if a new residenct list was created.  <br /></td></tr>
+<tr class="memdesc:a6d077755fd1c26ad6399d41479d911bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets list to its initial state as if a new list was created.  <br /></td></tr>
 <tr class="separator:a6d077755fd1c26ad6399d41479d911bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f06db116d1746109ac7333dcc3411ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee">CreateResidencyList</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> **ppResidencyListOut)</td></tr>
 <tr class="memdesc:a5f06db116d1746109ac7333dcc3411ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <br /></td></tr>
@@ -256,7 +257,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:adb90c75c67c0355bca69397d8411438d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the heap assigned to this resource allocation.  <br /></td></tr>
 <tr class="separator:adb90c75c67c0355bca69397d8411438d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7024573a8206adebafbc41488b2b3be"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aa7024573a8206adebafbc41488b2b3be">CreateResource</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> &amp;allocationDescriptor, ID3D12Resource *pCommittedResource, <a class="el" href="namespacegpgmm_1_1d3d12.html#a199143fd12adc1d2a067b51257c228f1">IResourceAllocation</a> **<a class="el" href="namespacegpgmm_1_1d3d12.html#a7ae6e7dbbfc15afd46d2e3b562b36f49">ppResourceAllocationOut</a>)=0</td></tr>
-<tr class="memdesc:aa7024573a8206adebafbc41488b2b3be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use existing D3D12 resource as a resource allocation.  <br /></td></tr>
+<tr class="memdesc:aa7024573a8206adebafbc41488b2b3be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use existing ID3D12Resource as a resource allocation.  <br /></td></tr>
 <tr class="separator:aa7024573a8206adebafbc41488b2b3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33e1823d01d51f58a1ae135a2971941d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a33e1823d01d51f58a1ae135a2971941d">ReleaseResourceHeaps</a> (UINT64 bytesToRelease, UINT64 *pBytesReleased)=0</td></tr>
 <tr class="memdesc:a33e1823d01d51f58a1ae135a2971941d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return free memory back to the OS.  <br /></td></tr>
@@ -280,7 +281,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:af4959aceb2454a577bd5b37a60926a28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug object associates additional information for D3D objects using SetPrivateData.  <br /></td></tr>
 <tr class="separator:af4959aceb2454a577bd5b37a60926a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a826dccb5826564820e0671bb7b86b165"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a></td></tr>
-<tr class="memdesc:a826dccb5826564820e0671bb7b86b165"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more Heap within a residency cache.  <br /></td></tr>
+<tr class="memdesc:a826dccb5826564820e0671bb7b86b165"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more heaps within a residency cache.  <br /></td></tr>
 <tr class="separator:a826dccb5826564820e0671bb7b86b165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0af206595eb7d5798cccd49cbc9b3acf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0af206595eb7d5798cccd49cbc9b3acf">IResidencyHeap</a></td></tr>
 <tr class="memdesc:a0af206595eb7d5798cccd49cbc9b3acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap represents a residency-managed ID3D12Pageable object.  <br /></td></tr>
@@ -402,6 +403,11 @@ Variables</h2></td></tr>
 creation. The flag only has effect when the heap's residency status
 cannot be determined.
 </pre> </td></tr>
+<tr><td class="fieldname"><a id="ab374b96904e24df12ee8ba8b248652feae3b37abc509c5b972e76142d8dc05ebb" name="ab374b96904e24df12ee8ba8b248652feae3b37abc509c5b972e76142d8dc05ebb"></a>RESIDENCY_HEAP_FLAG_CREATE_LOCKED&#160;</td><td class="fielddoc"><p>Creates a residency heap that is locked. </p>
+<pre class="fragment">A locked heap cannot be evicted once made resident.
+
+This flag is equivalent to calling LockHeap immediately after creation.
+</pre> </td></tr>
 </table>
 
 </div>
@@ -418,14 +424,14 @@ cannot be determined.
       </table>
 </div><div class="memdoc">
 <p>Additional information about the heap residency status.</p>
-<p>D3D12 heaps are in one of three exclusive states: never made resident or unknown, about to become resident or evicted, and resident. When a heap gets paged-out, it transitions from being resident to evicted. Paged-in is the reverse of this, evicted to resident. If the heap was known to be created resident by D3D12, it will immediately become resident. If the heap becomes locked, it will stay resident until unlocked, then back to evicted. </p>
+<p>A heap is in one of three states: never made resident or unknown, about to become resident or evicted, and resident. When a heap gets paged-out, it transitions from being resident to evicted. Paged-in is the reverse of this, evicted to resident. If the heap was known to be created resident by D3D12, it will immediately become resident. If the heap becomes locked, it will stay resident until unlocked, then back to evicted. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a73db0a3f65a7943a5ae3ee00beeaeff3" name="a1a4f1102db3d15f073722b2da3aad717a73db0a3f65a7943a5ae3ee00beeaeff3"></a>RESIDENCY_HEAP_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p>Heap residency status is not known. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a73db0a3f65a7943a5ae3ee00beeaeff3" name="a1a4f1102db3d15f073722b2da3aad717a73db0a3f65a7943a5ae3ee00beeaeff3"></a>RESIDENCY_HEAP_STATUS_UNKNOWN&#160;</td><td class="fielddoc"><p>Residency status is not known. </p>
 <pre class="fragment">Unknown heaps must become locked to be managed for residency.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a2c26bbfd2947d76ce70651eb4a4f239c" name="a1a4f1102db3d15f073722b2da3aad717a2c26bbfd2947d76ce70651eb4a4f239c"></a>RESIDENCY_HEAP_STATUS_EVICTED&#160;</td><td class="fielddoc"><p>Heap is evicted or about to be made resident. Evicted heaps must be previously locked, resident, or D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT. </p>
+<tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a2c26bbfd2947d76ce70651eb4a4f239c" name="a1a4f1102db3d15f073722b2da3aad717a2c26bbfd2947d76ce70651eb4a4f239c"></a>RESIDENCY_HEAP_STATUS_EVICTED&#160;</td><td class="fielddoc"><p>Heap was evicted or about to be made resident. Evicted heaps must be previously locked, resident, or D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a0ead00a352f525b7ae6ccb2a59e9cbd0" name="a1a4f1102db3d15f073722b2da3aad717a0ead00a352f525b7ae6ccb2a59e9cbd0"></a>RESIDENCY_HEAP_STATUS_RESIDENT&#160;</td><td class="fielddoc"><p>Heap is resident and can be evicted. Heaps that stay locked will always be resident. </p>
+<tr><td class="fieldname"><a id="a1a4f1102db3d15f073722b2da3aad717a0ead00a352f525b7ae6ccb2a59e9cbd0" name="a1a4f1102db3d15f073722b2da3aad717a0ead00a352f525b7ae6ccb2a59e9cbd0"></a>RESIDENCY_HEAP_STATUS_RESIDENT&#160;</td><td class="fielddoc"><p>Heap is resident. Locked heaps stay resident. </p>
 </td></tr>
 </table>
 
@@ -623,13 +629,13 @@ is normally not tracked.
 <pre class="fragment">This is an invalid state that assigned temporary before the actual method is known.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4ad373311e851b518457648f7a4dda4c0a" name="a26eab6e69ba858e7b6e367ea935324c4ad373311e851b518457648f7a4dda4c0a"></a>RESOURCE_ALLOCATION_TYPE_STANDALONE&#160;</td><td class="fielddoc"><p>Not sub-divided. </p>
-<pre class="fragment">One and only one allocation exists for the memory.
+<pre class="fragment">One and only one resource allocation exists for the heap.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4af4cd3000177c7334c7dbf49e5212835e" name="a26eab6e69ba858e7b6e367ea935324c4af4cd3000177c7334c7dbf49e5212835e"></a>RESOURCE_ALLOCATION_TYPE_SUBALLOCATED&#160;</td><td class="fielddoc"><p>Sub-divided using one or more allocations. </p>
-<pre class="fragment">Underlying memory will be broken up into one or more memory allocations.
+<pre class="fragment">Underlying heap will be broken up into one or more resource allocations.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a26eab6e69ba858e7b6e367ea935324c4aa9ce6aa06422c86a462bcd93bc38c1d9" name="a26eab6e69ba858e7b6e367ea935324c4aa9ce6aa06422c86a462bcd93bc38c1d9"></a>RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN&#160;</td><td class="fielddoc"><p>Sub-divided within a single memory allocation. </p>
-<pre class="fragment">A single memory allocation will be broken into one or more sub-allocations.
+<pre class="fragment">A single resource allocation will be broken into one or more sub-allocations.
 </pre> </td></tr>
 </table>
 
@@ -682,7 +688,7 @@ allocator.
 <pre class="fragment">Allows GPGMM to trigger prefetching based on heurstics. Prefetching enables more
 performance when allocating for contiguous allocations or many resources of the same size.
 </pre> </td></tr>
-<tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6" name="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6"></a>RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p>Disables recycling of GPU memory. </p>
+<tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6" name="a33ac7fa401378e4e3361fbae516c5c9aa1e453ca25c7ff81d6f96725f328a3aa6"></a>RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND&#160;</td><td class="fielddoc"><p>Disables recycling of heaps. </p>
 <pre class="fragment">Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
 (instead of re-using it).
 
@@ -692,7 +698,7 @@ corruption of heaps.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aaae859133263db0e2fbc47b26ae9e0cad" name="a33ac7fa401378e4e3361fbae516c5c9aaae859133263db0e2fbc47b26ae9e0cad"></a>RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY&#160;</td><td class="fielddoc"><p>Uses D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA. </p>
 <pre class="fragment">Allocates resources with a D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap type from
-a single memory pool.
+a single heap pool.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="a33ac7fa401378e4e3361fbae516c5c9aaee629d9cfdc3939a461fea970a41ebd8" name="a33ac7fa401378e4e3361fbae516c5c9aaee629d9cfdc3939a461fea970a41ebd8"></a>RESOURCE_ALLOCATOR_FLAG_NEVER_LEAK&#160;</td><td class="fielddoc"><p>Report leaks of resource allocations. </p>
 <pre class="fragment">Used to track outstanding allocations made with this allocator. When the allocator is about
@@ -1017,16 +1023,17 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </table>
 </div><div class="memdoc">
 
-<p>Use existing D3D12 resource as a resource allocation. </p>
+<p>Use existing ID3D12Resource as a resource allocation. </p>
 <p>Returns a ResourceAllocation which represents an existing resource with a resource heap.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">allocationDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_i_o_n___d_e_s_c.html">RESOURCE_ALLOCATION_DESC</a> structure that provides. properties for the resource allocation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pCommittedResource</td><td>A pointer to a committed ID3D12Resource. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocationOut</td><td>Pointer to a memory block that receives a pointer to the resource allocation. Pass NULL to test if resource allocation creation would succeed, but not actually create the resource allocation. If NULL is passed and resource allocation creation would succeed, S_FALSE is returned.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>S_OK if successful or E_OUTOFMEMORY if there was not enough available memory. </dd></dl>
 
 </div>
 </div>
@@ -1200,10 +1207,11 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
     <tr><td class="paramname">pQueue</td><td>The command queue to submit to. May be nullptr. When nullptr, only residency operations are performed. </td></tr>
     <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. May be nullptr. When nullptr, only residency operations are performed. </td></tr>
     <tr><td class="paramname">ppResidencyLists</td><td>The array of ResidencyList residency lists to make resident. </td></tr>
-    <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays. </td></tr>
+    <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful or E_OUTOFMEMORY if not enough memory exists. </dd></dl>
 
 </div>
 </div>
@@ -1288,7 +1296,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div><div class="memdoc">
 
 <p>Returns the heap assigned to this resource allocation. </p>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the Heap used by this resource allocation. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the IResidencyHeap used by this resource allocation. </dd></dl>
 
 </div>
 </div>
@@ -1535,7 +1543,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </table>
 </div><div class="memdoc">
 
-<p>Resets a residency list to its initial state as if a new residenct list was created. </p>
+<p>Resets list to its initial state as if a new list was created. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful. </dd></dl>
 
 </div>
@@ -1701,10 +1709,11 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 <p>Unlocking a heap allows the residency manager will evict it when over budget.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pHeap</td><td>A pointer to the heap being unlocked. </td></tr>
+    <tr><td class="paramname">pHeap</td><td>A pointer to the heap being unlocked.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>S_OK if unlocking was successful or S_FALSE if a lock remains. </dd></dl>
 
 </div>
 </div>
@@ -1817,8 +1826,8 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div><div class="memdoc">
 
 <p>Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
-<p>A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a ResidencyList by inserting heaps, by calling ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is called, the list can be reset or cleared for the next frame or compute job.</p>
-<p>Without ResidencyList, the application would need to call ResidencyManager::LockHeap and ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list being executed. </p>
+<p>A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a IResidencyList by inserting heaps, by calling IResourceAllocation::GetMemory, into the list. Once IResidencyManager::ExecuteCommandLists is called, the list can be reset or cleared for the next frame or compute job.</p>
+<p>Without IResidencyList, the application would need to call IResidencyManager::LockHeap and IResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list being executed. </p>
 
 </div>
 </div>
@@ -1834,8 +1843,8 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
       </table>
 </div><div class="memdoc">
 
-<p>ResidencyManager tracks and maintains one or more Heap within a residency cache. </p>
-<p>A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a operation that always requires the Heap to be resident (eg. Map, Unmap).</p>
+<p>ResidencyManager tracks and maintains one or more heaps within a residency cache. </p>
+<p>A heap is considered "resident" when it is accessible by the GPU. A heap can be made explicitly resident by calling ResidencyManager::LockHeap or implicitly resident by using the heap with a ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a operation that always requires the heap to be resident (eg. Map, Unmap).</p>
 <p>Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict and ID3D12Device::MakeResident to page-out or page-in heaps, respectively. </p>
 
 </div>
@@ -1873,7 +1882,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 <p>ResourceAllocator is an allocator that creates ID3D12Resources in a ResourceAllocation. </p>
 <p>Internally, ResourceAllocator creates a request, by determining the resource allocation requirements, then finds an allocator able to service the request.</p>
 <p>If the first ResourceAllocator attempt fails, it will try a second allocator, and so on. ResourceAllocator attempts are greedy: re-use of resources &gt; re-use of heaps &gt; re-use by pools &gt; no re-use, in order of maximizing performance while minimizing memory footprint.</p>
-<p>ResourceAllocator also uses ResidencyManager to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger Heap could be ideal for allocation but only if there is budget. And similarly, a smaller Heap allows for finer grained residency but could increase overall memory usage for allocation. </p>
+<p>ResourceAllocator also uses ResidencyManager to determine available memory (or budget left) when creating the request. This is because residency is managed per heap and not per resource). A larger heap could be ideal for allocation but only if there is budget. And similarly, a smaller heap allows for finer grained residency but could increase overall memory usage for allocation. </p>
 
 </div>
 </div>
