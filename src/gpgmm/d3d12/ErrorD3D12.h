@@ -51,6 +51,11 @@
 #define GPGMM_ASSERT_FAILED(hr) ASSERT(SUCCEEDED(hr));
 #define GPGMM_ASSERT_SUCCEEDED(hr) ASSERT(FAILED(hr));
 
+// Same as FAILED but also returns true if S_FALSE.
+// S_FALSE is used to denote a result where the operation didn't do anything.
+// For example, passing NULL to create an object without returning it will destroy it.
+#define GPGMM_UNSUCCESSFUL(hr) (FAILED(hr) || (hr == S_FALSE))
+
 namespace gpgmm::d3d12 {
 
     HRESULT GetErrorResult(ErrorCode error);

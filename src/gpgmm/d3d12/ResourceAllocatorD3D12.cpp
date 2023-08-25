@@ -1332,8 +1332,8 @@ namespace gpgmm::d3d12 {
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(committedResource));
+                        allocationDesc, subAllocation.GetAllocator(), resourceHeap,
+                        subAllocation.GetBlock(), std::move(committedResource));
 
                     return S_OK;
                 }));
@@ -1373,8 +1373,8 @@ namespace gpgmm::d3d12 {
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, mResidencyManager.Get(), subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(placedResource));
+                        allocationDesc, subAllocation.GetAllocator(), resourceHeap,
+                        subAllocation.GetBlock(), std::move(placedResource));
 
                     return S_OK;
                 }));
@@ -1417,8 +1417,8 @@ namespace gpgmm::d3d12 {
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, mResidencyManager.Get(), allocation.GetAllocator(),
-                        resourceHeap, allocation.GetBlock(), std::move(placedResource));
+                        allocationDesc, allocation.GetAllocator(), resourceHeap,
+                        allocation.GetBlock(), std::move(placedResource));
 
                     return S_OK;
                 }));
@@ -1478,8 +1478,7 @@ namespace gpgmm::d3d12 {
 
         if (ppResourceAllocationOut != nullptr) {
             *ppResourceAllocationOut = new ResourceAllocation(
-                allocationDesc, mResidencyManager.Get(), this, resourceHeap.Detach(), nullptr,
-                std::move(committedResource));
+                allocationDesc, this, resourceHeap.Detach(), nullptr, std::move(committedResource));
         }
 
         return ErrorCode::kNone;
@@ -1567,8 +1566,8 @@ namespace gpgmm::d3d12 {
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
 
         *ppResourceAllocationOut = new ResourceAllocation(
-            allocationDesc, nullptr, this, static_cast<ResidencyHeap*>(resourceHeap.Detach()),
-            nullptr, pCommittedResource);
+            allocationDesc, this, static_cast<ResidencyHeap*>(resourceHeap.Detach()), nullptr,
+            pCommittedResource);
 
         return S_OK;
     }

@@ -137,6 +137,14 @@ namespace gpgmm::d3d12 {
         cannot be determined.
         */
         RESIDENCY_HEAP_FLAG_CREATE_RESIDENT = 0x2,
+
+        /** \brief Creates a residency heap that is locked.
+
+        A locked heap cannot be evicted once made resident.
+
+        This flag is equivalent to calling LockHeap immediately after creation.
+        */
+        RESIDENCY_HEAP_FLAG_CREATE_LOCKED = 0x4,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_HEAP_FLAGS)
@@ -572,6 +580,8 @@ namespace gpgmm::d3d12 {
         Unlocking a heap allows the residency manager will evict it when over budget.
 
         @param pHeap A pointer to the heap being unlocked.
+
+        \return S_OK if unlocking was successful or S_FALSE if a lock remains.
         */
         virtual HRESULT UnlockHeap(IResidencyHeap * pHeap) = 0;
 

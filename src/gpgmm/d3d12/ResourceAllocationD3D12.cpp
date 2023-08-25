@@ -43,7 +43,6 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     ResourceAllocation::ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
-                                           ResidencyManager* residencyManager,
                                            MemoryAllocatorBase* allocator,
                                            ResidencyHeap* resourceHeap,
                                            MemoryBlock* block,
@@ -54,7 +53,6 @@ namespace gpgmm::d3d12 {
                                static_cast<AllocationMethod>(desc.Type),
                                block,
                                desc.SizeInBytes),
-          mResidencyManager(residencyManager),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
         ASSERT(resourceHeap != nullptr);
@@ -63,6 +61,9 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocation::~ResourceAllocation() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
+    }
+
+    void ResourceAllocation::DeleteThis() {
         if (mMappedCount.GetRefCount() > 0) {
             WarnLog(MessageId::kPerformanceWarning, this)
                 << "Destroying a mapped resource allocation is allowed but discouraged. Please "
@@ -72,17 +73,15 @@ namespace gpgmm::d3d12 {
 
         // If the developer forgots to unlock the heap, do so now so the heap can be made eligable
         // for eviction.
-        if (mResidencyManager != nullptr) {
-            mResidencyManager->UnlockHeap(GetMemory());
+        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        if (residencyHeap->GetResidencyManager() != nullptr) {
+            residencyHeap->Unlock();
             WarnLog(MessageId::kPerformanceWarning, this)
                 << "Destroying a locked resource allocation is allowed but discouraged. Please "
                    "call UnlockHeap the same number of times as LockHeap before releasing the "
-                   "resource "
-                   "allocation.";
+                   "resource allocation.";
         }
-    }
 
-    void ResourceAllocation::DeleteThis() {
         GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocationBase>(this));
     }
 
@@ -102,9 +101,9 @@ namespace gpgmm::d3d12 {
             return GetErrorResult(ErrorCode::kBadOperation);
         }
 
-        if (mResidencyManager != nullptr) {
-            GPGMM_RETURN_IF_FAILED(mResidencyManager->LockHeap(GetMemory()),
-                                   GetDevice(mResource.Get()));
+        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        if (residencyHeap->GetResidencyManager() != nullptr) {
+            GPGMM_RETURN_IF_FAILED(residencyHeap->Lock(), GetDevice(mResource.Get()));
         }
 
         // Range coordinates are always subresource-relative so the range should only be
@@ -142,8 +141,9 @@ namespace gpgmm::d3d12 {
         }
 
         // Underlying heap cannot be evicted until the last Unmap.
-        if (mResidencyManager != nullptr && mMappedCount.Unref()) {
-            mResidencyManager->UnlockHeap(GetMemory());
+        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        if (residencyHeap->GetResidencyManager() != nullptr && mMappedCount.Unref()) {
+            residencyHeap->Unlock();
         }
 
         D3D12_RANGE newWrittenRange{};

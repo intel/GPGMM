@@ -61,7 +61,6 @@ namespace gpgmm::d3d12 {
         friend ResourceAllocator;
 
         ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
-                           ResidencyManager* residencyManager,
                            MemoryAllocatorBase* allocator,
                            ResidencyHeap* resourceHeap,
                            MemoryBlock* block,
@@ -78,7 +77,6 @@ namespace gpgmm::d3d12 {
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocation)
 
-        ResidencyManager* const mResidencyManager;
         ComPtr<ID3D12Resource> mResource;
 
         const uint64_t mOffsetFromResource;
