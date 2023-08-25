@@ -202,6 +202,16 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapLocked) {
     ASSERT_FAILED(CreateResidencyHeap(lockedResidencyHeapDesc, nullptr,
                                       CreateResourceHeapCallbackContext::CreateHeap,
                                       &createHeapContext, nullptr));
+
+    ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
+
+    // Unlocking a heap with another lock must return S_FALSE.
+    EXPECT_EQ(residencyManager->UnlockHeap(resourceHeap.Get()), S_FALSE);
+    EXPECT_TRUE(resourceHeap->GetInfo().IsLocked);
+
+    // But unlocking the last lock must return S_OK.
+    EXPECT_EQ(residencyManager->UnlockHeap(resourceHeap.Get()), S_OK);
+    EXPECT_FALSE(resourceHeap->GetInfo().IsLocked);
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
