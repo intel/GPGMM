@@ -27,9 +27,9 @@ First create an allocator then create allocations from it:
 
 gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC allocatorDesc = {};
 
-ComPtr<gpgmm::d3d12::IResidencyManager> residency; // Optional
+ComPtr<gpgmm::d3d12::IResidencyManager> residencyManager; // Optional
 ComPtr<gpgmm::d3d12::IResourceAllocator> allocator;
-gpgmm::d3d12::CreateResourceAllocator(desc, device, adapter, &allocator, &residency);
+gpgmm::d3d12::CreateResourceAllocator(desc, device, adapter, &allocator, &residencyManager);
 ```
 
 ```cpp
@@ -46,10 +46,10 @@ physical GPU memory. GPGMM integrates residency into the resource allocators to 
 
 ```cpp
 ComPtr<gpgmm::d3d12::IResidencyList> list;
-CreateResidencyList(&list);
+gpgmm::d3d12::CreateResidencyList(&list);
 list->Add(allocation->GetMemory());
 
-residency->ExecuteCommandList(&queue, &commandList, &list, 1);
+residencyManager->ExecuteCommandList(&queue, &commandList, &list, 1);
 
 // Prepare for next frame.
 list->Reset();
@@ -58,18 +58,15 @@ list->Reset();
 Residency also works for non-resources too:
 
 ```cpp
-gpgmm::d3d12::RESIDENCY_HEAP_DESC shaderVisibleHeap = {};
-shaderVisibleHeap.SizeInBytes = kHeapSize;
-shaderVisibleHeap.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+// Shader-visible heaps should be locked or always resident.
+gpgmm::d3d12::RESIDENCY_HEAP_DESC shaderVisibleHeapDesc = {};
+shaderVisibleHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_LOCKED;
+shaderVisibleHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
 
 ComPtr<gpgmm::d3d12::IResidencyHeap> descriptorHeap;
-CreateHeapContext createHeapContext(heapDesc);
-gpgmm::d3d12::CreateResidencyHeap(shaderVisibleHeap, residencyManager,
-      createHeapContext, &CreateHeapContext::CreateHeapCallbackWrapper,
+gpgmm::d3d12::CreateResidencyHeap(shaderVisibleHeapDesc, residency.Get(),
+      d3d12DescriptorHeap.Get(),
       &descriptorHeap);
-
-// Shader-visible heaps should be locked or always resident.
-residency->LockHeap(descriptorHeap.get());
 ```
 
 To clean-up, simply call `Release()` once the is GPU is finished.
