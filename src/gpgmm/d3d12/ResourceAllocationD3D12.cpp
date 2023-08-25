@@ -69,6 +69,17 @@ namespace gpgmm::d3d12 {
                    "call Unmap the same number of times as Map before releasing the resource "
                    "allocation.";
         }
+
+        // If the developer forgots to unlock the heap, do so now so the heap can be made eligable
+        // for eviction.
+        if (mResidencyManager != nullptr) {
+            mResidencyManager->UnlockHeap(GetMemory());
+            WarnLog(MessageId::kPerformanceWarning, this)
+                << "Destroying a locked resource allocation is allowed but discouraged. Please "
+                   "call UnlockHeap the same number of times as LockHeap before releasing the "
+                   "resource "
+                   "allocation.";
+        }
     }
 
     void ResourceAllocation::DeleteThis() {
