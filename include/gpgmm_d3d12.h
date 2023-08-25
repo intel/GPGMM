@@ -70,26 +70,26 @@ namespace gpgmm::d3d12 {
     /** \enum RESIDENCY_HEAP_STATUS
     Additional information about the heap residency status.
 
-    D3D12 heaps are in one of three exclusive states: never made resident or unknown, about to
+    A heap is in one of three states: never made resident or unknown, about to
     become resident or evicted, and resident. When a heap gets paged-out, it transitions from
     being resident to evicted. Paged-in is the reverse of this, evicted to resident. If the heap
     was known to be created resident by D3D12, it will immediately become resident. If the heap
     becomes locked, it will stay resident until unlocked, then back to evicted.
     */
     enum RESIDENCY_HEAP_STATUS {
-        /** \brief Heap residency status is not known.
+        /** \brief Residency status is not known.
 
         Unknown heaps must become locked to be managed for residency.
         */
         RESIDENCY_HEAP_STATUS_UNKNOWN = 0,
 
-        /** \brief Heap is evicted or about to be made resident.
+        /** \brief Heap was evicted or about to be made resident.
         Evicted heaps must be previously locked, resident, or D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.
         */
         RESIDENCY_HEAP_STATUS_EVICTED = 1,
 
-        /** \brief Heap is resident and can be evicted.
-        Heaps that stay locked will always be resident.
+        /** \brief Heap is resident.
+        Locked heaps stay resident.
         */
         RESIDENCY_HEAP_STATUS_RESIDENT = 2,
     };
@@ -271,12 +271,12 @@ namespace gpgmm::d3d12 {
     command-list.
 
     A residency list helps track heaps for residency which will be referenced together by a
-    command-list. The application uses a ResidencyList by inserting heaps, by calling
-    ResourceAllocation::GetMemory, into the list. Once ResidencyManager::ExecuteCommandLists is
+    command-list. The application uses a IResidencyList by inserting heaps, by calling
+    IResourceAllocation::GetMemory, into the list. Once IResidencyManager::ExecuteCommandLists is
     called, the list can be reset or cleared for the next frame or compute job.
 
-    Without ResidencyList, the application would need to call ResidencyManager::LockHeap and
-    ResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
+    Without IResidencyList, the application would need to call IResidencyManager::LockHeap and
+    IResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
     being executed.
     */
     GPGMM_INTERFACE IResidencyList : public IUnknown {
@@ -288,7 +288,7 @@ namespace gpgmm::d3d12 {
         */
         virtual HRESULT Add(IResidencyHeap * pHeap) = 0;
 
-        /** \brief Resets a residency list to its initial state as if a new residenct list was
+        /** \brief Resets list to its initial state as if a new list was
         created.
 
         \return Returns S_OK if successful.
@@ -388,8 +388,8 @@ namespace gpgmm::d3d12 {
     GPGMM_EXPORT HRESULT CreateResidencyList(IResidencyList** ppResidencyListOut);
 
     /** \enum RESIDENCY_MANAGER_FLAGS
-       Specify options to configure the residency manager.
-       */
+    Specify options to configure the residency manager.
+    */
     enum RESIDENCY_MANAGER_FLAGS {
 
         /** \brief Disables all option flags.
@@ -500,13 +500,13 @@ namespace gpgmm::d3d12 {
         is called. When over budget, these fence values are compared to determine which heaps can be
         evicted.
 
-        Optional parameter. Zero by default.
+        Optional parameter. If unspecified, the initial fence value is zero.
         */
         UINT64 InitialFenceValue;
     };
 
     /** \struct RESIDENCY_MANAGER_STATS
-    Additional information about residency manager usage.
+    Additional information about residency usage.
     */
     struct RESIDENCY_MANAGER_STATS {
         /** \brief Amount of memory, in bytes, currently resident.
@@ -530,29 +530,29 @@ namespace gpgmm::d3d12 {
 
         /** \brief Not sub-divided.
 
-        One and only one allocation exists for the memory.
+        One and only one resource allocation exists for the heap.
         */
         RESOURCE_ALLOCATION_TYPE_STANDALONE = 1,
 
         /** \brief Sub-divided using one or more allocations.
 
-        Underlying memory will be broken up into one or more memory allocations.
+        Underlying heap will be broken up into one or more resource allocations.
         */
         RESOURCE_ALLOCATION_TYPE_SUBALLOCATED = 2,
 
         /** \brief Sub-divided within a single memory allocation.
 
-        A single memory allocation will be broken into one or more sub-allocations.
+        A single resource allocation will be broken into one or more sub-allocations.
         */
         RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN = 3,
     };
 
-    /** \brief ResidencyManager tracks and maintains one or more Heap within a residency cache.
+    /** \brief ResidencyManager tracks and maintains one or more heaps within a residency cache.
 
-    A Heap is considered "resident" when it is accessible by the GPU. A Heap can be made explicitly
-    resident by calling ResidencyManager::LockHeap or implicitly resident by using the Heap with a
+    A heap is considered "resident" when it is accessible by the GPU. A heap can be made explicitly
+    resident by calling ResidencyManager::LockHeap or implicitly resident by using the heap with a
     ResidencyList upon calling ResidencyManager::ExecuteCommandLists or through a
-    operation that always requires the Heap to be resident (eg. Map, Unmap).
+    operation that always requires the heap to be resident (eg. Map, Unmap).
 
     Internally, the ResidencyManager keeps the application in-budget by calling ID3D12Device::Evict
     and ID3D12Device::MakeResident to page-out or page-in heaps, respectively.
@@ -587,6 +587,8 @@ namespace gpgmm::d3d12 {
         nullptr. When nullptr, only residency operations are performed.
         @param ppResidencyLists The array of ResidencyList residency lists to make resident.
         @param count The size of commandLists and residencyLists arrays.
+
+        \return Returns S_OK if successful or E_OUTOFMEMORY if not enough memory exists.
         */
         virtual HRESULT ExecuteCommandLists(
             ID3D12CommandQueue* const pQueue, ID3D12CommandList* const* ppCommandLists,
@@ -746,7 +748,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Returns the heap assigned to this resource allocation.
 
-        \return A pointer to the Heap used by this resource allocation.
+        \return A pointer to the IResidencyHeap used by this resource allocation.
         */
         virtual IResidencyHeap* GetMemory() const = 0;
     };
@@ -782,7 +784,7 @@ namespace gpgmm::d3d12 {
         */
         RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH = 0x4,
 
-        /** \brief Disables recycling of GPU memory.
+        /** \brief Disables recycling of heaps.
 
         Forces the creation of new heaps and to de-allocate heaps immediately once no longer needed
         (instead of re-using it).
@@ -796,7 +798,7 @@ namespace gpgmm::d3d12 {
         /** \brief Uses D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap everywhere on UMA.
 
         Allocates resources with a D3D12_HEAP_TYPE_CUSTOM-equivalent upload heap type from
-        a single memory pool.
+        a single heap pool.
         */
         RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY = 0x10,
 
@@ -912,6 +914,8 @@ namespace gpgmm::d3d12 {
 
         For example, whether the allocator can reuse memory, or resources should be resident upon
         creation.
+
+        Optional parameter. By default, no flags are specified.
         */
         RESOURCE_ALLOCATOR_FLAGS Flags;
 
@@ -1132,9 +1136,9 @@ namespace gpgmm::d3d12 {
     Specifies how allocations should be created.
     */
     struct RESOURCE_ALLOCATION_DESC {
-        /** \brief Flags used to control how the resource will be allocated.
+        /** \brief Used to control how the resource will be allocated.
 
-        Optional parameter. By default, GPGMM will decide automatically.
+        Optional parameter. By default, not flags are specified.
         */
         RESOURCE_ALLOCATION_FLAGS Flags;
 
@@ -1213,10 +1217,10 @@ namespace gpgmm::d3d12 {
     };
 
     /** \struct RESOURCE_ALLOCATOR_STATS
-    Additional information about resource allocator usage.
+    Additional information about allocator usage.
     */
     struct RESOURCE_ALLOCATOR_STATS {
-        /** \brief Number of used sub-allocated blocks within the same heap.
+        /** \brief Number of used sub-allocated blocks.
          */
         UINT UsedBlockCount;
 
@@ -1224,7 +1228,7 @@ namespace gpgmm::d3d12 {
          */
         UINT64 UsedBlockUsage;
 
-        /** \brief Number of used memory allocations.
+        /** \brief Number of used heaps.
          */
         UINT UsedHeapCount;
 
@@ -1266,13 +1270,13 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocator also uses ResidencyManager to determine available memory
     (or budget left) when creating the request. This is because residency is managed
-    per heap and not per resource). A larger Heap could be ideal for allocation but only if there is
-    budget. And similarly, a smaller Heap allows for finer grained residency but could increase
+    per heap and not per resource). A larger heap could be ideal for allocation but only if there is
+    budget. And similarly, a smaller heap allows for finer grained residency but could increase
     overall memory usage for allocation.
     **/
     GPGMM_INTERFACE IResourceAllocator : public IDebugObject {
       public:
-        /** \brief  Allocates memory and creates a D3D12 resource using it.
+        /** \brief Allocates memory and creates a ID3D12Resource using it.
 
         Returns a ResourceAllocation which represents a resource allocated at a specific
         location in memory. The resource could be allocated within a resource heap, within the
@@ -1292,6 +1296,8 @@ namespace gpgmm::d3d12 {
         for a clear color.
         @param[out] ppResourceAllocationOut An optional pointer to a memory block that receives the
         required interface pointer to the created resource allocation object.
+
+        \return S_OK if successful or E_OUTOFMEMORY if there was not enough available memory.
         */
         virtual HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                        const D3D12_RESOURCE_DESC& resourceDescriptor,
@@ -1299,7 +1305,7 @@ namespace gpgmm::d3d12 {
                                        const D3D12_CLEAR_VALUE* pClearValue,
                                        IResourceAllocation** ppResourceAllocationOut) = 0;
 
-        /** \brief  Use existing D3D12 resource as a resource allocation.
+        /** \brief Use existing ID3D12Resource as a resource allocation.
 
         Returns a ResourceAllocation which represents an existing resource with a resource heap.
 
@@ -1310,6 +1316,8 @@ namespace gpgmm::d3d12 {
         resource allocation. Pass NULL to test if resource allocation creation would succeed, but
         not actually create the resource allocation. If NULL is passed and resource allocation
         creation would succeed, S_FALSE is returned.
+
+        \return S_OK if successful or E_OUTOFMEMORY if there was not enough available memory.
         */
         virtual HRESULT CreateResource(const RESOURCE_ALLOCATION_DESC& allocationDescriptor,
                                        ID3D12Resource* pCommittedResource,
