@@ -241,7 +241,7 @@ namespace gpgmm::d3d12 {
 
         // If the heap was never locked, nothing further should be done.
         if (!heap->IsResidencyLocked()) {
-            return S_OK;
+            return S_FALSE;
         }
 
         if (heap->IsInList()) {
@@ -256,7 +256,7 @@ namespace gpgmm::d3d12 {
 
         // If another lock still exists on the heap, nothing further should be done.
         if (heap->IsResidencyLocked()) {
-            return S_OK;
+            return S_FALSE;
         }
 
         // When all locks have been removed, the resource remains resident and becomes tracked in

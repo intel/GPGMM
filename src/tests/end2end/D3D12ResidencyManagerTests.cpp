@@ -64,6 +64,21 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
         return residencyDesc;
     }
 
+    // Configures a residency heap for testing residency on any adapter.
+    D3D12_HEAP_DESC GetBasicHeapDesc(uint64_t sizeInBytes, D3D12_HEAP_TYPE heapType) const {
+        D3D12_HEAP_PROPERTIES heapProperties = {};
+        heapProperties.Type = heapType;
+
+        D3D12_HEAP_DESC heapDesc = {};
+        heapDesc.Properties = heapProperties;
+        heapDesc.SizeInBytes = sizeInBytes;
+
+        // Assume tier 1, which all adapters support.
+        heapDesc.Flags |= D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
+
+        return heapDesc;
+    }
+
     uint64_t GetBudgetLeft(IResidencyManager* residencyManager,
                            const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
         DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
@@ -154,6 +169,41 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
                                          &createHeapContext, nullptr));
 }
 
+TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapLocked) {
+    ComPtr<IResidencyManager> residencyManager;
+    ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
+                                            mAdapter.Get(), &residencyManager));
+    ASSERT_NE(residencyManager.Get(), nullptr);
+
+    D3D12_HEAP_DESC heapDesc = GetBasicHeapDesc(GPGMM_MB_TO_BYTES(10), D3D12_HEAP_TYPE_DEFAULT);
+
+    RESIDENCY_HEAP_DESC residencyHeapDesc = {};
+    residencyHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+
+    CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
+
+    RESIDENCY_HEAP_DESC unlockedResidencyHeapDesc = residencyHeapDesc;
+
+    ComPtr<IResidencyHeap> resourceHeap;
+    ASSERT_SUCCEEDED(CreateResidencyHeap(unlockedResidencyHeapDesc, residencyManager.Get(),
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, &resourceHeap));
+    EXPECT_FALSE(resourceHeap->GetInfo().IsLocked);
+
+    RESIDENCY_HEAP_DESC lockedResidencyHeapDesc = residencyHeapDesc;
+    lockedResidencyHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_LOCKED;
+
+    ASSERT_SUCCEEDED(CreateResidencyHeap(lockedResidencyHeapDesc, residencyManager.Get(),
+                                         CreateResourceHeapCallbackContext::CreateHeap,
+                                         &createHeapContext, &resourceHeap));
+    EXPECT_TRUE(resourceHeap->GetInfo().IsLocked);
+
+    // Residency manager must exist to create the heap locked.
+    ASSERT_FAILED(CreateResidencyHeap(lockedResidencyHeapDesc, nullptr,
+                                      CreateResourceHeapCallbackContext::CreateHeap,
+                                      &createHeapContext, nullptr));
+}
+
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
@@ -208,6 +258,29 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
         invalidResidencyHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET;
 
         ASSERT_FAILED(CreateResidencyHeap(invalidResidencyHeapDesc, nullptr,
+                                          CreateResourceHeapCallbackContext::CreateHeap,
+                                          &createHeapContext, nullptr));
+    }
+
+    {
+        RESIDENCY_HEAP_DESC unlockedResidencyHeapDesc = residencyHeapDesc;
+
+        ComPtr<IResidencyHeap> resourceHeap;
+        ASSERT_SUCCEEDED(CreateResidencyHeap(unlockedResidencyHeapDesc, residencyManager.Get(),
+                                             CreateResourceHeapCallbackContext::CreateHeap,
+                                             &createHeapContext, &resourceHeap));
+        EXPECT_FALSE(resourceHeap->GetInfo().IsLocked);
+
+        RESIDENCY_HEAP_DESC lockedResidencyHeapDesc = residencyHeapDesc;
+        lockedResidencyHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_LOCKED;
+
+        ASSERT_SUCCEEDED(CreateResidencyHeap(lockedResidencyHeapDesc, residencyManager.Get(),
+                                             CreateResourceHeapCallbackContext::CreateHeap,
+                                             &createHeapContext, &resourceHeap));
+        EXPECT_TRUE(resourceHeap->GetInfo().IsLocked);
+
+        // Residency manager must exist to create the heap locked.
+        ASSERT_FAILED(CreateResidencyHeap(lockedResidencyHeapDesc, nullptr,
                                           CreateResourceHeapCallbackContext::CreateHeap,
                                           &createHeapContext, nullptr));
     }

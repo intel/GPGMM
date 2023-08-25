@@ -158,7 +158,7 @@ namespace gpgmm::d3d12 {
         }
 
         std::unique_ptr<ResidencyHeap> heap(
-            new ResidencyHeap(pPageable, newDescriptor, isResidencyDisabled));
+            new ResidencyHeap(pResidencyManager, pPageable, newDescriptor, isResidencyDisabled));
 
         if (!isResidencyDisabled) {
             // Check if the underlying memory was implicitly made resident.
@@ -191,18 +191,29 @@ namespace gpgmm::d3d12 {
                                        GetDevice(pPageable));
             } else {
                 if (newDescriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
-                    GPGMM_RETURN_IF_FAILED(residencyManager->LockHeap(heap.get()),
-                                           GetDevice(pPageable));
-                    GPGMM_RETURN_IF_FAILED(residencyManager->UnlockHeap(heap.get()),
-                                           GetDevice(pPageable));
+                    GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable));
+                    GPGMM_RETURN_IF_FAILED(heap->Unlock(), GetDevice(pPageable));
                     ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT);
                 }
             }
+
+            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_LOCKED) {
+                GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable));
+            }
+
         } else {
             if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
                 WarnLog(MessageId::kPerformanceWarning, heap.get())
                     << "RESIDENCY_HEAP_FLAG_CREATE_RESIDENT was specified but had no effect "
                        "becauase residency management is not being used.";
+            }
+
+            // Heap created not resident requires no budget to be created.
+            if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_LOCKED) {
+                ErrorLog(ErrorCode::kInvalidArgument, heap.get())
+                    << "RESIDENCY_HEAP_FLAG_CREATE_LOCKED cannot be specified without a residency "
+                       "manager.";
+                return E_INVALIDARG;
             }
         }
 
@@ -278,24 +289,30 @@ namespace gpgmm::d3d12 {
                                    ppResidencyHeapOut);
     }
 
-    ResidencyHeap::ResidencyHeap(ComPtr<ID3D12Pageable> pageable,
+    ResidencyHeap::ResidencyHeap(ComPtr<IResidencyManager> residencyManager,
+                                 ComPtr<ID3D12Pageable> pageable,
                                  const RESIDENCY_HEAP_DESC& descriptor,
                                  bool isResidencyDisabled)
         : MemoryBase(descriptor.SizeInBytes, descriptor.Alignment),
+          mResidencyManager(std::move(residencyManager)),
           mPageable(std::move(pageable)),
           mHeapSegment(descriptor.HeapSegment),
           mResidencyLock(0),
-          mIsResidencyDisabled(isResidencyDisabled),
           mState(RESIDENCY_HEAP_STATUS_UNKNOWN) {
         ASSERT(mPageable != nullptr);
-        if (!mIsResidencyDisabled) {
+        if (residencyManager != nullptr) {
             GPGMM_TRACE_EVENT_OBJECT_NEW(this);
         }
     }
 
     ResidencyHeap::~ResidencyHeap() {
-        if (mIsResidencyDisabled) {
+        if (mResidencyManager == nullptr) {
             return;
+        }
+
+        if (IsResidencyLocked() && GPGMM_UNSUCCESSFUL(Unlock())) {
+            DebugLog(MessageId::kUnknown, this)
+                << "Heap was locked for residency while being destroyed.";
         }
 
         // When a heap is destroyed, it no longer resides in resident memory, so we must evict
@@ -362,6 +379,20 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResidencyHeap::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugName(Name);
+    }
+
+    HRESULT ResidencyHeap::Lock() {
+        ASSERT(mResidencyManager != nullptr);
+        return mResidencyManager->LockHeap(this);
+    }
+
+    HRESULT ResidencyHeap::Unlock() {
+        ASSERT(mResidencyManager != nullptr);
+        return mResidencyManager->UnlockHeap(this);
+    }
+
+    IResidencyManager* ResidencyHeap::GetResidencyManager() const {
+        return mResidencyManager.Get();
     }
 
 }  // namespace gpgmm::d3d12

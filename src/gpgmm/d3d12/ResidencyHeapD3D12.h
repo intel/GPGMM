@@ -59,10 +59,16 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
+        IResidencyManager* GetResidencyManager() const;
+
+        HRESULT Lock();
+        HRESULT Unlock();
+
       private:
         friend ResidencyManager;
 
-        ResidencyHeap(ComPtr<ID3D12Pageable> pageable,
+        ResidencyHeap(ComPtr<IResidencyManager> residencyManager,
+                      ComPtr<ID3D12Pageable> pageable,
                       const RESIDENCY_HEAP_DESC& descriptor,
                       bool isResidencyDisabled);
 
@@ -87,13 +93,13 @@ namespace gpgmm::d3d12 {
         void AddResidencyLockRef();
         void ReleaseResidencyLock();
 
+        ComPtr<IResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
         // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
         uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
         RefCounted mResidencyLock;
-        bool mIsResidencyDisabled;
         RESIDENCY_HEAP_STATUS mState;
     };
 }  // namespace gpgmm::d3d12
