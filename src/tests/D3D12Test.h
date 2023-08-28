@@ -33,6 +33,8 @@
 
 #define EXPECT_EQUAL_WSTR(wstr1, wstr2) EXPECT_FALSE(wcscmp(wstr1, wstr2))
 
+#define EXPECT_REFCOUNT_EQ(expr, count) EXPECT_EQ(gpgmm::d3d12::GetRefCount(expr), count)
+
 namespace gpgmm::d3d12 {
 
     class Caps;
