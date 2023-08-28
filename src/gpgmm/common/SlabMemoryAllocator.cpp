@@ -475,7 +475,7 @@ namespace gpgmm {
             SafeDivide(mStats.PrefetchedMemoryMissesEliminated,
                        mStats.PrefetchedMemoryMissesEliminated + mStats.PrefetchedMemoryMisses);
         if (currentCoverage < kPrefetchCoverageWarnMinThreshold) {
-            DebugLog(MessageId::kPerformanceWarning, this)
+            WarnEvent(MessageId::kPerformanceWarning, false, GetTypename(), this)
                 << "Prefetch coverage is below threshold (%): " << currentCoverage * 100 << " vs "
                 << kPrefetchCoverageWarnMinThreshold * 100;
             return false;

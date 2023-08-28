@@ -298,11 +298,6 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
-    HRESULT ResourceAllocation::GetResidencyManager(
-        IResidencyManager** ppResidencyManagerOut) const {
-        return E_NOTIMPL;
-    }
-
     // ResourceAllocator
 
     HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,

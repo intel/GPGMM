@@ -197,26 +197,4 @@ namespace gpgmm::d3d12 {
         return DebugObject::SetDebugName(Name);
     }
 
-    HRESULT ResourceAllocation::GetResidencyManager(
-        IResidencyManager** ppResidencyManagerOut) const {
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        ASSERT(residencyHeap != nullptr);
-
-        IResidencyManager* residencyManager = residencyHeap->GetResidencyManager();
-        if (residencyManager == nullptr) {
-            return E_FAIL;
-        }
-
-        if (ppResidencyManagerOut != nullptr) {
-            GPGMM_RETURN_IF_FAILED(
-                residencyManager->QueryInterface(IID_IUnknown,
-                                                 reinterpret_cast<void**>(ppResidencyManagerOut)),
-                GetDevice(mResource.Get()));
-        } else {
-            return S_FALSE;
-        }
-
-        return S_OK;
-    }
-
 }  // namespace gpgmm::d3d12
