@@ -97,6 +97,10 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment(), false, RESIDENCY_HEAP_STATUS_UNKNOWN};
     }
 
+    HRESULT ResidencyHeap::GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const {
+        return E_NOTIMPL;
+    }
+
     HRESULT STDMETHODCALLTYPE ResidencyHeap::QueryInterface(REFIID riid, void** ppvObject) {
         return mPageable->QueryInterface(riid, ppvObject);
     }
@@ -295,11 +299,6 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResourceAllocation::SetDebugName(LPCWSTR Name) {
-        return E_NOTIMPL;
-    }
-
-    HRESULT ResourceAllocation::GetResidencyManager(
-        IResidencyManager** ppResidencyManagerOut) const {
         return E_NOTIMPL;
     }
 

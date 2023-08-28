@@ -50,7 +50,6 @@ namespace gpgmm::d3d12 {
         uint64_t GetOffsetFromResource() const override;
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
         IResidencyHeap* GetMemory() const override;
-        HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
         HRESULT GetResourceAllocator(IResourceAllocator** ppResourceAllocatorOut) const override;
 
         DEFINE_UNKNOWN_OVERRIDES()

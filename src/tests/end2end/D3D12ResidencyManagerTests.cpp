@@ -560,12 +560,12 @@ TEST_F(D3D12ResidencyManagerTests, GetResidencyManager) {
     EXPECT_REFCOUNT_EQ(residencyManager.Get(), 3);
 
     // Ownership must remain unchanged if no residency manager pointer was specified.
-    EXPECT_SUCCEEDED(allocationWithResidency->GetResidencyManager(nullptr));
+    EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->GetResidencyManager(nullptr));
     EXPECT_REFCOUNT_EQ(residencyManager.Get(), 3);
 
     ComPtr<IResidencyManager> residencyManagerAgain;
-    EXPECT_SUCCEEDED(
-        allocationWithResidency->GetResidencyManager(residencyManagerAgain.GetAddressOf()));
+    EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->GetResidencyManager(
+        residencyManagerAgain.GetAddressOf()));
 
     // Creating a pointer to residency manager must claim ownership.
     EXPECT_REFCOUNT_EQ(residencyManager.Get(), 4);
@@ -575,7 +575,7 @@ TEST_F(D3D12ResidencyManagerTests, GetResidencyManager) {
     EXPECT_SUCCEEDED(residencyManagerAgain->UnlockHeap(allocationWithResidency->GetMemory()));
 
     // Getting a NULL pointer to a residency manager cannot claim ownership.
-    EXPECT_SUCCEEDED(allocationWithResidency->GetResidencyManager(nullptr));
+    EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->GetResidencyManager(nullptr));
     EXPECT_REFCOUNT_EQ(residencyManager.Get(), 4);
 
     // Release the allocator (and allocation), relinquishing ownership.

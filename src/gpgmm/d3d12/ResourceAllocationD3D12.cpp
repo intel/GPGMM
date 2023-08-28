@@ -77,7 +77,7 @@ namespace gpgmm::d3d12 {
         // If the developer forgots to unlock the heap, do so now so the heap can be made eligable
         // for eviction.
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        if (residencyHeap->GetResidencyManager() != nullptr &&
+        if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr)) &&
             GPGMM_UNSUCCESSFUL(residencyHeap->Unlock())) {
             WarnLog(MessageId::kPerformanceWarning, this)
                 << "Destroying a locked resource allocation is allowed but discouraged. Please "
@@ -105,7 +105,7 @@ namespace gpgmm::d3d12 {
         }
 
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        if (residencyHeap->GetResidencyManager() != nullptr) {
+        if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
             GPGMM_RETURN_IF_FAILED(residencyHeap->Lock(), GetDevice(mResource.Get()));
         }
 
@@ -145,7 +145,7 @@ namespace gpgmm::d3d12 {
 
         // Underlying heap cannot be evicted until the last Unmap.
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        if (residencyHeap->GetResidencyManager() != nullptr && mMappedCount.Unref()) {
+        if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr)) && mMappedCount.Unref()) {
             residencyHeap->Unlock();
         }
 
@@ -198,21 +198,6 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocation::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugName(Name);
-    }
-
-    HRESULT ResourceAllocation::GetResidencyManager(
-        IResidencyManager** ppResidencyManagerOut) const {
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        ASSERT(residencyHeap != nullptr);
-
-        ComPtr<IResidencyManager> residencyManager(residencyHeap->GetResidencyManager());
-        if (ppResidencyManagerOut != nullptr) {
-            *ppResidencyManagerOut = residencyManager.Detach();
-        } else {
-            return S_FALSE;
-        }
-
-        return S_OK;
     }
 
     HRESULT ResourceAllocation::GetResourceAllocator(
