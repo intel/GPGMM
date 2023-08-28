@@ -303,6 +303,11 @@ namespace gpgmm::d3d12 {
         return E_NOTIMPL;
     }
 
+    HRESULT ResourceAllocation::GetResourceAllocator(
+        IResourceAllocator** ppResourceAllocatorOut) const {
+        return E_NOTIMPL;
+    }
+
     // ResourceAllocator
 
     HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,

@@ -163,6 +163,7 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
         IResidencyHeap* GetMemory() const override;
         HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
+        HRESULT GetResourceAllocator(IResourceAllocator** ppResourceAllocatorOut) const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
