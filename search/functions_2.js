@@ -6,10 +6,11 @@ var searchData=
   ['getoffsetfromresource_3',['GetOffsetFromResource',['../namespacegpgmm_1_1d3d12.html#abef42cfb572e20b44f1fc86aca14d497',1,'gpgmm::d3d12']]],
   ['getresidencymanager_4',['GetResidencyManager',['../namespacegpgmm_1_1d3d12.html#aa899b85a6d148e56010de91a94cdde94',1,'gpgmm::d3d12']]],
   ['getresource_5',['GetResource',['../namespacegpgmm_1_1d3d12.html#afa6f63f90f81e777ddb781a3dc01c0f2',1,'gpgmm::d3d12']]],
-  ['gpcreatebuffer_6',['gpCreateBuffer',['../namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4',1,'gpgmm::vk']]],
-  ['gpcreateimage_7',['gpCreateImage',['../namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a',1,'gpgmm::vk']]],
-  ['gpcreateresourceallocator_8',['gpCreateResourceAllocator',['../namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65',1,'gpgmm::vk']]],
-  ['gpdestroybuffer_9',['gpDestroyBuffer',['../namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c',1,'gpgmm::vk']]],
-  ['gpdestroyimage_10',['gpDestroyImage',['../namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5',1,'gpgmm::vk']]],
-  ['gpdestroyresourceallocator_11',['gpDestroyResourceAllocator',['../namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006',1,'gpgmm::vk']]]
+  ['getresourceallocator_6',['GetResourceAllocator',['../namespacegpgmm_1_1d3d12.html#ab19fc06f87b1fd423bc2a58f6ef8bbaf',1,'gpgmm::d3d12']]],
+  ['gpcreatebuffer_7',['gpCreateBuffer',['../namespacegpgmm_1_1vk.html#aae143de825aff02b5d4c9b316fec88b4',1,'gpgmm::vk']]],
+  ['gpcreateimage_8',['gpCreateImage',['../namespacegpgmm_1_1vk.html#a98b4ef536593f6e7d4d1fe0248c5528a',1,'gpgmm::vk']]],
+  ['gpcreateresourceallocator_9',['gpCreateResourceAllocator',['../namespacegpgmm_1_1vk.html#a714d3c0ca5f86caa30020a08646ceb65',1,'gpgmm::vk']]],
+  ['gpdestroybuffer_10',['gpDestroyBuffer',['../namespacegpgmm_1_1vk.html#a87035ca264fc0e367910c896fb73045c',1,'gpgmm::vk']]],
+  ['gpdestroyimage_11',['gpDestroyImage',['../namespacegpgmm_1_1vk.html#a8e0bd9e3e29e8f43ca886e2d7baf1ff5',1,'gpgmm::vk']]],
+  ['gpdestroyresourceallocator_12',['gpDestroyResourceAllocator',['../namespacegpgmm_1_1vk.html#acc98f4568b4de02bbd65f32c6adc7006',1,'gpgmm::vk']]]
 ];
