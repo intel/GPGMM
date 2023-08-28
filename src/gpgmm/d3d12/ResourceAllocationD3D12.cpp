@@ -197,4 +197,19 @@ namespace gpgmm::d3d12 {
         return DebugObject::SetDebugName(Name);
     }
 
+    HRESULT ResourceAllocation::GetResidencyManager(
+        IResidencyManager** ppResidencyManagerOut) const {
+        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        ASSERT(residencyHeap != nullptr);
+
+        ComPtr<IResidencyManager> residencyManager(residencyHeap->GetResidencyManager());
+        if (ppResidencyManagerOut != nullptr) {
+            *ppResidencyManagerOut = residencyManager.Detach();
+        } else {
+            return S_FALSE;
+        }
+
+        return S_OK;
+    }
+
 }  // namespace gpgmm::d3d12
