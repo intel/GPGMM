@@ -43,7 +43,7 @@ namespace gpgmm::d3d12 {
             ComPtr<ID3D12Resource> committedResource;
             if (SUCCEEDED(pageable.As(&committedResource))) {
                 GPGMM_RETURN_IF_FAILED(committedResource->GetHeapProperties(nullptr, heapFlags),
-                                       GetDevice(committedResource.Get()));
+                                       GetDevice(committedResource.Get()).Get());
                 return S_OK;
             }
 
@@ -188,17 +188,17 @@ namespace gpgmm::d3d12 {
             // residency cache.
             if (heap->GetInfo().Status != RESIDENCY_HEAP_STATUS_UNKNOWN) {
                 GPGMM_RETURN_IF_FAILED(residencyManager->InsertHeap(heap.get()),
-                                       GetDevice(pPageable));
+                                       GetDevice(pPageable).Get());
             } else {
                 if (newDescriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_RESIDENT) {
-                    GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable));
-                    GPGMM_RETURN_IF_FAILED(heap->Unlock(), GetDevice(pPageable));
+                    GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable).Get());
+                    GPGMM_RETURN_IF_FAILED(heap->Unlock(), GetDevice(pPageable).Get());
                     ASSERT(heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT);
                 }
             }
 
             if (descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_LOCKED) {
-                GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable));
+                GPGMM_RETURN_IF_FAILED(heap->Lock(), GetDevice(pPageable).Get());
             }
 
         } else {
@@ -217,7 +217,8 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(newDescriptor.DebugName), GetDevice(pPageable));
+        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(newDescriptor.DebugName),
+                               GetDevice(pPageable).Get());
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), newDescriptor);
 
         DebugLog(MessageId::kObjectCreated, heap.get())
@@ -283,7 +284,7 @@ namespace gpgmm::d3d12 {
 
         ComPtr<ID3D12Pageable> pageable;
         GPGMM_RETURN_IF_FAILED(createHeapFn(pCreateHeapContext, &pageable),
-                               GetDevice(pageable.Get()));
+                               GetDevice(pageable.Get()).Get());
 
         return CreateResidencyHeap(descriptor, pResidencyManager, pageable.Get(),
                                    ppResidencyHeapOut);

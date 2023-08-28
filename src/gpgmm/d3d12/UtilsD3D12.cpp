@@ -14,6 +14,7 @@
 
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
+#include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/utils/Math.h"
 
 namespace gpgmm::d3d12 {
@@ -466,13 +467,16 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    ID3D12Device* GetDevice(ID3D12DeviceChild* pDeviceChild) {
+    ComPtr<ID3D12Device> GetDevice(ID3D12DeviceChild* pDeviceChild) {
         if (pDeviceChild == nullptr) {
             return {};
         }
-        ID3D12Device* pDevice = nullptr;
-        pDeviceChild->GetDevice(IID_PPV_ARGS(&pDevice));
-        return pDevice;
+        // ID3D12DeviceChild::GetDevice will AddRef the underlying device so return
+        // a COM pointer to ensure the caller must release it once finished.
+        ComPtr<ID3D12Device> device;
+        HRESULT hr = pDeviceChild->GetDevice(IID_PPV_ARGS(&device));
+        ASSERT(SUCCEEDED(hr));
+        return device;
     }
 
     bool IsTexture(const D3D12_RESOURCE_DESC& resourceDescriptor) {

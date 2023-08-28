@@ -29,7 +29,7 @@ namespace gpgmm::d3d12 {
     HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name);
     DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment(D3D12_MEMORY_POOL memoryPool, bool isUMA);
     const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP heapSegment, bool isUMA);
-    ID3D12Device* GetDevice(ID3D12DeviceChild* pDeviceChild);
+    ComPtr<ID3D12Device> GetDevice(ID3D12DeviceChild* pDeviceChild);
     bool IsTexture(const D3D12_RESOURCE_DESC& resourceDescriptor);
     bool IsBuffer(const D3D12_RESOURCE_DESC& resourceDescriptor);
 
