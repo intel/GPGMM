@@ -497,6 +497,9 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
                                                  &residencyManager));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
+
+        // Both the resource allocator and |residencyManager| have ownership.
+        EXPECT_EQ(GetRefCount(residencyManager.Get()), 2);
     }
 
     // Create allocator with residency, seperately, but no adapter should fail.
@@ -521,7 +524,59 @@ TEST_F(D3D12ResidencyManagerTests, CreateResidencyManager) {
                                                  &resourceAllocator));
         EXPECT_NE(resourceAllocator, nullptr);
         EXPECT_NE(residencyManager, nullptr);
+
+        // Both the resource allocator and |residencyManager| have ownership.
+        EXPECT_EQ(GetRefCount(residencyManager.Get()), 2);
     }
+}
+
+// Verify getting the residency manager from the allocation doesn't destroy it.
+TEST_F(D3D12ResidencyManagerTests, GetResidencyManager) {
+    ComPtr<IResidencyManager> residencyManager;
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), &resourceAllocator,
+                                             &residencyManager));
+
+    // Resource allocator must have ownership of the |residencyManager| object.
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 2);
+
+    ComPtr<IResourceAllocation> allocationWithResidency;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource({}, CreateBasicBufferDesc(1),
+                                                       D3D12_RESOURCE_STATE_COMMON, nullptr,
+                                                       &allocationWithResidency));
+
+    // Each allocation must have ownership of the |residencyManager| object.
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 3);
+
+    // Ownership must remain unchanged if no residency manager pointer was specified.
+    EXPECT_SUCCEEDED(allocationWithResidency->GetResidencyManager(nullptr));
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 3);
+
+    ComPtr<IResidencyManager> residencyManagerAgain;
+    EXPECT_SUCCEEDED(
+        allocationWithResidency->GetResidencyManager(residencyManagerAgain.GetAddressOf()));
+
+    // Creating a pointer to residency manager must claim ownership.
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 4);
+
+    // Use the resource manager object from the new pointer.
+    EXPECT_SUCCEEDED(residencyManagerAgain->LockHeap(allocationWithResidency->GetMemory()));
+    EXPECT_SUCCEEDED(residencyManagerAgain->UnlockHeap(allocationWithResidency->GetMemory()));
+
+    // Getting a NULL pointer to a residency manager cannot claim ownership.
+    EXPECT_SUCCEEDED(allocationWithResidency->GetResidencyManager(nullptr));
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 4);
+
+    // Release the allocator (and allocation), relinquishing ownership.
+    allocationWithResidency = nullptr;
+    resourceAllocator = nullptr;
+
+    EXPECT_EQ(GetRefCount(residencyManager.Get()), 2);
+
+    // Releasing the residency manager cannot destroy the |residencyManager| object.
+    residencyManager = nullptr;
+    EXPECT_EQ(GetRefCount(residencyManagerAgain.Get()), 1);
 }
 
 // Verify the residency manager will not increment the device refcount upon creation.

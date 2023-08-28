@@ -761,6 +761,14 @@ namespace gpgmm::d3d12 {
         \return A pointer to the IResidencyHeap used by this resource allocation.
         */
         virtual IResidencyHeap* GetMemory() const = 0;
+
+        /** \brief Get the residency manager that manages the memory for this resource allocation.
+
+        @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
+        residency manager. Pass NULL to test if the residency manager exists.
+        \return S_OK when exists else S_FALSE if NULL was passed to test.
+        */
+        virtual HRESULT GetResidencyManager(IResidencyManager * *ppResidencyManagerOut) const = 0;
     };
 
     /** \enum RESOURCE_ALLOCATOR_FLAGS
