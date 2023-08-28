@@ -241,7 +241,7 @@ namespace gpgmm::d3d12 {
 
         // If the heap was never locked, nothing further should be done.
         if (!heap->IsResidencyLocked()) {
-            return S_FALSE;
+            return S_OK;
         }
 
         if (heap->IsInList()) {

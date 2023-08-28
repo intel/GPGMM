@@ -74,8 +74,8 @@ namespace gpgmm::d3d12 {
         // If the developer forgots to unlock the heap, do so now so the heap can be made eligable
         // for eviction.
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        if (residencyHeap->GetResidencyManager() != nullptr) {
-            residencyHeap->Unlock();
+        if (residencyHeap->GetResidencyManager() != nullptr &&
+            GPGMM_UNSUCCESSFUL(residencyHeap->Unlock())) {
             WarnLog(MessageId::kPerformanceWarning, this)
                 << "Destroying a locked resource allocation is allowed but discouraged. Please "
                    "call UnlockHeap the same number of times as LockHeap before releasing the "
