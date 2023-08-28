@@ -72,6 +72,7 @@ namespace gpgmm::d3d12 {
 
         // IResidencyHeap interface
         RESIDENCY_HEAP_INFO GetInfo() const override;
+        HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -162,7 +163,6 @@ namespace gpgmm::d3d12 {
         uint64_t GetOffsetFromResource() const override;
         RESOURCE_ALLOCATION_INFO GetInfo() const override;
         IResidencyHeap* GetMemory() const override;
-        HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
         HRESULT GetResourceAllocator(IResourceAllocator** ppResourceAllocatorOut) const override;
 
         // IUnknown interface

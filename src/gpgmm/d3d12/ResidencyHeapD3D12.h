@@ -49,6 +49,7 @@ namespace gpgmm::d3d12 {
 
         // IResidencyHeap interface
         RESIDENCY_HEAP_INFO GetInfo() const override;
+        HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
 
         // IUnknown interface
         HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
@@ -58,8 +59,6 @@ namespace gpgmm::d3d12 {
         // IDebugObject interface
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
-
-        IResidencyManager* GetResidencyManager() const;
 
         HRESULT Lock();
         HRESULT Unlock();

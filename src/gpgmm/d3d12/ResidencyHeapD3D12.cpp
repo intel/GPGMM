@@ -391,8 +391,15 @@ namespace gpgmm::d3d12 {
         return mResidencyManager->UnlockHeap(this);
     }
 
-    IResidencyManager* ResidencyHeap::GetResidencyManager() const {
-        return mResidencyManager.Get();
+    HRESULT ResidencyHeap::GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const {
+        ComPtr<IResidencyManager> residencyManager(mResidencyManager.Get());
+        GPGMM_RETURN_IF_NULLPTR(residencyManager.Get());
+        if (ppResidencyManagerOut != nullptr) {
+            *ppResidencyManagerOut = residencyManager.Detach();
+        } else {
+            return S_FALSE;
+        }
+        return S_OK;
     }
 
 }  // namespace gpgmm::d3d12
