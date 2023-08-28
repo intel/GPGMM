@@ -24,6 +24,7 @@
 #include "gpgmm/d3d12/ResidencyHeapD3D12.h"
 #include "gpgmm/d3d12/ResidencyListD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
+#include "gpgmm/d3d12/ResourceAllocatorD3D12.h"
 #include "gpgmm/d3d12/UtilsD3D12.h"
 
 #include <utility>
@@ -43,6 +44,7 @@ namespace gpgmm::d3d12 {
     }  // namespace
 
     ResourceAllocation::ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
+                                           ResourceAllocator* resourceAllocator,
                                            MemoryAllocatorBase* allocator,
                                            ResidencyHeap* resourceHeap,
                                            MemoryBlock* block,
@@ -53,6 +55,7 @@ namespace gpgmm::d3d12 {
                                static_cast<AllocationMethod>(desc.Type),
                                block,
                                desc.SizeInBytes),
+          mResourceAllocator(std::move(resourceAllocator)),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
         ASSERT(resourceHeap != nullptr);
@@ -205,6 +208,18 @@ namespace gpgmm::d3d12 {
         ComPtr<IResidencyManager> residencyManager(residencyHeap->GetResidencyManager());
         if (ppResidencyManagerOut != nullptr) {
             *ppResidencyManagerOut = residencyManager.Detach();
+        } else {
+            return S_FALSE;
+        }
+
+        return S_OK;
+    }
+
+    HRESULT ResourceAllocation::GetResourceAllocator(
+        IResourceAllocator** ppResourceAllocatorOut) const {
+        ComPtr<IResourceAllocator> resourceAllocator(mResourceAllocator);
+        if (ppResourceAllocatorOut != nullptr) {
+            *ppResourceAllocatorOut = resourceAllocator.Detach();
         } else {
             return S_FALSE;
         }

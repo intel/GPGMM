@@ -691,6 +691,8 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_TYPE Type;
     };
 
+    GPGMM_INTERFACE IResourceAllocator;
+
     /** \brief ResourceAllocation is an allocation that contains a ID3D12Resource.
 
     It can represent a allocation using a resource in one of three ways: 1) ID3D12Resource "placed"
@@ -769,6 +771,14 @@ namespace gpgmm::d3d12 {
         \return S_OK when exists else S_FALSE if NULL was passed to test.
         */
         virtual HRESULT GetResidencyManager(IResidencyManager * *ppResidencyManagerOut) const = 0;
+
+        /** \brief Get the resource allocator that created the resource for this allocation.
+
+        @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
+        resource allocator.
+        */
+        virtual HRESULT GetResourceAllocator(IResourceAllocator * *ppResourceAllocatorOut)
+            const = 0;
     };
 
     /** \enum RESOURCE_ALLOCATOR_FLAGS

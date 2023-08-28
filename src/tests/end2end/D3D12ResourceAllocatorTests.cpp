@@ -706,6 +706,39 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     }
 }
 
+TEST_F(D3D12ResourceAllocatorTests, GetResourceAllocator) {
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), &resourceAllocator, nullptr));
+
+    EXPECT_EQ(GetRefCount(resourceAllocator.Get()), 1);
+
+    // Retrieve the resource allocator and create a resource through it.
+    ComPtr<IResourceAllocation> allocation;
+    ASSERT_SUCCEEDED(
+        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+                                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
+
+    EXPECT_EQ(GetRefCount(resourceAllocator.Get()), 2);
+
+    ASSERT_SUCCEEDED(allocation->GetResourceAllocator(nullptr));
+
+    ComPtr<IResourceAllocator> resourceAllocatorAgain;
+    ASSERT_SUCCEEDED(allocation->GetResourceAllocator(resourceAllocatorAgain.GetAddressOf()));
+
+    ASSERT_SUCCEEDED(resourceAllocatorAgain->CreateResource(
+        {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), D3D12_RESOURCE_STATE_COMMON, nullptr,
+        nullptr));
+
+    EXPECT_EQ(GetRefCount(resourceAllocator.Get()), 3);
+
+    allocation = nullptr;
+    EXPECT_EQ(GetRefCount(resourceAllocator.Get()), 2);
+
+    resourceAllocatorAgain = nullptr;
+    EXPECT_EQ(GetRefCount(resourceAllocator.Get()), 1);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
