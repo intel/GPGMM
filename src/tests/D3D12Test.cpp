@@ -16,6 +16,7 @@
 
 #include <gpgmm_d3d12.h>
 
+#include "gpgmm/common/GPUInfo.h"
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerD3D12.h"
@@ -83,19 +84,18 @@ namespace gpgmm::d3d12 {
         ASSERT_SUCCEEDED(dxgiFactory4->EnumAdapterByLuid(adapterLUID, IID_PPV_ARGS(&mAdapter)));
         ASSERT_NE(mAdapter.Get(), nullptr);
 
-        DXGI_ADAPTER_DESC adapterDesc;
-        ASSERT_SUCCEEDED(mAdapter->GetDesc(&adapterDesc));
+        ASSERT_SUCCEEDED(mAdapter->GetDesc(&mAdapterDesc));
 
-        DebugLog() << "GPU: " << WCharToUTF8(adapterDesc.Description)
-                   << " (device: " << ToHexStr(adapterDesc.DeviceId)
-                   << ", vendor: " << ToHexStr(adapterDesc.VendorId) << ")";
+        DebugLog() << "GPU: " << WCharToUTF8(mAdapterDesc.Description)
+                   << " (device: " << ToHexStr(mAdapterDesc.DeviceId)
+                   << ", vendor: " << ToHexStr(mAdapterDesc.VendorId) << ")";
         DebugLog() << "System memory: "
-                   << GPGMM_BYTES_TO_GB(adapterDesc.SharedSystemMemory +
-                                        adapterDesc.DedicatedSystemMemory)
+                   << GPGMM_BYTES_TO_GB(mAdapterDesc.SharedSystemMemory +
+                                        mAdapterDesc.DedicatedSystemMemory)
                    << " GBs"
-                   << " (" << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedSystemMemory)
+                   << " (" << GPGMM_BYTES_TO_GB(mAdapterDesc.DedicatedSystemMemory)
                    << " dedicated) ";
-        DebugLog() << "GPU memory: " << GPGMM_BYTES_TO_GB(adapterDesc.DedicatedVideoMemory)
+        DebugLog() << "GPU memory: " << GPGMM_BYTES_TO_GB(mAdapterDesc.DedicatedVideoMemory)
                    << " GBs.";
 
         Caps* capsPtr = nullptr;
@@ -124,6 +124,10 @@ namespace gpgmm::d3d12 {
 
     void D3D12TestBase::TearDown() {
         GPGMMTestBase::TearDown();
+
+        // Check that nothing was leaked from the D3D12 device.
+        // If the test doesn't fully clean-up itself, this will trip.
+        EXPECT_REFCOUNT_EQ(mDevice.Get(), 1);
     }
 
     RESOURCE_ALLOCATOR_DESC D3D12TestBase::CreateBasicAllocatorDesc() const {
@@ -208,6 +212,11 @@ namespace gpgmm::d3d12 {
 #else
         return true;
 #endif
+    }
+
+    bool D3D12TestBase::IsAdapterMicrosoftWARP() const {
+        return mAdapterDesc.VendorId == static_cast<UINT>(GPUVendor::kMicrosoft_Vendor) &&
+               mAdapterDesc.DeviceId == static_cast<UINT>(GPUDevice::kWARP_Device);
     }
 
 }  // namespace gpgmm::d3d12

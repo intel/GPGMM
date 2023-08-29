@@ -15,6 +15,8 @@
 #ifndef SRC_GPGMM_COMMON_GPUINFO_H_
 #define SRC_GPGMM_COMMON_GPUINFO_H_
 
+#include <cstdint>
+
 namespace gpgmm {
 
     enum class GPUVendor {
@@ -24,6 +26,11 @@ namespace gpgmm {
         kIntel_Vendor = 32902,
         kNvidia_Vendor = 4318,
         kQualcomm_Vendor = 20803,
+        kMicrosoft_Vendor = 0x1414,
+    };
+
+    enum class GPUDevice {
+        kWARP_Device = 0x8c,
     };
 
 }  // namespace gpgmm
