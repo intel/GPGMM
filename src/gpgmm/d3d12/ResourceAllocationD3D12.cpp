@@ -99,8 +99,8 @@ namespace gpgmm::d3d12 {
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Type == RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
             ErrorLog(ErrorCode::kBadOperation, this)
-                << "Mapping a sub-allocation within a resource cannot use "
-                   "non-zero subresource-relative coordinates.";
+                << "Mapping a resource allocation within cannot use subresource-relative "
+                   "coordinates.";
             return GetErrorResult(ErrorCode::kBadOperation);
         }
 
@@ -138,14 +138,14 @@ namespace gpgmm::d3d12 {
         // subresource-relative coordinates.
         if (subresource > 0 && GetInfo().Type == RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN) {
             ErrorLog(ErrorCode::kBadOperation, this)
-                << "Unmapping a sub-allocation within a resource cannot use "
-                   "non-zero subresource-relative coordinates.";
+                << "Unmapping a resource allocation within cannot use subresource-relative "
+                   "coordinates.";
             return;
         }
 
         // Underlying heap cannot be evicted until the last Unmap.
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
-        if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr)) && mMappedCount.Unref()) {
+        if (mMappedCount.Unref() && SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
             residencyHeap->Unlock();
         }
 
