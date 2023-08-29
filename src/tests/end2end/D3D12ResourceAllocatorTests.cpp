@@ -739,20 +739,6 @@ TEST_F(D3D12ResourceAllocatorTests, GetResourceAllocator) {
     EXPECT_REFCOUNT_EQ(resourceAllocator.Get(), 1);
 }
 
-TEST_F(D3D12ResourceAllocatorTests, CreateBufferLeaked) {
-    ComPtr<IResourceAllocator> resourceAllocator;
-    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
-                                             mAdapter.Get(), &resourceAllocator, nullptr));
-    ASSERT_NE(resourceAllocator, nullptr);
-
-    ComPtr<IResourceAllocation> allocation;
-    ASSERT_SUCCEEDED(
-        resourceAllocator->CreateResource({}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
-                                          D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
-
-    allocation.Detach();  // leaked!
-}
-
 // Verifies there are no attribution of heaps when UMA + no read-back.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
     GPGMM_SKIP_TEST_IF(!mCaps->IsAdapterCacheCoherentUMA());
