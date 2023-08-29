@@ -64,10 +64,11 @@ namespace gpgmm {
                 &mBuddyBlockAllocator, allocationSize, request.Alignment, request.NeverAllocate,
                 [&](const auto& block) -> ResultOrError<MemoryBase*> {
                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                    MemoryAllocationBase memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
+                    std::unique_ptr<MemoryAllocationBase> memoryAllocation =
+                        mUsedPool.AcquireFromPool(memoryIndex);
 
                     // No existing, allocate new memory for the block.
-                    if (memoryAllocation == GPGMM_INVALID_ALLOCATION) {
+                    if (memoryAllocation == nullptr) {
                         MemoryAllocationRequest newRequest = request;
                         newRequest.SizeInBytes = mMemorySize;
                         newRequest.Alignment = mMemoryAlignment;
@@ -79,11 +80,11 @@ namespace gpgmm {
                             return memoryAllocationResult.GetErrorCode();
                         }
 
-                        memoryAllocation = *memoryAllocationResult.AcquireResult();
+                        memoryAllocation = memoryAllocationResult.AcquireResult();
                     }
 
-                    MemoryBase* memory = memoryAllocation.GetMemory();
-                    mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
+                    MemoryBase* memory = memoryAllocation->GetMemory();
+                    mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
                     return memory;
                 }),
@@ -117,16 +118,16 @@ namespace gpgmm {
 
         mBuddyBlockAllocator.DeallocateBlock(subAllocation->GetBlock());
 
-        MemoryAllocationBase memoryAllocation = mUsedPool.AcquireFromPool(memoryIndex);
+        std::unique_ptr<MemoryAllocationBase> memoryAllocation =
+            mUsedPool.AcquireFromPool(memoryIndex);
 
-        MemoryBase* memory = memoryAllocation.GetMemory();
+        MemoryBase* memory = memoryAllocation->GetMemory();
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
-            GetNextInChain()->DeallocateMemory(
-                std::make_unique<MemoryAllocationBase>(memoryAllocation));
+            GetNextInChain()->DeallocateMemory(std::move(memoryAllocation));
         } else {
-            mUsedPool.ReturnToPool(memoryAllocation, memoryIndex);
+            mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
         }
     }
 

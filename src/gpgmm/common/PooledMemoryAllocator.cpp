@@ -44,26 +44,26 @@ namespace gpgmm {
 
         GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
 
-        MemoryAllocationBase allocation = mPool->AcquireFromPool(kInvalidIndex);
-        if (allocation == GPGMM_INVALID_ALLOCATION) {
+        std::unique_ptr<MemoryAllocationBase> allocation = mPool->AcquireFromPool(kInvalidIndex);
+        if (allocation == nullptr) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
             memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
             std::unique_ptr<MemoryAllocationBase> allocationPtr;
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
-            allocation = *allocationPtr;
+            allocation.reset(allocationPtr.release());
         } else {
-            mStats.FreeMemoryUsage -= allocation.GetSize();
+            mStats.FreeMemoryUsage -= allocation->GetSize();
         }
 
         mStats.UsedMemoryCount++;
-        mStats.UsedMemoryUsage += allocation.GetSize();
+        mStats.UsedMemoryUsage += allocation->GetSize();
 
-        MemoryBase* memory = allocation.GetMemory();
+        MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        return std::make_unique<MemoryAllocationBase>(this, memory, allocation.GetRequestSize());
+        return std::make_unique<MemoryAllocationBase>(this, memory, allocation->GetRequestSize());
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {
@@ -80,9 +80,9 @@ namespace gpgmm {
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        mPool->ReturnToPool(
-            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()),
-            kInvalidIndex);
+        mPool->ReturnToPool(std::make_unique<MemoryAllocationBase>(GetNextInChain(), memory,
+                                                                   allocation->GetRequestSize()),
+                            kInvalidIndex);
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {

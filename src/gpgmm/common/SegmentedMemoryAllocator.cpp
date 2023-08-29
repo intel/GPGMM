@@ -132,23 +132,23 @@ namespace gpgmm {
         MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
         ASSERT(segment != nullptr);
 
-        MemoryAllocationBase allocation = segment->AcquireFromPool();
-        if (allocation == GPGMM_INVALID_ALLOCATION) {
+        std::unique_ptr<MemoryAllocationBase> allocation = segment->AcquireFromPool();
+        if (allocation == nullptr) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
             memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
 
             std::unique_ptr<MemoryAllocationBase> allocationPtr;
             GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
-            allocation = *allocationPtr;
+            allocation.reset(allocationPtr.release());
         } else {
-            mStats.FreeMemoryUsage -= allocation.GetSize();
+            mStats.FreeMemoryUsage -= allocation->GetSize();
         }
 
         mStats.UsedMemoryCount++;
-        mStats.UsedMemoryUsage += allocation.GetSize();
+        mStats.UsedMemoryUsage += allocation->GetSize();
 
-        MemoryBase* memory = allocation.GetMemory();
+        MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
         memory->SetPool(segment);
 
@@ -175,8 +175,8 @@ namespace gpgmm {
         MemoryPoolBase* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
-        static_cast<MemorySegment*>(pool)->ReturnToPool(
-            MemoryAllocationBase(GetNextInChain(), memory, allocation->GetRequestSize()));
+        static_cast<MemorySegment*>(pool)->ReturnToPool(std::make_unique<MemoryAllocationBase>(
+            GetNextInChain(), memory, allocation->GetRequestSize()));
     }
 
     uint64_t SegmentedMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
