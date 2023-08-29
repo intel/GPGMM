@@ -67,11 +67,14 @@ namespace gpgmm::d3d12 {
 
         D3D12_MESSAGE_SEVERITY GetDefaultLogLevel() const;
 
+        bool IsAdapterMicrosoftWARP() const;
+
       protected:
         ComPtr<IDXGIAdapter3> mAdapter;
         ComPtr<ID3D12Device> mDevice;
         std::unique_ptr<Caps> mCaps;
         std::string mTraceFile;
+        DXGI_ADAPTER_DESC mAdapterDesc = {};
     };
 
 }  // namespace gpgmm::d3d12

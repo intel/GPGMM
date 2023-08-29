@@ -907,6 +907,9 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithMappedResources) {
 // swaps the residency status using ExecuteCommandList: first set gets paged-in again, second set
 // gets paged-out.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
+    // Disable for WARP because the device always leaks after this test ends.
+    GPGMM_SKIP_TEST_IF(IsAdapterMicrosoftWARP());
+
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
                                             mAdapter.Get(), &residencyManager));
