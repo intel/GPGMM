@@ -62,7 +62,7 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &mBuddyBlockAllocator, allocationSize, request.Alignment, request.NeverAllocate,
-                [&](const auto& block) -> ResultOrError<MemoryBase*> {
+                [&](const auto& block) -> ResultOrError<std::unique_ptr<MemoryAllocationBase>> {
                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
                     std::unique_ptr<MemoryAllocationBase> memoryAllocation =
                         mUsedPool.AcquireFromPool(memoryIndex);
@@ -72,21 +72,14 @@ namespace gpgmm {
                         MemoryAllocationRequest newRequest = request;
                         newRequest.SizeInBytes = mMemorySize;
                         newRequest.Alignment = mMemoryAlignment;
-
-                        ResultOrError<std::unique_ptr<MemoryAllocationBase>>
-                            memoryAllocationResult =
-                                GetNextInChain()->TryAllocateMemory(newRequest);
-                        if (!memoryAllocationResult.IsSuccess()) {
-                            return memoryAllocationResult.GetErrorCode();
-                        }
-
-                        memoryAllocation = memoryAllocationResult.AcquireResult();
+                        GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(newRequest),
+                                         memoryAllocation);
                     }
 
-                    MemoryBase* memory = memoryAllocation->GetMemory();
+                    const MemoryAllocationBase buddyAllocation = *memoryAllocation;
                     mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
 
-                    return memory;
+                    return std::make_unique<MemoryAllocationBase>(buddyAllocation);
                 }),
             subAllocation);
 
