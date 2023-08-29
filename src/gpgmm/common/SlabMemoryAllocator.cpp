@@ -266,10 +266,10 @@ namespace gpgmm {
         GPGMM_TRY_ASSIGN(
             TrySubAllocateMemory(
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
-                [&](const auto& block) -> ResultOrError<MemoryBase*> {
+                [&](const auto& block) -> ResultOrError<std::unique_ptr<MemoryAllocationBase>> {
                     // Re-use memory from the free slab.
                     if (pFreeSlab->Allocation.GetMemory() != nullptr) {
-                        return pFreeSlab->Allocation.GetMemory();
+                        return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
                     }
 
                     // Or use pre-fetched memory if possible. Else, throw it away and create a new
@@ -277,14 +277,9 @@ namespace gpgmm {
                     if (mNextSlabAllocationEvent != nullptr) {
                         // Resolve the pending pre-fetched allocation.
                         mNextSlabAllocationEvent->Wait();
-                        ResultOrError<std::unique_ptr<MemoryAllocationBase>>
-                            memoryAllocationResult = mNextSlabAllocationEvent->AcquireAllocation();
-                        if (!memoryAllocationResult.IsSuccess()) {
-                            return memoryAllocationResult.GetErrorCode();
-                        }
-
-                        std::unique_ptr<MemoryAllocationBase> prefetchedSlabAllocation =
-                            memoryAllocationResult.AcquireResult();
+                        std::unique_ptr<MemoryAllocationBase> prefetchedSlabAllocation;
+                        GPGMM_TRY_ASSIGN(mNextSlabAllocationEvent->AcquireAllocation(),
+                                         prefetchedSlabAllocation);
                         mNextSlabAllocationEvent.reset();
 
                         // Assign pre-fetched memory to the slab.
@@ -292,7 +287,7 @@ namespace gpgmm {
                             prefetchedSlabAllocation->GetSize() == slabSize) {
                             pFreeSlab->Allocation = *prefetchedSlabAllocation;
                             mStats.PrefetchedMemoryMissesEliminated++;
-                            return pFreeSlab->Allocation.GetMemory();
+                            return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
                         }
 
                         if (prefetchedSlabAllocation != nullptr) {
@@ -304,7 +299,6 @@ namespace gpgmm {
                         }
 
                         mStats.PrefetchedMemoryMisses++;
-
                         mMemoryAllocator->DeallocateMemory(std::move(prefetchedSlabAllocation));
                     }
 
@@ -313,15 +307,13 @@ namespace gpgmm {
                     newSlabRequest.SizeInBytes = slabSize;
                     newSlabRequest.Alignment = mSlabAlignment;
 
-                    ResultOrError<std::unique_ptr<MemoryAllocationBase>> slabAllocationResult =
-                        mMemoryAllocator->TryAllocateMemory(newSlabRequest);
-                    if (!slabAllocationResult.IsSuccess()) {
-                        return slabAllocationResult.GetErrorCode();
-                    }
+                    std::unique_ptr<MemoryAllocationBase> slabAllocation;
+                    GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(newSlabRequest),
+                                     slabAllocation);
 
-                    pFreeSlab->Allocation = *slabAllocationResult.AcquireResult();
+                    pFreeSlab->Allocation = *slabAllocation;
 
-                    return pFreeSlab->Allocation.GetMemory();
+                    return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
                 }),
             subAllocation);
 

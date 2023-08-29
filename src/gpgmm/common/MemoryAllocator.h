@@ -227,7 +227,7 @@ namespace gpgmm {
                 return {};
             }
 
-            ResultOrError<MemoryBase*> result = GetOrCreateMemory(block);
+            ResultOrError<std::unique_ptr<MemoryAllocationBase>> result = GetOrCreateMemory(block);
             if (!result.IsSuccess()) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {
@@ -240,16 +240,17 @@ namespace gpgmm {
                 return result.GetErrorCode();
             }
 
-            MemoryBase* memory = result.AcquireResult();
-            ASSERT(memory != nullptr);
+            std::unique_ptr<MemoryAllocationBase> memoryAllocation = result.AcquireResult();
+            ASSERT(memoryAllocation->GetMemory() != nullptr);
 
-            memory->Ref();
+            memoryAllocation->GetMemory()->Ref();
 
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the
             // final sub-allocated block to created memory.
             return std::make_unique<MemoryAllocationBase>(
-                nullptr, memory, kInvalidOffset, AllocationMethod::kUndefined, block, requestSize);
+                nullptr, memoryAllocation->GetMemory(), kInvalidOffset,
+                AllocationMethod::kUndefined, block, requestSize);
         }
 
         void InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next);
