@@ -24,10 +24,10 @@ namespace gpgmm {
     LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
-    MemoryAllocationBase LIFOMemoryPool::AcquireFromPool(uint64_t indexInPool) {
+    std::unique_ptr<MemoryAllocationBase> LIFOMemoryPool::AcquireFromPool(uint64_t indexInPool) {
         ASSERT(indexInPool == kInvalidIndex);
 
-        MemoryAllocationBase allocation = {};
+        std::unique_ptr<MemoryAllocationBase> allocation;
         if (!mPool.empty()) {
             allocation = std::move(mPool.front());
             mPool.pop_front();
@@ -35,10 +35,9 @@ namespace gpgmm {
         return allocation;
     }
 
-    void LIFOMemoryPool::ReturnToPool(MemoryAllocationBase allocation, uint64_t indexInPool) {
+    void LIFOMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                      uint64_t indexInPool) {
         ASSERT(indexInPool == kInvalidIndex);
-        ASSERT(allocation.GetSize() == GetMemorySize());
-
         mPool.push_front(std::move(allocation));
     }
 

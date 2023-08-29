@@ -42,7 +42,7 @@ TEST_F(LIFOMemoryPoolTests, SingleAllocation) {
     EXPECT_EQ(pool.GetPoolSize() * pool.GetMemorySize(), 0u);
 
     pool.ReturnToPool(
-        *allocator.TryAllocateMemoryForTesting(CreateBasicRequest(kDefaultMemorySize)));
+        allocator.TryAllocateMemoryForTesting(CreateBasicRequest(kDefaultMemorySize)));
     EXPECT_EQ(pool.GetPoolSize() * pool.GetMemorySize(), kDefaultMemorySize);
     EXPECT_EQ(pool.GetPoolSize(), 1u);
 
@@ -68,7 +68,7 @@ TEST_F(LIFOMemoryPoolTests, MultipleAllocations) {
     constexpr uint64_t kPoolSize = 64;
     while (pool.GetPoolSize() < kPoolSize) {
         pool.ReturnToPool(
-            *allocator.TryAllocateMemoryForTesting(CreateBasicRequest(kDefaultMemorySize)));
+            allocator.TryAllocateMemoryForTesting(CreateBasicRequest(kDefaultMemorySize)));
     }
 
     EXPECT_EQ(pool.GetPoolSize() * pool.GetMemorySize(), kDefaultMemorySize * kPoolSize);

@@ -31,11 +31,12 @@ namespace gpgmm {
 
         // Retrieves a memory allocation from the pool using an optional index.
         // Use kInvalidIndex to specify |this| pool is not indexed.
-        virtual MemoryAllocationBase AcquireFromPool(uint64_t indexInPool) = 0;
+        virtual std::unique_ptr<MemoryAllocationBase> AcquireFromPool(uint64_t indexInPool) = 0;
 
         // Returns a memory allocation back to the pool using an optional index.
         // Use kInvalidIndex to specify |this| pool is not indexed.
-        virtual void ReturnToPool(MemoryAllocationBase allocation, uint64_t indexInPool) = 0;
+        virtual void ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                  uint64_t indexInPool) = 0;
 
         // Deallocate or shrink the pool.
         virtual uint64_t ReleasePool(uint64_t bytesToRelease) = 0;
@@ -53,9 +54,8 @@ namespace gpgmm {
             uint64_t totalBytesReleased = 0;
             uint64_t lastIndex = 0;
             for (auto& allocation : pool) {
-                totalBytesReleased += allocation.GetSize();
-                allocation.GetAllocator()->DeallocateMemory(
-                    std::make_unique<MemoryAllocationBase>(allocation));
+                totalBytesReleased += allocation->GetSize();
+                allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
                 lastIndex++;
                 if (totalBytesReleased >= bytesToRelease) {
                     break;
