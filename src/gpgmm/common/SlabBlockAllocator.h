@@ -47,7 +47,8 @@ namespace gpgmm {
         void ReleaseBlocks();
 
         // BlockAllocator interface
-        MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) override;
+        ResultOrError<MemoryBlock*> TryAllocateBlock(uint64_t requestSize,
+                                                     uint64_t alignment) override;
         void DeallocateBlock(MemoryBlock* block) override;
 
         uint64_t GetBlockCount() const;

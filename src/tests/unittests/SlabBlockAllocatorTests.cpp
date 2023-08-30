@@ -21,11 +21,28 @@
 
 using namespace gpgmm;
 
+class DummySlabBlockAllocator {
+  public:
+    DummySlabBlockAllocator(uint64_t blockCount, uint64_t blockSize)
+        : mAllocator(blockCount, blockSize) {
+    }
+
+    MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment = 1) {
+        return mAllocator.TryAllocateBlock(requestSize, alignment).AcquireResult();
+    }
+
+    void DeallocateBlock(MemoryBlock* block) {
+        mAllocator.DeallocateBlock(block);
+    }
+
+    SlabBlockAllocator mAllocator;
+};
+
 // Verify a single allocation in a slab.
 TEST(SlabBlockAllocatorTests, SingleBlock) {
     constexpr uint64_t blockSize = 32;
     constexpr uint64_t slabSize = 128;
-    SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
+    DummySlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     // Check that we cannot allocate a oversized block.
     EXPECT_EQ(allocator.TryAllocateBlock(slabSize * 2), nullptr);
@@ -45,7 +62,7 @@ TEST(SlabBlockAllocatorTests, SingleBlock) {
 TEST(SlabBlockAllocatorTests, SingleBlockAligned) {
     constexpr uint64_t blockSize = 32;
     constexpr uint64_t slabSize = 128;
-    SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
+    DummySlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     // Check that we cannot allocate a misaligned block.
     EXPECT_EQ(allocator.TryAllocateBlock(blockSize, 64u), nullptr);
@@ -62,7 +79,7 @@ TEST(SlabBlockAllocatorTests, MultipleBlocks) {
     // Fill entire slab in the allocator.
     constexpr uint64_t blockSize = 32;
     constexpr uint64_t slabSize = 128;
-    SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
+    DummySlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     std::unordered_set<MemoryBlock*> blocks = {};
     for (uint64_t blockIdx = 0; blockIdx < slabSize / blockSize; blockIdx++) {
@@ -88,7 +105,7 @@ TEST(SlabBlockAllocatorTests, MultipleBlocksVarious) {
     // Fill entire slab in the allocator.
     constexpr uint64_t blockSize = 32;
     constexpr uint64_t slabSize = 128;
-    SlabBlockAllocator allocator(slabSize / blockSize, blockSize);
+    DummySlabBlockAllocator allocator(slabSize / blockSize, blockSize);
 
     std::unordered_set<MemoryBlock*> blocks = {};
 

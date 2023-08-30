@@ -15,6 +15,7 @@
 #ifndef SRC_GPGMM_COMMON_BLOCKALLOCATOR_H_
 #define SRC_GPGMM_COMMON_BLOCKALLOCATOR_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/common/MemoryBlock.h"
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/NonCopyable.h"
@@ -26,7 +27,8 @@ namespace gpgmm {
       public:
         ~BlockAllocator() override = default;
 
-        virtual MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment) = 0;
+        virtual ResultOrError<MemoryBlock*> TryAllocateBlock(uint64_t requestSize,
+                                                             uint64_t alignment) = 0;
         virtual void DeallocateBlock(MemoryBlock* block) = 0;
     };
 

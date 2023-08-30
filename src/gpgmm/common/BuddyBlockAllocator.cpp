@@ -144,10 +144,11 @@ namespace gpgmm {
         }
     }
 
-    MemoryBlock* BuddyBlockAllocator::TryAllocateBlock(uint64_t requestSize, uint64_t alignment) {
+    ResultOrError<MemoryBlock*> BuddyBlockAllocator::TryAllocateBlock(uint64_t requestSize,
+                                                                      uint64_t alignment) {
         // Request cannot exceed max block size.
         if (requestSize > mMaxBlockSize) {
-            return nullptr;
+            return {};
         }
 
         // Compute the level
@@ -159,7 +160,7 @@ namespace gpgmm {
 
         // Error when no free blocks exist (allocator is full)
         if (currBlockLevel == kInvalidOffset) {
-            return nullptr;
+            return {};
         }
 
         // Split free blocks level-by-level.

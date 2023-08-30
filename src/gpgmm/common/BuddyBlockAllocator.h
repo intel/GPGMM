@@ -42,7 +42,8 @@ namespace gpgmm {
         ~BuddyBlockAllocator() override;
 
         // BlockAllocator interface
-        MemoryBlock* TryAllocateBlock(uint64_t requestSize, uint64_t alignment) override;
+        ResultOrError<MemoryBlock*> TryAllocateBlock(uint64_t requestSize,
+                                                     uint64_t alignment) override;
         void DeallocateBlock(MemoryBlock* block) override;
 
         // For testing purposes only.
