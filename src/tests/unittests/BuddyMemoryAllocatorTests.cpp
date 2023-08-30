@@ -52,7 +52,7 @@ TEST_F(BuddyMemoryAllocatorTests, SingleHeap) {
     //
     constexpr uint64_t maxBlockSize = kDefaultMemorySize;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     // Cannot allocate greater than heap size.
     {
@@ -95,7 +95,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleHeaps) {
     //
     constexpr uint64_t maxBlockSize = 256;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     // Cannot allocate greater than heap size.
     {
@@ -157,7 +157,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultipleSplitHeaps) {
     //
     constexpr uint64_t maxBlockSize = 256;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     // Allocate two 64 byte sub-allocations.
     std::unique_ptr<MemoryAllocationBase> allocation1 =
@@ -220,7 +220,7 @@ TEST_F(BuddyMemoryAllocatorTests, MultiplSplitHeapsVariableSizes) {
     //
     constexpr uint64_t maxBlockSize = 512;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     // Allocate two 64-byte allocations.
     std::unique_ptr<MemoryAllocationBase> allocation1 =
@@ -311,7 +311,7 @@ TEST_F(BuddyMemoryAllocatorTests, SameSizeVariousAlignment) {
     //
     constexpr uint64_t maxBlockSize = 512;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     std::unique_ptr<MemoryAllocationBase> allocation1 =
         allocator.TryAllocateMemoryForTesting(CreateBasicRequest(64, 128));
@@ -385,7 +385,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
     //
     constexpr uint64_t maxBlockSize = 512;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     constexpr uint64_t alignment = 64;
 
@@ -448,7 +448,7 @@ TEST_F(BuddyMemoryAllocatorTests, VariousSizeSameAlignment) {
 TEST_F(BuddyMemoryAllocatorTests, AllocationOverflow) {
     constexpr uint64_t maxBlockSize = 512;
     BuddyMemoryAllocator allocator(maxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     constexpr uint64_t largeBlock = (1ull << 63) + 1;
     std::unique_ptr<MemoryAllocationBase> invalidAllocation = allocator.TryAllocateMemoryForTesting(
@@ -460,8 +460,8 @@ TEST_F(BuddyMemoryAllocatorTests, AllocationOverflow) {
 TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        kDefaultMemorySize, kDefaultMemoryAlignment, std::make_unique<DummyMemoryAllocator>());
+    ScopedRef<MemoryAllocatorBase> poolAllocator(new PooledMemoryAllocator(
+        kDefaultMemorySize, kDefaultMemoryAlignment, new DummyMemoryAllocator));
 
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
@@ -521,8 +521,8 @@ TEST_F(BuddyMemoryAllocatorTests, ReuseFreedHeaps) {
 TEST_F(BuddyMemoryAllocatorTests, DestroyHeaps) {
     constexpr uint64_t kMaxBlockSize = 4096;
 
-    std::unique_ptr<PooledMemoryAllocator> poolAllocator = std::make_unique<PooledMemoryAllocator>(
-        kDefaultMemorySize, kDefaultMemoryAlignment, std::make_unique<DummyMemoryAllocator>());
+    ScopedRef<MemoryAllocatorBase> poolAllocator(new PooledMemoryAllocator(
+        kDefaultMemorySize, kDefaultMemoryAlignment, new DummyMemoryAllocator));
     BuddyMemoryAllocator allocator(kMaxBlockSize, kDefaultMemorySize, kDefaultMemoryAlignment,
                                    std::move(poolAllocator));
 

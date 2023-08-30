@@ -30,7 +30,7 @@ class TestMemoryAllocator final : public DummyMemoryAllocator {
   public:
     TestMemoryAllocator() = default;
 
-    explicit TestMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> next)
+    explicit TestMemoryAllocator(ScopedRef<MemoryAllocatorBase> next)
         : DummyMemoryAllocator(std::move(next)) {
     }
 
@@ -53,28 +53,28 @@ class MemoryAllocatorTests : public testing::Test {
 };
 
 TEST_F(MemoryAllocatorTests, SingleAllocator) {
-    auto child = std::make_unique<TestMemoryAllocator>();
-    auto parent = std::make_unique<TestMemoryAllocator>(std::move(child));
+    ScopedRef<MemoryAllocatorBase> child(new TestMemoryAllocator);
+    ScopedRef<MemoryAllocatorBase> parent(new TestMemoryAllocator(std::move(child)));
 
     EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
     parent->ReleaseMemory(kReleaseAllMemory);
     EXPECT_EQ(ReleaseMemoryCount, 2u);
 
-    parent.reset();
+    parent = nullptr;
     EXPECT_EQ(DestructCount, 2u);
 }
 
 TEST_F(MemoryAllocatorTests, MultipleAllocators) {
-    auto grandChild = std::make_unique<TestMemoryAllocator>();
-    auto child = std::make_unique<TestMemoryAllocator>(std::move(grandChild));
-    auto parent = std::make_unique<TestMemoryAllocator>(std::move(child));
+    ScopedRef<MemoryAllocatorBase> grandChild(new TestMemoryAllocator);
+    ScopedRef<MemoryAllocatorBase> child(new TestMemoryAllocator(std::move(grandChild)));
+    ScopedRef<MemoryAllocatorBase> parent(new TestMemoryAllocator(std::move(child)));
 
     EXPECT_TRUE(parent->GetNextInChain() != nullptr);
 
     parent->ReleaseMemory(kReleaseAllMemory);
     EXPECT_EQ(ReleaseMemoryCount, 3u);
 
-    parent.reset();
+    parent = nullptr;
     EXPECT_EQ(DestructCount, 3u);
 }

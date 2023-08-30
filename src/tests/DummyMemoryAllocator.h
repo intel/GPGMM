@@ -31,7 +31,7 @@ namespace gpgmm {
       public:
         DummyMemoryAllocator() = default;
 
-        explicit DummyMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> next)
+        explicit DummyMemoryAllocator(ScopedRef<MemoryAllocatorBase> next)
             : MemoryAllocatorBase(std::move(next)) {
         }
 

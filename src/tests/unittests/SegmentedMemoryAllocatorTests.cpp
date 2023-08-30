@@ -33,8 +33,7 @@ MemoryAllocationRequest CreateBasicRequest(uint64_t size, uint64_t alignment) {
 }
 
 TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
-                                       kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -51,8 +50,7 @@ TEST(SegmentedMemoryAllocatorTests, SingleHeap) {
 }
 
 TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
-                                       kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocationBase> firstAllocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -78,8 +76,7 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeaps) {
 }
 
 TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
-                                       kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kDefaultMemoryAlignment);
 
     // Append the 1st and 3rd segment, in sequence.
     uint64_t firstMemorySize = kDefaultMemorySize / 2;
@@ -161,8 +158,7 @@ TEST(SegmentedMemoryAllocatorTests, MultipleHeapsVariousSizes) {
 }
 
 TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
-                                       kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kDefaultMemoryAlignment);
     {
         std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
             CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -187,8 +183,7 @@ TEST(SegmentedMemoryAllocatorTests, ReuseFreedHeaps) {
 }
 
 TEST(SegmentedMemoryAllocatorTests, GetInfo) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(),
-                                       kDefaultMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kDefaultMemoryAlignment);
 
     std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));

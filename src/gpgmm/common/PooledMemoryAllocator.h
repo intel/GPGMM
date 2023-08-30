@@ -26,7 +26,7 @@ namespace gpgmm {
       public:
         PooledMemoryAllocator(uint64_t memorySize,
                               uint64_t memoryAlignment,
-                              std::unique_ptr<MemoryAllocatorBase> memoryAllocator);
+                              ScopedRef<MemoryAllocatorBase> memoryAllocator);
         ~PooledMemoryAllocator() override;
 
         // MemoryAllocatorBase interface

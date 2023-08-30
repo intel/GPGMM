@@ -34,7 +34,7 @@ namespace gpgmm {
     // variable-size memory blocks.
     class SegmentedMemoryAllocator : public MemoryAllocatorBase {
       public:
-        SegmentedMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
+        SegmentedMemoryAllocator(ScopedRef<MemoryAllocatorBase> memoryAllocator,
                                  uint64_t memoryAlignment);
         ~SegmentedMemoryAllocator() override;
 

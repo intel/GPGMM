@@ -25,6 +25,7 @@
 #include "gpgmm/utils/Limits.h"
 #include "gpgmm/utils/LinkedList.h"
 #include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/Refcount.h"
 
 #include <memory>
 #include <mutex>
@@ -140,13 +141,15 @@ namespace gpgmm {
     // parent) and the next MemoryAllocatorBase (or child) form a one-way edge. This allows the
     // first-order MemoryAllocatorBase to sub-allocate from larger blocks provided by the
     // second-order MemoryAllocatorBase and so on.
-    class MemoryAllocatorBase : public ObjectBase, public LinkNode<MemoryAllocatorBase> {
+    class MemoryAllocatorBase : public ObjectBase,
+                                public LinkNode<MemoryAllocatorBase>,
+                                public RefCounted {
       public:
         // Constructs a standalone MemoryAllocatorBase.
         MemoryAllocatorBase();
 
         // Constructs a MemoryAllocatorBase that also owns a (child) allocator.
-        explicit MemoryAllocatorBase(std::unique_ptr<MemoryAllocatorBase> next);
+        explicit MemoryAllocatorBase(ScopedRef<MemoryAllocatorBase> next);
 
         virtual ~MemoryAllocatorBase() override;
 
@@ -253,14 +256,14 @@ namespace gpgmm {
                 AllocationMethod::kUndefined, block, requestSize);
         }
 
-        void InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next);
+        void InsertIntoChain(ScopedRef<MemoryAllocatorBase> next);
 
         MemoryAllocatorStats mStats = {};
 
         mutable std::mutex mMutex;
 
       private:
-        MemoryAllocatorBase* mNext = nullptr;
+        ScopedRef<MemoryAllocatorBase> mNext;
         MemoryAllocatorBase* mParent = nullptr;
     };
 

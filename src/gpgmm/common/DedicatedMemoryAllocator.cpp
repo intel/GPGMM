@@ -22,7 +22,7 @@
 namespace gpgmm {
 
     DedicatedMemoryAllocator::DedicatedMemoryAllocator(
-        std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
+        ScopedRef<MemoryAllocatorBase> memoryAllocator,
         uint64_t memoryAlignment)
         : MemoryAllocatorBase(std::move(memoryAllocator)), mMemoryAlignment(memoryAlignment) {
     }

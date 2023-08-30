@@ -344,12 +344,12 @@ namespace gpgmm::vk {
 
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> result;
         if (!isSubAllocationDisabled) {
-            allocator = mResourceAllocatorsPerType[memoryTypeIndex].get();
+            allocator = mResourceAllocatorsPerType[memoryTypeIndex].Get();
             result = allocator->TryAllocateMemory(request);
         }
 
         if (!result.IsSuccess()) {
-            allocator = mDeviceAllocatorsPerType[memoryTypeIndex].get();
+            allocator = mDeviceAllocatorsPerType[memoryTypeIndex].Get();
             result = allocator->TryAllocateMemory(request);
         }
 
@@ -384,23 +384,23 @@ namespace gpgmm::vk {
         return mCaps.get();
     }
 
-    std::unique_ptr<MemoryAllocatorBase> GpResourceAllocator_T::CreateDeviceMemoryAllocator(
+    ScopedRef<MemoryAllocatorBase> GpResourceAllocator_T::CreateDeviceMemoryAllocator(
         const GpAllocatorCreateInfo& info,
         uint64_t memoryTypeIndex,
         uint64_t memoryAlignment) {
-        std::unique_ptr<MemoryAllocatorBase> deviceMemoryAllocator =
-            std::make_unique<DeviceMemoryAllocator>(this, memoryTypeIndex);
+        ScopedRef<MemoryAllocatorBase> deviceMemoryAllocator(
+            new DeviceMemoryAllocator(this, memoryTypeIndex));
 
         if (!(info.flags & GP_ALLOCATOR_CREATE_ALWAYS_ON_DEMAND)) {
             switch (info.poolAlgorithm) {
                 case GP_ALLOCATOR_ALGORITHM_FIXED_POOL: {
-                    return std::make_unique<PooledMemoryAllocator>(
-                        info.preferredDeviceMemorySize, memoryAlignment,
-                        std::move(deviceMemoryAllocator));
+                    return new PooledMemoryAllocator(info.preferredDeviceMemorySize,
+                                                     memoryAlignment,
+                                                     std::move(deviceMemoryAllocator));
                 }
                 case GP_ALLOCATOR_ALGORITHM_SEGMENTED_POOL: {
-                    return std::make_unique<SegmentedMemoryAllocator>(
-                        std::move(deviceMemoryAllocator), memoryAlignment);
+                    return new SegmentedMemoryAllocator(std::move(deviceMemoryAllocator),
+                                                        memoryAlignment);
                 }
                 default: {
                     UNREACHABLE();
@@ -412,11 +412,11 @@ namespace gpgmm::vk {
         return deviceMemoryAllocator;
     }
 
-    std::unique_ptr<MemoryAllocatorBase> GpResourceAllocator_T::CreateResourceSubAllocator(
+    ScopedRef<MemoryAllocatorBase> GpResourceAllocator_T::CreateResourceSubAllocator(
         const GpAllocatorCreateInfo& info,
         uint64_t memoryTypeIndex,
         uint64_t memoryAlignment) {
-        std::unique_ptr<MemoryAllocatorBase> pooledOrNonPooledAllocator =
+        ScopedRef<MemoryAllocatorBase> pooledOrNonPooledAllocator =
             CreateDeviceMemoryAllocator(info, memoryTypeIndex, memoryAlignment);
 
         // TODO: Figure out how to specify this using Vulkan API.
@@ -427,14 +427,14 @@ namespace gpgmm::vk {
 
         switch (info.subAllocationAlgorithm) {
             case GP_ALLOCATOR_ALGORITHM_BUDDY_SYSTEM: {
-                return std::make_unique<BuddyMemoryAllocator>(
+                return new BuddyMemoryAllocator(
                     /*systemSize*/ kMaxDeviceMemorySize,
                     /*memorySize*/ std::max(memoryAlignment, info.preferredDeviceMemorySize),
                     /*memoryAlignment*/ memoryAlignment,
                     /*memoryAllocator*/ std::move(pooledOrNonPooledAllocator));
             }
             case GP_ALLOCATOR_ALGORITHM_SLAB: {
-                return std::make_unique<SlabCacheAllocator>(
+                return new SlabCacheAllocator(
                     /*maxSlabSize*/ kMaxDeviceMemorySize,
                     /*minSlabSize*/ std::max(memoryAlignment, info.preferredDeviceMemorySize),
                     /*slabAlignment*/ memoryAlignment,

@@ -79,7 +79,7 @@ namespace gpgmm {
     // SegmentedMemoryAllocator
 
     SegmentedMemoryAllocator::SegmentedMemoryAllocator(
-        std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
+        ScopedRef<MemoryAllocatorBase> memoryAllocator,
         uint64_t memoryAlignment)
         : MemoryAllocatorBase(std::move(memoryAllocator)), mMemoryAlignment(memoryAlignment) {
     }
