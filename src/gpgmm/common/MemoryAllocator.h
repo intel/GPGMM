@@ -225,13 +225,15 @@ namespace gpgmm {
             uint64_t alignment,
             bool neverAllocate,
             GetOrCreateMemoryFn&& GetOrCreateMemory) {
-            MemoryBlock* block = allocator->TryAllocateBlock(requestSize, alignment);
-            if (block == nullptr) {
-                return {};
+            ResultOrError<MemoryBlock*> allocatedBlockResult =
+                allocator->TryAllocateBlock(requestSize, alignment);
+            if (!allocatedBlockResult.IsSuccess()) {
+                return allocatedBlockResult.GetErrorCode();
             }
-
-            ResultOrError<std::unique_ptr<MemoryAllocationBase>> result = GetOrCreateMemory(block);
-            if (!result.IsSuccess()) {
+            MemoryBlock* block = allocatedBlockResult.AcquireResult();
+            ResultOrError<std::unique_ptr<MemoryAllocationBase>> allocatedMemoryResult =
+                GetOrCreateMemory(block);
+            if (!allocatedMemoryResult.IsSuccess()) {
                 // NeverAllocate always fails, so suppress it.
                 if (!neverAllocate) {
                     ErrorLog(ErrorCode::kAllocationFailed, this)
@@ -240,10 +242,11 @@ namespace gpgmm {
                         << std::to_string(block->Offset + block->Size) << ").";
                 }
                 allocator->DeallocateBlock(block);
-                return result.GetErrorCode();
+                return allocatedMemoryResult.GetErrorCode();
             }
 
-            std::unique_ptr<MemoryAllocationBase> memoryAllocation = result.AcquireResult();
+            std::unique_ptr<MemoryAllocationBase> memoryAllocation =
+                allocatedMemoryResult.AcquireResult();
             ASSERT(memoryAllocation->GetMemory() != nullptr);
 
             memoryAllocation->GetMemory()->Ref();
