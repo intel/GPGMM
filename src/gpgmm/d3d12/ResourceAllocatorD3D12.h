@@ -101,26 +101,24 @@ namespace gpgmm::d3d12 {
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
-            uint64_t heapAlignment);
+            const HEAP_ALLOCATION_INFO& heapInfo);
 
         ScopedRef<MemoryAllocatorBase> CreateSmallBufferAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
-            uint64_t heapAlignment,
+            const HEAP_ALLOCATION_INFO& heapInfo,
             D3D12_RESOURCE_STATES initialResourceState);
 
         ScopedRef<MemoryAllocatorBase> CreatePoolAllocator(
             RESOURCE_ALLOCATION_ALGORITHM algorithm,
-            uint64_t memorySize,
-            uint64_t memoryAlignment,
+            const HEAP_ALLOCATION_INFO& heapInfo,
             bool isAlwaysOnDemand,
             ScopedRef<MemoryAllocatorBase> underlyingAllocator);
 
         ScopedRef<MemoryAllocatorBase> CreateSubAllocator(
             RESOURCE_ALLOCATION_ALGORITHM algorithm,
-            uint64_t memorySize,
-            uint64_t memoryAlignment,
+            const HEAP_ALLOCATION_INFO& heapInfo,
             float memoryFragmentationLimit,
             float memoryGrowthFactor,
             bool isPrefetchAllowed,

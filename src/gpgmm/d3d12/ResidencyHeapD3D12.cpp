@@ -25,10 +25,6 @@
 
 namespace gpgmm::d3d12 {
 
-    // D3D12 doesn't provide a allocation info definition for non-resource heap types (eg.
-    // descriptor heaps) but the info is the otherwise the same as resource heaps.
-    using HEAP_ALLOCATION_INFO = D3D12_RESOURCE_ALLOCATION_INFO;
-
     namespace {
 
         // Returns the resource heap flags or E_INVALIDARG, when the memory type doesn't allow

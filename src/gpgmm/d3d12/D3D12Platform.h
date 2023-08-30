@@ -28,4 +28,8 @@
 
 using Microsoft::WRL::ComPtr;
 
+// D3D12 doesn't provide a allocation info definition for non-resource heap types (eg.
+// descriptor heaps) but the info is the otherwise the same as resource heaps.
+using HEAP_ALLOCATION_INFO = D3D12_RESOURCE_ALLOCATION_INFO;
+
 #endif  // SRC_GPGMM_D3D12_D3D12PLATFORM_H_

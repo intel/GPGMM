@@ -630,8 +630,17 @@ namespace gpgmm::d3d12 {
                 GetHeapFlags(resourceHeapType, IsCreateHeapNotResidentEnabled());
             const D3D12_HEAP_TYPE heapType = GetHeapType(resourceHeapType);
 
-            const uint64_t msaaHeapAlignment = GetHeapAlignment(heapFlags, true);
-            const uint64_t heapAlignment = GetHeapAlignment(heapFlags, false);
+            HEAP_ALLOCATION_INFO msaaHeapInfo = {};
+            msaaHeapInfo.Alignment = GetHeapAlignment(heapFlags, /*isMSAA*/ true);
+            msaaHeapInfo.SizeInBytes =
+                std::max(msaaHeapInfo.Alignment,
+                         AlignTo(descriptor.PreferredResourceHeapSize, msaaHeapInfo.Alignment));
+
+            HEAP_ALLOCATION_INFO heapInfo = {};
+            heapInfo.Alignment = GetHeapAlignment(heapFlags, /*isMSAA*/ false);
+            heapInfo.SizeInBytes =
+                std::max(heapInfo.Alignment,
+                         AlignTo(descriptor.PreferredResourceHeapSize, heapInfo.Alignment));
 
             D3D12_HEAP_PROPERTIES heapProperties =
                 GetHeapProperties(mDevice, heapType, mIsCustomHeapsEnabled);
@@ -641,11 +650,11 @@ namespace gpgmm::d3d12 {
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
             mResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapAlignment);
+                CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapInfo);
 
             if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
-                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
-                    descriptor, heapFlags, heapProperties, msaaHeapAlignment);
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
+                    CreateResourceAllocator(descriptor, heapFlags, heapProperties, msaaHeapInfo);
             } else {
                 mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator();
             }
@@ -655,13 +664,13 @@ namespace gpgmm::d3d12 {
             RESOURCE_ALLOCATOR_DESC dedicatedDescriptor = descriptor;
             dedicatedDescriptor.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
 
-            mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateResourceAllocator(
-                dedicatedDescriptor, heapFlags, heapProperties, heapAlignment);
+            mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
+                CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties, heapInfo);
 
             if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
                     CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties,
-                                            msaaHeapAlignment);
+                                            msaaHeapInfo);
             } else {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
                     new SentinelMemoryAllocator;
@@ -669,7 +678,7 @@ namespace gpgmm::d3d12 {
 
             if (IsBuffersAllowed(heapFlags, mResourceHeapTier)) {
                 mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
-                    CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapAlignment,
+                    CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapInfo,
                                                GetInitialResourceState(heapType));
             } else {
                 mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator;
@@ -719,8 +728,7 @@ namespace gpgmm::d3d12 {
 
     ScopedRef<MemoryAllocatorBase> ResourceAllocator::CreatePoolAllocator(
         RESOURCE_ALLOCATION_ALGORITHM algorithm,
-        uint64_t memorySize,
-        uint64_t memoryAlignment,
+        const HEAP_ALLOCATION_INFO& heapInfo,
         bool isAlwaysOnDemand,
         ScopedRef<MemoryAllocatorBase> underlyingAllocator) {
         if (isAlwaysOnDemand) {
@@ -729,12 +737,12 @@ namespace gpgmm::d3d12 {
 
         switch (algorithm) {
             case RESOURCE_ALLOCATION_ALGORITHM_FIXED_POOL: {
-                return new PooledMemoryAllocator(memorySize, memoryAlignment,
+                return new PooledMemoryAllocator(heapInfo.SizeInBytes, heapInfo.Alignment,
                                                  std::move(underlyingAllocator));
             }
             case RESOURCE_ALLOCATION_ALGORITHM_SEGMENTED_POOL: {
                 return new SegmentedMemoryAllocator(std::move(underlyingAllocator),
-                                                    memoryAlignment);
+                                                    heapInfo.Alignment);
             }
             default: {
                 UNREACHABLE();
@@ -745,8 +753,7 @@ namespace gpgmm::d3d12 {
 
     ScopedRef<MemoryAllocatorBase> ResourceAllocator::CreateSubAllocator(
         RESOURCE_ALLOCATION_ALGORITHM algorithm,
-        uint64_t memorySize,
-        uint64_t memoryAlignment,
+        const HEAP_ALLOCATION_INFO& heapInfo,
         float memoryFragmentationLimit,
         float memoryGrowthFactor,
         bool isPrefetchAllowed,
@@ -756,8 +763,8 @@ namespace gpgmm::d3d12 {
                 // System and memory size must be aligned at creation-time.
                 return new BuddyMemoryAllocator(
                     /*systemSize*/ LowerPowerOfTwo(mMaxResourceHeapSize),
-                    /*memorySize*/ UpperPowerOfTwo(memorySize),
-                    /*memoryAlignment*/ memoryAlignment,
+                    /*memorySize*/ UpperPowerOfTwo(heapInfo.SizeInBytes),
+                    /*memoryAlignment*/ heapInfo.Alignment,
                     /*memoryAllocator*/ std::move(underlyingAllocator));
             }
             case RESOURCE_ALLOCATION_ALGORITHM_SLAB: {
@@ -765,8 +772,8 @@ namespace gpgmm::d3d12 {
                 // slab allocator aligns the slab size at allocate-time.
                 return new SlabCacheAllocator(
                     /*maxSlabSize*/ LowerPowerOfTwo(mMaxResourceHeapSize),
-                    /*minSlabSize*/ memorySize,
-                    /*slabAlignment*/ memoryAlignment,
+                    /*minSlabSize*/ heapInfo.SizeInBytes,
+                    /*slabAlignment*/ heapInfo.Alignment,
                     /*slabFragmentationLimit*/ memoryFragmentationLimit,
                     /*allowSlabPrefetch*/ isPrefetchAllowed,
                     /*slabGrowthFactor*/ memoryGrowthFactor,
@@ -774,7 +781,7 @@ namespace gpgmm::d3d12 {
             }
             case RESOURCE_ALLOCATION_ALGORITHM_DEDICATED: {
                 return new DedicatedMemoryAllocator(
-                    /*memoryAllocator*/ std::move(underlyingAllocator), memoryAlignment);
+                    /*memoryAllocator*/ std::move(underlyingAllocator), heapInfo.Alignment);
             }
             default: {
                 UNREACHABLE();
@@ -787,19 +794,16 @@ namespace gpgmm::d3d12 {
         const RESOURCE_ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_HEAP_PROPERTIES& heapProperties,
-        uint64_t heapAlignment) {
+        const HEAP_ALLOCATION_INFO& heapInfo) {
         ScopedRef<MemoryAllocatorBase> resourceHeapAllocator(new ResourceHeapAllocator(
             mResidencyManager.Get(), mDevice, heapProperties, heapFlags, mIsAlwaysCreatedInBudget));
 
-        const uint64_t heapSize =
-            std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
-
         ScopedRef<MemoryAllocatorBase> pooledOrNonPooledAllocator =
-            CreatePoolAllocator(descriptor.PoolAlgorithm, heapSize, heapAlignment,
+            CreatePoolAllocator(descriptor.PoolAlgorithm, heapInfo,
                                 (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
                                 std::move(resourceHeapAllocator));
 
-        return CreateSubAllocator(descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
+        return CreateSubAllocator(descriptor.SubAllocationAlgorithm, heapInfo,
                                   descriptor.ResourceHeapFragmentationLimit,
                                   descriptor.ResourceHeapGrowthFactor,
                                   /*allowSlabPrefetch*/
@@ -811,23 +815,20 @@ namespace gpgmm::d3d12 {
         const RESOURCE_ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_HEAP_PROPERTIES& heapProperties,
-        uint64_t heapAlignment,
+        const HEAP_ALLOCATION_INFO& heapInfo,
         D3D12_RESOURCE_STATES initialResourceState) {
         ScopedRef<MemoryAllocatorBase> smallBufferOnlyAllocator(new BufferAllocator(
             this, heapProperties, heapFlags, D3D12_RESOURCE_FLAG_NONE, initialResourceState));
 
         ScopedRef<MemoryAllocatorBase> pooledOrNonPooledAllocator =
-            CreatePoolAllocator(descriptor.PoolAlgorithm, heapAlignment, heapAlignment,
+            CreatePoolAllocator(descriptor.PoolAlgorithm, heapInfo,
                                 (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
                                 std::move(smallBufferOnlyAllocator));
-
-        const uint64_t heapSize =
-            std::max(heapAlignment, AlignTo(descriptor.PreferredResourceHeapSize, heapAlignment));
 
         // Any amount of fragmentation must be allowed for small buffers since the allocation can
         // be smaller then the resource heap alignment.
         return CreateSubAllocator(
-            descriptor.SubAllocationAlgorithm, heapSize, heapAlignment,
+            descriptor.SubAllocationAlgorithm, heapInfo,
             /*memoryFragmentationLimit*/ 1.0f, descriptor.ResourceHeapGrowthFactor,
             /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
     }
