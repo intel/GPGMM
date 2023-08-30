@@ -85,6 +85,7 @@ namespace gpgmm {
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
+        std::lock_guard<std::mutex> lock(mMutex);
         const uint64_t bytesReleased = mPool->ReleasePool(bytesToRelease);
         mStats.FreeMemoryUsage -= bytesReleased;
         return bytesReleased;

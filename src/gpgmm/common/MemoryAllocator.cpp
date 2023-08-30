@@ -108,11 +108,6 @@ namespace gpgmm {
         }
 #endif
 
-        // Deletes adjacent node recursively (post-order).
-        if (mNext != nullptr) {
-            mNext = nullptr;
-        }
-
         if (IsInList()) {
             RemoveFromList();
         }
@@ -203,6 +198,7 @@ namespace gpgmm {
     }
 
     void MemoryAllocatorBase::InsertIntoChain(ScopedRef<MemoryAllocatorBase> next) {
+        std::lock_guard<std::mutex> lock(mMutex);
         ASSERT(next != nullptr);
         next->mParent = this->value();
         mNext = next;
