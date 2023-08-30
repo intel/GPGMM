@@ -71,6 +71,9 @@ namespace gpgmm::d3d12 {
                       const RESIDENCY_HEAP_DESC& descriptor,
                       bool isResidencyDisabled);
 
+        // Unknown interface
+        void DeleteThis() override;
+
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IHeap)
 

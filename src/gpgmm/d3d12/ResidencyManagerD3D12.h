@@ -84,6 +84,9 @@ namespace gpgmm::d3d12 {
                          IDXGIAdapter3* pAdapter,
                          std::unique_ptr<Caps> caps);
 
+        // Unknown interface
+        void DeleteThis() override;
+
         HRESULT EvictInternal(uint64_t bytesToEvict,
                               const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
                               uint64_t* bytesEvictedOut = nullptr);
