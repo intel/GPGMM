@@ -181,10 +181,13 @@ namespace gpgmm::d3d12 {
         ASSERT(mAdapter != nullptr);
     }
 
+    void ResidencyManager::DeleteThis() {
+        StopBudgetNotificationUpdates();
+        Unknown::DeleteThis();
+    }
+
     ResidencyManager::~ResidencyManager() {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
-        StopBudgetNotificationUpdates();
-
         if (mFlushEventBuffersOnDestruct) {
             FlushEventTraceToDisk();
         }

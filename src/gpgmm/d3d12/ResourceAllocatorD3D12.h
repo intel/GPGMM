@@ -83,6 +83,8 @@ namespace gpgmm::d3d12 {
                           ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 
+        void DeleteThis() override;
+
         template <typename CreateResourceFn>
         MaybeError TryAllocateResource(MemoryAllocatorBase* allocator,
                                        const MemoryAllocationRequest& request,

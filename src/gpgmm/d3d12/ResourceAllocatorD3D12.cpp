@@ -832,9 +832,7 @@ namespace gpgmm::d3d12 {
             /*allowSlabPrefetch*/ false, std::move(pooledOrNonPooledAllocator));
     }
 
-    ResourceAllocator::~ResourceAllocator() {
-        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
-
+    void ResourceAllocator::DeleteThis() {
         // Give the debug allocator the first chance to report allocation leaks.
         // If allocation leak exists, report then release them immediately to prevent another leak
         // check from re-reporting the leaked allocation.
@@ -870,6 +868,11 @@ namespace gpgmm::d3d12 {
 #endif
         mResidencyManager = nullptr;
 
+        Unknown::DeleteThis();
+    }
+
+    ResourceAllocator::~ResourceAllocator() {
+        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
         if (mFlushEventBuffersOnDestruct) {
             FlushEventTraceToDisk();
         }

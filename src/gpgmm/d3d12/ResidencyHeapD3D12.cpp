@@ -306,14 +306,18 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    ResidencyHeap::~ResidencyHeap() {
-        if (mResidencyManager == nullptr) {
-            return;
-        }
-
+    void ResidencyHeap::DeleteThis() {
         if (IsResidencyLocked() && GPGMM_UNSUCCESSFUL(Unlock())) {
             DebugLog(MessageId::kUnknown, this)
                 << "Heap was locked for residency while being destroyed.";
+        }
+
+        Unknown::DeleteThis();
+    }
+
+    ResidencyHeap::~ResidencyHeap() {
+        if (mResidencyManager == nullptr) {
+            return;
         }
 
         // When a heap is destroyed, it no longer resides in resident memory, so we must evict
