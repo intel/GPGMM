@@ -117,7 +117,7 @@ namespace gpgmm {
                            float slabFragmentationLimit,
                            bool allowSlabPrefetch,
                            float slabGrowthFactor,
-                           std::unique_ptr<MemoryAllocatorBase> memoryAllocator);
+                           ScopedRef<MemoryAllocatorBase> memoryAllocator);
 
         ~SlabCacheAllocator() override;
 

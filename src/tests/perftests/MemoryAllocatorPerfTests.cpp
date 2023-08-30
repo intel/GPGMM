@@ -81,7 +81,7 @@ class SingleSizeAllocationPerfTests : public MemoryAllocatorPerfTests {
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::State& state) {
     SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment, kMemoryAlignment,
                                  /*allowPrefetch*/ false, kDisableSlabGrowth,
-                                 std::make_unique<DummyMemoryAllocator>());
+                                 new DummyMemoryAllocator);
 
     // Below is effectively equivelent to STL's reserve(size=1).
     {
@@ -99,7 +99,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Warm)(benchmark::Sta
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Cold)(benchmark::State& state) {
     SlabCacheAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
                                  /*slabFragmentationLimit*/ 1, /*allowPrefetch*/ false,
-                                 kDisableSlabGrowth, std::make_unique<DummyMemoryAllocator>());
+                                 kDisableSlabGrowth, new DummyMemoryAllocator);
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
@@ -107,11 +107,10 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SlabCache_Cold)(benchmark::Sta
 }
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Slab)(benchmark::State& state) {
-    std::unique_ptr<DummyMemoryAllocator> memoryAllocator =
-        std::make_unique<DummyMemoryAllocator>();
+    ScopedRef<DummyMemoryAllocator> memoryAllocator(new DummyMemoryAllocator);
     SlabMemoryAllocator allocator(state.range(2), state.range(1), state.range(0), kMemoryAlignment,
                                   /*slabFragmentationLimit*/ 1, /*allowPrefetch*/ false,
-                                  /*slabGrowthFactor*/ 1, memoryAllocator.get());
+                                  /*slabGrowthFactor*/ 1, memoryAllocator.Get());
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
@@ -120,7 +119,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Slab)(benchmark::State& state)
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, BuddySystem)(benchmark::State& state) {
     BuddyMemoryAllocator allocator(state.range(1), state.range(0), kMemoryAlignment,
-                                   std::make_unique<DummyMemoryAllocator>());
+                                   new DummyMemoryAllocator);
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
@@ -128,7 +127,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, BuddySystem)(benchmark::State&
 }
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Standalone)(benchmark::State& state) {
-    DedicatedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(), kMemoryAlignment);
+    DedicatedMemoryAllocator allocator(new DummyMemoryAllocator, kMemoryAlignment);
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));
@@ -136,7 +135,7 @@ BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, Standalone)(benchmark::State& 
 }
 
 BENCHMARK_DEFINE_F(SingleSizeAllocationPerfTests, SegmentedPool)(benchmark::State& state) {
-    SegmentedMemoryAllocator allocator(std::make_unique<DummyMemoryAllocator>(), kMemoryAlignment);
+    SegmentedMemoryAllocator allocator(new DummyMemoryAllocator, kMemoryAlignment);
 
     for (auto _ : state) {
         SingleStep(state, &allocator, CreateBasicRequest(state.range(2)));

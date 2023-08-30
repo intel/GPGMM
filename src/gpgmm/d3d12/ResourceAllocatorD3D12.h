@@ -95,34 +95,34 @@ namespace gpgmm::d3d12 {
                                           const D3D12_CLEAR_VALUE* clearValue,
                                           ResourceAllocation** ppResourceAllocationOut);
 
-        std::unique_ptr<MemoryAllocatorBase> CreateResourceAllocator(
+        ScopedRef<MemoryAllocatorBase> CreateResourceAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment);
 
-        std::unique_ptr<MemoryAllocatorBase> CreateSmallBufferAllocator(
+        ScopedRef<MemoryAllocatorBase> CreateSmallBufferAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             uint64_t heapAlignment,
             D3D12_RESOURCE_STATES initialResourceState);
 
-        std::unique_ptr<MemoryAllocatorBase> CreatePoolAllocator(
+        ScopedRef<MemoryAllocatorBase> CreatePoolAllocator(
             RESOURCE_ALLOCATION_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             bool isAlwaysOnDemand,
-            std::unique_ptr<MemoryAllocatorBase> underlyingAllocator);
+            ScopedRef<MemoryAllocatorBase> underlyingAllocator);
 
-        std::unique_ptr<MemoryAllocatorBase> CreateSubAllocator(
+        ScopedRef<MemoryAllocatorBase> CreateSubAllocator(
             RESOURCE_ALLOCATION_ALGORITHM algorithm,
             uint64_t memorySize,
             uint64_t memoryAlignment,
             float memoryFragmentationLimit,
             float memoryGrowthFactor,
             bool isPrefetchAllowed,
-            std::unique_ptr<MemoryAllocatorBase> underlyingAllocator);
+            ScopedRef<MemoryAllocatorBase> underlyingAllocator);
 
         HRESULT CreatePlacedResource(ResidencyHeap* const resourceHeap,
                                      uint64_t resourceOffset,
@@ -176,20 +176,20 @@ namespace gpgmm::d3d12 {
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
 
-        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mDedicatedResourceAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mResourceAllocatorOfType;
 
-        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mMSAADedicatedResourceAllocatorOfType;
-        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mMSAAResourceAllocatorOfType;
 
-        std::array<std::unique_ptr<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mSmallBufferAllocatorOfType;
 
-        std::unique_ptr<ResourceAllocationTrackingAllocator> mTrackingAllocator;
+        ScopedRef<ResourceAllocationTrackingAllocator> mTrackingAllocator;
     };
 
 }  // namespace gpgmm::d3d12

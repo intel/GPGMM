@@ -90,11 +90,11 @@ namespace gpgmm {
 
     // MemoryAllocatorBase
 
-    MemoryAllocatorBase::MemoryAllocatorBase() {
+    MemoryAllocatorBase::MemoryAllocatorBase() : RefCounted(0) {
     }
 
-    MemoryAllocatorBase::MemoryAllocatorBase(std::unique_ptr<MemoryAllocatorBase> next) {
-        InsertIntoChain(std::move(next));
+    MemoryAllocatorBase::MemoryAllocatorBase(ScopedRef<MemoryAllocatorBase> next) : RefCounted(0) {
+        InsertIntoChain(next);
     }
 
     MemoryAllocatorBase::~MemoryAllocatorBase() {
@@ -110,7 +110,7 @@ namespace gpgmm {
 
         // Deletes adjacent node recursively (post-order).
         if (mNext != nullptr) {
-            SafeDelete(mNext);
+            mNext = nullptr;
         }
 
         if (IsInList()) {
@@ -195,17 +195,17 @@ namespace gpgmm {
     }
 
     MemoryAllocatorBase* MemoryAllocatorBase::GetNextInChain() const {
-        return mNext;
+        return mNext.Get();
     }
 
     MemoryAllocatorBase* MemoryAllocatorBase::GetParent() const {
         return mParent;
     }
 
-    void MemoryAllocatorBase::InsertIntoChain(std::unique_ptr<MemoryAllocatorBase> next) {
+    void MemoryAllocatorBase::InsertIntoChain(ScopedRef<MemoryAllocatorBase> next) {
         ASSERT(next != nullptr);
         next->mParent = this->value();
-        mNext = next.release();
+        mNext = next;
     }
 
 }  // namespace gpgmm

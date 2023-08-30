@@ -40,7 +40,7 @@ class PooledMemoryAllocatorTests : public testing::Test {
 
 TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
-                                    std::make_unique<DummyMemoryAllocator>());
+                                    new DummyMemoryAllocator);
 
     std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -58,7 +58,7 @@ TEST_F(PooledMemoryAllocatorTests, SingleHeap) {
 
 TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
-                                    std::make_unique<DummyMemoryAllocator>());
+                                    new DummyMemoryAllocator);
 
     std::unique_ptr<MemoryAllocationBase> firstAllocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -85,7 +85,7 @@ TEST_F(PooledMemoryAllocatorTests, MultipleHeaps) {
 
 TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
-                                    std::make_unique<DummyMemoryAllocator>());
+                                    new DummyMemoryAllocator);
     {
         std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
             CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));
@@ -111,7 +111,7 @@ TEST_F(PooledMemoryAllocatorTests, ReuseFreedHeaps) {
 
 TEST_F(PooledMemoryAllocatorTests, GetInfo) {
     PooledMemoryAllocator allocator(kDefaultMemorySize, kDefaultMemoryAlignment,
-                                    std::make_unique<DummyMemoryAllocator>());
+                                    new DummyMemoryAllocator);
 
     std::unique_ptr<MemoryAllocationBase> allocation = allocator.TryAllocateMemoryForTesting(
         CreateBasicRequest(kDefaultMemorySize, kDefaultMemoryAlignment));

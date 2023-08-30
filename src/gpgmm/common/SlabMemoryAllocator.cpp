@@ -492,7 +492,7 @@ namespace gpgmm {
                                            float slabFragmentationLimit,
                                            bool allowPrefetchSlab,
                                            float slabGrowthFactor,
-                                           std::unique_ptr<MemoryAllocatorBase> memoryAllocator)
+                                           ScopedRef<MemoryAllocatorBase> memoryAllocator)
         : MemoryAllocatorBase(std::move(memoryAllocator)),
           mMaxSlabSize(maxSlabSize),
           mMinSlabSize(minSlabSize),

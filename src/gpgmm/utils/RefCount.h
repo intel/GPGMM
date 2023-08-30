@@ -86,6 +86,11 @@ namespace gpgmm {
             return *this;
         }
 
+        ScopedRef& operator=(nullptr_t) {
+            SafeRelease(mPtr);
+            return *this;
+        }
+
         T* Get() const {
             return mPtr;
         }
@@ -120,6 +125,10 @@ namespace gpgmm {
 
         bool operator!=(const ScopedRef& other) const {
             return !operator==(other);
+        }
+
+        operator bool() const {
+            return mPtr != nullptr;
         }
 
       private:

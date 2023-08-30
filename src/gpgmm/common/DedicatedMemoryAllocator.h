@@ -25,7 +25,7 @@ namespace gpgmm {
     // memory to be tracked.
     class DedicatedMemoryAllocator final : public MemoryAllocatorBase {
       public:
-        DedicatedMemoryAllocator(std::unique_ptr<MemoryAllocatorBase> memoryAllocator,
+        DedicatedMemoryAllocator(ScopedRef<MemoryAllocatorBase> memoryAllocator,
                                  uint64_t memoryAlignment);
 
         // MemoryAllocatorBase interface
