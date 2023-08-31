@@ -852,32 +852,14 @@ namespace gpgmm::d3d12 {
 
         // Destroy allocators in the reverse order they were created so we can record delete events
         // before event tracer shutdown.
-        for (auto& allocator : mSmallBufferAllocatorOfType) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mMSAADedicatedResourceAllocatorOfType) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mMSAAResourceAllocatorOfType) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mResourceAllocatorOfType) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mDedicatedResourceAllocatorOfType) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mMSAAPooledOrNonPooledHeapAllocator) {
-            allocator = nullptr;
-        }
-
-        for (auto& allocator : mPooledOrNonPooledHeapAllocator) {
-            allocator = nullptr;
+        for (uint32_t i = 0; i < kNumOfResourceHeapTypes; i++) {
+            mSmallBufferAllocatorOfType[i] = nullptr;
+            mMSAADedicatedResourceAllocatorOfType[i] = nullptr;
+            mMSAAResourceAllocatorOfType[i] = nullptr;
+            mResourceAllocatorOfType[i] = nullptr;
+            mDedicatedResourceAllocatorOfType[i] = nullptr;
+            mMSAAPooledOrNonPooledHeapAllocator[i] = nullptr;
+            mPooledOrNonPooledHeapAllocator[i] = nullptr;
         }
 
 #if defined(GPGMM_ENABLE_DEVICE_LEAK_CHECKS)
