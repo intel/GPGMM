@@ -249,14 +249,17 @@ namespace gpgmm {
                 allocatedMemoryResult.AcquireResult();
             ASSERT(memoryAllocation->GetMemory() != nullptr);
 
+            // Increment the sub-allocation count so the sub-allocator knows when to
+            // safely deallocate the underlying memory allocation.
             memoryAllocation->GetMemory()->Ref();
 
             // Caller is be responsible in fully initializing the memory allocation.
             // This is because TrySubAllocateMemory() does not necessarily know how to map the
             // final sub-allocated block to created memory.
-            return std::make_unique<MemoryAllocationBase>(
-                nullptr, memoryAllocation->GetMemory(), kInvalidOffset,
-                AllocationMethod::kUndefined, block, requestSize);
+            memoryAllocation->SetBlock(block);
+            memoryAllocation->SetMethod(AllocationMethod::kUndefined);
+
+            return memoryAllocation;
         }
 
         void InsertIntoChain(ScopedRef<MemoryAllocatorBase> next);
