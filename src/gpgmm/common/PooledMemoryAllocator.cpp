@@ -62,7 +62,7 @@ namespace gpgmm {
         MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
-        return std::make_unique<MemoryAllocationBase>(this, memory, allocation->GetRequestSize());
+        return allocation;
     }
 
     void PooledMemoryAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {

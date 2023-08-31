@@ -138,4 +138,20 @@ namespace gpgmm {
         return GetRequestSize() != kInvalidSize && GetSize() > GetRequestSize();
     }
 
+    void MemoryAllocationBase::SetOffset(uint64_t offset) {
+        mOffset = offset;
+    }
+
+    void MemoryAllocationBase::SetMethod(AllocationMethod method) {
+        mMethod = method;
+    }
+
+    void MemoryAllocationBase::SetAllocator(MemoryAllocatorBase* allocator) {
+        mAllocator = allocator;
+    }
+
+    void MemoryAllocationBase::SetBlock(MemoryBlock* block) {
+        mBlock = block;
+    }
+
 }  // namespace gpgmm

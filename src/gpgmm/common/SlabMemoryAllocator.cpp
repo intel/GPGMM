@@ -387,9 +387,11 @@ namespace gpgmm {
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += blockInSlab->Size;
 
-        return std::make_unique<MemoryAllocationBase>(
-            this, subAllocation->GetMemory(), offsetFromMemory, AllocationMethod::kSubAllocated,
-            blockInSlab, request.SizeInBytes);
+        subAllocation->SetOffset(offsetFromMemory);
+        subAllocation->SetMethod(AllocationMethod::kSubAllocated);
+        subAllocation->SetAllocator(this);
+
+        return subAllocation;
     }
 
     void SlabMemoryAllocator::DeallocateMemory(
@@ -533,9 +535,9 @@ namespace gpgmm {
         // Hold onto the cached allocator until the last allocation gets deallocated.
         entry->Ref();
 
-        return std::make_unique<MemoryAllocationBase>(
-            this, subAllocation->GetMemory(), subAllocation->GetOffset(),
-            subAllocation->GetMethod(), subAllocation->GetBlock(), request.SizeInBytes);
+        subAllocation->SetAllocator(this);
+
+        return subAllocation;
     }
 
     void SlabCacheAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> subAllocation) {
