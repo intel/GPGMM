@@ -97,12 +97,6 @@ namespace gpgmm::d3d12 {
                                           const D3D12_CLEAR_VALUE* clearValue,
                                           ResourceAllocation** ppResourceAllocationOut);
 
-        ScopedRef<MemoryAllocatorBase> CreateResourceAllocator(
-            const RESOURCE_ALLOCATOR_DESC& descriptor,
-            D3D12_HEAP_FLAGS heapFlags,
-            const D3D12_HEAP_PROPERTIES& heapProperties,
-            const HEAP_ALLOCATION_INFO& heapInfo);
-
         ScopedRef<MemoryAllocatorBase> CreateSmallBufferAllocator(
             const RESOURCE_ALLOCATOR_DESC& descriptor,
             D3D12_HEAP_FLAGS heapFlags,
@@ -175,6 +169,11 @@ namespace gpgmm::d3d12 {
         const uint64_t mReleaseSizeInBytes;
 
         static constexpr uint64_t kNumOfResourceHeapTypes = 12u;
+
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+            mPooledOrNonPooledHeapAllocator;
+        std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
+            mMSAAPooledOrNonPooledHeapAllocator;
 
         std::array<ScopedRef<MemoryAllocatorBase>, kNumOfResourceHeapTypes>
             mDedicatedResourceAllocatorOfType;

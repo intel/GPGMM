@@ -646,31 +646,60 @@ namespace gpgmm::d3d12 {
                 GetHeapProperties(mDevice, heapType, mIsCustomHeapsEnabled);
             heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
+            if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
+                mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] = CreatePoolAllocator(
+                    descriptor.PoolAlgorithm, msaaHeapInfo,
+                    (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
+                    new ResourceHeapAllocator(mResidencyManager.Get(), mDevice, heapProperties,
+                                              heapFlags, mIsAlwaysCreatedInBudget));
+            } else {
+                mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] =
+                    new SentinelMemoryAllocator();
+            }
+
+            mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] = CreatePoolAllocator(
+                descriptor.PoolAlgorithm, heapInfo,
+                (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
+                new ResourceHeapAllocator(mResidencyManager.Get(), mDevice, heapProperties,
+                                          heapFlags, mIsAlwaysCreatedInBudget));
+
             // General-purpose allocators.
             // Used for dynamic resource allocation or when the resource size is not known at
             // compile-time.
-            mResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceAllocator(descriptor, heapFlags, heapProperties, heapInfo);
+            mResourceAllocatorOfType[resourceHeapTypeIndex] = CreateSubAllocator(
+                descriptor.SubAllocationAlgorithm, heapInfo,
+                descriptor.ResourceHeapFragmentationLimit, descriptor.ResourceHeapGrowthFactor,
+                /*allowSlabPrefetch*/
+                (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
+                mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
 
             if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
                 mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
-                    CreateResourceAllocator(descriptor, heapFlags, heapProperties, msaaHeapInfo);
+                    CreateSubAllocator(descriptor.SubAllocationAlgorithm, msaaHeapInfo,
+                                       descriptor.ResourceHeapFragmentationLimit,
+                                       descriptor.ResourceHeapGrowthFactor, /*allowSlabPrefetch*/
+                                       (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
+                                       mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
             } else {
                 mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator();
             }
 
             // Dedicated allocators are used when sub-allocation cannot but heaps could still be
             // recycled.
-            RESOURCE_ALLOCATOR_DESC dedicatedDescriptor = descriptor;
-            dedicatedDescriptor.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
-
-            mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
-                CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties, heapInfo);
+            mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex] = CreateSubAllocator(
+                RESOURCE_ALLOCATION_ALGORITHM_DEDICATED, heapInfo,
+                descriptor.ResourceHeapFragmentationLimit, descriptor.ResourceHeapGrowthFactor,
+                /*allowSlabPrefetch*/
+                (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
+                mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
 
             if (IsTexturesAllowed(heapFlags, /*isMSAA*/ true, mResourceHeapTier)) {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
-                    CreateResourceAllocator(dedicatedDescriptor, heapFlags, heapProperties,
-                                            msaaHeapInfo);
+                    CreateSubAllocator(RESOURCE_ALLOCATION_ALGORITHM_DEDICATED, msaaHeapInfo,
+                                       descriptor.ResourceHeapFragmentationLimit,
+                                       descriptor.ResourceHeapGrowthFactor, /*allowSlabPrefetch*/
+                                       (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
+                                       mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
             } else {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
                     new SentinelMemoryAllocator;
@@ -790,27 +819,6 @@ namespace gpgmm::d3d12 {
         }
     }
 
-    ScopedRef<MemoryAllocatorBase> ResourceAllocator::CreateResourceAllocator(
-        const RESOURCE_ALLOCATOR_DESC& descriptor,
-        D3D12_HEAP_FLAGS heapFlags,
-        const D3D12_HEAP_PROPERTIES& heapProperties,
-        const HEAP_ALLOCATION_INFO& heapInfo) {
-        ScopedRef<MemoryAllocatorBase> resourceHeapAllocator(new ResourceHeapAllocator(
-            mResidencyManager.Get(), mDevice, heapProperties, heapFlags, mIsAlwaysCreatedInBudget));
-
-        ScopedRef<MemoryAllocatorBase> pooledOrNonPooledAllocator =
-            CreatePoolAllocator(descriptor.PoolAlgorithm, heapInfo,
-                                (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_ON_DEMAND),
-                                std::move(resourceHeapAllocator));
-
-        return CreateSubAllocator(descriptor.SubAllocationAlgorithm, heapInfo,
-                                  descriptor.ResourceHeapFragmentationLimit,
-                                  descriptor.ResourceHeapGrowthFactor,
-                                  /*allowSlabPrefetch*/
-                                  (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
-                                  std::move(pooledOrNonPooledAllocator));
-    }
-
     ScopedRef<MemoryAllocatorBase> ResourceAllocator::CreateSmallBufferAllocator(
         const RESOURCE_ALLOCATOR_DESC& descriptor,
         D3D12_HEAP_FLAGS heapFlags,
@@ -861,6 +869,14 @@ namespace gpgmm::d3d12 {
         }
 
         for (auto& allocator : mDedicatedResourceAllocatorOfType) {
+            allocator = nullptr;
+        }
+
+        for (auto& allocator : mMSAAPooledOrNonPooledHeapAllocator) {
+            allocator = nullptr;
+        }
+
+        for (auto& allocator : mPooledOrNonPooledHeapAllocator) {
             allocator = nullptr;
         }
 
@@ -1688,16 +1704,40 @@ namespace gpgmm::d3d12 {
         // ResourceAllocator itself could call CreateCommittedResource directly.
         MemoryAllocatorStats result = mStats;
 
+        // Avoid over-counting memory usage due to shared heap allocators by counting
+        // allocator stats for resources and heaps seperately.
+        MemoryAllocatorStats resourceStats = {};
         for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
              resourceHeapTypeIndex++) {
-            result += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            resourceStats += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetStats();
 
-            result += mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
-            result += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            resourceStats +=
+                mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            resourceStats += mMSAAResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
 
-            result += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
-            result += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            resourceStats += mResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+            resourceStats += mDedicatedResourceAllocatorOfType[resourceHeapTypeIndex]->GetStats();
         }
+
+        // Small buffers must be re-counted since they create seperate heap allocators.
+        MemoryAllocatorStats heapStats = {};
+        for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
+             resourceHeapTypeIndex++) {
+            heapStats += mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]->GetStats();
+            heapStats += mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]->GetStats();
+            heapStats += mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetStats();
+        }
+
+        result.SizeCacheHits += resourceStats.SizeCacheHits;
+        result.SizeCacheMisses += resourceStats.SizeCacheMisses;
+        result.PrefetchedMemoryMisses += resourceStats.PrefetchedMemoryMisses;
+        result.PrefetchedMemoryMissesEliminated += resourceStats.PrefetchedMemoryMissesEliminated;
+        result.UsedBlockUsage += resourceStats.UsedBlockUsage;
+        result.UsedBlockCount += resourceStats.UsedBlockCount;
+
+        result.FreeMemoryUsage += heapStats.FreeMemoryUsage;
+        result.UsedMemoryUsage += heapStats.UsedMemoryUsage;
+        result.UsedMemoryCount += heapStats.UsedMemoryCount;
 
         // Dedicated allocations always have 1 block per heap so only check >1 blocks or when
         // sub-allocation is used.
