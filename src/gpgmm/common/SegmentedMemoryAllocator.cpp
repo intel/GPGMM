@@ -152,7 +152,7 @@ namespace gpgmm {
         ASSERT(memory != nullptr);
         memory->SetPool(segment);
 
-        return std::make_unique<MemoryAllocationBase>(this, memory, request.SizeInBytes);
+        return allocation;
     }
 
     void SegmentedMemoryAllocator::DeallocateMemory(

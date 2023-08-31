@@ -46,9 +46,11 @@ namespace gpgmm {
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
 
-        return std::make_unique<MemoryAllocationBase>(
-            this, allocation->GetMemory(), /*offset*/ 0, allocation->GetMethod(),
-            new MemoryBlock{0, allocation->GetSize()}, request.SizeInBytes);
+        allocation->SetOffset(0);
+        allocation->SetAllocator(this);
+        allocation->SetBlock(new MemoryBlock{0, allocation->GetSize()});
+
+        return allocation;
     }
 
     void DedicatedMemoryAllocator::DeallocateMemory(

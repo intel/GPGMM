@@ -90,9 +90,11 @@ namespace gpgmm {
         // Memory allocation offset is always memory-relative.
         const uint64_t memoryOffset = block->Offset % mMemorySize;
 
-        return std::make_unique<MemoryAllocationBase>(
-            /*allocator*/ this, subAllocation->GetMemory(), memoryOffset,
-            AllocationMethod::kSubAllocated, block, request.SizeInBytes);
+        subAllocation->SetOffset(memoryOffset);
+        subAllocation->SetMethod(AllocationMethod::kSubAllocated);
+        subAllocation->SetAllocator(this);
+
+        return subAllocation;
     }
 
     void BuddyMemoryAllocator::DeallocateMemory(
