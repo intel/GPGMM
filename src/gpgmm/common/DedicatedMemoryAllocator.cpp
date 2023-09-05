@@ -46,9 +46,7 @@ namespace gpgmm {
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += allocation->GetSize();
 
-        allocation->SetOffset(0);
         allocation->SetAllocator(this);
-        allocation->SetBlock(new MemoryBlock{0, allocation->GetSize()});
 
         return allocation;
     }
@@ -60,11 +58,9 @@ namespace gpgmm {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        MemoryBlock* block = allocation->GetBlock();
         mStats.UsedBlockCount--;
-        mStats.UsedBlockUsage -= block->Size;
+        mStats.UsedBlockUsage -= allocation->GetSize();
 
-        SafeDelete(block);
         GetNextInChain()->DeallocateMemory(std::move(allocation));
     }
 

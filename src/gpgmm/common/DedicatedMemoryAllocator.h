@@ -19,12 +19,13 @@
 
 namespace gpgmm {
 
-    // DedicatedMemoryAllocator allocates from device memory with exactly one block.
-    // DedicatedMemoryAllocator is useful in situations where whole memory objects could be reused
-    // without the need for sub-allocation. DedicatedMemoryAllocator also allows
-    // memory to be tracked.
+    // DedicatedMemoryAllocator always allocates the entire region of memory.
+    // This is useful in situations where entire memory allocations could be reused
+    // without the need for sub-allocation.
     class DedicatedMemoryAllocator final : public MemoryAllocatorBase {
       public:
+        // Constructs a dedicated allocation.
+        // The underlying |memoryAllocator| cannot be a sub-allocator.
         DedicatedMemoryAllocator(ScopedRef<MemoryAllocatorBase> memoryAllocator,
                                  uint64_t memoryAlignment);
 
