@@ -327,10 +327,12 @@ namespace gpgmm::d3d12 {
     }
 
     uint64_t ResidencyHeap::GetLastUsedFenceValue() const {
+        std::lock_guard<std::mutex> lock(mMutex);
         return mLastUsedFenceValue;
     }
 
     void ResidencyHeap::SetLastUsedFenceValue(uint64_t fenceValue) {
+        std::lock_guard<std::mutex> lock(mMutex);
         mLastUsedFenceValue = fenceValue;
     }
 
@@ -351,10 +353,12 @@ namespace gpgmm::d3d12 {
     }
 
     RESIDENCY_HEAP_INFO ResidencyHeap::GetInfo() const {
+        std::lock_guard<std::mutex> lock(mMutex);
         return {GetSize(), GetAlignment(), IsResidencyLocked(), mState};
     }
 
     HRESULT ResidencyHeap::SetDebugNameImpl(LPCWSTR name) {
+        std::lock_guard<std::mutex> lock(mMutex);
         return SetDebugObjectName(mPageable.Get(), name);
     }
 
@@ -371,6 +375,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResidencyHeap::SetResidencyStatus(RESIDENCY_HEAP_STATUS newStatus) {
+        std::lock_guard<std::mutex> lock(mMutex);
         mState = newStatus;
     }
 
