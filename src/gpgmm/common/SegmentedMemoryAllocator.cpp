@@ -137,10 +137,7 @@ namespace gpgmm {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
             memoryRequest.SizeInBytes = AlignTo(request.SizeInBytes, mMemoryAlignment);
-
-            std::unique_ptr<MemoryAllocationBase> allocationPtr;
-            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocationPtr);
-            allocation.reset(allocationPtr.release());
+            GPGMM_TRY_ASSIGN(GetNextInChain()->TryAllocateMemory(memoryRequest), allocation);
         } else {
             mStats.FreeMemoryUsage -= allocation->GetSize();
         }
