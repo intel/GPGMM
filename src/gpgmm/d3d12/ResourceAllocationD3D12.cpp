@@ -178,10 +178,6 @@ namespace gpgmm::d3d12 {
         return static_cast<ResidencyHeap*>(MemoryAllocationBase::GetMemory());
     }
 
-    void ResourceAllocation::SetDebugAllocator(MemoryAllocatorBase* allocator) {
-        mAllocator = allocator;
-    }
-
     HRESULT ResourceAllocation::SetDebugNameImpl(LPCWSTR name) {
         // D3D name is set per resource.
         if (GetDebugName() != nullptr &&
