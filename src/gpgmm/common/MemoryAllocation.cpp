@@ -16,6 +16,7 @@
 #include "gpgmm/common/MemoryAllocation.h"
 
 #include "gpgmm/common/Memory.h"
+#include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/common/MemoryBlock.h"
 #include "gpgmm/utils/Assert.h"
 
@@ -152,6 +153,11 @@ namespace gpgmm {
 
     void MemoryAllocationBase::SetBlock(MemoryBlock* block) {
         mBlock = block;
+    }
+
+    void MemoryAllocationBase::ReleaseMemory() {
+        ASSERT(mAllocator != nullptr);
+        mAllocator->DeallocateMemory(std::unique_ptr<MemoryAllocationBase>(this));
     }
 
 }  // namespace gpgmm

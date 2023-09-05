@@ -85,7 +85,7 @@ namespace gpgmm::d3d12 {
                    "resource allocation.";
         }
 
-        GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocationBase>(this));
+        ReleaseMemory();
     }
 
     ID3D12Resource* ResourceAllocation::GetResource() const {

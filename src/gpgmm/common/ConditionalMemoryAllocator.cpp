@@ -41,8 +41,9 @@ namespace gpgmm {
 
     void ConditionalMemoryAllocator::DeallocateMemory(
         std::unique_ptr<MemoryAllocationBase> allocation) {
-        // ConditionalMemoryAllocator cannot allocate memory itself, so it must not deallocate.
-        allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
+        // ConditionalMemoryAllocator cannot allocate memory itself, so it must deallocate through
+        // the allocator used to create the |allocation|.
+        allocation->ReleaseMemory();
     }
 
     MemoryAllocatorStats ConditionalMemoryAllocator::GetStats() const {

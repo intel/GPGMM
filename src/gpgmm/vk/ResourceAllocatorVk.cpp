@@ -368,8 +368,7 @@ namespace gpgmm::vk {
         if (allocation == VK_NULL_HANDLE) {
             return;
         }
-        allocation->GetAllocator()->DeallocateMemory(
-            std::unique_ptr<MemoryAllocationBase>(allocation));
+        allocation->ReleaseMemory();
     }
 
     VkDevice GpResourceAllocator_T::GetDevice() const {

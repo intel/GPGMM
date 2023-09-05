@@ -62,6 +62,9 @@ namespace gpgmm {
 
         virtual ~MemoryAllocationBase() override = default;
 
+        // Deallocates memory and destroys |this|.
+        void ReleaseMemory();
+
         MemoryAllocationBase(const MemoryAllocationBase&) = default;
         MemoryAllocationBase& operator=(const MemoryAllocationBase&) = default;
         bool operator==(const MemoryAllocationBase&) const;
