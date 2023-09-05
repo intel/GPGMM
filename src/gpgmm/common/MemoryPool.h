@@ -55,7 +55,7 @@ namespace gpgmm {
             uint64_t lastIndex = 0;
             for (auto& allocation : pool) {
                 totalBytesReleased += allocation->GetSize();
-                allocation->ReleaseMemory();
+                allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
                 lastIndex++;
                 if (totalBytesReleased >= bytesToRelease) {
                     break;

@@ -61,7 +61,8 @@ namespace gpgmm::d3d12 {
     void ResourceAllocationTrackingAllocator::ReleaseLiveAllocationsForTesting() {
         std::lock_guard<std::mutex> lock(mMutex);
         for (auto allocationEntry : mLiveAllocations) {
-            allocationEntry->GetValue().GetAllocation()->ReleaseMemory();
+            allocationEntry->GetValue().GetAllocator()->DeallocateMemory(
+                std::unique_ptr<MemoryAllocationBase>(allocationEntry->GetValue().GetAllocation()));
         }
 
         mLiveAllocations.clear();
@@ -89,7 +90,7 @@ namespace gpgmm::d3d12 {
         entry->Unref();
         ASSERT(entry->HasOneRef());
 
-        allocation->ReleaseMemory();
+        entry->GetValue().GetAllocator()->DeallocateMemory(std::move(allocation));
     }
 
 }  // namespace gpgmm::d3d12
