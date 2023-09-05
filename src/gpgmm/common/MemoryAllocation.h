@@ -99,6 +99,8 @@ namespace gpgmm {
         uint64_t mRequestSize;
 #endif
 
+        // Assigns a contiguously allocated sub-region.
+        // When the entire allocation region gets assigned, |mBlock| will be nullptr.
         MemoryBlock* mBlock;
     };
 }  // namespace gpgmm
