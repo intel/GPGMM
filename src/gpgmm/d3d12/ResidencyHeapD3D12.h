@@ -23,12 +23,17 @@
 
 #include <gpgmm_d3d12.h>
 
+#include <mutex>
+
 namespace gpgmm::d3d12 {
 
     class ResidencyManager;
 
     RESIDENCY_HEAP_FLAGS GetHeapFlags(D3D12_HEAP_FLAGS heapFlags, bool alwaysCreatedInBudget);
 
+    // Thread-safe managed heap type for performing residency operations.
+    // A ResidencyHeap wraps a ID3D12Pageable that can be temporarily or permanently made
+    // resident and can be explicitly or implicitly (through allocation) created.
     class ResidencyHeap final : public MemoryBase,
                                 public DebugObject,
                                 public LinkNode<ResidencyHeap>,
@@ -98,11 +103,15 @@ namespace gpgmm::d3d12 {
         ComPtr<IResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
-        // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
-        uint64_t mLastUsedFenceValue = 0;
         DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
         RefCounted mResidencyLock;
+
+        // Protects thread-access to the mutable members below.
+        mutable std::mutex mMutex;
         RESIDENCY_HEAP_STATUS mState;
+
+        // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
+        uint64_t mLastUsedFenceValue = 0;
     };
 }  // namespace gpgmm::d3d12
 
