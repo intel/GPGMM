@@ -70,8 +70,7 @@ namespace gpgmm::d3d12 {
         ComPtr<ResidencyHeap> resourceHeap;
         HRESULT hr = mResourceAllocator->CreateCommittedResource(
             mHeapProperties, mHeapFlags, info, &resourceDescriptor,
-            /*pOptimizedClearValue*/ nullptr, mInitialResourceState, /*resourceOut*/ nullptr,
-            &resourceHeap);
+            /*pOptimizedClearValue*/ nullptr, mInitialResourceState, &resourceHeap);
 
         if (FAILED(hr)) {
             return GetErrorCode(hr);

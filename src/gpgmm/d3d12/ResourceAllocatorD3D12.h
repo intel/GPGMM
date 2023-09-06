@@ -131,7 +131,6 @@ namespace gpgmm::d3d12 {
                                         const D3D12_RESOURCE_DESC* resourceDescriptor,
                                         const D3D12_CLEAR_VALUE* clearValue,
                                         D3D12_RESOURCE_STATES initialResourceState,
-                                        ID3D12Resource** committedResourceOut,
                                         ResidencyHeap** resourceHeapOut);
 
         HRESULT ReleaseResourceHeapsInternal(uint64_t bytesToRelease, uint64_t* pBytesReleased);

@@ -40,6 +40,14 @@ namespace gpgmm::d3d12 {
                                      public DebugObject,
                                      public IResourceAllocation {
       public:
+        static HRESULT CreateResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& descriptor,
+                                                ResourceAllocator* pResourceAllocator,
+                                                MemoryAllocatorBase* pHeapAllocator,
+                                                ResidencyHeap* pResourceHeap,
+                                                MemoryBlock* pMemoryBlock,
+                                                ComPtr<ID3D12Resource> resource,
+                                                ResourceAllocation** ppResourceAllocationOut);
+
         ~ResourceAllocation() override;
 
         // IResourceAllocation interface

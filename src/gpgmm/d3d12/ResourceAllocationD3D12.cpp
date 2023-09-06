@@ -43,6 +43,31 @@ namespace gpgmm::d3d12 {
 
     }  // namespace
 
+    // static
+    HRESULT ResourceAllocation::CreateResourceAllocation(
+        const RESOURCE_RESOURCE_ALLOCATION_DESC& descriptor,
+        ResourceAllocator* pResourceAllocator,
+        MemoryAllocatorBase* pHeapAllocator,
+        ResidencyHeap* pResourceHeap,
+        MemoryBlock* pMemoryBlock,
+        ComPtr<ID3D12Resource> resource,
+        ResourceAllocation** ppResourceAllocationOut) {
+        // If no resource was specified it must be implicitly created.
+        if (resource == nullptr) {
+            pResourceHeap->QueryInterface(IID_PPV_ARGS(&resource));
+        }
+
+        if (ppResourceAllocationOut != nullptr) {
+            *ppResourceAllocationOut =
+                new ResourceAllocation(descriptor, pResourceAllocator, pHeapAllocator,
+                                       pResourceHeap, pMemoryBlock, resource);
+        } else {
+            return S_FALSE;
+        }
+
+        return S_OK;
+    }
+
     ResourceAllocation::ResourceAllocation(const RESOURCE_RESOURCE_ALLOCATION_DESC& desc,
                                            ResourceAllocator* resourceAllocator,
                                            MemoryAllocatorBase* allocator,
@@ -58,6 +83,8 @@ namespace gpgmm::d3d12 {
           mResourceAllocator(std::move(resourceAllocator)),
           mResource(std::move(resource)),
           mOffsetFromResource(desc.OffsetFromResource) {
+        ASSERT(allocator != nullptr);
+        ASSERT(mResourceAllocator != nullptr);
         ASSERT(resourceHeap != nullptr);
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
     }
