@@ -1325,14 +1325,6 @@ namespace gpgmm::d3d12 {
 
             GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
                 allocator, subAllocWithinRequest, [&](const auto& subAllocation) -> HRESULT {
-                    // Committed resource implicitly creates a resource heap which can be
-                    // used for sub-allocation.
-                    ComPtr<ID3D12Resource> committedResource;
-                    ResidencyHeap* resourceHeap =
-                        static_cast<ResidencyHeap*>(subAllocation.GetMemory());
-                    GPGMM_RETURN_IF_FAILED(
-                        resourceHeap->QueryInterface(IID_PPV_ARGS(&committedResource)), mDevice);
-
                     RESOURCE_RESOURCE_ALLOCATION_DESC allocationDesc = {};
                     allocationDesc.SizeInBytes = newResourceDesc.Width;
                     allocationDesc.HeapOffset = kInvalidOffset;
@@ -1340,9 +1332,15 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, /*resourceAllocator*/ this, subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(committedResource));
+                    ResidencyHeap* resourceHeap =
+                        static_cast<ResidencyHeap*>(subAllocation.GetMemory());
+
+                    GPGMM_RETURN_IF_FAILED(
+                        ResourceAllocation::CreateResourceAllocation(
+                            allocationDesc, /*resourceAllocator*/ this,
+                            subAllocation.GetAllocator(), resourceHeap, subAllocation.GetBlock(),
+                            nullptr, ppResourceAllocationOut),
+                        mDevice);
 
                     return S_OK;
                 }));
@@ -1381,9 +1379,12 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, /*resourceAllocator*/ this, subAllocation.GetAllocator(),
-                        resourceHeap, subAllocation.GetBlock(), std::move(placedResource));
+                    GPGMM_RETURN_IF_FAILED(
+                        ResourceAllocation::CreateResourceAllocation(
+                            allocationDesc, /*resourceAllocator*/ this,
+                            subAllocation.GetAllocator(), resourceHeap, subAllocation.GetBlock(),
+                            std::move(placedResource), ppResourceAllocationOut),
+                        mDevice);
 
                     return S_OK;
                 }));
@@ -1425,9 +1426,12 @@ namespace gpgmm::d3d12 {
                     allocationDesc.OffsetFromResource = 0;
                     allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-                    *ppResourceAllocationOut = new ResourceAllocation(
-                        allocationDesc, /*resourceAllocator*/ this, allocation.GetAllocator(),
-                        resourceHeap, allocation.GetBlock(), std::move(placedResource));
+                    GPGMM_RETURN_IF_FAILED(
+                        ResourceAllocation::CreateResourceAllocation(
+                            allocationDesc, /*resourceAllocator*/ this, allocation.GetAllocator(),
+                            resourceHeap, allocation.GetBlock(), std::move(placedResource),
+                            ppResourceAllocationOut),
+                        mDevice);
 
                     return S_OK;
                 }));
@@ -1457,11 +1461,10 @@ namespace gpgmm::d3d12 {
             "be created and RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK was specified.",
             ErrorCode::kAllocationFailed);
 
-        ComPtr<ID3D12Resource> committedResource;
         ComPtr<ResidencyHeap> resourceHeap;
         if (FAILED(CreateCommittedResource(heapProperties, heapFlags, resourceInfo,
                                            &newResourceDesc, clearValue, initialResourceState,
-                                           &committedResource, &resourceHeap))) {
+                                           &resourceHeap))) {
             return ErrorCode::kAllocationFailed;
         }
 
@@ -1485,10 +1488,10 @@ namespace gpgmm::d3d12 {
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
         allocationDesc.DebugName = allocationDescriptor.DebugName;
 
-        if (ppResourceAllocationOut != nullptr) {
-            *ppResourceAllocationOut =
-                new ResourceAllocation(allocationDesc, this, this, resourceHeap.Detach(), nullptr,
-                                       std::move(committedResource));
+        if (FAILED(ResourceAllocation::CreateResourceAllocation(
+                allocationDesc, this, this, resourceHeap.Detach(), nullptr, nullptr,
+                ppResourceAllocationOut))) {
+            return ErrorCode::kAllocationFailed;
         }
 
         return ErrorCode::kNone;
@@ -1618,7 +1621,6 @@ namespace gpgmm::d3d12 {
         const D3D12_RESOURCE_DESC* resourceDescriptor,
         const D3D12_CLEAR_VALUE* clearValue,
         D3D12_RESOURCE_STATES initialResourceState,
-        ID3D12Resource** committedResourceOut,
         ResidencyHeap** resourceHeapOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResourceAllocator.CreateCommittedResource");
@@ -1645,13 +1647,6 @@ namespace gpgmm::d3d12 {
                                                CreateCommittedResourceCallbackContext::CreateHeap,
                                                &callbackContext, &resourceHeap),
             mDevice);
-
-        if (committedResourceOut != nullptr) {
-            ComPtr<ID3D12Resource> committedResource;
-            GPGMM_RETURN_IF_FAILED(resourceHeap.As(&committedResource), mDevice);
-
-            *committedResourceOut = committedResource.Detach();
-        }
 
         if (resourceHeapOut != nullptr) {
             *resourceHeapOut = static_cast<ResidencyHeap*>(resourceHeap.Detach());
