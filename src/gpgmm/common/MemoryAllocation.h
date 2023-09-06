@@ -82,15 +82,11 @@ namespace gpgmm {
         void SetAllocator(MemoryAllocatorBase* allocator);
         void SetBlock(MemoryBlock* block);
 
-      protected:
-        friend class MemoryAllocatorBase;
-
-        MemoryAllocatorBase* mAllocator;
-
       private:
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocationBase)
 
+        MemoryAllocatorBase* mAllocator;
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;
