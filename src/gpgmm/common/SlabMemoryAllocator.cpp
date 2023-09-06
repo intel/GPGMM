@@ -49,6 +49,14 @@ namespace gpgmm {
             : Allocator(blockCount, blockSize), IndexInList(indexInList) {
         }
 
+        Slab(Slab&& other)
+            : Allocator(std::move(other.Allocator)),
+              UsedBlocksPerSlab(std::move(other.UsedBlocksPerSlab)),
+              Allocation(std::move(other.Allocation)),
+              IndexInList(std::move(other.IndexInList)),
+              IndexInCache(std::move(other.IndexInCache)) {
+        }
+
         uint64_t GetBlockCount() const {
             return Allocator.GetBlockCount();
         }
@@ -71,7 +79,7 @@ namespace gpgmm {
 
         SlabBlockAllocator Allocator;
         uint64_t UsedBlocksPerSlab = 0;
-        MemoryAllocationBase Allocation;
+        std::unique_ptr<MemoryAllocationBase> Allocation;
         uint64_t IndexInList = kInvalidIndex;
         uint64_t IndexInCache = kInvalidIndex;
     };
@@ -173,12 +181,12 @@ namespace gpgmm {
             const Slab& freeSlab = cache->FreeList.back();
 
             // Slab is not free if only the block exists.
-            if (freeSlab.Allocation.GetMemory() == nullptr) {
+            if (freeSlab.Allocation == nullptr) {
                 continue;
             }
 
-            if (freeSlab.Allocation.GetSize() >= slabSize) {
-                return freeSlab.Allocation.GetSize();
+            if (freeSlab.Allocation->GetSize() >= slabSize) {
+                return freeSlab.Allocation->GetSize();
             }
         }
 
@@ -268,8 +276,8 @@ namespace gpgmm {
                 &pFreeSlab->Allocator, mBlockSize, request.Alignment, request.NeverAllocate,
                 [&](const auto& block) -> ResultOrError<std::unique_ptr<MemoryAllocationBase>> {
                     // Re-use memory from the free slab.
-                    if (pFreeSlab->Allocation.GetMemory() != nullptr) {
-                        return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
+                    if (pFreeSlab->Allocation != nullptr) {
+                        return std::make_unique<MemoryAllocationBase>(*pFreeSlab->Allocation);
                     }
 
                     // Or use pre-fetched memory if possible. Else, throw it away and create a new
@@ -285,9 +293,9 @@ namespace gpgmm {
                         // Assign pre-fetched memory to the slab.
                         if (prefetchedSlabAllocation != nullptr &&
                             prefetchedSlabAllocation->GetSize() == slabSize) {
-                            pFreeSlab->Allocation = *prefetchedSlabAllocation;
+                            pFreeSlab->Allocation.reset(prefetchedSlabAllocation.release());
                             mStats.PrefetchedMemoryMissesEliminated++;
-                            return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
+                            return std::make_unique<MemoryAllocationBase>(*pFreeSlab->Allocation);
                         }
 
                         if (prefetchedSlabAllocation != nullptr) {
@@ -307,13 +315,10 @@ namespace gpgmm {
                     newSlabRequest.SizeInBytes = slabSize;
                     newSlabRequest.Alignment = mSlabAlignment;
 
-                    std::unique_ptr<MemoryAllocationBase> slabAllocation;
                     GPGMM_TRY_ASSIGN(mMemoryAllocator->TryAllocateMemory(newSlabRequest),
-                                     slabAllocation);
+                                     pFreeSlab->Allocation);
 
-                    pFreeSlab->Allocation = *slabAllocation;
-
-                    return std::make_unique<MemoryAllocationBase>(pFreeSlab->Allocation);
+                    return std::make_unique<MemoryAllocationBase>(*pFreeSlab->Allocation);
                 }),
             subAllocation);
 
@@ -382,7 +387,7 @@ namespace gpgmm {
 
         // Since the slab's block could reside in another allocated block, the allocation
         // offset must be made relative to the slab's underlying memory and not the slab itself.
-        const uint64_t offsetFromMemory = pFreeSlab->Allocation.GetOffset() + blockInSlab->Offset;
+        const uint64_t offsetFromMemory = pFreeSlab->Allocation->GetOffset() + blockInSlab->Offset;
 
         mStats.UsedBlockCount++;
         mStats.UsedBlockUsage += blockInSlab->Size;
@@ -407,7 +412,7 @@ namespace gpgmm {
         Slab* pSlab = *(blockInSlab->ppSlab);
         ASSERT(pSlab != nullptr);
 
-        SlabCache* pCache = GetOrCreateCache(pSlab->Allocation.GetSize());
+        SlabCache* pCache = GetOrCreateCache(pSlab->Allocation->GetSize());
         ASSERT(pCache != nullptr);
 
         // Move the slab from the full-list to free-list.
@@ -428,9 +433,7 @@ namespace gpgmm {
         slabMemory->Unref();
 
         if (pSlab->IsEmpty()) {
-            mMemoryAllocator->DeallocateMemory(
-                std::make_unique<MemoryAllocationBase>(pSlab->Allocation));
-            pSlab->Allocation = {};  // Invalidate it
+            mMemoryAllocator->DeallocateMemory(std::move(pSlab->Allocation));
         }
     }
 
@@ -440,7 +443,7 @@ namespace gpgmm {
                                                StableList<Slab>* pDstList) {
         const uint64_t srcIndex = pSlab->IndexInList;
         pSlab->IndexInList = pDstList->size();
-        pDstList->push_back(*pSlab);  // copy
+        pDstList->push_back(std::move(*pSlab));
         pSrcList->erase(srcIndex);
         pSlab = &pDstList->back();
 
