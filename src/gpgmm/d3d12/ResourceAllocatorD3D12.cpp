@@ -1065,9 +1065,10 @@ namespace gpgmm::d3d12 {
 
             ASSERT(allocation->GetResource() != nullptr);
 
+            GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
+                                   mDevice);
+
             if (GPGMM_UNLIKELY(mTrackingAllocator)) {
-                GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
-                                       mDevice);
                 mTrackingAllocator->TrackAllocation(allocation.Get());
             }
 
