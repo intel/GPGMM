@@ -26,16 +26,16 @@
 
 namespace gpgmm::d3d12 {
 
-    BufferAllocator::BufferAllocator(ResourceAllocator* resourceAllocator,
+    BufferAllocator::BufferAllocator(ScopedRef<ResourceAllocator> resourceAllocator,
                                      D3D12_HEAP_PROPERTIES heapProperties,
                                      D3D12_HEAP_FLAGS heapFlags,
-                                     D3D12_RESOURCE_FLAGS resourceFlags,
-                                     D3D12_RESOURCE_STATES initialResourceState)
-        : mResourceAllocator(resourceAllocator),
+                                     D3D12_RESOURCE_FLAGS bufferFlags,
+                                     D3D12_RESOURCE_STATES initialBufferState)
+        : MemoryAllocatorBase(resourceAllocator.Detach()),
           mHeapProperties(heapProperties),
           mHeapFlags(heapFlags),
-          mResourceFlags(resourceFlags),
-          mInitialResourceState(initialResourceState) {
+          mBufferFlags(bufferFlags),
+          mInitialBufferState(initialBufferState) {
     }
 
     ResultOrError<std::unique_ptr<MemoryAllocationBase>> BufferAllocator::TryAllocateMemory(
@@ -53,24 +53,25 @@ namespace gpgmm::d3d12 {
         info.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
         info.Alignment = request.Alignment;
 
-        D3D12_RESOURCE_DESC resourceDescriptor;
-        resourceDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDescriptor.Alignment = info.Alignment;
-        resourceDescriptor.Width = info.SizeInBytes;
-        resourceDescriptor.Height = 1;
-        resourceDescriptor.DepthOrArraySize = 1;
-        resourceDescriptor.MipLevels = 1;
-        resourceDescriptor.Format = DXGI_FORMAT_UNKNOWN;
-        resourceDescriptor.SampleDesc.Count = 1;
-        resourceDescriptor.SampleDesc.Quality = 0;
-        resourceDescriptor.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-        resourceDescriptor.Flags = mResourceFlags;
+        D3D12_RESOURCE_DESC bufferDescriptor;
+        bufferDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        bufferDescriptor.Alignment = info.Alignment;
+        bufferDescriptor.Width = info.SizeInBytes;
+        bufferDescriptor.Height = 1;
+        bufferDescriptor.DepthOrArraySize = 1;
+        bufferDescriptor.MipLevels = 1;
+        bufferDescriptor.Format = DXGI_FORMAT_UNKNOWN;
+        bufferDescriptor.SampleDesc.Count = 1;
+        bufferDescriptor.SampleDesc.Quality = 0;
+        bufferDescriptor.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        bufferDescriptor.Flags = mBufferFlags;
 
         // Optimized clear is not supported for buffers.
         ComPtr<ResidencyHeap> resourceHeap;
-        HRESULT hr = mResourceAllocator->CreateCommittedResource(
-            mHeapProperties, mHeapFlags, info, &resourceDescriptor,
-            /*pOptimizedClearValue*/ nullptr, mInitialResourceState, &resourceHeap);
+        HRESULT hr = static_cast<ResourceAllocator*>(GetNextInChain())
+                         ->CreateCommittedResource(
+                             mHeapProperties, mHeapFlags, info, &bufferDescriptor,
+                             /*pOptimizedClearValue*/ nullptr, mInitialBufferState, &resourceHeap);
 
         if (FAILED(hr)) {
             return GetErrorCode(hr);
