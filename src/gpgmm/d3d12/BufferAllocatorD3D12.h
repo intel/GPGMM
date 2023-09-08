@@ -25,11 +25,11 @@ namespace gpgmm::d3d12 {
 
     class BufferAllocator : public MemoryAllocatorBase {
       public:
-        BufferAllocator(ResourceAllocator* resourceAllocator,
+        BufferAllocator(ScopedRef<ResourceAllocator> resourceAllocator,
                         D3D12_HEAP_PROPERTIES heapProperties,
                         D3D12_HEAP_FLAGS heapFlags,
-                        D3D12_RESOURCE_FLAGS resourceFlags,
-                        D3D12_RESOURCE_STATES initialResourceState);
+                        D3D12_RESOURCE_FLAGS bufferFlags,
+                        D3D12_RESOURCE_STATES initialBufferState);
         ~BufferAllocator() override = default;
 
         // MemoryAllocatorBase interface
@@ -38,12 +38,10 @@ namespace gpgmm::d3d12 {
         void DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) override;
 
       private:
-        ResourceAllocator* const mResourceAllocator;
-
         const D3D12_HEAP_PROPERTIES mHeapProperties;
         const D3D12_HEAP_FLAGS mHeapFlags;
-        const D3D12_RESOURCE_FLAGS mResourceFlags;
-        const D3D12_RESOURCE_STATES mInitialResourceState;
+        const D3D12_RESOURCE_FLAGS mBufferFlags;
+        const D3D12_RESOURCE_STATES mInitialBufferState;
     };
 
 }  // namespace gpgmm::d3d12
