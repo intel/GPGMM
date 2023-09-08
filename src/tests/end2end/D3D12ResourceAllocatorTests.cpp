@@ -657,14 +657,14 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
     {
         RESOURCE_ALLOCATION_DESC allocationDesc = {};
         allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
-        allocationDesc.DebugName = L"Buffer";
 
         ComPtr<IResourceAllocation> allocation;
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             allocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
             D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
         ASSERT_NE(allocation, nullptr);
-        EXPECT_EQUAL_WSTR(allocation->GetDebugName(), allocationDesc.DebugName);
+        ASSERT_SUCCEEDED(allocation->SetDebugName(L"Buffer"));
+        EXPECT_EQUAL_WSTR(allocation->GetDebugName(), L"Buffer");
     }
 
     // Creating a buffer without a heap type should be inferred based on the resource state.
@@ -1163,8 +1163,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
 
     // Create two small buffers that will be byte-aligned.
     ComPtr<IResourceAllocation> smallBufferA;
-    allocationDesc.DebugName = GPGMM_GET_VAR_NAME(smallBufferA);
-
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, smallBufferDesc,
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferA));
@@ -1173,8 +1171,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(smallBufferA->GetInfo().SizeInBytes, smallBufferDesc.Width);
 
     ComPtr<IResourceAllocation> smallBufferB;
-    allocationDesc.DebugName = GPGMM_GET_VAR_NAME(smallBufferB);
-
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, smallBufferDesc,
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferB));
@@ -1183,8 +1179,6 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinMany) {
     EXPECT_EQ(smallBufferB->GetInfo().SizeInBytes, smallBufferDesc.Width);
 
     ComPtr<IResourceAllocation> smallBufferC;
-    allocationDesc.DebugName = GPGMM_GET_VAR_NAME(smallBufferC);
-
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(allocationDesc, smallBufferDesc,
                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                                                        &smallBufferC));

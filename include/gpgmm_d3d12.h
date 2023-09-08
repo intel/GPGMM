@@ -178,12 +178,6 @@ namespace gpgmm::d3d12 {
         Optional parameter. By default, no flags are specified or RESIDENCY_HEAP_FLAG_NONE.
         */
         RESIDENCY_HEAP_FLAGS Flags;
-
-        /** \brief Debug name associated with the heap.
-
-        Optional parameter. By default, no name is associated.
-        */
-        LPCWSTR DebugName;
     };
 
     /** \brief Callback function used to create a ID3D12Pageable.
@@ -1207,12 +1201,6 @@ namespace gpgmm::d3d12 {
         Optional parameter. No extra padding is applied by default.
         */
         UINT64 ExtraRequiredResourcePadding;
-
-        /** \brief Associates a name with the given allocation.
-
-        Optional parameter. By default, no name is associated.
-        */
-        LPCWSTR DebugName;
     };
 
     /** \struct FEATURE_DATA_RESOURCE_ALLOCATION_SUPPORT

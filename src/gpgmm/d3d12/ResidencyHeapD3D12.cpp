@@ -213,8 +213,6 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        GPGMM_RETURN_IF_FAILED(heap->SetDebugName(newDescriptor.DebugName),
-                               GetDevice(pPageable).Get());
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(heap.get(), newDescriptor);
 
         DebugLog(MessageId::kObjectCreated, heap.get())

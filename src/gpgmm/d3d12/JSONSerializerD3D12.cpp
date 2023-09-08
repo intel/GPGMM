@@ -64,9 +64,6 @@ namespace gpgmm::d3d12 {
         dict.AddItem("HeapType", desc.HeapType);
         dict.AddItem("ExtraRequiredHeapFlags", desc.ExtraRequiredHeapFlags);
         dict.AddItem("ExtraRequiredResourcePadding", desc.ExtraRequiredResourcePadding);
-        if (desc.DebugName != nullptr) {
-            dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
-        }
         return dict;
     }
 
@@ -164,9 +161,6 @@ namespace gpgmm::d3d12 {
         dict.AddItem("Alignment", desc.Alignment);
         dict.AddItem("HeapSegment", desc.HeapSegment);
         dict.AddItem("Flags", desc.Flags);
-        if (desc.DebugName != nullptr) {
-            dict.AddItem("DebugName", WCharToUTF8(desc.DebugName));
-        }
         return dict;
     }
 
