@@ -1065,9 +1065,6 @@ namespace gpgmm::d3d12 {
 
             ASSERT(allocation->GetResource() != nullptr);
 
-            GPGMM_RETURN_IF_FAILED(allocation->SetDebugName(allocationDescriptor.DebugName),
-                                   mDevice);
-
             if (GPGMM_UNLIKELY(mTrackingAllocator)) {
                 mTrackingAllocator->TrackAllocation(allocation.Get());
             }
@@ -1331,7 +1328,6 @@ namespace gpgmm::d3d12 {
                     allocationDesc.HeapOffset = kInvalidOffset;
                     allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
-                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     ResidencyHeap* resourceHeap =
                         static_cast<ResidencyHeap*>(subAllocation.GetMemory());
@@ -1378,7 +1374,6 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Type =
                         static_cast<RESOURCE_ALLOCATION_TYPE>(subAllocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
-                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     GPGMM_RETURN_IF_FAILED(
                         ResourceAllocation::CreateResourceAllocation(
@@ -1425,7 +1420,6 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Type =
                         static_cast<RESOURCE_ALLOCATION_TYPE>(allocation.GetMethod());
                     allocationDesc.OffsetFromResource = 0;
-                    allocationDesc.DebugName = allocationDescriptor.DebugName;
 
                     GPGMM_RETURN_IF_FAILED(
                         ResourceAllocation::CreateResourceAllocation(
@@ -1487,7 +1481,6 @@ namespace gpgmm::d3d12 {
         allocationDesc.HeapOffset = kInvalidOffset;
         allocationDesc.SizeInBytes = request.SizeInBytes;
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
-        allocationDesc.DebugName = allocationDescriptor.DebugName;
 
         if (FAILED(ResourceAllocation::CreateResourceAllocation(
                 allocationDesc, this, this, resourceHeap.Detach(), nullptr, nullptr,
@@ -1629,7 +1622,6 @@ namespace gpgmm::d3d12 {
         RESIDENCY_HEAP_DESC resourceHeapDesc = {};
         resourceHeapDesc.SizeInBytes = info.SizeInBytes;
         resourceHeapDesc.Alignment = info.Alignment;
-        resourceHeapDesc.DebugName = L"Resource heap (committed)";
 
         if (IsResidencyEnabled()) {
             resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, mIsAlwaysCreatedInBudget);
@@ -1648,6 +1640,8 @@ namespace gpgmm::d3d12 {
                                                CreateCommittedResourceCallbackContext::CreateHeap,
                                                &callbackContext, &resourceHeap),
             mDevice);
+
+        GPGMM_RETURN_IF_FAILED(resourceHeap->SetDebugName(L"Resource heap (committed)"), mDevice);
 
         if (resourceHeapOut != nullptr) {
             *resourceHeapOut = static_cast<ResidencyHeap*>(resourceHeap.Detach());

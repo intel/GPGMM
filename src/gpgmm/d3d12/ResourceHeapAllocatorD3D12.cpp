@@ -56,7 +56,6 @@ namespace gpgmm::d3d12 {
         // https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_HEAP_INFO
         resourceHeapDesc.SizeInBytes = AlignTo(request.SizeInBytes, request.Alignment);
         resourceHeapDesc.Alignment = request.Alignment;
-        resourceHeapDesc.DebugName = L"GPGMM Resource Heap";
 
         const bool isResidencyEnabled = (mResidencyManager != nullptr);
         if (isResidencyEnabled) {
@@ -79,6 +78,8 @@ namespace gpgmm::d3d12 {
         if (FAILED(hr)) {
             return GetErrorCode(hr);
         }
+
+        resourceHeap->SetDebugName(L"GPGMM Resource Heap");
 
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
