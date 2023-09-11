@@ -23,6 +23,8 @@ namespace gpgmm {
 
     // Pool using LIFO (newest are recycled first).
     class LIFOMemoryPool : public MemoryPoolBase {
+        using UnderlyingContainerType = std::deque<std::unique_ptr<MemoryAllocationBase>>;
+
       public:
         explicit LIFOMemoryPool(uint64_t memorySize);
         ~LIFOMemoryPool() override = default;
@@ -33,11 +35,16 @@ namespace gpgmm {
         void ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
                           uint64_t indexInPool = kInvalidIndex) override;
         uint64_t ReleasePool(uint64_t bytesToFree = kInvalidSize) override;
-
         uint64_t GetPoolSize() const override;
 
+        UnderlyingContainerType::iterator begin();
+        UnderlyingContainerType::iterator end();
+
+        // Resizes the pool up to but not including |lastIndex|.
+        void ShrinkPool(uint64_t lastIndex);
+
       private:
-        std::deque<std::unique_ptr<MemoryAllocationBase>> mPool;
+        UnderlyingContainerType mPool;
     };
 
 }  // namespace gpgmm

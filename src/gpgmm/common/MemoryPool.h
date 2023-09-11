@@ -16,6 +16,7 @@
 #define SRC_GPGMM_COMMON_MEMORYPOOL_H_
 
 #include "gpgmm/common/MemoryAllocation.h"
+#include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/utils/Limits.h"
 
 #include <memory>
@@ -49,11 +50,11 @@ namespace gpgmm {
 
       protected:
         // Shrinks the size of the pool in |mMemorySize| sizes until |bytesToRelease| is reached.
-        template <typename T>
-        uint64_t TrimPoolUntil(T& pool, uint64_t bytesToRelease) {
+        template <typename MemoryPoolT>
+        uint64_t TrimPoolUntil(MemoryPoolT* pool, uint64_t bytesToRelease) {
             uint64_t totalBytesReleased = 0;
             uint64_t lastIndex = 0;
-            for (auto& allocation : pool) {
+            for (auto& allocation : *pool) {
                 totalBytesReleased += allocation->GetSize();
                 allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
                 lastIndex++;
@@ -64,7 +65,7 @@ namespace gpgmm {
 
             // Last is non-inclusive or [first, last).
             if (lastIndex > 0) {
-                pool.erase(pool.begin(), pool.begin() + lastIndex);
+                pool->ShrinkPool(lastIndex);
             }
 
             return totalBytesReleased;
