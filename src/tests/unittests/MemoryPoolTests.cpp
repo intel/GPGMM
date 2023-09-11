@@ -46,7 +46,7 @@ TEST_F(LIFOMemoryPoolTests, SingleAllocation) {
     EXPECT_EQ(pool.GetPoolSize() * pool.GetMemorySize(), kDefaultMemorySize);
     EXPECT_EQ(pool.GetPoolSize(), 1u);
 
-    pool.ReturnToPool(pool.AcquireFromPool());
+    pool.ReturnToPool(pool.AcquireFromPoolForTesting(kInvalidIndex));
     EXPECT_EQ(pool.GetPoolSize() * pool.GetMemorySize(), kDefaultMemorySize);
     EXPECT_EQ(pool.GetPoolSize(), 1u);
 

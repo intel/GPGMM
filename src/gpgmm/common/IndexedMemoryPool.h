@@ -27,9 +27,10 @@ namespace gpgmm {
         ~IndexedMemoryPool() override = default;
 
         // MemoryPoolBase interface
-        std::unique_ptr<MemoryAllocationBase> AcquireFromPool(uint64_t indexInPool) override;
-        void ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
-                          uint64_t indexInPool) override;
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireFromPool(
+            uint64_t indexInPool) override;
+        MaybeError ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                uint64_t indexInPool) override;
         uint64_t ReleasePool(uint64_t bytesToRelease) override;
 
         uint64_t GetPoolSize() const override;

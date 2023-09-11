@@ -132,7 +132,8 @@ namespace gpgmm {
         MemorySegment* segment = GetOrCreateFreeSegment(memorySize);
         ASSERT(segment != nullptr);
 
-        std::unique_ptr<MemoryAllocationBase> allocation = segment->AcquireFromPool();
+        std::unique_ptr<MemoryAllocationBase> allocation;
+        GPGMM_TRY_ASSIGN(segment->AcquireFromPool(), allocation);
         if (allocation == nullptr) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;

@@ -15,6 +15,7 @@
 #ifndef SRC_GPGMM_COMMON_MEMORYPOOL_H_
 #define SRC_GPGMM_COMMON_MEMORYPOOL_H_
 
+#include "gpgmm/common/Error.h"
 #include "gpgmm/common/MemoryAllocation.h"
 #include "gpgmm/utils/Limits.h"
 
@@ -31,12 +32,15 @@ namespace gpgmm {
 
         // Retrieves a memory allocation from the pool using an optional index.
         // Use kInvalidIndex to specify |this| pool is not indexed.
-        virtual std::unique_ptr<MemoryAllocationBase> AcquireFromPool(uint64_t indexInPool) = 0;
+        virtual ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireFromPool(
+            uint64_t indexInPool) = 0;
+
+        std::unique_ptr<MemoryAllocationBase> AcquireFromPoolForTesting(uint64_t indexInPool);
 
         // Returns a memory allocation back to the pool using an optional index.
         // Use kInvalidIndex to specify |this| pool is not indexed.
-        virtual void ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
-                                  uint64_t indexInPool) = 0;
+        virtual MaybeError ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                        uint64_t indexInPool) = 0;
 
         // Deallocate or shrink the pool.
         virtual uint64_t ReleasePool(uint64_t bytesToRelease) = 0;

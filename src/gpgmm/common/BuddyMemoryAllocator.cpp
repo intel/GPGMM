@@ -64,8 +64,9 @@ namespace gpgmm {
                 &mBuddyBlockAllocator, allocationSize, request.Alignment, request.NeverAllocate,
                 [&](const auto& block) -> ResultOrError<std::unique_ptr<MemoryAllocationBase>> {
                     const uint64_t memoryIndex = GetMemoryIndex(block->Offset);
-                    std::unique_ptr<MemoryAllocationBase> memoryAllocation =
-                        mUsedPool.AcquireFromPool(memoryIndex);
+
+                    std::unique_ptr<MemoryAllocationBase> memoryAllocation;
+                    GPGMM_TRY_ASSIGN(mUsedPool.AcquireFromPool(memoryIndex), memoryAllocation);
 
                     // No existing, allocate new memory for the block.
                     if (memoryAllocation == nullptr) {
@@ -113,16 +114,18 @@ namespace gpgmm {
 
         mBuddyBlockAllocator.DeallocateBlock(subAllocation->GetBlock());
 
-        std::unique_ptr<MemoryAllocationBase> memoryAllocation =
-            mUsedPool.AcquireFromPool(memoryIndex);
+        auto result = mUsedPool.AcquireFromPool(memoryIndex);
+        ASSERT(result.IsSuccess());
 
-        MemoryBase* memory = memoryAllocation->GetMemory();
+        std::unique_ptr<MemoryAllocationBase> allocation = result.AcquireResult();
+
+        MemoryBase* memory = allocation->GetMemory();
         ASSERT(memory != nullptr);
 
         if (memory->Unref()) {
-            GetNextInChain()->DeallocateMemory(std::move(memoryAllocation));
+            GetNextInChain()->DeallocateMemory(std::move(allocation));
         } else {
-            mUsedPool.ReturnToPool(std::move(memoryAllocation), memoryIndex);
+            mUsedPool.ReturnToPool(std::move(allocation), memoryIndex);
         }
     }
 

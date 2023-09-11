@@ -43,7 +43,8 @@ namespace gpgmm {
 
         GPGMM_RETURN_IF_ERROR(ValidateRequest(request));
 
-        std::unique_ptr<MemoryAllocationBase> allocation = mPool->AcquireFromPool(kInvalidIndex);
+        std::unique_ptr<MemoryAllocationBase> allocation;
+        GPGMM_TRY_ASSIGN(mPool->AcquireFromPool(kInvalidIndex), allocation);
         if (allocation == nullptr) {
             MemoryAllocationRequest memoryRequest = request;
             memoryRequest.Alignment = mMemoryAlignment;
