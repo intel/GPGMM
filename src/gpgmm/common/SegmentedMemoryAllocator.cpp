@@ -172,8 +172,9 @@ namespace gpgmm {
         MemoryPoolBase* pool = memory->GetPool();
         ASSERT(pool != nullptr);
 
-        static_cast<MemorySegment*>(pool)->ReturnToPool(std::make_unique<MemoryAllocationBase>(
-            GetNextInChain(), memory, allocation->GetRequestSize()));
+        allocation->SetAllocator(GetNextInChain());
+
+        pool->ReturnToPool(std::move(allocation), kInvalidIndex);
     }
 
     uint64_t SegmentedMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
