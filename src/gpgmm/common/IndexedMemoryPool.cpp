@@ -22,17 +22,20 @@ namespace gpgmm {
     IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
-    std::unique_ptr<MemoryAllocationBase> IndexedMemoryPool::AcquireFromPool(uint64_t indexInPool) {
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> IndexedMemoryPool::AcquireFromPool(
+        uint64_t indexInPool) {
         if (indexInPool >= mPool.size()) {
             mPool.resize(indexInPool + 1);
         }
         return std::unique_ptr<MemoryAllocationBase>(mPool[indexInPool].release());
     }
 
-    void IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
-                                         uint64_t indexInPool) {
-        ASSERT(indexInPool < mPool.size());
+    MaybeError IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                               uint64_t indexInPool) {
+        GPGMM_RETURN_ERROR_IF(this, indexInPool >= mPool.size(), "Index exceeded pool size",
+                              ErrorCode::kBadOperation);
         mPool[indexInPool] = std::move(allocation);
+        return {};
     }
 
     uint64_t IndexedMemoryPool::ReleasePool(uint64_t bytesToRelease) {

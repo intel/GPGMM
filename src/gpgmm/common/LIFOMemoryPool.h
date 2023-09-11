@@ -28,10 +28,10 @@ namespace gpgmm {
         ~LIFOMemoryPool() override = default;
 
         // MemoryPoolBase interface
-        std::unique_ptr<MemoryAllocationBase> AcquireFromPool(
+        ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireFromPool(
             uint64_t indexInPool = kInvalidIndex) override;
-        void ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
-                          uint64_t indexInPool = kInvalidIndex) override;
+        MaybeError ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                uint64_t indexInPool = kInvalidIndex) override;
         uint64_t ReleasePool(uint64_t bytesToFree = kInvalidSize) override;
 
         uint64_t GetPoolSize() const override;

@@ -24,21 +24,26 @@ namespace gpgmm {
     LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
-    std::unique_ptr<MemoryAllocationBase> LIFOMemoryPool::AcquireFromPool(uint64_t indexInPool) {
-        ASSERT(indexInPool == kInvalidIndex);
+    ResultOrError<std::unique_ptr<MemoryAllocationBase>> LIFOMemoryPool::AcquireFromPool(
+        uint64_t indexInPool) {
+        GPGMM_RETURN_ERROR_IF(this, indexInPool != kInvalidIndex,
+                              "Index was specified but not allowed", ErrorCode::kBadOperation);
 
         std::unique_ptr<MemoryAllocationBase> allocation;
         if (!mPool.empty()) {
             allocation = std::move(mPool.front());
             mPool.pop_front();
         }
+
         return allocation;
     }
 
-    void LIFOMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
-                                      uint64_t indexInPool) {
-        ASSERT(indexInPool == kInvalidIndex);
+    MaybeError LIFOMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
+                                            uint64_t indexInPool) {
+        GPGMM_RETURN_ERROR_IF(this, indexInPool != kInvalidIndex,
+                              "Index was specified but not allowed", ErrorCode::kBadOperation);
         mPool.push_front(std::move(allocation));
+        return {};
     }
 
     uint64_t LIFOMemoryPool::ReleasePool(uint64_t bytesToRelease) {

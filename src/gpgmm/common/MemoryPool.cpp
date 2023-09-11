@@ -26,6 +26,11 @@ namespace gpgmm {
         GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
     }
 
+    std::unique_ptr<MemoryAllocationBase> MemoryPoolBase::AcquireFromPoolForTesting(
+        uint64_t indexInPool) {
+        return AcquireFromPool(indexInPool).AcquireResult();
+    }
+
     uint64_t MemoryPoolBase::GetMemorySize() const {
         return mMemorySize;
     }
