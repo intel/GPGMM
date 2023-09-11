@@ -112,6 +112,8 @@ namespace gpgmm::d3d12 {
                    "resource allocation.";
         }
 
+        mResourceAllocator = nullptr;
+
         GetAllocator()->DeallocateMemory(std::unique_ptr<MemoryAllocationBase>(this));
     }
 

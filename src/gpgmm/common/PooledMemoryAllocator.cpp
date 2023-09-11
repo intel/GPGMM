@@ -60,8 +60,7 @@ namespace gpgmm {
         mStats.UsedMemoryCount++;
         mStats.UsedMemoryUsage += allocation->GetSize();
 
-        MemoryBase* memory = allocation->GetMemory();
-        ASSERT(memory != nullptr);
+        allocation->SetAllocator(this);
 
         return allocation;
     }
@@ -77,12 +76,9 @@ namespace gpgmm {
         mStats.UsedMemoryCount--;
         mStats.UsedMemoryUsage -= allocationSize;
 
-        MemoryBase* memory = allocation->GetMemory();
-        ASSERT(memory != nullptr);
+        allocation->SetAllocator(GetNextInChain());
 
-        mPool->ReturnToPool(std::make_unique<MemoryAllocationBase>(GetNextInChain(), memory,
-                                                                   allocation->GetRequestSize()),
-                            kInvalidIndex);
+        mPool->ReturnToPool(std::move(allocation), kInvalidIndex);
     }
 
     uint64_t PooledMemoryAllocator::ReleaseMemory(uint64_t bytesToRelease) {
