@@ -39,7 +39,7 @@ namespace gpgmm {
     }
 
     uint64_t IndexedMemoryPool::ReleasePool(uint64_t bytesToRelease) {
-        return TrimPoolUntil(mPool, bytesToRelease);
+        return TrimPoolUntil(this, bytesToRelease);
     }
 
     uint64_t IndexedMemoryPool::GetPoolSize() const {
@@ -51,4 +51,17 @@ namespace gpgmm {
         }
         return count;
     }
+
+    IndexedMemoryPool::UnderlyingContainerType::iterator IndexedMemoryPool::begin() {
+        return mPool.begin();
+    }
+
+    IndexedMemoryPool::UnderlyingContainerType::iterator IndexedMemoryPool::end() {
+        return mPool.end();
+    }
+
+    void IndexedMemoryPool::ShrinkPool(uint64_t lastIndex) {
+        mPool.erase(begin(), begin() + lastIndex);
+    }
+
 }  // namespace gpgmm

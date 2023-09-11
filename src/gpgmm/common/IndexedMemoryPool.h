@@ -22,6 +22,8 @@
 namespace gpgmm {
 
     class IndexedMemoryPool final : public MemoryPoolBase {
+        using UnderlyingContainerType = std::vector<std::unique_ptr<MemoryAllocationBase>>;
+
       public:
         explicit IndexedMemoryPool(uint64_t memorySize);
         ~IndexedMemoryPool() override = default;
@@ -32,11 +34,16 @@ namespace gpgmm {
         MaybeError ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
                                 uint64_t indexInPool) override;
         uint64_t ReleasePool(uint64_t bytesToRelease) override;
-
         uint64_t GetPoolSize() const override;
 
+        UnderlyingContainerType::iterator begin();
+        UnderlyingContainerType::iterator end();
+
+        // Resizes the pool up to but not including |lastIndex|.
+        void ShrinkPool(uint64_t lastIndex);
+
       private:
-        std::vector<std::unique_ptr<MemoryAllocationBase>> mPool;
+        UnderlyingContainerType mPool;
     };
 
 }  // namespace gpgmm

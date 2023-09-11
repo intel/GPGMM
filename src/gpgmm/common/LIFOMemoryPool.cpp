@@ -47,10 +47,23 @@ namespace gpgmm {
     }
 
     uint64_t LIFOMemoryPool::ReleasePool(uint64_t bytesToRelease) {
-        return TrimPoolUntil(mPool, bytesToRelease);
+        return TrimPoolUntil(this, bytesToRelease);
     }
 
     uint64_t LIFOMemoryPool::GetPoolSize() const {
         return mPool.size();
     }
+
+    LIFOMemoryPool::UnderlyingContainerType::iterator LIFOMemoryPool::begin() {
+        return mPool.begin();
+    }
+
+    LIFOMemoryPool::UnderlyingContainerType::iterator LIFOMemoryPool::end() {
+        return mPool.end();
+    }
+
+    void LIFOMemoryPool::ShrinkPool(uint64_t lastIndex) {
+        mPool.erase(begin(), begin() + lastIndex);
+    }
+
 }  // namespace gpgmm
