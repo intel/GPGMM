@@ -18,6 +18,7 @@
 
 #include "gpgmm/common/Object.h"
 #include "gpgmm/utils/Limits.h"
+#include "gpgmm/utils/RefCount.h"
 
 namespace gpgmm {
 
@@ -86,7 +87,7 @@ namespace gpgmm {
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(MemoryAllocationBase)
 
-        MemoryAllocatorBase* mAllocator;
+        ScopedRef<MemoryAllocatorBase> mAllocator;
         MemoryBase* mMemory;
         uint64_t mOffset;  // Offset always local to the memory.
         AllocationMethod mMethod;

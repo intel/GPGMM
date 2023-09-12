@@ -15,9 +15,7 @@
 
 #include "gpgmm/common/MemoryAllocation.h"
 
-#include "gpgmm/common/Memory.h"
-#include "gpgmm/common/MemoryBlock.h"
-#include "gpgmm/utils/Assert.h"
+#include "gpgmm/common/MemoryAllocator.h"
 
 namespace gpgmm {
 
@@ -75,7 +73,7 @@ namespace gpgmm {
     }
 
     MemoryAllocatorBase* MemoryAllocationBase::GetAllocator() const {
-        return mAllocator;
+        return mAllocator.Get();
     }
 
     uint64_t MemoryAllocationBase::GetSize() const {
