@@ -135,7 +135,7 @@ namespace gpgmm::d3d12 {
 
         ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
         if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
-            GPGMM_RETURN_IF_FAILED(residencyHeap->Lock(), GetDevice(mResource.Get()).Get());
+            GPGMM_RETURN_IF_FAILED(residencyHeap->Lock());
         }
 
         // Range coordinates are always subresource-relative so the range should only be
