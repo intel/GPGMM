@@ -704,6 +704,23 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBuffer) {
             {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize + 1),
             D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, nullptr));
     }
+
+    // Create a UAV buffer that that ALLOW_UAV flags applied.
+    {
+        RESOURCE_ALLOCATOR_DESC uavAllocatorDesc = CreateBasicAllocatorDesc();
+        uavAllocatorDesc.ExtraRequiredResourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+
+        ComPtr<IResourceAllocator> uavResourceAllocator;
+        ASSERT_SUCCEEDED(CreateResourceAllocator(uavAllocatorDesc, mDevice.Get(), mAdapter.Get(),
+                                                 &uavResourceAllocator, nullptr));
+
+        ComPtr<IResourceAllocation> uavBuffer;
+        ASSERT_SUCCEEDED(uavResourceAllocator->CreateResource(
+            {}, CreateBasicBufferDesc(kBufferOf4MBAllocationSize),
+            D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, &uavBuffer));
+
+        EXPECT_EQ(uavBuffer->GetResource()->GetDesc().Flags, uavAllocatorDesc.ExtraRequiredResourceFlags);
+    }
 }
 
 TEST_F(D3D12ResourceAllocatorTests, GetResourceAllocator) {

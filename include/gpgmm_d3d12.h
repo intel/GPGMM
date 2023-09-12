@@ -1052,6 +1052,19 @@ namespace gpgmm::d3d12 {
         allocation.
         */
         UINT64 ReleaseSizeInBytes;
+
+        /** \brief Additional resource flags to apply for any resource created by this resource
+        allocator.
+
+        Alternatively, resource flags can be applied at allocation-time so long as
+        RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE was not specified.
+
+        For a list of available options, please read:
+        https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_flags
+
+        Optional parameter. When unspecified, no additional flags would be applied.
+        */
+        D3D12_RESOURCE_FLAGS ExtraRequiredResourceFlags;
     };
 
     /** \enum RESOURCE_ALLOCATION_FLAGS

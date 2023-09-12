@@ -102,6 +102,7 @@ namespace gpgmm::d3d12 {
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_HEAP_PROPERTIES& heapProperties,
             const HEAP_ALLOCATION_INFO& heapInfo,
+            D3D12_RESOURCE_FLAGS resourceFlags,
             D3D12_RESOURCE_STATES initialResourceState);
 
         ScopedRef<MemoryAllocatorBase> CreatePoolAllocator(
@@ -157,6 +158,7 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<Caps> mCaps;
 
         const D3D12_RESOURCE_HEAP_TIER mResourceHeapTier;
+        const D3D12_RESOURCE_FLAGS mExtraRequiredResourceFlags;
         const bool mIsAlwaysCommitted;
         const bool mIsAlwaysCreatedInBudget;
         const bool mFlushEventBuffersOnDestruct;
