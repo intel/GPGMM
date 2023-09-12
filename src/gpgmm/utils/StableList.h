@@ -374,11 +374,20 @@ namespace gpgmm {
             bool operator!=(const iterator& it) const {
                 return !operator==(it);
             }
+
+            iterator& operator++() {
+                StableListIteratorBase<StableList<T, ChunkSize>>::operator++();
+                return *this;
+            }
         };
 
-        struct const_iterator : public StableListIteratorBase<StableList<T>> {
+        struct const_iterator : public StableListIteratorBase<const StableList<T, ChunkSize>> {
             const_iterator(const iterator& it)
                 : StableListIteratorBase<const StableList<T, ChunkSize>>(it.mList, it.mIndex) {
+            }
+
+            const_iterator(StableList<T, ChunkSize> const* list, size_t index)
+                : StableListIteratorBase<const StableList<T, ChunkSize>>(list, index) {
             }
 
             const T& operator*() const {
@@ -391,6 +400,11 @@ namespace gpgmm {
 
             bool operator!=(const const_iterator& it) const {
                 return !operator==(it);
+            }
+
+            const_iterator& operator++() {
+                StableListIteratorBase<const StableList<T, ChunkSize>>::operator++();
+                return *this;
             }
         };
 
