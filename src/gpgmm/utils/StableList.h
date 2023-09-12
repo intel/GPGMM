@@ -352,6 +352,10 @@ namespace gpgmm {
                 return mIndex;
             }
 
+            StableListT* list() const {
+                return mList;
+            }
+
           protected:
             StableListT* mList;
             size_t mIndex;
@@ -379,11 +383,17 @@ namespace gpgmm {
                 StableListIteratorBase<StableList<T, ChunkSize>>::operator++();
                 return *this;
             }
+
+            iterator operator+(int offset) const {
+                iterator tmp = *this;
+                tmp.mIndex += offset;
+                return tmp;
+            }
         };
 
         struct const_iterator : public StableListIteratorBase<const StableList<T, ChunkSize>> {
             const_iterator(const iterator& it)
-                : StableListIteratorBase<const StableList<T, ChunkSize>>(it.mList, it.mIndex) {
+                : StableListIteratorBase<const StableList<T, ChunkSize>>(it.list(), it.index()) {
             }
 
             const_iterator(StableList<T, ChunkSize> const* list, size_t index)
@@ -406,10 +416,16 @@ namespace gpgmm {
                 StableListIteratorBase<const StableList<T, ChunkSize>>::operator++();
                 return *this;
             }
+
+            const_iterator operator+(int offset) const {
+                const_iterator tmp = *this;
+                tmp.mIndex += offset;
+                return tmp;
+            }
         };
 
         void erase(const_iterator it) {
-            erase(it.mIndex);
+            erase(it.index());
         }
 
         iterator begin() {
