@@ -121,10 +121,32 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a76b721fed3b2ce5aa24093cee1ed7c3e" id="r_a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="memItemLeft" align="right" valign="top">UINT64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a76b721fed3b2ce5aa24093cee1ed7c3e">ReleaseSizeInBytes</a></td></tr>
 <tr class="memdesc:a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of memory, in bytes, to release from the resource allocator at once, should there not be enough memory left.  <br /></td></tr>
 <tr class="separator:a76b721fed3b2ce5aa24093cee1ed7c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15dd80a843198c388ca130330d77a5d4" id="r_a15dd80a843198c388ca130330d77a5d4"><td class="memItemLeft" align="right" valign="top">D3D12_RESOURCE_FLAGS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html#a15dd80a843198c388ca130330d77a5d4">ExtraRequiredResourceFlags</a></td></tr>
+<tr class="memdesc:a15dd80a843198c388ca130330d77a5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional resource flags to apply for any resource created by this resource allocator.  <br /></td></tr>
+<tr class="separator:a15dd80a843198c388ca130330d77a5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Specify parameters for creating allocators. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a15dd80a843198c388ca130330d77a5d4" name="a15dd80a843198c388ca130330d77a5d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15dd80a843198c388ca130330d77a5d4">&#9670;&#160;</a></span>ExtraRequiredResourceFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">D3D12_RESOURCE_FLAGS gpgmm::d3d12::RESOURCE_ALLOCATOR_DESC::ExtraRequiredResourceFlags</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Additional resource flags to apply for any resource created by this resource allocator. </p>
+<p>Alternatively, resource flags can be applied at allocation-time so long as RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE was not specified.</p>
+<p>For a list of available options, please read: <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_flags">https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_flags</a></p>
+<p>Optional parameter. When unspecified, no additional flags would be applied. </p>
+
+</div>
+</div>
 <a id="a9c073ecdf89db7740068c84e1c5b9d33" name="a9c073ecdf89db7740068c84e1c5b9d33"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c073ecdf89db7740068c84e1c5b9d33">&#9670;&#160;</a></span>Flags</h2>
 
