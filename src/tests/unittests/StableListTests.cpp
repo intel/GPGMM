@@ -261,4 +261,21 @@ TEST(StableListTests, Enumerate) {
         }
         EXPECT_EQ(i, 0);
     }
+
+    // Using const or non-const iteration
+    {
+        StableList<int, 2> list;
+        list.push_back(1);
+        list.push_back(2);
+
+        int i = 0;
+        for (auto it = list.cbegin(); it != list.cend(); ++it) {
+            EXPECT_EQ(*it, ++i);
+        }
+
+        i = 0;
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            EXPECT_EQ(*it, ++i);
+        }
+    }
 }
