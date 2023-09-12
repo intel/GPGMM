@@ -85,16 +85,15 @@ namespace gpgmm::d3d12 {
 
     // static
     HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
-        GPGMM_RETURN_IF_NULLPTR(device);
+        GPGMM_RETURN_IF_NULL(device);
 
         std::unique_ptr<Caps> caps(new Caps());
-        GPGMM_RETURN_IF_FAILED(SetMaxResourceSize(device, &caps->mMaxResourceSize), device);
-        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize), device);
-        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier),
-                               device);
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceSize(device, &caps->mMaxResourceSize));
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
         GPGMM_RETURN_IF_FAILED(
-            SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported),
-            device);
+            SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier));
+        GPGMM_RETURN_IF_FAILED(
+            SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
         D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
         GPGMM_RETURN_IF_FAILED(
@@ -104,7 +103,7 @@ namespace gpgmm::d3d12 {
 
         if (adapter != nullptr) {
             DXGI_ADAPTER_DESC adapterDesc;
-            GPGMM_RETURN_IF_FAILED(adapter->GetDesc(&adapterDesc), device);
+            GPGMM_RETURN_IF_FAILED(adapter->GetDesc(&adapterDesc));
 
             caps->mSharedSegmentSize = adapterDesc.SharedSystemMemory;
             caps->mDedicatedSegmentSize = adapterDesc.DedicatedVideoMemory;

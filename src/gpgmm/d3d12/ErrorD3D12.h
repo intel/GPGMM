@@ -22,20 +22,21 @@
 
 #include <string>
 
-#define GPGMM_RETURN_IF_NULLPTR(ptr) \
+#define GPGMM_RETURN_IF_NULL(ptr) \
     GPGMM_RETURN_IF_FAILED((ptr == nullptr ? E_POINTER : S_OK), nullptr)
 
-#define GPGMM_RETURN_IF_FAILED(expr, device)                                          \
-    {                                                                                 \
-        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                                         \
-        if (GPGMM_UNLIKELY(FAILED(GPGMM_LOCAL_VAR(HRESULT)))) {                       \
-            gpgmm::ErrorLog(GetErrorCode(GPGMM_LOCAL_VAR(HRESULT)))                   \
-                << #expr << ": "                                                      \
-                << GetErrorResultWithRemovalReason(GPGMM_LOCAL_VAR(HRESULT), device); \
-            return GPGMM_LOCAL_VAR(HRESULT);                                          \
-        }                                                                             \
-    }                                                                                 \
-    for (;;)                                                                          \
+// For D3D12 calls that could remove device, the (optional) device ptr should be supplied as the
+// last argument so the reason can be appended the result message.
+#define GPGMM_RETURN_IF_FAILED(expr, ...)                                                         \
+    {                                                                                             \
+        auto GPGMM_LOCAL_VAR(HRESULT) = expr;                                                     \
+        if (GPGMM_UNLIKELY(FAILED(GPGMM_LOCAL_VAR(HRESULT)))) {                                   \
+            gpgmm::ErrorLog(GetErrorCode(GPGMM_LOCAL_VAR(HRESULT)))                               \
+                << #expr << ": " << GetErrorResultMessage(GPGMM_LOCAL_VAR(HRESULT), __VA_ARGS__); \
+            return GPGMM_LOCAL_VAR(HRESULT);                                                      \
+        }                                                                                         \
+    }                                                                                             \
+    for (;;)                                                                                      \
     break
 
 #define GPGMM_RETURN_IF_SUCCEEDED(expr)                          \
@@ -48,12 +49,9 @@
     for (;;)                                                     \
     break
 
-#define GPGMM_ASSERT_FAILED(hr) ASSERT(SUCCEEDED(hr));
-#define GPGMM_ASSERT_SUCCEEDED(hr) ASSERT(FAILED(hr));
-
 // Same as FAILED but also returns true if S_FALSE.
-// S_FALSE is used to denote a result where the operation didn't do anything.
-// For example, passing NULL to create an object without returning it will destroy it.
+// S_FALSE is used to denote a HRESULT where the operation didn't do anything.
+// For example, passing NULL to create an object without returning it.
 #define GPGMM_UNSUCCESSFUL(hr) (FAILED(hr) || (hr == S_FALSE))
 
 namespace gpgmm::d3d12 {
@@ -61,9 +59,12 @@ namespace gpgmm::d3d12 {
     HRESULT GetErrorResult(ErrorCode error);
     ErrorCode GetErrorCode(HRESULT error);
 
-    // Returns HRESULT error as a printable message.
-    // If the device is also specified and removed, a detailed message is supplied.
-    std::string GetErrorResultWithRemovalReason(HRESULT error, ID3D12Device* device);
+    // Returns non device removal HRESULT error as a printable message.
+    std::string GetErrorResultMessage(HRESULT error);
+
+    // Returns device removal HRESULT error as a printable message.
+    std::string GetErrorResultMessage(HRESULT error, ID3D12Device* device);
+
     std::string GetErrorResultToString(HRESULT error) noexcept;
 
 }  // namespace gpgmm::d3d12

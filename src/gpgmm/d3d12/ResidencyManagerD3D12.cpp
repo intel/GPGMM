@@ -52,13 +52,13 @@ namespace gpgmm::d3d12 {
                                                      ID3D12Device* pDevice,
                                                      IDXGIAdapter3* pAdapter,
                                                      IResidencyManager** ppResidencyManagerOut) {
-        GPGMM_RETURN_IF_NULLPTR(pAdapter);
-        GPGMM_RETURN_IF_NULLPTR(pDevice);
+        GPGMM_RETURN_IF_NULL(pAdapter);
+        GPGMM_RETURN_IF_NULL(pDevice);
 
         std::unique_ptr<Caps> caps;
         {
             Caps* ptr = nullptr;
-            GPGMM_RETURN_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr), pDevice);
+            GPGMM_RETURN_IF_FAILED(Caps::CreateCaps(pDevice, pAdapter, &ptr));
             caps.reset(ptr);
         }
 
@@ -98,7 +98,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Set the initial video memory limits.
-        GPGMM_RETURN_IF_FAILED(residencyManager->UpdateMemorySegments(), pDevice);
+        GPGMM_RETURN_IF_FAILED(residencyManager->UpdateMemorySegments());
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
             residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
@@ -195,7 +195,7 @@ namespace gpgmm::d3d12 {
 
     // Increments number of locks on a heap to ensure the heap remains resident.
     HRESULT ResidencyManager::LockHeap(IResidencyHeap* pHeap) {
-        GPGMM_RETURN_IF_NULLPTR(pHeap);
+        GPGMM_RETURN_IF_NULL(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -206,8 +206,7 @@ namespace gpgmm::d3d12 {
             ComPtr<ID3D12Pageable> pageable;
             GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)), mDevice);
             GPGMM_RETURN_IF_FAILED(
-                MakeResident(heap->GetHeapSegment(), heap->GetSize(), 1, pageable.GetAddressOf()),
-                mDevice);
+                MakeResident(heap->GetHeapSegment(), heap->GetSize(), 1, pageable.GetAddressOf()));
             heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
@@ -236,7 +235,7 @@ namespace gpgmm::d3d12 {
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
     HRESULT ResidencyManager::UnlockHeap(IResidencyHeap* pHeap) {
-        GPGMM_RETURN_IF_NULLPTR(pHeap);
+        GPGMM_RETURN_IF_NULL(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);
         ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
@@ -264,7 +263,7 @@ namespace gpgmm::d3d12 {
 
         // When all locks have been removed, the resource remains resident and becomes tracked in
         // the corresponding LRU.
-        GPGMM_RETURN_IF_FAILED(InsertHeapInternal(heap), mDevice);
+        GPGMM_RETURN_IF_FAILED(InsertHeapInternal(heap));
 
         // Heaps inserted into the residency cache are already attributed in residency usage.
         mStats.CurrentHeapCount--;
@@ -346,7 +345,7 @@ namespace gpgmm::d3d12 {
         videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
 
         if (IsBudgetNotificationUpdatesDisabled()) {
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment), mDevice);
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
         if (pCurrentReservationOut != nullptr) {
@@ -472,10 +471,8 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResidencyManager::UpdateMemorySegments() {
         std::lock_guard<std::mutex> lock(mMutex);
-        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL),
-                               mDevice);
-        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL),
-                               mDevice);
+        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
+        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
         return S_OK;
     }
 
@@ -484,7 +481,7 @@ namespace gpgmm::d3d12 {
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (IsBudgetNotificationUpdatesDisabled()) {
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment), mDevice);
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
         if (pVideoMemoryInfoOut != nullptr) {
@@ -503,7 +500,7 @@ namespace gpgmm::d3d12 {
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
         if (IsBudgetNotificationUpdatesDisabled()) {
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment), mDevice);
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
         // If a budget wasn't provided, it not possible to evict. This is because either the budget
@@ -535,7 +532,7 @@ namespace gpgmm::d3d12 {
             return S_OK;
         }
 
-        GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists(), mDevice);
+        GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists());
 
         uint64_t bytesEvicted = 0;
         while (bytesEvicted < bytesNeededToBeUnderBudget) {
@@ -563,7 +560,7 @@ namespace gpgmm::d3d12 {
 
             // We must ensure that any previous use of a resource has completed before the resource
             // can be evicted.
-            GPGMM_RETURN_IF_FAILED(mResidencyFence->WaitFor(lastUsedFenceValue), mDevice);
+            GPGMM_RETURN_IF_FAILED(mResidencyFence->WaitFor(lastUsedFenceValue));
 
             heap->RemoveFromList();
             heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_EVICTED);
@@ -571,7 +568,7 @@ namespace gpgmm::d3d12 {
             bytesEvicted += heap->GetSize();
 
             ComPtr<ID3D12Pageable> pageable;
-            GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)), mDevice);
+            GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
             objectsToEvict.push_back(pageable.Get());
         }
@@ -622,7 +619,7 @@ namespace gpgmm::d3d12 {
             return GetErrorResult(ErrorCode::kUnsupported);
         }
 
-        GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists(), mDevice);
+        GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists());
 
         ResidencyList* residencyList = static_cast<ResidencyList*>(ppResidencyLists[0]);
 
@@ -650,7 +647,7 @@ namespace gpgmm::d3d12 {
                 heap->RemoveFromList();
             } else {
                 ComPtr<ID3D12Pageable> pageable;
-                GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)), mDevice);
+                GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
                 if (heap->GetHeapSegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
                     localSizeToMakeResident += heap->GetSize();
@@ -690,15 +687,13 @@ namespace gpgmm::d3d12 {
                 static_cast<uint32_t>(localHeapsToMakeResident.size());
             GPGMM_RETURN_IF_FAILED(
                 MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
-                             numberOfObjectsToMakeResident, localHeapsToMakeResident.data()),
-                mDevice);
+                             numberOfObjectsToMakeResident, localHeapsToMakeResident.data()));
         } else if (nonLocalSizeToMakeResident > 0) {
             const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             GPGMM_RETURN_IF_FAILED(
                 MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, nonLocalSizeToMakeResident,
-                             numberOfObjectsToMakeResident, nonLocalHeapsToMakeResident.data()),
-                mDevice);
+                             numberOfObjectsToMakeResident, nonLocalHeapsToMakeResident.data()));
         }
 
         // Once MakeResident succeeds, we must assume the heaps are resident since D3D12 provides
@@ -720,17 +715,16 @@ namespace gpgmm::d3d12 {
         // ExecuteCommandLists themself. We must continue to keep the residency state of heaps
         // synchronized with the GPU in either case.
         if (pQueue != nullptr) {
-            GPGMM_RETURN_IF_FAILED(mResidencyFence->Signal(pQueue), mDevice);
+            GPGMM_RETURN_IF_FAILED(mResidencyFence->Signal(pQueue));
         }
 
         // Keep video memory segments up-to-date. This must always happen because if the budget
         // never changes (ie. not manually updated or through budget change events), the
         // residency manager wouldn't know what to page in or out.
         if (IsBudgetNotificationUpdatesDisabled()) {
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL),
-                                   mDevice);
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL),
-                                   mDevice);
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
+            GPGMM_RETURN_IF_FAILED(
+                UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL(
@@ -746,7 +740,7 @@ namespace gpgmm::d3d12 {
                                            ID3D12Pageable** allocations) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.MakeResident");
 
-        GPGMM_RETURN_IF_FAILED(EvictInternal(sizeToMakeResident, heapSegment, nullptr), mDevice);
+        GPGMM_RETURN_IF_FAILED(EvictInternal(sizeToMakeResident, heapSegment, nullptr));
 
         DebugEvent(MessageId::kBudgetExceeded, this)
             << "GPU page-in. Number of allocations: " << numberOfObjectsToMakeResident << " ("
@@ -758,7 +752,7 @@ namespace gpgmm::d3d12 {
         // able to continue after calling Evict again.
         ComPtr<ID3D12Device3> device3;
         if (SUCCEEDED(mDevice->QueryInterface(IID_PPV_ARGS(&device3)))) {
-            GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists(), mDevice);
+            GPGMM_RETURN_IF_FAILED(EnsureResidencyFenceExists());
             GPGMM_RETURN_IF_SUCCEEDED(device3->EnqueueMakeResident(
                 (mIsAlwaysInBudget) ? D3D12_RESIDENCY_FLAG_DENY_OVERBUDGET
                                     : D3D12_RESIDENCY_FLAG_NONE,
@@ -775,7 +769,7 @@ namespace gpgmm::d3d12 {
             // execution and must throw a fatal error.
             uint64_t evictedSizeInBytes = 0;
             GPGMM_RETURN_IF_FAILED(
-                EvictInternal(mEvictSizeInBytes, heapSegment, &evictedSizeInBytes), mDevice);
+                EvictInternal(mEvictSizeInBytes, heapSegment, &evictedSizeInBytes));
             if (evictedSizeInBytes == 0) {
                 ErrorLog(ErrorCode::kBudgetInvalid, this)
                     << "Unable to evict enough heaps to stay within budget. This "
@@ -885,7 +879,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResidencyManager::SetResidencyStatus(IResidencyHeap* pHeap,
                                                  const RESIDENCY_HEAP_STATUS& newStatus) {
-        GPGMM_RETURN_IF_NULLPTR(pHeap);
+        GPGMM_RETURN_IF_NULL(pHeap);
 
         ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
         if (heap->GetInfo().IsLocked) {
@@ -916,7 +910,7 @@ namespace gpgmm::d3d12 {
         }
 
         Fence* fencePtr = nullptr;
-        GPGMM_RETURN_IF_FAILED(Fence::CreateFence(mDevice, mInitialFenceValue, &fencePtr), mDevice);
+        GPGMM_RETURN_IF_FAILED(Fence::CreateFence(mDevice, mInitialFenceValue, &fencePtr));
         mResidencyFence.reset(fencePtr);
         return S_OK;
     }

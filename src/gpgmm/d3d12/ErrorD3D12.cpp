@@ -70,11 +70,15 @@ namespace gpgmm::d3d12 {
         return ss.str();
     }
 
-    std::string GetErrorResultWithRemovalReason(HRESULT error, ID3D12Device* device) {
+    std::string GetErrorResultMessage(HRESULT error) {
+        // Device must be supplied when device removal errors are possible.
+        ASSERT(error != DXGI_ERROR_DEVICE_REMOVED);
+        return GetErrorResultToString(error);
+    }
+
+    std::string GetErrorResultMessage(HRESULT error, ID3D12Device* device) {
         if (error == DXGI_ERROR_DEVICE_REMOVED) {
-            if (device == nullptr) {
-                return "Device was not found but removed " + GetErrorResultToString(error);
-            }
+            ASSERT(device != nullptr);
             return GetErrorResultToString(error) +
                    " with reason: " + GetErrorResultToString(device->GetDeviceRemovedReason());
         }
