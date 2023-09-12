@@ -598,6 +598,7 @@ namespace gpgmm::d3d12 {
           mResidencyManager(pResidencyManager),
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
+          mExtraRequiredResourceFlags(descriptor.ExtraRequiredResourceFlags),
           mIsAlwaysCommitted(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED),
           mIsAlwaysCreatedInBudget(descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALWAYS_IN_BUDGET),
           mFlushEventBuffersOnDestruct(descriptor.RecordOptions.EventScope &
@@ -706,9 +707,9 @@ namespace gpgmm::d3d12 {
             }
 
             if (IsBuffersAllowed(heapFlags, mResourceHeapTier)) {
-                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
-                    CreateSmallBufferAllocator(descriptor, heapFlags, heapProperties, heapInfo,
-                                               GetInitialResourceState(heapType));
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = CreateSmallBufferAllocator(
+                    descriptor, heapFlags, heapProperties, heapInfo, mExtraRequiredResourceFlags,
+                    GetInitialResourceState(heapType));
             } else {
                 mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator;
             }
@@ -824,9 +825,10 @@ namespace gpgmm::d3d12 {
         D3D12_HEAP_FLAGS heapFlags,
         const D3D12_HEAP_PROPERTIES& heapProperties,
         const HEAP_ALLOCATION_INFO& heapInfo,
+        D3D12_RESOURCE_FLAGS resourceFlags,
         D3D12_RESOURCE_STATES initialResourceState) {
         ScopedRef<MemoryAllocatorBase> smallBufferOnlyAllocator(new BufferAllocator(
-            this, heapProperties, heapFlags, D3D12_RESOURCE_FLAG_NONE, initialResourceState));
+            this, heapProperties, heapFlags, resourceFlags, initialResourceState));
 
         ScopedRef<MemoryAllocatorBase> pooledOrNonPooledAllocator =
             CreatePoolAllocator(descriptor.PoolAlgorithm, heapInfo,
@@ -1134,6 +1136,7 @@ namespace gpgmm::d3d12 {
 
         D3D12_RESOURCE_DESC newResourceDesc = resourceDescriptor;
         newResourceDesc.Alignment = resourceInfo.Alignment;
+        newResourceDesc.Flags |= mExtraRequiredResourceFlags;
 
         // If the heap type was not specified, infer it using the initial resource state.
         D3D12_HEAP_TYPE heapType = allocationDescriptor.HeapType;
