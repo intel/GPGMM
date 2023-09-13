@@ -73,14 +73,32 @@ TEST(StableListTests, Insert) {
 }
 
 TEST(StableListTests, Get) {
-    StableList<int, 2> list;
-    list.push_back(0);
-    list.push_back(1);
-    list.push_back(2);
+    // All items, unerased.
+    {
+        StableList<int, 2> list;
+        list.push_back(0);
+        list.push_back(1);
+        list.push_back(2);
 
-    EXPECT_EQ(*list.begin(), 0);
-    EXPECT_EQ(*list.begin() + 1, 1);
-    EXPECT_EQ(*list.begin() + 2, 2);
+        EXPECT_EQ(*list.begin(), 0);
+        EXPECT_EQ(*list.begin() + 1, 1);
+        EXPECT_EQ(*list.begin() + 2, 2);
+
+        EXPECT_EQ(*(list.begin() += 0), 0);
+        EXPECT_EQ(*(list.begin() += 1), 1);
+        EXPECT_EQ(*(list.begin() += 2), 2);
+    }
+
+    // Over a hole in the middle.
+    {
+        StableList<int, 2> list;
+        list.push_back(0);
+        list.push_back(1);
+        list.push_back(2);
+
+        list.erase(list.begin() + 1);
+        EXPECT_EQ(*(list.begin() += 1), 2);
+    }
 }
 
 TEST(StableListTests, RemoveEnds) {
