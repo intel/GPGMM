@@ -24,7 +24,7 @@
 
 namespace gpgmm {
 
-    /** \brief StableList is like a STL vector, offering reference stability. StableList is used
+    /* StableList is like a STL vector, offering reference stability. StableList is used
     to contain data like a linked-list but is stored using one or more STL vectors (See
     the Q&A section to understand how this differs from std::vector or std::list).
 
@@ -91,32 +91,24 @@ namespace gpgmm {
 
         StableList() = default;
 
-        /** \brief Contructs the container with count default-inserted instances of T.
-
-        @param count Number of default-inserted instances of T to create.
-        */
+        // Contructs the container with count default-inserted instances of T.
         explicit StableList(size_t count) {
             for (size_t i = 0; i < count; ++i) {
                 emplace_back();
             }
         }
 
-        /** Contructs the container with count copies of value |value|.
-
-        @param count Number of value-inserted instances of T to create.
-        @param value The value which is copied per instance of T.
-        */
+        // Contructs the container with count copies of value |value|.
         StableList(size_t count, const T& value) {
             for (size_t i = 0; i < count; ++i) {
                 push_back(value);
             }
         }
 
-        /** \brief Removes unused capacity. Reduces capacity() to size().
-
-        Reduces from the end and only when unoccupied. If the chunk size decreases to zero, the
-        chunk will be removed too.
-        */
+        // Removes unused capacity. Reduces capacity() to size().
+        //
+        // Reduces from the end and only when unoccupied. If the chunk size decreases to zero, the
+        // chunk will be removed too.
         void shrink_to_fit() {
             for (size_t i = mChunks.size(); i > 0; i--) {
                 auto& chunk = mChunks[i - 1];
@@ -134,21 +126,15 @@ namespace gpgmm {
             }
         }
 
-        /** \brief Remove item from the back.
-
-        Must be at-least one item inserted.
-        */
+        // Remove item from the back.
         void pop_back() {
             erase(GetSizeWithUnused() - 1);
         }
 
-        /** \brief Erase item by index.
-
-        The index is flatten or the value of size() - 1.
-
-        Erasing from a position other than the end will not erase immediately. Not until
-        no other positions after it are also erased.
-        */
+        // Erase item by index, whose value is flatten or value of size - 1.
+        //
+        // Erasing from a position other than the end will not erase immediately. Not until
+        // no other positions after it are also erased.
         void erase(size_t index) {
             ASSERT(!empty());
             bool* isUsed = &mChunks[index / ChunkSize]->mOccupied[index % ChunkSize];
@@ -167,12 +153,8 @@ namespace gpgmm {
             mSize--;
         }
 
-        /** \brief Insert item in back of the list.
-
-        Inserted item is added to size() position (before push_back is called).
-
-        @param lvalue Item to insert.
-        */
+        // Insert item in back of the list, added at size() position (or before push_back is
+        // called).
         void push_back(const T& lvalue) {
             Chunk& chunk = GetOrAddLastChunk();
             chunk.mData.push_back(lvalue);
@@ -180,12 +162,8 @@ namespace gpgmm {
             mSize++;
         }
 
-        /** \brief Insert item in back of the list.
-
-        Inserted item is added to size() position (before push_back is called).
-
-        @param rvalue Item to insert.
-        */
+        // Insert item in back of the list, added at size() position (or before push_back is
+        // called).
         void push_back(T&& rvalue) {
             Chunk& chunk = GetOrAddLastChunk();
             chunk.mData.push_back(std::move(rvalue));
@@ -193,8 +171,7 @@ namespace gpgmm {
             mSize++;
         }
 
-        /** \brief Insert item in-place in back of the list.
-         */
+        // Insert item in-place in back of the list.
         template <class... Args>
         void emplace_back(Args&&... args) {
             Chunk& chunk = GetOrAddLastChunk();
@@ -203,42 +180,27 @@ namespace gpgmm {
             mSize++;
         }
 
-        /** \brief Get the last item in the list.
-
-        \return Reference to the last item in the list.
-        */
+        // Get the last item in the list.
         T& back() {
             return mChunks.back()->mData.back();
         }
 
-        /** \brief Get the last item in the list.
-
-        \return Const reference to the last item in the list.
-        */
+        // Get the last item in the list.
         const T& back() const {
             return mChunks.back()->mData.back();
         }
 
-        /** \brief Get the allocated size.
-
-        \return Allocated size, number of chunks allocated x size per chunk.
-        */
+        // Get the allocated size or number of chunks allocated x size per chunk.
         size_t capacity() const {
             return mChunks.size() * ChunkSize;
         }
 
-        /** \brief Get the occupied size or count of items.
-
-        \return Size occupied, not counting previously erased items.
-        */
+        // Get the occupied size, or size not counting erased items.
         size_t occupied_size() const {
             return mSize;
         }
 
-        /** \brief Get the size, counting both occupied and non-occupied items.
-
-        \return Size, counting both occupied and non-occupied items.
-        */
+        // Get the size, counting both occupied and non-occupied items.
         size_t size() const {
             if (empty()) {
                 return 0;
@@ -246,28 +208,17 @@ namespace gpgmm {
             return GetSizeWithUnused();
         }
 
-        /** \brief Get the max size of the list.
-
-        \return Size, max limit.
-        */
+        // Get the max size of the list.
         size_t max_size() const {
             return std::numeric_limits<size_t>::max();
         }
 
-        /** \brief Check if list is empty.
-
-        Empty means the occupied size is zero.
-
-        \return True, when the list has no occupied items.
-        */
+        // Check if list is empty or the occupied size is zero.
         bool empty() const {
             return occupied_size() == 0;
         }
 
-        /** \brief Increase the capacity of the list.
-
-        @param newCapacity New capacity, in number of items.
-        */
+        // Increase the capacity of the list.
         void reserve(size_t newCapacity) {
             while (capacity() < newCapacity) {
                 AddChunk();
@@ -384,9 +335,16 @@ namespace gpgmm {
                 return *this;
             }
 
+            iterator& operator+=(const int offset) {
+                for (int i = 0; i < offset; i++) {
+                    StableListIteratorBase<StableList<T, ChunkSize>>::operator++();
+                }
+                return *this;
+            }
+
             iterator operator+(int offset) const {
                 iterator tmp = *this;
-                tmp.mIndex += offset;
+                tmp += offset;
                 return tmp;
             }
         };
@@ -417,9 +375,16 @@ namespace gpgmm {
                 return *this;
             }
 
+            const_iterator& operator+=(const int offset) {
+                for (int i = 0; i < offset; i++) {
+                    StableListIteratorBase<StableList<T, ChunkSize>>::operator++();
+                }
+                return *this;
+            }
+
             const_iterator operator+(int offset) const {
                 const_iterator tmp = *this;
-                tmp.mIndex += offset;
+                tmp += offset;
                 return tmp;
             }
         };
