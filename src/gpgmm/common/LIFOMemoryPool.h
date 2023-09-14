@@ -21,13 +21,14 @@
 
 namespace gpgmm {
 
-    // Pool using LIFO (newest are recycled first).
+    // LIFO storage of memory allocations (newest are recycled first).
     class LIFOMemoryPool : public MemoryPoolBase {
         using UnderlyingContainerType = std::deque<std::unique_ptr<MemoryAllocationBase>>;
+        using Iterator = UnderlyingContainerType::iterator;
 
       public:
         explicit LIFOMemoryPool(uint64_t memorySize);
-        ~LIFOMemoryPool() override = default;
+        ~LIFOMemoryPool() override;
 
         // MemoryPoolBase interface
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireFromPool(
@@ -37,14 +38,14 @@ namespace gpgmm {
         uint64_t ReleasePool(uint64_t bytesToFree = kInvalidSize) override;
         uint64_t GetPoolSize() const override;
 
-        UnderlyingContainerType::iterator begin();
-        UnderlyingContainerType::iterator end();
+        Iterator begin();
+        Iterator end();
 
         // Resizes the pool up to but not including |lastIndex|.
-        void ShrinkPool(uint64_t lastIndex);
+        void ResizePool(uint64_t lastIndex);
 
       private:
-        UnderlyingContainerType mPool;
+        UnderlyingContainerType mStack;
     };
 
 }  // namespace gpgmm
