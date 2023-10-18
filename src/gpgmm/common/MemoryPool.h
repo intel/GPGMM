@@ -46,33 +46,41 @@ namespace gpgmm {
         // Deallocate or shrink the pool.
         virtual uint64_t ReleasePool(uint64_t bytesToRelease) = 0;
 
-        // Get the size of the pool.
+        // Gets the number of allocations in the pool.
         virtual uint64_t GetPoolSize() const = 0;
 
         // Returns the size of the memory allocations being pooled.
         virtual uint64_t GetMemorySize() const;
 
       protected:
-        // Shrinks the size of the pool in |mMemorySize| sizes until |bytesToRelease| is reached.
+        // Resizes pool storage by erasing items up to but not including |lastIndex| or the interval
+        // [first, last).
+        virtual void ShrinkPool(uint64_t lastIndex) = 0;
+
+        // Helper which decreases the size of the pool in |mMemorySize| sizes until |bytesToRelease|
+        // is reached.
         template <typename MemoryPoolT>
-        uint64_t TrimPoolUntil(MemoryPoolT* pool, uint64_t bytesToRelease) {
-            uint64_t totalBytesReleased = 0;
-            uint64_t lastIndex = 0;
+        uint64_t DeallocateMemoryAndShrinkUntil(MemoryPoolT* pool, uint64_t bytesToRelease) {
+            uint64_t bytesReleased = 0;
+            uint64_t lastIndexInPool = 0;
             for (auto& allocation : *pool) {
-                totalBytesReleased += allocation->GetSize();
+                if (allocation == nullptr) {
+                    continue;
+                }
+                bytesReleased += allocation->GetSize();
                 allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
-                lastIndex++;
-                if (totalBytesReleased >= bytesToRelease) {
+                lastIndexInPool++;
+                if (bytesReleased >= bytesToRelease) {
                     break;
                 }
             }
 
-            // Last is non-inclusive or [first, last).
-            if (lastIndex > 0) {
-                pool->ShrinkPool(lastIndex);
+            // Once allocations are deallocated, clean-up the corresponding entries in the pool too.
+            if (lastIndexInPool > 0) {
+                pool->ShrinkPool(lastIndexInPool);
             }
 
-            return totalBytesReleased;
+            return bytesReleased;
         }
 
       private:

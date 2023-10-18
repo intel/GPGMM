@@ -14,17 +14,13 @@
 
 #include "gpgmm/common/MemoryPool.h"
 
-#include "gpgmm/common/TraceEvent.h"
-
 namespace gpgmm {
 
     MemoryPoolBase::MemoryPoolBase(uint64_t memorySize) : mMemorySize(memorySize) {
-        GPGMM_TRACE_EVENT_OBJECT_NEW(this);
+        ASSERT(mMemorySize != kInvalidSize);
     }
 
-    MemoryPoolBase::~MemoryPoolBase() {
-        GPGMM_TRACE_EVENT_OBJECT_DESTROY(this);
-    }
+    MemoryPoolBase::~MemoryPoolBase() = default;
 
     std::unique_ptr<MemoryAllocationBase> MemoryPoolBase::AcquireFromPoolForTesting(
         uint64_t indexInPool) {
