@@ -15,39 +15,36 @@
 #include "gpgmm/common/IndexedMemoryPool.h"
 
 #include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/TraceEvent.h"
 
 namespace gpgmm {
 
     IndexedMemoryPool::IndexedMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
     }
 
-    IndexedMemoryPool::~IndexedMemoryPool() {
-        ReleasePool(kInvalidSize);
-    }
-
     ResultOrError<std::unique_ptr<MemoryAllocationBase>> IndexedMemoryPool::AcquireFromPool(
         uint64_t indexInPool) {
-        if (indexInPool >= mVec.size()) {
-            mVec.resize(indexInPool + 1);
+        if (indexInPool >= mPool.size()) {
+            mPool.resize(indexInPool + 1);
         }
-        return std::unique_ptr<MemoryAllocationBase>(mVec[indexInPool].release());
+        return std::unique_ptr<MemoryAllocationBase>(mPool[indexInPool].release());
     }
 
     MaybeError IndexedMemoryPool::ReturnToPool(std::unique_ptr<MemoryAllocationBase> allocation,
                                                uint64_t indexInPool) {
-        GPGMM_RETURN_ERROR_IF(this, indexInPool >= mVec.size(), "Index exceeded pool size",
+        GPGMM_RETURN_ERROR_IF(this, indexInPool >= mPool.size(), "Index exceeded pool size",
                               ErrorCode::kBadOperation);
-        mVec[indexInPool] = std::move(allocation);
+        mPool[indexInPool] = std::move(allocation);
         return {};
     }
 
     uint64_t IndexedMemoryPool::ReleasePool(uint64_t bytesToRelease) {
-        return DeallocateAndShrinkUntil(this, bytesToRelease);
+        return TrimPoolUntil(this, bytesToRelease);
     }
 
     uint64_t IndexedMemoryPool::GetPoolSize() const {
         uint64_t count = 0;
-        for (auto& allocation : mVec) {
+        for (auto& allocation : mPool) {
             if (allocation != nullptr) {
                 count++;
             }
@@ -55,16 +52,16 @@ namespace gpgmm {
         return count;
     }
 
-    IndexedMemoryPool::Iterator IndexedMemoryPool::begin() {
-        return mVec.begin();
+    IndexedMemoryPool::UnderlyingContainerType::iterator IndexedMemoryPool::begin() {
+        return mPool.begin();
     }
 
-    IndexedMemoryPool::Iterator IndexedMemoryPool::end() {
-        return mVec.end();
+    IndexedMemoryPool::UnderlyingContainerType::iterator IndexedMemoryPool::end() {
+        return mPool.end();
     }
 
-    void IndexedMemoryPool::ResizePool(uint64_t lastIndex) {
-        mVec.erase(begin(), begin() + lastIndex);
+    void IndexedMemoryPool::ShrinkPool(uint64_t lastIndex) {
+        mPool.erase(begin(), begin() + lastIndex);
     }
 
 }  // namespace gpgmm

@@ -46,7 +46,7 @@ namespace gpgmm {
         // Deallocate or shrink the pool.
         virtual uint64_t ReleasePool(uint64_t bytesToRelease) = 0;
 
-        // Gets the number of allocations in the pool.
+        // Get the size of the pool.
         virtual uint64_t GetPoolSize() const = 0;
 
         // Returns the size of the memory allocations being pooled.
@@ -55,24 +55,24 @@ namespace gpgmm {
       protected:
         // Shrinks the size of the pool in |mMemorySize| sizes until |bytesToRelease| is reached.
         template <typename MemoryPoolT>
-        uint64_t DeallocateAndShrinkUntil(MemoryPoolT* pool, uint64_t bytesToRelease) {
-            uint64_t bytesReleased = 0;
-            uint64_t lastIndexInPool = 0;
+        uint64_t TrimPoolUntil(MemoryPoolT* pool, uint64_t bytesToRelease) {
+            uint64_t totalBytesReleased = 0;
+            uint64_t lastIndex = 0;
             for (auto& allocation : *pool) {
-                bytesReleased += allocation->GetSize();
+                totalBytesReleased += allocation->GetSize();
                 allocation->GetAllocator()->DeallocateMemory(std::move(allocation));
-                lastIndexInPool++;
-                if (bytesReleased >= bytesToRelease) {
+                lastIndex++;
+                if (totalBytesReleased >= bytesToRelease) {
                     break;
                 }
             }
 
             // Last is non-inclusive or [first, last).
-            if (lastIndexInPool > 0) {
-                pool->ResizePool(lastIndexInPool);
+            if (lastIndex > 0) {
+                pool->ShrinkPool(lastIndex);
             }
 
-            return bytesReleased;
+            return totalBytesReleased;
         }
 
       private:

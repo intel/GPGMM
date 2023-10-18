@@ -14,13 +14,14 @@
 
 #include "gpgmm/common/LIFOMemoryPool.h"
 
+#include "gpgmm/common/MemoryAllocation.h"
+#include "gpgmm/common/MemoryAllocator.h"
+#include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/utils/Assert.h"
+
 namespace gpgmm {
 
     LIFOMemoryPool::LIFOMemoryPool(uint64_t memorySize) : MemoryPoolBase(memorySize) {
-    }
-
-    LIFOMemoryPool::~LIFOMemoryPool() {
-        ReleasePool(kInvalidSize);
     }
 
     ResultOrError<std::unique_ptr<MemoryAllocationBase>> LIFOMemoryPool::AcquireFromPool(
@@ -29,9 +30,9 @@ namespace gpgmm {
                               "Index was specified but not allowed", ErrorCode::kBadOperation);
 
         std::unique_ptr<MemoryAllocationBase> allocation;
-        if (!mStack.empty()) {
-            allocation = std::move(mStack.front());
-            mStack.pop_front();
+        if (!mPool.empty()) {
+            allocation = std::move(mPool.front());
+            mPool.pop_front();
         }
 
         return allocation;
@@ -41,28 +42,28 @@ namespace gpgmm {
                                             uint64_t indexInPool) {
         GPGMM_RETURN_ERROR_IF(this, indexInPool != kInvalidIndex,
                               "Index was specified but not allowed", ErrorCode::kBadOperation);
-        mStack.push_front(std::move(allocation));
+        mPool.push_front(std::move(allocation));
         return {};
     }
 
     uint64_t LIFOMemoryPool::ReleasePool(uint64_t bytesToRelease) {
-        return DeallocateAndShrinkUntil(this, bytesToRelease);
+        return TrimPoolUntil(this, bytesToRelease);
     }
 
     uint64_t LIFOMemoryPool::GetPoolSize() const {
-        return mStack.size();
+        return mPool.size();
     }
 
-    LIFOMemoryPool::Iterator LIFOMemoryPool::begin() {
-        return mStack.begin();
+    LIFOMemoryPool::UnderlyingContainerType::iterator LIFOMemoryPool::begin() {
+        return mPool.begin();
     }
 
-    LIFOMemoryPool::Iterator LIFOMemoryPool::end() {
-        return mStack.end();
+    LIFOMemoryPool::UnderlyingContainerType::iterator LIFOMemoryPool::end() {
+        return mPool.end();
     }
 
-    void LIFOMemoryPool::ResizePool(uint64_t lastIndex) {
-        mStack.erase(begin(), begin() + lastIndex);
+    void LIFOMemoryPool::ShrinkPool(uint64_t lastIndex) {
+        mPool.erase(begin(), begin() + lastIndex);
     }
 
 }  // namespace gpgmm

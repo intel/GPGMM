@@ -21,14 +21,12 @@
 
 namespace gpgmm {
 
-    // Direct mapped storage of memory allocations.
     class IndexedMemoryPool final : public MemoryPoolBase {
         using UnderlyingContainerType = std::vector<std::unique_ptr<MemoryAllocationBase>>;
-        using Iterator = UnderlyingContainerType::iterator;
 
       public:
         explicit IndexedMemoryPool(uint64_t memorySize);
-        ~IndexedMemoryPool() override;
+        ~IndexedMemoryPool() override = default;
 
         // MemoryPoolBase interface
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> AcquireFromPool(
@@ -38,14 +36,14 @@ namespace gpgmm {
         uint64_t ReleasePool(uint64_t bytesToRelease) override;
         uint64_t GetPoolSize() const override;
 
-        Iterator begin();
-        Iterator end();
+        UnderlyingContainerType::iterator begin();
+        UnderlyingContainerType::iterator end();
 
         // Resizes the pool up to but not including |lastIndex|.
-        void ResizePool(uint64_t lastIndex);
+        void ShrinkPool(uint64_t lastIndex);
 
       private:
-        UnderlyingContainerType mVec;
+        UnderlyingContainerType mPool;
     };
 
 }  // namespace gpgmm
