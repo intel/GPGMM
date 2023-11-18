@@ -203,14 +203,14 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapLocked) {
                                       CreateResourceHeapCallbackContext::CreateHeap,
                                       &createHeapContext, nullptr));
 
-    ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
+    ASSERT_SUCCEEDED(resourceHeap->Lock());
 
     // Unlocking a heap with another lock must return S_FALSE.
-    EXPECT_EQ(residencyManager->UnlockHeap(resourceHeap.Get()), S_FALSE);
+    EXPECT_EQ(resourceHeap->Unlock(), S_FALSE);
     EXPECT_TRUE(resourceHeap->GetInfo().IsLocked);
 
     // But unlocking the last lock must return S_OK.
-    EXPECT_EQ(residencyManager->UnlockHeap(resourceHeap.Get()), S_OK);
+    EXPECT_EQ(resourceHeap->Unlock(), S_OK);
     EXPECT_FALSE(resourceHeap->GetInfo().IsLocked);
 }
 
@@ -333,7 +333,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     ASSERT_SUCCEEDED(resourceHeap.As(&heap));
     EXPECT_NE(heap, nullptr);
 
-    ASSERT_SUCCEEDED(residencyManager->LockHeap(resourceHeap.Get()));
+    ASSERT_SUCCEEDED(resourceHeap->Lock());
 
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, true);
@@ -341,7 +341,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, heapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
-    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));
+    ASSERT_SUCCEEDED(resourceHeap->Unlock());
 
     EXPECT_EQ(resourceHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(resourceHeap->GetInfo().IsLocked, false);
@@ -350,7 +350,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, heapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
-    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(resourceHeap.Get()));  // Not locked
+    ASSERT_SUCCEEDED(resourceHeap->Unlock());  // Not locked
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
@@ -387,7 +387,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, 0u);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 0u);
 
-    ASSERT_SUCCEEDED(residencyManager->LockHeap(descriptorHeap.Get()));
+    ASSERT_SUCCEEDED(descriptorHeap->Lock());
 
     EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, true);
@@ -395,7 +395,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
-    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
+    ASSERT_SUCCEEDED(descriptorHeap->Unlock());
 
     EXPECT_EQ(descriptorHeap->GetInfo().Status, gpgmm::d3d12::RESIDENCY_HEAP_STATUS_RESIDENT);
     EXPECT_EQ(descriptorHeap->GetInfo().IsLocked, false);
@@ -404,7 +404,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapUsage, descriptorHeapDesc.SizeInBytes);
     EXPECT_EQ(GetStats(residencyManager).CurrentHeapCount, 1u);
 
-    ASSERT_SUCCEEDED(residencyManager->UnlockHeap(descriptorHeap.Get()));
+    ASSERT_SUCCEEDED(descriptorHeap->Unlock());
 }
 
 TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapResident) {
@@ -571,8 +571,8 @@ TEST_F(D3D12ResidencyManagerTests, GetResidencyManager) {
     EXPECT_REFCOUNT_EQ(residencyManager.Get(), 4);
 
     // Use the resource manager object from the new pointer.
-    EXPECT_SUCCEEDED(residencyManagerAgain->LockHeap(allocationWithResidency->GetMemory()));
-    EXPECT_SUCCEEDED(residencyManagerAgain->UnlockHeap(allocationWithResidency->GetMemory()));
+    EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->Lock());
+    EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->Unlock());
 
     // Getting a NULL pointer to a residency manager cannot claim ownership.
     EXPECT_SUCCEEDED(allocationWithResidency->GetMemory()->GetResidencyManager(nullptr));
@@ -811,7 +811,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
         ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
             bufferAllocationDesc, bufferDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, &allocation));
 
-        ASSERT_SUCCEEDED(residencyManager->LockHeap(allocation->GetMemory()));
+        ASSERT_SUCCEEDED(allocation->GetMemory()->Lock());
 
         allocationsBelowBudget.push_back(std::move(allocation));
     }
@@ -834,7 +834,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithLockedHeaps) {
 
     // Unlocked allocations should be always eligable for eviction.
     for (auto& allocation : allocationsBelowBudget) {
-        ASSERT_SUCCEEDED(residencyManager->UnlockHeap(allocation->GetMemory()));
+        ASSERT_SUCCEEDED(allocation->GetMemory()->Unlock());
     }
 
     ASSERT_SUCCEEDED(resourceAllocator->CreateResource(

@@ -194,7 +194,7 @@ namespace gpgmm::d3d12 {
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
-    HRESULT ResidencyManager::LockHeap(IResidencyHeap* pHeap) {
+    HRESULT ResidencyManager::LockHeap(ResidencyHeap* pHeap) {
         GPGMM_RETURN_IF_NULL(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);
@@ -234,7 +234,7 @@ namespace gpgmm::d3d12 {
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    HRESULT ResidencyManager::UnlockHeap(IResidencyHeap* pHeap) {
+    HRESULT ResidencyManager::UnlockHeap(ResidencyHeap* pHeap) {
         GPGMM_RETURN_IF_NULL(pHeap);
 
         std::lock_guard<std::mutex> lock(mMutex);

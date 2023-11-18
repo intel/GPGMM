@@ -97,6 +97,14 @@ namespace gpgmm::d3d12 {
         return {GetSize(), GetAlignment(), false, RESIDENCY_HEAP_STATUS_UNKNOWN};
     }
 
+    HRESULT ResidencyHeap::Lock() {
+        return S_OK;
+    }
+
+    HRESULT ResidencyHeap::Unlock() {
+        return S_OK;
+    }
+
     HRESULT ResidencyHeap::GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const {
         return E_NOTIMPL;
     }
@@ -175,14 +183,6 @@ namespace gpgmm::d3d12 {
     }
 
     ResidencyManager::~ResidencyManager() = default;
-
-    HRESULT ResidencyManager::LockHeap(IResidencyHeap* pHeap) {
-        return S_OK;
-    }
-
-    HRESULT ResidencyManager::UnlockHeap(IResidencyHeap* pHeap) {
-        return S_OK;
-    }
 
     HRESULT ResidencyManager::ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                                   ID3D12CommandList* const* ppCommandLists,

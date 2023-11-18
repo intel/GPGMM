@@ -54,6 +54,8 @@ namespace gpgmm::d3d12 {
 
         // IResidencyHeap interface
         RESIDENCY_HEAP_INFO GetInfo() const override;
+        HRESULT Lock() override;
+        HRESULT Unlock() override;
         HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
 
         // IUnknown interface
@@ -65,13 +67,10 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
-        HRESULT Lock();
-        HRESULT Unlock();
-
       private:
         friend ResidencyManager;
 
-        ResidencyHeap(ComPtr<IResidencyManager> residencyManager,
+        ResidencyHeap(ComPtr<ResidencyManager> residencyManager,
                       ComPtr<ID3D12Pageable> pageable,
                       const RESIDENCY_HEAP_DESC& descriptor,
                       bool isResidencyDisabled);
@@ -100,7 +99,7 @@ namespace gpgmm::d3d12 {
         void AddResidencyLockRef();
         void ReleaseResidencyLock();
 
-        ComPtr<IResidencyManager> mResidencyManager;
+        ComPtr<ResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
         DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
