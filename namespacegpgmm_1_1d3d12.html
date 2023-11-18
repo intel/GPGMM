@@ -205,6 +205,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a445f08a49a91decaacc53bc978572451" id="r_a445f08a49a91decaacc53bc978572451"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a445f08a49a91decaacc53bc978572451">SetDebugName</a> (LPCWSTR Name)=0</td></tr>
 <tr class="memdesc:a445f08a49a91decaacc53bc978572451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associate a debug name.  <br /></td></tr>
 <tr class="separator:a445f08a49a91decaacc53bc978572451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e52cb74ecea6531cff0b584d5e7841d" id="r_a5e52cb74ecea6531cff0b584d5e7841d"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a5e52cb74ecea6531cff0b584d5e7841d">Lock</a> ()=0</td></tr>
+<tr class="memdesc:a5e52cb74ecea6531cff0b584d5e7841d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locks the specified heap.  <br /></td></tr>
+<tr class="separator:a5e52cb74ecea6531cff0b584d5e7841d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a25b93d4c6b26a10999b2943f47826b" id="r_a6a25b93d4c6b26a10999b2943f47826b"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a6a25b93d4c6b26a10999b2943f47826b">Unlock</a> ()=0</td></tr>
+<tr class="memdesc:a6a25b93d4c6b26a10999b2943f47826b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <br /></td></tr>
+<tr class="separator:a6a25b93d4c6b26a10999b2943f47826b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa899b85a6d148e56010de91a94cdde94" id="r_aa899b85a6d148e56010de91a94cdde94"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aa899b85a6d148e56010de91a94cdde94">GetResidencyManager</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> **ppResidencyManagerOut) const =0</td></tr>
 <tr class="memdesc:aa899b85a6d148e56010de91a94cdde94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the residency manager that manages this heap.  <br /></td></tr>
 <tr class="separator:aa899b85a6d148e56010de91a94cdde94"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,12 +226,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5f06db116d1746109ac7333dcc3411ee" id="r_a5f06db116d1746109ac7333dcc3411ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a5f06db116d1746109ac7333dcc3411ee">CreateResidencyList</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> **ppResidencyListOut)</td></tr>
 <tr class="memdesc:a5f06db116d1746109ac7333dcc3411ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a residency list or collection of heaps to manage together for residency.  <br /></td></tr>
 <tr class="separator:a5f06db116d1746109ac7333dcc3411ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefca0a22a15bdc66cebf9eecc5aa4c43" id="r_aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#aefca0a22a15bdc66cebf9eecc5aa4c43">UnlockHeap</a> (<a class="el" href="namespacegpgmm_1_1d3d12.html#a0af206595eb7d5798cccd49cbc9b3acf">IResidencyHeap</a> *pHeap)=0</td></tr>
-<tr class="memdesc:aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the specified heap.  <br /></td></tr>
-<tr class="separator:aefca0a22a15bdc66cebf9eecc5aa4c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac911ca7f1a4e44c02d008e136766f104" id="r_ac911ca7f1a4e44c02d008e136766f104"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ac911ca7f1a4e44c02d008e136766f104">ExecuteCommandLists</a> (ID3D12CommandQueue *const pQueue, ID3D12CommandList *const *ppCommandLists, <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *ppResidencyLists, UINT count)=0</td></tr>
-<tr class="memdesc:ac911ca7f1a4e44c02d008e136766f104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command lists using residency managed heaps or E_OUTOFMEMORY.  <br /></td></tr>
-<tr class="separator:ac911ca7f1a4e44c02d008e136766f104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c4619565912aa33382be743b7116f9f" id="r_a4c4619565912aa33382be743b7116f9f"><td class="memItemLeft" align="right" valign="top">virtual HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a4c4619565912aa33382be743b7116f9f">SetVideoMemoryReservation</a> (const DXGI_MEMORY_SEGMENT_GROUP &amp;heapSegment, UINT64 availableForReservation, UINT64 *pCurrentReservationOut=nullptr)=0</td></tr>
 <tr class="memdesc:a4c4619565912aa33382be743b7116f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets video memory reservation.  <br /></td></tr>
 <tr class="separator:a4c4619565912aa33382be743b7116f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -295,6 +295,12 @@ Variables</h2></td></tr>
 <tr class="memitem:a09e5c02e9225b2fbfcbb11c26356024a" id="r_a09e5c02e9225b2fbfcbb11c26356024a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a></td></tr>
 <tr class="memdesc:a09e5c02e9225b2fbfcbb11c26356024a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <br /></td></tr>
 <tr class="separator:a09e5c02e9225b2fbfcbb11c26356024a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae173d5a93a50c0b7346f0310f5855472" id="r_ae173d5a93a50c0b7346f0310f5855472"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList *const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#ae173d5a93a50c0b7346f0310f5855472">ppCommandLists</a></td></tr>
+<tr class="separator:ae173d5a93a50c0b7346f0310f5855472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e34fc5152f42adbb9bad54867eeb293" id="r_a3e34fc5152f42adbb9bad54867eeb293"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList *const <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a3e34fc5152f42adbb9bad54867eeb293">ppResidencyLists</a></td></tr>
+<tr class="separator:a3e34fc5152f42adbb9bad54867eeb293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56edb989afb9db31dbabf15aa1ec63a6" id="r_a56edb989afb9db31dbabf15aa1ec63a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList *const <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#a56edb989afb9db31dbabf15aa1ec63a6">count</a> = 0</td></tr>
+<tr class="separator:a56edb989afb9db31dbabf15aa1ec63a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc19a7e39d7932a3c59ab30f069dc5f8" id="r_adc19a7e39d7932a3c59ab30f069dc5f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegpgmm_1_1d3d12.html#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a></td></tr>
 <tr class="memdesc:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResourceAllocator is an allocator that creates ID3D12Resources in a ResourceAllocation.  <br /></td></tr>
 <tr class="separator:adc19a7e39d7932a3c59ab30f069dc5f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1160,67 +1166,6 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 
 </div>
 </div>
-<a id="ac911ca7f1a4e44c02d008e136766f104" name="ac911ca7f1a4e44c02d008e136766f104"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac911ca7f1a4e44c02d008e136766f104">&#9670;&#160;</a></span>ExecuteCommandLists()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual HRESULT gpgmm::d3d12::ExecuteCommandLists </td>
-          <td>(</td>
-          <td class="paramtype">ID3D12CommandQueue *const&#160;</td>
-          <td class="paramname"><em>pQueue</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ID3D12CommandList *const *&#160;</td>
-          <td class="paramname"><em>ppCommandLists</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a> *const *&#160;</td>
-          <td class="paramname"><em>ppResidencyLists</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UINT&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Execute command lists using residency managed heaps or E_OUTOFMEMORY. </p>
-<p>Submits an array of command lists and residency lists for the specified command queue. Unlike calling ExecuteCommandLists directly, errors will be returned should memory be exhausted.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pQueue</td><td>The command queue to submit to. May be nullptr. When nullptr, only residency operations are performed. </td></tr>
-    <tr><td class="paramname">ppCommandLists</td><td>The array of ID3D12CommandList command lists to be executed. May be nullptr. When nullptr, only residency operations are performed. </td></tr>
-    <tr><td class="paramname">ppResidencyLists</td><td>The array of ResidencyList residency lists to make resident. </td></tr>
-    <tr><td class="paramname">count</td><td>The size of commandLists and residencyLists arrays.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns S_OK if successful or E_OUTOFMEMORY if not enough memory exists. </dd></dl>
-
-</div>
-</div>
 <a id="a904c1177cec90316677f032d530cb146" name="a904c1177cec90316677f032d530cb146"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a904c1177cec90316677f032d530cb146">&#9670;&#160;</a></span>GetGPUVirtualAddress()</h2>
 
@@ -1429,6 +1374,35 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a5e52cb74ecea6531cff0b584d5e7841d" name="a5e52cb74ecea6531cff0b584d5e7841d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e52cb74ecea6531cff0b584d5e7841d">&#9670;&#160;</a></span>Lock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::Lock </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Locks the specified heap. </p>
+<p>Locking a heap means the residency manager will never evict it when over budget.</p>
+<dl class="section return"><dt>Returns</dt><dd>S_OK if locking was successful. </dd></dl>
 
 </div>
 </div>
@@ -1756,8 +1730,8 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 
 </div>
 </div>
-<a id="aefca0a22a15bdc66cebf9eecc5aa4c43" name="aefca0a22a15bdc66cebf9eecc5aa4c43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefca0a22a15bdc66cebf9eecc5aa4c43">&#9670;&#160;</a></span>UnlockHeap()</h2>
+<a id="a6a25b93d4c6b26a10999b2943f47826b" name="a6a25b93d4c6b26a10999b2943f47826b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a25b93d4c6b26a10999b2943f47826b">&#9670;&#160;</a></span>Unlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1766,10 +1740,9 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual HRESULT gpgmm::d3d12::UnlockHeap </td>
+          <td class="memname">virtual HRESULT gpgmm::d3d12::Unlock </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacegpgmm_1_1d3d12.html#a0af206595eb7d5798cccd49cbc9b3acf">IResidencyHeap</a> *&#160;</td>
-          <td class="paramname"><em>pHeap</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1782,12 +1755,6 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 
 <p>Unlocks the specified heap. </p>
 <p>Unlocking a heap allows the residency manager will evict it when over budget.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pHeap</td><td>A pointer to the heap being unlocked.</td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd>S_OK if unlocking was successful or S_FALSE if a lock remains. </dd></dl>
 
 </div>
@@ -1839,6 +1806,20 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a56edb989afb9db31dbabf15aa1ec63a6" name="a56edb989afb9db31dbabf15aa1ec63a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56edb989afb9db31dbabf15aa1ec63a6">&#9670;&#160;</a></span>count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList* const <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a>* const UINT gpgmm::d3d12::count = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af4959aceb2454a577bd5b37a60926a28" name="af4959aceb2454a577bd5b37a60926a28"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4959aceb2454a577bd5b37a60926a28">&#9670;&#160;</a></span>IDebugObject</h2>
 
@@ -1902,7 +1883,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 
 <p>Represents a list of heaps which will be "made resident" upon executing a command-list. </p>
 <p>A residency list helps track heaps for residency which will be referenced together by a command-list. The application uses a IResidencyList by inserting heaps, by calling IResourceAllocation::GetMemory, into the list. Once IResidencyManager::ExecuteCommandLists is called, the list can be reset or cleared for the next frame or compute job.</p>
-<p>Without IResidencyList, the application would need to call IResidencyManager::LockHeap and IResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list being executed. </p>
+<p>Without IResidencyList, the application would need to lock and unlock each heap before and after every GPU command or command-list being executed. </p>
 
 </div>
 </div>
@@ -1975,6 +1956,20 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 
 </div>
 </div>
+<a id="ae173d5a93a50c0b7346f0310f5855472" name="ae173d5a93a50c0b7346f0310f5855472"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae173d5a93a50c0b7346f0310f5855472">&#9670;&#160;</a></span>ppCommandLists</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList* const* gpgmm::d3d12::ppCommandLists</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a924abb72b724f675a0d311bf225a9fda" name="a924abb72b724f675a0d311bf225a9fda"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a924abb72b724f675a0d311bf225a9fda">&#9670;&#160;</a></span>ppDataOut</h2>
 
@@ -1983,6 +1978,20 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> const D3D12_RANGE void** gpgmm::d3d12::ppDataOut = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3e34fc5152f42adbb9bad54867eeb293" name="a3e34fc5152f42adbb9bad54867eeb293"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e34fc5152f42adbb9bad54867eeb293">&#9670;&#160;</a></span>ppResidencyLists</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a> ID3D12CommandList* const <a class="el" href="namespacegpgmm_1_1d3d12.html#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a>* const* gpgmm::d3d12::ppResidencyLists</td>
         </tr>
       </table>
 </div><div class="memdoc">
