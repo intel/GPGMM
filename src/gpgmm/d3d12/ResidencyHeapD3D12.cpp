@@ -154,7 +154,7 @@ namespace gpgmm::d3d12 {
         }
 
         std::unique_ptr<ResidencyHeap> heap(
-            new ResidencyHeap(pResidencyManager, pPageable, newDescriptor, isResidencyDisabled));
+            new ResidencyHeap(residencyManager, pPageable, newDescriptor, isResidencyDisabled));
 
         if (!isResidencyDisabled) {
             // Check if the underlying memory was implicitly made resident.
@@ -280,7 +280,7 @@ namespace gpgmm::d3d12 {
                                    ppResidencyHeapOut);
     }
 
-    ResidencyHeap::ResidencyHeap(ComPtr<IResidencyManager> residencyManager,
+    ResidencyHeap::ResidencyHeap(ComPtr<ResidencyManager> residencyManager,
                                  ComPtr<ID3D12Pageable> pageable,
                                  const RESIDENCY_HEAP_DESC& descriptor,
                                  bool isResidencyDisabled)
@@ -382,12 +382,16 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyHeap::Lock() {
-        ASSERT(mResidencyManager != nullptr);
+        if (mResidencyManager == nullptr) {
+            return S_FALSE;
+        }
         return mResidencyManager->LockHeap(this);
     }
 
     HRESULT ResidencyHeap::Unlock() {
-        ASSERT(mResidencyManager != nullptr);
+        if (mResidencyManager == nullptr) {
+            return S_FALSE;
+        }
         return mResidencyManager->UnlockHeap(this);
     }
 

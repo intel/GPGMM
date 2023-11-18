@@ -72,6 +72,8 @@ namespace gpgmm::d3d12 {
 
         // IResidencyHeap interface
         RESIDENCY_HEAP_INFO GetInfo() const override;
+        HRESULT Lock() override;
+        HRESULT Unlock() override;
         HRESULT GetResidencyManager(IResidencyManager** ppResidencyManagerOut) const override;
 
         // IUnknown interface
@@ -114,8 +116,6 @@ namespace gpgmm::d3d12 {
         ~ResidencyManager() override;
 
         // IResidencyManager interface
-        HRESULT LockHeap(IResidencyHeap* pHeap) override;
-        HRESULT UnlockHeap(IResidencyHeap* pHeap) override;
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
                                     IResidencyList* const* ppResidencyLists,

@@ -203,6 +203,22 @@ namespace gpgmm::d3d12 {
         */
         virtual RESIDENCY_HEAP_INFO GetInfo() const = 0;
 
+        /** \brief Locks the specified heap.
+
+        Locking a heap means the residency manager will never evict it when over budget.
+
+        \return S_OK if locking was successful.
+        */
+        virtual HRESULT Lock() = 0;
+
+        /** \brief Unlocks the specified heap.
+
+        Unlocking a heap allows the residency manager will evict it when over budget.
+
+        \return S_OK if unlocking was successful or S_FALSE if a lock remains.
+        */
+        virtual HRESULT Unlock() = 0;
+
         /** \brief Get the residency manager that manages this heap.
 
         @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
@@ -285,9 +301,8 @@ namespace gpgmm::d3d12 {
     IResourceAllocation::GetMemory, into the list. Once IResidencyManager::ExecuteCommandLists is
     called, the list can be reset or cleared for the next frame or compute job.
 
-    Without IResidencyList, the application would need to call IResidencyManager::LockHeap and
-    IResidencyManager::UnlockHeap for each heap before and after every GPU command or command-list
-    being executed.
+    Without IResidencyList, the application would need to lock and unlock each heap before and
+    after every GPU command or command-list being executed.
     */
     GPGMM_INTERFACE IResidencyList : public IUnknown {
         /** \brief  Adds a heap to the residency list.
@@ -569,24 +584,6 @@ namespace gpgmm::d3d12 {
     **/
     GPGMM_INTERFACE IResidencyManager : public IDebugObject {
       public:
-        /** \brief Locks the specified heap.
-
-        Locking a heap means the residency manager will never evict it when over budget.
-
-        @param pHeap A pointer to the heap being locked.
-        */
-        virtual HRESULT LockHeap(IResidencyHeap * pHeap) = 0;
-
-        /** \brief Unlocks the specified heap.
-
-        Unlocking a heap allows the residency manager will evict it when over budget.
-
-        @param pHeap A pointer to the heap being unlocked.
-
-        \return S_OK if unlocking was successful or S_FALSE if a lock remains.
-        */
-        virtual HRESULT UnlockHeap(IResidencyHeap * pHeap) = 0;
-
         /** \brief Execute command lists using residency managed heaps or E_OUTOFMEMORY.
 
         Submits an array of command lists and residency lists for the specified command queue.

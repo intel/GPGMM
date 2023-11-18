@@ -50,8 +50,6 @@ namespace gpgmm::d3d12 {
         ~ResidencyManager() override;
 
         // IResidencyManager interface
-        HRESULT LockHeap(IResidencyHeap* pHeap) override;
-        HRESULT UnlockHeap(IResidencyHeap* pHeap) override;
         HRESULT ExecuteCommandLists(ID3D12CommandQueue* pQueue,
                                     ID3D12CommandList* const* ppCommandLists,
                                     IResidencyList* const* ppResidencyLists,
@@ -73,6 +71,9 @@ namespace gpgmm::d3d12 {
         // IDebugObject interface
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
+
+        HRESULT LockHeap(ResidencyHeap* pHeap);
+        HRESULT UnlockHeap(ResidencyHeap* pHeap);
 
       private:
         friend ResidencyHeap;
