@@ -1177,14 +1177,15 @@ namespace gpgmm::d3d12 {
 
         // Resource is always committed when heaps flags are incompatible with the resource heap
         // type or if specified by the flag.
-        bool isAlwaysCommitted = mIsAlwaysCommitted;
+        bool isAlwaysCommitted = mIsAlwaysCommitted || (allocationDescriptor.Flags &
+                                                        RESOURCE_ALLOCATION_FLAG_ALWAYS_COMMITTED);
 
         // Check memory requirements.
         D3D12_HEAP_FLAGS heapFlags =
             GetHeapFlags(resourceHeapType, IsCreateHeapNotResidentEnabled());
         if (!HasAllFlags(heapFlags, allocationDescriptor.ExtraRequiredHeapFlags)) {
             WarnLog(MessageId::kPerformanceWarning, this)
-                << "RESOURCE_ALLOCATOR_FLAG_ALWAYS_COMMITTED was not requested but enabled anyway "
+                << "RESOURCE_ALLOCATION_FLAG_ALWAYS_COMMITTED was not requested but enabled anyway "
                    "because "
                    "the required heap flags were incompatible with resource heap type ("
                 << std::to_string(allocationDescriptor.ExtraRequiredHeapFlags) << " vs "

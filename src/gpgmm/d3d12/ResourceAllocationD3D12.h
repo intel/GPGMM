@@ -60,11 +60,14 @@ namespace gpgmm::d3d12 {
         IResidencyHeap* GetMemory() const override;
         HRESULT GetResourceAllocator(IResourceAllocator** ppResourceAllocatorOut) const override;
 
-        DEFINE_UNKNOWN_OVERRIDES()
-
         // IDebugObject interface
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
+
+        // IUnknown interface
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
       private:
         friend ResourceAllocator;
