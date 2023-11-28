@@ -1136,10 +1136,10 @@ namespace gpgmm::d3d12 {
 
         /** \brief Forces use of the resource allocator or E_FAIL.
 
-        The flag disables the fall-back behavior of reverting to the D3D12 runtime/driver provided
-        allocator (CreateCommittedResource) when resource allocation fails.
+        The flag disables the fall-back behavior of using
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_COMMITTED as a last resort.
 
-        Mostly used for debug and testing when certain allocation methods unexpectedly fail.
+        Mostly used for debug and testing when certain allocations unexpectedly fail.
         */
         RESOURCE_ALLOCATION_FLAG_NEVER_FALLBACK = 0x40,
 
@@ -1160,6 +1160,14 @@ namespace gpgmm::d3d12 {
         is normally not tracked.
         */
         RESOURCE_ALLOCATION_FLAG_ALWAYS_WARN_ON_ALIGNMENT_MISMATCH = 0x100,
+
+        /** \brief Disable re-use of resource heap.
+
+        A committed resource is allocated through D3D12 instead of GPGMM. This could be favorable
+        for large static resources. Otherwise, this is mostly used for debugging and testing
+        purposes.
+        */
+        RESOURCE_ALLOCATION_FLAG_ALWAYS_COMMITTED = 0x200,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(RESOURCE_ALLOCATION_FLAGS)

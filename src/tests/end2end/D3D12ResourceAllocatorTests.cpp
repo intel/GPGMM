@@ -909,6 +909,28 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferImported) {
     ASSERT_EQ(internalAllocation->GetResource(), internalAllocationAgain->GetResource());
 }
 
+TEST_F(D3D12ResourceAllocatorTests, CreateBufferExported) {
+    ComPtr<IResourceAllocator> resourceAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),
+                                             mAdapter.Get(), &resourceAllocator, nullptr));
+    ASSERT_NE(resourceAllocator, nullptr);
+
+    RESOURCE_ALLOCATION_DESC externalAllocationDesc = {};
+    externalAllocationDesc.Flags |= RESOURCE_ALLOCATION_FLAG_ALWAYS_COMMITTED;
+
+    ComPtr<IResourceAllocation> internalAllocation;
+    ASSERT_SUCCEEDED(resourceAllocator->CreateResource(
+        externalAllocationDesc, CreateBasicBufferDesc(kBufferOf4MBAllocationSize), {}, nullptr,
+        &internalAllocation));
+
+    ComPtr<ID3D12Resource> externalResource;
+    ASSERT_SUCCEEDED(internalAllocation.As(&externalResource));
+
+    internalAllocation = nullptr;
+    EXPECT_NE(externalResource, nullptr);
+    EXPECT_REFCOUNT_EQ(externalResource.Get(), 1);
+}
+
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferInvalid) {
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),

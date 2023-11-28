@@ -225,6 +225,36 @@ namespace gpgmm::d3d12 {
         return DebugObject::SetDebugName(Name);
     }
 
+    HRESULT STDMETHODCALLTYPE ResourceAllocation::QueryInterface(REFIID riid, void** ppvObject) {
+        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+
+        // Only committed resources can be exported. Committed resources are created
+        // without explicit heaps.
+        ComPtr<ID3D12Heap> heap;
+        if (SUCCEEDED(residencyHeap->QueryInterface(IID_PPV_ARGS(&heap)))) {
+            ErrorLog(ErrorCode::kBadOperation, this)
+                << "QueryInterface is not supported for this resource allocation.";
+            return E_INVALIDARG;
+        }
+
+        // Exported resource cannot remain managed for residency.
+        if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
+            ErrorLog(ErrorCode::kBadOperation, this) << "QueryInterface does not supported resource "
+                                                        "allocations under residency management.";
+            return E_INVALIDARG;
+        }
+
+        return mResource->QueryInterface(riid, ppvObject);
+    }
+
+    ULONG STDMETHODCALLTYPE ResourceAllocation::AddRef() {
+        return Unknown::AddRef();
+    }
+
+    ULONG STDMETHODCALLTYPE ResourceAllocation::Release() {
+        return Unknown::Release();
+    }
+
     HRESULT ResourceAllocation::GetResourceAllocator(
         IResourceAllocator** ppResourceAllocatorOut) const {
         ComPtr<IResourceAllocator> resourceAllocator(mResourceAllocator);
