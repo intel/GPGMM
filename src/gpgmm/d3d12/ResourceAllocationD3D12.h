@@ -23,8 +23,6 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResourceAllocationTrackingAllocator;
-    class ResidencyManager;
     class ResourceAllocator;
     class ResidencyHeap;
 
@@ -33,7 +31,6 @@ namespace gpgmm::d3d12 {
         uint64_t HeapOffset;
         uint64_t OffsetFromResource;
         RESOURCE_ALLOCATION_TYPE Type;
-        LPCWSTR DebugName;
     };
 
     class ResourceAllocation final : public MemoryAllocationBase,
