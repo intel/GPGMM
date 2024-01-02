@@ -186,15 +186,15 @@ namespace gpgmm::d3d12 {
 
     GPGMM_INTERFACE IResidencyManager;
 
-    /** \brief Heap represents a residency-managed ID3D12Pageable object.
+    /** \brief IResidencyHeap represents a ID3D12Pageable object used for residency management.
 
-    For example, a Heap could represent a "resource heap" (ID3D12Heap or committed ID3D12Resource)
-    or ID3D12DescriptorHeap and so on.
+    For example, a IResidencyHeap could represent a "resource heap" (ID3D12Heap or committed
+    ID3D12Resource) or ID3D12DescriptorHeap and so on.
 
-    Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into
-    the cache when it is first created, and any time it is scheduled to be used by the GPU. This
-    node is removed from the cache when it is evicted from video memory due to budget constraints,
-    or when the memory is released.
+    IResidencyHeap serves as a node within the IResidencyManager's residency cache. This node is
+    inserted into the cache when it is first created, and any time it is scheduled to be used by the
+    GPU. This node is removed from the cache when it is evicted from video memory due to budget
+    constraints, or when the memory is released.
     */
     GPGMM_INTERFACE IResidencyHeap : public IDebugObject {
         /** \brief Returns information about this heap.
@@ -230,12 +230,12 @@ namespace gpgmm::d3d12 {
 
     /** \brief  Create a residency managed heap.
 
-    Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be managed for residency
-    purposes. A heap managed by GPGMM represents either a 1) committed resource backed by
-    implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.
+    Unlike a D3D12 heap, a IResidencyHeap means it can be managed for residency
+    purposes.
 
     @param descriptor A reference to RESIDENCY_HEAP_DESC structure that describes the heap.
-    @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
+    @param pResidencyManager A pointer to the ResidencyManager used to manage this heap. If NULL,
+    the residency heap will be created without residency management.
     @param createHeapFn  A callback function which creates a ID3D12Pageable derived type.
     @param pCreateHeapContext  A pointer to a class designed to implement the actual heap creation
     function and store any necessary variables.
@@ -280,10 +280,11 @@ namespace gpgmm::d3d12 {
     /** \brief  Create a residency managed heap.
 
     This version of CreateResidencyHeap is a simpler way to create residency heaps by disallowing
-    use of RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET by specifying the pageable instead.
+    use of RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET by specifying the ID3D12Pageable.
 
     @param descriptor A reference to RESIDENCY_HEAP_DESC structure that describes the heap.
-    @param pResidencyManager A pointer to the ResidencyManager used to manage this heap.
+    @param pResidencyManager A pointer to the ResidencyManager used to manage this heap. If NULL,
+    the residency heap will be created without residency management.
     @param pPageable  A pointer to the pageable object that represents the heap.
     @param[out] ppResidencyHeapOut Pointer to a memory block that receives a pointer to the
     heap.
@@ -431,7 +432,7 @@ namespace gpgmm::d3d12 {
         /** \brief Specifies if unified memory architecture (UMA) is always disabled, even
         if the adapter supports UMA.
 
-        By default, UMA is enabled when the adapter supports the architecture.
+        By default, UMA is enabled when the adapter supports the unified memory architecture.
         UMA allows the residency manager to budget using a single memory segment.
         Otherwise, the residency manager will have two budgets for local and non-local
         memory segments, respectively.

@@ -227,7 +227,7 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        heap->AddResidencyLockRef();
+        heap->IncrementResidencyLockCount();
 
         return S_OK;
     }
@@ -254,7 +254,7 @@ namespace gpgmm::d3d12 {
             return GetErrorResult(ErrorCode::kBadOperation);
         }
 
-        heap->ReleaseResidencyLock();
+        heap->DecrementResidencyLockCount();
 
         // If another lock still exists on the heap, nothing further should be done.
         if (heap->IsResidencyLocked()) {
