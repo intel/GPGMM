@@ -19,37 +19,13 @@ import("${gpgmm_root_dir}/build_overrides/gpgmm_features.gni")
 group("samples") {
   deps = []
   if (gpgmm_enable_d3d12) {
-    deps = [
-      ":D3D12Sample",
-      ":D3D12SampleMVI",
-    ]
+    deps = [ ":D3D12Sample" ]
   }
 }
 
 executable("D3D12Sample") {
   deps = [ "${gpgmm_root_dir}:gpgmm" ]
   sources = [ "D3D12Sample.cpp" ]
-  libs = [
-    "d3d12.lib",
-    "dxgi.lib",
-  ]
-}
-
-source_set("gpgmm_mvi") {
-  sources = [
-    "${gpgmm_root_dir}/src/mvi/gpgmm.cpp",
-    "${gpgmm_root_dir}/src/mvi/gpgmm.h",
-    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12.cpp",
-    "${gpgmm_root_dir}/src/mvi/gpgmm_d3d12.h",
-  ]
-  include_dirs = [ "${gpgmm_root_dir}/include" ]
-}
-
-executable("D3D12SampleMVI") {
-  deps = [ ":gpgmm_mvi" ]
-  defines = [ "GPGMM_D3D12_HEADERS_ALREADY_INCLUDED" ]
-  sources = [ "D3D12Sample.cpp" ]
-  include_dirs = [ "${gpgmm_root_dir}/include" ]
   libs = [
     "d3d12.lib",
     "dxgi.lib",
