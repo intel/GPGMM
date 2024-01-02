@@ -293,7 +293,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:a826dccb5826564820e0671bb7b86b165"><td class="mdescLeft">&#160;</td><td class="mdescRight">ResidencyManager tracks and maintains one or more heaps within a residency cache.  <br /></td></tr>
 <tr class="separator:a826dccb5826564820e0671bb7b86b165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0af206595eb7d5798cccd49cbc9b3acf" id="r_a0af206595eb7d5798cccd49cbc9b3acf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0af206595eb7d5798cccd49cbc9b3acf">IResidencyHeap</a></td></tr>
-<tr class="memdesc:a0af206595eb7d5798cccd49cbc9b3acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">IResidencyHeap represents a ID3D12Pageable object used for residency management.  <br /></td></tr>
+<tr class="memdesc:a0af206595eb7d5798cccd49cbc9b3acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap represents a residency-managed ID3D12Pageable object.  <br /></td></tr>
 <tr class="separator:a0af206595eb7d5798cccd49cbc9b3acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09e5c02e9225b2fbfcbb11c26356024a" id="r_a09e5c02e9225b2fbfcbb11c26356024a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a20798add1b6bb98b3c3f327924676fcc">GPGMM_INTERFACE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09e5c02e9225b2fbfcbb11c26356024a">IResidencyList</a></td></tr>
 <tr class="memdesc:a09e5c02e9225b2fbfcbb11c26356024a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of heaps which will be "made resident" upon executing a command-list.  <br /></td></tr>
@@ -472,7 +472,7 @@ This flag is equivalent to calling LockHeap immediately after creation.
 instead of pushed by OS notifications using a background thread.
 </pre> </td></tr>
 <tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27ab4580062135a0f4c55e51bd75fdf43fd" name="adcdbaecdcd1fa9578f444da18babcc27ab4580062135a0f4c55e51bd75fdf43fd"></a>RESIDENCY_MANAGER_FLAG_NEVER_USE_UNIFIED_MEMORY&#160;</td><td class="fielddoc"><p>Specifies if unified memory architecture (UMA) is always disabled, even if the adapter supports UMA. </p>
-<p>By default, UMA is enabled when the adapter supports the unified memory architecture. UMA allows the residency manager to budget using a single memory segment. Otherwise, the residency manager will have two budgets for local and non-local memory segments, respectively. </p>
+<p>By default, UMA is enabled when the adapter supports the architecture. UMA allows the residency manager to budget using a single memory segment. Otherwise, the residency manager will have two budgets for local and non-local memory segments, respectively. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a" name="adcdbaecdcd1fa9578f444da18babcc27a0798ef448f5b090152aaaf6ed6f2ec0a"></a>RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET&#160;</td><td class="fielddoc"><p>Requires heaps to be in budget or E_OUTOFMEMORY. </p>
 <pre class="fragment">With this flag, heaps created for this residency manager will effectively never
@@ -823,11 +823,11 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div><div class="memdoc">
 
 <p>Create a residency managed heap. </p>
-<p>Unlike a D3D12 heap, a IResidencyHeap means it can be managed for residency purposes.</p>
+<p>Unlike a normal D3D12 heap, a heap managed by GPGMM means it will be managed for residency purposes. A heap managed by GPGMM represents either a 1) committed resource backed by implicit D3D12 heap OR 2) an explicit D3D12 heap used with placed resources.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___d_e_s_c.html">RESIDENCY_HEAP_DESC</a> structure that describes the heap. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the ResidencyManager used to manage this heap. If NULL, the residency heap will be created without residency management. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the ResidencyManager used to manage this heap. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">createHeapFn</td><td>A callback function which creates a ID3D12Pageable derived type. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pCreateHeapContext</td><td>A pointer to a class designed to implement the actual heap creation function and store any necessary variables. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyHeapOut</td><td>Pointer to a memory block that receives a pointer to the heap.</td></tr>
@@ -885,11 +885,11 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div><div class="memdoc">
 
 <p>Create a residency managed heap. </p>
-<p>This version of CreateResidencyHeap is a simpler way to create residency heaps by disallowing use of RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET by specifying the ID3D12Pageable.</p>
+<p>This version of CreateResidencyHeap is a simpler way to create residency heaps by disallowing use of RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET by specifying the pageable instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">descriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_i_d_e_n_c_y___h_e_a_p___d_e_s_c.html">RESIDENCY_HEAP_DESC</a> structure that describes the heap. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the ResidencyManager used to manage this heap. If NULL, the residency heap will be created without residency management. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pResidencyManager</td><td>A pointer to the ResidencyManager used to manage this heap. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">pPageable</td><td>A pointer to the pageable object that represents the heap. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyHeapOut</td><td>Pointer to a memory block that receives a pointer to the heap. </td></tr>
   </table>
@@ -1765,9 +1765,9 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
       </table>
 </div><div class="memdoc">
 
-<p>IResidencyHeap represents a ID3D12Pageable object used for residency management. </p>
-<p>For example, a IResidencyHeap could represent a "resource heap" (ID3D12Heap or committed ID3D12Resource) or ID3D12DescriptorHeap and so on.</p>
-<p>IResidencyHeap serves as a node within the IResidencyManager's residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
+<p>Heap represents a residency-managed ID3D12Pageable object. </p>
+<p>For example, a Heap could represent a "resource heap" (ID3D12Heap or committed ID3D12Resource) or ID3D12DescriptorHeap and so on.</p>
+<p>Heap serves as a node within the ResidencyManager's residency cache. This node is inserted into the cache when it is first created, and any time it is scheduled to be used by the GPU. This node is removed from the cache when it is evicted from video memory due to budget constraints, or when the memory is released. </p>
 
 </div>
 </div>
