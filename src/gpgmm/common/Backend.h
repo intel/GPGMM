@@ -20,26 +20,26 @@ namespace gpgmm {
     // Forward declare common types.
     class MemoryAllocationBase;
 
-    template <typename CommonType, typename BackendTrait>
-    struct CommonTrait;
+    template <typename CommonType, typename BackendTraits>
+    struct CommonTraits;
 
     // Define common types.
-    template <typename BackendTrait>
-    struct CommonTrait<MemoryAllocationBase, BackendTrait> {
-        using CommonType = typename BackendTrait::AllocationType;
+    template <typename BackendTraits>
+    struct CommonTraits<MemoryAllocationBase, BackendTraits> {
+        using CommonType = typename BackendTraits::AllocationType;
     };
 
     // Convert common to backend type.
 
-    template <typename BackendTrait, typename CommonT>
-    typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackend(CommonT* common) {
-        return reinterpret_cast<typename CommonTrait<CommonT, BackendTrait>::CommonType*>(common);
+    template <typename BackendTraits, typename CommonT>
+    typename CommonTraits<CommonT, BackendTraits>::CommonType* ToBackend(CommonT* common) {
+        return reinterpret_cast<typename CommonTraits<CommonT, BackendTraits>::CommonType*>(common);
     }
 
-    template <typename BackendTrait, typename CommonT>
-    const typename CommonTrait<CommonT, BackendTrait>::CommonType* ToBackend(
+    template <typename BackendTraits, typename CommonT>
+    const typename CommonTraits<CommonT, BackendTraits>::CommonType* ToBackend(
         const CommonT* common) {
-        return reinterpret_cast<const typename CommonTrait<CommonT, BackendTrait>::CommonType*>(
+        return reinterpret_cast<const typename CommonTraits<CommonT, BackendTraits>::CommonType*>(
             common);
     }
 

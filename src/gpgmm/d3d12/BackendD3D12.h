@@ -21,13 +21,13 @@ namespace gpgmm::d3d12 {
 
     class ResourceAllocation;
 
-    struct BackendTrait {
+    struct BackendTraits {
         using AllocationType = ResourceAllocation;
     };
 
     template <typename T>
-    auto ToBackend(T&& common) -> decltype(gpgmm::ToBackend<BackendTrait>(common)) {
-        return gpgmm::ToBackend<BackendTrait>(common);
+    auto ToBackend(T&& common) -> decltype(gpgmm::ToBackend<BackendTraits>(common)) {
+        return gpgmm::ToBackend<BackendTraits>(common);
     }
 
 }  // namespace gpgmm::d3d12
