@@ -539,7 +539,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                             ConvertToD3D12HeapProperties(args["Heap"]["Properties"]);
 
                         RESIDENCY_HEAP_DESC resourceHeapDesc = {};
-                        resourceHeapDesc.HeapSegment = GetHeapSegment(
+                        resourceHeapDesc.HeapSegment = GetMemorySegment(
                             heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
                         resourceHeapDesc =
                             ConvertAndApplyToHeapDesc(args["Heap"], resourceHeapDesc);

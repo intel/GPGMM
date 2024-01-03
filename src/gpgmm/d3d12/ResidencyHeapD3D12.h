@@ -83,7 +83,7 @@ namespace gpgmm::d3d12 {
         // DebugObject interface
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
 
-        DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment() const;
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was
         // submitted to be used so that we can ensure this pageable stays resident in memory at

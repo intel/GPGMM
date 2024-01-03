@@ -205,8 +205,8 @@ namespace gpgmm::d3d12 {
         if (!heap->IsInList() && !heap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
             GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)), mDevice);
-            GPGMM_RETURN_IF_FAILED(
-                MakeResident(heap->GetHeapSegment(), heap->GetSize(), 1, pageable.GetAddressOf()));
+            GPGMM_RETURN_IF_FAILED(MakeResident(heap->GetMemorySegment(), heap->GetSize(), 1,
+                                                pageable.GetAddressOf()));
             heap->SetResidencyStatus(RESIDENCY_HEAP_STATUS_RESIDENT);
 
             // Untracked heaps, created not resident, are not already attributed toward residency
@@ -292,7 +292,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetHeapSegment());
+        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegment());
         ASSERT(cache != nullptr);
 
         heap->InsertAfter(cache->tail());
@@ -649,7 +649,7 @@ namespace gpgmm::d3d12 {
                 ComPtr<ID3D12Pageable> pageable;
                 GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
-                if (heap->GetHeapSegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
+                if (heap->GetMemorySegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
                     localSizeToMakeResident += heap->GetSize();
                     localHeapsToMakeResident.push_back(pageable.Get());
                 } else {

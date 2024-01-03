@@ -89,7 +89,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
         gDevice->GetCustomHeapProperties(0, allocationDesc.HeapType);
 
     const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
-        gpgmm::d3d12::GetHeapSegment(heapProperties.MemoryPoolPreference, arch.UMA);
+        gpgmm::d3d12::GetMemorySegment(heapProperties.MemoryPoolPreference, arch.UMA);
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);
     const D3D12_RESOURCE_DESC bufferDesc = CreateBufferDesc(kBufferMemorySize);

@@ -335,7 +335,7 @@ namespace gpgmm::d3d12 {
         mLastUsedFenceValue = fenceValue;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP ResidencyHeap::GetHeapSegment() const {
+    DXGI_MEMORY_SEGMENT_GROUP ResidencyHeap::GetMemorySegment() const {
         return mHeapSegment;
     }
 

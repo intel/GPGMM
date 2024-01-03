@@ -1248,7 +1248,7 @@ namespace gpgmm::d3d12 {
         heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
         const DXGI_MEMORY_SEGMENT_GROUP heapSegment =
-            GetHeapSegment(heapProperties.MemoryPoolPreference, isUMA);
+            GetMemorySegment(heapProperties.MemoryPoolPreference, isUMA);
 
         const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);
         GPGMM_RETURN_ERROR_IF(
@@ -1615,7 +1615,7 @@ namespace gpgmm::d3d12 {
         if (IsResidencyEnabled()) {
             resourceHeapDesc.Flags |= GetHeapFlags(heapFlags, mIsAlwaysCreatedInBudget);
             resourceHeapDesc.HeapSegment =
-                GetHeapSegment(heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
+                GetMemorySegment(heapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         // Since residency is per heap, every committed resource is wrapped in a heap object.

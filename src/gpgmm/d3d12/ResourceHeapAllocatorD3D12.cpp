@@ -61,7 +61,7 @@ namespace gpgmm::d3d12 {
         if (isResidencyEnabled) {
             resourceHeapDesc.Flags |= GetHeapFlags(mHeapFlags, mIsAlwaysCreatedInBudget);
             resourceHeapDesc.HeapSegment =
-                GetHeapSegment(mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
+                GetMemorySegment(mHeapProperties.MemoryPoolPreference, mResidencyManager->IsUMA());
         }
 
         D3D12_HEAP_DESC heapDesc = {};

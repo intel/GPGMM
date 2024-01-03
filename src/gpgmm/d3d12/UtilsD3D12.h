@@ -14,12 +14,8 @@
 #ifndef SRC_GPGMM_D3D12_UTILSD3D12_H_
 #define SRC_GPGMM_D3D12_UTILSD3D12_H_
 
+#include "gpgmm/common/Message.h"
 #include "gpgmm/d3d12/D3D12Platform.h"
-
-#include "gpgmm/utils/Log.h"
-#include "gpgmm/utils/WindowsUtils.h"
-
-#include <string>
 
 namespace gpgmm::d3d12 {
 
@@ -27,7 +23,7 @@ namespace gpgmm::d3d12 {
     bool IsDepthFormat(DXGI_FORMAT format);
     bool IsAllowedToUseSmallAlignment(const D3D12_RESOURCE_DESC& Desc);
     HRESULT SetDebugObjectName(ID3D12Object* object, LPCWSTR name);
-    DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment(D3D12_MEMORY_POOL memoryPool, bool isUMA);
+    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment(D3D12_MEMORY_POOL memoryPool, bool isUMA);
     const char* GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP heapSegment, bool isUMA);
     ComPtr<ID3D12Device> GetDevice(ID3D12DeviceChild* pDeviceChild);
     bool IsTexture(const D3D12_RESOURCE_DESC& resourceDescriptor);
