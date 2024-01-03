@@ -72,8 +72,7 @@ namespace gpgmm::d3d12 {
 
         ResidencyHeap(ComPtr<ResidencyManager> residencyManager,
                       ComPtr<ID3D12Pageable> pageable,
-                      const RESIDENCY_HEAP_DESC& descriptor,
-                      bool isResidencyDisabled);
+                      const RESIDENCY_HEAP_DESC& descriptor);
 
         // Unknown interface
         void DeleteThis() override;
@@ -81,7 +80,9 @@ namespace gpgmm::d3d12 {
         // ObjectBase interface
         DEFINE_OBJECT_BASE_OVERRIDES(IHeap)
 
+        // DebugObject interface
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
+
         DXGI_MEMORY_SEGMENT_GROUP GetHeapSegment() const;
 
         // The residency manager must know the last fence value that any portion of the pageable was
@@ -96,14 +97,14 @@ namespace gpgmm::d3d12 {
 
         // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
         // heaps or mapping resources).
-        void AddResidencyLockRef();
-        void ReleaseResidencyLock();
+        void IncrementResidencyLockCount();
+        void DecrementResidencyLockCount();
 
         ComPtr<ResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
         DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
-        RefCounted mResidencyLock;
+        RefCounted mResidencyLockCount;
 
         // Protects thread-access to the mutable members below.
         mutable std::mutex mMutex;
