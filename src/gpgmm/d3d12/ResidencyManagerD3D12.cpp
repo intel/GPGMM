@@ -221,7 +221,7 @@ namespace gpgmm::d3d12 {
 
             // Untracked heaps, previously made resident, are not attributed toward residency usage
             // because they will be removed from the residency cache.
-            if (heap->mState == RESIDENCY_HEAP_STATUS_RESIDENT) {
+            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 mStats.CurrentHeapCount++;
                 mStats.CurrentHeapUsage += heap->GetSize();
             }

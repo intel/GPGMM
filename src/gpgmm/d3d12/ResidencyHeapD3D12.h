@@ -67,9 +67,21 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
-      private:
-        friend ResidencyManager;
+        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
 
+        uint64_t GetLastUsedFenceValue() const;
+        void SetLastUsedFenceValue(uint64_t fenceValue);
+
+        void SetResidencyStatus(RESIDENCY_HEAP_STATUS newStatus);
+
+        bool IsResidencyLocked() const;
+
+        // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
+        // heaps or mapping resources).
+        void IncrementResidencyLockCount();
+        void DecrementResidencyLockCount();
+
+      private:
         ResidencyHeap(ComPtr<ResidencyManager> residencyManager,
                       ComPtr<ID3D12Pageable> pageable,
                       const RESIDENCY_HEAP_DESC& descriptor);
@@ -83,23 +95,6 @@ namespace gpgmm::d3d12 {
         // DebugObject interface
         HRESULT SetDebugNameImpl(LPCWSTR name) override;
 
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
-
-        // The residency manager must know the last fence value that any portion of the pageable was
-        // submitted to be used so that we can ensure this pageable stays resident in memory at
-        // least until that fence has completed.
-        uint64_t GetLastUsedFenceValue() const;
-        void SetLastUsedFenceValue(uint64_t fenceValue);
-
-        void SetResidencyStatus(RESIDENCY_HEAP_STATUS newStatus);
-
-        bool IsResidencyLocked() const;
-
-        // Locks residency to ensure the heap cannot be evicted (ex. shader-visible descriptor
-        // heaps or mapping resources).
-        void IncrementResidencyLockCount();
-        void DecrementResidencyLockCount();
-
         ComPtr<ResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
@@ -110,7 +105,9 @@ namespace gpgmm::d3d12 {
         mutable std::mutex mMutex;
         RESIDENCY_HEAP_STATUS mState;
 
-        // mLastUsedFenceValue denotes the last time this pageable was submitted to the GPU.
+        // The residency manager must know the last fence value that any portion of the pageable was
+        // submitted to be used so that we can ensure this pageable stays resident in memory at
+        // least until that fence has completed.
         uint64_t mLastUsedFenceValue = 0;
     };
 }  // namespace gpgmm::d3d12
