@@ -2065,3 +2065,40 @@ TEST_F(D3D12ResourceAllocatorTests, AllocatorFeatures) {
             RESOURCE_ALLOCATOR_FEATURE_RESOURCE_ALLOCATION_SUPPORT, &data, sizeof(data)));
     }
 }
+
+// Create two resource allocations using different methods using the same heaps.
+TEST_F(D3D12ResourceAllocatorTests, NestedAllocators) {
+    RESOURCE_ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+    desc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
+
+    ComPtr<IResourceAllocator> parentAllocator;
+    ASSERT_SUCCEEDED(
+        CreateResourceAllocator(desc, mDevice.Get(), mAdapter.Get(), &parentAllocator, nullptr));
+
+    {
+        ComPtr<IResourceAllocation> subAllocation;
+        ASSERT_SUCCEEDED(parentAllocator->CreateResource({}, CreateBasicBufferDesc(1),
+                                                         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                                         &subAllocation));
+        EXPECT_EQ(subAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
+    }
+
+    RESOURCE_ALLOCATOR_STATS beforeStats = GetStats(parentAllocator);
+    EXPECT_GT(beforeStats.FreeHeapUsage, 0u);
+
+    desc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_DEDICATED;
+
+    ComPtr<IResourceAllocator> childAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(desc, parentAllocator.Get(), &childAllocator));
+
+    {
+        ComPtr<IResourceAllocation> dedicatedAllocation;
+        ASSERT_SUCCEEDED(childAllocator->CreateResource({}, CreateBasicBufferDesc(1),
+                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                                        &dedicatedAllocation));
+        EXPECT_EQ(dedicatedAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_STANDALONE);
+    }
+
+    RESOURCE_ALLOCATOR_STATS afterStats = GetStats(parentAllocator);
+    EXPECT_EQ(beforeStats.FreeHeapUsage, afterStats.FreeHeapUsage);
+}
