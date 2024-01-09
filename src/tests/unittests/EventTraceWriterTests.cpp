@@ -36,8 +36,8 @@ class EventTraceWriterTests : public testing::Test {
 
 TEST_F(EventTraceWriterTests, SingleThreadWrites) {
     // TODO: Figure out why win_clang_[rel|dbg]_x86 builder fails.
-#if defined(GPGMM_PLATFORM_IS_X86) && defined(GPGMM_PLATFORM_IS_32_BIT)
-    GPGMM_SKIP_TEST_IF(true);
+#if GPGMM_PLATFORM_IS(X86) && GPGMM_PLATFORM_IS(32_BIT)
+    GPGMM_SKIP_TEST_IF_DISABLED(true);
 #endif
 
     constexpr uint32_t kEventCount = 64u;
@@ -51,8 +51,8 @@ TEST_F(EventTraceWriterTests, SingleThreadWrites) {
 
 TEST_F(EventTraceWriterTests, MultiThreadWrites) {
     // TODO: Figure out why win_clang_[rel|dbg]_x86 builder fails.
-#if defined(GPGMM_PLATFORM_IS_X86) && defined(GPGMM_PLATFORM_IS_32_BIT)
-    GPGMM_SKIP_TEST_IF(true);
+#if GPGMM_PLATFORM_IS(X86) && GPGMM_PLATFORM_IS(32_BIT)
+    GPGMM_SKIP_TEST_IF_DISABLED(true);
 #endif
 
     constexpr uint32_t kThreadCount = 64u;

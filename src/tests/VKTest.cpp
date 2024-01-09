@@ -49,7 +49,8 @@ namespace gpgmm::vk {
 
         // vkCreateInstance fails if no Vulkan ICD was installed.
         // TODO: Consider installing a fall-back CPU-based Vulkan driver for testing.
-        GPGMM_SKIP_TEST_IF(vkCreateInstance(&instanceInfo, nullptr, &mInstance) != VK_SUCCESS);
+        GPGMM_SKIP_TEST_IF_UNSUPPORTED(vkCreateInstance(&instanceInfo, nullptr, &mInstance) !=
+                                       VK_SUCCESS);
 
         // Setup the physical device
         {
