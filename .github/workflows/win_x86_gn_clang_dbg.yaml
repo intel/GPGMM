@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  win_clang_rel_x86:
+  win_clang_dbg_x86:
 
     runs-on: windows-2019
 
