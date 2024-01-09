@@ -696,8 +696,8 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 
 // Keeps allocating until it goes over the OS provided budget.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
-    // TODO: Figure out why MSVC occasionally fails.
-#if defined(GPGMM_COMPILER_MSVC)
+    // TODO: Figure out why x86 32-bit builders fail.
+#if GPGMM_PLATFORM_IS(X86) && GPGMM_PLATFORM_IS(32_BIT)
     GPGMM_SKIP_TEST_IF_DISABLED(true);
 #endif
 
