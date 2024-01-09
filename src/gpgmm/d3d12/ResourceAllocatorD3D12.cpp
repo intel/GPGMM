@@ -389,8 +389,18 @@ namespace gpgmm::d3d12 {
                                     IDXGIAdapter* pAdapter,
                                     IResidencyManager* pResidencyManager,
                                     IResourceAllocator** ppResourceAllocatorOut) {
+        return ResourceAllocator::CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
+                                                          pResidencyManager, nullptr,
+                                                          ppResourceAllocatorOut);
+    }
+
+    HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
+                                    IResourceAllocator* pResourceAllocator,
+                                    IResourceAllocator** ppResourceAllocatorOut) {
+        ResourceAllocator* resourceAllocator = static_cast<ResourceAllocator*>(pResourceAllocator);
         return ResourceAllocator::CreateResourceAllocator(
-            allocatorDescriptor, pDevice, pAdapter, pResidencyManager, ppResourceAllocatorOut);
+            allocatorDescriptor, resourceAllocator->GetDevice(), resourceAllocator->GetAdapter(),
+            resourceAllocator->GetResidencyManager(), pResourceAllocator, ppResourceAllocatorOut);
     }
 
     // static
@@ -423,7 +433,8 @@ namespace gpgmm::d3d12 {
 
         ComPtr<IResourceAllocator> resourceAllocator;
         GPGMM_RETURN_IF_FAILED(CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
-                                                       residencyManager.Get(), &resourceAllocator));
+                                                       residencyManager.Get(), nullptr,
+                                                       &resourceAllocator));
 
         if (ppResourceAllocatorOut != nullptr) {
             *ppResourceAllocatorOut = resourceAllocator.Detach();
@@ -442,6 +453,7 @@ namespace gpgmm::d3d12 {
         ID3D12Device* pDevice,
         IDXGIAdapter* pAdapter,
         IResidencyManager* pResidencyManager,
+        IResourceAllocator* pResourceAllocator,
         IResourceAllocator** ppResourceAllocatorOut) {
         GPGMM_RETURN_IF_NULL(pDevice);
 
@@ -571,10 +583,16 @@ namespace gpgmm::d3d12 {
         }
 #endif
 
-        std::unique_ptr<ResourceAllocator> resourceAllocator =
-            std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
-                newDescriptor, pDevice, static_cast<ResidencyManager*>(pResidencyManager),
+        std::unique_ptr<ResourceAllocator> resourceAllocator;
+        if (pResourceAllocator == nullptr) {
+            resourceAllocator = std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
+                newDescriptor, pDevice, pAdapter, static_cast<ResidencyManager*>(pResidencyManager),
                 std::move(caps)));
+        } else {
+            resourceAllocator = std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
+                newDescriptor, static_cast<ResourceAllocator*>(pResourceAllocator),
+                std::move(caps)));
+        }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
 
@@ -589,10 +607,32 @@ namespace gpgmm::d3d12 {
     }
 
     ResourceAllocator::ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
+                                         ResourceAllocator* allocator,
+                                         std::unique_ptr<Caps> caps)
+        : ResourceAllocator(descriptor,
+                            allocator->mDevice,
+                            allocator->mAdapter,
+                            allocator->mResidencyManager.Get(),
+                            std::move(caps)) {
+        // Use the existing pooled allocators allocator.
+        for (uint32_t resourceHeapTypeIndex = 0; resourceHeapTypeIndex < kNumOfResourceHeapTypes;
+             resourceHeapTypeIndex++) {
+            mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] =
+                allocator->mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex];
+            mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] =
+                allocator->mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex];
+            mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
+                allocator->mSmallBufferAllocatorOfType[resourceHeapTypeIndex];
+        }
+    }
+
+    ResourceAllocator::ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                                          ID3D12Device* pDevice,
+                                         IDXGIAdapter* pAdapter,
                                          ResidencyManager* pResidencyManager,
                                          std::unique_ptr<Caps> caps)
         : mDevice(pDevice),
+          mAdapter(pAdapter),
           mResidencyManager(pResidencyManager),
           mCaps(std::move(caps)),
           mResourceHeapTier(descriptor.ResourceHeapTier),
@@ -1835,6 +1875,18 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResourceAllocator::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugNameImpl(Name);
+    }
+
+    ID3D12Device* ResourceAllocator::GetDevice() const {
+        return mDevice;
+    }
+
+    IDXGIAdapter* ResourceAllocator::GetAdapter() const {
+        return mAdapter;
+    }
+
+    IResidencyManager* ResourceAllocator::GetResidencyManager() const {
+        return mResidencyManager.Get();
     }
 
     ImportResourceCallbackContext::ImportResourceCallbackContext(ID3D12Resource* resource)

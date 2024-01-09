@@ -1454,6 +1454,25 @@ namespace gpgmm::d3d12 {
                                                  IResidencyManager* pResidencyManager,
                                                  IResourceAllocator** ppResourceAllocatorOut);
 
+    /** \brief Create a resource allocator from an existing resource allocator.
+
+    Creating a resource allocator from another resource allocator allows resources heaps to be
+    re-used between allocators that have seperate configurations. For example, the application
+    developer may want a global resource allocator to service large requests using dedication
+    allocations but still prefer smaller requests to use sub-allocation. By creating a resource
+    allocator from another, the same pool can be re-used instead of managing multiple pools.
+
+    @param allocatorDescriptor A reference to RESOURCE_ALLOCATOR_DESC structure that describes the
+    allocator.
+    @param pResourceAllocator allocator used to create the allocator. Required parameter.
+    @param[out] ppResourceAllocatorOut Pointer to a memory block that receives a pointer to the
+    resource allocator. Pass NULL to test if allocator creation would succeed, but not actually
+    create the allocator.
+    */
+    GPGMM_EXPORT HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
+                                                 IResourceAllocator* pResourceAllocator,
+                                                 IResourceAllocator** ppResourceAllocatorOut);
+
 }  // namespace gpgmm::d3d12
 
 #endif  // INCLUDE_GPGMM_D3D12_H_

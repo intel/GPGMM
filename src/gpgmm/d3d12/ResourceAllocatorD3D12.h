@@ -49,6 +49,11 @@ namespace gpgmm::d3d12 {
                                                ID3D12Device* pDevice,
                                                IDXGIAdapter* pAdapter,
                                                IResidencyManager* pResidencyManager,
+                                               IResourceAllocator* pResourceAllocator,
+                                               IResourceAllocator** ppResourceAllocatorOut);
+
+        static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
+                                               IResourceAllocator* pResourceAllocator,
                                                IResourceAllocator** ppResourceAllocatorOut);
 
         ~ResourceAllocator() override;
@@ -74,13 +79,22 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
+        ID3D12Device* GetDevice() const;
+        IDXGIAdapter* GetAdapter() const;
+        IResidencyManager* GetResidencyManager() const;
+
       private:
         friend BufferAllocator;
         friend ResourceAllocation;
 
         ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                           ID3D12Device* pDevice,
+                          IDXGIAdapter* pAdapter,
                           ResidencyManager* pResidencyManager,
+                          std::unique_ptr<Caps> caps);
+
+        ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
+                          ResourceAllocator* allocator,
                           std::unique_ptr<Caps> caps);
 
         void DeleteThis() override;
@@ -153,6 +167,7 @@ namespace gpgmm::d3d12 {
         DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
 
         ID3D12Device* mDevice = nullptr;
+        IDXGIAdapter* mAdapter = nullptr;
         ComPtr<ResidencyManager> mResidencyManager;
 
         std::unique_ptr<Caps> mCaps;
