@@ -184,7 +184,10 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
 
         Json::Value root;
         Json::Reader reader;
-        GPGMM_SKIP_TEST_IF(!reader.parse(traceFileStream, root, false));
+        if (!reader.parse(traceFileStream, root, false)) {
+            gpgmm::WarnLog() << "Json reader failed to parse from file: " << traceFile.path << ".";
+            GTEST_SKIP();
+        }
 
         PlaybackExecutionContext playbackContext = {};
 
@@ -399,7 +402,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                                 << "Capture device does not match playback device (IsUMA: " +
                                        std::to_string(snapshot["IsUMA"].asBool()) + " vs " +
                                        std::to_string(mCaps->IsAdapterUMA()) + ").";
-                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
+                            GPGMM_SKIP_TEST_IF_UNSUPPORTED(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
                         RESIDENCY_MANAGER_DESC newResidencyDesc = baseResidencyDesc;
@@ -461,7 +464,7 @@ class D3D12MemoryTraceReplay : public D3D12TestBase, public CaptureReplayTestWit
                                        " vs " +
                                        std::to_string(mCaps->GetMaxResourceHeapTierSupported()) +
                                        ").";
-                            GPGMM_SKIP_TEST_IF(!envParams.IsIgnoreCapsMismatchEnabled);
+                            GPGMM_SKIP_TEST_IF_UNSUPPORTED(!envParams.IsIgnoreCapsMismatchEnabled);
                         }
 
                         RESOURCE_ALLOCATOR_DESC allocatorDescOfProfile = baseAllocatorDesc;

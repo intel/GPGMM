@@ -195,7 +195,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferAndTextureInSameHeap) {
     allocatorDesc.PreferredResourceHeapSize = kBufferOf4MBAllocationSize;
 
     // Adapter must support mixing of resource types in same heap.
-    GPGMM_SKIP_TEST_IF(allocatorDesc.ResourceHeapTier < D3D12_RESOURCE_HEAP_TIER_2);
+    GPGMM_SKIP_TEST_IF_UNSUPPORTED(allocatorDesc.ResourceHeapTier < D3D12_RESOURCE_HEAP_TIER_2);
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(allocatorDesc, mDevice.Get(), mAdapter.Get(),
@@ -758,7 +758,7 @@ TEST_F(D3D12ResourceAllocatorTests, GetResourceAllocator) {
 
 // Verifies there are no attribution of heaps when UMA + no read-back.
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferUMA) {
-    GPGMM_SKIP_TEST_IF(!mCaps->IsAdapterCacheCoherentUMA());
+    GPGMM_SKIP_TEST_IF_UNSUPPORTED(!mCaps->IsAdapterCacheCoherentUMA());
 
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
     allocatorDesc.Flags |= RESOURCE_ALLOCATOR_FLAG_ALLOW_UNIFIED_MEMORY;
@@ -1574,8 +1574,8 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferStats) {
         // Depending on the device, sub-allocation could fail. Since this test relies on a
         // sub-allocator's info counts, it must be skipped.
         // TODO: Consider testing counts by allocator type.
-        GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Type !=
-                           RESOURCE_ALLOCATION_TYPE_SUBALLOCATED);
+        GPGMM_SKIP_TEST_IF(firstAllocation->GetInfo().Type != RESOURCE_ALLOCATION_TYPE_SUBALLOCATED,
+                           "failed", "unexpected allocation type used");
 
         RESOURCE_ALLOCATOR_STATS stats = GetStats(resourceAllocator);
         EXPECT_EQ(stats.UsedHeapCount, 1u);
@@ -1779,7 +1779,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithLimitedFragmentation) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferManyPrefetch) {
     // TODO: Figure out why MSVC workflow occasionally fails.
 #if defined(GPGMM_COMPILER_MSVC)
-    GPGMM_SKIP_TEST_IF(true);
+    GPGMM_SKIP_TEST_IF_DISABLED(true);
 #endif
 
     RESOURCE_ALLOCATOR_DESC allocatorDesc = CreateBasicAllocatorDesc();
@@ -1876,7 +1876,7 @@ TEST_F(D3D12ResourceAllocatorTests, CreateBufferWithinManyThreaded) {
 TEST_F(D3D12ResourceAllocatorTests, CreateBufferCacheSize) {
     // Since we cannot determine which resource sizes will be cached upon CreateResourceAllocator,
     // skip the test.
-    GPGMM_SKIP_TEST_IF(IsSizeCacheEnabled());
+    GPGMM_SKIP_TEST_IF_UNSUPPORTED(IsSizeCacheEnabled());
 
     ComPtr<IResourceAllocator> resourceAllocator;
     ASSERT_SUCCEEDED(CreateResourceAllocator(CreateBasicAllocatorDesc(), mDevice.Get(),

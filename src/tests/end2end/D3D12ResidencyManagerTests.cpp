@@ -140,7 +140,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
 
 TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
     // Adapters that do not support creating heaps will ignore D3D12_HEAP_FLAG_CREATE_NOT_RESIDENT.
-    GPGMM_SKIP_TEST_IF(!mCaps->IsCreateHeapNotResidentSupported());
+    GPGMM_SKIP_TEST_IF_UNSUPPORTED(!mCaps->IsCreateHeapNotResidentSupported());
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),
@@ -698,7 +698,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudget) {
 TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     // TODO: Figure out why MSVC occasionally fails.
 #if defined(GPGMM_COMPILER_MSVC)
-    GPGMM_SKIP_TEST_IF(true);
+    GPGMM_SKIP_TEST_IF_DISABLED(true);
 #endif
 
     constexpr uint64_t kBudgetIsDeterminedByOS = 0;
@@ -916,7 +916,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetWithMappedResources) {
 // gets paged-out.
 TEST_F(D3D12ResidencyManagerTests, OverBudgetExecuteCommandList) {
     // Disable for WARP because the device always leaks after this test ends.
-    GPGMM_SKIP_TEST_IF(IsAdapterMicrosoftWARP());
+    GPGMM_SKIP_TEST_IF_UNSUPPORTED(IsAdapterMicrosoftWARP());
 
     ComPtr<IResidencyManager> residencyManager;
     ASSERT_SUCCEEDED(CreateResidencyManager(CreateBasicResidencyDesc(kDefaultBudget), mDevice.Get(),

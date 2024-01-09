@@ -19,18 +19,25 @@
 
 #include "gpgmm/common/MemoryAllocator.h"
 #include "gpgmm/utils/Log.h"
+#include "gpgmm/utils/Platform.h"
 #include "gpgmm/utils/PlatformDebug.h"
 
 #include <vector>
 
-#define GPGMM_SKIP_TEST_IF(expr)                            \
-    do {                                                    \
-        if (expr) {                                         \
-            gpgmm::InfoLog() << "Test skipped: " #expr "."; \
-            GTEST_SKIP();                                   \
-            return;                                         \
-        }                                                   \
+#define GPGMM_SKIP_TEST_IF(expr, kind, reason)             \
+    do {                                                   \
+        if (expr) {                                        \
+            gpgmm::InfoLog() << "Test " kind ": " #reason; \
+            GTEST_SKIP();                                  \
+            return;                                        \
+        }                                                  \
     } while (0)
+
+// Unsupported tests are tests that rely on some OS / driver / platform feature to run.
+#define GPGMM_SKIP_TEST_IF_UNSUPPORTED(expr) GPGMM_SKIP_TEST_IF(expr, "unsupported", expr)
+
+// Disabled tests are tests that are not working and can be skipped until fixed.
+#define GPGMM_SKIP_TEST_IF_DISABLED(expr) GPGMM_SKIP_TEST_IF(expr, "disabled", expr)
 
 #define GPGMM_TEST_MEMORY_LEAK_START()          \
     do {                                        \

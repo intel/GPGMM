@@ -16,6 +16,10 @@
 #ifndef SRC_GPGMM_UTILS_PLATFORM_H_
 #define SRC_GPGMM_UTILS_PLATFORM_H_
 
+// Converts "is platform X" macro into conditional expression.
+// Useful when skipping code without using raw #ifdef.
+#define GPGMM_PLATFORM_IS(X) (1 == GPGMM_PLATFORM_IS_##X)
+
 // Per operating system.
 
 // Windows
