@@ -283,9 +283,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a9b382abf4ccea8a51660f760b8857c92" id="r_a9b382abf4ccea8a51660f760b8857c92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b382abf4ccea8a51660f760b8857c92">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> &amp;allocatorDescriptor, ID3D12Device *pDevice, IDXGIAdapter *pAdapter, <a class="el" href="#a826dccb5826564820e0671bb7b86b165">IResidencyManager</a> *pResidencyManager, <a class="el" href="#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
 <tr class="memdesc:a9b382abf4ccea8a51660f760b8857c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator using a specified residency manager.  <br /></td></tr>
 <tr class="separator:a9b382abf4ccea8a51660f760b8857c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b1fd700da8d5794df7e7cdfb6c3bda1" id="r_a2b1fd700da8d5794df7e7cdfb6c3bda1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b1fd700da8d5794df7e7cdfb6c3bda1">CreateResourceAllocator</a> (const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> &amp;allocatorDescriptor, <a class="el" href="#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> *pResourceAllocator, <a class="el" href="#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **ppResourceAllocatorOut)</td></tr>
-<tr class="memdesc:a2b1fd700da8d5794df7e7cdfb6c3bda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a resource allocator from an existing resource allocator.  <br /></td></tr>
-<tr class="separator:a2b1fd700da8d5794df7e7cdfb6c3bda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -1016,7 +1013,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div>
 </div>
 <a id="a9b382abf4ccea8a51660f760b8857c92" name="a9b382abf4ccea8a51660f760b8857c92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b382abf4ccea8a51660f760b8857c92">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b382abf4ccea8a51660f760b8857c92">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1064,7 +1061,7 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
 </div>
 </div>
 <a id="a8142df67f3fd5f78dfac64a3cff7a7b1" name="a8142df67f3fd5f78dfac64a3cff7a7b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8142df67f3fd5f78dfac64a3cff7a7b1">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8142df67f3fd5f78dfac64a3cff7a7b1">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1106,43 +1103,6 @@ With this flag, there will be no attempt to free unused heaps when E_OUTOFMEMORY
     <tr><td class="paramdir"></td><td class="paramname">pAdapter</td><td>DXGI adapter used to create the device. Used to detect for additional device capabilities (by GPU vendor). Optional parameter. Use EnumAdapters to get the adapter. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">ppResidencyManagerOut</td><td>Pointer to a memory block that receives a pointer to the residency manager. If NULL is passed, the allocator will be created without using residency. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a2b1fd700da8d5794df7e7cdfb6c3bda1" name="a2b1fd700da8d5794df7e7cdfb6c3bda1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b1fd700da8d5794df7e7cdfb6c3bda1">&#9670;&#160;</a></span>CreateResourceAllocator() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="gpgmm__d3d12_8h.html#a4d930693574b3af05f93dfd5546edd2b">GPGMM_EXPORT</a> HRESULT gpgmm::d3d12::CreateResourceAllocator </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>allocatorDescriptor</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> *</td>          <td class="paramname"><span class="paramname"><em>pResourceAllocator</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="#adc19a7e39d7932a3c59ab30f069dc5f8">IResourceAllocator</a> **</td>          <td class="paramname"><span class="paramname"><em>ppResourceAllocatorOut</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Create a resource allocator from an existing resource allocator. </p>
-<p>Creating a resource allocator from another resource allocator allows resources heaps to be re-used between allocators that have seperate configurations. For example, the application developer may want a global resource allocator to service large requests using dedication allocations but still prefer smaller requests to use sub-allocation. By creating a resource allocator from another, the same pool can be re-used instead of managing multiple pools.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">allocatorDescriptor</td><td>A reference to <a class="el" href="structgpgmm_1_1d3d12_1_1_r_e_s_o_u_r_c_e___a_l_l_o_c_a_t_o_r___d_e_s_c.html">RESOURCE_ALLOCATOR_DESC</a> structure that describes the allocator. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">pResourceAllocator</td><td>allocator used to create the allocator. Required parameter. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">ppResourceAllocatorOut</td><td>Pointer to a memory block that receives a pointer to the resource allocator. Pass NULL to test if allocator creation would succeed, but not actually create the allocator. </td></tr>
   </table>
   </dd>
 </dl>
