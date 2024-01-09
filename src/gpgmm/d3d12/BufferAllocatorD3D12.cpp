@@ -68,7 +68,7 @@ namespace gpgmm::d3d12 {
 
         // Optimized clear is not supported for buffers.
         ComPtr<ResidencyHeap> resourceHeap;
-        HRESULT hr = static_cast<ResourceAllocator*>(GetNextInChain())
+        HRESULT hr = ToBackend(GetNextInChain())
                          ->CreateCommittedResource(
                              mHeapProperties, mHeapFlags, info, &bufferDescriptor,
                              /*pOptimizedClearValue*/ nullptr, mInitialBufferState, &resourceHeap);

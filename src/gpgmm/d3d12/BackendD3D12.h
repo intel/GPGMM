@@ -19,10 +19,14 @@
 
 namespace gpgmm::d3d12 {
 
+    class ResidencyHeap;
     class ResourceAllocation;
+    class ResourceAllocator;
 
     struct BackendTraits {
         using AllocationType = ResourceAllocation;
+        using AllocatorType = ResourceAllocator;
+        using MemoryType = ResidencyHeap;
     };
 
     template <typename T>

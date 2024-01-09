@@ -1371,9 +1371,7 @@ namespace gpgmm::d3d12 {
                     allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN;
                     allocationDesc.OffsetFromResource = subAllocation.GetOffset();
 
-                    ResidencyHeap* resourceHeap =
-                        static_cast<ResidencyHeap*>(subAllocation.GetMemory());
-
+                    ResidencyHeap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     GPGMM_RETURN_IF_FAILED(ResourceAllocation::CreateResourceAllocation(
                         allocationDesc, /*resourceAllocator*/ this, subAllocation.GetAllocator(),
                         resourceHeap, subAllocation.GetBlock(), nullptr, ppResourceAllocationOut));
@@ -1399,8 +1397,7 @@ namespace gpgmm::d3d12 {
                     // Each allocation maps to a disjoint (physical) address range so no physical
                     // memory is can be aliased or will overlap.
                     ComPtr<ID3D12Resource> placedResource;
-                    ResidencyHeap* resourceHeap =
-                        static_cast<ResidencyHeap*>(subAllocation.GetMemory());
+                    ResidencyHeap* resourceHeap = ToBackend(subAllocation.GetMemory());
                     GPGMM_RETURN_IF_FAILED(CreatePlacedResource(
                         resourceHeap, subAllocation.GetOffset(), &newResourceDesc, clearValue,
                         initialResourceState, &placedResource));
@@ -1441,8 +1438,7 @@ namespace gpgmm::d3d12 {
 
             GPGMM_RETURN_IF_NOT_FATAL(TryAllocateResource(
                 allocator, dedicatedRequest, [&](const auto& allocation) -> HRESULT {
-                    ResidencyHeap* resourceHeap =
-                        static_cast<ResidencyHeap*>(allocation.GetMemory());
+                    ResidencyHeap* resourceHeap = ToBackend(allocation.GetMemory());
                     ComPtr<ID3D12Resource> placedResource;
                     GPGMM_RETURN_IF_FAILED(
                         CreatePlacedResource(resourceHeap, allocation.GetOffset(), &newResourceDesc,
