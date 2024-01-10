@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_GPGMM_COMMON_SENTINELMEMORYALLOCATOR_H_
-#define SRC_GPGMM_COMMON_SENTINELMEMORYALLOCATOR_H_
+#ifndef SRC_GPGMM_COMMON_TERMINATIONMEMORYALLOCATOR_H_
+#define SRC_GPGMM_COMMON_TERMINATIONMEMORYALLOCATOR_H_
 
 #include "gpgmm/common/MemoryAllocator.h"
 
 namespace gpgmm {
 
     // A MemoryAllocator that will be inserted last in the sequence to terminate or reject requests.
-    class SentinelMemoryAllocator final : public MemoryAllocatorBase {
+    class TerminationMemoryAllocator final : public MemoryAllocatorBase {
       public:
-        SentinelMemoryAllocator() = default;
-        ~SentinelMemoryAllocator() override = default;
+        TerminationMemoryAllocator() = default;
+        ~TerminationMemoryAllocator() override = default;
 
         // MemoryAllocatorBase interface
         ResultOrError<std::unique_ptr<MemoryAllocationBase>> TryAllocateMemory(
@@ -32,9 +32,9 @@ namespace gpgmm {
 
       private:
         // ObjectBase interface
-        DEFINE_OBJECT_BASE_OVERRIDES(SentinelMemoryAllocator)
+        DEFINE_OBJECT_BASE_OVERRIDES(TerminationMemoryAllocator)
     };
 
 }  // namespace gpgmm
 
-#endif  // SRC_GPGMM_COMMON_SENTINELMEMORYALLOCATOR_H_
+#endif  // SRC_GPGMM_COMMON_TERMINATIONMEMORYALLOCATOR_H_

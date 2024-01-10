@@ -20,8 +20,8 @@
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/PooledMemoryAllocator.h"
 #include "gpgmm/common/SegmentedMemoryAllocator.h"
-#include "gpgmm/common/SentinelMemoryAllocator.h"
 #include "gpgmm/common/SlabMemoryAllocator.h"
+#include "gpgmm/common/TerminationMemoryAllocator.h"
 #include "gpgmm/common/TraceEvent.h"
 #include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BufferAllocatorD3D12.h"
@@ -695,7 +695,7 @@ namespace gpgmm::d3d12 {
                                               heapFlags, mIsAlwaysCreatedInBudget));
             } else {
                 mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] =
-                    new SentinelMemoryAllocator();
+                    new TerminationMemoryAllocator();
             }
 
             mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] = CreatePoolAllocator(
@@ -722,7 +722,8 @@ namespace gpgmm::d3d12 {
                                        (descriptor.Flags & RESOURCE_ALLOCATOR_FLAG_ALLOW_PREFETCH),
                                        mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
             } else {
-                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator();
+                mMSAAResourceAllocatorOfType[resourceHeapTypeIndex] =
+                    new TerminationMemoryAllocator();
             }
 
             // Dedicated allocators are used when sub-allocation cannot but heaps could still be
@@ -743,7 +744,7 @@ namespace gpgmm::d3d12 {
                                        mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex]);
             } else {
                 mMSAADedicatedResourceAllocatorOfType[resourceHeapTypeIndex] =
-                    new SentinelMemoryAllocator;
+                    new TerminationMemoryAllocator;
             }
 
             if (IsBuffersAllowed(heapFlags, mResourceHeapTier)) {
@@ -751,7 +752,7 @@ namespace gpgmm::d3d12 {
                     descriptor, heapFlags, heapProperties, heapInfo, mExtraRequiredResourceFlags,
                     GetInitialResourceState(heapType));
             } else {
-                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = new SentinelMemoryAllocator;
+                mSmallBufferAllocatorOfType[resourceHeapTypeIndex] = new TerminationMemoryAllocator;
             }
 
             // Cache resource sizes commonly requested.
