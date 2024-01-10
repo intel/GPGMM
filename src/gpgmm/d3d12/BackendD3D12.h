@@ -17,11 +17,58 @@
 
 #include "gpgmm/common/Backend.h"
 
-namespace gpgmm::d3d12 {
+#include <gpgmm_d3d12.h>
 
+namespace gpgmm::d3d12 {
     class ResidencyHeap;
     class ResourceAllocation;
     class ResourceAllocator;
+    class ResidencyManager;
+}  // namespace gpgmm::d3d12
+
+// Compile-time mappings to/from API object/interface to down or up casts with only permitted API
+// types. For example, `FromAPI(interface)` instead of `static_cast<Object*>(interface)`.
+template <>
+struct gpgmm::APIObjectTraits<gpgmm::d3d12::IResidencyHeap> {
+    using DerivedType = gpgmm::d3d12::ResidencyHeap;
+};
+
+template <>
+struct gpgmm::APIInterfaceTraits<gpgmm::d3d12::ResidencyHeap> {
+    using InterfaceType = gpgmm::d3d12::IResidencyHeap;
+};
+
+template <>
+struct gpgmm::APIObjectTraits<gpgmm::d3d12::IResourceAllocator> {
+    using DerivedType = gpgmm::d3d12::ResourceAllocator;
+};
+
+template <>
+struct gpgmm::APIInterfaceTraits<gpgmm::d3d12::ResourceAllocator> {
+    using InterfaceType = gpgmm::d3d12::IResourceAllocator;
+};
+
+template <>
+struct gpgmm::APIObjectTraits<gpgmm::d3d12::IResidencyManager> {
+    using DerivedType = gpgmm::d3d12::ResidencyManager;
+};
+
+template <>
+struct gpgmm::APIInterfaceTraits<gpgmm::d3d12::ResidencyManager> {
+    using InterfaceType = gpgmm::d3d12::IResidencyManager;
+};
+
+namespace gpgmm::d3d12 {
+
+    template <typename InterfaceType>
+    auto FromAPI(InterfaceType&& basePtr) -> decltype(gpgmm::FromAPI(basePtr)) {
+        return gpgmm::FromAPI(basePtr);
+    }
+
+    template <typename APIObjectType>
+    auto ToAPI(APIObjectType&& objectPtr) -> decltype(gpgmm::ToAPI(objectPtr)) {
+        return gpgmm::ToAPI(objectPtr);
+    }
 
     struct BackendTraits {
         using AllocationType = ResourceAllocation;

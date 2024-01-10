@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/SizeClass.h"
 #include "gpgmm/common/TraceEvent.h"
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
 #include "gpgmm/d3d12/JSONSerializerD3D12.h"
 #include "gpgmm/d3d12/LogD3D12.h"
@@ -150,7 +151,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
+        ResidencyManager* residencyManager = FromAPI(pResidencyManager);
 
         std::unique_ptr<ResidencyHeap> heap(
             new ResidencyHeap(residencyManager, pPageable, newDescriptor));
@@ -250,7 +251,7 @@ namespace gpgmm::d3d12 {
         // Ensure enough budget exists before creating the heap to avoid an out-of-memory error.
         if (pResidencyManager != nullptr &&
             descriptor.Flags & RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET) {
-            ResidencyManager* residencyManager = static_cast<ResidencyManager*>(pResidencyManager);
+            ResidencyManager* residencyManager = FromAPI(pResidencyManager);
 
             uint64_t bytesEvicted = descriptor.SizeInBytes;
             GPGMM_RETURN_IF_FAILED(residencyManager->EvictInternal(

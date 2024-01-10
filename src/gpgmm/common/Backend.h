@@ -55,6 +55,22 @@ namespace gpgmm {
             common);
     }
 
+    template <typename InterfaceType>
+    struct APIObjectTraits;
+
+    template <typename InterfaceType>
+    typename APIObjectTraits<InterfaceType>::DerivedType* FromAPI(InterfaceType* basePtr) {
+        return static_cast<typename APIObjectTraits<InterfaceType>::DerivedType*>(basePtr);
+    }
+
+    template <typename APIObjectType>
+    struct APIInterfaceTraits;
+
+    template <typename APIObjectType>
+    typename APIInterfaceTraits<APIObjectType>::InterfaceType* ToAPI(APIObjectType* objectPtr) {
+        return static_cast<typename APIInterfaceTraits<APIObjectType>::InterfaceType*>(objectPtr);
+    }
+
 }  // namespace gpgmm
 
 #endif  // SRC_GPGMM_COMMON_BACKEND_H_

@@ -24,10 +24,8 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResidencyHeap;
-
     class ResidencyList final : public IResidencyList, public Unknown {
-        using UnderlyingType = std::vector<ResidencyHeap*>;
+        using UnderlyingType = std::vector<IResidencyHeap*>;
 
       public:
         ResidencyList();

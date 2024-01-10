@@ -39,7 +39,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        mList.push_back(static_cast<ResidencyHeap*>(pHeap));
+        mList.push_back(pHeap);
         return S_OK;
     }
 

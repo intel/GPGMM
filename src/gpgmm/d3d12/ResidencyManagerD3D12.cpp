@@ -17,6 +17,7 @@
 
 #include "gpgmm/common/EventMessage.h"
 #include "gpgmm/common/SizeClass.h"
+#include "gpgmm/d3d12/BackendD3D12.h"
 #include "gpgmm/d3d12/BudgetUpdateD3D12.h"
 #include "gpgmm/d3d12/CapsD3D12.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
@@ -194,14 +195,10 @@ namespace gpgmm::d3d12 {
     }
 
     // Increments number of locks on a heap to ensure the heap remains resident.
-    HRESULT ResidencyManager::LockHeap(ResidencyHeap* pHeap) {
-        GPGMM_RETURN_IF_NULL(pHeap);
+    HRESULT ResidencyManager::LockHeap(ResidencyHeap* heap) {
+        GPGMM_RETURN_IF_NULL(heap);
 
         std::lock_guard<std::mutex> lock(mMutex);
-
-        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
-        ASSERT(heap != nullptr);
-
         if (!heap->IsInList() && !heap->IsResidencyLocked()) {
             ComPtr<ID3D12Pageable> pageable;
             GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)), mDevice);
@@ -234,12 +231,10 @@ namespace gpgmm::d3d12 {
 
     // Decrements number of locks on a heap. When the number of locks becomes zero, the heap is
     // inserted into the LRU cache and becomes eligible for eviction.
-    HRESULT ResidencyManager::UnlockHeap(ResidencyHeap* pHeap) {
-        GPGMM_RETURN_IF_NULL(pHeap);
+    HRESULT ResidencyManager::UnlockHeap(ResidencyHeap* heap) {
+        GPGMM_RETURN_IF_NULL(heap);
 
         std::lock_guard<std::mutex> lock(mMutex);
-        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
-        ASSERT(heap != nullptr);
 
         // If the heap was never locked, nothing further should be done.
         if (!heap->IsResidencyLocked()) {
@@ -629,31 +624,33 @@ namespace gpgmm::d3d12 {
         uint64_t nonLocalSizeToMakeResident = 0;
 
         std::vector<ResidencyHeap*> heapsToMakeResident;
-        for (ResidencyHeap* heap : *residencyList) {
+        for (IResidencyHeap* heap : *residencyList) {
+            ResidencyHeap* backendHeap = FromAPI(heap);
+
             // Heaps that are locked resident are not tracked in the LRU cache.
-            if (heap->IsResidencyLocked()) {
+            if (backendHeap->IsResidencyLocked()) {
                 continue;
             }
 
             // ResidencyList can contain duplicates. We can skip them by checking if the heap's last
             // used fence is the same as the current one.
-            if (heap->GetLastUsedFenceValue() == mResidencyFence->GetCurrentFence()) {
+            if (backendHeap->GetLastUsedFenceValue() == mResidencyFence->GetCurrentFence()) {
                 continue;
             }
 
-            if (heap->IsInList()) {
+            if (backendHeap->IsInList()) {
                 // If the heap is already in the LRU, we must remove it and append again below to
                 // update its position in the LRU.
-                heap->RemoveFromList();
+                backendHeap->RemoveFromList();
             } else {
                 ComPtr<ID3D12Pageable> pageable;
-                GPGMM_RETURN_IF_FAILED(heap->QueryInterface(IID_PPV_ARGS(&pageable)));
+                GPGMM_RETURN_IF_FAILED(backendHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
-                if (heap->GetMemorySegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
-                    localSizeToMakeResident += heap->GetSize();
+                if (backendHeap->GetMemorySegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
+                    localSizeToMakeResident += backendHeap->GetSize();
                     localHeapsToMakeResident.push_back(pageable.Get());
                 } else {
-                    nonLocalSizeToMakeResident += heap->GetSize();
+                    nonLocalSizeToMakeResident += backendHeap->GetSize();
                     nonLocalHeapsToMakeResident.push_back(pageable.Get());
                 }
             }
@@ -662,21 +659,21 @@ namespace gpgmm::d3d12 {
             // command list stay resident at least until that command list has finished execution.
             // Setting this serial unnecessarily can leave the LRU in a state where nothing is
             // eligible for eviction, even though some evictions may be possible.
-            heap->SetLastUsedFenceValue(mResidencyFence->GetCurrentFence());
+            backendHeap->SetLastUsedFenceValue(mResidencyFence->GetCurrentFence());
 
             // Insert the heap into the appropriate LRU.
-            InsertHeapInternal(heap);
+            InsertHeapInternal(backendHeap);
 
             // Temporarily track which heaps will be made resident. Once MakeResident() is called
             // on them will we transition them all together.
-            heapsToMakeResident.push_back(heap);
+            heapsToMakeResident.push_back(backendHeap);
 
             // If the heap should be already resident, calling MakeResident again will be redundant.
             // Tell the developer the heap wasn't properly tracked by the residency manager.
-            if (heap->GetInfo().Status == RESIDENCY_HEAP_STATUS_UNKNOWN) {
+            if (backendHeap->GetInfo().Status == RESIDENCY_HEAP_STATUS_UNKNOWN) {
                 WarnLog(MessageId::kPerformanceWarning, this)
                     << "Residency state could not be determined for the heap (Heap="
-                    << ToHexStr(heap)
+                    << ToHexStr(backendHeap)
                     << "). This likely means the developer was attempting to make a "
                        "non-resource heap resident without calling lock/unlock first.";
             }
@@ -881,7 +878,7 @@ namespace gpgmm::d3d12 {
                                                  const RESIDENCY_HEAP_STATUS& newStatus) {
         GPGMM_RETURN_IF_NULL(pHeap);
 
-        ResidencyHeap* heap = static_cast<ResidencyHeap*>(pHeap);
+        ResidencyHeap* heap = FromAPI(pHeap);
         if (heap->GetInfo().IsLocked) {
             ErrorLog(ErrorCode::kBadOperation, this)
                 << "Heap residency cannot be updated because it was locked. "
