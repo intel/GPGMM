@@ -621,8 +621,10 @@ namespace gpgmm::d3d12 {
                 allocator->mPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex];
             mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex] =
                 allocator->mMSAAPooledOrNonPooledHeapAllocator[resourceHeapTypeIndex];
-            mSmallBufferAllocatorOfType[resourceHeapTypeIndex] =
-                allocator->mSmallBufferAllocatorOfType[resourceHeapTypeIndex];
+
+            // Small buffers have seperate pools within because they cannot use managed heaps.
+            mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->SetNextInChain(
+                allocator->mSmallBufferAllocatorOfType[resourceHeapTypeIndex]->GetNextInChain());
         }
     }
 

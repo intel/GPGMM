@@ -208,6 +208,7 @@ namespace gpgmm {
 
         // Return the next MemoryAllocatorBase.
         MemoryAllocatorBase* GetNextInChain() const;
+        void SetNextInChain(ScopedRef<MemoryAllocatorBase> next);
 
         // Return the previous MemoryAllocatorBase.
         MemoryAllocatorBase* GetParent() const;

@@ -201,6 +201,10 @@ namespace gpgmm {
         std::lock_guard<std::mutex> lock(mMutex);
         ASSERT(next != nullptr);
         next->mParent = this->value();
+        SetNextInChain(std::move(next));
+    }
+
+    void MemoryAllocatorBase::SetNextInChain(ScopedRef<MemoryAllocatorBase> next) {
         mNext = next;
     }
 

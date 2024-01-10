@@ -2102,3 +2102,43 @@ TEST_F(D3D12ResourceAllocatorTests, NestedAllocators) {
     RESOURCE_ALLOCATOR_STATS afterStats = GetStats(parentAllocator);
     EXPECT_EQ(beforeStats.FreeHeapUsage, afterStats.FreeHeapUsage);
 }
+
+// Create two resource allocations using different methods using the same heaps.
+TEST_F(D3D12ResourceAllocatorTests, NestedAllocatorsWithin) {
+    RESOURCE_ALLOCATOR_DESC desc = CreateBasicAllocatorDesc();
+    desc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_BUDDY_SYSTEM;
+
+    RESOURCE_ALLOCATION_DESC allocationDesc = {};
+    allocationDesc.Flags |= RESOURCE_ALLOCATION_FLAG_ALLOW_SUBALLOCATE_WITHIN_RESOURCE;
+
+    ComPtr<IResourceAllocator> parentAllocator;
+    ASSERT_SUCCEEDED(
+        CreateResourceAllocator(desc, mDevice.Get(), mAdapter.Get(), &parentAllocator, nullptr));
+
+    {
+        ComPtr<IResourceAllocation> subAllocation;
+        ASSERT_SUCCEEDED(parentAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(1),
+                                                         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                                         &subAllocation));
+        EXPECT_EQ(subAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+    }
+
+    RESOURCE_ALLOCATOR_STATS beforeStats = GetStats(parentAllocator);
+    EXPECT_GT(beforeStats.FreeHeapUsage, 0u);
+
+    desc.SubAllocationAlgorithm = RESOURCE_ALLOCATION_ALGORITHM_SLAB;
+
+    ComPtr<IResourceAllocator> childAllocator;
+    ASSERT_SUCCEEDED(CreateResourceAllocator(desc, parentAllocator.Get(), &childAllocator));
+
+    {
+        ComPtr<IResourceAllocation> subAllocation;
+        ASSERT_SUCCEEDED(childAllocator->CreateResource(allocationDesc, CreateBasicBufferDesc(1),
+                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                                        &subAllocation));
+        EXPECT_EQ(subAllocation->GetInfo().Type, RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN);
+    }
+
+    RESOURCE_ALLOCATOR_STATS afterStats = GetStats(parentAllocator);
+    EXPECT_EQ(beforeStats.FreeHeapUsage, afterStats.FreeHeapUsage);
+}
