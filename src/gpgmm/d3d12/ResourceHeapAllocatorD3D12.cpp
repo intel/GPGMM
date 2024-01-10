@@ -84,8 +84,8 @@ namespace gpgmm::d3d12 {
         mStats.UsedMemoryUsage += resourceHeapDesc.SizeInBytes;
         mStats.UsedMemoryCount++;
 
-        return std::make_unique<MemoryAllocationBase>(
-            this, static_cast<ResidencyHeap*>(resourceHeap.Detach()), request.SizeInBytes);
+        return std::make_unique<MemoryAllocationBase>(this, FromAPI(resourceHeap.Detach()),
+                                                      request.SizeInBytes);
     }
 
     void ResourceHeapAllocator::DeallocateMemory(std::unique_ptr<MemoryAllocationBase> allocation) {

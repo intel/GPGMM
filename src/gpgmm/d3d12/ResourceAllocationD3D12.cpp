@@ -103,7 +103,7 @@ namespace gpgmm::d3d12 {
 
         // If the developer forgots to unlock the heap, do so now so the heap can be made eligable
         // for eviction.
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        ResidencyHeap* residencyHeap = FromAPI(GetMemory());
         if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr)) &&
             GPGMM_UNSUCCESSFUL(residencyHeap->Unlock())) {
             WarnLog(MessageId::kPerformanceWarning, this)
@@ -133,7 +133,7 @@ namespace gpgmm::d3d12 {
             return GetErrorResult(ErrorCode::kBadOperation);
         }
 
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        ResidencyHeap* residencyHeap = FromAPI(GetMemory());
         if (SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
             GPGMM_RETURN_IF_FAILED(residencyHeap->Lock());
         }
@@ -173,7 +173,7 @@ namespace gpgmm::d3d12 {
         }
 
         // Underlying heap cannot be evicted until the last Unmap.
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        ResidencyHeap* residencyHeap = FromAPI(GetMemory());
         if (mMappedCount.Unref() && SUCCEEDED(residencyHeap->GetResidencyManager(nullptr))) {
             residencyHeap->Unlock();
         }
@@ -204,7 +204,7 @@ namespace gpgmm::d3d12 {
     }
 
     IResidencyHeap* ResourceAllocation::GetMemory() const {
-        return static_cast<ResidencyHeap*>(MemoryAllocationBase::GetMemory());
+        return ToBackend(MemoryAllocationBase::GetMemory());
     }
 
     HRESULT ResourceAllocation::SetDebugNameImpl(LPCWSTR name) {
@@ -226,7 +226,7 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT STDMETHODCALLTYPE ResourceAllocation::QueryInterface(REFIID riid, void** ppvObject) {
-        ResidencyHeap* residencyHeap = static_cast<ResidencyHeap*>(GetMemory());
+        ResidencyHeap* residencyHeap = FromAPI(GetMemory());
 
         // Only committed resources can be exported. Committed resources are created
         // without explicit heaps.

@@ -397,7 +397,7 @@ namespace gpgmm::d3d12 {
     HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                     IResourceAllocator* pResourceAllocator,
                                     IResourceAllocator** ppResourceAllocatorOut) {
-        ResourceAllocator* resourceAllocator = static_cast<ResourceAllocator*>(pResourceAllocator);
+        ResourceAllocator* resourceAllocator = FromAPI(pResourceAllocator);
         return ResourceAllocator::CreateResourceAllocator(
             allocatorDescriptor, resourceAllocator->GetDevice(), resourceAllocator->GetAdapter(),
             resourceAllocator->GetResidencyManager(), pResourceAllocator, ppResourceAllocatorOut);
@@ -586,12 +586,10 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<ResourceAllocator> resourceAllocator;
         if (pResourceAllocator == nullptr) {
             resourceAllocator = std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
-                newDescriptor, pDevice, pAdapter, static_cast<ResidencyManager*>(pResidencyManager),
-                std::move(caps)));
+                newDescriptor, pDevice, pAdapter, FromAPI(pResidencyManager), std::move(caps)));
         } else {
-            resourceAllocator = std::unique_ptr<ResourceAllocator>(new ResourceAllocator(
-                newDescriptor, static_cast<ResourceAllocator*>(pResourceAllocator),
-                std::move(caps)));
+            resourceAllocator = std::unique_ptr<ResourceAllocator>(
+                new ResourceAllocator(newDescriptor, FromAPI(pResourceAllocator), std::move(caps)));
         }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(resourceAllocator.get(), newDescriptor);
@@ -1600,9 +1598,9 @@ namespace gpgmm::d3d12 {
         allocationDesc.SizeInBytes = allocationSize;
         allocationDesc.Type = RESOURCE_ALLOCATION_TYPE_STANDALONE;
 
-        *ppResourceAllocationOut = new ResourceAllocation(
-            allocationDesc, /*resourceAllocator*/ this, this,
-            static_cast<ResidencyHeap*>(resourceHeap.Detach()), nullptr, pCommittedResource);
+        *ppResourceAllocationOut =
+            new ResourceAllocation(allocationDesc, /*resourceAllocator*/ this, this,
+                                   FromAPI(resourceHeap.Detach()), nullptr, pCommittedResource);
 
         return S_OK;
     }
@@ -1670,7 +1668,7 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(resourceHeap->SetDebugName(L"Resource heap (committed)"));
 
         if (resourceHeapOut != nullptr) {
-            *resourceHeapOut = static_cast<ResidencyHeap*>(resourceHeap.Detach());
+            *resourceHeapOut = FromAPI(resourceHeap.Detach());
         }
 
         return S_OK;
