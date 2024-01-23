@@ -1,4 +1,5 @@
 name: "Clang format check"
+permissions: read-all
 
 on:
   push:
