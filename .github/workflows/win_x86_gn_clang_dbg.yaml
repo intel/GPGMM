@@ -1,4 +1,5 @@
 name: Windows x86 GN/Clang (Debug)
+permissions: read-all
 
 on:
   # This is a required workflow specified in branch enforcement

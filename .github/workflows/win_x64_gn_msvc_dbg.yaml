@@ -1,4 +1,5 @@
 name: Windows x64 GN/MSVC (Debug)
+permissions: read-all
 
 on:
   # This is a required workflow specified in branch enforcement

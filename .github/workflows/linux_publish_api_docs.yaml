@@ -1,4 +1,5 @@
 name: "Build and Publish API Documentation"
+permissions: read-all
 
 on:
   push:

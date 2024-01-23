@@ -4,6 +4,7 @@
 # once the integration tests become green.
 # Any new dependencies in .\DEPS should also be added here.
 name: 'Auto Roll DEPS'
+permissions: read-all
 
 on:
   workflow_dispatch:

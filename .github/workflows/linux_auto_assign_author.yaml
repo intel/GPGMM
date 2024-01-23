@@ -1,5 +1,6 @@
 # Automatically assigns the author who created the PR to the Assignees in GitHub.
 name: PR Author Assign
+permissions: read-all
 
 on:
   pull_request_target:
