@@ -105,10 +105,10 @@ namespace gpgmm::d3d12 {
         GPGMM_RETURN_IF_FAILED(residencyManager->UpdateMemorySegments());
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
-            residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+            residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_LOCAL);
 
         DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
-            residencyManager->GetVideoMemoryInfo(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+            residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_NON_LOCAL);
 
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
@@ -127,13 +127,13 @@ namespace gpgmm::d3d12 {
         if (localVideoMemorySegmentInfo->Budget == 0) {
             WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                 << "GPU memory segment ("
-                << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, residencyManager->mIsUMA)
+                << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_LOCAL, residencyManager->mIsUMA)
                 << ") did not initialize a budget. This means either a restricted budget was not "
                    "used or the first OS budget update hasn't occured.";
             if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
                 WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                     << "GPU memory segment ("
-                    << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL,
+                    << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_NON_LOCAL,
                                             residencyManager->mIsUMA)
                     << ") did not initialize a budget. This means either a "
                        "restricted budget was not "
@@ -142,9 +142,9 @@ namespace gpgmm::d3d12 {
         }
 
         // Dump out the initialized memory segment status.
-        residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_LOCAL);
+        residencyManager->ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT_LOCAL);
         if (!residencyManager->mIsUMA) {
-            residencyManager->ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL);
+            residencyManager->ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT_NON_LOCAL);
         }
 
         GPGMM_TRACE_EVENT_OBJECT_SNAPSHOT(residencyManager.get(), descriptor);
@@ -301,11 +301,11 @@ namespace gpgmm::d3d12 {
     }
 
     DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemoryInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
+        const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         switch (heapSegment) {
-            case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_LOCAL:
                 return &mLocalVideoMemorySegment.Info;
-            case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_NON_LOCAL:
                 return &mNonLocalVideoMemorySegment.Info;
             default:
                 UNREACHABLE();
@@ -314,11 +314,11 @@ namespace gpgmm::d3d12 {
     }
 
     ResidencyManager::LRUCache* ResidencyManager::GetVideoMemorySegmentCache(
-        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
+        const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         switch (heapSegment) {
-            case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_LOCAL:
                 return &mLocalVideoMemorySegment.cache;
-            case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_NON_LOCAL:
                 return &mNonLocalVideoMemorySegment.cache;
             default:
                 UNREACHABLE();
@@ -329,12 +329,11 @@ namespace gpgmm::d3d12 {
     // Sends the minimum required physical video memory for an application, to this residency
     // manager. Returns the amount of memory reserved, which may be less then the |reservation| when
     // under video memory pressure.
-    HRESULT ResidencyManager::SetVideoMemoryReservation(
-        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
-        uint64_t availableForReservation,
-        uint64_t* pCurrentReservationOut) {
+    HRESULT ResidencyManager::SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                                        uint64_t availableForReservation,
+                                                        uint64_t* pCurrentReservationOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
-                                   "ResidencyManager.SetVideoMemoryReservation");
+                                   "ResidencyManager.SetMemoryReservation");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
@@ -354,15 +353,18 @@ namespace gpgmm::d3d12 {
     }
 
     HRESULT ResidencyManager::UpdateMemorySegmentInternal(
-        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
+        const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         // For UMA adapters, non-local is always zero.
-        if (mIsUMA && heapSegment == DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL) {
+        if (mIsUMA && heapSegment == RESIDENCY_HEAP_SEGMENT_NON_LOCAL) {
             return S_OK;
         }
 
+        // Residency heap segments are 1:1 with DXGI memory segment groups.
         DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfoOut;
         GPGMM_RETURN_IF_FAILED(
-            mAdapter->QueryVideoMemoryInfo(0, heapSegment, &queryVideoMemoryInfoOut), mDevice);
+            mAdapter->QueryVideoMemoryInfo(0, static_cast<DXGI_MEMORY_SEGMENT_GROUP>(heapSegment),
+                                           &queryVideoMemoryInfoOut),
+            mDevice);
 
         // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -469,13 +471,13 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResidencyManager::UpdateMemorySegments() {
         std::lock_guard<std::mutex> lock(mMutex);
-        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
-        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
+        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(RESIDENCY_HEAP_SEGMENT_LOCAL));
+        GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(RESIDENCY_HEAP_SEGMENT_NON_LOCAL));
         return S_OK;
     }
 
     HRESULT ResidencyManager::QueryVideoMemoryInfo(
-        const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+        const RESIDENCY_HEAP_SEGMENT& heapSegment,
         DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (IsBudgetNotificationUpdatesDisabled()) {
@@ -492,7 +494,7 @@ namespace gpgmm::d3d12 {
     // Evicts |evictSizeInBytes| bytes of memory in |heapSegment| and returns the number of
     // bytes evicted.
     HRESULT ResidencyManager::EvictInternal(uint64_t bytesToEvict,
-                                            const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+                                            const RESIDENCY_HEAP_SEGMENT& heapSegment,
                                             uint64_t* bytesEvictedOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.Evict");
 
@@ -506,7 +508,7 @@ namespace gpgmm::d3d12 {
         if (pVideoMemoryInfo->Budget == 0) {
             WarnEvent(MessageId::kBudgetExceeded, this)
                 << "GPU memory segment ("
-                << GetMemorySegmentName(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, IsUMA())
+                << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_NON_LOCAL, IsUMA())
                 << ") was unable to evict memory because a budget was not specified.";
             return S_FALSE;
         }
@@ -649,7 +651,7 @@ namespace gpgmm::d3d12 {
                 ComPtr<ID3D12Pageable> pageable;
                 GPGMM_RETURN_IF_FAILED(backendHeap->QueryInterface(IID_PPV_ARGS(&pageable)));
 
-                if (backendHeap->GetMemorySegment() == DXGI_MEMORY_SEGMENT_GROUP_LOCAL) {
+                if (backendHeap->GetMemorySegment() == RESIDENCY_HEAP_SEGMENT_LOCAL) {
                     localSizeToMakeResident += backendHeap->GetSize();
                     localHeapsToMakeResident.push_back(pageable.Get());
                 } else {
@@ -686,13 +688,13 @@ namespace gpgmm::d3d12 {
             const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(localHeapsToMakeResident.size());
             GPGMM_RETURN_IF_FAILED(
-                MakeResident(DXGI_MEMORY_SEGMENT_GROUP_LOCAL, localSizeToMakeResident,
+                MakeResident(RESIDENCY_HEAP_SEGMENT_LOCAL, localSizeToMakeResident,
                              numberOfObjectsToMakeResident, localHeapsToMakeResident.data()));
         } else if (nonLocalSizeToMakeResident > 0) {
             const uint32_t numberOfObjectsToMakeResident =
                 static_cast<uint32_t>(nonLocalHeapsToMakeResident.size());
             GPGMM_RETURN_IF_FAILED(
-                MakeResident(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, nonLocalSizeToMakeResident,
+                MakeResident(RESIDENCY_HEAP_SEGMENT_NON_LOCAL, nonLocalSizeToMakeResident,
                              numberOfObjectsToMakeResident, nonLocalHeapsToMakeResident.data()));
         }
 
@@ -722,9 +724,8 @@ namespace gpgmm::d3d12 {
         // never changes (ie. not manually updated or through budget change events), the
         // residency manager wouldn't know what to page in or out.
         if (IsBudgetNotificationUpdatesDisabled()) {
-            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_LOCAL));
-            GPGMM_RETURN_IF_FAILED(
-                UpdateMemorySegmentInternal(DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL));
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(RESIDENCY_HEAP_SEGMENT_LOCAL));
+            GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(RESIDENCY_HEAP_SEGMENT_NON_LOCAL));
         }
 
         GPGMM_TRACE_EVENT_OBJECT_CALL(
@@ -734,7 +735,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::MakeResident(const DXGI_MEMORY_SEGMENT_GROUP heapSegment,
+    HRESULT ResidencyManager::MakeResident(const RESIDENCY_HEAP_SEGMENT heapSegment,
                                            uint64_t sizeToMakeResident,
                                            uint32_t numberOfObjectsToMakeResident,
                                            ID3D12Pageable** allocations) {
@@ -860,7 +861,7 @@ namespace gpgmm::d3d12 {
         return mIsUMA;
     }
 
-    void ResidencyManager::ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup) {
+    void ResidencyManager::ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT segmentGroup) {
         DXGI_QUERY_VIDEO_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
         ASSERT(info != nullptr);
 

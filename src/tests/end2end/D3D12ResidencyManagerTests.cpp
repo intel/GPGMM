@@ -80,14 +80,14 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     }
 
     uint64_t GetBudgetLeft(IResidencyManager* residencyManager,
-                           const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
+                           const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
         residencyManager->QueryVideoMemoryInfo(heapSegment, &segment);
         return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
                                                        : 0;
     }
 
-    DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment(D3D12_HEAP_TYPE heapType) const {
+    RESIDENCY_HEAP_SEGMENT GetMemorySegment(D3D12_HEAP_TYPE heapType) const {
         D3D12_HEAP_PROPERTIES heapProperties = mDevice->GetCustomHeapProperties(0, heapType);
         return ::GetMemorySegment(heapProperties.MemoryPoolPreference, mCaps->IsAdapterUMA());
     }
@@ -153,7 +153,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapNotResident) {
 
     RESIDENCY_HEAP_DESC resourceHeapInBudgetDesc = {};
     resourceHeapInBudgetDesc.SizeInBytes = kHeapSize;
-    resourceHeapInBudgetDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    resourceHeapInBudgetDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
     resourceHeapInBudgetDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_IN_BUDGET;
 
     D3D12_HEAP_DESC heapDesc = {};
@@ -178,7 +178,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeapLocked) {
     D3D12_HEAP_DESC heapDesc = GetBasicHeapDesc(GPGMM_MB_TO_BYTES(10), D3D12_HEAP_TYPE_DEFAULT);
 
     RESIDENCY_HEAP_DESC residencyHeapDesc = {};
-    residencyHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    residencyHeapDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
 
     CreateResourceHeapCallbackContext createHeapContext(mDevice.Get(), &heapDesc);
 
@@ -231,7 +231,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateResourceHeap) {
     heapDesc.Flags |= D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS;
 
     RESIDENCY_HEAP_DESC residencyHeapDesc = {};
-    residencyHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    residencyHeapDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
 
     {
         BadCreateHeapCallbackContext badCreateHeapCallbackContext;
@@ -366,7 +366,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeap) {
     RESIDENCY_HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
 
@@ -420,7 +420,7 @@ TEST_F(D3D12ResidencyManagerTests, CreateDescriptorHeapResident) {
     RESIDENCY_HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.SizeInBytes =
         heapDesc.NumDescriptors * mDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-    descriptorHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+    descriptorHeapDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
     descriptorHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_RESIDENT;
 
     CreateDescHeapCallbackContext createDescHeapCallbackContext(mDevice.Get(), heapDesc);
@@ -720,7 +720,7 @@ TEST_F(D3D12ResidencyManagerTests, OverBudgetAsync) {
     RESOURCE_ALLOCATION_DESC bufferAllocationDesc = {};
     bufferAllocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
-    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
+    const RESIDENCY_HEAP_SEGMENT bufferMemorySegment =
         GetMemorySegment(bufferAllocationDesc.HeapType);
 
     const uint64_t memoryUnderBudget = GetBudgetLeft(residencyManager.Get(), bufferMemorySegment);

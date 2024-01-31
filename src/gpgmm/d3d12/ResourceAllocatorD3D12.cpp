@@ -1288,7 +1288,7 @@ namespace gpgmm::d3d12 {
         // allocation-time, it must be set here and again, when a resource heap is created.
         heapProperties.MemoryPoolPreference = GetMemoryPool(heapProperties, isUMA);
 
-        const DXGI_MEMORY_SEGMENT_GROUP heapSegment =
+        const RESIDENCY_HEAP_SEGMENT heapSegment =
             GetMemorySegment(heapProperties.MemoryPoolPreference, isUMA);
 
         const uint64_t maxSegmentSize = mCaps->GetMaxSegmentSize(heapSegment);

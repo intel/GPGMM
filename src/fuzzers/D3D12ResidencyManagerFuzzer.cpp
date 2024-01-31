@@ -30,7 +30,7 @@ namespace {
     std::vector<ComPtr<gpgmm::d3d12::IResourceAllocation>> gAllocationsBelowBudget = {};
 
     uint64_t GetBudgetLeft(gpgmm::d3d12::IResidencyManager* const residencyManager,
-                           const DXGI_MEMORY_SEGMENT_GROUP& heapSegment) {
+                           const gpgmm::d3d12::RESIDENCY_HEAP_SEGMENT& heapSegment) {
         if (residencyManager == nullptr) {
             return 0;
         }
@@ -88,7 +88,7 @@ extern "C" int LLVMFuzzerInitialize(int* argc, char*** argv) {
     D3D12_HEAP_PROPERTIES heapProperties =
         gDevice->GetCustomHeapProperties(0, allocationDesc.HeapType);
 
-    const DXGI_MEMORY_SEGMENT_GROUP bufferMemorySegment =
+    const gpgmm::d3d12::RESIDENCY_HEAP_SEGMENT bufferMemorySegment =
         gpgmm::d3d12::GetMemorySegment(heapProperties.MemoryPoolPreference, arch.UMA);
 
     constexpr uint64_t kBufferMemorySize = GPGMM_MB_TO_BYTES(1);

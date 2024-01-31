@@ -142,16 +142,16 @@ namespace gpgmm::d3d12 {
         return mMaxResourceHeapSize;
     }
 
-    uint64_t Caps::GetMaxSegmentSize(DXGI_MEMORY_SEGMENT_GROUP heapSegment) const {
+    uint64_t Caps::GetMaxSegmentSize(RESIDENCY_HEAP_SEGMENT heapSegment) const {
         if (mIsAdapterUMA) {
             return mSharedSegmentSize;
         }
 
         switch (heapSegment) {
-            case DXGI_MEMORY_SEGMENT_GROUP_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_LOCAL:
                 return mDedicatedSegmentSize;
 
-            case DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL:
+            case RESIDENCY_HEAP_SEGMENT_NON_LOCAL:
                 return mSharedSegmentSize;
 
             default:
