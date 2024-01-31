@@ -1305,7 +1305,7 @@ namespace gpgmm::d3d12 {
         // checks this amount to determine if its appropriate to pre-allocate more memory or
         // not.
         if (IsResidencyEnabled() && !IsCreateHeapNotResidentEnabled()) {
-            DXGI_QUERY_VIDEO_MEMORY_INFO* currentVideoInfo =
+            RESIDENCY_MEMORY_INFO* currentVideoInfo =
                 mResidencyManager->GetVideoMemoryInfo(heapSegment);
 
             // If over-budget, only free memory is considered available.

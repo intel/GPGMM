@@ -60,7 +60,7 @@ namespace gpgmm::d3d12 {
                                           uint64_t* pCurrentReservationOut = nullptr) override;
 
         HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                     DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
+                                     RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
                                    const RESIDENCY_HEAP_STATUS& newStatus) override;
 
@@ -110,7 +110,7 @@ namespace gpgmm::d3d12 {
 
         struct VideoMemorySegment {
             LRUCache cache = {};
-            DXGI_QUERY_VIDEO_MEMORY_INFO Info = {};
+            RESIDENCY_MEMORY_INFO Info = {};
         };
 
         HRESULT MakeResident(const RESIDENCY_HEAP_SEGMENT heapSegment,
@@ -120,7 +120,7 @@ namespace gpgmm::d3d12 {
 
         LRUCache* GetVideoMemorySegmentCache(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment);
+        RESIDENCY_MEMORY_INFO* GetVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
         HRESULT UpdateMemorySegmentInternal(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 

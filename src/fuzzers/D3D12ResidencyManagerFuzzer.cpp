@@ -34,7 +34,7 @@ namespace {
         if (residencyManager == nullptr) {
             return 0;
         }
-        DXGI_QUERY_VIDEO_MEMORY_INFO segment = {};
+        gpgmm::d3d12::RESIDENCY_MEMORY_INFO segment = {};
         gResidencyManager->QueryVideoMemoryInfo(heapSegment, &segment);
         return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
                                                        : 0;
