@@ -667,7 +667,7 @@ namespace gpgmm::d3d12 {
     */
     GPGMM_EXPORT HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                                 ID3D12Device* pDevice,
-                                                IDXGIAdapter3* pAdapter,
+                                                IUnknown* pAdapter,
                                                 IResidencyManager** ppResidencyManagerOut);
 
     /** \struct RESOURCE_ALLOCATION_INFO
@@ -1430,7 +1430,7 @@ namespace gpgmm::d3d12 {
     */
     GPGMM_EXPORT HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                  ID3D12Device* pDevice,
-                                                 IDXGIAdapter* pAdapter,
+                                                 IUnknown* pAdapter,
                                                  IResourceAllocator** ppResourceAllocatorOut,
                                                  IResidencyManager** ppResidencyManagerOut);
 
@@ -1450,7 +1450,7 @@ namespace gpgmm::d3d12 {
     */
     GPGMM_EXPORT HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                  ID3D12Device* pDevice,
-                                                 IDXGIAdapter* pAdapter,
+                                                 IUnknown* pAdapter,
                                                  IResidencyManager* pResidencyManager,
                                                  IResourceAllocator** ppResourceAllocatorOut);
 

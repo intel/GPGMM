@@ -44,7 +44,7 @@ namespace gpgmm::d3d12 {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                               ID3D12Device* pDevice,
-                                              IDXGIAdapter3* pAdapter,
+                                              IUnknown* pAdapter,
                                               IResidencyManager** ppResidencyManagerOut);
 
         ~ResidencyManager() override;

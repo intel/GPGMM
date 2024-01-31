@@ -41,13 +41,13 @@ namespace gpgmm::d3d12 {
       public:
         static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
-                                               IDXGIAdapter* pAdapter,
+                                               IUnknown* pAdapter,
                                                IResourceAllocator** ppResourceAllocatorOut,
                                                IResidencyManager** ppResidencyManagerOut);
 
         static HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                                ID3D12Device* pDevice,
-                                               IDXGIAdapter* pAdapter,
+                                               IUnknown* pAdapter,
                                                IResidencyManager* pResidencyManager,
                                                IResourceAllocator* pResourceAllocator,
                                                IResourceAllocator** ppResourceAllocatorOut);
@@ -80,7 +80,7 @@ namespace gpgmm::d3d12 {
         HRESULT SetDebugName(LPCWSTR Name) override;
 
         ID3D12Device* GetDevice() const;
-        IDXGIAdapter* GetAdapter() const;
+        IUnknown* GetAdapter() const;
         IResidencyManager* GetResidencyManager() const;
 
       private:
@@ -89,7 +89,7 @@ namespace gpgmm::d3d12 {
 
         ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                           ID3D12Device* pDevice,
-                          IDXGIAdapter* pAdapter,
+                          IUnknown* pAdapter,
                           ResidencyManager* pResidencyManager,
                           std::unique_ptr<Caps> caps);
 
@@ -167,7 +167,7 @@ namespace gpgmm::d3d12 {
         DEFINE_OBJECT_BASE_OVERRIDES(IResourceAllocator)
 
         ID3D12Device* mDevice = nullptr;
-        IDXGIAdapter* mAdapter = nullptr;
+        IUnknown* mAdapter = nullptr;
         ComPtr<ResidencyManager> mResidencyManager;
 
         std::unique_ptr<Caps> mCaps;
