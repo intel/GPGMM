@@ -25,7 +25,7 @@ namespace gpgmm::d3d12 {
 
     class Caps {
       public:
-        static HRESULT CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut);
+        static HRESULT CreateCaps(ID3D12Device* pDevice, IUnknown* pAdapter, Caps** ppCapsOut);
 
         // Largest resource size that this device can make available.
         uint64_t GetMaxResourceSize() const;

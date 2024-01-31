@@ -42,7 +42,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                    ID3D12Device* pDevice,
-                                   IDXGIAdapter3* pAdapter,
+                                   IUnknown* pAdapter,
                                    IResidencyManager** ppResidencyManagerOut) {
         return ResidencyManager::CreateResidencyManager(descriptor, pDevice, pAdapter,
                                                         ppResidencyManagerOut);
@@ -51,7 +51,7 @@ namespace gpgmm::d3d12 {
     // static
     HRESULT ResidencyManager::CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                                      ID3D12Device* pDevice,
-                                                     IDXGIAdapter3* pAdapter,
+                                                     IUnknown* pAdapter,
                                                      IResidencyManager** ppResidencyManagerOut) {
         GPGMM_RETURN_IF_NULL(pAdapter);
         GPGMM_RETURN_IF_NULL(pDevice);
@@ -86,8 +86,11 @@ namespace gpgmm::d3d12 {
 
         SetLogLevel(GetMessageSeverity(descriptor.MinLogLevel));
 
+        ComPtr<IDXGIAdapter3> dxgiAdapter3;
+        GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&dxgiAdapter3)));
+
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(descriptor, pDevice, pAdapter, std::move(caps)));
+            new ResidencyManager(descriptor, pDevice, dxgiAdapter3.Get(), std::move(caps)));
 
         // Enable automatic video memory budget updates.
         if (descriptor.Flags & RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES) {

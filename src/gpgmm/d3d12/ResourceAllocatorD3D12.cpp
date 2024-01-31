@@ -377,7 +377,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                     ID3D12Device* pDevice,
-                                    IDXGIAdapter* pAdapter,
+                                    IUnknown* pAdapter,
                                     IResourceAllocator** ppResourceAllocatorOut,
                                     IResidencyManager** ppResidencyManagerOut = nullptr) {
         return ResourceAllocator::CreateResourceAllocator(
@@ -386,7 +386,7 @@ namespace gpgmm::d3d12 {
 
     HRESULT CreateResourceAllocator(const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
                                     ID3D12Device* pDevice,
-                                    IDXGIAdapter* pAdapter,
+                                    IUnknown* pAdapter,
                                     IResidencyManager* pResidencyManager,
                                     IResourceAllocator** ppResourceAllocatorOut) {
         return ResourceAllocator::CreateResourceAllocator(allocatorDescriptor, pDevice, pAdapter,
@@ -407,7 +407,7 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResourceAllocator(
         const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
         ID3D12Device* pDevice,
-        IDXGIAdapter* pAdapter,
+        IUnknown* pAdapter,
         IResourceAllocator** ppResourceAllocatorOut,
         IResidencyManager** ppResidencyManagerOut) {
         GPGMM_RETURN_IF_NULL(pDevice);
@@ -451,7 +451,7 @@ namespace gpgmm::d3d12 {
     HRESULT ResourceAllocator::CreateResourceAllocator(
         const RESOURCE_ALLOCATOR_DESC& allocatorDescriptor,
         ID3D12Device* pDevice,
-        IDXGIAdapter* pAdapter,
+        IUnknown* pAdapter,
         IResidencyManager* pResidencyManager,
         IResourceAllocator* pResourceAllocator,
         IResourceAllocator** ppResourceAllocatorOut) {
@@ -628,7 +628,7 @@ namespace gpgmm::d3d12 {
 
     ResourceAllocator::ResourceAllocator(const RESOURCE_ALLOCATOR_DESC& descriptor,
                                          ID3D12Device* pDevice,
-                                         IDXGIAdapter* pAdapter,
+                                         IUnknown* pAdapter,
                                          ResidencyManager* pResidencyManager,
                                          std::unique_ptr<Caps> caps)
         : mDevice(pDevice),
@@ -1878,7 +1878,7 @@ namespace gpgmm::d3d12 {
         return mDevice;
     }
 
-    IDXGIAdapter* ResourceAllocator::GetAdapter() const {
+    IUnknown* ResourceAllocator::GetAdapter() const {
         return mAdapter;
     }
 

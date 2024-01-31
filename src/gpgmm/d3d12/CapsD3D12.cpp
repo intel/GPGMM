@@ -25,85 +25,95 @@
 
 namespace gpgmm::d3d12 {
 
-    HRESULT SetMaxResourceSize(ID3D12Device* device, uint64_t* sizeOut) {
+    HRESULT SetMaxResourceSize(ID3D12Device* pDevice, uint64_t* pSizeOut) {
+        ASSERT(pSizeOut);
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
         GPGMM_RETURN_IF_FAILED(
-            device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
-                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
-            device);
+            pDevice->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
+                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
+            pDevice);
         // Check for overflow.
         if (feature.MaxGPUVirtualAddressBitsPerResource == 0 ||
             feature.MaxGPUVirtualAddressBitsPerResource > GetNumOfBits<uint64_t>()) {
             return E_FAIL;
         }
 
-        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
+        *pSizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerResource - 1)) - 1;
         return S_OK;
     }
 
-    HRESULT SetMaxResourceHeapSize(ID3D12Device* device, uint64_t* sizeOut) {
+    HRESULT SetMaxResourceHeapSize(ID3D12Device* pDevice, uint64_t* pSizeOut) {
+        ASSERT(pSizeOut);
         D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT feature = {};
         GPGMM_RETURN_IF_FAILED(
-            device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
-                                        sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
-            device);
+            pDevice->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &feature,
+                                         sizeof(D3D12_FEATURE_DATA_GPU_VIRTUAL_ADDRESS_SUPPORT)),
+            pDevice);
         // Check for overflow.
         if (feature.MaxGPUVirtualAddressBitsPerProcess == 0 ||
             feature.MaxGPUVirtualAddressBitsPerProcess > GetNumOfBits<uint64_t>()) {
             return E_FAIL;
         }
 
-        *sizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerProcess - 1)) - 1;
+        *pSizeOut = (1ull << (feature.MaxGPUVirtualAddressBitsPerProcess - 1)) - 1;
         return S_OK;
     }
 
-    HRESULT SetCreateHeapNotResidentSupported(ID3D12Device* device,
+    HRESULT SetCreateHeapNotResidentSupported(ID3D12Device* pDevice,
                                               bool* createHeapNotResidencySupported) {
+        ASSERT(createHeapNotResidencySupported);
         *createHeapNotResidencySupported = false;
 
         // Only Windows 10 Build 20348 and later support creating non-resident heaps.
         // ID3D12Device8 is required to be defined in Windows 10 Build 20348 or newer builds.
 #ifdef __ID3D12Device8_FWD_DEFINED__
         D3D12_FEATURE_DATA_D3D12_OPTIONS7 options7 = {};
-        if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &options7,
-                                                  sizeof(options7)))) {
+        if (SUCCEEDED(pDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &options7,
+                                                   sizeof(options7)))) {
             *createHeapNotResidencySupported = true;
         }
 #endif
         return S_OK;
     }
 
-    HRESULT SetMaxResourceHeapTierSupported(ID3D12Device* device,
+    HRESULT SetMaxResourceHeapTierSupported(ID3D12Device* pDevice,
                                             D3D12_RESOURCE_HEAP_TIER* maxResourceHeapTierOut) {
+        ASSERT(maxResourceHeapTierOut);
         D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
         GPGMM_RETURN_IF_FAILED(
-            device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)),
-            device);
+            pDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options)),
+            pDevice);
         *maxResourceHeapTierOut = options.ResourceHeapTier;
         return S_OK;
     }
 
     // static
-    HRESULT Caps::CreateCaps(ID3D12Device* device, IDXGIAdapter* adapter, Caps** capsOut) {
-        GPGMM_RETURN_IF_NULL(device);
+    HRESULT Caps::CreateCaps(ID3D12Device* pDevice, IUnknown* pAdapter, Caps** ppCapsOut) {
+        ASSERT(pDevice);
 
         std::unique_ptr<Caps> caps(new Caps());
-        GPGMM_RETURN_IF_FAILED(SetMaxResourceSize(device, &caps->mMaxResourceSize));
-        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapSize(device, &caps->mMaxResourceHeapSize));
-        GPGMM_RETURN_IF_FAILED(
-            SetMaxResourceHeapTierSupported(device, &caps->mMaxResourceHeapTier));
-        GPGMM_RETURN_IF_FAILED(
-            SetCreateHeapNotResidentSupported(device, &caps->mIsCreateHeapNotResidentSupported));
 
+        // Load device-specific capabilities.
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceSize(pDevice, &caps->mMaxResourceSize));
+        GPGMM_RETURN_IF_FAILED(SetMaxResourceHeapSize(pDevice, &caps->mMaxResourceHeapSize));
+        GPGMM_RETURN_IF_FAILED(
+            SetMaxResourceHeapTierSupported(pDevice, &caps->mMaxResourceHeapTier));
+        GPGMM_RETURN_IF_FAILED(
+            SetCreateHeapNotResidentSupported(pDevice, &caps->mIsCreateHeapNotResidentSupported));
+
+        // Load adapter-specific capabilities.
         D3D12_FEATURE_DATA_ARCHITECTURE arch = {};
         GPGMM_RETURN_IF_FAILED(
-            device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)), device);
+            pDevice->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &arch, sizeof(arch)), pDevice);
         caps->mIsAdapterUMA = arch.UMA;
         caps->mIsAdapterCacheCoherentUMA = arch.CacheCoherentUMA;
 
-        if (adapter != nullptr) {
+        if (pAdapter != nullptr) {
+            ComPtr<IDXGIAdapter> dxgiAdapter;
+            GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&dxgiAdapter)));
+
             DXGI_ADAPTER_DESC adapterDesc;
-            GPGMM_RETURN_IF_FAILED(adapter->GetDesc(&adapterDesc));
+            GPGMM_RETURN_IF_FAILED(dxgiAdapter->GetDesc(&adapterDesc));
 
             caps->mSharedSegmentSize = adapterDesc.SharedSystemMemory;
             caps->mDedicatedSegmentSize = adapterDesc.DedicatedVideoMemory;
@@ -117,8 +127,8 @@ namespace gpgmm::d3d12 {
                 << "Adapter was left unspecified. Device capabilities may not be fully detected.";
         }
 
-        if (capsOut != nullptr) {
-            *capsOut = caps.release();
+        if (ppCapsOut != nullptr) {
+            *ppCapsOut = caps.release();
         }
 
         return S_OK;
