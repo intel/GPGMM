@@ -55,11 +55,11 @@ namespace gpgmm::d3d12 {
                                     IResidencyList* const* ppResidencyLists,
                                     uint32_t count) override;
 
-        HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+        HRESULT SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
                                           uint64_t availableForReservation,
                                           uint64_t* pCurrentReservationOut = nullptr) override;
 
-        HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+        HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
                                      DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) override;
         HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
                                    const RESIDENCY_HEAP_STATUS& newStatus) override;
@@ -89,7 +89,7 @@ namespace gpgmm::d3d12 {
         void DeleteThis() override;
 
         HRESULT EvictInternal(uint64_t bytesToEvict,
-                              const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+                              const RESIDENCY_HEAP_SEGMENT& heapSegment,
                               uint64_t* bytesEvictedOut = nullptr);
 
         HRESULT InsertHeap(ResidencyHeap* heap);
@@ -113,24 +113,23 @@ namespace gpgmm::d3d12 {
             DXGI_QUERY_VIDEO_MEMORY_INFO Info = {};
         };
 
-        HRESULT MakeResident(const DXGI_MEMORY_SEGMENT_GROUP heapSegment,
+        HRESULT MakeResident(const RESIDENCY_HEAP_SEGMENT heapSegment,
                              uint64_t sizeToMakeResident,
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        LRUCache* GetVideoMemorySegmentCache(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
+        LRUCache* GetVideoMemorySegmentCache(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(
-            const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
+        DXGI_QUERY_VIDEO_MEMORY_INFO* GetVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
-        HRESULT UpdateMemorySegmentInternal(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment);
+        HRESULT UpdateMemorySegmentInternal(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
         HRESULT StartBudgetNotificationUpdates();
         void StopBudgetNotificationUpdates();
 
         bool IsBudgetNotificationUpdatesDisabled() const;
 
-        void ReportSegmentInfoForTesting(DXGI_MEMORY_SEGMENT_GROUP segmentGroup);
+        void ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT segmentGroup);
 
         HRESULT EnsureResidencyFenceExists();
 

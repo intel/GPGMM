@@ -61,7 +61,7 @@ Residency also works for non-resources too:
 // Shader-visible heaps should be locked or always resident.
 gpgmm::d3d12::RESIDENCY_HEAP_DESC shaderVisibleHeapDesc = {};
 shaderVisibleHeapDesc.Flags |= RESIDENCY_HEAP_FLAG_CREATE_LOCKED;
-shaderVisibleHeapDesc.HeapSegment = DXGI_MEMORY_SEGMENT_GROUP_LOCAL;
+shaderVisibleHeapDesc.HeapSegment = RESIDENCY_HEAP_SEGMENT_LOCAL;
 
 ComPtr<gpgmm::d3d12::IResidencyHeap> descriptorHeap;
 gpgmm::d3d12::CreateResidencyHeap(shaderVisibleHeapDesc, residency.Get(),

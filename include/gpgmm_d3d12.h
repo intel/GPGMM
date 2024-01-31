@@ -149,6 +149,19 @@ namespace gpgmm::d3d12 {
 
     DEFINE_ENUM_FLAG_OPERATORS(RESIDENCY_HEAP_FLAGS)
 
+    /** \enum RESIDENCY_HEAP_SEGMENT
+    Specify the heap segment to use for residency.
+    */
+    enum RESIDENCY_HEAP_SEGMENT {
+        /** \brief Heap segment is local to the adapter.
+         */
+        RESIDENCY_HEAP_SEGMENT_LOCAL = 0,
+
+        /** \brief Heap segment is non-local to the adapter.
+         */
+        RESIDENCY_HEAP_SEGMENT_NON_LOCAL = 1,
+    };
+
     /** \struct RESIDENCY_HEAP_DESC
       Specifies creation options for a residency managed heap.
       */
@@ -157,7 +170,7 @@ namespace gpgmm::d3d12 {
 
         Required parameter. Must be local or non-local segment.
         */
-        DXGI_MEMORY_SEGMENT_GROUP HeapSegment;
+        RESIDENCY_HEAP_SEGMENT HeapSegment;
 
         /** \brief Created size of the heap, in bytes.
 
@@ -615,7 +628,7 @@ namespace gpgmm::d3d12 {
         |reservation| when under video memory pressure. A value of nullptr will update but not
         return the current reservation.
         */
-        virtual HRESULT SetVideoMemoryReservation(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+        virtual HRESULT SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
                                                   UINT64 availableForReservation,
                                                   UINT64* pCurrentReservationOut = nullptr) = 0;
 
@@ -625,7 +638,7 @@ namespace gpgmm::d3d12 {
         @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
         of nullptr will update but not return the current info.
         */
-        virtual HRESULT QueryVideoMemoryInfo(const DXGI_MEMORY_SEGMENT_GROUP& heapSegment,
+        virtual HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
                                              DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
 
         /** \brief Update the residency status of a heap.

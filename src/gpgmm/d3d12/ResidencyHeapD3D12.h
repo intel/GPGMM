@@ -67,7 +67,7 @@ namespace gpgmm::d3d12 {
         LPCWSTR GetDebugName() const override;
         HRESULT SetDebugName(LPCWSTR Name) override;
 
-        DXGI_MEMORY_SEGMENT_GROUP GetMemorySegment() const;
+        RESIDENCY_HEAP_SEGMENT GetMemorySegment() const;
 
         uint64_t GetLastUsedFenceValue() const;
         void SetLastUsedFenceValue(uint64_t fenceValue);
@@ -98,7 +98,7 @@ namespace gpgmm::d3d12 {
         ComPtr<ResidencyManager> mResidencyManager;
         ComPtr<ID3D12Pageable> mPageable;
 
-        DXGI_MEMORY_SEGMENT_GROUP mHeapSegment;
+        RESIDENCY_HEAP_SEGMENT mHeapSegment;
         RefCounted mResidencyLockCount;
 
         // Protects thread-access to the mutable members below.
