@@ -82,7 +82,7 @@ class D3D12ResidencyManagerTests : public D3D12TestBase, public ::testing::Test 
     uint64_t GetBudgetLeft(IResidencyManager* residencyManager,
                            const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         RESIDENCY_MEMORY_INFO segment = {};
-        residencyManager->QueryVideoMemoryInfo(heapSegment, &segment);
+        residencyManager->QueryMemoryInfo(heapSegment, &segment);
         return (segment.Budget > segment.CurrentUsage) ? (segment.Budget - segment.CurrentUsage)
                                                        : 0;
     }

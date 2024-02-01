@@ -259,8 +259,8 @@ namespace gpgmm::d3d12 {
 
             if (bytesEvicted < descriptor.SizeInBytes) {
                 RESIDENCY_MEMORY_INFO currentVideoInfo = {};
-                if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
-                                                                     &currentVideoInfo))) {
+                if (SUCCEEDED(residencyManager->QueryMemoryInfo(descriptor.HeapSegment,
+                                                                &currentVideoInfo))) {
                     ErrorLog(ErrorCode::kSizeExceeded)
                         << "Unable to create heap because not enough budget exists ("
                         << GetBytesToSizeInUnits(descriptor.SizeInBytes) << " vs "

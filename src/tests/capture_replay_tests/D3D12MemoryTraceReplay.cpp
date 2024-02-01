@@ -115,8 +115,8 @@ namespace {
         RESIDENCY_MANAGER_DESC newResidencyDesc = residencyDesc;
         newResidencyDesc.Flags |=
             static_cast<RESIDENCY_MANAGER_FLAGS>(residencyDescJson["Flags"].asInt());
-        newResidencyDesc.MaxPctOfVideoMemoryToBudget =
-            residencyDescJson["MaxPctOfVideoMemoryToBudget"].asFloat();
+        newResidencyDesc.MaxPctOfMemoryToBudget =
+            residencyDescJson["MaxPctOfMemoryToBudget"].asFloat();
         newResidencyDesc.MinPctOfBudgetToReserve =
             residencyDescJson["MinPctOfBudgetToReserve"].asFloat();
         newResidencyDesc.MaxBudgetInBytes = residencyDescJson["MaxBudgetInBytes"].asUInt64();

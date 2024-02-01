@@ -55,12 +55,12 @@ namespace gpgmm::d3d12 {
                                     IResidencyList* const* ppResidencyLists,
                                     uint32_t count) override;
 
-        HRESULT SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                          uint64_t availableForReservation,
-                                          uint64_t* pCurrentReservationOut = nullptr) override;
+        HRESULT SetMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                     uint64_t availableForReservation,
+                                     uint64_t* pCurrentReservationOut = nullptr) override;
 
-        HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                     RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) override;
+        HRESULT QueryMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                RESIDENCY_MEMORY_INFO* pMemoryInfoOut) override;
         HRESULT SetResidencyStatus(IResidencyHeap* pHeap,
                                    const RESIDENCY_HEAP_STATUS& newStatus) override;
 
@@ -108,7 +108,7 @@ namespace gpgmm::d3d12 {
 
         using LRUCache = LinkedList<ResidencyHeap>;
 
-        struct VideoMemorySegment {
+        struct MemorySegment {
             LRUCache cache = {};
             RESIDENCY_MEMORY_INFO Info = {};
         };
@@ -118,9 +118,9 @@ namespace gpgmm::d3d12 {
                              uint32_t numberOfObjectsToMakeResident,
                              ID3D12Pageable** allocations);
 
-        LRUCache* GetVideoMemorySegmentCache(const RESIDENCY_HEAP_SEGMENT& heapSegment);
+        LRUCache* GetMemorySegmentCache(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
-        RESIDENCY_MEMORY_INFO* GetVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment);
+        RESIDENCY_MEMORY_INFO* GetMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
         HRESULT UpdateMemorySegmentInternal(const RESIDENCY_HEAP_SEGMENT& heapSegment);
 
@@ -136,7 +136,7 @@ namespace gpgmm::d3d12 {
         ID3D12Device* mDevice = nullptr;
         IDXGIAdapter3* mAdapter = nullptr;
 
-        const float mMaxPctOfVideoMemoryToBudget;
+        const float mMaxPctOfMemoryToBudget;
         const float mMinPctOfBudgetToReserve;
         const bool mIsBudgetRestricted;
         const uint64_t mEvictSizeInBytes;
@@ -149,8 +149,8 @@ namespace gpgmm::d3d12 {
 
         std::unique_ptr<Fence> mResidencyFence;
 
-        VideoMemorySegment mLocalVideoMemorySegment;
-        VideoMemorySegment mNonLocalVideoMemorySegment;
+        MemorySegment mLocalMemorySegment;
+        MemorySegment mNonLocalMemorySegment;
         RESIDENCY_MANAGER_STATS mStats = {};
 
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
