@@ -104,10 +104,10 @@ namespace gpgmm::d3d12 {
         // Set the initial video memory limits.
         GPGMM_RETURN_IF_FAILED(residencyManager->UpdateMemorySegments());
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* localVideoMemorySegmentInfo =
+        RESIDENCY_MEMORY_INFO* localVideoMemorySegmentInfo =
             residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_LOCAL);
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
+        RESIDENCY_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
             residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_NON_LOCAL);
 
         // D3D12 has non-zero memory usage even before any resources have been created, and this
@@ -300,7 +300,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    DXGI_QUERY_VIDEO_MEMORY_INFO* ResidencyManager::GetVideoMemoryInfo(
+    RESIDENCY_MEMORY_INFO* ResidencyManager::GetVideoMemoryInfo(
         const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         switch (heapSegment) {
             case RESIDENCY_HEAP_SEGMENT_LOCAL:
@@ -337,7 +337,7 @@ namespace gpgmm::d3d12 {
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* videoMemorySegmentInfo = GetVideoMemoryInfo(heapSegment);
+        RESIDENCY_MEMORY_INFO* videoMemorySegmentInfo = GetVideoMemoryInfo(heapSegment);
 
         videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
 
@@ -370,7 +370,7 @@ namespace gpgmm::d3d12 {
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
         // cap the external reservation to half the available budget, which prevents the external
         // component from consuming a disproportionate share of memory and ensures forward progress.
-        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
+        RESIDENCY_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
 
         pVideoMemoryInfo->CurrentReservation = std::min(
             static_cast<uint64_t>(queryVideoMemoryInfoOut.Budget * mMinPctOfBudgetToReserve),
@@ -476,9 +476,8 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::QueryVideoMemoryInfo(
-        const RESIDENCY_HEAP_SEGMENT& heapSegment,
-        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) {
+    HRESULT ResidencyManager::QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                                   RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (IsBudgetNotificationUpdatesDisabled()) {
             GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
@@ -498,7 +497,7 @@ namespace gpgmm::d3d12 {
                                             uint64_t* bytesEvictedOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.Evict");
 
-        DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
+        RESIDENCY_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
         if (IsBudgetNotificationUpdatesDisabled()) {
             GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
@@ -862,7 +861,7 @@ namespace gpgmm::d3d12 {
     }
 
     void ResidencyManager::ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT segmentGroup) {
-        DXGI_QUERY_VIDEO_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
+        RESIDENCY_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
         ASSERT(info != nullptr);
 
         DebugLog(MessageId::kBudgetUpdated, this)

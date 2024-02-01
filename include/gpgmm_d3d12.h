@@ -586,6 +586,29 @@ namespace gpgmm::d3d12 {
         RESOURCE_ALLOCATION_TYPE_SUBALLOCATED_WITHIN = 3,
     };
 
+    /** \struct RESIDENCY_MEMORY_INFO
+    Describes the current memory budget.
+    */
+    struct RESIDENCY_MEMORY_INFO {
+        /** \brief OS-provided memory budget, in bytes, that the application should target.
+         */
+        UINT64 Budget;
+
+        /** \brief Application's current memory usage, in bytes.
+         */
+        UINT64 CurrentUsage;
+
+        /** \brief Amount of memory, in bytes, that the application has available for reservation.
+
+        To reserve memory, the application should call IResidencyManager::SetVideoMemoryReservation.
+        */
+        UINT64 AvailableForReservation;
+
+        /** \brief The amount of memory, in bytes, reserved by the application.
+         */
+        UINT64 CurrentReservation;
+    };
+
     /** \brief ResidencyManager tracks and maintains one or more heaps within a residency cache.
 
     A heap is considered "resident" when it is accessible by the GPU. A heap can be made explicitly
@@ -639,7 +662,7 @@ namespace gpgmm::d3d12 {
         of nullptr will update but not return the current info.
         */
         virtual HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                             DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
+                                             RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
 
         /** \brief Update the residency status of a heap.
 

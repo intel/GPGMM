@@ -258,7 +258,7 @@ namespace gpgmm::d3d12 {
                 descriptor.SizeInBytes, descriptor.HeapSegment, &bytesEvicted));
 
             if (bytesEvicted < descriptor.SizeInBytes) {
-                DXGI_QUERY_VIDEO_MEMORY_INFO currentVideoInfo = {};
+                RESIDENCY_MEMORY_INFO currentVideoInfo = {};
                 if (SUCCEEDED(residencyManager->QueryVideoMemoryInfo(descriptor.HeapSegment,
                                                                      &currentVideoInfo))) {
                     ErrorLog(ErrorCode::kSizeExceeded)
