@@ -1305,26 +1305,27 @@ namespace gpgmm::d3d12 {
         // checks this amount to determine if its appropriate to pre-allocate more memory or
         // not.
         if (IsResidencyEnabled() && !IsCreateHeapNotResidentEnabled()) {
-            RESIDENCY_MEMORY_INFO* currentVideoInfo =
-                mResidencyManager->GetVideoMemoryInfo(heapSegment);
+            RESIDENCY_MEMORY_INFO* currentMemorySegmentInfo =
+                mResidencyManager->GetMemoryInfo(heapSegment);
 
             // If over-budget, only free memory is considered available.
             // TODO: Consider optimizing GetStatsInternal().
-            if (currentVideoInfo->CurrentUsage + request.SizeInBytes > currentVideoInfo->Budget) {
+            if (currentMemorySegmentInfo->CurrentUsage + request.SizeInBytes >
+                currentMemorySegmentInfo->Budget) {
                 const MemoryAllocatorStats allocationStats = GetStats();
 
                 request.AvailableForAllocation = allocationStats.FreeMemoryUsage;
 
                 DebugLog(MessageId::kBudgetExceeded, this)
                     << "Current usage exceeded budget: "
-                    << GetBytesToSizeInUnits(currentVideoInfo->CurrentUsage) << " vs "
-                    << GetBytesToSizeInUnits(currentVideoInfo->Budget) << " ("
+                    << GetBytesToSizeInUnits(currentMemorySegmentInfo->CurrentUsage) << " vs "
+                    << GetBytesToSizeInUnits(currentMemorySegmentInfo->Budget) << " ("
                     << GetBytesToSizeInUnits(request.AvailableForAllocation) << " free).";
 
             } else {
                 // Otherwise, only memory in budget is considered available.
                 request.AvailableForAllocation =
-                    currentVideoInfo->Budget - currentVideoInfo->CurrentUsage;
+                    currentMemorySegmentInfo->Budget - currentMemorySegmentInfo->CurrentUsage;
             }
         }
 

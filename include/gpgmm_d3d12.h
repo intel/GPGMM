@@ -206,7 +206,7 @@ namespace gpgmm::d3d12 {
 
     IResidencyHeap serves as a node within the IResidencyManager's residency cache. This node is
     inserted into the cache when it is first created, and any time it is scheduled to be used by the
-    GPU. This node is removed from the cache when it is evicted from video memory due to budget
+    GPU. This node is removed from the cache when it is evicted from memory due to budget
     constraints, or when the memory is released.
     */
     GPGMM_INTERFACE IResidencyHeap : public IDebugObject {
@@ -496,20 +496,20 @@ namespace gpgmm::d3d12 {
         */
         RECORD_OPTIONS RecordOptions;
 
-        /** \brief Maximum amount of budgeted memory, expressed as a percentage of video memory,
+        /** \brief Maximum amount of budgeted memory, expressed as a percentage of memory,
         that can be budgeted.
 
-        If a non-zero MaxBudgetInBytes is specified, MaxPctOfVideoMemoryToBudget is ignored.
+        If a non-zero MaxBudgetInBytes is specified, MaxPctOfMemoryToBudget is ignored.
 
         Optional parameter. By default, the API will automatically set the budget to 95% of video
         memory, leaving 5% for the OS and other applications.
         */
-        FLOAT MaxPctOfVideoMemoryToBudget;
+        FLOAT MaxPctOfMemoryToBudget;
 
         /** \brief Lowest amount of budgeted memory, expressed as a percentage, that can be
         reserved.
 
-        If SetVideoMemoryReservation is used a set a reservation larger then the budget, this amount
+        If SetMemoryReservation is used a set a reservation larger then the budget, this amount
         is used instead so the application can make forward progress.
 
         Optional parameter. By default, the API restricts the residency manager reservation to never
@@ -600,7 +600,7 @@ namespace gpgmm::d3d12 {
 
         /** \brief Amount of memory, in bytes, that the application has available for reservation.
 
-        To reserve memory, the application should call IResidencyManager::SetVideoMemoryReservation.
+        To reserve memory, the application should call IResidencyManager::SetMemoryReservation.
         */
         UINT64 AvailableForReservation;
 
@@ -640,7 +640,7 @@ namespace gpgmm::d3d12 {
             ID3D12CommandQueue* const pQueue, ID3D12CommandList* const* ppCommandLists,
             IResidencyList* const* ppResidencyLists, UINT count) = 0;
 
-        /** \brief Sets video memory reservation.
+        /** \brief Sets memory reservation.
 
         A reservation is the lowest amount of physical memory the application need to continue
         operation safely.
@@ -648,21 +648,21 @@ namespace gpgmm::d3d12 {
         @param heapSegment Memory segment to reserve.
         @param availableForReservation Amount of memory to reserve, in bytes.
         @param[out] pCurrentReservationOut the amount of memory reserved, which may be less then the
-        |reservation| when under video memory pressure. A value of nullptr will update but not
+        |reservation| when under memory pressure. A value of nullptr will update but not
         return the current reservation.
         */
-        virtual HRESULT SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                                  UINT64 availableForReservation,
-                                                  UINT64* pCurrentReservationOut = nullptr) = 0;
+        virtual HRESULT SetMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                             UINT64 availableForReservation,
+                                             UINT64* pCurrentReservationOut = nullptr) = 0;
 
         /** \brief Get the current budget and memory usage.
 
         @param heapSegment Memory segment to retrieve info from.
-        @param[out] pVideoMemoryInfoOut Pointer to DXGI_QUERY_VIDEO_MEMORY_INFO to populate. A value
+        @param[out] pMemoryInfoOut Pointer to RESIDENCY_MEMORY_INFO to populate. A value
         of nullptr will update but not return the current info.
         */
-        virtual HRESULT QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                             RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) = 0;
+        virtual HRESULT QueryMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                        RESIDENCY_MEMORY_INFO* pMemoryInfoOut) = 0;
 
         /** \brief Update the residency status of a heap.
 
@@ -688,14 +688,14 @@ namespace gpgmm::d3d12 {
         virtual HRESULT QueryStats(RESIDENCY_MANAGER_STATS * pResidencyManagerStats) = 0;
     };
 
-    /** \brief  Create residency residency manager to manage video memory.
+    /** \brief  Create residency residency manager to manage memory.
 
     @param descriptor A reference to RESIDENCY_MANAGER_DESC structure that describes the residency
     manager.
     @param pDevice device used by this allocator. Required parameter. Use CreateDevice get the
     device.
     @param pAdapter DXGI adapter used to create the device.  Requires DXGI 1.4 due to
-    IDXGIAdapter3::QueryVideoMemoryInfo. Use EnumAdapters to get the adapter.
+    IDXGIAdapter3::QueryMemoryInfo. Use EnumAdapters to get the adapter.
     @param[out] ppResidencyManagerOut Pointer to a memory block that receives a pointer to the
     residency manager. Pass NULL to test if residency Manager creation would succeed, but not
     actually create the residency Manager. If NULL is passed and residency manager creating

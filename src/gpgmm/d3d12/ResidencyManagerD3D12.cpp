@@ -36,7 +36,7 @@
 namespace gpgmm::d3d12 {
 
     static constexpr uint64_t kDefaultEvictSizeInBytes = GPGMM_MB_TO_BYTES(50);
-    static constexpr float kDefaultMaxPctOfVideoMemoryToBudget = 0.95f;  // 95%
+    static constexpr float kDefaultMaxPctOfMemoryToBudget = 0.95f;       // 95%
     static constexpr float kDefaultMinPctOfBudgetToReserve = 0.50f;      // 50%
     static constexpr float kMinCurrentUsageOfBudgetReportingThreshold = 0.90f;
 
@@ -70,7 +70,7 @@ namespace gpgmm::d3d12 {
                    "did not match the architecture of the adapter.";
         }
 
-        if (descriptor.MaxPctOfVideoMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
+        if (descriptor.MaxPctOfMemoryToBudget != 0 && descriptor.MaxBudgetInBytes != 0) {
             ErrorLog(ErrorCode::kInvalidArgument)
                 << "Both the OS based memory budget and restricted budget were "
                    "specified but cannot be used at the same time.";
@@ -92,7 +92,7 @@ namespace gpgmm::d3d12 {
         std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
             new ResidencyManager(descriptor, pDevice, dxgiAdapter3.Get(), std::move(caps)));
 
-        // Enable automatic video memory budget updates.
+        // Enable automatic memory budget updates.
         if (descriptor.Flags & RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES) {
             if (FAILED(residencyManager->StartBudgetNotificationUpdates())) {
                 WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
@@ -101,36 +101,36 @@ namespace gpgmm::d3d12 {
             }
         }
 
-        // Set the initial video memory limits.
+        // Set the initial memory limits.
         GPGMM_RETURN_IF_FAILED(residencyManager->UpdateMemorySegments());
 
-        RESIDENCY_MEMORY_INFO* localVideoMemorySegmentInfo =
-            residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_LOCAL);
+        RESIDENCY_MEMORY_INFO* localMemorySegmentInfo =
+            residencyManager->GetMemoryInfo(RESIDENCY_HEAP_SEGMENT_LOCAL);
 
-        RESIDENCY_MEMORY_INFO* nonLocalVideoMemorySegmentInfo =
-            residencyManager->GetVideoMemoryInfo(RESIDENCY_HEAP_SEGMENT_NON_LOCAL);
+        RESIDENCY_MEMORY_INFO* nonLocalMemorySegmentInfo =
+            residencyManager->GetMemoryInfo(RESIDENCY_HEAP_SEGMENT_NON_LOCAL);
 
         // D3D12 has non-zero memory usage even before any resources have been created, and this
         // value can vary by OS enviroment. By adding this in addition to the artificial budget
         // limit, we can create a predictable and reproducible budget.
         if (descriptor.MaxBudgetInBytes > 0) {
-            localVideoMemorySegmentInfo->Budget =
-                localVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
+            localMemorySegmentInfo->Budget =
+                localMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             if (!residencyManager->mIsUMA) {
-                nonLocalVideoMemorySegmentInfo->Budget =
-                    nonLocalVideoMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
+                nonLocalMemorySegmentInfo->Budget =
+                    nonLocalMemorySegmentInfo->CurrentUsage + descriptor.MaxBudgetInBytes;
             }
         }
 
         // Emit a warning if the budget was initialized to zero.
         // This means nothing will be ever evicted, which will lead to device lost.
-        if (localVideoMemorySegmentInfo->Budget == 0) {
+        if (localMemorySegmentInfo->Budget == 0) {
             WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                 << "GPU memory segment ("
                 << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_LOCAL, residencyManager->mIsUMA)
                 << ") did not initialize a budget. This means either a restricted budget was not "
                    "used or the first OS budget update hasn't occured.";
-            if (!residencyManager->mIsUMA && nonLocalVideoMemorySegmentInfo->Budget == 0) {
+            if (!residencyManager->mIsUMA && nonLocalMemorySegmentInfo->Budget == 0) {
                 WarnLog(MessageId::kBudgetUpdated, residencyManager.get())
                     << "GPU memory segment ("
                     << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_NON_LOCAL,
@@ -164,9 +164,9 @@ namespace gpgmm::d3d12 {
                                        std::unique_ptr<Caps> caps)
         : mDevice(pDevice),
           mAdapter(pAdapter),
-          mMaxPctOfVideoMemoryToBudget(descriptor.MaxPctOfVideoMemoryToBudget == 0
-                                           ? kDefaultMaxPctOfVideoMemoryToBudget
-                                           : descriptor.MaxPctOfVideoMemoryToBudget),
+          mMaxPctOfMemoryToBudget(descriptor.MaxPctOfMemoryToBudget == 0
+                                      ? kDefaultMaxPctOfMemoryToBudget
+                                      : descriptor.MaxPctOfMemoryToBudget),
           mMinPctOfBudgetToReserve(descriptor.MinPctOfBudgetToReserve == 0
                                        ? kDefaultMinPctOfBudgetToReserve
                                        : descriptor.MinPctOfBudgetToReserve),
@@ -290,7 +290,7 @@ namespace gpgmm::d3d12 {
             return E_INVALIDARG;
         }
 
-        LRUCache* cache = GetVideoMemorySegmentCache(heap->GetMemorySegment());
+        LRUCache* cache = GetMemorySegmentCache(heap->GetMemorySegment());
         ASSERT(cache != nullptr);
 
         heap->InsertAfter(cache->tail());
@@ -300,53 +300,52 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    RESIDENCY_MEMORY_INFO* ResidencyManager::GetVideoMemoryInfo(
+    RESIDENCY_MEMORY_INFO* ResidencyManager::GetMemoryInfo(
         const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         switch (heapSegment) {
             case RESIDENCY_HEAP_SEGMENT_LOCAL:
-                return &mLocalVideoMemorySegment.Info;
+                return &mLocalMemorySegment.Info;
             case RESIDENCY_HEAP_SEGMENT_NON_LOCAL:
-                return &mNonLocalVideoMemorySegment.Info;
+                return &mNonLocalMemorySegment.Info;
             default:
                 UNREACHABLE();
                 return nullptr;
         }
     }
 
-    ResidencyManager::LRUCache* ResidencyManager::GetVideoMemorySegmentCache(
+    ResidencyManager::LRUCache* ResidencyManager::GetMemorySegmentCache(
         const RESIDENCY_HEAP_SEGMENT& heapSegment) {
         switch (heapSegment) {
             case RESIDENCY_HEAP_SEGMENT_LOCAL:
-                return &mLocalVideoMemorySegment.cache;
+                return &mLocalMemorySegment.cache;
             case RESIDENCY_HEAP_SEGMENT_NON_LOCAL:
-                return &mNonLocalVideoMemorySegment.cache;
+                return &mNonLocalMemorySegment.cache;
             default:
                 UNREACHABLE();
                 return nullptr;
         }
     }
 
-    // Sends the minimum required physical video memory for an application, to this residency
+    // Sends the minimum required physical memory for an application, to this residency
     // manager. Returns the amount of memory reserved, which may be less then the |reservation| when
-    // under video memory pressure.
-    HRESULT ResidencyManager::SetVideoMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                                        uint64_t availableForReservation,
-                                                        uint64_t* pCurrentReservationOut) {
+    // under memory pressure.
+    HRESULT ResidencyManager::SetMemoryReservation(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                                   uint64_t availableForReservation,
+                                                   uint64_t* pCurrentReservationOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault,
                                    "ResidencyManager.SetMemoryReservation");
 
         std::lock_guard<std::mutex> lock(mMutex);
 
-        RESIDENCY_MEMORY_INFO* videoMemorySegmentInfo = GetVideoMemoryInfo(heapSegment);
-
-        videoMemorySegmentInfo->AvailableForReservation = availableForReservation;
+        RESIDENCY_MEMORY_INFO* memorySegmentInfo = GetMemoryInfo(heapSegment);
+        memorySegmentInfo->AvailableForReservation = availableForReservation;
 
         if (IsBudgetNotificationUpdatesDisabled()) {
             GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
         if (pCurrentReservationOut != nullptr) {
-            *pCurrentReservationOut = videoMemorySegmentInfo->CurrentReservation;
+            *pCurrentReservationOut = memorySegmentInfo->CurrentReservation;
         }
 
         return S_OK;
@@ -366,68 +365,68 @@ namespace gpgmm::d3d12 {
                                            &queryVideoMemoryInfoOut),
             mDevice);
 
-        // The video memory budget provided by QueryVideoMemoryInfo is defined by the operating
+        // The memory budget provided by QueryMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
         // cap the external reservation to half the available budget, which prevents the external
         // component from consuming a disproportionate share of memory and ensures forward progress.
-        RESIDENCY_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
+        RESIDENCY_MEMORY_INFO* memorySegmentInfo = GetMemoryInfo(heapSegment);
 
-        pVideoMemoryInfo->CurrentReservation = std::min(
+        memorySegmentInfo->CurrentReservation = std::min(
             static_cast<uint64_t>(queryVideoMemoryInfoOut.Budget * mMinPctOfBudgetToReserve),
-            pVideoMemoryInfo->AvailableForReservation);
+            memorySegmentInfo->AvailableForReservation);
 
-        const uint64_t previousUsage = pVideoMemoryInfo->CurrentUsage;
-        pVideoMemoryInfo->CurrentUsage =
-            queryVideoMemoryInfoOut.CurrentUsage - pVideoMemoryInfo->CurrentReservation;
+        const uint64_t previousUsage = memorySegmentInfo->CurrentUsage;
+        memorySegmentInfo->CurrentUsage =
+            queryVideoMemoryInfoOut.CurrentUsage - memorySegmentInfo->CurrentReservation;
 
-        if (previousUsage > pVideoMemoryInfo->CurrentUsage &&
-            GPGMM_BYTES_TO_MB(previousUsage - pVideoMemoryInfo->CurrentUsage) > 0) {
+        if (previousUsage > memorySegmentInfo->CurrentUsage &&
+            GPGMM_BYTES_TO_MB(previousUsage - memorySegmentInfo->CurrentUsage) > 0) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went down by "
-                << GetBytesToSizeInUnits(previousUsage - pVideoMemoryInfo->CurrentUsage) << ".";
-        } else if (previousUsage < pVideoMemoryInfo->CurrentUsage &&
-                   GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentUsage - previousUsage) > 0) {
+                << GetBytesToSizeInUnits(previousUsage - memorySegmentInfo->CurrentUsage) << ".";
+        } else if (previousUsage < memorySegmentInfo->CurrentUsage &&
+                   GPGMM_BYTES_TO_MB(memorySegmentInfo->CurrentUsage - previousUsage) > 0) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went up by "
-                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage - previousUsage) << ".";
-        } else if (previousUsage < pVideoMemoryInfo->CurrentUsage) {
+                << GetBytesToSizeInUnits(memorySegmentInfo->CurrentUsage - previousUsage) << ".";
+        } else if (previousUsage < memorySegmentInfo->CurrentUsage) {
             DebugLog(MessageId::kMemoryUsageUpdated, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage went up by "
-                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << ".";
+                << GetBytesToSizeInUnits(memorySegmentInfo->CurrentUsage) << ".";
         }
 
         // If we're restricting the budget, leave the budget as is.
         if (!mIsBudgetRestricted) {
-            const uint64_t previousBudget = pVideoMemoryInfo->Budget;
-            pVideoMemoryInfo->Budget = static_cast<uint64_t>(
-                (queryVideoMemoryInfoOut.Budget - pVideoMemoryInfo->CurrentReservation) *
-                mMaxPctOfVideoMemoryToBudget);
+            const uint64_t previousBudget = memorySegmentInfo->Budget;
+            memorySegmentInfo->Budget = static_cast<uint64_t>(
+                (queryVideoMemoryInfoOut.Budget - memorySegmentInfo->CurrentReservation) *
+                mMaxPctOfMemoryToBudget);
 
-            if (previousBudget > pVideoMemoryInfo->Budget &&
-                GPGMM_BYTES_TO_MB(previousBudget - pVideoMemoryInfo->Budget) > 0) {
+            if (previousBudget > memorySegmentInfo->Budget &&
+                GPGMM_BYTES_TO_MB(previousBudget - memorySegmentInfo->Budget) > 0) {
                 DebugLog(MessageId::kMemoryUsageUpdated, this)
                     << GetMemorySegmentName(heapSegment, mIsUMA)
                     << " GPU memory budget went down by "
-                    << GetBytesToSizeInUnits(previousBudget - pVideoMemoryInfo->Budget) << ".";
-            } else if (previousBudget < pVideoMemoryInfo->Budget &&
-                       GPGMM_BYTES_TO_MB(pVideoMemoryInfo->Budget - previousBudget) > 0) {
+                    << GetBytesToSizeInUnits(previousBudget - memorySegmentInfo->Budget) << ".";
+            } else if (previousBudget < memorySegmentInfo->Budget &&
+                       GPGMM_BYTES_TO_MB(memorySegmentInfo->Budget - previousBudget) > 0) {
                 DebugLog(MessageId::kMemoryUsageUpdated, this)
                     << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory budget went up by "
-                    << GetBytesToSizeInUnits(pVideoMemoryInfo->Budget - previousBudget) << ".";
+                    << GetBytesToSizeInUnits(memorySegmentInfo->Budget - previousBudget) << ".";
             }
         }
 
         // Ignore when no budget was specified.
-        if (pVideoMemoryInfo->Budget > 0 &&
-            pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget) {
+        if (memorySegmentInfo->Budget > 0 &&
+            memorySegmentInfo->CurrentUsage > memorySegmentInfo->Budget) {
             WarnEvent(MessageId::kBudgetExceeded, this)
                 << GetMemorySegmentName(heapSegment, mIsUMA) << " GPU memory usage exceeds budget: "
-                << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << " vs "
-                << GetBytesToSizeInUnits(pVideoMemoryInfo->Budget) << ".";
+                << GetBytesToSizeInUnits(memorySegmentInfo->CurrentUsage) << " vs "
+                << GetBytesToSizeInUnits(memorySegmentInfo->Budget) << ".";
         } else {
             const float currentUsageOfBudget =
-                SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget);
-            if (pVideoMemoryInfo->Budget > 0 &&
+                SafeDivide(memorySegmentInfo->CurrentUsage, memorySegmentInfo->Budget);
+            if (memorySegmentInfo->Budget > 0 &&
                 currentUsageOfBudget > kMinCurrentUsageOfBudgetReportingThreshold) {
                 EventMessage message = WarnEvent(MessageId::kBudgetExceeded, this);
                 message << GetMemorySegmentName(heapSegment, mIsUMA)
@@ -437,9 +436,9 @@ namespace gpgmm::d3d12 {
 
                 // Check if even evicting resident heaps would get us back below the budget or not.
                 // Otherwise, warn the developer that E_OUTOFMEMORY is likely unavoidable.
-                if (pVideoMemoryInfo->CurrentUsage > mStats.CurrentHeapUsage &&
-                    (pVideoMemoryInfo->CurrentUsage - mStats.CurrentHeapUsage >
-                     pVideoMemoryInfo->Budget)) {
+                if (memorySegmentInfo->CurrentUsage > mStats.CurrentHeapUsage &&
+                    (memorySegmentInfo->CurrentUsage - mStats.CurrentHeapUsage >
+                     memorySegmentInfo->Budget)) {
                     message
                         << "There is not enough memory to page-out to get below the budget. This "
                            "likely means there are more external than internal heaps that cannot "
@@ -447,7 +446,7 @@ namespace gpgmm::d3d12 {
                            "evicted because they are unmanaged by GPGMM. Consider using "
                            "CreateResidencyHeap "
                            "to import them: "
-                        << GetBytesToSizeInUnits(pVideoMemoryInfo->CurrentUsage) << " vs "
+                        << GetBytesToSizeInUnits(memorySegmentInfo->CurrentUsage) << " vs "
                         << GetBytesToSizeInUnits(mStats.CurrentHeapUsage) << ".";
                 }
             }
@@ -456,15 +455,15 @@ namespace gpgmm::d3d12 {
         // Not all segments could be used.
         GPGMM_TRACE_EVENT_METRIC(
             ToString(GetMemorySegmentName(heapSegment, mIsUMA), " GPU memory usage (%)").c_str(),
-            (pVideoMemoryInfo->CurrentUsage > pVideoMemoryInfo->Budget)
+            (memorySegmentInfo->CurrentUsage > memorySegmentInfo->Budget)
                 ? 100
-                : SafeDivide(pVideoMemoryInfo->CurrentUsage, pVideoMemoryInfo->Budget) * 100);
+                : SafeDivide(memorySegmentInfo->CurrentUsage, memorySegmentInfo->Budget) * 100);
 
         // Reservations are optional.
         GPGMM_TRACE_EVENT_METRIC(
             ToString(GetMemorySegmentName(heapSegment, mIsUMA), " GPU memory reserved (MB)")
                 .c_str(),
-            GPGMM_BYTES_TO_MB(pVideoMemoryInfo->CurrentReservation));
+            GPGMM_BYTES_TO_MB(memorySegmentInfo->CurrentReservation));
 
         return S_OK;
     }
@@ -476,15 +475,15 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    HRESULT ResidencyManager::QueryVideoMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                                   RESIDENCY_MEMORY_INFO* pVideoMemoryInfoOut) {
+    HRESULT ResidencyManager::QueryMemoryInfo(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                              RESIDENCY_MEMORY_INFO* pMemoryInfoOut) {
         std::lock_guard<std::mutex> lock(mMutex);
         if (IsBudgetNotificationUpdatesDisabled()) {
             GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
-        if (pVideoMemoryInfoOut != nullptr) {
-            *pVideoMemoryInfoOut = *GetVideoMemoryInfo(heapSegment);
+        if (pMemoryInfoOut != nullptr) {
+            *pMemoryInfoOut = *GetMemoryInfo(heapSegment);
         }
 
         return S_OK;
@@ -497,14 +496,14 @@ namespace gpgmm::d3d12 {
                                             uint64_t* bytesEvictedOut) {
         GPGMM_TRACE_EVENT_DURATION(TraceEventCategory::kDefault, "ResidencyManager.Evict");
 
-        RESIDENCY_MEMORY_INFO* pVideoMemoryInfo = GetVideoMemoryInfo(heapSegment);
+        RESIDENCY_MEMORY_INFO* memorySegmentInfo = GetMemoryInfo(heapSegment);
         if (IsBudgetNotificationUpdatesDisabled()) {
             GPGMM_RETURN_IF_FAILED(UpdateMemorySegmentInternal(heapSegment));
         }
 
         // If a budget wasn't provided, it not possible to evict. This is because either the budget
         // update event has not happened yet or was invalid.
-        if (pVideoMemoryInfo->Budget == 0) {
+        if (memorySegmentInfo->Budget == 0) {
             WarnEvent(MessageId::kBudgetExceeded, this)
                 << "GPU memory segment ("
                 << GetMemorySegmentName(RESIDENCY_HEAP_SEGMENT_NON_LOCAL, IsUMA())
@@ -512,10 +511,10 @@ namespace gpgmm::d3d12 {
             return S_FALSE;
         }
 
-        const uint64_t currentUsageAfterEvict = bytesToEvict + pVideoMemoryInfo->CurrentUsage;
+        const uint64_t currentUsageAfterEvict = bytesToEvict + memorySegmentInfo->CurrentUsage;
 
         // Return if we will remain under budget after evict.
-        if (currentUsageAfterEvict < pVideoMemoryInfo->Budget) {
+        if (currentUsageAfterEvict < memorySegmentInfo->Budget) {
             return S_OK;
         }
 
@@ -524,7 +523,7 @@ namespace gpgmm::d3d12 {
         // enough memory, we should evict until there is.
         std::vector<ID3D12Pageable*> objectsToEvict;
         const uint64_t bytesNeededToBeUnderBudget =
-            currentUsageAfterEvict - pVideoMemoryInfo->Budget;
+            currentUsageAfterEvict - memorySegmentInfo->Budget;
 
         // Return if nothing needs to be evicted to stay within budget.
         if (bytesNeededToBeUnderBudget == 0) {
@@ -539,7 +538,7 @@ namespace gpgmm::d3d12 {
             // emptying the cache is undesirable, because it can mean either 1) the cache is not
             // accurately accounting for GPU allocations, or 2) an external component is
             // using all of the budget and is starving us, which will cause thrash.
-            LRUCache* cache = GetVideoMemorySegmentCache(heapSegment);
+            LRUCache* cache = GetMemorySegmentCache(heapSegment);
             ASSERT(cache != nullptr);
 
             if (cache->empty()) {
@@ -719,7 +718,7 @@ namespace gpgmm::d3d12 {
             GPGMM_RETURN_IF_FAILED(mResidencyFence->Signal(pQueue));
         }
 
-        // Keep video memory segments up-to-date. This must always happen because if the budget
+        // Keep memory segments up-to-date. This must always happen because if the budget
         // never changes (ie. not manually updated or through budget change events), the
         // residency manager wouldn't know what to page in or out.
         if (IsBudgetNotificationUpdatesDisabled()) {
@@ -799,14 +798,14 @@ namespace gpgmm::d3d12 {
         // residency manager on Lock/Unlock then added here to get the sum.
         RESIDENCY_MANAGER_STATS result = mStats;
 
-        for (const auto& entry : mLocalVideoMemorySegment.cache) {
+        for (const auto& entry : mLocalMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
             }
         }
 
-        for (const auto& entry : mNonLocalVideoMemorySegment.cache) {
+        for (const auto& entry : mNonLocalMemorySegment.cache) {
             if (entry.value()->GetInfo().Status == RESIDENCY_HEAP_STATUS_RESIDENT) {
                 result.CurrentHeapUsage += entry.value()->GetSize();
                 result.CurrentHeapCount++;
@@ -825,7 +824,7 @@ namespace gpgmm::d3d12 {
         return S_OK;
     }
 
-    // Starts updating video memory budget from OS notifications.
+    // Starts updating memory budget from OS notifications.
     // Return True if successfully registered or False if error.
     HRESULT ResidencyManager::StartBudgetNotificationUpdates() {
         if (mBudgetNotificationUpdateEvent == nullptr) {
@@ -861,19 +860,20 @@ namespace gpgmm::d3d12 {
     }
 
     void ResidencyManager::ReportSegmentInfoForTesting(RESIDENCY_HEAP_SEGMENT segmentGroup) {
-        RESIDENCY_MEMORY_INFO* info = GetVideoMemoryInfo(segmentGroup);
-        ASSERT(info != nullptr);
+        RESIDENCY_MEMORY_INFO* memorySegmentInfo = GetMemoryInfo(segmentGroup);
+        ASSERT(memorySegmentInfo != nullptr);
 
         DebugLog(MessageId::kBudgetUpdated, this)
             << GetMemorySegmentName(segmentGroup, IsUMA()) << " GPU memory segment:";
         DebugLog(MessageId::kBudgetUpdated, this)
-            << "\tBudget: " << GetBytesToSizeInUnits(info->Budget) << " ("
-            << GetBytesToSizeInUnits(info->CurrentUsage) << " used).";
+            << "\tBudget: " << GetBytesToSizeInUnits(memorySegmentInfo->Budget) << " ("
+            << GetBytesToSizeInUnits(memorySegmentInfo->CurrentUsage) << " used).";
 
-        if (info->CurrentReservation == 0) {
+        if (memorySegmentInfo->CurrentReservation == 0) {
             DebugLog(MessageId::kBudgetUpdated, this)
-                << "\tReserved: " << GetBytesToSizeInUnits(info->CurrentReservation) << " ("
-                << GetBytesToSizeInUnits(info->AvailableForReservation) << " available).";
+                << "\tReserved: " << GetBytesToSizeInUnits(memorySegmentInfo->CurrentReservation)
+                << " (" << GetBytesToSizeInUnits(memorySegmentInfo->AvailableForReservation)
+                << " available).";
         }
     }
 

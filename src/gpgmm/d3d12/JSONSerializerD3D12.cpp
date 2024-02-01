@@ -246,7 +246,7 @@ namespace gpgmm::d3d12 {
         dict.AddItem("MinRecordLevel", desc.MinRecordLevel);
         dict.AddItem("Flags", desc.Flags);
         dict.AddItem("RecordOptions", Serialize(desc.RecordOptions));
-        dict.AddItem("MaxPctOfVideoMemoryToBudget", desc.MaxPctOfVideoMemoryToBudget);
+        dict.AddItem("MaxPctOfMemoryToBudget", desc.MaxPctOfMemoryToBudget);
         dict.AddItem("MinPctOfBudgetToReserve", desc.MinPctOfBudgetToReserve);
         dict.AddItem("MaxBudgetInBytes", desc.MaxBudgetInBytes);
         dict.AddItem("EvictSizeInBytes", desc.EvictSizeInBytes);
