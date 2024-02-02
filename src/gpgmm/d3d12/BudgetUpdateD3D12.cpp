@@ -24,24 +24,38 @@ namespace gpgmm::d3d12 {
 
     // BudgetUpdateTask
 
-    BudgetUpdateTask::BudgetUpdateTask(ResidencyManager* const residencyManager,
-                                       IDXGIAdapter3* adapter)
+    BudgetUpdateTask::BudgetUpdateTask() = default;
+
+    BudgetUpdateTask::~BudgetUpdateTask() = default;
+
+    HRESULT BudgetUpdateTask::GetLastError() const {
+        std::lock_guard<std::mutex> lock(mMutex);
+        return mLastError;
+    }
+
+    void BudgetUpdateTask::SetLastError(HRESULT hr) {
+        std::lock_guard<std::mutex> lock(mMutex);
+        mLastError = hr;
+    }
+
+    // BudgetUpdateTaskDXGI
+
+    BudgetUpdateTaskDXGI::BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager)
         : mResidencyManager(residencyManager),
-          mAdapter(std::move(adapter)),
           mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
           mUnregisterAndExitEvent(CreateEventW(NULL, FALSE, FALSE, NULL)) {
         ASSERT(mResidencyManager != nullptr);
-        ASSERT(mAdapter != nullptr);
-        mLastError = mAdapter->RegisterVideoMemoryBudgetChangeNotificationEvent(
-            mBudgetNotificationUpdateEvent, &mCookie);
+        mLastError =
+            mResidencyManager->GetAdapter()->RegisterVideoMemoryBudgetChangeNotificationEvent(
+                mBudgetNotificationUpdateEvent, &mCookie);
     }
 
-    BudgetUpdateTask::~BudgetUpdateTask() {
+    BudgetUpdateTaskDXGI::~BudgetUpdateTaskDXGI() {
         CloseHandle(mUnregisterAndExitEvent);
         CloseHandle(mBudgetNotificationUpdateEvent);
     }
 
-    MaybeError BudgetUpdateTask::operator()() {
+    MaybeError BudgetUpdateTaskDXGI::operator()() {
         HRESULT hr = GetLastError();
         bool isExiting = false;
         while (!isExiting && SUCCEEDED(hr)) {
@@ -77,26 +91,16 @@ namespace gpgmm::d3d12 {
         if (FAILED(hr)) {
             ErrorLog(ErrorCode::kBudgetInvalid, mResidencyManager)
                 << "Unable to update budget: " +
-                       GetErrorResultMessage(hr, mResidencyManager->mDevice);
+                       GetErrorResultMessage(hr, mResidencyManager->GetDevice());
         }
 
         SetLastError(hr);
         return GetErrorCode(hr);
     }
 
-    HRESULT BudgetUpdateTask::GetLastError() const {
-        std::lock_guard<std::mutex> lock(mMutex);
-        return mLastError;
-    }
-
-    bool BudgetUpdateTask::UnregisterAndExit() {
-        mAdapter->UnregisterVideoMemoryBudgetChangeNotification(mCookie);
+    bool BudgetUpdateTaskDXGI::UnregisterAndExit() {
+        mResidencyManager->GetAdapter()->UnregisterVideoMemoryBudgetChangeNotification(mCookie);
         return SetEvent(mUnregisterAndExitEvent);
-    }
-
-    void BudgetUpdateTask::SetLastError(HRESULT hr) {
-        std::lock_guard<std::mutex> lock(mMutex);
-        mLastError = hr;
     }
 
     // BudgetUpdateEvent

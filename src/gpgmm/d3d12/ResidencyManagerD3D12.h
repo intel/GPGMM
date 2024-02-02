@@ -26,10 +26,6 @@
 #include <memory>
 #include <mutex>
 
-namespace gpgmm {
-    class TaskScheduler;
-}  // namespace gpgmm
-
 namespace gpgmm::d3d12 {
 
     class BudgetUpdateTask;
@@ -40,7 +36,7 @@ namespace gpgmm::d3d12 {
     class ResourceAllocator;
     class ResourceHeapAllocator;
 
-    class ResidencyManager final : public DebugObject, public IResidencyManager, public ObjectBase {
+    class ResidencyManager : public DebugObject, public IResidencyManager, public ObjectBase {
       public:
         static HRESULT CreateResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                               ID3D12Device* pDevice,
@@ -75,15 +71,25 @@ namespace gpgmm::d3d12 {
         HRESULT LockHeap(ResidencyHeap* pHeap);
         HRESULT UnlockHeap(ResidencyHeap* pHeap);
 
+        HRESULT UpdateMemorySegments();
+
+        ID3D12Device* GetDevice() const;
+
+      protected:
+        ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
+                         ID3D12Device* pDevice,
+                         std::unique_ptr<Caps> caps);
+
+        // Should be overridden per adapter type.
+        virtual HRESULT QueryMemoryInfoImpl(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                            RESIDENCY_MEMORY_INFO* pMemoryInfoOut) = 0;
+
+        virtual std::shared_ptr<BudgetUpdateTask> CreateBudgetUpdateTask() = 0;
+
       private:
         friend ResidencyHeap;
         friend ResourceAllocator;
         friend ResourceHeapAllocator;
-
-        ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
-                         ID3D12Device* pDevice,
-                         IDXGIAdapter3* pAdapter,
-                         std::unique_ptr<Caps> caps);
 
         // Unknown interface
         void DeleteThis() override;
@@ -97,9 +103,6 @@ namespace gpgmm::d3d12 {
         HRESULT InsertHeapInternal(ResidencyHeap* heap);
 
         HRESULT QueryStatsInternal(RESIDENCY_MANAGER_STATS* pResidencyManagerStats);
-
-        friend BudgetUpdateTask;
-        HRESULT UpdateMemorySegments();
 
         bool IsUMA() const;
 
@@ -134,7 +137,6 @@ namespace gpgmm::d3d12 {
         HRESULT EnsureResidencyFenceExists();
 
         ID3D12Device* mDevice = nullptr;
-        IDXGIAdapter3* mAdapter = nullptr;
 
         const float mMaxPctOfMemoryToBudget;
         const float mMinPctOfBudgetToReserve;
@@ -154,6 +156,27 @@ namespace gpgmm::d3d12 {
         RESIDENCY_MANAGER_STATS mStats = {};
 
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
+    };
+
+    class ResidencyManagerDXGI final : public ResidencyManager {
+      public:
+        ResidencyManagerDXGI(const RESIDENCY_MANAGER_DESC& descriptor,
+                             ID3D12Device* pDevice,
+                             IDXGIAdapter3* pAdapter,
+                             std::unique_ptr<Caps> caps);
+
+        ~ResidencyManagerDXGI() override;
+
+        IDXGIAdapter3* GetAdapter() const;
+
+      private:
+        // ResidencyManager overloads
+        HRESULT QueryMemoryInfoImpl(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                    RESIDENCY_MEMORY_INFO* pMemoryInfoOut) override;
+
+        std::shared_ptr<BudgetUpdateTask> CreateBudgetUpdateTask() override;
+
+        IDXGIAdapter3* mAdapter = nullptr;
     };
 
 }  // namespace gpgmm::d3d12

@@ -23,34 +23,44 @@
 
 namespace gpgmm::d3d12 {
 
-    class ResidencyManager;
-
     // Creates a long-lived task to recieve and process OS budget change events.
     class BudgetUpdateTask : public VoidCallback {
       public:
-        BudgetUpdateTask(ResidencyManager* const residencyManager, IDXGIAdapter3* adapter);
+        BudgetUpdateTask();
         ~BudgetUpdateTask() override;
 
-        MaybeError operator()() override;
-
-        HRESULT GetLastError() const;
-
         // Shutdown the event loop.
-        bool UnregisterAndExit();
+        virtual bool UnregisterAndExit() = 0;
 
-      private:
+        virtual HRESULT GetLastError() const;
+
+      protected:
         void SetLastError(HRESULT hr);
 
-        ResidencyManager* const mResidencyManager;
-        IDXGIAdapter3* mAdapter = nullptr;
+        mutable std::mutex mMutex;  // Protect access between threads for members below.
+        HRESULT mLastError = S_OK;
+    };
+
+    class ResidencyManagerDXGI;
+
+    class BudgetUpdateTaskDXGI final : public BudgetUpdateTask {
+      public:
+        BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager);
+        ~BudgetUpdateTaskDXGI() override;
+
+        // VoidCallback interface
+        MaybeError operator()() override;
+
+        // BudgetUpdateTask interface
+        bool UnregisterAndExit() override;
+
+      private:
+        ResidencyManagerDXGI* const mResidencyManager;
 
         HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;
         HANDLE mUnregisterAndExitEvent = INVALID_HANDLE_VALUE;
 
         DWORD mCookie = 0;  // Used to unregister from notifications.
-
-        mutable std::mutex mMutex;  // Protect access between threads for members below.
-        HRESULT mLastError = S_OK;
     };
 
     class BudgetUpdateEvent final : public Event {

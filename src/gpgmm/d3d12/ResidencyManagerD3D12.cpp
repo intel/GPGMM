@@ -86,11 +86,16 @@ namespace gpgmm::d3d12 {
 
         SetLogLevel(GetMessageSeverity(descriptor.MinLogLevel));
 
+        std::unique_ptr<ResidencyManager> residencyManager;
         ComPtr<IDXGIAdapter3> dxgiAdapter3;
-        GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&dxgiAdapter3)));
-
-        std::unique_ptr<ResidencyManager> residencyManager = std::unique_ptr<ResidencyManager>(
-            new ResidencyManager(descriptor, pDevice, dxgiAdapter3.Get(), std::move(caps)));
+        if (SUCCEEDED(pAdapter->QueryInterface(IID_PPV_ARGS(&dxgiAdapter3)))) {
+            residencyManager = std::make_unique<ResidencyManagerDXGI>(
+                descriptor, pDevice, dxgiAdapter3.Get(), std::move(caps));
+        } else {
+            ErrorLog(ErrorCode::kInvalidArgument)
+                << "Residency management is not supported for this adapter.";
+            return E_NOINTERFACE;
+        }
 
         // Enable automatic memory budget updates.
         if (descriptor.Flags & RESIDENCY_MANAGER_FLAG_ALLOW_BACKGROUND_BUDGET_UPDATES) {
@@ -160,10 +165,8 @@ namespace gpgmm::d3d12 {
 
     ResidencyManager::ResidencyManager(const RESIDENCY_MANAGER_DESC& descriptor,
                                        ID3D12Device* pDevice,
-                                       IDXGIAdapter3* pAdapter,
                                        std::unique_ptr<Caps> caps)
         : mDevice(pDevice),
-          mAdapter(pAdapter),
           mMaxPctOfMemoryToBudget(descriptor.MaxPctOfMemoryToBudget == 0
                                       ? kDefaultMaxPctOfMemoryToBudget
                                       : descriptor.MaxPctOfMemoryToBudget),
@@ -180,9 +183,7 @@ namespace gpgmm::d3d12 {
           mInitialFenceValue(descriptor.InitialFenceValue),
           mIsAlwaysInBudget(descriptor.Flags & RESIDENCY_MANAGER_FLAG_ALWAYS_IN_BUDGET) {
         GPGMM_TRACE_EVENT_OBJECT_NEW(this);
-
         ASSERT(mDevice != nullptr);
-        ASSERT(mAdapter != nullptr);
     }
 
     void ResidencyManager::DeleteThis() {
@@ -358,12 +359,8 @@ namespace gpgmm::d3d12 {
             return S_OK;
         }
 
-        // Residency heap segments are 1:1 with DXGI memory segment groups.
-        DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfoOut;
-        GPGMM_RETURN_IF_FAILED(
-            mAdapter->QueryVideoMemoryInfo(0, static_cast<DXGI_MEMORY_SEGMENT_GROUP>(heapSegment),
-                                           &queryVideoMemoryInfoOut),
-            mDevice);
+        RESIDENCY_MEMORY_INFO queryVideoMemoryInfoOut = {};
+        GPGMM_RETURN_IF_FAILED(QueryMemoryInfoImpl(heapSegment, &queryVideoMemoryInfoOut));
 
         // The memory budget provided by QueryMemoryInfo is defined by the operating
         // system, and may be lower than expected in certain scenarios. Under memory pressure, we
@@ -828,8 +825,7 @@ namespace gpgmm::d3d12 {
     // Return True if successfully registered or False if error.
     HRESULT ResidencyManager::StartBudgetNotificationUpdates() {
         if (mBudgetNotificationUpdateEvent == nullptr) {
-            std::shared_ptr<BudgetUpdateTask> task =
-                std::make_shared<BudgetUpdateTask>(this, mAdapter);
+            std::shared_ptr<BudgetUpdateTask> task = CreateBudgetUpdateTask();
             mBudgetNotificationUpdateEvent = std::make_shared<BudgetUpdateEvent>(
                 TaskScheduler::GetOrCreateInstance()->PostTask(task), task);
         }
@@ -921,6 +917,43 @@ namespace gpgmm::d3d12 {
 
     HRESULT ResidencyManager::SetDebugName(LPCWSTR Name) {
         return DebugObject::SetDebugNameImpl(Name);
+    }
+
+    ID3D12Device* ResidencyManager::GetDevice() const {
+        return mDevice;
+    }
+
+    // ResidencyManagerDXGI
+
+    ResidencyManagerDXGI::ResidencyManagerDXGI(const RESIDENCY_MANAGER_DESC& descriptor,
+                                               ID3D12Device* pDevice,
+                                               IDXGIAdapter3* pAdapter,
+                                               std::unique_ptr<Caps> caps)
+        : ResidencyManager(descriptor, pDevice, std::move(caps)), mAdapter(pAdapter) {
+        ASSERT(mAdapter != nullptr);
+    }
+
+    ResidencyManagerDXGI::~ResidencyManagerDXGI() = default;
+
+    HRESULT ResidencyManagerDXGI::QueryMemoryInfoImpl(const RESIDENCY_HEAP_SEGMENT& heapSegment,
+                                                      RESIDENCY_MEMORY_INFO* pMemoryInfoOut) {
+        // Residency heap segments are 1:1 with DXGI memory segment groups.
+        DXGI_QUERY_VIDEO_MEMORY_INFO queryVideoMemoryInfoOut;
+        GPGMM_RETURN_IF_FAILED(mAdapter->QueryVideoMemoryInfo(
+            0, static_cast<DXGI_MEMORY_SEGMENT_GROUP>(heapSegment), &queryVideoMemoryInfoOut));
+        pMemoryInfoOut->AvailableForReservation = queryVideoMemoryInfoOut.AvailableForReservation;
+        pMemoryInfoOut->Budget = queryVideoMemoryInfoOut.Budget;
+        pMemoryInfoOut->CurrentReservation = queryVideoMemoryInfoOut.CurrentReservation;
+        pMemoryInfoOut->CurrentUsage = queryVideoMemoryInfoOut.CurrentUsage;
+        return S_OK;
+    }
+
+    std::shared_ptr<BudgetUpdateTask> ResidencyManagerDXGI::CreateBudgetUpdateTask() {
+        return std::make_shared<BudgetUpdateTaskDXGI>(this);
+    }
+
+    IDXGIAdapter3* ResidencyManagerDXGI::GetAdapter() const {
+        return mAdapter;
     }
 
 }  // namespace gpgmm::d3d12
