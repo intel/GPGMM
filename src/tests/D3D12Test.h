@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include <dxgi1_4.h>
 #include <gpgmm_d3d12.h>
 
 #include "gpgmm/d3d12/D3D12Platform.h"

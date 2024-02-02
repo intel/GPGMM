@@ -21,6 +21,7 @@
 #include "gpgmm/utils/Utils.h"
 #include "gpgmm/utils/WindowsUtils.h"
 
+#include <dxgi.h>
 #include <memory>
 
 namespace gpgmm::d3d12 {
