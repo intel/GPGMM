@@ -17,7 +17,6 @@
 #define SRC_GPGMM_D3D12_D3D12PLATFORM_H_
 
 #include <d3d12.h>
-#include <dxgi1_4.h>
 #include <wrl.h>
 
 // Keep backwards compatibility when using D3D12 feature flags that are only defined in a newer
