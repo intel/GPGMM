@@ -21,7 +21,6 @@
 #include "gpgmm/utils/EnumFlags.h"
 #include "gpgmm/utils/LinkedList.h"
 
-#include <dxgi1_4.h>
 #include <gpgmm_d3d12.h>
 
 #include <memory>
@@ -157,27 +156,6 @@ namespace gpgmm::d3d12 {
         RESIDENCY_MANAGER_STATS mStats = {};
 
         std::shared_ptr<BudgetUpdateEvent> mBudgetNotificationUpdateEvent;
-    };
-
-    class ResidencyManagerDXGI final : public ResidencyManager {
-      public:
-        ResidencyManagerDXGI(const RESIDENCY_MANAGER_DESC& descriptor,
-                             ID3D12Device* pDevice,
-                             IDXGIAdapter3* pAdapter,
-                             std::unique_ptr<Caps> caps);
-
-        ~ResidencyManagerDXGI() override;
-
-        IDXGIAdapter3* GetAdapter() const;
-
-      private:
-        // ResidencyManager overloads
-        HRESULT QueryMemoryInfoImpl(const RESIDENCY_HEAP_SEGMENT& heapSegment,
-                                    RESIDENCY_MEMORY_INFO* pMemoryInfoOut) override;
-
-        std::shared_ptr<BudgetUpdateTask> CreateBudgetUpdateTask() override;
-
-        IDXGIAdapter3* mAdapter = nullptr;
     };
 
 }  // namespace gpgmm::d3d12

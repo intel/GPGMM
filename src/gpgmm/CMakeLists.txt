@@ -55,6 +55,8 @@ endif()
 
 if (GPGMM_ENABLE_D3D12)
     target_sources(gpgmm PRIVATE
+        "d3d12/BudgetUpdateDXGI.cpp"
+        "d3d12/BudgetUpdateDXGI.h"
         "d3d12/BudgetUpdateD3D12.cpp"
         "d3d12/BudgetUpdateD3D12.h"
         "d3d12/BufferAllocatorD3D12.cpp"
@@ -79,6 +81,8 @@ if (GPGMM_ENABLE_D3D12)
         "d3d12/ResidencyListD3D12.h"
         "d3d12/ResidencyManagerD3D12.cpp"
         "d3d12/ResidencyManagerD3D12.h"
+        "d3d12/ResidencyManagerDXGI.cpp"
+        "d3d12/ResidencyManagerDXGI.h"
         "d3d12/ResourceAllocationD3D12.cpp"
         "d3d12/ResourceAllocationD3D12.h"
         "d3d12/ResourceAllocatorD3D12.cpp"

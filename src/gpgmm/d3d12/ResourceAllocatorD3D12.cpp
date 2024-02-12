@@ -414,11 +414,6 @@ namespace gpgmm::d3d12 {
 
         ComPtr<IResidencyManager> residencyManager;
         if (ppResidencyManagerOut != nullptr) {
-            ComPtr<IDXGIAdapter3> adapter3;
-            if (pAdapter != nullptr) {
-                GPGMM_RETURN_IF_FAILED(pAdapter->QueryInterface(IID_PPV_ARGS(&adapter3)));
-            }
-
             RESIDENCY_MANAGER_DESC residencyDesc = {};
             residencyDesc.MinLogLevel = allocatorDescriptor.MinLogLevel;
             residencyDesc.RecordOptions = allocatorDescriptor.RecordOptions;
@@ -428,7 +423,7 @@ namespace gpgmm::d3d12 {
             }
 
             GPGMM_RETURN_IF_FAILED(ResidencyManager::CreateResidencyManager(
-                residencyDesc, pDevice, adapter3.Get(), &residencyManager));
+                residencyDesc, pDevice, pAdapter, &residencyManager));
         }
 
         ComPtr<IResourceAllocator> resourceAllocator;
