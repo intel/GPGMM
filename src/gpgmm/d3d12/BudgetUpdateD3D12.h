@@ -41,28 +41,6 @@ namespace gpgmm::d3d12 {
         HRESULT mLastError = S_OK;
     };
 
-    class ResidencyManagerDXGI;
-
-    class BudgetUpdateTaskDXGI final : public BudgetUpdateTask {
-      public:
-        BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager);
-        ~BudgetUpdateTaskDXGI() override;
-
-        // VoidCallback interface
-        MaybeError operator()() override;
-
-        // BudgetUpdateTask interface
-        bool UnregisterAndExit() override;
-
-      private:
-        ResidencyManagerDXGI* const mResidencyManager;
-
-        HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;
-        HANDLE mUnregisterAndExitEvent = INVALID_HANDLE_VALUE;
-
-        DWORD mCookie = 0;  // Used to unregister from notifications.
-    };
-
     class BudgetUpdateEvent final : public Event {
       public:
         BudgetUpdateEvent(std::shared_ptr<Event> event, std::shared_ptr<BudgetUpdateTask> task);

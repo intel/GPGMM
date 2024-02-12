@@ -14,12 +14,6 @@
 
 #include "gpgmm/d3d12/BudgetUpdateD3D12.h"
 
-#include "gpgmm/common/Message.h"
-#include "gpgmm/common/TraceEvent.h"
-#include "gpgmm/d3d12/ErrorD3D12.h"
-#include "gpgmm/d3d12/LogD3D12.h"
-#include "gpgmm/d3d12/ResidencyManagerD3D12.h"
-
 namespace gpgmm::d3d12 {
 
     // BudgetUpdateTask
@@ -36,71 +30,6 @@ namespace gpgmm::d3d12 {
     void BudgetUpdateTask::SetLastError(HRESULT hr) {
         std::lock_guard<std::mutex> lock(mMutex);
         mLastError = hr;
-    }
-
-    // BudgetUpdateTaskDXGI
-
-    BudgetUpdateTaskDXGI::BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager)
-        : mResidencyManager(residencyManager),
-          mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
-          mUnregisterAndExitEvent(CreateEventW(NULL, FALSE, FALSE, NULL)) {
-        ASSERT(mResidencyManager != nullptr);
-        mLastError =
-            mResidencyManager->GetAdapter()->RegisterVideoMemoryBudgetChangeNotificationEvent(
-                mBudgetNotificationUpdateEvent, &mCookie);
-    }
-
-    BudgetUpdateTaskDXGI::~BudgetUpdateTaskDXGI() {
-        CloseHandle(mUnregisterAndExitEvent);
-        CloseHandle(mBudgetNotificationUpdateEvent);
-    }
-
-    MaybeError BudgetUpdateTaskDXGI::operator()() {
-        HRESULT hr = GetLastError();
-        bool isExiting = false;
-        while (!isExiting && SUCCEEDED(hr)) {
-            // Wait on two events: one to unblock for OS budget changes, and another to unblock
-            // for shutdown.
-            HANDLE hWaitEvents[2] = {mBudgetNotificationUpdateEvent, mUnregisterAndExitEvent};
-            const DWORD waitedEvent =
-                WaitForMultipleObjects(2, hWaitEvents, /*bWaitAll*/ false, INFINITE);
-            switch (waitedEvent) {
-                // mBudgetNotificationUpdateEvent
-                case (WAIT_OBJECT_0 + 0): {
-                    hr = mResidencyManager->UpdateMemorySegments();
-                    if (FAILED(hr)) {
-                        break;
-                    }
-
-                    DebugLog(MessageId::kBudgetUpdated, mResidencyManager)
-                        << "Updated budget from OS notification.";
-                    break;
-                }
-                // mUnregisterAndExitEvent
-                case (WAIT_OBJECT_0 + 1): {
-                    isExiting = true;
-                    break;
-                }
-                default: {
-                    UNREACHABLE();
-                    break;
-                }
-            }
-        }
-
-        if (FAILED(hr)) {
-            ErrorLog(ErrorCode::kBudgetInvalid, mResidencyManager)
-                << "Unable to update budget: " +
-                       GetErrorResultMessage(hr, mResidencyManager->GetDevice());
-        }
-
-        SetLastError(hr);
-        return GetErrorCode(hr);
-    }
-
-    bool BudgetUpdateTaskDXGI::UnregisterAndExit() {
-        mResidencyManager->GetAdapter()->UnregisterVideoMemoryBudgetChangeNotification(mCookie);
-        return SetEvent(mUnregisterAndExitEvent);
     }
 
     // BudgetUpdateEvent
