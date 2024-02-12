@@ -14,14 +14,12 @@
 
 #include "gpgmm/d3d12/BudgetUpdateDXGI.h"
 
-#include "gpgmm/common/Message.h"
 #include "gpgmm/d3d12/ErrorD3D12.h"
-#include "gpgmm/d3d12/LogD3D12.h"
 #include "gpgmm/d3d12/ResidencyManagerDXGI.h"
 
 namespace gpgmm::d3d12 {
 
-    BudgetUpdateTaskDXGI::BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager)
+    BudgetUpdateTaskDXGI::BudgetUpdateTaskDXGI(ResidencyManagerDXGI* residencyManager)
         : mResidencyManager(residencyManager),
           mBudgetNotificationUpdateEvent(CreateEventW(NULL, FALSE, FALSE, NULL)),
           mUnregisterAndExitEvent(CreateEventW(NULL, FALSE, FALSE, NULL)) {
@@ -32,8 +30,12 @@ namespace gpgmm::d3d12 {
     }
 
     BudgetUpdateTaskDXGI::~BudgetUpdateTaskDXGI() {
-        CloseHandle(mUnregisterAndExitEvent);
-        CloseHandle(mBudgetNotificationUpdateEvent);
+        if (mUnregisterAndExitEvent != nullptr) {
+            ::CloseHandle(mUnregisterAndExitEvent);
+        }
+        if (mBudgetNotificationUpdateEvent != nullptr) {
+            ::CloseHandle(mBudgetNotificationUpdateEvent);
+        }
     }
 
     MaybeError BudgetUpdateTaskDXGI::operator()() {
@@ -52,9 +54,6 @@ namespace gpgmm::d3d12 {
                     if (FAILED(hr)) {
                         break;
                     }
-
-                    DebugLog(MessageId::kBudgetUpdated, mResidencyManager)
-                        << "Updated budget from OS notification.";
                     break;
                 }
                 // mUnregisterAndExitEvent
@@ -68,13 +67,6 @@ namespace gpgmm::d3d12 {
                 }
             }
         }
-
-        if (FAILED(hr)) {
-            ErrorLog(ErrorCode::kBudgetInvalid, mResidencyManager)
-                << "Unable to update budget: " +
-                       GetErrorResultMessage(hr, mResidencyManager->GetDevice());
-        }
-
         SetLastError(hr);
         return GetErrorCode(hr);
     }
