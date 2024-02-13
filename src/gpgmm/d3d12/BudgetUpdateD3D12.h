@@ -52,7 +52,7 @@ namespace gpgmm::d3d12 {
 
         bool UnregisterAndExit();
 
-        bool GetLastError() const;
+        HRESULT GetLastError() const;
 
       private:
         std::shared_ptr<BudgetUpdateTask> mTask;

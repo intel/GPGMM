@@ -27,13 +27,13 @@ namespace gpgmm::d3d12 {
         BudgetUpdateTaskDXGI(ResidencyManagerDXGI* const residencyManager);
         ~BudgetUpdateTaskDXGI() override;
 
+      private:
         // VoidCallback interface
         MaybeError operator()() override;
 
         // BudgetUpdateTask interface
         bool UnregisterAndExit() override;
 
-      private:
         ResidencyManagerDXGI* const mResidencyManager;
 
         HANDLE mBudgetNotificationUpdateEvent = INVALID_HANDLE_VALUE;

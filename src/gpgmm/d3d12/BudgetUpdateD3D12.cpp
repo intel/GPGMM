@@ -55,7 +55,7 @@ namespace gpgmm::d3d12 {
         return mTask->UnregisterAndExit();
     }
 
-    bool BudgetUpdateEvent::GetLastError() const {
+    HRESULT BudgetUpdateEvent::GetLastError() const {
         return mTask->GetLastError();
     }
 
