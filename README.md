@@ -339,3 +339,5 @@ gpgmm_capture_replay_tests.exe --gtest_filter=*Replay/* --event-mask=0x3 --disab
 ## License
 
 Apache 2.0 Public License, please see [LICENSE](/LICENSE).
+
+<!-- footnote added to prevent the project from being archived. -->
