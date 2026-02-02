@@ -1,3 +1,8 @@
+# THIS PROJECT IS ARCHIVED   
+Intel will not provide or guarantee development of or support for this project, including but not limited to, maintenance, bug fixes, new releases or updates.  
+Patches to this project are no longer accepted by Intel.  
+ If you have an ongoing need to use this project, are interested in independently developing it, or would like to maintain patches for the community, please create your own fork of the project.  
+  
 | Build Config | Build Status |
 ---------------|--------------|
 | GN/Clang     | [![win_x64_gn_clang_rel](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_rel.yaml)[![win_x64_gn_clang_dbg](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_clang_dbg.yaml)[![win_x64_gn_msvc_dbg](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_dbg.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_dbg.yaml)[![win_x64_gn_msvc_rel](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_rel.yaml/badge.svg)](https://github.com/intel/GPGMM/actions/workflows/win_x64_gn_msvc_rel.yaml) |
